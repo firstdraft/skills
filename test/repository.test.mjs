@@ -245,6 +245,72 @@ test("resume eval stages and binds the identity-preserving rename", async () => 
   assert.throws(() => JSON.parse(placeholder));
 });
 
+test("diagnostic and recovery evals stage and preserve existing Plan state", async () => {
+  const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
+  const cases = JSON.parse(
+    await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
+  ).cases;
+  const stagedPlanArtifacts = [
+    {
+      path: "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+      role: "input",
+      stage_as: ".firstdraft/foundation-plan.json",
+    },
+    {
+      path: "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+      role: "input",
+      stage_as: ".firstdraft/state.json",
+    },
+  ];
+  const diagnosticEvaluation = cases.find(
+    ({ id }) => id === "prototype-nonempty-diagnostic",
+  );
+
+  assert.deepEqual(diagnosticEvaluation.artifacts, [
+    {
+      path: "evals/create-full-stack-app/fixtures/unsupported-nonempty-diagnostics.json",
+      role: "input",
+    },
+    ...stagedPlanArtifacts,
+  ]);
+  for (const id of [
+    "stale-writer-conflict",
+    "ambiguous-network-outcome",
+    "local-state-not-saved",
+  ]) {
+    assert.deepEqual(
+      cases.find((evaluation) => evaluation.id === id).artifacts,
+      stagedPlanArtifacts,
+    );
+  }
+
+  const planSource = await readFile(
+    path.join(evaluationDirectory, "fixtures", "resume.foundation-plan.json"),
+    "utf8",
+  );
+  const response = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "unsupported-nonempty-diagnostics.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(
+    createHash("sha256").update(planSource).digest("hex"),
+    response.source_sha256,
+  );
+  assert.equal(
+    response.diagnostics[0].code,
+    "foundation_plan.import.unsupported_bootstrap_content",
+  );
+  assert.deepEqual(response.diagnostics[0].location, {
+    source_pointer: "/application/entities",
+  });
+});
+
 test("malformed source fixture is bound to its coordinate diagnostic", async () => {
   const fixtureDirectory = path.join(
     evalsDirectory,
