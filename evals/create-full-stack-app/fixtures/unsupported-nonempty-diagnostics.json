@@ -1,5 +1,5 @@
 {
-  "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source_sha256": "2686cd1415de95e2dfee568b15a93c1ccddd253f25217ad7b216d024497084cc",
   "diagnostics": [
     {
       "code": "foundation_plan.import.unsupported_bootstrap_content",
