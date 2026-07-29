@@ -622,7 +622,7 @@
         },
         "associations": {
           "title": "Associations",
-          "description": "Named traversals not mechanically derived from this Entity's References. Every Reference still yields a same-key forward Association in the Compiler graph.",
+          "description": "Authored named traversals not mechanically derived from this Entity's References. Every Reference still yields a same-key forward Association in the live Project graph; that derived row is not serialized here.",
           "type": "array",
           "items": {
             "$ref": "#/$defs/association"

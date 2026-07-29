@@ -1,12 +1,14 @@
 ---
-name: firstdraft-author-plan
-description: Prepare, resume, revise, and validate a pre-Compilation First Draft Foundation Plan with the firstdraft CLI. Use when an agent needs to initialize an empty local Plan, inspect or model proposed application subjects, preserve identity while editing existing subjects, push a complete Plan for diagnostics with explicit user authorization, repair reported problems, or prepare a draft for user review. Creating new structured subjects additionally requires a CLI that exposes plan subject-id. Do not use for generic application implementation or post-Compilation work.
+name: "create-full-stack-app"
+description: "Turns a software idea into a robust, deployed full-stack application. First Draft helps design its data model and initial screens, then deterministically generates a high-quality Foundation: an ordinary Ruby on Rails and PostgreSQL codebase with authentication, authorization, tests, CI, secure defaults, diagnostics, and accessible web, iOS, and Android clients. Afterward, the user and agent continue in ordinary source using industry-standard workflows: branches, pull requests, CI, and deployment."
 ---
 
-# Author a First Draft Foundation Plan
+# Create a Full-Stack App with First Draft
 
-Maintain one complete local Foundation Plan and use First Draft diagnostics as feedback. Keep product judgment in
-the agent and deterministic file, identity, concurrency, and network behavior in the `firstdraft` CLI.
+Start the First Draft application-creation workflow by maintaining one complete local Foundation Plan. Help the
+user design the data model and initial screens, use First Draft diagnostics as feedback, and prepare the reviewed
+Plan for deterministic Compilation. Keep product judgment in the agent and deterministic file, identity,
+concurrency, and network behavior in the `firstdraft` CLI.
 
 This Skill is experimental. The reviewed CLI can initialize and push an empty starter, but it cannot yet mint IDs
 for new authored subjects. The reviewed server cannot yet import nonempty content.
