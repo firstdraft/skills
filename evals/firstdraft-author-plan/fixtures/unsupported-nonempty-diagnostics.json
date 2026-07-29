@@ -1,0 +1,16 @@
+{
+  "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "diagnostics": [
+    {
+      "code": "foundation_plan.import.unsupported_bootstrap_content",
+      "severity": "error",
+      "message": "This First Draft release can create or replace a Project only from the empty starter Plan.",
+      "location": {
+        "source_pointer": "/application/entities"
+      },
+      "subject": null,
+      "related_locations": [],
+      "suggestions": []
+    }
+  ]
+}

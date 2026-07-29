@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare a First Draft Plan"
+  short_description: "Prepare and review a First Draft Foundation Plan"
+  default_prompt: "Use $firstdraft-author-plan to initialize or resume my Foundation Plan and identify the next safe authoring step."

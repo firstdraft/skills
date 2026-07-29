@@ -1,0 +1,14 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-07"
+  },
+  "application": {
+    "key": "oscar_party",
+    "name": "Oscar Party",
+    "native": {},
+    "delivery": {},
+    "entities": []
+  }
+}
