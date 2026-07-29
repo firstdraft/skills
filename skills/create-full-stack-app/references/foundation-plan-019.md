@@ -9,18 +9,19 @@ the submitted exact bytes.
 - The v0.19 corpus passes the First Draft JSON Schema and strict loader.
 - Structural validity does not prove readable-link resolution, whole-application consistency, target support, or
   compilability.
-- The prototype conditional PUT currently imports only the empty starter subset.
-- There is no released end-to-end CLI/API workflow, GET or pull operation, complete semantic analyzer, Publish
-  action, Compilation action, or generated Foundation.
+- The reviewed conditional PUT imports empty drafts and a bounded subset of Entities, scalar Fields, and Field or
+  system-Field Primary Descriptors.
+- There is no released end-to-end CLI/API workflow, complete nonempty import, GET or pull operation, complete
+  semantic analyzer, Publish action, Compilation action, or generated Foundation.
 
 The bundled schema was copied from the
 [First Draft source at revision `12fa2a6`](https://github.com/firstdraft/firstdraft/blob/12fa2a6bcac122196d55f5528fbc3f1363c684e3/docs/architecture/design/foundation-plan.schema.json)
 and has SHA-256
 `5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The reviewed public CLI baseline is
-[`af33be324fd0bc1df62f8f888a8e0b30cbd9e8da`](https://github.com/firstdraft/cli/commit/af33be324fd0bc1df62f8f888a8e0b30cbd9e8da);
-it has not been released and exposes only `plan init`
-and `plan push`. Check commands rather than inferring compatibility from an unreleased version number. Update this
-Skill deliberately when either contract changes.
+[`0681afd48d7825a7a1a0112e248f3013d0123743`](https://github.com/firstdraft/cli/commit/0681afd48d7825a7a1a0112e248f3013d0123743);
+it has not been released and exposes `plan init`, `plan subject-id`, and `plan push`. Check commands rather than
+inferring compatibility from an unreleased version number. Update this Skill deliberately when either contract
+changes.
 
 ## Closed envelope
 
@@ -87,9 +88,13 @@ App Schema artifact.
 - Use `null` only where the schema gives it a semantic meaning, not as structural filler.
 - Omission and an explicit scalar default mean the same thing, but examples normally omit default-valued settings.
 
-## Prototype PUT limitation
+## Current conditional PUT boundary
 
-The currently reviewed importer accepts only these Application properties:
+The reviewed importer accepts the required Application properties `key`, `name`, `native`, `delivery`, and
+`entities`. `native` and `delivery` must remain empty. `entities` may contain any number of Entities with
+`subject_uuid`, `key`, `name`, optional `icon` and `fields`, and one required `primary_descriptor`.
+
+The smallest accepted Application remains:
 
 ```json
 {
@@ -101,6 +106,24 @@ The currently reviewed importer accepts only these Application properties:
 }
 ```
 
-Nonempty `entities`, `native`, or `delivery`, and optional properties such as `domain` or `appearance`, currently
-produce `foundation_plan.import.unsupported_bootstrap_content`. That diagnostic describes server capability, not
-invalid product meaning. Preserve the authored Plan and report the gap.
+A Primary Descriptor may select a Field owned by that Entity or a schema-supported system Field. Association
+descriptors are not yet supported. A Field may use these types:
+
+- `boolean`
+- `date`
+- `datetime`
+- `decimal`
+- `integer`
+- `language_code`
+- `long_text`
+- `short_text`
+- `time_zone`
+- `url`
+
+For those types, the importer retains schema-valid combinations of `subject_uuid`, `key`, `name`, `type`,
+`required`, `notes`, `immutable`, `comparison`, `normalizations`, `encrypted_at_rest`, and `redact_from_logs`.
+
+Any Field type outside the list above, Field defaults, Validations, derivations, Field settings, References,
+Associations, and other Entity or Application capabilities remain unsupported. One unsupported pointer rejects the
+complete conditional PUT with `foundation_plan.import.unsupported_capability` and no mutation. That diagnostic
+describes server capability, not invalid product meaning. Preserve the authored Plan and report the exact gap.

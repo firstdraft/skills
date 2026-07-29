@@ -5,8 +5,8 @@ in a real Project.
 
 ## Empty starter
 
-This is the only subset accepted by the current prototype PUT. `firstdraft plan init` creates the same shape with
-the user's application key and name.
+`firstdraft plan init` creates this valid starting point with the user's application key and name. It is the
+smallest subset accepted by the reviewed conditional PUT.
 
 ```json
 {
@@ -27,10 +27,10 @@ the user's application key and name.
 
 An empty Plan is preferable to a fake Entity. Tell the user that the application model is still empty.
 
-## One Entity and Field
+## One Entity and scalar Field
 
-This complete document is structurally valid v0.19, but its nonempty `entities` array is not currently importable.
-It has not been proven compilable.
+This complete document is structurally valid v0.19 and accepted by the reviewed bounded importer. That does not
+prove complete semantic analysis, target support, Compilation, or generated output.
 
 ```json
 {
@@ -68,13 +68,14 @@ It has not been proven compilable.
 ```
 
 The Entity and Field have independent UUIDs. The `primary_descriptor` uses a typed readable path rather than a
-UUID.
+UUID. The reviewed importer also accepts `boolean`, `date`, `datetime`, `decimal`, `integer`, `language_code`,
+`long_text`, `time_zone`, and `url` Fields when they use only the supported schema-valid scalar properties.
 
 ## Stored and reverse relationship
 
-This complete document is structurally valid v0.19, but is not currently importable or Compiler-proven. `Task`
-owns the stored `project` Reference. `Project` owns the meaningful reverse `tasks` Association. The forward
-`task.project` Association is derived and therefore omitted.
+This complete document is structurally valid v0.19, but References and authored Associations remain outside the
+reviewed importer subset. It is not Compiler-proven. `Task` owns the stored `project` Reference. `Project` owns the
+meaningful reverse `tasks` Association. The forward `task.project` Association is derived and therefore omitted.
 
 ```json
 {

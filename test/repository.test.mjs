@@ -17,6 +17,31 @@ const foundationPlanTarget = {
 };
 const foundationPlanSchemaDigest =
   "5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5";
+const supportedScalarFieldTypes = [
+  "boolean",
+  "date",
+  "datetime",
+  "decimal",
+  "integer",
+  "language_code",
+  "long_text",
+  "short_text",
+  "time_zone",
+  "url",
+];
+const supportedScalarFieldProperties = [
+  "subject_uuid",
+  "key",
+  "name",
+  "type",
+  "required",
+  "notes",
+  "immutable",
+  "comparison",
+  "normalizations",
+  "encrypted_at_rest",
+  "redact_from_logs",
+];
 
 test("installable Skills follow the portable repository profile", async () => {
   const entries = await readdir(skillsDirectory, { withFileTypes: true });
@@ -152,6 +177,63 @@ test("authored JSON examples parse and retain the pinned Plan contract", async (
   assert.deepEqual(foundationPlanReference.at(-1), fixture.application);
 });
 
+test("bounded importer prose remains bound to the exact allowlists", async () => {
+  const referencesDirectory = path.join(
+    skillsDirectory,
+    "create-full-stack-app",
+    "references",
+  );
+  const foundationPlanReference = await readFile(
+    path.join(referencesDirectory, "foundation-plan-019.md"),
+    "utf8",
+  );
+  const documentedTypeSection = foundationPlanReference.match(
+    /A Field may use these types:\n\n([\s\S]*?)\n\nFor those types/,
+  );
+  assert(
+    documentedTypeSection,
+    "foundation-plan-019.md: missing supported Field type list",
+  );
+  assert.deepEqual(
+    [...documentedTypeSection[1].matchAll(/^- `([^`]+)`$/gm)].map(
+      (match) => match[1],
+    ),
+    supportedScalarFieldTypes,
+  );
+
+  const documentedPropertySection = foundationPlanReference.match(
+    /retains schema-valid combinations of ([\s\S]*?)\.\n\nAny Field type/,
+  );
+  assert(
+    documentedPropertySection,
+    "foundation-plan-019.md: missing retained Field property list",
+  );
+  assert.deepEqual(
+    [...documentedPropertySection[1].matchAll(/`([^`]+)`/g)].map(
+      (match) => match[1],
+    ),
+    supportedScalarFieldProperties,
+  );
+
+  const examples = await readFile(
+    path.join(referencesDirectory, "examples.md"),
+    "utf8",
+  );
+  const additionalTypeSentence = examples.match(
+    /reviewed importer also accepts ([\s\S]*?) Fields/,
+  );
+  assert(
+    additionalTypeSentence,
+    "examples.md: missing additional supported Field type list",
+  );
+  assert.deepEqual(
+    [...additionalTypeSentence[1].matchAll(/`([^`]+)`/g)].map(
+      (match) => match[1],
+    ),
+    supportedScalarFieldTypes.filter((type) => type !== "short_text"),
+  );
+});
+
 test("complete examples and eval Plans validate against the bundled exact schema", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
   const schemaSource = await readFile(
@@ -197,14 +279,12 @@ test("complete examples and eval Plans validate against the bundled exact schema
   }
 });
 
-test("resume eval stages and binds the identity-preserving rename", async () => {
+test("revision evals stage existing Plan identity and private state", async () => {
   const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
   const cases = JSON.parse(
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
-  const evaluation = cases.find(({ id }) => id === "resume-with-stable-identity");
-
-  assert.deepEqual(evaluation.artifacts, [
+  const stagedPlanArtifacts = [
     {
       path: "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
       role: "input",
@@ -215,7 +295,26 @@ test("resume eval stages and binds the identity-preserving rename", async () => 
       role: "input",
       stage_as: ".firstdraft/state.json",
     },
-  ]);
+  ];
+  for (const id of ["resume-with-stable-identity", "add-field-with-minted-id"]) {
+    assert.deepEqual(
+      cases.find((evaluation) => evaluation.id === id).artifacts,
+      stagedPlanArtifacts,
+    );
+  }
+  const mintingEvaluation = cases.find(
+    ({ id }) => id === "add-field-with-minted-id",
+  );
+  assert(
+    mintingEvaluation.expectations.some((expectation) =>
+      expectation.includes("plan subject-id exactly once"),
+    ),
+  );
+  assert(
+    mintingEvaluation.expectations.some((expectation) =>
+      expectation.includes("Never fabricates a UUIDv7"),
+    ),
+  );
 
   const plan = JSON.parse(
     await readFile(
@@ -245,7 +344,143 @@ test("resume eval stages and binds the identity-preserving rename", async () => 
   assert.throws(() => JSON.parse(placeholder));
 });
 
-test("diagnostic and recovery evals stage and preserve existing Plan state", async () => {
+test("bounded import evals bind supported and unsupported Plan state", async () => {
+  const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
+  const cases = JSON.parse(
+    await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
+  ).cases;
+  const stateArtifact = {
+    path: "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+    role: "input",
+    stage_as: ".firstdraft/state.json",
+  };
+  const supportedPlanArtifact = {
+    path:
+      "evals/create-full-stack-app/fixtures/supported-scalars.foundation-plan.json",
+    role: "input",
+    stage_as: ".firstdraft/foundation-plan.json",
+  };
+  const supportedEvaluation = cases.find(
+    ({ id }) => id === "review-supported-scalar-plan",
+  );
+
+  assert.deepEqual(supportedEvaluation.artifacts, [
+    supportedPlanArtifact,
+    stateArtifact,
+  ]);
+  const supportedPlan = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "supported-scalars.foundation-plan.json",
+      ),
+      "utf8",
+    ),
+  );
+  const supportedEntity = supportedPlan.application.entities[0];
+  assert.equal(supportedPlan.application.entities.length, 1);
+  assert.equal(supportedEntity.primary_descriptor.field, "movie.title");
+  assert.deepEqual(
+    supportedEntity.fields.map(({ type }) => type),
+    supportedScalarFieldTypes,
+  );
+  assert.deepEqual(
+    [
+      ...new Set(
+        supportedEntity.fields.flatMap((field) => Object.keys(field)),
+      ),
+    ].sort(),
+    [...supportedScalarFieldProperties].sort(),
+  );
+  const descriptorKey = supportedEntity.primary_descriptor.field
+    .split(".")
+    .at(-1);
+  const descriptorField = supportedEntity.fields.find(
+    ({ key }) => key === descriptorKey,
+  );
+  assert(descriptorField, "supported fixture: descriptor Field does not resolve");
+  assert.equal(descriptorField.type, "short_text");
+  assert.equal(descriptorField.required, true);
+  assert.equal(
+    new Set([
+      supportedEntity.subject_uuid,
+      ...supportedEntity.fields.map(({ subject_uuid }) => subject_uuid),
+    ]).size,
+    supportedScalarFieldTypes.length + 1,
+  );
+
+  const unsupportedPlanArtifact = {
+    path:
+      "evals/create-full-stack-app/fixtures/unsupported-field-capabilities.foundation-plan.json",
+    role: "input",
+    stage_as: ".firstdraft/foundation-plan.json",
+  };
+  const unsupportedEvaluation = cases.find(
+    ({ id }) => id === "unsupported-field-capabilities",
+  );
+  assert.deepEqual(unsupportedEvaluation.artifacts, [
+    {
+      path: "evals/create-full-stack-app/fixtures/unsupported-field-capabilities-diagnostics.json",
+      role: "input",
+    },
+    unsupportedPlanArtifact,
+    stateArtifact,
+  ]);
+  const planSource = await readFile(
+    path.join(
+      evaluationDirectory,
+      "fixtures",
+      "unsupported-field-capabilities.foundation-plan.json",
+    ),
+    "utf8",
+  );
+  const unsupportedPlan = JSON.parse(planSource);
+  const unsupportedFields = unsupportedPlan.application.entities[0].fields;
+  assert.equal(unsupportedFields[0].default.value, "Untitled");
+  assert.equal(unsupportedFields[0].validations[0].kind, "length");
+  assert.equal(unsupportedFields[1].type, "enum");
+  const response = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "unsupported-field-capabilities-diagnostics.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(
+    createHash("sha256").update(planSource).digest("hex"),
+    response.source_sha256,
+  );
+  assert.deepEqual(
+    response.diagnostics.map(({ code, location }) => [
+      code,
+      location.source_pointer,
+    ]),
+    [
+      [
+        "foundation_plan.import.unsupported_capability",
+        "/application/entities/0/fields/0/default",
+      ],
+      [
+        "foundation_plan.import.unsupported_capability",
+        "/application/entities/0/fields/0/validations",
+      ],
+      [
+        "foundation_plan.import.unsupported_capability",
+        "/application/entities/0/fields/1/settings",
+      ],
+      [
+        "foundation_plan.import.unsupported_capability",
+        "/application/entities/0/fields/1/type",
+      ],
+    ],
+  );
+});
+
+test("recovery evals stage and preserve existing Plan state", async () => {
   const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
   const cases = JSON.parse(
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
@@ -262,17 +497,7 @@ test("diagnostic and recovery evals stage and preserve existing Plan state", asy
       stage_as: ".firstdraft/state.json",
     },
   ];
-  const diagnosticEvaluation = cases.find(
-    ({ id }) => id === "prototype-nonempty-diagnostic",
-  );
 
-  assert.deepEqual(diagnosticEvaluation.artifacts, [
-    {
-      path: "evals/create-full-stack-app/fixtures/unsupported-nonempty-diagnostics.json",
-      role: "input",
-    },
-    ...stagedPlanArtifacts,
-  ]);
   for (const id of [
     "stale-writer-conflict",
     "ambiguous-network-outcome",
@@ -283,32 +508,6 @@ test("diagnostic and recovery evals stage and preserve existing Plan state", asy
       stagedPlanArtifacts,
     );
   }
-
-  const planSource = await readFile(
-    path.join(evaluationDirectory, "fixtures", "resume.foundation-plan.json"),
-    "utf8",
-  );
-  const response = JSON.parse(
-    await readFile(
-      path.join(
-        evaluationDirectory,
-        "fixtures",
-        "unsupported-nonempty-diagnostics.json",
-      ),
-      "utf8",
-    ),
-  );
-  assert.equal(
-    createHash("sha256").update(planSource).digest("hex"),
-    response.source_sha256,
-  );
-  assert.equal(
-    response.diagnostics[0].code,
-    "foundation_plan.import.unsupported_bootstrap_content",
-  );
-  assert.deepEqual(response.diagnostics[0].location, {
-    source_pointer: "/application/entities",
-  });
 });
 
 test("malformed source fixture is bound to its coordinate diagnostic", async () => {

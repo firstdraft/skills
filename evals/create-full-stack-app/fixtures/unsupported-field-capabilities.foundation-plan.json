@@ -1,0 +1,60 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-07"
+  },
+  "application": {
+    "key": "movies",
+    "name": "Movies",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01900000-0000-7000-8000-000000000301",
+        "key": "movie",
+        "name": "Movie",
+        "primary_descriptor": {
+          "field": "movie.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000302",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "Untitled"
+            },
+            "validations": [
+              {
+                "subject_uuid": "01900000-0000-7000-8000-000000000304",
+                "key": "title_length",
+                "kind": "length",
+                "minimum": 1
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000303",
+            "key": "status",
+            "name": "Status",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01900000-0000-7000-8000-000000000305",
+                  "key": "draft",
+                  "name": "Draft"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

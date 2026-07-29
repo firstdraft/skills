@@ -10,8 +10,9 @@ user design the data model and initial screens, use First Draft diagnostics as f
 Plan for deterministic Compilation. Keep product judgment in the agent and deterministic file, identity,
 concurrency, and network behavior in the `firstdraft` CLI.
 
-This Skill is experimental. The reviewed CLI can initialize and push an empty starter, but it cannot yet mint IDs
-for new authored subjects. The reviewed server cannot yet import nonempty content.
+This Skill is experimental. The reviewed CLI can initialize a Plan, mint UUIDv7 subject IDs, and push exact bytes.
+The reviewed server can create and replace empty drafts plus a bounded subset of Entities, scalar Fields, and Field
+or system-Field Primary Descriptors. These slices are not released end to end.
 
 ## Load the relevant references
 
@@ -29,8 +30,9 @@ Work from the root of the project the Plan describes.
 
 1. Run `firstdraft --version` and `firstdraft plan --help`.
 2. Require an already-installed CLI that lists `plan init` and `plan push`.
-3. Do not install, download, or upgrade the CLI automatically.
-4. Treat `.firstdraft/state.json` as private CLI state. Never edit it, copy it into chat, or commit it.
+3. Before any task that creates a new subject, also require `plan subject-id`.
+4. Do not install, download, or upgrade the CLI automatically.
+5. Treat `.firstdraft/state.json` as private CLI state. Never edit it, copy it into chat, or commit it.
 
 The current toolchain is experimental. If a needed command is absent, state the missing capability and stop before
 approximating its behavior.
@@ -46,7 +48,8 @@ If `.firstdraft/` does not exist:
    firstdraft plan init --application-key <key> --name "<name>"
    ```
 
-3. Keep the generated empty `entities` array. Do not invent a placeholder Entity.
+3. Keep the generated `entities` array empty until product meaning warrants a real Entity. Never invent a
+   placeholder Entity.
 
 If `.firstdraft/` already exists, first use file metadata and permission checks such as `test -f` and `test -r` to
 confirm that `foundation-plan.json` and `state.json` are regular and readable. Do not open or echo `state.json`.
@@ -61,9 +64,8 @@ preserve its existing subject UUIDs.
 3. Express product meaning, not Rails tables, macros, gems, callbacks, or executable code.
 4. Preserve a subject's `subject_uuid` through renames and coherent same-kind moves. Update every affected readable
    path in the same candidate. Give a replacement concept a new UUID.
-5. Before adding a genuinely new subject, check whether `firstdraft plan --help` lists `subject-id`. If it does, use
-   `firstdraft plan subject-id` for each new subject. If it does not, do not invent a UUIDv7 or copy an example UUID;
-   explain that this CLI cannot yet add subjects safely.
+5. Use `firstdraft plan subject-id` for each genuinely new subject. If the capability check failed, do not invent a
+   UUIDv7 or copy an example UUID; explain that this CLI cannot yet add subjects safely.
 6. Omit unsupported prose, secrets, arbitrary code, ordinary empty optional collections, and structural `null`
    placeholders.
 7. Ask the user about materially ambiguous product meaning. Do not silently choose destructive relationship
@@ -80,10 +82,11 @@ Run `firstdraft plan push` only after reading the recovery rules. The CLI submit
 conditional whole-document PUT and owns the ETag lifecycle.
 
 - On success, inspect every diagnostic. Repair errors; surface warnings and material assumptions.
-- On `422`, amend the addressed source while preserving unrelated content and stable subject identity, then push
-  again when the correction is well-founded.
-- If First Draft reports that the current release accepts only the empty starter, keep the user's nonempty design
-  intact and report the server capability gap. Do not erase valid work to make the request pass.
+- On `422`, classify every diagnostic before editing. Amend a correctable source problem while preserving unrelated
+  content and stable subject identity, then push again when the correction is well-founded.
+- On `foundation_plan.import.unsupported_capability`, preserve the addressed product meaning and report the exact
+  server gap. Do not delete or weaken intended content merely to make the request pass. Stop for this attempt; do
+  not resubmit unchanged bytes.
 - On `local_state_not_saved`, stop. Keep the printed recovery material local and private; do not paste it into
   chat, commit it, or push again.
 - On `412`, an ambiguous transport/protocol outcome, or damaged local state, stop. Do not retry, reinitialize, or

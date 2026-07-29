@@ -22,11 +22,11 @@ A `422` response binds diagnostics to the submitted bytes with `source_sha256`:
   "source_sha256": "<sha256-of-the-submitted-bytes>",
   "diagnostics": [
     {
-      "code": "foundation_plan.import.unsupported_bootstrap_content",
+      "code": "foundation_plan.import.unsupported_capability",
       "severity": "error",
-      "message": "This First Draft release can create or replace a Project only from the empty starter Plan.",
+      "message": "This First Draft release cannot yet import this Foundation Plan capability.",
       "location": {
-        "source_pointer": "/application/entities"
+        "source_pointer": "/application/entities/0/fields/0/default"
       },
       "subject": null,
       "related_locations": [],
@@ -57,8 +57,9 @@ For each diagnostic:
 5. Make the smallest well-founded correction without changing unrelated identity or product meaning.
 6. Push again only after the local source has been deliberately amended.
 
-The prototype's `unsupported_bootstrap_content` error is not corrected by deleting intended nonempty content.
-Keep the Plan and report that this server release cannot import it.
+An `unsupported_capability` error is not corrected by deleting or weakening intended product meaning. The complete
+candidate is rejected atomically; supported sibling content is not partially applied. Keep the Plan and report the
+exact capability this server release cannot import.
 
 ## Concurrent replacement
 
