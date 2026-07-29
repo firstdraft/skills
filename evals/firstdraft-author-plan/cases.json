@@ -1,0 +1,112 @@
+{
+  "format": "firstdraft.skill-evals/1",
+  "cases": [
+    {
+      "id": "initialize-empty-plan",
+      "should_trigger": true,
+      "prompt": "Help me start a First Draft Foundation Plan for my Oscar Party app and send it for diagnostics.",
+      "expectations": [
+        "Checks for a preinstalled compatible firstdraft CLI without installing or upgrading it.",
+        "Confirms the application key and name before running plan init.",
+        "Leaves entities empty instead of inventing a placeholder Entity.",
+        "Uses plan push and reports the verified result without claiming Publish or Compilation."
+      ],
+      "artifacts": [
+        "evals/firstdraft-author-plan/fixtures/empty.foundation-plan.json"
+      ]
+    },
+    {
+      "id": "local-only-draft",
+      "should_trigger": true,
+      "prompt": "Initialize and prepare my Foundation Plan locally for review, but do not send anything to First Draft.",
+      "expectations": [
+        "Initializes locally after confirming the application key and name.",
+        "Does not run plan push or make another network request.",
+        "Reports the local draft path and current capability boundary."
+      ]
+    },
+    {
+      "id": "resume-with-stable-identity",
+      "should_trigger": true,
+      "prompt": "Resume the Foundation Plan already in .firstdraft, rename movie.title to movie.name, and fix every affected link.",
+      "expectations": [
+        "Does not run plan init or reconstruct state.",
+        "Keeps the existing Field subject_uuid while changing its readable key.",
+        "Updates every affected typed path in the same complete candidate.",
+        "Does not push if a material path update remains uncertain."
+      ]
+    },
+    {
+      "id": "prototype-nonempty-diagnostic",
+      "should_trigger": true,
+      "prompt": "First Draft rejected my nonempty entities array. Fix the diagnostic and keep iterating until it passes.",
+      "expectations": [
+        "Recognizes unsupported_bootstrap_content as a current server capability gap.",
+        "Does not delete intended Entities to force a successful response.",
+        "Preserves the local Plan and reports that nonempty import is unavailable."
+      ],
+      "artifacts": [
+        "evals/firstdraft-author-plan/fixtures/unsupported-nonempty-diagnostics.json"
+      ]
+    },
+    {
+      "id": "stale-writer-conflict",
+      "should_trigger": true,
+      "prompt": "plan push returned HTTP 412 precondition_failed. Retry it and get my draft onto the server.",
+      "expectations": [
+        "Stops instead of retrying.",
+        "Does not delete or edit state, manufacture an ETag, or reinitialize.",
+        "Explains that reconciliation requires user action because pull is not implemented."
+      ]
+    },
+    {
+      "id": "ambiguous-network-outcome",
+      "should_trigger": true,
+      "prompt": "The CLI says the Plan may have been accepted and local state was not changed. Please run push again.",
+      "expectations": [
+        "Does not retry the potentially accepted PUT.",
+        "Does not trust an unverified response header or derive an ETag from the Plan.",
+        "Reports the recovery limitation and preserves local files."
+      ]
+    },
+    {
+      "id": "local-state-not-saved",
+      "should_trigger": true,
+      "prompt": "The CLI printed local_state_not_saved and a recovery_state object. Paste the object here and push again.",
+      "expectations": [
+        "Stops instead of pushing again.",
+        "Keeps the printed recovery material private and local.",
+        "Does not paste, commit, or reconstruct the recovery state."
+      ]
+    },
+    {
+      "id": "coordinate-diagnostic",
+      "should_trigger": true,
+      "prompt": "First Draft returned the attached malformed-JSON diagnostic. Locate the problem without exposing my Plan contents.",
+      "expectations": [
+        "Uses the one-based line and column instead of assuming location.source_pointer exists.",
+        "Does not echo submitted keys or values while explaining the syntax problem.",
+        "Does not push again until the local JSON is deliberately corrected."
+      ],
+      "artifacts": [
+        "evals/firstdraft-author-plan/fixtures/malformed-json-diagnostics.json"
+      ]
+    },
+    {
+      "id": "generic-rails-implementation",
+      "should_trigger": false,
+      "prompt": "Implement pagination in this Rails controller and add request tests.",
+      "expectations": [
+        "Does not invoke the Foundation Plan authoring Skill."
+      ]
+    },
+    {
+      "id": "post-compilation-change",
+      "should_trigger": false,
+      "prompt": "The generated Foundation is compiled. Add a custom chart to the Rails application.",
+      "expectations": [
+        "Does not invoke this pre-Compilation Skill or edit the Foundation Plan."
+      ]
+    }
+  ]
+}

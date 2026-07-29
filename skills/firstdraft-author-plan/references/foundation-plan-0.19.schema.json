@@ -1,0 +1,4961 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://firstdraft.com/schemas/foundation-plan/sketch-0.19",
+  "title": "Foundation Plan",
+  "description": "The working sketch/0.19 JSON import and export representation for one First Draft Project graph.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "target",
+    "application"
+  ],
+  "properties": {
+    "format": {
+      "title": "Format",
+      "description": "Names the Foundation Plan serialization vocabulary and its version.",
+      "const": "firstdraft.foundation-plan.sketch/0.19"
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "application": {
+      "$ref": "#/$defs/application"
+    }
+  },
+  "$defs": {
+    "subjectUuid": {
+      "title": "Subject UUID",
+      "description": "A stable Project-scoped UUIDv7 for one independently mutable document subject.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "examples": [
+        "019f9425-5412-7b9a-9493-7bb4b66ca886"
+      ]
+    },
+    "scopedPath": {
+      "title": "Readable scoped path",
+      "description": "A typed, readable path built from owner-local keys and resolved within the property namespace.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$",
+      "examples": [
+        "movie.released_on",
+        "comment.thread"
+      ]
+    },
+    "localKey": {
+      "title": "Local key",
+      "description": "A lower-snake-case readable key local to the object that owns it.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "examples": [
+        "movie",
+        "current_account"
+      ]
+    },
+    "displayName": {
+      "title": "Display name",
+      "description": "The human-facing name shown to reviewers, even when it matches humanized key text. It must contain at least one non-whitespace character.",
+      "$ref": "#/$defs/nonblankString",
+      "examples": [
+        "Released on"
+      ]
+    },
+    "nonblankString": {
+      "title": "Nonblank string",
+      "description": "A string containing at least one code point outside the Unicode White_Space set.",
+      "type": "string",
+      "pattern": "[^\\u0009-\\u000D\\u0020\\u0085\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000]"
+    },
+    "nonnegativeCount": {
+      "title": "Nonnegative count",
+      "description": "A whole-number count within JSON's exactly interoperable integer range.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "positiveCount": {
+      "title": "Positive count",
+      "description": "A positive whole-number count within JSON's exactly interoperable integer range.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "target": {
+      "title": "Target",
+      "description": "Selects the platform and versioned target profile that interpret this Plan.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "profile"
+      ],
+      "properties": {
+        "id": {
+          "title": "Target ID",
+          "description": "Names the output platform. The working examples currently exercise only Rails.",
+          "const": "rails"
+        },
+        "profile": {
+          "title": "Target profile",
+          "description": "Pins the release of target defaults, supported lowerings, and verification expectations.",
+          "const": "rails-sketch/2026-07"
+        }
+      }
+    },
+    "application": {
+      "title": "Application",
+      "description": "The semantic application definition and sparse target choices for this Plan.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "name",
+        "native",
+        "delivery",
+        "entities"
+      ],
+      "properties": {
+        "key": {
+          "title": "Application key",
+          "description": "The lower-snake-case application identifier used by generated naming.",
+          "$ref": "#/$defs/localKey"
+        },
+        "name": {
+          "title": "Application name",
+          "$ref": "#/$defs/displayName"
+        },
+        "domain": {
+          "title": "Application domain",
+          "description": "The owner's domain. Platform identifiers, linked domains, and a default sending address derive from it. Omission yields a placeholder identifier disclosed as an external prerequisite.",
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$",
+          "examples": [
+            "example.com"
+          ]
+        },
+        "appearance": {
+          "title": "Appearance",
+          "description": "Shared brand values every target honors. Splash screens, launch icons, and navigation-bar branding derive from these rather than being authored.",
+          "$ref": "#/$defs/appearance"
+        },
+        "native": {
+          "title": "Native clients",
+          "description": "Which native clients this Foundation requests. A declined platform drops its project, workflows, and path configuration.",
+          "$ref": "#/$defs/nativeClients"
+        },
+        "delivery": {
+          "title": "Delivery channels",
+          "description": "Which notification channels this Foundation requests. Each carries an external credential the owner must obtain.",
+          "$ref": "#/$defs/deliveryChannels"
+        },
+        "entities": {
+          "title": "Entities",
+          "description": "Domain record definitions. The collection may be empty while the Plan is being authored. At most one Entity may own Account behavior in this sketch.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entity"
+          },
+          "contains": {
+            "type": "object",
+            "required": [
+              "account"
+            ]
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        "development_data": {
+          "title": "Development data",
+          "description": "Literal, development-only records that make the generated application useful to explore. Omit when none are needed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/developmentDataRecord"
+          },
+          "minItems": 1
+        }
+      },
+      "allOf": [
+        {
+          "title": "iOS push requires an iOS client",
+          "if": {
+            "properties": {
+              "delivery": {
+                "type": "object",
+                "required": [
+                  "ios_push"
+                ]
+              }
+            },
+            "required": [
+              "delivery"
+            ]
+          },
+          "then": {
+            "properties": {
+              "native": {
+                "type": "object",
+                "required": [
+                  "ios"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "title": "Android push requires an Android client",
+          "if": {
+            "properties": {
+              "delivery": {
+                "type": "object",
+                "required": [
+                  "android_push"
+                ]
+              }
+            },
+            "required": [
+              "delivery"
+            ]
+          },
+          "then": {
+            "properties": {
+              "native": {
+                "type": "object",
+                "required": [
+                  "android"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Brand values shared by every target. A color accepts a hex string or a light and dark pair.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tint_color": {
+          "title": "Tint color",
+          "description": "The color of interactive elements such as links, buttons, and native tab selection.",
+          "$ref": "#/$defs/color"
+        },
+        "background_color": {
+          "title": "Background color",
+          "description": "The application background, also used for the generated launch screen and icon field.",
+          "$ref": "#/$defs/color"
+        },
+        "theme": {
+          "title": "Theme",
+          "description": "Light and dark handling. Omission follows the viewer's system setting.",
+          "oneOf": [
+            {
+              "const": "auto",
+              "title": "Follow the system setting"
+            },
+            {
+              "const": "light",
+              "title": "Always light"
+            },
+            {
+              "const": "dark",
+              "title": "Always dark"
+            }
+          ]
+        }
+      },
+      "minProperties": 1
+    },
+    "color": {
+      "title": "Color",
+      "description": "A six-digit hex color, or a light and dark pair when the two differ.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/hexColor"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "light",
+            "dark"
+          ],
+          "properties": {
+            "light": {
+              "title": "Light",
+              "$ref": "#/$defs/hexColor"
+            },
+            "dark": {
+              "title": "Dark",
+              "$ref": "#/$defs/hexColor"
+            }
+          }
+        }
+      ]
+    },
+    "hexColor": {
+      "title": "Hex color",
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "examples": [
+        "#4F46E5"
+      ]
+    },
+    "nativeClients": {
+      "title": "Native clients",
+      "description": "Selected native clients. An omitted platform is not generated; the required outer object may be empty.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ios": {
+          "title": "iOS client",
+          "description": "Generate the profile-pinned iOS client.",
+          "type": "object",
+          "additionalProperties": false
+        },
+        "android": {
+          "title": "Android client",
+          "description": "Generate the profile-pinned Android client.",
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "deliveryChannels": {
+      "title": "Delivery channels",
+      "description": "Selected notification transports. An omitted channel is not generated; the required outer object may be empty.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ios_push": {
+          "title": "Apple push",
+          "description": "Requires an iOS client and APNs credentials.",
+          "type": "object",
+          "additionalProperties": false
+        },
+        "android_push": {
+          "title": "Google push",
+          "description": "Requires an Android client and Firebase credentials.",
+          "type": "object",
+          "additionalProperties": false
+        },
+        "web_push": {
+          "title": "Browser push",
+          "description": "Requests the profile-pinned browser push implementation.",
+          "type": "object",
+          "additionalProperties": false
+        },
+        "email": {
+          "title": "Transactional email",
+          "description": "Requires a transactional mail provider.",
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "account": {
+      "title": "Account",
+      "description": "Generated authentication owned by an Entity. Its readable path is the containing Entity key.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identifiers",
+        "sign_in_methods"
+      ],
+      "properties": {
+        "identifiers": {
+          "title": "Account identifiers",
+          "description": "Values a person may use to identify the Account during sign in.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/accountIdentifier"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "sign_in_methods": {
+          "title": "Sign-in methods",
+          "description": "Generated ways to prove control of the Account.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/signInMethod"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "registration": {
+          "title": "Registration",
+          "description": "The generated Account creation flow. Omit when Account creation happens elsewhere.",
+          "$ref": "#/$defs/registration"
+        },
+        "verification": {
+          "title": "Verification",
+          "description": "The generated ownership-verification flow. Omit when none is used.",
+          "$ref": "#/$defs/verificationFlow"
+        },
+        "recovery": {
+          "title": "Recovery",
+          "description": "The generated Account recovery flow. Omit when none is used.",
+          "$ref": "#/$defs/recoveryFlow"
+        },
+        "lockout": {
+          "title": "Lockout",
+          "description": "Generated protection after repeated failed sign-in attempts. Omit when none is used.",
+          "$ref": "#/$defs/lockout"
+        }
+      }
+    },
+    "accountIdentifier": {
+      "title": "Account identifier",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "title": "Identifier kind",
+          "const": "email",
+          "description": "Use an email address as the sign-in identifier."
+        },
+        "name": {
+          "title": "Identifier name",
+          "$ref": "#/$defs/displayName"
+        }
+      }
+    },
+    "signInMethod": {
+      "title": "Sign-in method",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "title": "Sign-in method kind",
+          "const": "password",
+          "description": "Authenticate with a password."
+        }
+      }
+    },
+    "registration": {
+      "title": "Registration",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "inputs"
+      ],
+      "properties": {
+        "mode": {
+          "title": "Registration mode",
+          "const": "self_service",
+          "description": "Allow a visitor to create their own Account."
+        },
+        "inputs": {
+          "title": "Registration inputs",
+          "description": "Fields and conventional forward Associations collected during registration.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/registrationInput"
+          }
+        }
+      }
+    },
+    "registrationInput": {
+      "title": "Registration input",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required"
+      ],
+      "properties": {
+        "field": {
+          "title": "Field",
+          "description": "A Field collected during registration.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "association": {
+          "title": "Association",
+          "description": "An unqualified referencing-side direct Association selected during registration.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "required": {
+          "title": "Required",
+          "description": "Whether registration can finish without this value.",
+          "type": "boolean"
+        },
+        "default": {
+          "title": "Default",
+          "description": "A default used when the input does not ask the registrant for a value.",
+          "$ref": "#/$defs/defaultValue"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "field"
+          ]
+        },
+        {
+          "required": [
+            "association"
+          ]
+        }
+      ]
+    },
+    "verificationFlow": {
+      "title": "Verification flow",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "title": "Verification kind",
+          "const": "email",
+          "description": "Verify control by delivering a link or token to the Account email."
+        }
+      }
+    },
+    "recoveryFlow": {
+      "title": "Recovery flow",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "title": "Recovery kind",
+          "const": "password_reset",
+          "description": "Recover the Account by resetting its password."
+        }
+      }
+    },
+    "lockout": {
+      "title": "Lockout",
+      "description": "Presence requests the profile-pinned failed-attempt lockout behavior. Omission disables it.",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "entity": {
+      "title": "Entity",
+      "description": "A domain record type that owns its Fields, relationships, queries, rules, and behavior.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "name",
+        "primary_descriptor"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Entity subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Entity.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Entity key",
+          "description": "The lower-snake-case readable key local to the Application.",
+          "$ref": "#/$defs/localKey"
+        },
+        "name": {
+          "title": "Entity name",
+          "$ref": "#/$defs/displayName"
+        },
+        "primary_descriptor": {
+          "title": "Primary descriptor",
+          "description": "The Field, Association, or system Field used to display this record.",
+          "$ref": "#/$defs/primaryDescriptor"
+        },
+        "icon": {
+          "title": "Icon",
+          "description": "A semantic token naming how this Entity is depicted. Main navigation is its first consumer, and the profile maps it to a platform symbol. Omission takes a neutral fallback.",
+          "$ref": "#/$defs/iconToken"
+        },
+        "account": {
+          "title": "Account",
+          "description": "Generated authentication behavior owned by this Entity.",
+          "$ref": "#/$defs/account"
+        },
+        "implicit_order_column": {
+          "title": "Implicit order column",
+          "description": "The ascending, deterministic fallback used by ordered finder calls such as first and last. Omit for created_at followed by id.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/implicitOrderColumnSource"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "default": [
+            {
+              "system_field": "created_at"
+            },
+            {
+              "system_field": "id"
+            }
+          ]
+        },
+        "fields": {
+          "title": "Fields",
+          "description": "Stored or target-derived values owned by this Entity.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          },
+          "minItems": 1
+        },
+        "references": {
+          "title": "References",
+          "description": "Stored relationship facts owned by this Entity.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          },
+          "minItems": 1
+        },
+        "associations": {
+          "title": "Associations",
+          "description": "Named traversals not mechanically derived from this Entity's References. Every Reference still yields a same-key forward Association in the Compiler graph.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/association"
+          },
+          "minItems": 1
+        },
+        "predicates": {
+          "title": "Predicates",
+          "description": "Named Boolean classifications of records of this Entity.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/predicate"
+          },
+          "minItems": 1
+        },
+        "orderings": {
+          "title": "Orderings",
+          "description": "Reusable, deterministic ordering rules for this Entity.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ordering"
+          },
+          "minItems": 1
+        },
+        "validations": {
+          "title": "Entity validations",
+          "description": "Tuple and cross-value rules owned by this Entity. Each rule names its error target.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entityValidation"
+          },
+          "minItems": 1
+        },
+        "trees": {
+          "title": "Trees",
+          "description": "Hierarchies formed by self-References on this Entity.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tree"
+          },
+          "minItems": 1
+        },
+        "policies": {
+          "title": "Policies",
+          "description": "Authorization rules for operations on this Entity.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/policy"
+          },
+          "minItems": 1
+        },
+        "scaffold": {
+          "title": "Scaffold",
+          "description": "Selected standard resource routes and reusable behavior. Omit when this Entity requests no Scaffold behavior.",
+          "$ref": "#/$defs/scaffold"
+        },
+        "reference_data": {
+          "title": "Reference data",
+          "description": "Small, stable records the application requires in every environment. Omit when the Entity has none.",
+          "$ref": "#/$defs/referenceData"
+        }
+      },
+      "allOf": [
+        {
+          "title": "A profile belongs to the Account-bearing Entity",
+          "if": {
+            "type": "object",
+            "properties": {
+              "scaffold": {
+                "type": "object",
+                "required": [
+                  "profile"
+                ]
+              }
+            },
+            "required": [
+              "scaffold"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "account"
+            ]
+          }
+        },
+        {
+          "title": "Registration owns Account creation",
+          "if": {
+            "type": "object",
+            "required": [
+              "account"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "scaffold": {
+                "type": "object",
+                "properties": {
+                  "resource_routes": {
+                    "type": "array",
+                    "items": {
+                      "not": {
+                        "enum": [
+                          "new",
+                          "create"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "primaryDescriptor": {
+      "title": "Primary descriptor",
+      "description": "A typed locator resolved explicitly at each generated interface use.",
+      "oneOf": [
+        {
+          "title": "Field descriptor",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "field"
+          ],
+          "properties": {
+            "field": {
+              "title": "Field",
+              "description": "A required Field owned by this Entity. Whole-Plan validation checks requiredness.",
+              "$ref": "#/$defs/scopedPath"
+            }
+          }
+        },
+        {
+          "title": "Association descriptor",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "association"
+          ],
+          "properties": {
+            "association": {
+              "title": "Association",
+              "description": "An unqualified forward Association over a required Reference.",
+              "$ref": "#/$defs/scopedPath"
+            }
+          }
+        },
+        {
+          "title": "System Field descriptor",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "system_field"
+          ],
+          "properties": {
+            "system_field": {
+              "title": "System Field",
+              "description": "A target-profile Field generated for every persisted record.",
+              "oneOf": [
+                {
+                  "const": "id",
+                  "title": "ID"
+                },
+                {
+                  "const": "created_at",
+                  "title": "Created at"
+                },
+                {
+                  "const": "updated_at",
+                  "title": "Updated at"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "field": {
+      "title": "Field",
+      "description": "A typed value owned by an Entity. Common behavior stays top-level; configuration exists only for types that need it.",
+      "type": "object",
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "title": "Text Field",
+              "type": "object",
+              "unevaluatedProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/fieldCommon"
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "short_text",
+                        "long_text"
+                      ]
+                    },
+                    "validations": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/$defs/fieldValidation"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "enum": [
+                                  "absence",
+                                  "comparison",
+                                  "exclusion",
+                                  "format",
+                                  "length",
+                                  "presence"
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "title": "Simple comparable Field",
+              "type": "object",
+              "unevaluatedProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/fieldCommon"
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "boolean",
+                        "date",
+                        "datetime",
+                        "decimal",
+                        "integer"
+                      ]
+                    },
+                    "validations": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/$defs/fieldValidation"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "enum": [
+                                  "absence",
+                                  "comparison",
+                                  "exclusion",
+                                  "presence"
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "title": "Presence-only Field",
+              "type": "object",
+              "unevaluatedProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/fieldCommon"
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "attachment",
+                        "image",
+                        "json",
+                        "language_code",
+                        "rich_text",
+                        "secure_token",
+                        "time_zone",
+                        "url"
+                      ]
+                    },
+                    "validations": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/$defs/fieldValidation"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "enum": [
+                                  "absence",
+                                  "presence"
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "type": {
+                            "const": "secure_token"
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      "then": {
+                        "not": {
+                          "required": [
+                            "default"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Enum Field",
+              "type": "object",
+              "unevaluatedProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/fieldCommon"
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "const": "enum"
+                    },
+                    "settings": {
+                      "$ref": "#/$defs/enumFieldSettings"
+                    },
+                    "validations": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/$defs/fieldValidation"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "enum": [
+                                  "absence",
+                                  "comparison",
+                                  "exclusion",
+                                  "presence"
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "settings"
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Money Field",
+              "type": "object",
+              "unevaluatedProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/fieldCommon"
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "const": "money"
+                    },
+                    "settings": {
+                      "$ref": "#/$defs/moneyFieldSettings"
+                    },
+                    "validations": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/$defs/fieldValidation"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "enum": [
+                                  "absence",
+                                  "comparison",
+                                  "exclusion",
+                                  "presence"
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "settings"
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Counter Field",
+              "type": "object",
+              "unevaluatedProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/fieldCommon"
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "const": "counter"
+                    },
+                    "settings": {
+                      "$ref": "#/$defs/counterFieldSettings"
+                    },
+                    "validations": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/$defs/fieldValidation"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "enum": [
+                                  "absence",
+                                  "comparison",
+                                  "exclusion",
+                                  "presence"
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "required": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "settings"
+                  ],
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "default"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "immutable"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "title": "Position Field",
+              "type": "object",
+              "unevaluatedProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/fieldCommon"
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "const": "position"
+                    },
+                    "settings": {
+                      "$ref": "#/$defs/positionFieldSettings"
+                    },
+                    "validations": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/$defs/fieldValidation"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "enum": [
+                                  "absence",
+                                  "comparison",
+                                  "exclusion",
+                                  "presence"
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "required": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "settings"
+                  ],
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "default"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "immutable"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "title": "State Machine Field",
+              "type": "object",
+              "unevaluatedProperties": false,
+              "allOf": [
+                {
+                  "$ref": "#/$defs/fieldCommon"
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "const": "state_machine"
+                    },
+                    "settings": {
+                      "$ref": "#/$defs/stateMachineFieldSettings"
+                    },
+                    "validations": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/$defs/fieldValidation"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "enum": [
+                                  "comparison",
+                                  "exclusion"
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "settings"
+                  ],
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "default"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "immutable"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "if": {
+            "required": [
+              "normalizations"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "short_text",
+                  "long_text",
+                  "url"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "normalizations": {
+                "type": "array",
+                "contains": {
+                  "const": "collapse_whitespace"
+                }
+              }
+            },
+            "required": [
+              "normalizations"
+            ]
+          },
+          "then": {
+            "properties": {
+              "normalizations": {
+                "type": "array",
+                "not": {
+                  "contains": {
+                    "const": "trim"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "url"
+              }
+            },
+            "required": [
+              "normalizations",
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "normalizations": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "trim",
+                    "blank_to_null"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "comparison"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type": {
+                "const": "short_text"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "derivation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "decimal",
+                  "integer"
+                ]
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "default"
+                  ]
+                },
+                {
+                  "required": [
+                    "immutable"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "derivation": {
+                "type": "object",
+                "properties": {
+                  "aggregate": {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "const": "average"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  }
+                },
+                "required": [
+                  "aggregate"
+                ]
+              }
+            },
+            "required": [
+              "derivation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type": {
+                "const": "decimal"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "required": {
+                "const": true
+              }
+            },
+            "required": [
+              "required"
+            ]
+          },
+          "then": {
+            "properties": {
+              "validations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "not": {
+                        "enum": [
+                          "absence",
+                          "presence"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "state_machine"
+              },
+              "required": {
+                "const": false
+              }
+            },
+            "required": [
+              "type",
+              "required"
+            ]
+          },
+          "then": {
+            "properties": {
+              "settings": {
+                "type": "object",
+                "required": [
+                  "when"
+                ]
+              }
+            }
+          },
+          "else": {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "state_machine"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "settings": {
+                  "type": "object",
+                  "not": {
+                    "required": [
+                      "when"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "fieldDerivation": {
+      "title": "Field derivation",
+      "description": "A typed dependency and value rule for a system-determined Field used by a structured consumer.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aggregate"
+      ],
+      "properties": {
+        "aggregate": {
+          "title": "Association aggregate",
+          "$ref": "#/$defs/associationAggregate"
+        }
+      }
+    },
+    "associationAggregate": {
+      "title": "Association aggregate",
+      "description": "A numeric value calculated from one Field across the current members of an Association.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "association",
+        "operation",
+        "field"
+      ],
+      "properties": {
+        "association": {
+          "title": "Association",
+          "description": "The Association traversed from the Entity that owns the derived Field.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "operation": {
+          "title": "Operation",
+          "description": "The aggregate applied to the source Field values.",
+          "oneOf": [
+            {
+              "const": "sum",
+              "title": "Sum"
+            },
+            {
+              "const": "average",
+              "title": "Average"
+            },
+            {
+              "const": "minimum",
+              "title": "Minimum"
+            },
+            {
+              "const": "maximum",
+              "title": "Maximum"
+            }
+          ]
+        },
+        "field": {
+          "title": "Source Field",
+          "description": "The numeric Field read from each associated record.",
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "reference": {
+      "title": "Reference",
+      "description": "A stored relationship fact. Its same-key forward Association is derived automatically.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "name",
+        "targets",
+        "required",
+        "on_referenced_deleted"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Reference subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Reference.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Reference key",
+          "description": "The lower-snake-case stored slot and derived forward Association key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "name": {
+          "title": "Reference name",
+          "$ref": "#/$defs/displayName"
+        },
+        "targets": {
+          "title": "Targets",
+          "description": "The complete nonempty set of Entity types this Reference may point to.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/localKey"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "required": {
+          "title": "Required",
+          "description": "Whether every referencing record needs a target.",
+          "type": "boolean"
+        },
+        "one_to_one": {
+          "title": "One to one",
+          "description": "Whether at most one referencing record may point to each target.",
+          "type": "boolean",
+          "default": false
+        },
+        "on_referenced_deleted": {
+          "title": "When the referenced record is deleted",
+          "description": "The authored consequence when deletion reaches the target record.",
+          "oneOf": [
+            {
+              "const": "restrict",
+              "title": "Restrict",
+              "description": "Reject deletion while referencing records remain."
+            },
+            {
+              "const": "nullify_reference",
+              "title": "Nullify the Reference",
+              "description": "Clear this Reference on each surviving referencing record."
+            },
+            {
+              "const": "delete_referencing_record",
+              "title": "Delete the referencing record",
+              "description": "Delete each record that owns this Reference."
+            }
+          ]
+        },
+        "validations": {
+          "title": "Reference validations",
+          "description": "Conditional rules whose errors belong to this Reference. Omit when none are needed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/referenceValidation"
+          },
+          "minItems": 1
+        },
+        "default": {
+          "title": "Default",
+          "description": "The initial target selected from a tagged runtime or reference-record value.",
+          "$ref": "#/$defs/defaultValue"
+        },
+        "immutable": {
+          "title": "Immutable",
+          "description": "Whether the target may be chosen at record creation but cannot change afterward.",
+          "type": "boolean",
+          "default": false
+        },
+        "realization": {
+          "title": "Reference realization",
+          "$ref": "#/$defs/referenceRealization"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "targets": {
+                "type": "array",
+                "minItems": 2
+              }
+            },
+            "required": [
+              "targets"
+            ]
+          },
+          "then": {
+            "required": [
+              "realization"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "realization"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "required": {
+                "const": true
+              }
+            },
+            "required": [
+              "required"
+            ]
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "validations"
+                  ]
+                },
+                {
+                  "properties": {
+                    "on_referenced_deleted": {
+                      "const": "nullify_reference"
+                    }
+                  },
+                  "required": [
+                    "on_referenced_deleted"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "referenceRealization": {
+      "title": "Reference realization",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rails_association"
+      ],
+      "properties": {
+        "rails_association": {
+          "title": "Rails association strategy",
+          "oneOf": [
+            {
+              "const": "exclusive_arc",
+              "title": "Exclusive arc",
+              "description": "Use nullable foreign keys plus an exclusive-arc constraint."
+            },
+            {
+              "const": "polymorphic",
+              "title": "Polymorphic",
+              "description": "Use a Rails polymorphic association with ID and type columns."
+            }
+          ]
+        }
+      }
+    },
+    "association": {
+      "title": "Association",
+      "description": "A named traversal over one Reference or over other Associations.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Association subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Association.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Association key",
+          "description": "The lower-snake-case generated reader key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "kind": {
+          "title": "Association kind",
+          "description": "The explicit discriminator that selects the direct or indirect Association shape.",
+          "oneOf": [
+            {
+              "const": "direct",
+              "title": "Direct",
+              "description": "Traverse one Reference from either its referencing or referenced endpoint."
+            },
+            {
+              "const": "indirect",
+              "title": "Indirect",
+              "description": "Compose a named through Association with a named source Association."
+            }
+          ]
+        },
+        "name": {
+          "title": "Association name",
+          "description": "The human-facing label shown to reviewers; it does not determine the generated reader.",
+          "$ref": "#/$defs/displayName"
+        },
+        "reference": {
+          "title": "Reference",
+          "description": "The stored Reference traversed by this direct Association.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "side": {
+          "title": "Starting side",
+          "description": "Which endpoint owns this direct traversal.",
+          "oneOf": [
+            {
+              "const": "referencing",
+              "title": "Referencing",
+              "description": "Start at the Entity that stores the Reference and reach its target."
+            },
+            {
+              "const": "referenced",
+              "title": "Referenced",
+              "description": "Start at one target Entity and reach records that store the Reference."
+            }
+          ]
+        },
+        "source": {
+          "title": "Source Association",
+          "description": "The Association followed from each through record.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "through": {
+          "title": "Through Association",
+          "description": "The Association followed from the starting Entity.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "predicate": {
+          "title": "Predicate",
+          "description": "One Predicate owned by the result Entity and applied after the Association traversal.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "cardinality": {
+          "title": "Qualified cardinality",
+          "description": "The allowed result count after any Association Predicate is applied.",
+          "$ref": "#/$defs/cardinality"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "direct"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reference",
+              "side"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "source"
+                  ]
+                },
+                {
+                  "required": [
+                    "through"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "indirect"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "source",
+              "through"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "reference"
+                  ]
+                },
+                {
+                  "required": [
+                    "side"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "cardinality": {
+      "title": "Cardinality",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minimum": {
+          "title": "Minimum",
+          "$ref": "#/$defs/nonnegativeCount"
+        },
+        "maximum": {
+          "title": "Maximum",
+          "$ref": "#/$defs/positiveCount"
+        }
+      },
+      "minProperties": 1,
+      "description": "Bounds over distinct result-record identities after any Predicate is applied. Omitted minimum means zero; omitted maximum means unbounded."
+    },
+    "predicate": {
+      "title": "Predicate",
+      "description": "A named Boolean classification of one Entity's records.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "name",
+        "expression"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Predicate subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Predicate.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Predicate key",
+          "description": "The lower-snake-case readable key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "name": {
+          "title": "Predicate name",
+          "$ref": "#/$defs/displayName"
+        },
+        "expression": {
+          "title": "Expression",
+          "description": "The recursive Boolean expression that classifies a record.",
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "implicitOrderColumnSource": {
+      "title": "Implicit order column source",
+      "description": "One stored, non-null column used in ascending order by ordered finder calls.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "title": "Field",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "system_field": {
+          "title": "System Field",
+          "oneOf": [
+            {
+              "const": "created_at",
+              "title": "Created at"
+            },
+            {
+              "const": "id",
+              "title": "ID"
+            }
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "field"
+          ]
+        },
+        {
+          "required": [
+            "system_field"
+          ]
+        }
+      ]
+    },
+    "ordering": {
+      "title": "Ordering",
+      "description": "A named deterministic sequence of sort terms.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "terms"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Ordering subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Ordering.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Ordering key",
+          "description": "The lower-snake-case readable key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "terms": {
+          "title": "Terms",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/orderingTerm"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "orderingTerm": {
+      "title": "Ordering term",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "title": "Field",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "system_field": {
+          "title": "System Field",
+          "description": "A target-provided Field present on every generated record.",
+          "oneOf": [
+            {
+              "const": "created_at",
+              "title": "Created at"
+            },
+            {
+              "const": "id",
+              "title": "ID"
+            }
+          ]
+        },
+        "tree": {
+          "title": "Tree",
+          "description": "A Tree whose structural ordering should be used.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "direction": {
+          "title": "Direction",
+          "oneOf": [
+            {
+              "const": "ascending",
+              "title": "Ascending"
+            },
+            {
+              "const": "descending",
+              "title": "Descending"
+            }
+          ]
+        },
+        "nulls": {
+          "title": "Null placement",
+          "const": "last",
+          "description": "Place records without a value after records with values."
+        },
+        "value": {
+          "title": "Tree ordering value",
+          "oneOf": [
+            {
+              "const": "root_created_at",
+              "title": "Root creation time"
+            },
+            {
+              "const": "root_first",
+              "title": "Root first"
+            }
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "field",
+            "direction"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "system_field"
+                ]
+              },
+              {
+                "required": [
+                  "tree"
+                ]
+              },
+              {
+                "required": [
+                  "value"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "required": [
+            "system_field",
+            "direction"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "field"
+                ]
+              },
+              {
+                "required": [
+                  "tree"
+                ]
+              },
+              {
+                "required": [
+                  "value"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "required": [
+            "tree",
+            "value",
+            "direction"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "field"
+                ]
+              },
+              {
+                "required": [
+                  "system_field"
+                ]
+              },
+              {
+                "required": [
+                  "nulls"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "fieldValidation": {
+      "title": "Field validation",
+      "description": "A closed rule whose error belongs to the containing Field.",
+      "oneOf": [
+        {
+          "title": "Presence or absence",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "kind",
+            "when"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Field validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Field validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Field validation key",
+              "description": "The lower-snake-case readable key local to its Field.",
+              "$ref": "#/$defs/localKey"
+            },
+            "kind": {
+              "enum": [
+                "presence",
+                "absence"
+              ]
+            },
+            "when": {
+              "$ref": "#/$defs/expression"
+            }
+          }
+        },
+        {
+          "title": "Comparison",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "kind",
+            "comparisons"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Field validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Field validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Field validation key",
+              "description": "The lower-snake-case readable key local to its Field.",
+              "$ref": "#/$defs/localKey"
+            },
+            "kind": {
+              "const": "comparison"
+            },
+            "comparisons": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/comparisonClause"
+              },
+              "minItems": 1
+            },
+            "when": {
+              "$ref": "#/$defs/expression"
+            }
+          }
+        },
+        {
+          "title": "Exclusion",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "kind",
+            "forbidden_values"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Field validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Field validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Field validation key",
+              "description": "The lower-snake-case readable key local to its Field.",
+              "$ref": "#/$defs/localKey"
+            },
+            "kind": {
+              "const": "exclusion"
+            },
+            "forbidden_values": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/nonNullLiteralValue"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "when": {
+              "$ref": "#/$defs/expression"
+            }
+          }
+        },
+        {
+          "title": "Format",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "kind"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Field validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Field validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Field validation key",
+              "description": "The lower-snake-case readable key local to its Field.",
+              "$ref": "#/$defs/localKey"
+            },
+            "kind": {
+              "const": "format"
+            },
+            "matches": {
+              "$ref": "#/$defs/rubyPattern"
+            },
+            "does_not_match": {
+              "$ref": "#/$defs/rubyPattern"
+            },
+            "when": {
+              "$ref": "#/$defs/expression"
+            }
+          },
+          "oneOf": [
+            {
+              "required": [
+                "matches"
+              ]
+            },
+            {
+              "required": [
+                "does_not_match"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Length",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "kind"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Field validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Field validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Field validation key",
+              "description": "The lower-snake-case readable key local to its Field.",
+              "$ref": "#/$defs/localKey"
+            },
+            "kind": {
+              "const": "length"
+            },
+            "minimum": {
+              "$ref": "#/$defs/nonnegativeCount"
+            },
+            "maximum": {
+              "$ref": "#/$defs/nonnegativeCount"
+            },
+            "exact_length": {
+              "$ref": "#/$defs/nonnegativeCount"
+            },
+            "when": {
+              "$ref": "#/$defs/expression"
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "minimum"
+              ]
+            },
+            {
+              "required": [
+                "maximum"
+              ]
+            },
+            {
+              "required": [
+                "exact_length"
+              ]
+            }
+          ],
+          "not": {
+            "allOf": [
+              {
+                "required": [
+                  "exact_length"
+                ]
+              },
+              {
+                "anyOf": [
+                  {
+                    "required": [
+                      "minimum"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "maximum"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "referenceValidation": {
+      "title": "Reference validation",
+      "description": "A conditional presence or absence rule whose error belongs to the containing Reference.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "kind",
+        "when"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Reference validation subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Reference validation.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Reference validation key",
+          "description": "The lower-snake-case readable key local to its Reference.",
+          "$ref": "#/$defs/localKey"
+        },
+        "kind": {
+          "enum": [
+            "presence",
+            "absence"
+          ]
+        },
+        "when": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "entityValidation": {
+      "title": "Entity validation",
+      "description": "A tuple or cross-value rule owned by one Entity.",
+      "oneOf": [
+        {
+          "title": "Uniqueness",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "kind",
+            "targets",
+            "nulls",
+            "error_target"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Entity validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Entity validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Entity validation key",
+              "description": "The lower-snake-case readable key local to its Entity.",
+              "$ref": "#/$defs/localKey"
+            },
+            "kind": {
+              "const": "uniqueness"
+            },
+            "targets": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/locator"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "nulls": {
+              "title": "Null equality",
+              "description": "Whether two tuples with null in the same position remain distinct or conflict.",
+              "enum": [
+                "distinct",
+                "not_distinct"
+              ]
+            },
+            "error_target": {
+              "$ref": "#/$defs/validationErrorTarget"
+            },
+            "when": {
+              "$ref": "#/$defs/expression"
+            }
+          }
+        },
+        {
+          "title": "Comparison",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "kind",
+            "left",
+            "comparisons",
+            "error_target"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Entity validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Entity validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Entity validation key",
+              "description": "The lower-snake-case readable key local to its Entity.",
+              "$ref": "#/$defs/localKey"
+            },
+            "kind": {
+              "const": "comparison"
+            },
+            "left": {
+              "$ref": "#/$defs/path"
+            },
+            "comparisons": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/comparisonClause"
+              },
+              "minItems": 1
+            },
+            "error_target": {
+              "$ref": "#/$defs/validationErrorTarget"
+            },
+            "when": {
+              "$ref": "#/$defs/expression"
+            }
+          }
+        }
+      ]
+    },
+    "validationErrorTarget": {
+      "title": "Validation error target",
+      "description": "The Field, Reference, or owning record that receives an Entity Validation error.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/locator"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "record"
+          ],
+          "properties": {
+            "record": {
+              "const": "self"
+            }
+          }
+        }
+      ]
+    },
+    "transition": {
+      "title": "State transition",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "from",
+        "to"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "State transition subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable State transition.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "State transition key",
+          "description": "The lower-snake-case readable key local to its State Machine Field.",
+          "$ref": "#/$defs/localKey"
+        },
+        "from": {
+          "title": "From states",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/localKey"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "to": {
+          "title": "To state",
+          "$ref": "#/$defs/localKey"
+        },
+        "effects": {
+          "title": "Effects",
+          "description": "Ordered assignments committed and rolled back atomically with this transition.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/transitionEffect"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "tree": {
+      "title": "Tree",
+      "description": "A hierarchy anchored by a parent Reference and optionally partitioned by another Reference.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "parent_reference"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Tree subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Tree.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Tree key",
+          "description": "The lower-snake-case readable key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "parent_reference": {
+          "title": "Parent Reference",
+          "description": "The self-Reference that stores each non-root node's parent.",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "scope_reference": {
+          "title": "Scope Reference",
+          "description": "A Reference that partitions independent Trees and constrains parent selection.",
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "policy": {
+      "title": "Policy",
+      "description": "One decision; its Policy Expression sources required record and relation projections.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "operation",
+        "allow_when"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Policy subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Policy.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Policy key",
+          "description": "The lower-snake-case readable key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "operation": {
+          "title": "Operation",
+          "description": "Exact manage includes standard CRUD; exact destroy supplies a narrower deletion decision.",
+          "$ref": "#/$defs/localKey"
+        },
+        "allow_when": {
+          "title": "Allow when",
+          "description": "The sole allowing Policy Expression. Every projection derives from it; otherwise deny.",
+          "$ref": "#/$defs/policyExpression"
+        }
+      }
+    },
+    "referenceData": {
+      "title": "Reference data",
+      "description": "Small, stable records that are part of the application in every environment. This object does not define edit or recompilation policy.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity",
+        "records"
+      ],
+      "properties": {
+        "identity": {
+          "title": "Identity",
+          "description": "The owning Entity's Field used to distinguish and reconcile these records.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "field"
+          ],
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/scopedPath"
+            }
+          }
+        },
+        "records": {
+          "title": "Reference records",
+          "description": "Literal records owned by this Entity.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/referenceDataRecord"
+          }
+        }
+      }
+    },
+    "referenceDataRecord": {
+      "title": "Reference data record",
+      "description": "One stable record. Its owner-local key does not become an application primary key.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Reference data record subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Reference data record.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Reference data record key",
+          "description": "The lower-snake-case readable key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "fields": {
+          "title": "Field values",
+          "description": "Literal assignments to Fields on the owning Entity. Include the identity Field.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/dataFieldAssignment"
+          }
+        },
+        "references": {
+          "title": "Reference values",
+          "description": "Assignments from References on the owning Entity to other named data records.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dataReferenceAssignment"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "developmentDataRecord": {
+      "title": "Development data record",
+      "description": "One explicit record in the development-only sample graph. Its owner-local key does not become an application primary key.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "entity"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Development data record subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Development data record.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Development data record key",
+          "description": "The lower-snake-case readable key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "entity": {
+          "title": "Entity",
+          "description": "The readable key of the Entity that owns this development record.",
+          "$ref": "#/$defs/localKey"
+        },
+        "fields": {
+          "title": "Field values",
+          "description": "Literal assignments to Fields on the record's Entity.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dataFieldAssignment"
+          },
+          "minItems": 1
+        },
+        "references": {
+          "title": "Reference values",
+          "description": "Assignments from References on the record's Entity to named development or reference-data records.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dataReferenceAssignment"
+          },
+          "minItems": 1
+        },
+        "account": {
+          "title": "Development Account data",
+          "description": "Known, non-secret development-only identifiers and credentials for a record of the Account-bearing Entity.",
+          "$ref": "#/$defs/developmentAccountData"
+        }
+      }
+    },
+    "dataFieldAssignment": {
+      "title": "Data Field assignment",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "value"
+      ],
+      "properties": {
+        "field": {
+          "title": "Field",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "value": {
+          "title": "Literal value",
+          "$ref": "#/$defs/dataLiteral"
+        }
+      }
+    },
+    "dataReferenceAssignment": {
+      "title": "Data Reference assignment",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference",
+        "value"
+      ],
+      "properties": {
+        "reference": {
+          "title": "Reference",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "value": {
+          "title": "Target data record",
+          "description": "A tagged pointer to a development or reference-data record.",
+          "$ref": "#/$defs/referenceRecordValue"
+        }
+      }
+    },
+    "dataLiteral": {
+      "$ref": "#/$defs/literalValue"
+    },
+    "developmentAccountData": {
+      "title": "Development Account data",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identifiers",
+        "credentials"
+      ],
+      "properties": {
+        "identifiers": {
+          "title": "Account identifiers",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/developmentAccountIdentifier"
+          }
+        },
+        "credentials": {
+          "title": "Account credentials",
+          "description": "Known development-only credentials that make the sample account usable.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/developmentAccountCredential"
+          }
+        }
+      }
+    },
+    "developmentAccountIdentifier": {
+      "title": "Development Account identifier",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "email"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "developmentAccountCredential": {
+      "title": "Development Account credential",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "password"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "scaffold": {
+      "title": "Scaffold",
+      "description": "Standard resource route exposure plus directly keyed reusable behavior.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "resource_routes": {
+          "title": "Resource routes",
+          "description": "Selected top-level resource routes. Omit when this Scaffold exposes none.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scaffoldRoute"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "profile": {
+          "$ref": "#/$defs/scaffoldProfile"
+        },
+        "index": {
+          "$ref": "#/$defs/scaffoldCollection"
+        },
+        "show": {
+          "$ref": "#/$defs/scaffoldDetail"
+        },
+        "create": {
+          "$ref": "#/$defs/scaffoldCreate"
+        },
+        "update": {
+          "$ref": "#/$defs/scaffoldUpdate"
+        },
+        "destroy": {
+          "$ref": "#/$defs/scaffoldDestroy"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "index"
+                }
+              }
+            },
+            "required": [
+              "resource_routes"
+            ]
+          },
+          "then": {
+            "required": [
+              "index"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "index"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "show"
+                }
+              }
+            },
+            "required": [
+              "resource_routes"
+            ]
+          },
+          "then": {
+            "required": [
+              "show"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "show"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "new"
+                }
+              }
+            },
+            "required": [
+              "resource_routes"
+            ]
+          },
+          "then": {
+            "required": [
+              "create"
+            ],
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "create"
+                }
+              },
+              "create": {
+                "type": "object",
+                "required": [
+                  "return_to"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "create": {
+                "not": {
+                  "type": "object",
+                  "required": [
+                    "return_to"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "create"
+            ]
+          },
+          "then": {
+            "required": [
+              "resource_routes"
+            ],
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "create"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "create"
+                }
+              }
+            },
+            "required": [
+              "resource_routes"
+            ]
+          },
+          "then": {
+            "required": [
+              "create"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "edit"
+                }
+              }
+            },
+            "required": [
+              "resource_routes"
+            ]
+          },
+          "then": {
+            "required": [
+              "update"
+            ],
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "update"
+                }
+              },
+              "update": {
+                "type": "object",
+                "required": [
+                  "return_to"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "update": {
+                "not": {
+                  "type": "object",
+                  "required": [
+                    "return_to"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "update"
+                }
+              }
+            },
+            "required": [
+              "resource_routes"
+            ]
+          },
+          "then": {
+            "required": [
+              "update"
+            ]
+          },
+          "else": {
+            "if": {
+              "required": [
+                "update"
+              ]
+            },
+            "then": {
+              "required": [
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "required": [
+              "update"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_routes": {
+                "type": "array",
+                "contains": {
+                  "const": "destroy"
+                }
+              }
+            },
+            "required": [
+              "resource_routes"
+            ]
+          },
+          "then": {
+            "required": [
+              "destroy"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "destroy"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "scaffoldRoute": {
+      "title": "Scaffold route",
+      "oneOf": [
+        {
+          "const": "index",
+          "title": "Index"
+        },
+        {
+          "const": "show",
+          "title": "Show"
+        },
+        {
+          "const": "new",
+          "title": "New"
+        },
+        {
+          "const": "create",
+          "title": "Create"
+        },
+        {
+          "const": "edit",
+          "title": "Edit"
+        },
+        {
+          "const": "update",
+          "title": "Update"
+        },
+        {
+          "const": "destroy",
+          "title": "Destroy"
+        }
+      ]
+    },
+    "scaffoldCollection": {
+      "title": "Scaffold index",
+      "description": "The standard collection page and relation query for one Entity.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorization"
+      ],
+      "properties": {
+        "projection": {
+          "$ref": "#/$defs/scaffoldProjection"
+        },
+        "predicate": {
+          "$ref": "#/$defs/scopedPath"
+        },
+        "ordering": {
+          "$ref": "#/$defs/scopedPath"
+        },
+        "pagination": {
+          "const": "cursor"
+        },
+        "authorization": {
+          "$ref": "#/$defs/scaffoldAuthorization"
+        }
+      }
+    },
+    "scaffoldDetail": {
+      "title": "Scaffold show",
+      "description": "The standard detail page for one Entity.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorization"
+      ],
+      "properties": {
+        "projection": {
+          "$ref": "#/$defs/scaffoldProjection"
+        },
+        "authorization": {
+          "$ref": "#/$defs/scaffoldAuthorization"
+        }
+      }
+    },
+    "scaffoldAssociation": {
+      "title": "Scaffold Association",
+      "description": "One recursively projected Association shown from an index item or detail record.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "association",
+        "authorization"
+      ],
+      "properties": {
+        "association": {
+          "$ref": "#/$defs/scopedPath"
+        },
+        "projection": {
+          "$ref": "#/$defs/scaffoldProjection"
+        },
+        "predicate": {
+          "title": "Predicate",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "ordering": {
+          "title": "Ordering",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "pagination": {
+          "const": "cursor"
+        },
+        "authorization": {
+          "$ref": "#/$defs/scaffoldAssociationAuthorization"
+        },
+        "create_form": {
+          "$ref": "#/$defs/scaffoldCreateForm"
+        }
+      }
+    },
+    "scaffoldProfile": {
+      "title": "Scaffold profile",
+      "description": "The singular current-Account surface. It edits through this Scaffold's update definition.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorization",
+        "return_to"
+      ],
+      "properties": {
+        "projection": {
+          "$ref": "#/$defs/scaffoldProjection"
+        },
+        "authorization": {
+          "$ref": "#/$defs/authorizationBinding"
+        },
+        "return_to": {
+          "$ref": "#/$defs/scaffoldMutationReturnTo"
+        }
+      }
+    },
+    "iconToken": {
+      "title": "Icon token",
+      "description": "A semantic icon name from a closed vocabulary. The target profile maps each token to an SF Symbol on iOS and a Material icon on Android, so an open string would resolve on one platform and not the other.",
+      "enum": [
+        "bell",
+        "bookmark",
+        "calendar",
+        "camera",
+        "cart",
+        "chat",
+        "check",
+        "clock",
+        "document",
+        "envelope",
+        "film",
+        "folder",
+        "gear",
+        "globe",
+        "grid",
+        "heart",
+        "house",
+        "list",
+        "map_pin",
+        "music",
+        "payment",
+        "people",
+        "person",
+        "photo",
+        "search",
+        "star",
+        "tag",
+        "video"
+      ]
+    },
+    "scaffoldCreate": {
+      "title": "Scaffold create",
+      "description": "User inputs, server-owned bindings, authorization, and any top-level new form's return destination.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorization"
+      ],
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scaffoldInput"
+          },
+          "minItems": 1
+        },
+        "bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scaffoldBinding"
+          },
+          "minItems": 1
+        },
+        "authorization": {
+          "$ref": "#/$defs/scaffoldAuthorization"
+        },
+        "return_to": {
+          "$ref": "#/$defs/scaffoldMutationReturnTo"
+        }
+      }
+    },
+    "scaffoldUpdate": {
+      "title": "Scaffold update",
+      "description": "User inputs, authorization, and any top-level edit form's return destination.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorization"
+      ],
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scaffoldInput"
+          },
+          "minItems": 1
+        },
+        "authorization": {
+          "$ref": "#/$defs/scaffoldAuthorization"
+        },
+        "return_to": {
+          "$ref": "#/$defs/scaffoldMutationReturnTo"
+        }
+      }
+    },
+    "scaffoldDestroy": {
+      "title": "Scaffold destroy",
+      "description": "Authorization and the required return destination for a generated destroy control.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorization",
+        "return_to"
+      ],
+      "properties": {
+        "authorization": {
+          "$ref": "#/$defs/scaffoldAuthorization"
+        },
+        "return_to": {
+          "$ref": "#/$defs/scaffoldDestroyReturnTo"
+        }
+      }
+    },
+    "runtimeRecord": {
+      "title": "Runtime record",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "const": "environment"
+        },
+        "name": {
+          "const": "current_account"
+        }
+      }
+    },
+    "scaffoldAuthorization": {
+      "title": "Scaffold authorization",
+      "description": "Every generated resource request declares public access or a Policy.",
+      "oneOf": [
+        {
+          "const": "public",
+          "title": "Public",
+          "description": "No Account or Policy decision is required for this generated surface."
+        },
+        {
+          "$ref": "#/$defs/authorizationBinding"
+        }
+      ]
+    },
+    "authorizationBinding": {
+      "title": "Authorization binding",
+      "description": "Applies a Policy to primary records or items unless record selects a resource gate.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy"
+      ],
+      "properties": {
+        "policy": {
+          "title": "Policy",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "record": {
+          "title": "Policy record",
+          "description": "An explicit runtime gate record. Omit it to authorize the primary record or each collection item.",
+          "$ref": "#/$defs/runtimeRecord"
+        }
+      }
+    },
+    "scaffoldAssociationAuthorization": {
+      "title": "Scaffold Association authorization",
+      "description": "A displayed Association is public or applies a Policy to each associated record or an explicit gate record.",
+      "oneOf": [
+        {
+          "const": "public",
+          "title": "Public",
+          "description": "No Account or Policy decision is required for this generated presentation."
+        },
+        {
+          "$ref": "#/$defs/scaffoldAssociationAuthorizationBinding"
+        }
+      ]
+    },
+    "scaffoldAssociationAuthorizationBinding": {
+      "title": "Scaffold Association authorization binding",
+      "description": "Applies a Policy to each associated record unless record selects a presentation gate.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy"
+      ],
+      "properties": {
+        "policy": {
+          "title": "Policy",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "record": {
+          "title": "Policy record",
+          "description": "An explicit gate record. Omit it to authorize each associated record.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/runtimeRecord"
+            },
+            {
+              "const": "scaffold_record",
+              "title": "Scaffold record",
+              "description": "Use the owning record whose index item or detail page contains this Association."
+            }
+          ]
+        }
+      }
+    },
+    "locator": {
+      "title": "Typed locator",
+      "description": "A typed pointer to a stored Field or Reference.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/scopedPath"
+        },
+        "reference": {
+          "$ref": "#/$defs/scopedPath"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "field"
+          ]
+        },
+        {
+          "required": [
+            "reference"
+          ]
+        }
+      ]
+    },
+    "fieldLocator": {
+      "title": "Field locator",
+      "description": "A typed pointer to one Field.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field"
+      ],
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "associationLocator": {
+      "title": "Association locator",
+      "description": "A typed pointer to one Association.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "association"
+      ],
+      "properties": {
+        "association": {
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "valueLocator": {
+      "title": "Value locator",
+      "description": "A typed pointer to a Field value or an Association result.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/fieldLocator"
+        },
+        {
+          "$ref": "#/$defs/associationLocator"
+        }
+      ]
+    },
+    "locatorOrPath": {
+      "$ref": "#/$defs/path"
+    },
+    "currentRecordTarget": {
+      "title": "Current record target",
+      "description": "The record in the current Entity scope, including the nested scope of exists.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record"
+      ],
+      "properties": {
+        "record": {
+          "const": "current",
+          "title": "Current record"
+        }
+      }
+    },
+    "expressionValuePath": {
+      "title": "Expression value path",
+      "description": "Zero or more singular Association hops followed by one Expression value target.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target"
+      ],
+      "properties": {
+        "through": {
+          "title": "Association hops",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/associationLocator"
+          },
+          "minItems": 1
+        },
+        "target": {
+          "title": "Terminal value target",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/fieldLocator"
+            },
+            {
+              "$ref": "#/$defs/associationLocator"
+            },
+            {
+              "$ref": "#/$defs/currentRecordTarget"
+            }
+          ]
+        }
+      }
+    },
+    "fieldValuePath": {
+      "title": "Field value path",
+      "description": "Zero or more singular Association hops followed by one Field.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target"
+      ],
+      "properties": {
+        "through": {
+          "title": "Association hops",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/associationLocator"
+          },
+          "minItems": 1
+        },
+        "target": {
+          "title": "Terminal Field",
+          "$ref": "#/$defs/fieldLocator"
+        }
+      }
+    },
+    "comparisonTarget": {
+      "$ref": "#/$defs/expressionValuePath"
+    },
+    "referenceRecordValue": {
+      "title": "Reference-data record value",
+      "description": "A readable scoped path to one record from an Entity's reference_data collection.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "record"
+      ],
+      "properties": {
+        "kind": {
+          "const": "reference_record"
+        },
+        "record": {
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "comparisonValue": {
+      "title": "Comparison value",
+      "description": "A compatible tagged value or typed target.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonNullLiteralValue"
+        },
+        {
+          "$ref": "#/$defs/environmentValue"
+        },
+        {
+          "$ref": "#/$defs/environmentPathValue"
+        },
+        {
+          "$ref": "#/$defs/referenceRecordValue"
+        },
+        {
+          "$ref": "#/$defs/expressionValuePath"
+        }
+      ]
+    },
+    "setMemberValue": {
+      "title": "Set member value",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonNullLiteralValue"
+        },
+        {
+          "$ref": "#/$defs/referenceRecordValue"
+        }
+      ]
+    },
+    "binaryComparisonOperator": {
+      "title": "Binary comparison operator",
+      "oneOf": [
+        {
+          "const": "equals",
+          "title": "Equals"
+        },
+        {
+          "const": "not_equals",
+          "title": "Does not equal"
+        },
+        {
+          "const": "less_than",
+          "title": "Less than"
+        },
+        {
+          "const": "less_than_or_equal_to",
+          "title": "Less than or equal to"
+        },
+        {
+          "const": "greater_than",
+          "title": "Greater than"
+        },
+        {
+          "const": "greater_than_or_equal_to",
+          "title": "Greater than or equal to"
+        },
+        {
+          "const": "contains",
+          "title": "Contains"
+        },
+        {
+          "const": "starts_with",
+          "title": "Starts with"
+        },
+        {
+          "const": "ends_with",
+          "title": "Ends with"
+        }
+      ]
+    },
+    "comparisonExpression": {
+      "title": "Comparison Expression",
+      "description": "Compare one typed target with a compatible value or nonempty literal set.",
+      "oneOf": [
+        {
+          "title": "Binary comparison",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "left",
+            "operator",
+            "right"
+          ],
+          "properties": {
+            "kind": {
+              "const": "comparison",
+              "title": "Comparison"
+            },
+            "left": {
+              "title": "Left target",
+              "$ref": "#/$defs/comparisonTarget"
+            },
+            "operator": {
+              "$ref": "#/$defs/binaryComparisonOperator"
+            },
+            "right": {
+              "title": "Right value",
+              "$ref": "#/$defs/comparisonValue"
+            }
+          }
+        },
+        {
+          "title": "Set membership comparison",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "left",
+            "operator",
+            "right"
+          ],
+          "properties": {
+            "kind": {
+              "const": "comparison",
+              "title": "Comparison"
+            },
+            "left": {
+              "title": "Left target",
+              "$ref": "#/$defs/comparisonTarget"
+            },
+            "operator": {
+              "const": "in",
+              "title": "In"
+            },
+            "right": {
+              "title": "Right set",
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/setMemberValue"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          }
+        }
+      ]
+    },
+    "isNullExpression": {
+      "title": "Null-test Expression",
+      "description": "Test whether one optional queryable scalar Field is null.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "operand"
+      ],
+      "properties": {
+        "kind": {
+          "const": "is_null",
+          "title": "Is null"
+        },
+        "operand": {
+          "title": "Operand",
+          "$ref": "#/$defs/fieldValuePath"
+        }
+      }
+    },
+    "matchesPredicateExpression": {
+      "title": "Predicate-reference Expression",
+      "description": "Evaluate another Predicate owned by the current Entity for the current record.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "predicate"
+      ],
+      "properties": {
+        "kind": {
+          "const": "matches_predicate",
+          "title": "Matches Predicate"
+        },
+        "predicate": {
+          "title": "Predicate",
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "andExpression": {
+      "title": "Conjunction Expression",
+      "description": "True when every child Expression is true.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "expressions"
+      ],
+      "properties": {
+        "kind": {
+          "const": "and",
+          "title": "And"
+        },
+        "expressions": {
+          "title": "Expressions",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/expression"
+          },
+          "minItems": 2
+        }
+      }
+    },
+    "orExpression": {
+      "title": "Disjunction Expression",
+      "description": "True when at least one child Expression is true.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "expressions"
+      ],
+      "properties": {
+        "kind": {
+          "const": "or",
+          "title": "Or"
+        },
+        "expressions": {
+          "title": "Expressions",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/expression"
+          },
+          "minItems": 2
+        }
+      }
+    },
+    "notExpression": {
+      "title": "Negation Expression",
+      "description": "Negate one child Expression using the same three-valued logic.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "expression"
+      ],
+      "properties": {
+        "kind": {
+          "const": "not",
+          "title": "Not"
+        },
+        "expression": {
+          "title": "Expression",
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "existsExpression": {
+      "title": "Existence Expression",
+      "description": "True when an Association returns a record that satisfies the optional nested Expression.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "association"
+      ],
+      "properties": {
+        "kind": {
+          "const": "exists",
+          "title": "Exists"
+        },
+        "association": {
+          "title": "Association",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "where": {
+          "title": "Where",
+          "description": "A condition evaluated with each associated record as the current Entity scope.",
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "expression": {
+      "title": "Expression",
+      "description": "One exact recursive Boolean expression over named data and environment values.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/comparisonExpression"
+        },
+        {
+          "$ref": "#/$defs/isNullExpression"
+        },
+        {
+          "$ref": "#/$defs/andExpression"
+        },
+        {
+          "$ref": "#/$defs/orExpression"
+        },
+        {
+          "$ref": "#/$defs/notExpression"
+        },
+        {
+          "$ref": "#/$defs/matchesPredicateExpression"
+        },
+        {
+          "$ref": "#/$defs/existsExpression"
+        }
+      ]
+    },
+    "policyAndExpression": {
+      "title": "Policy conjunction Expression",
+      "description": "True when every child Expression is true.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "expressions"
+      ],
+      "properties": {
+        "kind": {
+          "const": "and",
+          "title": "And"
+        },
+        "expressions": {
+          "title": "Expressions",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/policyExpression"
+          },
+          "minItems": 2
+        }
+      }
+    },
+    "policyOrExpression": {
+      "title": "Policy disjunction Expression",
+      "description": "True when at least one child Expression is true.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "expressions"
+      ],
+      "properties": {
+        "kind": {
+          "const": "or",
+          "title": "Or"
+        },
+        "expressions": {
+          "title": "Expressions",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/policyExpression"
+          },
+          "minItems": 2
+        }
+      }
+    },
+    "policyNotExpression": {
+      "title": "Policy negation Expression",
+      "description": "Negate one child Expression using the same three-valued logic.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "expression"
+      ],
+      "properties": {
+        "kind": {
+          "const": "not",
+          "title": "Not"
+        },
+        "expression": {
+          "title": "Expression",
+          "$ref": "#/$defs/policyExpression"
+        }
+      }
+    },
+    "policyExistsExpression": {
+      "title": "Policy existence Expression",
+      "description": "True when an Association returns a record that satisfies the optional nested Expression.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "association"
+      ],
+      "properties": {
+        "kind": {
+          "const": "exists",
+          "title": "Exists"
+        },
+        "association": {
+          "title": "Association",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "where": {
+          "title": "Where",
+          "description": "A condition evaluated with each associated record as the current Entity scope.",
+          "$ref": "#/$defs/policyExpression"
+        }
+      }
+    },
+    "matchesPolicyExpression": {
+      "title": "Policy-reference Expression",
+      "description": "Evaluate a named Policy for the record reached through one singular Association.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "association",
+        "policy"
+      ],
+      "properties": {
+        "kind": {
+          "const": "matches_policy",
+          "title": "Matches Policy"
+        },
+        "association": {
+          "title": "Association",
+          "$ref": "#/$defs/scopedPath"
+        },
+        "policy": {
+          "title": "Policy",
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "policyExpression": {
+      "title": "Policy Expression",
+      "description": "One recursive allowing condition with Policy-only delegation through a singular Association.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/comparisonExpression"
+        },
+        {
+          "$ref": "#/$defs/isNullExpression"
+        },
+        {
+          "$ref": "#/$defs/policyAndExpression"
+        },
+        {
+          "$ref": "#/$defs/policyOrExpression"
+        },
+        {
+          "$ref": "#/$defs/policyNotExpression"
+        },
+        {
+          "$ref": "#/$defs/matchesPredicateExpression"
+        },
+        {
+          "$ref": "#/$defs/policyExistsExpression"
+        },
+        {
+          "$ref": "#/$defs/matchesPolicyExpression"
+        }
+      ]
+    },
+    "scalarValue": {
+      "$ref": "#/$defs/literalValue"
+    },
+    "nonNullScalarValue": {
+      "$ref": "#/$defs/nonNullLiteralValue"
+    },
+    "operandValue": {
+      "title": "Operand value",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/literalValue"
+        },
+        {
+          "$ref": "#/$defs/environmentValue"
+        },
+        {
+          "$ref": "#/$defs/environmentPathValue"
+        },
+        {
+          "$ref": "#/$defs/referenceRecordValue"
+        }
+      ]
+    },
+    "environmentValue": {
+      "title": "Environment value",
+      "description": "A named value supplied by the target runtime rather than embedded in the Plan.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "const": "environment"
+        },
+        "name": {
+          "oneOf": [
+            {
+              "const": "current_account",
+              "title": "Current Account"
+            },
+            {
+              "const": "current_date",
+              "title": "Current date"
+            },
+            {
+              "const": "current_time",
+              "title": "Current time"
+            }
+          ]
+        }
+      }
+    },
+    "defaultValue": {
+      "$ref": "#/$defs/value"
+    },
+    "validationComparisonValue": {
+      "title": "Validation comparison value",
+      "description": "A compatible tagged value or typed path resolved in the Validation's Entity scope.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonNullLiteralValue"
+        },
+        {
+          "$ref": "#/$defs/environmentValue"
+        },
+        {
+          "$ref": "#/$defs/environmentPathValue"
+        },
+        {
+          "$ref": "#/$defs/referenceRecordValue"
+        },
+        {
+          "$ref": "#/$defs/path"
+        }
+      ]
+    },
+    "validationEnvironmentValue": {
+      "title": "Validation environment value",
+      "description": "A date or time supplied when the generated validation runs.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "environment"
+      ],
+      "properties": {
+        "environment": {
+          "title": "Environment key",
+          "oneOf": [
+            {
+              "const": "current_date",
+              "title": "Current date"
+            },
+            {
+              "const": "current_time",
+              "title": "Current time"
+            }
+          ]
+        }
+      }
+    },
+    "rubyPattern": {
+      "title": "Ruby regular-expression pattern",
+      "description": "A non-executable Regexp body compiled and safety-checked by the pinned Ruby target.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "title": "Source",
+          "description": "Ruby Regexp source without slash delimiters. Use \\A and \\z for whole-value positive matches. The line anchors ^ and $ are rejected. A positive-position \\Z is accepted only for does_not_match so a pattern may include one final newline in its matched set; \\Z is rejected inside lookaround or absent expressions and is not a substitute for Field whitespace normalization.",
+          "type": "string",
+          "minLength": 1
+        },
+        "case_insensitive": {
+          "title": "Case insensitive",
+          "description": "Compile the pattern with Ruby's ignore-case option.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "namedValue": {
+      "title": "Named value",
+      "description": "A stable owner-local semantic value key and its reviewed human-facing name.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_uuid",
+        "key",
+        "name"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Named value subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Named value.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Named value key",
+          "description": "The lower-snake-case readable key local to its Enum or State Machine Field.",
+          "$ref": "#/$defs/localKey"
+        },
+        "name": {
+          "$ref": "#/$defs/displayName"
+        }
+      }
+    },
+    "enumFieldSettings": {
+      "title": "Enum settings",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "values"
+      ],
+      "properties": {
+        "values": {
+          "title": "Enum values",
+          "description": "The complete set of allowed semantic values in stable order.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/namedValue"
+          },
+          "minItems": 1
+        },
+        "ordinal": {
+          "title": "Ordinal enum",
+          "description": "Whether value order carries semantic rank rather than presentation order alone.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "counterFieldSettings": {
+      "title": "Counter settings",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "counts"
+      ],
+      "properties": {
+        "counts": {
+          "title": "Counted Association",
+          "description": "The Association whose distinct members determine this count.",
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "positionFieldSettings": {
+      "title": "Position settings",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "within"
+      ],
+      "properties": {
+        "within": {
+          "title": "Position scope",
+          "description": "Fields and References that partition records into ordered lists. [] means one global list.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/locator"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "moneyFieldSettings": {
+      "title": "Money settings",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "currency"
+      ],
+      "properties": {
+        "currency": {
+          "title": "Currency",
+          "description": "An uppercase three-letter currency code supported by the selected target profile.",
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "examples": [
+            "USD"
+          ]
+        }
+      }
+    },
+    "stateMachineFieldSettings": {
+      "title": "State Machine settings",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial_state",
+        "states",
+        "transitions"
+      ],
+      "properties": {
+        "initial_state": {
+          "title": "Initial state",
+          "description": "The state persisted when a new record is created.",
+          "$ref": "#/$defs/localKey"
+        },
+        "states": {
+          "title": "States",
+          "description": "The complete closed set of states stored by this Field.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/namedValue"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "transitions": {
+          "title": "Transitions",
+          "description": "The events that move this Field between its states.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/transition"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "when": {
+          "title": "Available when",
+          "description": "A condition under which this optional State Machine Field applies.",
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "fieldCommon": {
+      "title": "Field common properties",
+      "type": "object",
+      "required": [
+        "subject_uuid",
+        "key",
+        "name",
+        "type",
+        "required"
+      ],
+      "properties": {
+        "subject_uuid": {
+          "title": "Field subject UUID",
+          "description": "Stable Project-scoped identity for this independently mutable Field.",
+          "$ref": "#/$defs/subjectUuid"
+        },
+        "key": {
+          "title": "Field key",
+          "description": "The lower-snake-case readable key local to its Entity.",
+          "$ref": "#/$defs/localKey"
+        },
+        "name": {
+          "title": "Field name",
+          "$ref": "#/$defs/displayName"
+        },
+        "notes": {
+          "title": "Notes",
+          "description": "Optional explanatory prose for people reviewing the Field. It does not request behavior.",
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "title": "Field type",
+          "description": "The semantic value kind. One Field may unfold into several target implementation elements.",
+          "type": "string",
+          "enum": [
+            "attachment",
+            "boolean",
+            "counter",
+            "date",
+            "datetime",
+            "decimal",
+            "enum",
+            "image",
+            "integer",
+            "json",
+            "language_code",
+            "long_text",
+            "money",
+            "position",
+            "rich_text",
+            "secure_token",
+            "short_text",
+            "state_machine",
+            "time_zone",
+            "url"
+          ]
+        },
+        "required": {
+          "title": "Required",
+          "description": "Whether a stored record may omit this value.",
+          "type": "boolean"
+        },
+        "validations": {
+          "title": "Field validations",
+          "description": "Additional rules whose errors belong to this Field. Omit when none are needed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fieldValidation"
+          },
+          "minItems": 1
+        },
+        "default": {
+          "title": "Default",
+          "description": "A semantic initial value that the Compiler must realize explicitly.",
+          "$ref": "#/$defs/defaultValue"
+        },
+        "derivation": {
+          "title": "Derivation",
+          "description": "A typed rule that continuously and exclusively determines this Field's current value.",
+          "$ref": "#/$defs/fieldDerivation"
+        },
+        "immutable": {
+          "title": "Immutable",
+          "description": "Whether the value may be assigned at record creation but cannot change afterward.",
+          "type": "boolean",
+          "default": false
+        },
+        "comparison": {
+          "title": "Comparison",
+          "description": "The semantic comparison behavior required for this Field.",
+          "const": "case_insensitive"
+        },
+        "normalizations": {
+          "title": "Normalizations",
+          "description": "Ordered cleanup. Null stays null. Omit when unused; collapse_whitespace includes trim.",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "const": "trim",
+                "title": "Trim",
+                "description": "Remove leading and trailing Unicode whitespace."
+              },
+              {
+                "const": "blank_to_null",
+                "title": "Blank to null",
+                "description": "Replace an empty or Unicode-whitespace-only string with null."
+              },
+              {
+                "const": "collapse_whitespace",
+                "title": "Collapse whitespace",
+                "description": "Trim Unicode whitespace and replace each internal whitespace run with U+0020."
+              },
+              {
+                "const": "downcase",
+                "title": "Downcase",
+                "description": "Replace the text using the target profile's documented Unicode lowercase mapping."
+              }
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "encrypted_at_rest": {
+          "title": "Encrypted at rest",
+          "description": "Whether generated storage must encrypt the value at rest.",
+          "type": "boolean",
+          "default": false
+        },
+        "redact_from_logs": {
+          "title": "Redact from logs",
+          "description": "Whether generated diagnostics and logs must redact the value.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "literalValue": {
+      "title": "Literal value",
+      "description": "A literal JSON value. Decimal and money semantics use a canonical decimal string.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "literal"
+        },
+        "value": {}
+      }
+    },
+    "nonNullLiteralValue": {
+      "title": "Non-null literal value",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "literal"
+        },
+        "value": {
+          "not": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "path": {
+      "title": "Typed path",
+      "description": "Zero or more singular Association hops followed by one typed terminal target.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target"
+      ],
+      "properties": {
+        "through": {
+          "title": "Association hops",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/associationLocator"
+          },
+          "minItems": 1
+        },
+        "target": {
+          "title": "Terminal target",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/fieldLocator"
+            },
+            {
+              "$ref": "#/$defs/referenceLocator"
+            },
+            {
+              "$ref": "#/$defs/associationLocator"
+            },
+            {
+              "$ref": "#/$defs/currentRecordTarget"
+            }
+          ]
+        }
+      }
+    },
+    "environmentPathValue": {
+      "title": "Environment path value",
+      "description": "A typed value reached from the current Account through singular Associations.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name",
+        "path"
+      ],
+      "properties": {
+        "kind": {
+          "const": "environment_path"
+        },
+        "name": {
+          "const": "current_account"
+        },
+        "path": {
+          "$ref": "#/$defs/expressionValuePath"
+        }
+      }
+    },
+    "value": {
+      "title": "Value",
+      "description": "A closed, tagged value whose object literals cannot be confused with runtime instructions.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/literalValue"
+        },
+        {
+          "$ref": "#/$defs/environmentValue"
+        },
+        {
+          "$ref": "#/$defs/environmentPathValue"
+        },
+        {
+          "$ref": "#/$defs/referenceRecordValue"
+        }
+      ]
+    },
+    "referenceLocator": {
+      "title": "Reference locator",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference"
+      ],
+      "properties": {
+        "reference": {
+          "$ref": "#/$defs/scopedPath"
+        }
+      }
+    },
+    "comparisonClause": {
+      "title": "Comparison clause",
+      "description": "One semantic comparison operator and its compatible right operand.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator",
+        "right"
+      ],
+      "properties": {
+        "operator": {
+          "oneOf": [
+            {
+              "const": "equals",
+              "title": "Equals"
+            },
+            {
+              "const": "not_equals",
+              "title": "Does not equal"
+            },
+            {
+              "const": "less_than",
+              "title": "Less than"
+            },
+            {
+              "const": "less_than_or_equal_to",
+              "title": "Less than or equal to"
+            },
+            {
+              "const": "greater_than",
+              "title": "Greater than"
+            },
+            {
+              "const": "greater_than_or_equal_to",
+              "title": "Greater than or equal to"
+            }
+          ]
+        },
+        "right": {
+          "$ref": "#/$defs/validationComparisonValue"
+        }
+      }
+    },
+    "transitionEffect": {
+      "title": "Transition effect",
+      "description": "One ordered assignment performed atomically with a successful state transition.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "field",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "set_field"
+        },
+        "field": {
+          "$ref": "#/$defs/scopedPath"
+        },
+        "value": {
+          "$ref": "#/$defs/operandValue"
+        }
+      }
+    },
+    "scaffoldProjection": {
+      "title": "Scaffold projection",
+      "description": "An ordered, finite selection of Fields and recursively presented Associations.",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/fieldLocator"
+          },
+          {
+            "$ref": "#/$defs/scaffoldAssociation"
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "scaffoldInput": {
+      "title": "Scaffold input",
+      "description": "One user-selected Field or forward Association.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/fieldLocator"
+        },
+        {
+          "$ref": "#/$defs/associationLocator"
+        }
+      ]
+    },
+    "scaffoldBinding": {
+      "title": "Server-owned create binding",
+      "description": "A Field or Reference assigned by generated request code before authorization and persistence.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/scopedPath"
+        },
+        "reference": {
+          "$ref": "#/$defs/scopedPath"
+        },
+        "value": {
+          "$ref": "#/$defs/value"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "field"
+          ]
+        },
+        {
+          "required": [
+            "reference"
+          ]
+        }
+      ]
+    },
+    "returnToRecord": {
+      "title": "Return-to record",
+      "description": "Resolves a resource record from the mutation or the Scaffold record that rendered an inline form.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from"
+      ],
+      "properties": {
+        "from": {
+          "enum": [
+            "mutation_record",
+            "scaffold_record"
+          ]
+        },
+        "through": {
+          "title": "Association path",
+          "description": "An optional path of singular, guaranteed-present Association hops. Repeating a self-Association is valid.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/associationLocator"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "returnTo": {
+      "title": "Return to",
+      "description": "The one required destination carried by a generated HTML mutation interaction. It is never a fallback.",
+      "oneOf": [
+        {
+          "title": "Current location",
+          "description": "Return to the same validated internal location that rendered this interaction.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "current_location"
+            }
+          }
+        },
+        {
+          "title": "Resource destination",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "entity",
+            "route"
+          ],
+          "properties": {
+            "kind": {
+              "const": "resource"
+            },
+            "entity": {
+              "$ref": "#/$defs/localKey"
+            },
+            "route": {
+              "enum": [
+                "index",
+                "show",
+                "profile"
+              ]
+            },
+            "record": {
+              "$ref": "#/$defs/returnToRecord"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "route": {
+                    "const": "show"
+                  }
+                },
+                "required": [
+                  "route"
+                ]
+              },
+              "then": {
+                "required": [
+                  "record"
+                ]
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "record"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "scaffoldMutationReturnTo": {
+      "title": "Top-level Scaffold mutation return to",
+      "description": "A top-level create, update, destroy, or profile interaction can resolve a show record only from the mutation record. scaffold_record exists only for an associated create form.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/returnTo"
+        },
+        {
+          "not": {
+            "type": "object",
+            "required": [
+              "kind",
+              "record"
+            ],
+            "properties": {
+              "kind": {
+                "const": "resource"
+              },
+              "record": {
+                "type": "object",
+                "required": [
+                  "from"
+                ],
+                "properties": {
+                  "from": {
+                    "const": "scaffold_record"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "scaffoldDestroyReturnTo": {
+      "title": "Scaffold destroy return to",
+      "description": "A destroy interaction cannot return to the deleted mutation record's own show route. A show destination must traverse to another record.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/scaffoldMutationReturnTo"
+        },
+        {
+          "not": {
+            "type": "object",
+            "required": [
+              "kind",
+              "route",
+              "record"
+            ],
+            "properties": {
+              "kind": {
+                "const": "resource"
+              },
+              "route": {
+                "const": "show"
+              },
+              "record": {
+                "type": "object",
+                "required": [
+                  "from"
+                ],
+                "properties": {
+                  "from": {
+                    "const": "mutation_record"
+                  }
+                },
+                "not": {
+                  "required": [
+                    "through"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "scaffoldCreateForm": {
+      "title": "Associated create form",
+      "description": "A form that posts to the associated Entity's top-level create route and supplies the inverse Reference through the parent context.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "return_to"
+      ],
+      "properties": {
+        "return_to": {
+          "$ref": "#/$defs/returnTo"
+        }
+      }
+    }
+  }
+}

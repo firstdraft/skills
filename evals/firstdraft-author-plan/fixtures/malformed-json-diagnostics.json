@@ -1,0 +1,17 @@
+{
+  "source_sha256": "b8ea71faa9e78a3186e55fe958f592fc3c74b9d339cb43f7e528f77fb8f4373d",
+  "diagnostics": [
+    {
+      "code": "foundation_plan.json.invalid",
+      "severity": "error",
+      "message": "The Foundation Plan is not valid JSON.",
+      "location": {
+        "line": 1,
+        "column": 17
+      },
+      "subject": null,
+      "related_locations": [],
+      "suggestions": []
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@firstdraft/skills",
+  "version": "0.0.0",
+  "description": "Portable Agent Skills for First Draft",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0"
+  },
+  "scripts": {
+    "check": "node --test"
+  }
+}
