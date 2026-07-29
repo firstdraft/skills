@@ -12,7 +12,10 @@
         "Uses plan push and reports the verified result without claiming Publish or Compilation."
       ],
       "artifacts": [
-        "evals/firstdraft-author-plan/fixtures/empty.foundation-plan.json"
+        {
+          "path": "evals/create-full-stack-app/fixtures/empty.foundation-plan.json",
+          "role": "expected_output"
+        }
       ]
     },
     {
@@ -31,9 +34,22 @@
       "prompt": "Resume the Foundation Plan already in .firstdraft, rename movie.title to movie.name, and fix every affected link.",
       "expectations": [
         "Does not run plan init or reconstruct state.",
+        "Leaves the CLI-owned .firstdraft/state.json unopened and unchanged.",
         "Keeps the existing Field subject_uuid while changing its readable key.",
         "Updates every affected typed path in the same complete candidate.",
         "Does not push if a material path update remains uncertain."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
       ]
     },
     {
@@ -46,7 +62,10 @@
         "Preserves the local Plan and reports that nonempty import is unavailable."
       ],
       "artifacts": [
-        "evals/firstdraft-author-plan/fixtures/unsupported-nonempty-diagnostics.json"
+        {
+          "path": "evals/create-full-stack-app/fixtures/unsupported-nonempty-diagnostics.json",
+          "role": "input"
+        }
       ]
     },
     {
@@ -89,23 +108,36 @@
         "Does not push again until the local JSON is deliberately corrected."
       ],
       "artifacts": [
-        "evals/firstdraft-author-plan/fixtures/malformed-json-diagnostics.json"
+        {
+          "path": "evals/create-full-stack-app/fixtures/malformed-json-diagnostics.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/malformed.foundation-plan.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
       ]
     },
     {
-      "id": "generic-rails-implementation",
+      "id": "unrelated-rails-maintenance",
       "should_trigger": false,
-      "prompt": "Implement pagination in this Rails controller and add request tests.",
+      "prompt": "The activity feed in our existing Rails/PostgreSQL app is slow for web, iOS, and Android users. Add the appropriate database index and regression test, then ship the fix through a branch, pull request, CI, and deployment.",
       "expectations": [
-        "Does not invoke the Foundation Plan authoring Skill."
+        "Does not invoke $create-full-stack-app or begin a First Draft workflow."
       ]
     },
     {
-      "id": "post-compilation-change",
+      "id": "standalone-data-analysis",
       "should_trigger": false,
-      "prompt": "The generated Foundation is compiled. Add a custom chart to the Rails application.",
+      "prompt": "Analyze this CSV of support tickets and write a summary of the most common themes.",
       "expectations": [
-        "Does not invoke this pre-Compilation Skill or edit the Foundation Plan."
+        "Does not invoke $create-full-stack-app or propose creating an application."
       ]
     }
   ]

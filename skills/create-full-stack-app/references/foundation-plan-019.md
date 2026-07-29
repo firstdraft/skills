@@ -13,9 +13,12 @@ the submitted exact bytes.
 - There is no released end-to-end CLI/API workflow, GET or pull operation, complete semantic analyzer, Publish
   action, Compilation action, or generated Foundation.
 
-The bundled schema was copied from First Draft revision `4d956a5` and has SHA-256
-`12f8f2c5b422a0dbd94d201cc00f22e8845de0eb906f2019217e47014efb6734`. The reviewed public CLI baseline is
-[`af33be3`](https://github.com/firstdraft/cli/commit/af33be3); it has not been released and exposes only `plan init`
+The bundled schema was copied from the
+[First Draft source at revision `12fa2a6`](https://github.com/firstdraft/firstdraft/blob/12fa2a6bcac122196d55f5528fbc3f1363c684e3/docs/architecture/design/foundation-plan.schema.json)
+and has SHA-256
+`5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The reviewed public CLI baseline is
+[`af33be324fd0bc1df62f8f888a8e0b30cbd9e8da`](https://github.com/firstdraft/cli/commit/af33be324fd0bc1df62f8f888a8e0b30cbd9e8da);
+it has not been released and exposes only `plan init`
 and `plan push`. Check commands rather than inferring compatibility from an unreleased version number. Update this
 Skill deliberately when either contract changes.
 

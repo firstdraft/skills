@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create a Full-Stack App with First Draft"
+  short_description: "Create and deploy a Rails app for web, iOS, and Android"
+  default_prompt: "Use $create-full-stack-app to turn my software idea into a robust, deployed Rails application for web, iOS, and Android."
