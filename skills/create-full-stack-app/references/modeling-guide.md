@@ -62,8 +62,8 @@ Capabilities or prerequisites as authored lists.
 Fix the smallest well-founded source problem. Preserve unrelated subjects, ordering, and stable identity. If a
 diagnostic reveals an ambiguous product decision, ask the user rather than optimizing for a green response.
 
-In particular, do not remove nonempty modeled content solely because the prototype importer supports only an
-empty starter. That is a server capability gap and should remain visible.
+In particular, do not remove or weaken modeled content solely because the importer reports
+`foundation_plan.import.unsupported_capability`. Preserve the local Plan and report the exact server gap.
 
 ## Prepare user review
 

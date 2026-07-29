@@ -2,9 +2,9 @@
 
 Portable Agent Skills for working with [First Draft](https://github.com/firstdraft/firstdraft).
 
-This repository is experimental. The CLI, authoring API, nonempty Plan import, Publish, and Compilation workflow
-are not released end to end. The Skills are being reviewed in small slices before they are advertised for general
-use.
+This repository is experimental. The CLI and bounded authoring API exist only in reviewed branches. Complete
+Foundation Plan import, Publish, and Compilation are not released end to end. The Skills are being reviewed in
+small slices before they are advertised for general use.
 
 ## Skills
 

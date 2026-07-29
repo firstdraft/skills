@@ -1,0 +1,103 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-07"
+  },
+  "application": {
+    "key": "movies",
+    "name": "Movies",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01900000-0000-7000-8000-000000000101",
+        "key": "movie",
+        "name": "Movie",
+        "primary_descriptor": {
+          "field": "movie.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000201",
+            "key": "active",
+            "name": "Active",
+            "type": "boolean",
+            "required": true
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000202",
+            "key": "released_on",
+            "name": "Released on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000203",
+            "key": "published_at",
+            "name": "Published at",
+            "type": "datetime",
+            "required": true
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000204",
+            "key": "rating",
+            "name": "Rating",
+            "type": "decimal",
+            "required": true
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000205",
+            "key": "runtime_minutes",
+            "name": "Runtime minutes",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000206",
+            "key": "language",
+            "name": "Language",
+            "type": "language_code",
+            "required": true
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000207",
+            "key": "synopsis",
+            "name": "Synopsis",
+            "type": "long_text",
+            "required": true,
+            "normalizations": ["blank_to_null"]
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000208",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true,
+            "notes": "The public title.",
+            "immutable": true,
+            "comparison": "case_insensitive",
+            "normalizations": ["collapse_whitespace", "blank_to_null"]
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000209",
+            "key": "release_time_zone",
+            "name": "Release time zone",
+            "type": "time_zone",
+            "required": true
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000210",
+            "key": "private_feed_url",
+            "name": "Private feed URL",
+            "type": "url",
+            "required": true,
+            "encrypted_at_rest": true,
+            "redact_from_logs": true,
+            "normalizations": ["trim", "blank_to_null"]
+          }
+        ]
+      }
+    ]
+  }
+}

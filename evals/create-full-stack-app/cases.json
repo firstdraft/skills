@@ -53,21 +53,70 @@
       ]
     },
     {
-      "id": "prototype-nonempty-diagnostic",
+      "id": "add-field-with-minted-id",
       "should_trigger": true,
-      "prompt": "First Draft rejected my nonempty entities array. Fix the diagnostic and keep iterating until it passes.",
+      "prompt": "The installed firstdraft CLI includes plan subject-id. Add a required integer movie.runtime_minutes Field to the staged Plan for local review. Do not push it.",
       "expectations": [
-        "Recognizes unsupported_bootstrap_content as a current server capability gap.",
-        "Does not delete intended Entities to force a successful response.",
-        "Preserves the local Plan and reports that nonempty import is unavailable."
+        "Checks that plan subject-id is available before editing the Plan.",
+        "Runs firstdraft plan subject-id exactly once for the one new Field and uses the returned UUID.",
+        "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
+        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
+        "Does not run plan init or plan push."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/unsupported-nonempty-diagnostics.json",
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "review-supported-scalar-plan",
+      "should_trigger": true,
+      "prompt": "Review the Foundation Plan already in .firstdraft against the current First Draft import boundary. Keep this local; do not push it.",
+      "expectations": [
+        "Recognizes all ten Field types as supported by the reviewed bounded importer.",
+        "Preserves every Field, subject_uuid, and the Field Primary Descriptor.",
+        "Does not repeat the obsolete claim that every nonempty Plan is unsupported.",
+        "Does not run plan push or make another network request.",
+        "Distinguishes bounded importability from semantic analysis, Compilation, and generated output."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/supported-scalars.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "unsupported-field-capabilities",
+      "should_trigger": true,
+      "prompt": "First Draft returned the attached capability diagnostics for my staged Plan. Fix it and keep pushing until it passes.",
+      "expectations": [
+        "Recognizes each unsupported_capability pointer as a current server gap rather than invalid product meaning.",
+        "Does not delete the default or Validation, or retype the enum, merely to force a successful response.",
+        "Preserves the complete local Plan and every existing subject_uuid.",
+        "Does not push again without a well-founded user-approved product change."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/unsupported-field-capabilities-diagnostics.json",
           "role": "input"
         },
         {
-          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "path": "evals/create-full-stack-app/fixtures/unsupported-field-capabilities.foundation-plan.json",
           "role": "input",
           "stage_as": ".firstdraft/foundation-plan.json"
         },
