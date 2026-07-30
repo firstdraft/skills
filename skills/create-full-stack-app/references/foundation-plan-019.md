@@ -27,8 +27,8 @@ authorized.
 The bundled schema was copied from the
 [First Draft source at revision `12fa2a6`](https://github.com/firstdraft/firstdraft/blob/12fa2a6bcac122196d55f5528fbc3f1363c684e3/docs/architecture/design/foundation-plan.schema.json)
 and has SHA-256
-`5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The reviewed public API baseline is
-[`944673772ef7c5bf40ff67e65d8266556ab75f08`](https://github.com/firstdraft/firstdraft/commit/944673772ef7c5bf40ff67e65d8266556ab75f08)
+`5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The merged public API baseline is
+[`500d23e689bdb88325a2b00d2eac4132d846ceff`](https://github.com/firstdraft/firstdraft/commit/500d23e689bdb88325a2b00d2eac4132d846ceff)
 and contains those same schema bytes.
 The reviewed public CLI baseline is
 [`0681afd48d7825a7a1a0112e248f3013d0123743`](https://github.com/firstdraft/cli/commit/0681afd48d7825a7a1a0112e248f3013d0123743);

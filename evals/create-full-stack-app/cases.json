@@ -4,7 +4,7 @@
     {
       "id": "initialize-empty-plan",
       "should_trigger": true,
-      "prompt": "Help me start a First Draft Foundation Plan for my Oscar Party app and send it for diagnostics.",
+      "prompt": "The compatible firstdraft CLI is installed. Help me start a First Draft Foundation Plan for my Oscar Party app and send it for diagnostics.",
       "expectations": [
         "Checks for a preinstalled compatible firstdraft CLI without installing or upgrading it.",
         "Confirms the application key and name before running plan init.",
@@ -21,7 +21,7 @@
     {
       "id": "local-only-draft",
       "should_trigger": true,
-      "prompt": "Initialize and prepare my Foundation Plan locally for review, but do not send anything to First Draft.",
+      "prompt": "The compatible firstdraft CLI is installed. Initialize and prepare my Foundation Plan locally for review, but do not send anything to First Draft.",
       "expectations": [
         "Initializes locally after confirming the application key and name.",
         "Does not run plan push or make another network request.",
@@ -123,7 +123,7 @@
           "stage_as": ".firstdraft/foundation-plan.json"
         },
         {
-          "path": "evals/create-full-stack-app/fixtures/initialized-state.json",
+          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
           "role": "input",
           "stage_as": ".firstdraft/state.json"
         }
