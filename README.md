@@ -10,7 +10,7 @@ not released end to end. The Skills are being reviewed in small slices before th
 
 | Skill | Purpose | Status |
 |---|---|---|
-| `create-full-stack-app` | Create a robust full-stack application with First Draft | Experimental scaffold |
+| `create-full-stack-app` | Author and review an experimental First Draft Foundation Plan | Experimental scaffold |
 
 Each directory under `skills/` is an independently installable portable Skill. Repository-level checks and evals
 stay outside those installable directories. Product-specific Plugin packaging may point to the same Skill later;

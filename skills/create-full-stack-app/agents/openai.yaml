@@ -1,4 +1,4 @@
 interface:
   display_name: "Create a Full-Stack App with First Draft"
-  short_description: "Create and deploy a Rails app for web, iOS, and Android"
-  default_prompt: "Use $create-full-stack-app to turn my software idea into a robust, deployed Rails application for web, iOS, and Android."
+  short_description: "Experimental First Draft Plan authoring and diagnostics"
+  default_prompt: "Use $create-full-stack-app to help me author and review an experimental First Draft Foundation Plan. Keep it local unless I explicitly approve sending the complete Plan for bounded server diagnostics."
