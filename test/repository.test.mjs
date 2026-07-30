@@ -20,7 +20,11 @@ const foundationPlanSchemaDigest =
 const foundationPlanServerBaseline =
   "500d23e689bdb88325a2b00d2eac4132d846ceff";
 const foundationPlanCliBaseline =
-  "d588647044e64333d14bf467f4eb7d43728305db";
+  "6019e2935079f4a844611443558176b44b770f81";
+const planInitErrorCodes = [
+  "invalid_arguments",
+  "local_initialization_failed",
+];
 const planPushErrorCodes = [
   "invalid_arguments",
   "invalid_configuration",
@@ -1051,8 +1055,12 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     /Invoke it once for each candidate attempt[\s\S]*?never wrap the command in an automatic retry/,
   );
   assert(recoveryReference.includes(foundationPlanCliBaseline));
+  const pushReference = recoveryReference.match(
+    /## Plan push error boundary([\s\S]*?)## Verified success/,
+  );
+  assert(pushReference, "diagnostics reference: missing Plan push boundary");
   assert.deepEqual(
-    [...recoveryReference.matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
+    [...pushReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
       .map(([, code]) => code)
       .filter((code) => code !== "error"),
     planPushErrorCodes,
@@ -1128,6 +1136,99 @@ test("recovery evals stage and preserve existing Plan state", async () => {
       localStateEvaluation,
       "recognizes it as the only error that can carry recovery_state",
     ),
+  );
+});
+
+test("initialization recovery consumes the merged CLI error envelope", async () => {
+  const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
+  const cases = JSON.parse(
+    await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
+  ).cases;
+  const skillSource = await readFile(
+    path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
+    "utf8",
+  );
+  const recoveryReference = await readFile(
+    path.join(
+      skillsDirectory,
+      "create-full-stack-app",
+      "references",
+      "diagnostics-and-recovery.md",
+    ),
+    "utf8",
+  );
+  const initializationSection = skillSource.match(
+    /## Initialize or resume([\s\S]*?)## Model the application/,
+  );
+  const initializationReference = recoveryReference.match(
+    /## Local initialization error boundary([\s\S]*?)## Plan push error boundary/,
+  );
+
+  assert(initializationSection, "SKILL.md: missing initialization section");
+  assert(initializationReference, "diagnostics reference: missing initialization boundary");
+  for (const code of planInitErrorCodes) {
+    assert(
+      initializationSection[1].includes(`error: \"${code}\"`),
+      `SKILL.md: missing plan init branch for ${code}`,
+    );
+  }
+  assert.deepEqual(
+    [...initializationReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
+      .map(([, code]) => code)
+      .filter((code) => code !== "error"),
+    planInitErrorCodes,
+  );
+  assert.match(
+    initializationSection[1],
+    /any other code, missing object, malformed JSON, mixed output, or additional output, fail closed/,
+  );
+  assert.match(
+    initializationSection[1],
+    /Whether initialization reports success or failure[\s\S]*?`test -f` and `test -r`/,
+  );
+  assert.match(
+    initializationSection[1],
+    /Never expose an\s+absolute path, raw filesystem error, command arguments, Plan bytes, state contents, or unparsed command output/,
+  );
+  assert.match(
+    initializationReference[1],
+    /checks are evidence about local state, not a substitute for the command's error code/,
+  );
+  assert.match(
+    initializationReference[1],
+    /unknown code[\s\S]*?fail closed[\s\S]*?preserve it, and stop/,
+  );
+
+  const hasExpectation = (evaluation, fragment) =>
+    evaluation.expectations.some((expectation) =>
+      expectation.includes(fragment),
+    );
+  const invalidArguments = cases.find(
+    ({ id }) => id === "invalid-init-arguments",
+  );
+  assert.match(invalidArguments.prompt, /"error":"invalid_arguments"/);
+  assert(hasExpectation(invalidArguments, "Branches on invalid_arguments"));
+  assert(hasExpectation(invalidArguments, "one deliberately corrected invocation"));
+
+  const localFailure = cases.find(
+    ({ id }) => id === "local-initialization-failed",
+  );
+  assert.match(localFailure.prompt, /"error":"local_initialization_failed"/);
+  assert(hasExpectation(localFailure, "Branches on local_initialization_failed"));
+  assert(hasExpectation(localFailure, "project-relative metadata"));
+  assert(hasExpectation(localFailure, "Does not expose"));
+  assert.deepEqual(
+    localFailure.artifacts.map(({ stage_as: stageAs }) => stageAs),
+    [".firstdraft/state.json"],
+  );
+
+  const unknownOutput = cases.find(({ id }) => id === "unknown-init-output");
+  assert.match(unknownOutput.prompt, /not one parseable JSON object/);
+  assert(hasExpectation(unknownOutput, "Fails closed"));
+  assert(hasExpectation(unknownOutput, "Does not repeat or expose"));
+  assert.deepEqual(
+    unknownOutput.artifacts.map(({ stage_as: stageAs }) => stageAs),
+    [".firstdraft/state.json"],
   );
 });
 

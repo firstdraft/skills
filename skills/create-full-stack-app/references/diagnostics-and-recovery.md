@@ -3,13 +3,32 @@
 Read CLI output as the result of one exact local byte sequence. Do not infer server state from a partial or
 unverified response.
 
-## CLI error boundary
+## Local initialization error boundary
 
 The merged CLI contract at
-[`d588647044e64333d14bf467f4eb7d43728305db`](https://github.com/firstdraft/cli/commit/d588647044e64333d14bf467f4eb7d43728305db)
-writes exactly one JSON object to standard error for every handled `plan push` failure. Parse that object and branch
-on its stable `error` value. Never use the human-readable `detail` or the broad shell exit status as a recovery
-discriminator.
+[`6019e2935079f4a844611443558176b44b770f81`](https://github.com/firstdraft/cli/commit/6019e2935079f4a844611443558176b44b770f81)
+writes exactly one JSON object to standard error for every handled `plan init` failure. Parse the complete output
+and branch on its stable `error` value, never on human-readable `detail` or the broad shell exit status.
+
+| `error`                       | Local state                                      | Recovery action                                                                                   |
+| ----------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `invalid_arguments`           | No local files were written.                     | Correct only a known usage mistake from command help, then make one deliberately corrected call. |
+| `local_initialization_failed` | `.firstdraft/` may exist and may be incomplete.  | Stop, inspect project-relative metadata, and preserve every existing entry for manual recovery.   |
+
+Do not blindly retry either failure. After `local_initialization_failed`, never delete, overwrite, reconstruct, or
+reinitialize the directory. If output has an unknown code, is absent or malformed, mixes JSON with other text, or
+contains more than one value, fail closed: treat `.firstdraft/` as possibly incomplete, preserve it, and stop.
+
+After any initialization attempt, use only project-relative file metadata and permission checks to establish
+whether `.firstdraft/foundation-plan.json` and `.firstdraft/state.json` exist and are regular and readable. These
+checks are evidence about local state, not a substitute for the command's error code. Never report absolute paths,
+raw filesystem errors, command arguments, Plan bytes, state contents, or unparsed command output.
+
+## Plan push error boundary
+
+The same merged CLI baseline writes exactly one JSON object to standard error for every handled `plan push` failure.
+Parse that object and branch on its stable `error` value. Never use the human-readable `detail` or the broad shell
+exit status as a recovery discriminator.
 
 | `error`                   | Request state                                     | Recovery action                                                                               |
 | ------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------- |

@@ -4,4 +4,4 @@ set -eu
 repository=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$repository"
 
-node --test
+node --test 'test/**/*.test.mjs'

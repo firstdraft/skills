@@ -31,7 +31,7 @@ and has SHA-256
 [`500d23e689bdb88325a2b00d2eac4132d846ceff`](https://github.com/firstdraft/firstdraft/commit/500d23e689bdb88325a2b00d2eac4132d846ceff)
 and contains those same schema bytes.
 The merged CLI baseline is
-[`d588647044e64333d14bf467f4eb7d43728305db`](https://github.com/firstdraft/cli/commit/d588647044e64333d14bf467f4eb7d43728305db);
+[`6019e2935079f4a844611443558176b44b770f81`](https://github.com/firstdraft/cli/commit/6019e2935079f4a844611443558176b44b770f81);
 it has not been released and exposes `plan init`, `plan subject-id`, and `plan push`. Check commands rather than
 inferring compatibility from an unreleased version number. Update this Skill deliberately when either contract
 changes.
