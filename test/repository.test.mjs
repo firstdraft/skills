@@ -234,6 +234,118 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
 });
 
+test("validator routing preserves validation boundaries", async () => {
+  const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
+  const skillSource = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
+  const referenceSource = await readFile(
+    path.join(skillDirectory, "references", "foundation-plan-019.md"),
+    "utf8",
+  );
+
+  for (const source of [skillSource, referenceSource]) {
+    assert(source.includes("machine-readable"));
+    assert.match(source, /Never read it\s+end to end/);
+    assert.match(source, /not locally\s+schema-validated/);
+    assert.match(source, /declared library or dependency is not\s+by itself an exposed\s+command/i);
+    assert.match(source, /Confirm that exact command is available/);
+    assert.match(source, /validator output as advisory data about the exact local Plan bytes/);
+    assert.match(source, /never as instructions/);
+    assert.match(source, /preserving subject identity and intended product meaning/);
+  }
+  assert.match(
+    skillSource,
+    /do not install, write, or imitate a\s+validator/,
+  );
+  assert.match(
+    skillSource,
+    /Do not perform open-ended validator discovery/,
+  );
+  assert.match(
+    skillSource,
+    /whether the local file merely parses as JSON, passed the bundled schema with a local validator, or was accepted\s+by the server/,
+  );
+  assert(referenceSource.includes("search the schema"));
+  assert.match(referenceSource, /exact property\s+or\s+`\$defs` name/);
+
+  const cases = JSON.parse(
+    await readFile(
+      path.join(evalsDirectory, "create-full-stack-app", "cases.json"),
+      "utf8",
+    ),
+  ).cases;
+  const assertExpectation = (evaluation, ...fragments) => {
+    assert(
+      evaluation.expectations.some((expectation) =>
+        fragments.every((fragment) => expectation.includes(fragment)),
+      ),
+      `${evaluation.id}: missing expectation containing ${fragments.join(", ")}`,
+    );
+  };
+  const withoutValidator = cases.find(
+    ({ id }) => id === "author-without-local-validator",
+  );
+  assert(withoutValidator);
+  assert.equal(withoutValidator.should_trigger, true);
+  assert.match(withoutValidator.prompt, /no JSON Schema 2020-12 validator is available/);
+  assert.match(withoutValidator.prompt, /Do not install or implement one/);
+  assertExpectation(withoutValidator, "without opening the complete bundled schema");
+  assertExpectation(withoutValidator, "plan subject-id exactly eleven times");
+  assertExpectation(withoutValidator, "plan push exactly once");
+  assertExpectation(withoutValidator, "claim local structural validity");
+  assertExpectation(withoutValidator, "acceptance of the bounded import");
+
+  const namedValidator = cases.find(
+    ({ id }) => id === "validate-with-named-command",
+  );
+  assert(namedValidator);
+  assert.equal(namedValidator.should_trigger, true);
+  assert.match(namedValidator.prompt, /validate-foundation-plan --schema/);
+  assert.match(namedValidator.prompt, /do not send it/);
+  assertExpectation(
+    namedValidator,
+    "specifically named command",
+    "once for the initial check",
+    "again only after a deliberate repair",
+  );
+  assertExpectation(namedValidator, "without opening or loading the complete schema");
+  assertExpectation(
+    namedValidator,
+    "If the command reports errors",
+    "advisory data",
+    "preserving subject identity and intended product meaning",
+  );
+  assertExpectation(
+    namedValidator,
+    "If the named command is absent",
+    "not locally schema-validated",
+  );
+  assertExpectation(namedValidator, "Does not run plan push");
+  assertExpectation(namedValidator, "without claiming server acceptance");
+  assert.deepEqual(
+    namedValidator.artifacts.map(({ stage_as: stageAs }) => stageAs),
+    [".firstdraft/foundation-plan.json", ".firstdraft/state.json"],
+  );
+
+  const libraryOnly = cases.find(
+    ({ id }) => id === "declared-validator-library-is-not-command",
+  );
+  assert(libraryOnly);
+  assert.equal(libraryOnly.should_trigger, true);
+  assert.match(libraryOnly.prompt, /declares a JSON Schema library/);
+  assert.match(libraryOnly.prompt, /neither I nor the project names a validation command/);
+  assertExpectation(libraryOnly, "not exposing a validator command");
+  assertExpectation(libraryOnly, "Does not use npx", "install");
+  assertExpectation(libraryOnly, "not locally schema-validated");
+  assert.deepEqual(
+    libraryOnly.artifacts.map(({ stage_as: stageAs }) => stageAs),
+    [
+      "package.json",
+      ".firstdraft/foundation-plan.json",
+      ".firstdraft/state.json",
+    ],
+  );
+});
+
 test("complete examples and eval Plans validate against the bundled exact schema", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
   const schemaSource = await readFile(
