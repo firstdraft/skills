@@ -17,6 +17,10 @@ const foundationPlanTarget = {
 };
 const foundationPlanSchemaDigest =
   "5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5";
+const foundationPlanServerBaseline =
+  "3282954b6eefef4ab47ccba1c2ee7008315bee92";
+const foundationPlanCliBaseline =
+  "0681afd48d7825a7a1a0112e248f3013d0123743";
 const supportedScalarFieldTypes = [
   "boolean",
   "date",
@@ -29,7 +33,8 @@ const supportedScalarFieldTypes = [
   "time_zone",
   "url",
 ];
-const supportedScalarFieldProperties = [
+const supportedFieldTypes = [...supportedScalarFieldTypes, "enum"].sort();
+const supportedFieldProperties = [
   "subject_uuid",
   "key",
   "name",
@@ -188,7 +193,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     "utf8",
   );
   const documentedTypeSection = foundationPlanReference.match(
-    /A Field may use these types:\n\n([\s\S]*?)\n\nFor those types/,
+    /A Field may use these types:\n\n([\s\S]*?)\n\nFor every supported type/,
   );
   assert(
     documentedTypeSection,
@@ -198,11 +203,11 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     [...documentedTypeSection[1].matchAll(/^- `([^`]+)`$/gm)].map(
       (match) => match[1],
     ),
-    supportedScalarFieldTypes,
+    supportedFieldTypes,
   );
 
   const documentedPropertySection = foundationPlanReference.match(
-    /retains schema-valid combinations of ([\s\S]*?)\.\n\nAny Field type/,
+    /For every supported type, the importer retains schema-valid combinations of ([\s\S]*?)\.\n\nAn `enum` Field/,
   );
   assert(
     documentedPropertySection,
@@ -212,7 +217,36 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     [...documentedPropertySection[1].matchAll(/`([^`]+)`/g)].map(
       (match) => match[1],
     ),
-    supportedScalarFieldProperties,
+    supportedFieldProperties,
+  );
+
+  const documentedEnumSection = foundationPlanReference.match(
+    /An `enum` Field additionally requires ([\s\S]*?)\n\nScalar Fields/,
+  );
+  assert(
+    documentedEnumSection,
+    "foundation-plan-019.md: missing supported enum guidance",
+  );
+  assert.match(
+    documentedEnumSection[0],
+    /requires `settings\.values`, a nonempty array in stable order/,
+  );
+  assert.match(
+    documentedEnumSection[0],
+    /Each value\s+has its own `subject_uuid`, owner-local `key`, and human-facing `name`/,
+  );
+  assert.match(
+    documentedEnumSection[0],
+    /optional `settings\.ordinal` to `true` only when the order carries semantic\s+rank/,
+  );
+  assert.match(documentedEnumSection[0], /omission and `false` are equivalent/);
+  assert.match(
+    documentedEnumSection[0],
+    /Preserve a value's\s+UUID through renames, reordering, and coherent moves between enum Fields/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other\s+settings shape is structurally invalid rather than an importer capability gap/,
   );
 
   const examples = await readFile(
@@ -232,6 +266,40 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     ),
     supportedScalarFieldTypes.filter((type) => type !== "short_text"),
   );
+
+  const ordinalPlan = (await markdownJsonDocuments(
+    path.join(referencesDirectory, "examples.md"),
+  )).find((document) => document?.application?.key === "ranked_tasks");
+  assert(ordinalPlan, "examples.md: missing ordinal enum Plan");
+  const ordinalEntity = ordinalPlan.application.entities[0];
+  const ordinalField = ordinalEntity.fields.find(({ type }) => type === "enum");
+  assert(ordinalField, "examples.md: missing enum Field");
+  assert.deepEqual(
+    ordinalField.settings.values.map(({ key }) => key),
+    ["low", "medium", "high"],
+  );
+  assert.equal(ordinalField.settings.ordinal, true);
+  assert(!("default" in ordinalField));
+  assert(!("validations" in ordinalField));
+  const identities = [
+    ordinalEntity.subject_uuid,
+    ...ordinalEntity.fields.map(({ subject_uuid }) => subject_uuid),
+    ...ordinalField.settings.values.map(({ subject_uuid }) => subject_uuid),
+  ];
+  assert.equal(new Set(identities).size, identities.length);
+
+  const enumFixture = JSON.parse(
+    await readFile(
+      path.join(
+        evalsDirectory,
+        "create-full-stack-app",
+        "fixtures",
+        "supported-enum.foundation-plan.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.deepEqual(ordinalPlan, enumFixture);
 });
 
 test("validator routing preserves validation boundaries", async () => {
@@ -356,13 +424,16 @@ test("complete examples and eval Plans validate against the bundled exact schema
     createHash("sha256").update(schemaSource).digest("hex"),
     foundationPlanSchemaDigest,
   );
-  assert(
-    (
-      await readFile(
-        path.join(skillDirectory, "references", "foundation-plan-019.md"),
-        "utf8",
-      )
-    ).includes(foundationPlanSchemaDigest),
+  const referenceSource = await readFile(
+    path.join(skillDirectory, "references", "foundation-plan-019.md"),
+    "utf8",
+  );
+  assert(referenceSource.includes(foundationPlanSchemaDigest));
+  assert(referenceSource.includes(foundationPlanServerBaseline));
+  assert(referenceSource.includes(foundationPlanCliBaseline));
+  assert.match(
+    referenceSource,
+    /reviewed public API baseline is[\s\S]*?and contains those same schema bytes/,
   );
 
   const validate = new Ajv2020({
@@ -408,7 +479,11 @@ test("revision evals stage existing Plan identity and private state", async () =
       stage_as: ".firstdraft/state.json",
     },
   ];
-  for (const id of ["resume-with-stable-identity", "add-field-with-minted-id"]) {
+  for (const id of [
+    "resume-with-stable-identity",
+    "add-field-with-minted-id",
+    "add-ordinal-enum-with-minted-ids",
+  ]) {
     assert.deepEqual(
       cases.find((evaluation) => evaluation.id === id).artifacts,
       stagedPlanArtifacts,
@@ -426,6 +501,33 @@ test("revision evals stage existing Plan identity and private state", async () =
     mintingEvaluation.expectations.some((expectation) =>
       expectation.includes("Never fabricates a UUIDv7"),
     ),
+  );
+  const enumEvaluation = cases.find(
+    ({ id }) => id === "add-ordinal-enum-with-minted-ids",
+  );
+  assert(
+    enumEvaluation.expectations.some((expectation) =>
+      expectation.includes("plan subject-id exactly four times"),
+    ),
+    "enum eval must mint exactly one Field and three value IDs",
+  );
+  assert(
+    enumEvaluation.expectations.some((expectation) =>
+      expectation.includes("Never fabricates a UUIDv7"),
+    ),
+    "enum eval must forbid fabricated or copied IDs",
+  );
+  assert(
+    enumEvaluation.expectations.some((expectation) =>
+      expectation.includes("settings.values in low, medium, high order"),
+    ),
+    "enum eval must bind value order",
+  );
+  assert(
+    enumEvaluation.expectations.some((expectation) =>
+      expectation.includes("Does not run plan init or plan push"),
+    ),
+    "enum authoring eval must remain local",
   );
 
   const plan = JSON.parse(
@@ -466,6 +568,11 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     role: "input",
     stage_as: ".firstdraft/state.json",
   };
+  const initializedStateArtifact = {
+    path: "evals/create-full-stack-app/fixtures/initialized-state.json",
+    role: "input",
+    stage_as: ".firstdraft/state.json",
+  };
   const supportedPlanArtifact = {
     path:
       "evals/create-full-stack-app/fixtures/supported-scalars.foundation-plan.json",
@@ -503,7 +610,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
         supportedEntity.fields.flatMap((field) => Object.keys(field)),
       ),
     ].sort(),
-    [...supportedScalarFieldProperties].sort(),
+    [...supportedFieldProperties].sort(),
   );
   const descriptorKey = supportedEntity.primary_descriptor.field
     .split(".")
@@ -520,6 +627,83 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
       ...supportedEntity.fields.map(({ subject_uuid }) => subject_uuid),
     ]).size,
     supportedScalarFieldTypes.length + 1,
+  );
+
+  const supportedEnumPlanArtifact = {
+    path:
+      "evals/create-full-stack-app/fixtures/supported-enum.foundation-plan.json",
+    role: "input",
+    stage_as: ".firstdraft/foundation-plan.json",
+  };
+  const supportedEnumEvaluation = cases.find(
+    ({ id }) => id === "push-supported-enum-plan",
+  );
+  assert.deepEqual(supportedEnumEvaluation.artifacts, [
+    supportedEnumPlanArtifact,
+    initializedStateArtifact,
+  ]);
+  const initializedState = JSON.parse(
+    await readFile(
+      path.join(evaluationDirectory, "fixtures", "initialized-state.json"),
+      "utf8",
+    ),
+  );
+  assert.deepEqual(Object.keys(initializedState).sort(), ["format", "project_id"]);
+  assert.equal(initializedState.format, "firstdraft.cli-state/1");
+  assert.match(
+    initializedState.project_id,
+    /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+  );
+  const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  assert(readme.includes(foundationPlanCliBaseline));
+  assert.match(readme, /state-placeholder\.txt.*deliberately unreadable/s);
+  assert.match(readme, /initialized-state\.json.*mirrors the state written by `plan init`/s);
+  assert.match(
+    readme,
+    /Before every\s+`push-supported-enum-plan` run, replace the fixture with `.firstdraft\/state\.json` generated by a fresh\s+`firstdraft plan init` in a scratch directory before staging it/,
+  );
+  const supportedEnumPlan = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "supported-enum.foundation-plan.json",
+      ),
+      "utf8",
+    ),
+  );
+  const supportedEnumField = supportedEnumPlan.application.entities[0].fields.find(
+    ({ type }) => type === "enum",
+  );
+  assert(supportedEnumField, "supported enum fixture: missing enum Field");
+  assert.deepEqual(
+    supportedEnumField.settings.values.map(({ key }) => key),
+    ["low", "medium", "high"],
+  );
+  assert.equal(supportedEnumField.settings.ordinal, true);
+  assert(
+    supportedEnumEvaluation.expectations.some((expectation) =>
+      expectation.includes("supported by the reviewed bounded importer"),
+    ),
+    "supported enum eval must recognize the import boundary",
+  );
+  assert(
+    supportedEnumEvaluation.expectations.some((expectation) =>
+      expectation.includes("plan push exactly once"),
+    ),
+    "supported enum eval must exercise the push path",
+  );
+  assert(
+    supportedEnumEvaluation.expectations.some((expectation) =>
+      expectation.includes("Does not run plan init, reinitialize"),
+    ),
+    "supported enum eval must not replace initialized state",
+  );
+  assert(
+    supportedEnumEvaluation.expectations.some((expectation) =>
+      expectation.includes("instead of re-minting them"),
+    ),
+    "supported enum eval must preserve staged documentation UUIDs",
   );
 
   const unsupportedPlanArtifact = {
@@ -552,6 +736,10 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   assert.equal(unsupportedFields[0].default.value, "Untitled");
   assert.equal(unsupportedFields[0].validations[0].kind, "length");
   assert.equal(unsupportedFields[1].type, "enum");
+  assert.deepEqual(
+    unsupportedFields[1].settings.values.map(({ key }) => key),
+    ["draft"],
+  );
   const response = JSON.parse(
     await readFile(
       path.join(
@@ -579,14 +767,6 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
       [
         "foundation_plan.import.unsupported_capability",
         "/application/entities/0/fields/0/validations",
-      ],
-      [
-        "foundation_plan.import.unsupported_capability",
-        "/application/entities/0/fields/1/settings",
-      ],
-      [
-        "foundation_plan.import.unsupported_capability",
-        "/application/entities/0/fields/1/type",
       ],
     ],
   );

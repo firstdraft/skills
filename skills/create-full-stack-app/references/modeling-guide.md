@@ -31,6 +31,9 @@ For each Entity:
 Do not infer uniqueness from a label, presence from a form, or immutability from current UI. Ask when those facts
 matter.
 
+Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
+order carries semantic rank rather than presentation order alone.
+
 ## Model relationships
 
 Put a Reference on the Entity that stores the relationship fact. Ask:

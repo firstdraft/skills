@@ -19,15 +19,18 @@ authorized.
 - The v0.19 corpus passes the First Draft JSON Schema and strict loader.
 - Structural validity does not prove readable-link resolution, whole-application consistency, target support, or
   compilability.
-- The reviewed conditional PUT imports empty drafts and a bounded subset of Entities, scalar Fields, and Field or
-  system-Field Primary Descriptors.
+- The reviewed conditional PUT imports empty drafts and a bounded subset of Entities, ten scalar Field kinds, enum
+  Fields with ordered values, and Field or system-Field Primary Descriptors.
 - There is no released end-to-end CLI/API workflow, complete nonempty import, GET or pull operation, complete
   semantic analyzer, Publish action, Compilation action, or generated Foundation.
 
 The bundled schema was copied from the
 [First Draft source at revision `12fa2a6`](https://github.com/firstdraft/firstdraft/blob/12fa2a6bcac122196d55f5528fbc3f1363c684e3/docs/architecture/design/foundation-plan.schema.json)
 and has SHA-256
-`5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The reviewed public CLI baseline is
+`5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The reviewed public API baseline is
+[`3282954b6eefef4ab47ccba1c2ee7008315bee92`](https://github.com/firstdraft/firstdraft/commit/3282954b6eefef4ab47ccba1c2ee7008315bee92)
+and contains those same schema bytes.
+The reviewed public CLI baseline is
 [`0681afd48d7825a7a1a0112e248f3013d0123743`](https://github.com/firstdraft/cli/commit/0681afd48d7825a7a1a0112e248f3013d0123743);
 it has not been released and exposes `plan init`, `plan subject-id`, and `plan push`. Check commands rather than
 inferring compatibility from an unreleased version number. Update this Skill deliberately when either contract
@@ -124,6 +127,7 @@ descriptors are not yet supported. A Field may use these types:
 - `date`
 - `datetime`
 - `decimal`
+- `enum`
 - `integer`
 - `language_code`
 - `long_text`
@@ -131,10 +135,18 @@ descriptors are not yet supported. A Field may use these types:
 - `time_zone`
 - `url`
 
-For those types, the importer retains schema-valid combinations of `subject_uuid`, `key`, `name`, `type`,
+For every supported type, the importer retains schema-valid combinations of `subject_uuid`, `key`, `name`, `type`,
 `required`, `notes`, `immutable`, `comparison`, `normalizations`, `encrypted_at_rest`, and `redact_from_logs`.
 
-Any Field type outside the list above, Field defaults, Validations, derivations, Field settings, References,
-Associations, and other Entity or Application capabilities remain unsupported. One unsupported pointer rejects the
-complete conditional PUT with `foundation_plan.import.unsupported_capability` and no mutation. That diagnostic
-describes server capability, not invalid product meaning. Preserve the authored Plan and report the exact gap.
+An `enum` Field additionally requires `settings.values`, a nonempty array in stable order. Each value
+has its own `subject_uuid`, owner-local `key`, and human-facing `name`; mint an ID for each new value with
+`firstdraft plan subject-id`. Set the optional `settings.ordinal` to `true` only when the order carries semantic
+rank. Omit it when the order is presentational because omission and `false` are equivalent. Preserve a value's
+UUID through renames, reordering, and coherent moves between enum Fields.
+
+Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other
+settings shape is structurally invalid rather than an importer capability gap. Schema-valid Field types outside
+the list above, Field defaults, Validations, derivations, References, Associations, and other Entity or Application
+capabilities remain unsupported. One unsupported pointer rejects the complete conditional PUT with
+`foundation_plan.import.unsupported_capability` and no mutation. That diagnostic describes server capability, not
+invalid product meaning. Preserve the authored Plan and report the exact gap.

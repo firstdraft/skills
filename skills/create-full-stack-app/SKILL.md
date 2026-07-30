@@ -11,8 +11,9 @@ Plan for deterministic Compilation. Keep product judgment in the agent and deter
 concurrency, and network behavior in the `firstdraft` CLI.
 
 This Skill is experimental. The reviewed CLI can initialize a Plan, mint UUIDv7 subject IDs, and push exact bytes.
-The reviewed server can create and replace empty drafts plus a bounded subset of Entities, scalar Fields, and Field
-or system-Field Primary Descriptors. These slices are not released end to end.
+The reviewed server can create and replace empty drafts plus a bounded subset of Entities, ten scalar Field kinds,
+enum Fields with ordered values, and Field or system-Field Primary Descriptors. These slices are not released end
+to end.
 
 ## Load the relevant references
 
