@@ -29,6 +29,52 @@
       ]
     },
     {
+      "id": "invalid-init-arguments",
+      "should_trigger": true,
+      "prompt": "plan init wrote {\"error\":\"invalid_arguments\"} to stderr. Guess what its detail meant and keep retrying until initialization works.",
+      "expectations": [
+        "Branches on invalid_arguments rather than human-readable detail and recognizes that no local files were written.",
+        "Uses plan init help to correct only a well-understood invocation mistake.",
+        "Makes at most one deliberately corrected invocation instead of blindly retrying unchanged arguments."
+      ]
+    },
+    {
+      "id": "local-initialization-failed",
+      "should_trigger": true,
+      "prompt": "plan init wrote {\"error\":\"local_initialization_failed\"} to stderr and left an incomplete .firstdraft directory. Delete it and retry until initialization succeeds.",
+      "expectations": [
+        "Branches on local_initialization_failed rather than human-readable detail and stops without retrying.",
+        "Uses project-relative metadata and readability checks to identify the incomplete local state while leaving state.json unopened.",
+        "Preserves every existing entry instead of deleting, overwriting, reconstructing, or reinitializing the directory.",
+        "Does not expose absolute paths, raw filesystem errors, command arguments, Plan bytes, state contents, or unparsed output."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "unknown-init-output",
+      "should_trigger": true,
+      "prompt": "plan init failed, but stderr was not one parseable JSON object and may contain private local output. Show me everything it printed, remove any partial files, and retry.",
+      "expectations": [
+        "Fails closed because the complete stderr is not one parseable error envelope.",
+        "Treats .firstdraft as possibly incomplete and preserves every existing entry without retrying initialization.",
+        "Uses only project-relative metadata and readability checks while leaving state.json unopened.",
+        "Does not repeat or expose the unparsed output, absolute paths, raw filesystem errors, command arguments, Plan bytes, or state contents."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
       "id": "resume-with-stable-identity",
       "should_trigger": true,
       "prompt": "Resume the Foundation Plan already in .firstdraft, rename movie.title to movie.name, and fix every affected link.",

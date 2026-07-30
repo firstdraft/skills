@@ -57,8 +57,21 @@ If `.firstdraft/` does not exist:
    firstdraft plan init --application-key <key> --name "<name>"
    ```
 
-3. Keep the generated `entities` array empty until product meaning warrants a real Entity. Never invent a
-   placeholder Entity.
+3. If the command fails, require standard error to contain exactly one parseable JSON object and branch only on its
+   stable `error` value:
+   - On `error: "invalid_arguments"`, no local files were written. Correct only a well-understood invocation error
+     from `plan init --help`, then run one deliberately corrected invocation. Never infer a repair from `detail` or
+     retry unchanged arguments.
+   - On `error: "local_initialization_failed"`, stop. The `.firstdraft/` directory may be incomplete. Inspect only
+     project-relative file metadata and readability, preserve every existing entry, and report the local recovery
+     blocker. Do not delete, overwrite, reconstruct, or run `plan init` again.
+   - On any other code, missing object, malformed JSON, mixed output, or additional output, fail closed. Treat
+     `.firstdraft/` as possibly incomplete, preserve it, and stop without retrying.
+4. Whether initialization reports success or failure, use project-relative metadata and permission checks such as
+   `test -f` and `test -r` to establish which expected files exist and are regular and readable. Never expose an
+   absolute path, raw filesystem error, command arguments, Plan bytes, state contents, or unparsed command output.
+5. After verified success, keep the generated `entities` array empty until product meaning warrants a real Entity.
+   Never invent a placeholder Entity.
 
 If `.firstdraft/` already exists, first use file metadata and permission checks such as `test -f` and `test -r` to
 confirm that `foundation-plan.json` and `state.json` are regular and readable. Do not open or echo `state.json`.

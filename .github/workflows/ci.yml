@@ -27,3 +27,10 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts
       - run: sh script/check
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: firstdraft/cli
+          ref: 6019e2935079f4a844611443558176b44b770f81
+          path: tmp/firstdraft-cli
+          persist-credentials: false
+      - run: node script/check-cli-contract.mjs tmp/firstdraft-cli
