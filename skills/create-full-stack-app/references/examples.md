@@ -71,6 +71,76 @@ The Entity and Field have independent UUIDs. The `primary_descriptor` uses a typ
 UUID. The reviewed importer also accepts `boolean`, `date`, `datetime`, `decimal`, `integer`, `language_code`,
 `long_text`, `time_zone`, and `url` Fields when they use only the supported schema-valid scalar properties.
 
+## Ordinal enum Field
+
+Use an enum for a closed set of named choices. This complete document is structurally valid v0.19 and accepted by
+the reviewed bounded importer. Here, priority order carries semantic rank, so `ordinal` is `true`.
+
+```json
+{
+  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-07"
+  },
+  "application": {
+    "key": "ranked_tasks",
+    "name": "Ranked Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fb088-f094-719b-884f-8103ded44e99",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fb088-f0bb-72fe-8d31-44dc6e07e609",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fb088-f0e1-79e8-864b-7323270f7e4c",
+            "key": "priority",
+            "name": "Priority",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "019fb088-f10c-7b84-b98d-ec89c752c040",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "019fb088-f138-7a6d-952e-04c4782d1e3f",
+                  "key": "medium",
+                  "name": "Medium"
+                },
+                {
+                  "subject_uuid": "019fb088-f160-73b6-9418-e0d7e73d21a3",
+                  "key": "high",
+                  "name": "High"
+                }
+              ],
+              "ordinal": true
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+The Entity, Fields, and every enum value have independent UUIDs. Preserve a value's UUID when renaming or
+reordering it. Omit `ordinal` when order is presentational rather than ranked.
+
 ## Stored and reverse relationship
 
 This complete document is structurally valid v0.19, but References and authored Associations remain outside the

@@ -1,0 +1,59 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-07"
+  },
+  "application": {
+    "key": "ranked_tasks",
+    "name": "Ranked Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fb088-f094-719b-884f-8103ded44e99",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fb088-f0bb-72fe-8d31-44dc6e07e609",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fb088-f0e1-79e8-864b-7323270f7e4c",
+            "key": "priority",
+            "name": "Priority",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "019fb088-f10c-7b84-b98d-ec89c752c040",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "019fb088-f138-7a6d-952e-04c4782d1e3f",
+                  "key": "medium",
+                  "name": "Medium"
+                },
+                {
+                  "subject_uuid": "019fb088-f160-73b6-9418-e0d7e73d21a3",
+                  "key": "high",
+                  "name": "High"
+                }
+              ],
+              "ordinal": true
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

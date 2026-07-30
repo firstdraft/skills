@@ -77,11 +77,63 @@
       ]
     },
     {
+      "id": "add-ordinal-enum-with-minted-ids",
+      "should_trigger": true,
+      "prompt": "The installed firstdraft CLI includes plan subject-id. Add a required movie.priority Field with ranked Low, Medium, and High choices to the staged Plan for local review. Do not push it.",
+      "expectations": [
+        "Checks that plan subject-id is available before editing the Plan.",
+        "Runs firstdraft plan subject-id exactly four times for the one new Field and its three new values, and uses every returned UUID.",
+        "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
+        "Authors an enum Field with settings.values in low, medium, high order and settings.ordinal set to true.",
+        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
+        "Does not invent an unrequested default or Validation.",
+        "Does not run plan init or plan push."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "push-supported-enum-plan",
+      "should_trigger": true,
+      "prompt": "Send the staged Foundation Plan to First Draft for diagnostics. Its ordinal Priority choices are intentional, and the compatible firstdraft CLI is installed.",
+      "expectations": [
+        "Recognizes the enum Field, its ordered values, and ordinality as supported by the reviewed bounded importer.",
+        "Preserves the enum Field and every existing subject_uuid without weakening the modeled product meaning.",
+        "Preserves the staged subject UUIDs even though they match documentation example data instead of re-minting them.",
+        "Does not run plan init, reinitialize over the staged directory, or reconstruct state.",
+        "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
+        "Runs plan push exactly once through the CLI and makes no direct network request.",
+        "Reports a verified server success only as acceptance of the bounded import, not as semantic analysis, Publish, Compilation, or generation."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/supported-enum.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/initialized-state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
       "id": "review-supported-scalar-plan",
       "should_trigger": true,
       "prompt": "Review the Foundation Plan already in .firstdraft against the current First Draft import boundary. Keep this local; do not push it.",
       "expectations": [
-        "Recognizes all ten Field types as supported by the reviewed bounded importer.",
+        "Recognizes all ten scalar Field types as supported by the reviewed bounded importer.",
         "Preserves every Field, subject_uuid, and the Field Primary Descriptor.",
         "Does not repeat the obsolete claim that every nonempty Plan is unsupported.",
         "Does not run plan push or make another network request.",
@@ -172,8 +224,8 @@
       "should_trigger": true,
       "prompt": "First Draft returned the attached capability diagnostics for my staged Plan. Fix it and keep pushing until it passes.",
       "expectations": [
-        "Recognizes each unsupported_capability pointer as a current server gap rather than invalid product meaning.",
-        "Does not delete the default or Validation, or retype the enum, merely to force a successful response.",
+        "Recognizes both unsupported_capability pointers as current default and Validation server gaps rather than invalid product meaning.",
+        "Preserves the now-supported enum and does not delete the default or Validation merely to force a successful response.",
         "Preserves the complete local Plan and every existing subject_uuid.",
         "Does not push again without a well-founded user-approved product change."
       ],
