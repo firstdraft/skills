@@ -12,8 +12,8 @@ concurrency, and network behavior in the `firstdraft` CLI.
 
 This Skill is experimental. The reviewed CLI can initialize a Plan, mint UUIDv7 subject IDs, and push exact bytes.
 The reviewed server can create and replace empty drafts plus a bounded subset of Entities, ten scalar Field kinds,
-enum Fields with ordered values, and Field or system-Field Primary Descriptors. These slices are not released end
-to end.
+enum Fields with ordered values, schema-valid tagged Field defaults, and Field or system-Field Primary Descriptors.
+These slices are not released end to end.
 
 ## Load the relevant references
 
@@ -75,6 +75,7 @@ preserve its existing subject UUIDs.
    path in the same candidate. Give a replacement concept a new UUID.
 5. Use `firstdraft plan subject-id` for each genuinely new subject. If the capability check failed, do not invent a
    UUIDv7 or copy an example UUID; explain that this CLI cannot yet add subjects safely.
+   A Field default is a value owned by its Field, not a subject; never mint an ID for it.
 6. Omit unsupported prose, secrets, arbitrary code, ordinary empty optional collections, and structural `null`
    placeholders.
 7. Ask the user about materially ambiguous product meaning. Do not silently choose destructive relationship

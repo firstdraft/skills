@@ -52,6 +52,13 @@
                 }
               ]
             }
+          },
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000306",
+            "key": "description",
+            "name": "Description",
+            "type": "rich_text",
+            "required": false
           }
         ]
       }

@@ -1,12 +1,12 @@
 {
-  "source_sha256": "eb44957b1676b7b118e4081691f5dd3c684dc14fd498f8eb9539319c180b614b",
+  "source_sha256": "63a58234608f3b2698176b80f315b3057358c88043ded8838d3ae95de5a5dd35",
   "diagnostics": [
     {
       "code": "foundation_plan.import.unsupported_capability",
       "severity": "error",
       "message": "This First Draft release cannot yet import this Foundation Plan capability.",
       "location": {
-        "source_pointer": "/application/entities/0/fields/0/default"
+        "source_pointer": "/application/entities/0/fields/0/validations"
       },
       "subject": null,
       "related_locations": [],
@@ -17,7 +17,7 @@
       "severity": "error",
       "message": "This First Draft release cannot yet import this Foundation Plan capability.",
       "location": {
-        "source_pointer": "/application/entities/0/fields/0/validations"
+        "source_pointer": "/application/entities/0/fields/2/type"
       },
       "subject": null,
       "related_locations": [],

@@ -31,6 +31,10 @@
             "name": "Priority",
             "type": "enum",
             "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "medium"
+            },
             "settings": {
               "values": [
                 {

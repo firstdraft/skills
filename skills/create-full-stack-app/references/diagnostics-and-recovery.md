@@ -26,7 +26,7 @@ A `422` response binds diagnostics to the submitted bytes with `source_sha256`:
       "severity": "error",
       "message": "This First Draft release cannot yet import this Foundation Plan capability.",
       "location": {
-        "source_pointer": "/application/entities/0/fields/0/default"
+        "source_pointer": "/application/entities/0/fields/0/validations"
       },
       "subject": null,
       "related_locations": [],
@@ -41,6 +41,15 @@ Diagnostic locations have one of two shapes:
 - `location.source_pointer` is an RFC 6901 JSON Pointer into the exact submitted document.
 - `location.line` and `location.column` are positive one-based coordinates for source-level problems such as
   malformed JSON or duplicate object names.
+
+`foundation_plan.json.number_out_of_range` and `foundation_plan.json.number_not_round_trippable` use the root
+pointer `""` because the loader checks the whole document's PostgreSQL JSON storage boundary before subject-level
+analysis. Either can concern a numeric literal nested in a Field default. Scan the raw source for authored
+JSON-number literals; parsing and reserializing can erase exponent or negative-zero spelling. If more than one
+could explain the root diagnostic, identify the candidates for the user and do not guess which one to change.
+Preserve the intended representation rather than rounding or coercing a value merely to pass. A `decimal` literal
+is already authored as a canonical decimal string, not a JSON number; encode that documented semantic form when
+the user's intent is unambiguous.
 
 `subject` optionally identifies the typed readable subject the diagnostic concerns. `related_locations` lists
 additional pointer or coordinate locations needed to understand the same problem. `suggestions` contains optional
