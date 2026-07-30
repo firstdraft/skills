@@ -110,6 +110,10 @@ the reviewed bounded importer. Here, priority order carries semantic rank, so `o
             "name": "Priority",
             "type": "enum",
             "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "medium"
+            },
             "settings": {
               "values": [
                 {
@@ -138,8 +142,10 @@ the reviewed bounded importer. Here, priority order carries semantic rank, so `o
 }
 ```
 
-The Entity, Fields, and every enum value have independent UUIDs. Preserve a value's UUID when renaming or
-reordering it. Omit `ordinal` when order is presentational rather than ranked.
+The Entity, Fields, and every enum value have independent UUIDs. The default is a tagged value owned by the Field,
+so it has no UUID and does not require `plan subject-id`. Its literal names the selected enum value by owner-local
+key. If `medium` is renamed, update the default in the same candidate while preserving that value's UUID. Omit
+`ordinal` when order is presentational rather than ranked.
 
 ## Stored and reverse relationship
 

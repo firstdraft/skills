@@ -18,7 +18,7 @@ const foundationPlanTarget = {
 const foundationPlanSchemaDigest =
   "5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5";
 const foundationPlanServerBaseline =
-  "3282954b6eefef4ab47ccba1c2ee7008315bee92";
+  "944673772ef7c5bf40ff67e65d8266556ab75f08";
 const foundationPlanCliBaseline =
   "0681afd48d7825a7a1a0112e248f3013d0123743";
 const supportedScalarFieldTypes = [
@@ -40,6 +40,7 @@ const supportedFieldProperties = [
   "name",
   "type",
   "required",
+  "default",
   "notes",
   "immutable",
   "comparison",
@@ -245,8 +246,53 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     /Preserve a value's\s+UUID through renames, reordering, and coherent moves between enum Fields/,
   );
   assert.match(
+    documentedEnumSection[0],
+    /An enum literal default contains the\s+selected value's owner-local `key`, not its UUID\.[\s\S]*?Update that literal in the same candidate when renaming the value,\s+while preserving the value's UUID/,
+  );
+  assert.match(
     foundationPlanReference,
     /Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other\s+settings shape is structurally invalid rather than an importer capability gap/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /A Field `default` is one closed tagged Value\. Its tag is `literal`, `environment`, `environment_path`, or\s+`reference_record`/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /A `decimal` literal uses a canonical, non-exponent decimal string[\s\S]*?a JSON number, plus sign, negative zero, exponent, a redundant\s+leading zero before another integer digit, or trailing fractional zero is not/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /bounded importer structurally retains all four schema-valid tags without checking their type or resolving\s+their links/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /A Field default has no `subject_uuid`; adding, changing, or clearing one preserves the Field's\s+identity/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Omitting a Field's `default` means it has no authored default[\s\S]*?authored literal-null default/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /retention is structural, not default analysis[\s\S]*?does not prove literal compatibility[\s\S]*?Compiler lowering/,
+  );
+
+  const diagnosticsReference = await readFile(
+    path.join(referencesDirectory, "diagnostics-and-recovery.md"),
+    "utf8",
+  );
+  assert.match(
+    diagnosticsReference,
+    /`foundation_plan\.json\.number_out_of_range` and `foundation_plan\.json\.number_not_round_trippable` use the root\s+pointer `""`/,
+  );
+  assert.match(
+    diagnosticsReference,
+    /Scan the raw source for authored\s+JSON-number literals[\s\S]*?identify the candidates for the user and do not guess/,
+  );
+  assert.match(
+    diagnosticsReference,
+    /A\s+`decimal` literal\s+is already authored as a canonical decimal string, not a JSON number/,
   );
 
   const examples = await readFile(
@@ -279,13 +325,17 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     ["low", "medium", "high"],
   );
   assert.equal(ordinalField.settings.ordinal, true);
-  assert(!("default" in ordinalField));
+  assert.deepEqual(ordinalField.default, {
+    kind: "literal",
+    value: "medium",
+  });
   assert(!("validations" in ordinalField));
   const identities = [
     ordinalEntity.subject_uuid,
     ...ordinalEntity.fields.map(({ subject_uuid }) => subject_uuid),
     ...ordinalField.settings.values.map(({ subject_uuid }) => subject_uuid),
   ];
+  assert.equal(identities.length, 6);
   assert.equal(new Set(identities).size, identities.length);
 
   const enumFixture = JSON.parse(
@@ -358,6 +408,12 @@ test("validator routing preserves validation boundaries", async () => {
   assert.match(withoutValidator.prompt, /Do not install or implement one/);
   assertExpectation(withoutValidator, "without opening the complete bundled schema");
   assertExpectation(withoutValidator, "plan subject-id exactly eleven times");
+  assertExpectation(
+    withoutValidator,
+    "movie.rating",
+    "literal default value \"7.5\" as a canonical string",
+    "never the JSON number 7.5",
+  );
   assertExpectation(withoutValidator, "plan push exactly once");
   assertExpectation(withoutValidator, "claim local structural validity");
   assertExpectation(withoutValidator, "acceptance of the bounded import");
@@ -489,6 +545,47 @@ test("revision evals stage existing Plan identity and private state", async () =
       stagedPlanArtifacts,
     );
   }
+  const enumRenameEvaluation = cases.find(
+    ({ id }) => id === "rename-defaulted-enum-value",
+  );
+  assert.deepEqual(enumRenameEvaluation.artifacts, [
+    {
+      path: "evals/create-full-stack-app/fixtures/supported-enum.foundation-plan.json",
+      role: "input",
+      stage_as: ".firstdraft/foundation-plan.json",
+    },
+    stagedPlanArtifacts[1],
+  ]);
+  assert(
+    enumRenameEvaluation.expectations.some((expectation) =>
+      expectation.includes("existing subject_uuid"),
+    ),
+    "enum rename eval must preserve value identity",
+  );
+  assert(
+    enumRenameEvaluation.expectations.some((expectation) =>
+      expectation.includes("literal default from medium to standard"),
+    ),
+    "enum rename eval must update the dependent default",
+  );
+  assert(
+    enumRenameEvaluation.expectations.some((expectation) =>
+      expectation.includes("Does not run plan subject-id"),
+    ),
+    "enum rename eval must not mint a replacement identity",
+  );
+  assert(
+    enumRenameEvaluation.expectations.some((expectation) =>
+      expectation.includes("state.json unopened and unchanged"),
+    ),
+    "enum rename eval must preserve private CLI state",
+  );
+  assert(
+    enumRenameEvaluation.expectations.some((expectation) =>
+      expectation.includes("Does not run plan init or plan push or make a network request"),
+    ),
+    "enum rename eval must remain local",
+  );
   const mintingEvaluation = cases.find(
     ({ id }) => id === "add-field-with-minted-id",
   );
@@ -522,6 +619,12 @@ test("revision evals stage existing Plan identity and private state", async () =
       expectation.includes("settings.values in low, medium, high order"),
     ),
     "enum eval must bind value order",
+  );
+  assert(
+    enumEvaluation.expectations.some((expectation) =>
+      expectation.includes("literal default of medium without minting another subject ID"),
+    ),
+    "enum eval must reuse the value key without minting a default ID",
   );
   assert(
     enumEvaluation.expectations.some((expectation) =>
@@ -621,6 +724,32 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   assert(descriptorField, "supported fixture: descriptor Field does not resolve");
   assert.equal(descriptorField.type, "short_text");
   assert.equal(descriptorField.required, true);
+  const publishedAt = supportedEntity.fields.find(
+    ({ key }) => key === "published_at",
+  );
+  assert(publishedAt, "supported scalar fixture: missing published_at Field");
+  assert.deepEqual(publishedAt.default, {
+    kind: "environment",
+    name: "current_time",
+  });
+  assert(
+    supportedEvaluation.expectations.some((expectation) =>
+      expectation.includes("current_time environment default"),
+    ),
+    "supported scalar eval must recognize the environment default",
+  );
+  const rating = supportedEntity.fields.find(({ key }) => key === "rating");
+  assert(rating, "supported scalar fixture: missing rating Field");
+  assert.deepEqual(rating.default, {
+    kind: "literal",
+    value: "7.5",
+  });
+  assert(
+    supportedEvaluation.expectations.some((expectation) =>
+      expectation.includes("rating literal 7.5 as a canonical decimal string"),
+    ),
+    "supported scalar eval must preserve the decimal string default",
+  );
   assert.equal(
     new Set([
       supportedEntity.subject_uuid,
@@ -681,9 +810,13 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     ["low", "medium", "high"],
   );
   assert.equal(supportedEnumField.settings.ordinal, true);
+  assert.deepEqual(supportedEnumField.default, {
+    kind: "literal",
+    value: "medium",
+  });
   assert(
     supportedEnumEvaluation.expectations.some((expectation) =>
-      expectation.includes("supported by the reviewed bounded importer"),
+      expectation.includes("literal medium default as supported"),
     ),
     "supported enum eval must recognize the import boundary",
   );
@@ -715,6 +848,24 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   const unsupportedEvaluation = cases.find(
     ({ id }) => id === "unsupported-field-capabilities",
   );
+  assert(
+    unsupportedEvaluation.expectations.some((expectation) =>
+      expectation.includes("both unsupported_capability pointers"),
+    ),
+    "unsupported eval must classify every remaining import gap",
+  );
+  assert(
+    unsupportedEvaluation.expectations.some((expectation) =>
+      expectation.includes("default and enum as supported"),
+    ),
+    "unsupported eval must preserve the admitted default and enum",
+  );
+  assert(
+    unsupportedEvaluation.expectations.some((expectation) =>
+      expectation.includes("Validation, or rich_text Field"),
+    ),
+    "unsupported eval must preserve both unsupported capabilities",
+  );
   assert.deepEqual(unsupportedEvaluation.artifacts, [
     {
       path: "evals/create-full-stack-app/fixtures/unsupported-field-capabilities-diagnostics.json",
@@ -740,6 +891,11 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     unsupportedFields[1].settings.values.map(({ key }) => key),
     ["draft"],
   );
+  assert.equal(unsupportedFields[2].type, "rich_text");
+  assert.equal(
+    unsupportedFields[2].subject_uuid,
+    "01900000-0000-7000-8000-000000000306",
+  );
   const response = JSON.parse(
     await readFile(
       path.join(
@@ -762,11 +918,11 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     [
       [
         "foundation_plan.import.unsupported_capability",
-        "/application/entities/0/fields/0/default",
+        "/application/entities/0/fields/0/validations",
       ],
       [
         "foundation_plan.import.unsupported_capability",
-        "/application/entities/0/fields/0/validations",
+        "/application/entities/0/fields/2/type",
       ],
     ],
   );

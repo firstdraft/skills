@@ -37,14 +37,22 @@
             "key": "published_at",
             "name": "Published at",
             "type": "datetime",
-            "required": true
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_time"
+            }
           },
           {
             "subject_uuid": "01900000-0000-7000-8000-000000000204",
             "key": "rating",
             "name": "Rating",
             "type": "decimal",
-            "required": true
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "7.5"
+            }
           },
           {
             "subject_uuid": "01900000-0000-7000-8000-000000000205",

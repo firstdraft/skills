@@ -20,7 +20,7 @@ authorized.
 - Structural validity does not prove readable-link resolution, whole-application consistency, target support, or
   compilability.
 - The reviewed conditional PUT imports empty drafts and a bounded subset of Entities, ten scalar Field kinds, enum
-  Fields with ordered values, and Field or system-Field Primary Descriptors.
+  Fields with ordered values, schema-valid tagged Field defaults, and Field or system-Field Primary Descriptors.
 - There is no released end-to-end CLI/API workflow, complete nonempty import, GET or pull operation, complete
   semantic analyzer, Publish action, Compilation action, or generated Foundation.
 
@@ -28,7 +28,7 @@ The bundled schema was copied from the
 [First Draft source at revision `12fa2a6`](https://github.com/firstdraft/firstdraft/blob/12fa2a6bcac122196d55f5528fbc3f1363c684e3/docs/architecture/design/foundation-plan.schema.json)
 and has SHA-256
 `5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The reviewed public API baseline is
-[`3282954b6eefef4ab47ccba1c2ee7008315bee92`](https://github.com/firstdraft/firstdraft/commit/3282954b6eefef4ab47ccba1c2ee7008315bee92)
+[`944673772ef7c5bf40ff67e65d8266556ab75f08`](https://github.com/firstdraft/firstdraft/commit/944673772ef7c5bf40ff67e65d8266556ab75f08)
 and contains those same schema bytes.
 The reviewed public CLI baseline is
 [`0681afd48d7825a7a1a0112e248f3013d0123743`](https://github.com/firstdraft/cli/commit/0681afd48d7825a7a1a0112e248f3013d0123743);
@@ -73,9 +73,10 @@ Ordinary replacement must retain the Project's target and target-profile pin.
   UUIDs.
 
 Enum values, state-machine states and transitions, and data records are examples of identity-bearing nested
-subjects. Link-keyed assignments, ordered terms, settings, and singleton configuration inherit identity from
-their owner. Search the schema for the subject's exact `$defs` name and use diagnostics rather than guessing
-whether an unfamiliar object needs an ID.
+subjects. Defaults, link-keyed assignments, ordered terms, settings, and singleton configuration inherit identity
+from their owner. A Field default has no `subject_uuid`; adding, changing, or clearing one preserves the Field's
+identity. Search the schema for the subject's exact `$defs` name and use diagnostics rather than guessing whether
+an unfamiliar object needs an ID.
 
 ## Ownership
 
@@ -100,7 +101,10 @@ App Schema artifact.
   `"ios": {}` enables that feature; omission declines it.
 - `settings.within: []` deliberately means one global position scope.
 - Use `null` only where the schema gives it a semantic meaning, not as structural filler.
-- Omission and an explicit scalar default mean the same thing, but examples normally omit default-valued settings.
+- For an optional scalar setting with a declared default, omission and that explicit value mean the same thing;
+  examples normally omit default-valued settings.
+- Omitting a Field's `default` means it has no authored default. `{"kind":"literal","value":null}` is instead an
+  authored literal-null default.
 
 ## Current conditional PUT boundary
 
@@ -136,17 +140,38 @@ descriptors are not yet supported. A Field may use these types:
 - `url`
 
 For every supported type, the importer retains schema-valid combinations of `subject_uuid`, `key`, `name`, `type`,
-`required`, `notes`, `immutable`, `comparison`, `normalizations`, `encrypted_at_rest`, and `redact_from_logs`.
+`required`, `default`, `notes`, `immutable`, `comparison`, `normalizations`, `encrypted_at_rest`, and
+`redact_from_logs`.
 
 An `enum` Field additionally requires `settings.values`, a nonempty array in stable order. Each value
 has its own `subject_uuid`, owner-local `key`, and human-facing `name`; mint an ID for each new value with
 `firstdraft plan subject-id`. Set the optional `settings.ordinal` to `true` only when the order carries semantic
 rank. Omit it when the order is presentational because omission and `false` are equivalent. Preserve a value's
-UUID through renames, reordering, and coherent moves between enum Fields.
+UUID through renames, reordering, and coherent moves between enum Fields. An enum literal default contains the
+selected value's owner-local `key`, not its UUID. Update that literal in the same candidate when renaming the value,
+while preserving the value's UUID.
+
+A Field `default` is one closed tagged Value. Its tag is `literal`, `environment`, `environment_path`, or
+`reference_record`. A literal wraps its JSON value under `value`; an environment names `current_account`,
+`current_date`, or `current_time`. A `decimal` literal uses a canonical, non-exponent decimal string: `"0"`,
+`"-0.5"`, `"12"`, and `"12.34"` are valid, while a JSON number, plus sign, negative zero, exponent, a redundant
+leading zero before another integer digit, or trailing fractional zero is not. The two link-bearing variants use
+readable locators. Inspect only the matching `$defs` definition when authoring one of those variants. Their
+Account, Association, or reference-data dependencies may keep the complete candidate outside the current import
+subset; preserve valid product meaning and report the capability gap rather than replacing a linked default with a
+weaker literal.
+
+The bounded importer structurally retains all four schema-valid tags without checking their type or resolving
+their links. It retains the tagged object's decoded JSON meaning, including integer-versus-floating-point
+representation, while the exact submitted bytes remain in the Project Head.
+
+This retention is structural, not default analysis. It does not prove literal compatibility with the Field,
+enum membership, readable-locator resolution, nullability, normalization behavior, or Compiler lowering. Preserve
+the intended default when reporting any later semantic gap.
 
 Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other
 settings shape is structurally invalid rather than an importer capability gap. Schema-valid Field types outside
-the list above, Field defaults, Validations, derivations, References, Associations, and other Entity or Application
-capabilities remain unsupported. One unsupported pointer rejects the complete conditional PUT with
+the list above, Validations, derivations, References, Associations, and other Entity or Application capabilities
+remain unsupported. One unsupported pointer rejects the complete conditional PUT with
 `foundation_plan.import.unsupported_capability` and no mutation. That diagnostic describes server capability, not
 invalid product meaning. Preserve the authored Plan and report the exact gap.
