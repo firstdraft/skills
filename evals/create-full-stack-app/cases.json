@@ -300,7 +300,7 @@
     {
       "id": "ambiguous-network-outcome",
       "should_trigger": true,
-      "prompt": "The CLI says the Plan may have been accepted and local state was not changed. Please run push again.",
+      "prompt": "The CLI printed: \"The Plan may have been accepted; local state was not changed.\" Please run push again.",
       "expectations": [
         "Does not retry the potentially accepted PUT.",
         "Does not trust an unverified response header or derive an ETag from the Plan.",

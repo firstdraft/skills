@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Turns a software idea into a robust, deployed full-stack application. First Draft helps design its data model and initial screens, then deterministically generates a high-quality Foundation: an ordinary Ruby on Rails and PostgreSQL codebase with authentication, authorization, tests, CI, secure defaults, diagnostics, and accessible web, iOS, and Android clients. Afterward, the user and agent continue in ordinary source using industry-standard workflows: branches, pull requests, CI, and deployment."
+description: "Experimental and in development: Authors and revises a complete First Draft Foundation Plan, validates its JSON structure when a compatible local validator is available, and submits exact Plan bytes through an unreleased CLI for bounded server diagnostics. It preserves subject identity, product meaning, conditional-write state, and recovery boundaries. Compilation, generated applications, deployment, and web, iOS, or Android clients are not yet available."
 ---
 
 # Create a Full-Stack App with First Draft

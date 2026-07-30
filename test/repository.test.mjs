@@ -21,6 +21,10 @@ const foundationPlanServerBaseline =
   "500d23e689bdb88325a2b00d2eac4132d846ceff";
 const foundationPlanCliBaseline =
   "0681afd48d7825a7a1a0112e248f3013d0123743";
+const cliAmbiguousOutcomeSentence =
+  "The Plan may have been accepted; local state was not changed.";
+const cliLocalReadFailureSentence =
+  "Could not read the local First Draft Plan or state. No network request was made.";
 const supportedScalarFieldTypes = [
   "boolean",
   "date",
@@ -807,6 +811,11 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   }
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
   assert(readme.includes(foundationPlanCliBaseline));
+  assert(
+    readme.includes(
+      "| `create-full-stack-app` | Author and review an experimental First Draft Foundation Plan | Experimental scaffold |",
+    ),
+  );
   assert.match(readme, /state-placeholder\.txt.*deliberately unreadable/s);
   assert.match(
     readme,
@@ -985,6 +994,26 @@ test("recovery evals stage and preserve existing Plan state", async () => {
       stagedPlanArtifacts,
     );
   }
+
+  const recoveryReference = await readFile(
+    path.join(
+      skillsDirectory,
+      "create-full-stack-app",
+      "references",
+      "diagnostics-and-recovery.md",
+    ),
+    "utf8",
+  );
+  assert(recoveryReference.includes(cliAmbiguousOutcomeSentence));
+  assert(recoveryReference.includes(cliLocalReadFailureSentence));
+  assert.match(
+    recoveryReference,
+    /before public release, the CLI should add stable machine-readable codes for both branches/,
+  );
+  const ambiguousEvaluation = cases.find(
+    ({ id }) => id === "ambiguous-network-outcome",
+  );
+  assert(ambiguousEvaluation.prompt.includes(cliAmbiguousOutcomeSentence));
 });
 
 test("malformed source fixture is bound to its coordinate diagnostic", async () => {
@@ -1060,6 +1089,13 @@ async function checkSkill(skillName) {
   assert(metadata.name.length <= 64);
   assert(metadata.description.length > 0);
   assert(metadata.description.length <= 1024);
+  assert.match(metadata.description, /^Experimental and in development:/);
+  assert(metadata.description.includes("First Draft Foundation Plan"));
+  assert(
+    metadata.description.includes(
+      "Compilation, generated applications, deployment, and web, iOS, or Android clients are not yet available.",
+    ),
+  );
   assert(source.split("\n").length - 1 < 500);
   assert(!source.includes("TODO"));
 
@@ -1094,7 +1130,15 @@ async function checkSkill(skillName) {
   const shortDescription = quotedYamlValue(interfaceSource, "short_description");
   const defaultPrompt = quotedYamlValue(interfaceSource, "default_prompt");
   assert(shortDescription.length >= 25 && shortDescription.length <= 64);
+  assert.equal(
+    shortDescription,
+    "Experimental First Draft Plan authoring and diagnostics",
+  );
   assert(defaultPrompt.includes(`$${skillName}`));
+  assert.equal(
+    defaultPrompt,
+    `Use $${skillName} to help me author and review an experimental First Draft Foundation Plan. Keep it local unless I explicitly approve sending the complete Plan for bounded server diagnostics.`,
+  );
 }
 
 function parseRestrictedFrontmatter(source) {

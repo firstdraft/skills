@@ -3,6 +3,19 @@
 Read CLI output as the result of one exact local byte sequence. Do not infer server state from a partial or
 unverified response.
 
+## Provisional CLI error boundary
+
+The reviewed CLI baseline returns machine-readable JSON for only some failures. Until every recovery branch has a
+stable error code, this reference depends on two exact stderr sentences:
+
+- `The Plan may have been accepted; local state was not changed.`
+- `Could not read the local First Draft Plan or state. No network request was made.`
+
+The first is shared by ambiguous network and protocol failures; the second identifies a local read failure before
+any request. Changing either sentence requires a coordinated update to this Skill and its evals. This prose
+coupling is temporary: before public release, the CLI should add stable machine-readable codes for both branches,
+and this Skill should then branch on those codes. Do not invent or infer codes here.
+
 ## Verified success
 
 `firstdraft plan push` prints JSON only after verifying the response status, media type, Project ID, exact-source
@@ -78,8 +91,8 @@ There is no pull or reconciliation command yet; ask the user to resolve the comp
 
 ## Ambiguous outcome
 
-If the CLI reports that the Plan may have been accepted, the request crossed the point where a safe retry is
-possible but the response was not fully verified. Local state remains unchanged.
+If the CLI prints the exact provisional sentence `The Plan may have been accepted; local state was not changed.`,
+the request crossed the point where a safe retry is possible but the response was not fully verified.
 
 Stop. Do not retry the PUT, reconstruct an ETag from a digest, or trust a response header in isolation. Explain
 that the current API lacks the read/reconciliation endpoint needed to recover automatically.
@@ -92,5 +105,7 @@ or push again. An adjacent private temporary file may contain the same recovery 
 
 ## Damaged local files
 
-If the CLI cannot read the Plan or state, it makes no network request. Do not repair `.firstdraft/state.json` by
-guessing and do not reinitialize over the directory. Report the damaged path and preserve it for manual recovery.
+If the CLI prints the exact provisional sentence
+`Could not read the local First Draft Plan or state. No network request was made.`, it made no network request. Do
+not repair `.firstdraft/state.json` by guessing and do not reinitialize over the directory. Report the damaged path
+and preserve it for manual recovery.
