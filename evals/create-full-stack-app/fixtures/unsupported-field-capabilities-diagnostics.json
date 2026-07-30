@@ -1,27 +1,32 @@
 {
-  "source_sha256": "63a58234608f3b2698176b80f315b3057358c88043ded8838d3ae95de5a5dd35",
-  "diagnostics": [
-    {
-      "code": "foundation_plan.import.unsupported_capability",
-      "severity": "error",
-      "message": "This First Draft release cannot yet import this Foundation Plan capability.",
-      "location": {
-        "source_pointer": "/application/entities/0/fields/0/validations"
+  "error": "server_rejected",
+  "detail": "First Draft rejected the Plan.",
+  "status": 422,
+  "response": {
+    "source_sha256": "63a58234608f3b2698176b80f315b3057358c88043ded8838d3ae95de5a5dd35",
+    "diagnostics": [
+      {
+        "code": "foundation_plan.import.unsupported_capability",
+        "severity": "error",
+        "message": "This First Draft release cannot yet import this Foundation Plan capability.",
+        "location": {
+          "source_pointer": "/application/entities/0/fields/0/validations"
+        },
+        "subject": null,
+        "related_locations": [],
+        "suggestions": []
       },
-      "subject": null,
-      "related_locations": [],
-      "suggestions": []
-    },
-    {
-      "code": "foundation_plan.import.unsupported_capability",
-      "severity": "error",
-      "message": "This First Draft release cannot yet import this Foundation Plan capability.",
-      "location": {
-        "source_pointer": "/application/entities/0/fields/2/type"
-      },
-      "subject": null,
-      "related_locations": [],
-      "suggestions": []
-    }
-  ]
+      {
+        "code": "foundation_plan.import.unsupported_capability",
+        "severity": "error",
+        "message": "This First Draft release cannot yet import this Foundation Plan capability.",
+        "location": {
+          "source_pointer": "/application/entities/0/fields/2/type"
+        },
+        "subject": null,
+        "related_locations": [],
+        "suggestions": []
+      }
+    ]
+  }
 }

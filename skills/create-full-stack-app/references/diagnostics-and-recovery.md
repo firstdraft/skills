@@ -3,18 +3,32 @@
 Read CLI output as the result of one exact local byte sequence. Do not infer server state from a partial or
 unverified response.
 
-## Provisional CLI error boundary
+## CLI error boundary
 
-The reviewed CLI baseline returns machine-readable JSON for only some failures. Until every recovery branch has a
-stable error code, this reference depends on two exact stderr sentences:
+The merged CLI contract at
+[`d588647044e64333d14bf467f4eb7d43728305db`](https://github.com/firstdraft/cli/commit/d588647044e64333d14bf467f4eb7d43728305db)
+writes exactly one JSON object to standard error for every handled `plan push` failure. Parse that object and branch
+on its stable `error` value. Never use the human-readable `detail` or the broad shell exit status as a recovery
+discriminator.
 
-- `The Plan may have been accepted; local state was not changed.`
-- `Could not read the local First Draft Plan or state. No network request was made.`
+| `error`                   | Request state                                     | Recovery action                                                                               |
+| ------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `invalid_arguments`       | No request was made.                              | Correct only a well-understood invocation mistake.                                            |
+| `invalid_configuration`   | No request was made.                              | Correct only a well-understood API-origin or pinned-state mismatch.                           |
+| `local_input_unreadable`  | No request was made.                              | Stop and preserve the unreadable Plan or state for manual recovery.                           |
+| `request_outcome_unknown` | The request may have been accepted.               | Stop; reconciliation requires the user because no pull command exists. Never push again.     |
+| `server_rejected`         | A validated rejection was received.               | Inspect its `status` and bounded `response`, then follow the applicable rejection rule below. |
+| `local_state_not_saved`   | The Plan was accepted but its ETag was not saved. | Stop and preserve its private recovery material locally.                                      |
 
-The first is shared by ambiguous network and protocol failures; the second identifies a local read failure before
-any request. Changing either sentence requires a coordinated update to this Skill and its evals. This prose
-coupling is temporary: before public release, the CLI should add stable machine-readable codes for both branches,
-and this Skill should then branch on those codes. Do not invent or infer codes here.
+Only `local_state_not_saved` can contain `recovery_state`. Never paste, log, commit, or reconstruct that object.
+`request_outcome_unknown` can contain `status` when one was received, but status alone does not prove that the
+request failed. `server_rejected` contains a validated status and may contain a whitelisted response projection.
+Failure output does not expose command arguments, local Plan bytes, raw network errors, or unvalidated response
+bodies. Optional response fields can be absent; do not infer them.
+
+If a failed command does not produce one parseable JSON object with one of these six `error` values, its outcome is
+also unknown. Stop, preserve the local files, and report the failure without exposing private state. Do not retry,
+reinitialize, or bypass the CLI.
 
 ## Verified success
 
@@ -28,24 +42,30 @@ target support, Publish, Compilation, or generated output.
 
 ## Diagnostics response
 
-A `422` response binds diagnostics to the submitted bytes with `source_sha256`:
+A `server_rejected` error with status `422` binds validated diagnostics to the submitted bytes with
+`response.source_sha256`:
 
 ```json
 {
-  "source_sha256": "<sha256-of-the-submitted-bytes>",
-  "diagnostics": [
-    {
-      "code": "foundation_plan.import.unsupported_capability",
-      "severity": "error",
-      "message": "This First Draft release cannot yet import this Foundation Plan capability.",
-      "location": {
-        "source_pointer": "/application/entities/0/fields/0/validations"
-      },
-      "subject": null,
-      "related_locations": [],
-      "suggestions": []
-    }
-  ]
+  "error": "server_rejected",
+  "detail": "First Draft rejected the Plan.",
+  "status": 422,
+  "response": {
+    "source_sha256": "<sha256-of-the-submitted-bytes>",
+    "diagnostics": [
+      {
+        "code": "foundation_plan.import.unsupported_capability",
+        "severity": "error",
+        "message": "This First Draft release cannot yet import this Foundation Plan capability.",
+        "location": {
+          "source_pointer": "/application/entities/0/fields/0/validations"
+        },
+        "subject": null,
+        "related_locations": [],
+        "suggestions": []
+      }
+    ]
+  }
 }
 ```
 
@@ -83,29 +103,39 @@ An `unsupported_capability` error is not corrected by deleting or weakening inte
 candidate is rejected atomically; supported sibling content is not partially applied. Keep the Plan and report the
 exact capability this server release cannot import.
 
+For any other `server_rejected` response, report its validated status and bounded response. Do not resubmit
+unchanged bytes. Push a new candidate only after a well-founded correction permitted by the Skill.
+
 ## Concurrent replacement
 
-HTTP `412` with `code: "precondition_failed"` means the saved ETag no longer identifies the current server
-representation. Stop immediately. Do not retry, remove state, run `plan init`, or attempt to manufacture an ETag.
-There is no pull or reconciliation command yet; ask the user to resolve the competing writer.
+`error: "server_rejected"` with status `412` and `response.code: "precondition_failed"` means the saved ETag no
+longer identifies the current server representation. Stop immediately. Do not retry, remove state, run
+`plan init`, or attempt to manufacture an ETag. There is no pull or reconciliation command yet; ask the user to
+resolve the competing writer.
 
 ## Ambiguous outcome
 
-If the CLI prints the exact provisional sentence `The Plan may have been accepted; local state was not changed.`,
-the request crossed the point where a safe retry is possible but the response was not fully verified.
+`error: "request_outcome_unknown"` means the request crossed the point after which a safe retry cannot be
+established, and its outcome was not fully verified. An optional `status` records only that a status was received;
+it does not make a retry safe.
 
 Stop. Do not retry the PUT, reconstruct an ETag from a digest, or trust a response header in isolation. Explain
 that the current API lacks the read/reconciliation endpoint needed to recover automatically.
 
 ## Local state save failure
 
-If the CLI prints `error: "local_state_not_saved"`, the server response was verified but the new ETag could not be
-saved. Preserve the printed private recovery information locally and stop. Do not paste it into chat, commit it,
-or push again. An adjacent private temporary file may contain the same recovery copy.
+`error: "local_state_not_saved"` means the server response was verified but the new ETag could not be saved.
+Preserve its private `recovery_state` locally and stop. Do not paste it into chat, commit it, or push again. An
+adjacent private temporary file may contain the same recovery copy.
 
 ## Damaged local files
 
-If the CLI prints the exact provisional sentence
-`Could not read the local First Draft Plan or state. No network request was made.`, it made no network request. Do
-not repair `.firstdraft/state.json` by guessing and do not reinitialize over the directory. Report the damaged path
-and preserve it for manual recovery.
+`error: "local_input_unreadable"` means the CLI made no request because it could not read the local Plan or state.
+Do not repair `.firstdraft/state.json` by guessing and do not reinitialize over the directory. Report the damaged
+path without exposing its contents and preserve it for manual recovery.
+
+## Invalid invocation or configuration
+
+`error: "invalid_arguments"` and `error: "invalid_configuration"` both mean no request was made. Correct a known
+command-usage error or destination mismatch only from the command contract and the user's approved destination,
+not from `detail`. A later push is a new invocation and still requires the authorization described in the Skill.

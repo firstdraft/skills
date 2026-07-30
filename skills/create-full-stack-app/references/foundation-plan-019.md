@@ -30,8 +30,8 @@ and has SHA-256
 `5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The merged public API baseline is
 [`500d23e689bdb88325a2b00d2eac4132d846ceff`](https://github.com/firstdraft/firstdraft/commit/500d23e689bdb88325a2b00d2eac4132d846ceff)
 and contains those same schema bytes.
-The reviewed public CLI baseline is
-[`0681afd48d7825a7a1a0112e248f3013d0123743`](https://github.com/firstdraft/cli/commit/0681afd48d7825a7a1a0112e248f3013d0123743);
+The merged CLI baseline is
+[`d588647044e64333d14bf467f4eb7d43728305db`](https://github.com/firstdraft/cli/commit/d588647044e64333d14bf467f4eb7d43728305db);
 it has not been released and exposes `plan init`, `plan subject-id`, and `plan push`. Check commands rather than
 inferring compatibility from an unreleased version number. Update this Skill deliberately when either contract
 changes.

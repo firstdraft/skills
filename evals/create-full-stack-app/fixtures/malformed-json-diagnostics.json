@@ -1,17 +1,22 @@
 {
-  "source_sha256": "f57ff35e8450b8b8749c94c115f7e0575e1c928528ce0a139146ef8a1b49f3f8",
-  "diagnostics": [
-    {
-      "code": "foundation_plan.json.invalid",
-      "severity": "error",
-      "message": "The Foundation Plan is not valid JSON.",
-      "location": {
-        "line": 1,
-        "column": 17
-      },
-      "subject": null,
-      "related_locations": [],
-      "suggestions": []
-    }
-  ]
+  "error": "server_rejected",
+  "detail": "First Draft rejected the Plan.",
+  "status": 422,
+  "response": {
+    "source_sha256": "f57ff35e8450b8b8749c94c115f7e0575e1c928528ce0a139146ef8a1b49f3f8",
+    "diagnostics": [
+      {
+        "code": "foundation_plan.json.invalid",
+        "severity": "error",
+        "message": "The Foundation Plan is not valid JSON.",
+        "location": {
+          "line": 1,
+          "column": 17
+        },
+        "subject": null,
+        "related_locations": [],
+        "suggestions": []
+      }
+    ]
+  }
 }
