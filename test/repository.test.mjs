@@ -20,11 +20,15 @@ const foundationPlanSchemaDigest =
 const foundationPlanServerBaseline =
   "500d23e689bdb88325a2b00d2eac4132d846ceff";
 const foundationPlanCliBaseline =
-  "0681afd48d7825a7a1a0112e248f3013d0123743";
-const cliAmbiguousOutcomeSentence =
-  "The Plan may have been accepted; local state was not changed.";
-const cliLocalReadFailureSentence =
-  "Could not read the local First Draft Plan or state. No network request was made.";
+  "d588647044e64333d14bf467f4eb7d43728305db";
+const planPushErrorCodes = [
+  "invalid_arguments",
+  "invalid_configuration",
+  "local_input_unreadable",
+  "request_outcome_unknown",
+  "server_rejected",
+  "local_state_not_saved",
+];
 const supportedScalarFieldTypes = [
   "boolean",
   "date",
@@ -894,6 +898,12 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert(
     unsupportedEvaluation.expectations.some((expectation) =>
+      expectation.includes("Branches on server_rejected with status 422"),
+    ),
+    "unsupported eval must route through the CLI error envelope",
+  );
+  assert(
+    unsupportedEvaluation.expectations.some((expectation) =>
       expectation.includes("default and enum as supported"),
     ),
     "unsupported eval must preserve the admitted default and enum",
@@ -934,7 +944,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     unsupportedFields[2].subject_uuid,
     "01900000-0000-7000-8000-000000000306",
   );
-  const response = JSON.parse(
+  const errorEnvelope = JSON.parse(
     await readFile(
       path.join(
         evaluationDirectory,
@@ -944,6 +954,9 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
       "utf8",
     ),
   );
+  assert.equal(errorEnvelope.error, "server_rejected");
+  assert.equal(errorEnvelope.status, 422);
+  const response = errorEnvelope.response;
   assert.equal(
     createHash("sha256").update(planSource).digest("hex"),
     response.source_sha256,
@@ -971,6 +984,10 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   const cases = JSON.parse(
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
+  const hasExpectation = (evaluation, fragment) =>
+    evaluation.expectations.some((expectation) =>
+      expectation.includes(fragment),
+    );
   const stagedPlanArtifacts = [
     {
       path: "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
@@ -988,6 +1005,9 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     "stale-writer-conflict",
     "ambiguous-network-outcome",
     "local-state-not-saved",
+    "invalid-push-arguments",
+    "invalid-push-configuration",
+    "local-input-unreadable",
   ]) {
     assert.deepEqual(
       cases.find((evaluation) => evaluation.id === id).artifacts,
@@ -1004,16 +1024,111 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     ),
     "utf8",
   );
-  assert(recoveryReference.includes(cliAmbiguousOutcomeSentence));
-  assert(recoveryReference.includes(cliLocalReadFailureSentence));
+  const skillSource = await readFile(
+    path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
+    "utf8",
+  );
+  const pushSection = skillSource.match(
+    /## Push and revise([\s\S]*?)## Hand off for review/,
+  );
+  assert(pushSection, "SKILL.md: missing Push and revise section");
+  for (const code of planPushErrorCodes) {
+    assert(
+      pushSection[1].includes(`error: \"${code}\"`),
+      `SKILL.md: missing plan push branch for ${code}`,
+    );
+  }
+  assert.match(
+    pushSection[1],
+    /fails without one parseable JSON object carrying a known `error`[\s\S]*?treat the request outcome as\s+unknown/,
+  );
+  assert.match(
+    pushSection[1],
+    /do not infer a repair from the human-readable `detail`/,
+  );
+  assert.match(
+    pushSection[1],
+    /Invoke it once for each candidate attempt[\s\S]*?never wrap the command in an automatic retry/,
+  );
+  assert(recoveryReference.includes(foundationPlanCliBaseline));
+  assert.deepEqual(
+    [...recoveryReference.matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
+      .map(([, code]) => code)
+      .filter((code) => code !== "error"),
+    planPushErrorCodes,
+  );
   assert.match(
     recoveryReference,
-    /before public release, the CLI should add stable machine-readable codes for both branches/,
+    /branch\s+on its stable `error` value[\s\S]*?Never use the human-readable `detail`/,
   );
+  assert.match(
+    recoveryReference,
+    /Only `local_state_not_saved` can contain `recovery_state`/,
+  );
+  assert.match(
+    recoveryReference,
+    /does not produce one parseable JSON object with one of these six `error` values[\s\S]*?also unknown/,
+  );
+  assert.doesNotMatch(
+    recoveryReference,
+    /The Plan may have been accepted; local state was not changed\./,
+  );
+
+  const evaluationsByError = {
+    invalid_arguments: "invalid-push-arguments",
+    invalid_configuration: "invalid-push-configuration",
+    local_input_unreadable: "local-input-unreadable",
+    request_outcome_unknown: "ambiguous-network-outcome",
+    server_rejected: "stale-writer-conflict",
+    local_state_not_saved: "local-state-not-saved",
+  };
+  for (const [error, id] of Object.entries(evaluationsByError)) {
+    const evaluation = cases.find((candidate) => candidate.id === id);
+    assert.match(
+      evaluation.prompt,
+      new RegExp(`\"error\":\"${error}\"`),
+    );
+    assert(
+      hasExpectation(evaluation, `Branches on ${error}`),
+      `${id}: missing error-code branch expectation`,
+    );
+  }
+  assert.doesNotMatch(
+    recoveryReference,
+    /Could not read the local First Draft Plan or state\. No network request was made\./,
+  );
+
+  const staleWriterEvaluation = cases.find(
+    ({ id }) => id === "stale-writer-conflict",
+  );
+  assert.match(staleWriterEvaluation.prompt, /"error":"server_rejected"/);
+  assert.match(staleWriterEvaluation.prompt, /"status":412/);
+  assert.match(staleWriterEvaluation.prompt, /"code":"precondition_failed"/);
+  assert(
+    hasExpectation(
+      staleWriterEvaluation,
+      "Branches on server_rejected plus the validated status and response code",
+    ),
+  );
+
   const ambiguousEvaluation = cases.find(
     ({ id }) => id === "ambiguous-network-outcome",
   );
-  assert(ambiguousEvaluation.prompt.includes(cliAmbiguousOutcomeSentence));
+  assert.match(ambiguousEvaluation.prompt, /"error":"request_outcome_unknown"/);
+  assert(
+    hasExpectation(ambiguousEvaluation, "Branches on request_outcome_unknown"),
+  );
+
+  const localStateEvaluation = cases.find(
+    ({ id }) => id === "local-state-not-saved",
+  );
+  assert.match(localStateEvaluation.prompt, /"error":"local_state_not_saved"/);
+  assert(
+    hasExpectation(
+      localStateEvaluation,
+      "recognizes it as the only error that can carry recovery_state",
+    ),
+  );
 });
 
 test("malformed source fixture is bound to its coordinate diagnostic", async () => {
@@ -1026,12 +1141,15 @@ test("malformed source fixture is bound to its coordinate diagnostic", async () 
     path.join(fixtureDirectory, "malformed.foundation-plan.txt"),
     "utf8",
   );
-  const response = JSON.parse(
+  const errorEnvelope = JSON.parse(
     await readFile(
       path.join(fixtureDirectory, "malformed-json-diagnostics.json"),
       "utf8",
     ),
   );
+  assert.equal(errorEnvelope.error, "server_rejected");
+  assert.equal(errorEnvelope.status, 422);
+  const response = errorEnvelope.response;
   const location = response.diagnostics[0].location;
   const cases = JSON.parse(
     await readFile(
@@ -1064,6 +1182,11 @@ test("malformed source fixture is bound to its coordinate diagnostic", async () 
       stage_as: ".firstdraft/state.json",
     },
   ]);
+  assert(
+    evaluation.expectations.some((expectation) =>
+      expectation.includes("Branches on server_rejected with status 422"),
+    ),
+  );
 });
 
 test("the independently installed Skill retains the repository license", async () => {

@@ -89,18 +89,30 @@ Do not open private CLI state merely to discover the destination. One explicit r
 diagnostics covers well-founded repairs to that same Plan and destination until a recovery stop occurs.
 
 Run `firstdraft plan push` only after reading the recovery rules. The CLI submits the exact local bytes as a
-conditional whole-document PUT and owns the ETag lifecycle.
+conditional whole-document PUT and owns the ETag lifecycle. Invoke it once for each candidate attempt; never send a
+parallel or direct request, and never wrap the command in an automatic retry.
 
 - On success, inspect every diagnostic. Repair errors; surface warnings and material assumptions.
-- On `422`, classify every diagnostic before editing. Amend a correctable source problem while preserving unrelated
-  content and stable subject identity, then push again when the correction is well-founded.
-- On `foundation_plan.import.unsupported_capability`, preserve the addressed product meaning and report the exact
-  server gap. Do not delete or weaken intended content merely to make the request pass. Stop for this attempt; do
-  not resubmit unchanged bytes.
-- On `local_state_not_saved`, stop. Keep the printed recovery material local and private; do not paste it into
-  chat, commit it, or push again.
-- On `412`, an ambiguous transport/protocol outcome, or damaged local state, stop. Do not retry, reinitialize, or
-  bypass the CLI.
+- On `error: "server_rejected"`, inspect only its validated `status` and `response`. For status `422`, classify
+  every diagnostic before editing. Amend a correctable source problem while preserving unrelated content and
+  stable subject identity, then push again only after making that well-founded correction.
+- On a `foundation_plan.import.unsupported_capability` diagnostic inside that validated response, preserve the
+  addressed product meaning and report the exact server gap. Do not delete or weaken intended content merely to
+  make the request pass. Stop for this attempt; do not resubmit unchanged bytes.
+- On `error: "invalid_arguments"` or `error: "invalid_configuration"`, no request was made. Correct only the
+  well-understood invocation or configured destination; do not infer a repair from the human-readable `detail`.
+- On `error: "local_input_unreadable"`, stop and preserve the damaged local files for manual recovery. No request
+  was made; do not reinitialize over them.
+- On `error: "request_outcome_unknown"`, stop. Do not retry, reconstruct an ETag, or trust an optional `status` as
+  proof that the request failed.
+- On `error: "local_state_not_saved"`, stop. Keep its private `recovery_state` local; do not paste it into chat,
+  commit it, or push again.
+- On `error: "server_rejected"` with status `412` and `response.code: "precondition_failed"`, stop for
+  reconciliation. Do not retry, reinitialize, or bypass the CLI.
+- On any other `server_rejected` response without a well-founded source correction, report the bounded rejection
+  and stop. Never resubmit unchanged bytes.
+- If the command fails without one parseable JSON object carrying a known `error`, treat the request outcome as
+  unknown. Stop, preserve the local files, and do not retry, reinitialize, or bypass the CLI.
 
 Never run Publish or Compilation automatically. The current CLI does not implement either action.
 
