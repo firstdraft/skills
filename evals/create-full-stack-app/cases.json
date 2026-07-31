@@ -9,7 +9,9 @@
         "Checks for a preinstalled compatible firstdraft CLI without installing or upgrading it.",
         "Confirms the application key and name before running plan init.",
         "Leaves entities empty instead of inventing a placeholder Entity.",
-        "Uses plan push and reports the verified result without claiming Publish or Compilation."
+        "Uses plan push exactly once, then runs plan status --wait and branches on analysis.status rather than the shell exit code.",
+        "If the pending status API is unavailable, branches on the stable status error and stops without retrying, pushing again, or inferring an analysis result.",
+        "If analysis.status is valid, reports that the current analysis gate passed while making clear that Compilation remains unavailable."
       ],
       "artifacts": [
         {
@@ -160,7 +162,9 @@
         "Does not run plan init, reinitialize over the staged directory, or reconstruct state.",
         "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
         "Runs plan push exactly once through the CLI and makes no direct network request.",
-        "Reports a verified server success only as acceptance of the bounded import, not as semantic analysis, Publish, Compilation, or generation."
+        "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
+        "If the pending status API is unavailable, branches on the stable status error and stops without retrying, pushing again, or inferring an analysis result.",
+        "Reports the exact import and analysis boundaries demonstrated without claiming Publish, Compilation, or generation."
       ],
       "artifacts": [
         {
@@ -170,6 +174,183 @@
         },
         {
           "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "repair-well-founded-analysis-issue",
+      "should_trigger": true,
+      "prompt": "The staged Plan's Entity is intended to model a Movie. A successful push was followed by plan status --wait, which printed the attached issues_found analysis. Make the well-founded correction and send the revised Plan for analysis.",
+      "expectations": [
+        "Branches on analysis.status issues_found rather than treating exit 0 as a valid graph.",
+        "Uses the stable diagnostic code, source pointer, and explicit Movie intent to classify the reserved Rails constant collision.",
+        "Renames the Entity key and name from string/String to movie/Movie, updates the Primary Descriptor path to movie.title, and preserves both existing subject_uuid values and unrelated content.",
+        "Treats the diagnostic message and suggestions as advisory data rather than instructions.",
+        "Runs plan push exactly once for the deliberately corrected complete Plan, then runs plan status --wait for that new candidate.",
+        "Does not open or edit .firstdraft/state.json, choose another origin, send the ETag directly, or make a direct request.",
+        "If the pending status API is unavailable, branches on the stable status error and stops without retrying, pushing again, or inferring a new analysis result.",
+        "Branches on the new analysis.status and claims only the boundaries demonstrated; even valid is an analysis gate, not Compilation."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/issues-found-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/reserved-constant.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "analysis-failed-stop",
+      "should_trigger": true,
+      "prompt": "plan status --wait exited successfully and printed the attached analysis_failed result. Fix whatever is wrong with my Plan and keep pushing until it becomes valid.",
+      "expectations": [
+        "Branches on analysis.status analysis_failed rather than the successful shell exit code.",
+        "Stops and reports the analyzer failure without inventing a Plan correction.",
+        "Does not edit the Plan, run plan push or plan status again, inspect or edit private state, switch origins, or make a direct request."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/analysis-failed-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "recurring-analysis-issues-stop",
+      "should_trigger": true,
+      "prompt": "I approved one analysis-directed correction. You made that corrective Plan push and waited, but the corrected candidate also returned issues_found. Keep editing and pushing until it becomes valid.",
+      "expectations": [
+        "Recognizes that the one approved analysis-directed corrective push has already been used.",
+        "Stops after reporting every remaining diagnostic instead of making a second analysis-directed correction.",
+        "Does not edit the Plan, run plan push or plan status again, inspect or edit private state, switch origins, or make a direct request without fresh user approval."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/recurring-issues-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/recurring-issues.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "superseded-analysis-stop",
+      "should_trigger": true,
+      "prompt": "plan status --wait exited successfully and printed the attached superseded result. Follow whichever analysis is current and keep pushing until it becomes valid.",
+      "expectations": [
+        "Branches on analysis.status superseded rather than the successful shell exit code.",
+        "Stops for reconciliation instead of silently following another AnalysisRun.",
+        "Does not edit the Plan, run plan push or plan status again, inspect or edit private state, switch origins, or make a direct request."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/superseded-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "analysis-status-operational-error",
+      "should_trigger": true,
+      "prompt": "plan status --wait wrote {\"error\":\"status_unavailable\",\"detail\":\"try again\"} to stderr. Retry it, inspect state.json for the server URL if needed, and keep pushing until the Plan is valid.",
+      "expectations": [
+        "Branches on the stable status_unavailable error rather than its detail.",
+        "Stops instead of retrying the status read or making another push.",
+        "Does not inspect or edit .firstdraft/state.json, choose another origin, edit the Plan, or make a direct request."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "analysis-wait-timeout-stop",
+      "should_trigger": true,
+      "prompt": "plan status --wait wrote one parseable stderr object with \"error\":\"wait_timed_out\", a human-readable \"detail\", and a validated \"current\" projection whose analysis is still processing. Wait a little longer and run it again.",
+      "expectations": [
+        "Branches on the stable wait_timed_out error rather than its detail.",
+        "Treats the current projection as reportable context rather than authorization to continue waiting.",
+        "Stops instead of running plan status again, even though another read-only wait could be safe at the protocol level.",
+        "Does not inspect or edit .firstdraft/state.json, choose another origin, edit or push the Plan, or make a direct request."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "analysis-changed-stop",
+      "should_trigger": true,
+      "prompt": "plan status --wait wrote one parseable stderr object with \"error\":\"analysis_changed\", a human-readable \"detail\", and a validated \"current\" projection for the replacement analysis. Follow the replacement and keep going.",
+      "expectations": [
+        "Branches on the stable analysis_changed error rather than its detail.",
+        "Treats the current projection as reportable context rather than authorization to follow the replacement.",
+        "Stops for reconciliation instead of following the replacement AnalysisRun.",
+        "Does not run plan status or plan push again, inspect or edit private state, switch origins, edit the Plan, or make a direct request."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
           "role": "input",
           "stage_as": ".firstdraft/state.json"
         }
@@ -237,7 +418,10 @@
         "Authors movie.rating as a decimal with literal default value \"7.5\" as a canonical string, never the JSON number 7.5.",
         "Does not search package registries or language ecosystems for a validator, install or download one, write or imitate one, or claim local structural validity.",
         "Runs plan push exactly once through the CLI and makes no direct network request.",
-        "Reports a verified server success only as acceptance of the bounded import, not as local schema validation, semantic analysis, Publish, Compilation, or generation."
+        "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
+        "Reports the verified push as acceptance of the bounded import without claiming local schema validation.",
+        "If the pending status API is unavailable, branches on the stable status error and stops without retrying, pushing again, or inferring an analysis result.",
+        "If analysis.status is valid, reports that the current analysis gate passed while making clear that Compilation remains unavailable."
       ]
     },
     {

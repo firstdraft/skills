@@ -9,11 +9,37 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
-const cliBaseline = "6019e2935079f4a844611443558176b44b770f81";
+const cliBaseline = "74e3d4203587bcecbaf85362596037cb71d5154c";
 const storedApiUrl = "http://127.0.0.1:1";
 const configuredApiUrl = "http://127.0.0.1:2";
+const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const issuesFoundAnalysis = JSON.parse(
+  readFileSync(
+    path.join(
+      repository,
+      "evals",
+      "create-full-stack-app",
+      "fixtures",
+      "issues-found-analysis.json",
+    ),
+    "utf8",
+  ),
+);
+const issuesFoundDiagnostics = issuesFoundAnalysis.analysis.diagnostics;
+const supersededAnalysis = JSON.parse(
+  readFileSync(
+    path.join(
+      repository,
+      "evals",
+      "create-full-stack-app",
+      "fixtures",
+      "superseded-analysis.json",
+    ),
+    "utf8",
+  ),
+);
 const cleanEnvironment = Object.fromEntries(
   Object.entries(process.env).filter(([name]) => !name.startsWith("FIRSTDRAFT_")),
 );
@@ -125,6 +151,7 @@ async function verifyRunner(runCli) {
   );
 
   await verifyRunnerPushFailures(runCli);
+  await verifyRunnerStatusContract(runCli);
 }
 
 function verifyPackedExecutable(executable) {
@@ -160,6 +187,7 @@ function verifyPackedExecutable(executable) {
   );
 
   verifyExecutablePushFailures(executable);
+  verifyExecutableStatusFailures(executable);
 }
 
 async function verifyRunnerPushFailures(runCli) {
@@ -254,6 +282,403 @@ function verifyExecutablePushFailures(executable) {
   ]);
 }
 
+async function verifyRunnerStatusContract(runCli) {
+  const invalid = await invokeRunner(
+    runCli,
+    ["plan", "status", "--canary-private-argument"],
+    temporaryDirectory,
+  );
+  assertErrorEnvelope(invalid, 2, "invalid_arguments", [
+    "canary-private-argument",
+  ]);
+
+  const unpushed = emptyProject("runner-status-unpushed");
+  const initialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    unpushed,
+  );
+  assert.equal(initialization.status, 0);
+  const notPushed = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    unpushed,
+  );
+  assertErrorEnvelope(notPushed, 1, "project_not_pushed", [unpushed]);
+
+  const remote = emptyProject("runner-status-remote");
+  const remoteInitialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    remote,
+  );
+  assert.equal(remoteInitialization.status, 0);
+  pinApiUrl(remote, storedApiUrl);
+  const statePath = path.join(remote, ".firstdraft", "state.json");
+  const stateBeforeStatus = readFileSync(statePath);
+  const projectId = readProjectId(remote);
+  const responses = [
+    analysisResponse(projectId, "processing"),
+    analysisResponse(projectId, "valid"),
+  ];
+  const requests = [];
+  const result = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    remote,
+    {
+      apiUrl: configuredApiUrl,
+      fetchFunction: async (url, options) => {
+        requests.push({ url: url.toString(), options });
+        return responses.shift();
+      },
+      planStatusSleep: async () => {},
+    },
+  );
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  const body = JSON.parse(result.stdout);
+  assert.equal(body.project.id, projectId);
+  assert.equal(body.analysis.status, "valid");
+  assert.equal(requests.length, 2);
+  assert(
+    requests.every(({ url }) =>
+      url.startsWith(`${storedApiUrl}/v1/projects/`),
+    ),
+  );
+  assert(
+    requests.every(
+      ({ options }) =>
+        options.method === "GET" &&
+        options.redirect === "error" &&
+        options.headers.Accept.includes("application/json"),
+    ),
+  );
+  for (const { url, options } of requests) {
+    const requestProjection = JSON.stringify({
+      url,
+      headers: options.headers,
+      body: options.body,
+    });
+    assert(!requestProjection.includes("skill-contract"));
+  }
+  assert(!result.stdout.includes("skill-contract"));
+
+  for (const status of ["issues_found", "analysis_failed"]) {
+    const terminal = await invokeRunner(
+      runCli,
+      ["plan", "status", "--wait"],
+      remote,
+      {
+        fetchFunction: async () => analysisResponse(projectId, status),
+      },
+    );
+    assert.equal(terminal.status, 0);
+    assert.equal(terminal.stderr, "");
+    const terminalBody = JSON.parse(terminal.stdout);
+    assert.equal(terminalBody.analysis.status, status);
+    if (status === "issues_found") {
+      assert.deepEqual(
+        terminalBody.analysis.diagnostics,
+        issuesFoundDiagnostics,
+      );
+    }
+  }
+
+  const superseded = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    remote,
+    {
+      fetchFunction: async () =>
+        fixtureAnalysisResponse(supersededAnalysis, projectId),
+    },
+  );
+  assert.equal(superseded.status, 0);
+  assert.equal(superseded.stderr, "");
+  assert.deepEqual(
+    JSON.parse(superseded.stdout).analysis,
+    supersededAnalysis.analysis,
+  );
+
+  const changedCurrent = analysisProjection(projectId, "valid", {
+    analysisId: "01900000-0000-7000-8000-000000000992",
+  });
+  const changedResponses = [
+    analysisResponse(projectId, "processing"),
+    jsonResponse(changedCurrent),
+  ];
+  const changed = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    remote,
+    {
+      fetchFunction: async () => changedResponses.shift(),
+      planStatusSleep: async () => {},
+    },
+  );
+  const changedEnvelope = assertErrorEnvelope(
+    changed,
+    1,
+    "analysis_changed",
+    [remote, storedApiUrl, "skill-contract"],
+  );
+  assert.deepEqual(changedEnvelope.current, changedCurrent);
+
+  let clock = 0;
+  let timeoutFetches = 0;
+  const timedOutCurrent = analysisProjection(projectId, "processing");
+  const timedOut = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    remote,
+    {
+      fetchFunction: async () => {
+        timeoutFetches += 1;
+        return jsonResponse(timedOutCurrent);
+      },
+      planStatusSleep: async () => {
+        clock = 120_000;
+      },
+      planStatusNow: () => clock,
+    },
+  );
+  const timedOutEnvelope = assertErrorEnvelope(
+    timedOut,
+    1,
+    "wait_timed_out",
+    [remote, storedApiUrl, "skill-contract"],
+  );
+  assert.deepEqual(timedOutEnvelope.current, timedOutCurrent);
+  assert.equal(timeoutFetches, 1);
+
+  let failedFetches = 0;
+  const unavailable = await invokeRunner(
+    runCli,
+    ["plan", "status"],
+    remote,
+    {
+      apiUrl: configuredApiUrl,
+      fetchFunction: () => {
+        failedFetches += 1;
+        throw new TypeError("canary-private-network-failure");
+      },
+    },
+  );
+  assertErrorEnvelope(unavailable, 1, "status_unavailable", [
+    remote,
+    storedApiUrl,
+    configuredApiUrl,
+    "canary-private-network-failure",
+    "skill-contract",
+  ]);
+  assert.equal(failedFetches, 1);
+  assert.deepEqual(readFileSync(statePath), stateBeforeStatus);
+
+  let invalidResponseFetches = 0;
+  const invalidResponse = await invokeRunner(
+    runCli,
+    ["plan", "status"],
+    remote,
+    {
+      fetchFunction: async () => {
+        invalidResponseFetches += 1;
+        return jsonResponse({
+          unexpected: "canary-private-invalid-analysis",
+        });
+      },
+    },
+  );
+  const invalidResponseEnvelope = assertErrorEnvelope(
+    invalidResponse,
+    1,
+    "invalid_server_response",
+    [
+      remote,
+      storedApiUrl,
+      "skill-contract",
+      "canary-private-invalid-analysis",
+    ],
+  );
+  assert.deepEqual(Object.keys(invalidResponseEnvelope).sort(), [
+    "detail",
+    "error",
+    "status",
+  ]);
+  assert.equal(invalidResponseEnvelope.status, 200);
+  assert.equal(invalidResponseFetches, 1);
+  assert.deepEqual(readFileSync(statePath), stateBeforeStatus);
+
+  const problem = {
+    type: "about:blank",
+    title: "Not Found",
+    status: 404,
+    code: "analysis_not_found",
+    detail: "This Project does not have a current analysis run.",
+    canary: "canary-private-problem-extension",
+  };
+  let rejectedFetches = 0;
+  const rejected = await invokeRunner(
+    runCli,
+    ["plan", "status"],
+    remote,
+    {
+      fetchFunction: async () => {
+        rejectedFetches += 1;
+        return problemResponse(problem, 404);
+      },
+    },
+  );
+  const rejectedEnvelope = assertErrorEnvelope(
+    rejected,
+    1,
+    "server_rejected",
+    [
+      remote,
+      storedApiUrl,
+      "skill-contract",
+      "canary-private-problem-extension",
+    ],
+  );
+  assert.equal(rejectedEnvelope.status, 404);
+  assert.deepEqual(Object.keys(rejectedEnvelope).sort(), [
+    "detail",
+    "error",
+    "response",
+    "status",
+  ]);
+  assert.deepEqual(rejectedEnvelope.response, {
+    type: problem.type,
+    title: problem.title,
+    status: problem.status,
+    code: problem.code,
+    detail: problem.detail,
+  });
+  assert.equal(rejectedFetches, 1);
+  assert.deepEqual(readFileSync(statePath), stateBeforeStatus);
+}
+
+function verifyExecutableStatusFailures(executable) {
+  const planHelp = invokeExecutable(executable, ["plan", "--help"]);
+  assert.equal(planHelp.status, 0);
+  assert.equal(planHelp.stderr, "");
+  for (const command of ["init", "subject-id", "push", "status"]) {
+    assert.match(planHelp.stdout, new RegExp(`\\b${command}\\b`));
+  }
+
+  const help = invokeExecutable(executable, ["plan", "status", "--help"]);
+  assert.equal(help.status, 0);
+  assert.equal(help.stderr, "");
+  assert.match(help.stdout, /firstdraft plan status \[--wait\]/);
+
+  const invalid = invokeExecutable(executable, [
+    "plan",
+    "status",
+    "--canary-private-argument",
+  ]);
+  assertErrorEnvelope(invalid, 2, "invalid_arguments", [
+    "canary-private-argument",
+  ]);
+
+  const unpushed = emptyProject("package-status-unpushed");
+  const initialization = invokeExecutable(
+    executable,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    unpushed,
+  );
+  assert.equal(initialization.status, 0);
+  const notPushed = invokeExecutable(
+    executable,
+    ["plan", "status", "--wait"],
+    unpushed,
+  );
+  assertErrorEnvelope(notPushed, 1, "project_not_pushed", [unpushed]);
+}
+
+function readProjectId(directory) {
+  const state = JSON.parse(
+    readFileSync(path.join(directory, ".firstdraft", "state.json"), "utf8"),
+  );
+  return state.project_id;
+}
+
+function analysisResponse(
+  projectId,
+  status,
+  { analysisId = "01900000-0000-7000-8000-000000000991" } = {},
+) {
+  return jsonResponse(analysisProjection(projectId, status, { analysisId }));
+}
+
+function analysisProjection(
+  projectId,
+  status,
+  { analysisId = "01900000-0000-7000-8000-000000000991" } = {},
+) {
+  const terminal = status !== "processing";
+  const diagnostics = status === "issues_found" ? issuesFoundDiagnostics : [];
+  return {
+    project: {
+      id: projectId,
+      graph_version: 1,
+    },
+    analysis: {
+      id: analysisId,
+      graph_version: 1,
+      analyzer_release: "foundation-plan-rails/scalar-2026-07",
+      status,
+      diagnostics,
+      started_at: terminal ? "2026-07-30T12:00:00.000Z" : null,
+      completed_at: terminal ? "2026-07-30T12:00:01.000Z" : null,
+    },
+  };
+}
+
+function fixtureAnalysisResponse(fixture, projectId) {
+  return jsonResponse({
+    project: {
+      ...fixture.project,
+      id: projectId,
+    },
+    analysis: fixture.analysis,
+  });
+}
+
+function jsonResponse(body) {
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function problemResponse(body, status) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/problem+json" },
+  });
+}
+
 function pinApiUrl(directory, apiUrl) {
   const statePath = path.join(directory, ".firstdraft", "state.json");
   const state = JSON.parse(readFileSync(statePath, "utf8"));
@@ -326,6 +751,7 @@ function assertErrorEnvelope(execution, status, error, privateValues) {
     assert(!execution.stderr.includes(value));
   }
   assert.doesNotMatch(execution.stderr, /(?:EEXIST|errno|syscall|mkdir)/i);
+  return envelope;
 }
 
 function run(command, arguments_, cwd) {

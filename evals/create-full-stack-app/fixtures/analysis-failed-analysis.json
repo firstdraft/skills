@@ -1,0 +1,15 @@
+{
+  "project": {
+    "id": "01900000-0000-7000-8000-000000000000",
+    "graph_version": 1
+  },
+  "analysis": {
+    "id": "01900000-0000-7000-8000-000000000902",
+    "graph_version": 1,
+    "analyzer_release": "foundation-plan-rails/scalar-2026-07",
+    "status": "analysis_failed",
+    "diagnostics": [],
+    "started_at": "2026-07-30T12:00:00.000Z",
+    "completed_at": "2026-07-30T12:00:01.000Z"
+  }
+}

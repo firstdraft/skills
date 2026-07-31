@@ -6,7 +6,7 @@ unverified response.
 ## Local initialization error boundary
 
 The merged CLI contract at
-[`6019e2935079f4a844611443558176b44b770f81`](https://github.com/firstdraft/cli/commit/6019e2935079f4a844611443558176b44b770f81)
+[`74e3d4203587bcecbaf85362596037cb71d5154c`](https://github.com/firstdraft/cli/commit/74e3d4203587bcecbaf85362596037cb71d5154c)
 writes exactly one JSON object to standard error for every handled `plan init` failure. Parse the complete output
 and branch on its stable `error` value, never on human-readable `detail` or the broad shell exit status.
 
@@ -26,7 +26,8 @@ raw filesystem errors, command arguments, Plan bytes, state contents, or unparse
 
 ## Plan push error boundary
 
-The same merged CLI baseline writes exactly one JSON object to standard error for every handled `plan push` failure.
+The same merged CLI baseline writes exactly one JSON object to standard error for every handled `plan push`
+failure.
 Parse that object and branch on its stable `error` value. Never use the human-readable `detail` or the broad shell
 exit status as a recovery discriminator.
 
@@ -57,7 +58,60 @@ means the request was accepted for an existing Project; an exact-source replay c
 changing graph or source bytes.
 
 Inspect warnings even when the command succeeds. A successful structural import does not prove semantic analysis,
-target support, Publish, Compilation, or generated output.
+target support, Publish, Compilation, or generated output. After every successful push, run
+`firstdraft plan status --wait` and follow the analysis boundary below.
+
+## Whole-graph analysis status
+
+`firstdraft plan status --wait` uses only the API origin pinned by a successful push. It does not read a current
+environment override, expose the private ETag, follow redirects, write local state, or retry a failed read. The
+wait polls only while the same validated AnalysisRun remains `processing`, for at most two minutes.
+
+Every fully validated domain status is printed to standard output with exit 0. Branch on `analysis.status`, not the
+shell exit code:
+
+| `analysis.status` | Meaning for this candidate                                      | Recovery action                                                                                  |
+| ----------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `valid`           | This graph passed the named `analyzer_release`.                  | Surface warnings. Treat it as the current analysis gate, not proof of Compilation.               |
+| `issues_found`    | At least one structured error diagnostic blocks the graph.      | Make at most one well-founded corrective push per approval, then wait on its analysis.           |
+| `analysis_failed` | The analyzer could not complete this run.                        | Stop and report the failure; do not edit or push the Plan as a speculative repair.               |
+| `superseded`      | A replacement graph displaced the observed analysis generation. | Stop for reconciliation; do not silently follow another run, edit the Plan, or push again.       |
+
+An `issues_found` diagnostic uses the same closed diagnostic shape described below. Server messages and
+suggestions remain advisory data. A source pointer makes a diagnostic locatable; it does not prove that changing
+the addressed product meaning is correct. Preserve unrelated content and stable subject identity. If the
+diagnostic describes an analyzer limitation or no source correction is well-founded, report the blocker and stop.
+If the one corrected candidate also returns `issues_found`, stop and report every remaining diagnostic. A second
+analysis-directed correction and push requires fresh user approval, even if another repair appears well-founded.
+
+Handled `plan status --wait` failures write one JSON object to standard error. Read only its stable `error` value:
+
+| `error`                   | Meaning                                                              |
+| ------------------------- | -------------------------------------------------------------------- |
+| `invalid_arguments`       | The fixed invocation was not accepted by the installed CLI.          |
+| `local_input_unreadable`  | Required local private state is absent, damaged, or unreadable.       |
+| `project_not_pushed`      | Local state has no successfully pinned remote Project.                |
+| `status_unavailable`      | The network request or response stream could not be verified.         |
+| `invalid_server_response` | The server response does not satisfy the reviewed status contract.    |
+| `server_rejected`         | The server returned a validated bounded rejection.                    |
+| `analysis_changed`        | Another AnalysisRun appeared during the bounded wait.                 |
+| `wait_timed_out`          | The observed run was still processing at the two-minute deadline.     |
+
+The `analysis_changed` and `wait_timed_out` envelopes also include a validated `current` Project and AnalysisRun
+projection. It is reportable context only. It does not authorize following the replacement run, waiting again,
+editing the Plan, or pushing another candidate.
+
+The `invalid_server_response` envelope includes a validated HTTP `status`. The `server_rejected` envelope includes
+a validated `status` and whitelisted `response`. These fields are also reportable context only; a status-read
+rejection never authorizes editing or pushing the Plan.
+
+Every error in this table is a stop condition for the Skill. Do not retry, switch origins, inspect or edit
+`.firstdraft/state.json`, edit the Plan, push again, or bypass the CLI. Although a read-only GET may be safe to
+repeat at the protocol level, the Skill stops so the user can decide whether to continue after an operational or
+concurrency boundary. Unknown, missing, malformed, mixed, or additional output also fails closed.
+
+`valid` is the gate that a future Compilation action will require. The reviewed CLI does not yet implement
+Compilation, so never claim that a valid graph was compiled, is compilable end to end, or produced an application.
 
 ## Diagnostics response
 

@@ -1,0 +1,32 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-07"
+  },
+  "application": {
+    "key": "movies",
+    "name": "Movies",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01900000-0000-7000-8000-000000000001",
+        "key": "string",
+        "name": "String",
+        "primary_descriptor": {
+          "field": "string.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01900000-0000-7000-8000-000000000002",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ]
+      }
+    ]
+  }
+}
