@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Authors and revises a complete First Draft Foundation Plan, validates its JSON structure when a compatible local validator is available, submits exact Plan bytes, waits for bounded whole-graph analysis, and can invoke the prepared narrow Rails web-and-iPhone Compilation path through an unreleased CLI; that path has not completed an end-to-end journey. It preserves subject identity, product meaning, conditional-write state, explicit approval, and recovery boundaries. Arbitrary applications, deployment, Android, iPad, and broader web or native clients are not available."
+description: "Experimental and in development: Authors and revises a complete First Draft Foundation Plan, validates its JSON structure when a compatible local validator is available, submits exact Plan bytes, waits for bounded whole-graph analysis, and can invoke the prepared narrow Rails web-and-iPhone Compilation path through an unreleased CLI. It preserves subject identity, product meaning, conditional-write state, explicit approval, and recovery boundaries. Arbitrary applications, deployment, Android, iPad, and broader web or native clients are not available."
 ---
 
 # Create a Full-Stack App with First Draft
@@ -26,19 +26,20 @@ that exposure with the user instead of adding it merely to satisfy the iPhone re
 importable for editing but cannot pass the current Compilation analysis gate. Appearance, nonempty delivery,
 Android, iPad, broader Scaffolds, and other graph breadth remain blocked.
 
-The prior `rails-sketch/2026-07` journey is the only complete local evidence. First Draft's committed controlled CLI
-smoke at server baseline `9e29606` reproducibly exercises an installed CLI, loopback Rails, and real Solid Queue
-through 151-file application materialization. Separately, a one-off observation on 2026-07-30 used a fresh Codex
-invocation at Skill baseline `e24b438`, server baseline `9e29606`, and CLI baseline `36f1292` to go from a prose
-request through valid analysis and Movie application materialization. That observation is not a reproducible agent
-eval. Neither form of evidence makes the unauthenticated local transport, CLI, or Skill released or published, and
-neither is representative-user, deployed, or production evidence. The successor `rails-sketch/2026-08` authoring
-and contract fixtures have not completed that end-to-end journey; they are not execution evidence. The prior smoke
-exercised the successful start, status, artifact, and materialization path, not cancellation, and was bounded to one
-Entity using supported scalar Fields. The prepared 2026-08 web-and-iPhone implementation and contract have not
-completed an end-to-end 2026-08 journey. There is no Plan GET or pull operation, complete semantic analyzer,
-Publish action, arbitrary application generation, deployment workflow, or support for the rest of the Foundation
-Plan.
+The current `rails-sketch/2026-08` path has bounded local evidence. First Draft's committed controlled CLI smoke
+reproducibly drives an installed CLI through loopback Rails, real Solid Queue, valid analysis, artifact verification,
+and 194-file two-Entity materialization. Separately, one staff-prepared fresh-agent observation authored Movie and
+Director from prose and compiled once. The fresh agent session ended after the unmodified output passed its generated
+checks. A later operator performed Rails setup and used a temporary test-only copy to display live generated Rails
+pages in an iPhone Simulator. See the
+[current evidence boundary](references/foundation-plan-019.md#current-evidence-boundary) for the exact provenance
+and limitations.
+
+The fresh-agent observation is not a reproducible agent evaluation or representative-user evidence. Both paths
+remain local, unreleased, unpublished, unauthenticated, and bounded. They do not establish cancellation, a physical
+iPhone, iPad, deployment, or production readiness. There is no Plan GET or pull operation,
+complete semantic analyzer, Publish action, arbitrary application generation, deployment workflow, or support for
+the rest of the Foundation Plan.
 
 ## Load the relevant references
 
@@ -210,7 +211,7 @@ Before invoking the command:
    Fields, the exact public-index Scaffold, optional semantic Entity icons, and a selected iPhone project under
    `ios/`. A domain is admitted only with `native.ios`, and selected iOS requires at least one admitted public-index
    navigation entry. That entry exposes the Entity's records on an unauthenticated public web index and must reflect
-   the user's confirmed intent. This boundary has not completed an end-to-end 2026-08 journey. Do not imply that
+   the user's confirmed intent. Do not imply that
    Appearance, nonempty delivery, Android, iPad, broader Scaffolds, References, Associations, Accounts, Policies,
    arbitrary Foundation Plans, or deployment are supported.
 4. Run exactly:
