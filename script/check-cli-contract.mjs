@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
+  existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -11,9 +14,18 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const cliBaseline = "74e3d4203587bcecbaf85362596037cb71d5154c";
+const cliBaseline = "36f12921c0f6641f073820734234c11e47fdb834";
 const storedApiUrl = "http://127.0.0.1:1";
 const configuredApiUrl = "http://127.0.0.1:2";
+const compilationId = "01900000-0000-7000-8000-000000000981";
+const compilationAnalysisId = "01900000-0000-7000-8000-000000000982";
+const changedCompilationId = "01900000-0000-7000-8000-000000000983";
+const headSourceSha256 = "1".repeat(64);
+const compilationEtag = `"sha256:${headSourceSha256}"`;
+const compilationArtifactMediaType =
+  "application/vnd.firstdraft.compilation-artifact+json";
+const compilerRelease = "foundation-plan-rails/compiler-scalar-2026-07";
+const compilationTarget = { id: "rails", profile: "rails-sketch/2026-07" };
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const issuesFoundAnalysis = JSON.parse(
   readFileSync(
@@ -152,6 +164,7 @@ async function verifyRunner(runCli) {
 
   await verifyRunnerPushFailures(runCli);
   await verifyRunnerStatusContract(runCli);
+  await verifyRunnerCompileContract(runCli);
 }
 
 function verifyPackedExecutable(executable) {
@@ -188,6 +201,7 @@ function verifyPackedExecutable(executable) {
 
   verifyExecutablePushFailures(executable);
   verifyExecutableStatusFailures(executable);
+  verifyExecutableCompileFailures(executable);
 }
 
 async function verifyRunnerPushFailures(runCli) {
@@ -572,6 +586,671 @@ async function verifyRunnerStatusContract(runCli) {
   assert.deepEqual(readFileSync(statePath), stateBeforeStatus);
 }
 
+async function verifyRunnerCompileContract(runCli) {
+  const invalid = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--canary-private-argument"],
+    temporaryDirectory,
+  );
+  assertErrorEnvelope(invalid, 2, "invalid_arguments", [
+    "canary-private-argument",
+  ]);
+
+  const unreadableDirectory = emptyProject("runner-compile-unreadable");
+  const unreadable = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    unreadableDirectory,
+  );
+  assertErrorEnvelope(unreadable, 1, "local_input_unreadable", [
+    unreadableDirectory,
+  ]);
+
+  const unpushed = emptyProject("runner-compile-unpushed");
+  const initialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    unpushed,
+  );
+  assert.equal(initialization.status, 0);
+  const notPushed = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    unpushed,
+  );
+  assertErrorEnvelope(notPushed, 1, "project_not_pushed", [unpushed]);
+
+  const incompatible = emptyProject("runner-compile-incompatible");
+  const incompatibleInitialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    incompatible,
+  );
+  assert.equal(incompatibleInitialization.status, 0);
+  pinApiUrl(incompatible, storedApiUrl);
+  const invalidConfiguration = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    incompatible,
+  );
+  assertErrorEnvelope(invalidConfiguration, 2, "invalid_configuration", [
+    incompatible,
+    storedApiUrl,
+    "skill-contract",
+  ]);
+
+  const remote = emptyProject("runner-compile-remote");
+  const remoteInitialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    remote,
+  );
+  assert.equal(remoteInitialization.status, 0);
+  pinCompileState(remote);
+  const projectId = readProjectId(remote);
+  const existingOutput = path.join(remote, "existing-output");
+  mkdirSync(existingOutput);
+  let preflightFetches = 0;
+  const invalidOutput = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", existingOutput],
+    remote,
+    {
+      fetchFunction: () => {
+        preflightFetches += 1;
+        throw new Error("canary-private-network");
+      },
+    },
+  );
+  assertErrorEnvelope(invalidOutput, 2, "invalid_output_path", [
+    remote,
+    storedApiUrl,
+    "canary-private-network",
+  ]);
+  assert.equal(preflightFetches, 0);
+
+  const artifact = compilationArtifact(projectId);
+  const approvedOutput = "generated";
+  const output = path.join(remote, "generated");
+  const responses = [
+    jsonResponse(compilationResponse(projectId, "queued"), 202, {
+      Location: compilationStatusPath(projectId),
+    }),
+    jsonResponse(compilationResponse(projectId, "running")),
+    jsonResponse(compilationResponse(projectId, "succeeded", artifact)),
+    artifactResponse(artifact),
+  ];
+  const requests = [];
+  let sleeps = 0;
+  const success = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", approvedOutput],
+    remote,
+    {
+      apiUrl: configuredApiUrl,
+      fetchFunction: async (url, options) => {
+        requests.push({
+          url: url.toString(),
+          method: options.method,
+          body: options.body,
+          headers: options.headers,
+        });
+        return responses.shift();
+      },
+      planCompileSleep: async () => {
+        sleeps += 1;
+      },
+    },
+  );
+  assert.equal(success.status, 0);
+  assert.equal(success.stderr, "");
+  const successBody = JSON.parse(success.stdout);
+  assert.equal(successBody.project.id, projectId);
+  assert.equal(successBody.compilation.id, compilationId);
+  assert.equal(successBody.compilation.analysis_run_id, compilationAnalysisId);
+  assert.equal(successBody.compilation.artifact.sha256, artifact.sha256);
+  assert.deepEqual(successBody.output, {
+    path: output,
+    file_count: 1,
+    manifest_sha256: artifact.manifestSha256,
+  });
+  assert.equal(
+    readFileSync(path.join(output, "app", "models", "movie.rb"), "utf8"),
+    "class Movie < ApplicationRecord\nend\n",
+  );
+  assert.deepEqual(
+    requests.map(({ method, url }) => [method, url]),
+    [
+      ["POST", `${storedApiUrl}/v1/projects/${projectId}/compilations`],
+      ["GET", `${storedApiUrl}${compilationStatusPath(projectId)}`],
+      ["GET", `${storedApiUrl}${compilationStatusPath(projectId)}`],
+      ["GET", `${storedApiUrl}${compilationArtifactPath(projectId)}`],
+    ],
+  );
+  assert.equal(sleeps, 2);
+  assert.equal(requests[0].headers["If-Match"], compilationEtag);
+  assert(requests.every(({ body }) => body === undefined));
+  assert(!success.stdout.includes("canary-private"));
+  assert(!success.stdout.includes(headSourceSha256));
+
+  const ambiguousDirectory = await compileProject(
+    runCli,
+    "runner-compile-ambiguous",
+  );
+  let ambiguousFetches = 0;
+  const ambiguous = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    ambiguousDirectory,
+    {
+      fetchFunction: () => {
+        ambiguousFetches += 1;
+        throw new TypeError("canary-private-network-failure");
+      },
+    },
+  );
+  assertErrorEnvelope(ambiguous, 1, "request_outcome_unknown", [
+    ambiguousDirectory,
+    storedApiUrl,
+    headSourceSha256,
+    "canary-private-network-failure",
+  ]);
+  assert.equal(ambiguousFetches, 1);
+
+  const rejectedDirectory = await compileProject(
+    runCli,
+    "runner-compile-rejected",
+  );
+  const rejectedProblem = {
+    type: "about:blank",
+    title: "Conflict",
+    status: 409,
+    code: "project_not_valid",
+    detail: "Compile is unavailable.",
+    canary: "canary-private-problem-extension",
+  };
+  let rejectedFetches = 0;
+  const rejected = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    rejectedDirectory,
+    {
+      fetchFunction: async () => {
+        rejectedFetches += 1;
+        return problemResponse(rejectedProblem, 409);
+      },
+    },
+  );
+  const rejectedEnvelope = assertErrorEnvelope(
+    rejected,
+    1,
+    "compilation_start_rejected",
+    [
+      rejectedDirectory,
+      storedApiUrl,
+      headSourceSha256,
+      "canary-private-problem-extension",
+    ],
+  );
+  assert.equal(rejectedEnvelope.status, 409);
+  assert.deepEqual(rejectedEnvelope.response, {
+    type: rejectedProblem.type,
+    title: rejectedProblem.title,
+    status: rejectedProblem.status,
+    code: rejectedProblem.code,
+    detail: rejectedProblem.detail,
+  });
+  assert.equal(rejectedFetches, 1);
+
+  for (const status of ["failed", "cancelled"]) {
+    const directory = await compileProject(
+      runCli,
+      `runner-compile-${status}`,
+    );
+    let fetches = 0;
+    const result = await invokeRunner(
+      runCli,
+      ["plan", "compile", "--output", "generated"],
+      directory,
+      {
+        fetchFunction: async () => {
+          fetches += 1;
+          return jsonResponse(
+            compilationResponse(readProjectId(directory), status),
+            202,
+            { Location: compilationStatusPath(readProjectId(directory)) },
+          );
+        },
+      },
+    );
+    const envelope = assertErrorEnvelope(
+      result,
+      1,
+      `compilation_${status}`,
+      [directory, storedApiUrl, headSourceSha256],
+    );
+    assert.equal(envelope.current.compilation.status, status);
+    assert.equal(fetches, 1);
+  }
+
+  const timeoutDirectory = await compileProject(
+    runCli,
+    "runner-compile-timeout",
+  );
+  const timeoutProjectId = readProjectId(timeoutDirectory);
+  let currentTime = 0;
+  let timeoutFetches = 0;
+  const timeout = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    timeoutDirectory,
+    {
+      fetchFunction: async () => {
+        timeoutFetches += 1;
+        return jsonResponse(
+          compilationResponse(timeoutProjectId, "queued"),
+          202,
+          { Location: compilationStatusPath(timeoutProjectId) },
+        );
+      },
+      planCompileSleep: async () => {
+        currentTime = 600_000;
+      },
+      planCompileNow: () => currentTime,
+    },
+  );
+  const timeoutEnvelope = assertErrorEnvelope(
+    timeout,
+    1,
+    "compilation_wait_timed_out",
+    [timeoutDirectory, storedApiUrl, headSourceSha256],
+  );
+  assert.equal(timeoutEnvelope.current.compilation.status, "queued");
+  assert.equal(timeoutFetches, 1);
+
+  const unavailableDirectory = await compileProject(
+    runCli,
+    "runner-compile-status-unavailable",
+  );
+  const unavailableProjectId = readProjectId(unavailableDirectory);
+  const unavailableProblem = {
+    type: "about:blank",
+    title: "Service Unavailable",
+    status: 503,
+    code: "temporarily_unavailable",
+    detail: "Try later.",
+    canary: "canary-private-status-extension",
+  };
+  const unavailableResponses = [
+    jsonResponse(compilationResponse(unavailableProjectId, "queued"), 202, {
+      Location: compilationStatusPath(unavailableProjectId),
+    }),
+    problemResponse(unavailableProblem, 503),
+  ];
+  const unavailable = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    unavailableDirectory,
+    {
+      fetchFunction: async () => unavailableResponses.shift(),
+      planCompileSleep: async () => {},
+    },
+  );
+  const unavailableEnvelope = assertErrorEnvelope(
+    unavailable,
+    1,
+    "compilation_status_unavailable",
+    [
+      unavailableDirectory,
+      storedApiUrl,
+      headSourceSha256,
+      "canary-private-status-extension",
+    ],
+  );
+  assert.equal(unavailableEnvelope.status, 503);
+  assert.deepEqual(unavailableEnvelope.response, {
+    type: unavailableProblem.type,
+    title: unavailableProblem.title,
+    status: unavailableProblem.status,
+    code: unavailableProblem.code,
+    detail: unavailableProblem.detail,
+  });
+
+  const changedDirectory = await compileProject(
+    runCli,
+    "runner-compile-changed",
+  );
+  const changedProjectId = readProjectId(changedDirectory);
+  const changedProjection = compilationResponse(changedProjectId, "running");
+  changedProjection.compilation.id = changedCompilationId;
+  changedProjection.compilation.status_path = compilationStatusPath(
+    changedProjectId,
+    changedCompilationId,
+  );
+  changedProjection.compilation.cancel_path =
+    `${changedProjection.compilation.status_path}/cancel`;
+  const changedResponses = [
+    jsonResponse(compilationResponse(changedProjectId, "queued"), 202, {
+      Location: compilationStatusPath(changedProjectId),
+    }),
+    jsonResponse(changedProjection),
+  ];
+  const changed = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    changedDirectory,
+    {
+      fetchFunction: async () => changedResponses.shift(),
+      planCompileSleep: async () => {},
+    },
+  );
+  const changedEnvelope = assertErrorEnvelope(
+    changed,
+    1,
+    "compilation_changed",
+    [changedDirectory, storedApiUrl, headSourceSha256],
+  );
+  assert.equal(changedEnvelope.current.compilation.id, changedCompilationId);
+
+  const protocolDirectory = await compileProject(
+    runCli,
+    "runner-compile-protocol",
+  );
+  const protocolProjectId = readProjectId(protocolDirectory);
+  const protocolResponses = [
+    jsonResponse(compilationResponse(protocolProjectId, "queued"), 202, {
+      Location: compilationStatusPath(protocolProjectId),
+    }),
+    jsonResponse({ canary: "canary-private-invalid-status" }),
+  ];
+  const protocol = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    protocolDirectory,
+    {
+      fetchFunction: async () => protocolResponses.shift(),
+      planCompileSleep: async () => {},
+    },
+  );
+  assertErrorEnvelope(protocol, 1, "invalid_compilation_status", [
+    protocolDirectory,
+    storedApiUrl,
+    headSourceSha256,
+    "canary-private-invalid-status",
+  ]);
+
+  const digestDirectory = await compileProject(
+    runCli,
+    "runner-compile-digest",
+  );
+  const digestProjectId = readProjectId(digestDirectory);
+  const digestArtifact = compilationArtifact(digestProjectId);
+  const digestResponses = [
+    jsonResponse(
+      compilationResponse(digestProjectId, "succeeded", digestArtifact),
+      202,
+      { Location: compilationStatusPath(digestProjectId) },
+    ),
+    artifactResponse(digestArtifact, { etag: `"sha256:${"0".repeat(64)}"` }),
+  ];
+  const digest = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    digestDirectory,
+    {
+      fetchFunction: async () => digestResponses.shift(),
+    },
+  );
+  assertErrorEnvelope(digest, 1, "invalid_artifact", [
+    digestDirectory,
+    storedApiUrl,
+    headSourceSha256,
+  ]);
+
+  for (const adversarial of [
+    {
+      label: "traversal",
+      artifactPath: "../traversal-escape.rb",
+      escapedPath: (directory) =>
+        path.join(directory, "traversal-escape.rb"),
+    },
+    {
+      label: "absolute",
+      artifactPath: null,
+      escapedPath: (directory) => path.join(directory, "absolute-escape.rb"),
+    },
+    {
+      label: "mode",
+      artifactPath: "bin/unsafe",
+      mode: 0o4755,
+      escapedPath: () => null,
+    },
+  ]) {
+    const directory = await compileProject(
+      runCli,
+      `runner-compile-artifact-${adversarial.label}`,
+    );
+    const projectIdForArtifact = readProjectId(directory);
+    const escapedPath = adversarial.escapedPath(directory);
+    const artifactPath =
+      adversarial.artifactPath ??
+      /** @type {string} */ (escapedPath);
+    const invalidArtifact = compilationArtifact(projectIdForArtifact, {
+      filePath: artifactPath,
+      ...(adversarial.mode === undefined ? {} : { mode: adversarial.mode }),
+    });
+    const invalidArtifactResponses = [
+      jsonResponse(
+        compilationResponse(
+          projectIdForArtifact,
+          "succeeded",
+          invalidArtifact,
+        ),
+        202,
+        { Location: compilationStatusPath(projectIdForArtifact) },
+      ),
+      artifactResponse(invalidArtifact),
+    ];
+    const result = await invokeRunner(
+      runCli,
+      ["plan", "compile", "--output", "generated"],
+      directory,
+      {
+        fetchFunction: async () => invalidArtifactResponses.shift(),
+      },
+    );
+    assertErrorEnvelope(result, 1, "invalid_artifact", [
+      directory,
+      storedApiUrl,
+      headSourceSha256,
+    ]);
+    assert.equal(existsSync(path.join(directory, "generated")), false);
+    if (escapedPath !== null) assert.equal(existsSync(escapedPath), false);
+  }
+
+  for (const [label, artifactChanges] of [
+    ["file-digest", { fileDigest: "0".repeat(64) }],
+    ["manifest-digest", { manifestDigest: "0".repeat(64) }],
+    ["provenance", { provenanceProjectId: changedCompilationId }],
+  ]) {
+    const directory = await compileProject(
+      runCli,
+      `runner-compile-artifact-${label}`,
+    );
+    const projectIdForArtifact = readProjectId(directory);
+    const invalidArtifact = compilationArtifact(
+      projectIdForArtifact,
+      artifactChanges,
+    );
+    const invalidArtifactResponses = [
+      jsonResponse(
+        compilationResponse(
+          projectIdForArtifact,
+          "succeeded",
+          invalidArtifact,
+        ),
+        202,
+        { Location: compilationStatusPath(projectIdForArtifact) },
+      ),
+      artifactResponse(invalidArtifact),
+    ];
+    const result = await invokeRunner(
+      runCli,
+      ["plan", "compile", "--output", "generated"],
+      directory,
+      {
+        fetchFunction: async () => invalidArtifactResponses.shift(),
+      },
+    );
+    assertErrorEnvelope(result, 1, "invalid_artifact", [
+      directory,
+      storedApiUrl,
+      headSourceSha256,
+    ]);
+    assert.equal(existsSync(path.join(directory, "generated")), false);
+  }
+
+  const artifactUnavailableDirectory = await compileProject(
+    runCli,
+    "runner-compile-artifact-unavailable",
+  );
+  const artifactUnavailableProjectId = readProjectId(
+    artifactUnavailableDirectory,
+  );
+  const unavailableArtifact = compilationArtifact(
+    artifactUnavailableProjectId,
+  );
+  const artifactProblem = {
+    type: "about:blank",
+    title: "Service Unavailable",
+    status: 503,
+    code: "artifact_unavailable",
+    detail: "Try later.",
+    canary: "canary-private-artifact-extension",
+  };
+  const artifactUnavailableResponses = [
+    jsonResponse(
+      compilationResponse(
+        artifactUnavailableProjectId,
+        "succeeded",
+        unavailableArtifact,
+      ),
+      202,
+      { Location: compilationStatusPath(artifactUnavailableProjectId) },
+    ),
+    problemResponse(artifactProblem, 503),
+  ];
+  const artifactUnavailable = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", "generated"],
+    artifactUnavailableDirectory,
+    {
+      fetchFunction: async () => artifactUnavailableResponses.shift(),
+    },
+  );
+  const artifactUnavailableEnvelope = assertErrorEnvelope(
+    artifactUnavailable,
+    1,
+    "artifact_unavailable",
+    [
+      artifactUnavailableDirectory,
+      storedApiUrl,
+      headSourceSha256,
+      "canary-private-artifact-extension",
+    ],
+  );
+  assert.equal(artifactUnavailableEnvelope.status, 503);
+  assert.deepEqual(artifactUnavailableEnvelope.response, {
+    type: artifactProblem.type,
+    title: artifactProblem.title,
+    status: artifactProblem.status,
+    code: artifactProblem.code,
+    detail: artifactProblem.detail,
+  });
+
+  const materializationDirectory = await compileProject(
+    runCli,
+    "runner-compile-materialization",
+  );
+  const materializationProjectId = readProjectId(materializationDirectory);
+  const materializationArtifact = compilationArtifact(
+    materializationProjectId,
+  );
+  const materializationOutput = path.join(
+    materializationDirectory,
+    "generated",
+  );
+  const materializationResponses = [
+    jsonResponse(
+      compilationResponse(
+        materializationProjectId,
+        "succeeded",
+        materializationArtifact,
+      ),
+      202,
+      { Location: compilationStatusPath(materializationProjectId) },
+    ),
+    () => {
+      mkdirSync(materializationOutput);
+      writeFileSync(
+        path.join(materializationOutput, "belongs-to-user"),
+        "preserve me",
+      );
+      return artifactResponse(materializationArtifact);
+    },
+  ];
+  const materialization = await invokeRunner(
+    runCli,
+    ["plan", "compile", "--output", materializationOutput],
+    materializationDirectory,
+    {
+      fetchFunction: async () => {
+        const response = materializationResponses.shift();
+        return typeof response === "function" ? response() : response;
+      },
+    },
+  );
+  assertErrorEnvelope(materialization, 1, "materialization_failed", [
+    materializationDirectory,
+    storedApiUrl,
+    headSourceSha256,
+  ]);
+  assert.equal(
+    readFileSync(
+      path.join(materializationOutput, "belongs-to-user"),
+      "utf8",
+    ),
+    "preserve me",
+  );
+  assert.equal(
+    readdirSync(materializationDirectory).some((entry) =>
+      entry.startsWith(".firstdraft-generated-"),
+    ),
+    false,
+  );
+}
+
 function verifyExecutableStatusFailures(executable) {
   const planHelp = invokeExecutable(executable, ["plan", "--help"]);
   assert.equal(planHelp.status, 0);
@@ -616,11 +1295,245 @@ function verifyExecutableStatusFailures(executable) {
   assertErrorEnvelope(notPushed, 1, "project_not_pushed", [unpushed]);
 }
 
+function verifyExecutableCompileFailures(executable) {
+  const planHelp = invokeExecutable(executable, ["plan", "--help"]);
+  assert.equal(planHelp.status, 0);
+  assert.equal(planHelp.stderr, "");
+  assert.match(planHelp.stdout, /\bcompile\b/);
+
+  const help = invokeExecutable(executable, ["plan", "compile", "--help"]);
+  assert.equal(help.status, 0);
+  assert.equal(help.stderr, "");
+  assert.match(
+    help.stdout,
+    /firstdraft plan compile --output <absent-path>/,
+  );
+  assert.match(help.stdout, /waits up to ten minutes/);
+  assert.match(help.stdout, /atomically renames it into an absent output path/);
+
+  const invalid = invokeExecutable(executable, [
+    "plan",
+    "compile",
+    "--canary-private-argument",
+  ]);
+  assertErrorEnvelope(invalid, 2, "invalid_arguments", [
+    "canary-private-argument",
+  ]);
+
+  const unpushed = emptyProject("package-compile-unpushed");
+  const initialization = invokeExecutable(
+    executable,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    unpushed,
+  );
+  assert.equal(initialization.status, 0);
+  const notPushed = invokeExecutable(
+    executable,
+    ["plan", "compile", "--output", "generated"],
+    unpushed,
+  );
+  assertErrorEnvelope(notPushed, 1, "project_not_pushed", [unpushed]);
+
+  const localOnly = emptyProject("package-compile-invalid-output");
+  const localInitialization = invokeExecutable(
+    executable,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    localOnly,
+  );
+  assert.equal(localInitialization.status, 0);
+  pinCompileState(localOnly);
+  const output = path.join(localOnly, "generated");
+  mkdirSync(output);
+  const invalidOutput = invokeExecutable(
+    executable,
+    ["plan", "compile", "--output", output],
+    localOnly,
+  );
+  assertErrorEnvelope(invalidOutput, 2, "invalid_output_path", [
+    localOnly,
+    storedApiUrl,
+    headSourceSha256,
+  ]);
+}
+
+async function compileProject(runCli, label) {
+  const directory = emptyProject(label);
+  const initialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    directory,
+  );
+  assert.equal(initialization.status, 0);
+  pinCompileState(directory);
+  return directory;
+}
+
 function readProjectId(directory) {
   const state = JSON.parse(
     readFileSync(path.join(directory, ".firstdraft", "state.json"), "utf8"),
   );
   return state.project_id;
+}
+
+function pinCompileState(directory) {
+  const statePath = path.join(directory, ".firstdraft", "state.json");
+  const state = JSON.parse(readFileSync(statePath, "utf8"));
+  state.api_url = storedApiUrl;
+  state.foundation_plan_etag = compilationEtag;
+  writeFileSync(statePath, `${JSON.stringify(state, null, 2)}\n`);
+}
+
+function compilationResponse(projectId, status, artifact = null) {
+  const terminal = ["succeeded", "failed", "cancelled"].includes(status);
+  return {
+    project: {
+      id: projectId,
+      graph_version: 1,
+    },
+    compilation: {
+      id: compilationId,
+      analysis_run_id: compilationAnalysisId,
+      graph_version: 1,
+      status,
+      compiler_release: compilerRelease,
+      target: compilationTarget,
+      status_path: compilationStatusPath(projectId),
+      cancel_path: `${compilationStatusPath(projectId)}/cancel`,
+      artifact:
+        status === "succeeded" && artifact
+          ? {
+              path: compilationArtifactPath(projectId),
+              sha256: artifact.sha256,
+              media_type: compilationArtifactMediaType,
+              byte_size: artifact.source.byteLength,
+            }
+          : null,
+      failure:
+        status === "failed"
+          ? {
+              phase: "render",
+              code: "render_failed",
+              message: "The renderer failed safely.",
+            }
+          : null,
+      created_at: "2026-07-30T12:00:00.000Z",
+      started_at:
+        status === "queued" ? null : "2026-07-30T12:00:01.000Z",
+      completed_at: terminal ? "2026-07-30T12:00:02.000Z" : null,
+    },
+  };
+}
+
+function compilationArtifact(
+  projectId,
+  {
+    filePath = "app/models/movie.rb",
+    mode = 0o644,
+    fileDigest,
+    manifestDigest,
+    provenanceProjectId = projectId,
+  } = {},
+) {
+  const contents = Buffer.from("class Movie < ApplicationRecord\nend\n");
+  const file = {
+    path: filePath,
+    sha256: fileDigest ?? sha256(contents),
+    mode,
+    owner: "renderer:model",
+    source_subject_uuids: [],
+    contents_base64: contents.toString("base64"),
+  };
+  const metadata = [
+    {
+      path: file.path,
+      sha256: file.sha256,
+      mode: file.mode,
+      owner: file.owner,
+      source_subject_uuids: file.source_subject_uuids,
+    },
+  ];
+  const manifestSha256 =
+    manifestDigest ??
+    sha256(Buffer.from(JSON.stringify({ files: metadata })));
+  const body = {
+    format: "firstdraft.compilation-artifact/1",
+    provenance: {
+      compilation_id: compilationId,
+      project_id: provenanceProjectId,
+      graph_version: 1,
+      head_source_sha256: headSourceSha256,
+      foundation_plan: {
+        format: "firstdraft.foundation-plan.sketch/0.19",
+        sha256: "2".repeat(64),
+      },
+      analysis: {
+        id: compilationAnalysisId,
+        release: "foundation-plan-rails/scalar-2026-07",
+      },
+      compiler_release: compilerRelease,
+      target: compilationTarget,
+      core: {
+        repository: "firstdraft/foundation-rails-core",
+        revision: "3".repeat(40),
+        sha256: "4".repeat(64),
+      },
+    },
+    manifest_sha256: manifestSha256,
+    files: [file],
+  };
+  const source = Buffer.from(JSON.stringify(body));
+  return {
+    source,
+    sha256: sha256(source),
+    manifestSha256,
+  };
+}
+
+function artifactResponse(
+  artifact,
+  { etag = `"sha256:${artifact.sha256}"` } = {},
+) {
+  return new Response(artifact.source, {
+    status: 200,
+    headers: {
+      "Content-Type": compilationArtifactMediaType,
+      "Content-Length": String(artifact.source.byteLength),
+      ETag: etag,
+    },
+  });
+}
+
+function compilationStatusPath(projectId, identifier = compilationId) {
+  return `/v1/projects/${projectId}/compilations/${identifier}`;
+}
+
+function compilationArtifactPath(projectId) {
+  return `${compilationStatusPath(projectId)}/artifact`;
+}
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
 }
 
 function analysisResponse(
@@ -665,10 +1578,10 @@ function fixtureAnalysisResponse(fixture, projectId) {
   });
 }
 
-function jsonResponse(body) {
+function jsonResponse(body, status = 200, headers = {}) {
   return new Response(JSON.stringify(body), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
+    status,
+    headers: { "Content-Type": "application/json", ...headers },
   });
 }
 

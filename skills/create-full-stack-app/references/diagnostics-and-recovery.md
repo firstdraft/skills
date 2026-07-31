@@ -110,8 +110,78 @@ Every error in this table is a stop condition for the Skill. Do not retry, switc
 repeat at the protocol level, the Skill stops so the user can decide whether to continue after an operational or
 concurrency boundary. Unknown, missing, malformed, mixed, or additional output also fails closed.
 
-`valid` is the gate that a future Compilation action will require. The reviewed CLI does not yet implement
-Compilation, so never claim that a valid graph was compiled, is compilable end to end, or produced an application.
+`valid` is the gate that Compilation requires. It does not authorize the separate Compilation action and does not
+prove that an artifact can be produced.
+
+## Compilation and local materialization
+
+The merged Compilation CLI contract is
+[`36f12921c0f6641f073820734234c11e47fdb834`](https://github.com/firstdraft/cli/commit/36f12921c0f6641f073820734234c11e47fdb834).
+`firstdraft plan compile --output <approved-absent-path>` uses the API origin and strong Plan ETag pinned by the last
+successful push. It preflights an absent output below an existing real directory, sends one conditional
+Compilation start request, pins that Compilation while polling for at most ten minutes, downloads only its declared
+artifact, verifies the transport metadata, exact bytes, artifact envelope, provenance, manifest, file digests,
+portable paths, and modes, then atomically renames a private sibling temporary tree into the output path. It does
+not retry any request.
+
+Run it only after the user separately approves Compilation and the destination, the latest observed analysis is
+`valid`, and the local Plan has not changed since that accepted candidate. The command compiles the Plan identified
+by the last successful push; it never implicitly pushes later local edits. Prior approval to author, validate, push,
+analyze, or repair a Plan does not cover Compilation. Never remove or overwrite an existing path to satisfy the
+preflight.
+
+Establish that the local Plan is unchanged only from a successful push and terminal `valid` analysis observed in
+the current workflow, followed by no local Plan edits. In a resumed session without that evidence, stop without
+opening private state or compiling. A fresh push and analysis can reestablish the gate only with separate user
+approval for that network mutation.
+
+A successful command writes one validated JSON object. Report the bounded identity fields without replaying the
+object:
+
+- `project.id` and `project.graph_version`;
+- `compilation.id`, `analysis_run_id`, `compiler_release`, `target`, and `artifact.sha256`; and
+- the approved output path plus `file_count` and `manifest_sha256`; when the approved path was project-relative,
+  preserve that spelling rather than echoing the CLI's resolved absolute `output.path`.
+
+Do not expose local private state, the Plan, the artifact envelope, generated source, raw output, or the command
+environment. Success proves verified local materialization for the named narrow compiler release and target. It
+does not prove deployment, production readiness, arbitrary Foundation Plan support, or support outside the current
+one-Entity scalar-Field smoke slice.
+
+Handled failures write one JSON object to standard error. Branch only on the stable `error` value:
+
+| `error`                          | Established boundary                                                                                   |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `invalid_arguments`              | The invocation was rejected before local or network work.                                              |
+| `local_input_unreadable`         | Required local private state could not be read; no Compilation was started.                            |
+| `invalid_configuration`          | Saved local state cannot safely identify the accepted Plan; no Compilation was started.                |
+| `project_not_pushed`             | No successful push pinned the remote Project and Plan ETag; no Compilation was started.                |
+| `invalid_output_path`            | The destination failed local preflight; no network request was made.                                   |
+| `request_outcome_unknown`        | The start request may have created a Compilation, but its response was not fully verified.              |
+| `compilation_start_rejected`     | The server returned a validated bounded rejection before accepting this start request.                 |
+| `compilation_status_unavailable` | The pinned Compilation status could not be read; the command did not follow or start another one.      |
+| `invalid_compilation_status`     | A status response violated the reviewed protocol.                                                      |
+| `compilation_changed`            | The validated status projection no longer described the pinned lifecycle.                             |
+| `compilation_wait_timed_out`     | The pinned Compilation remained nonterminal at the ten-minute deadline.                                |
+| `compilation_failed`             | The pinned Compilation reached `failed`; no artifact was downloaded or materialized.                  |
+| `compilation_cancelled`          | The pinned Compilation reached `cancelled`; no artifact was downloaded or materialized.               |
+| `artifact_unavailable`           | The pinned artifact could not be downloaded; no files were materialized.                              |
+| `invalid_artifact`               | Transport metadata, bytes, envelope, provenance, manifest, or a file violated the integrity contract. |
+| `materialization_failed`         | A verified artifact could not be atomically materialized at the approved path.                         |
+
+Every row is a stop condition. Do not retry, make direct requests, inspect or edit `.firstdraft/state.json`, infer
+an endpoint, start another Compilation, download again, use a partial temporary tree, or weaken validation.
+`request_outcome_unknown` remains ambiguous even when it includes an HTTP `status`.
+
+`compilation_start_rejected`, `compilation_status_unavailable`, and `artifact_unavailable` may include a validated
+`status` and whitelisted `response`. `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, and
+`compilation_cancelled` include a validated `current` projection. Report only the bounded fields relevant to the
+blocker. They never authorize retrying or changing the Plan.
+
+The sole recovery that can lead to another invocation without reconciling server state is `invalid_output_path`,
+because the CLI guarantees that it made no network request. Preserve the rejected path and ask the user to choose
+and explicitly approve a different absent path. Do not invent one or treat the original Compilation approval as
+approval for a different destination.
 
 ## Diagnostics response
 
