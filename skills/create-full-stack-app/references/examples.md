@@ -149,9 +149,10 @@ key. If `medium` is renamed, update the default in the same candidate while pres
 
 ## Stored and reverse relationship
 
-This complete document is structurally valid v0.19, but References and authored Associations remain outside the
-reviewed importer subset. It is not Compiler-proven. `Task` owns the stored `project` Reference. `Project` owns the
-meaningful reverse `tasks` Association. The forward `task.project` Association is derived and therefore omitted.
+This complete document is structurally valid v0.19. Its Reference is within the reviewed importer subset, but its
+authored reverse Association is not, so the complete document is rejected at the current conditional PUT boundary.
+It is not analyzer- or Compiler-proven. `Task` owns the stored `project` Reference. `Project` owns the meaningful
+reverse `tasks` Association. The forward `task.project` Association is derived and therefore omitted.
 
 ```json
 {

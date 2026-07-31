@@ -6,7 +6,7 @@ unverified response.
 ## Local initialization error boundary
 
 The merged CLI contract at
-[`74e3d4203587bcecbaf85362596037cb71d5154c`](https://github.com/firstdraft/cli/commit/74e3d4203587bcecbaf85362596037cb71d5154c)
+[`36f12921c0f6641f073820734234c11e47fdb834`](https://github.com/firstdraft/cli/commit/36f12921c0f6641f073820734234c11e47fdb834)
 writes exactly one JSON object to standard error for every handled `plan init` failure. Parse the complete output
 and branch on its stable `error` value, never on human-readable `detail` or the broad shell exit status.
 

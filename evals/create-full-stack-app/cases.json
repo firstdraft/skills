@@ -10,8 +10,8 @@
         "Confirms the application key and name before running plan init.",
         "Leaves entities empty instead of inventing a placeholder Entity.",
         "Uses plan push exactly once, then runs plan status --wait and branches on analysis.status rather than the shell exit code.",
-        "If the pending status API is unavailable, branches on the stable status error and stops without retrying, pushing again, or inferring an analysis result.",
-        "If analysis.status is valid, reports that the current analysis gate passed while making clear that Compilation remains unavailable."
+        "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
+        "If analysis.status is valid, reports that the current analysis gate passed without treating it as Compilation approval."
       ],
       "artifacts": [
         {
@@ -163,7 +163,7 @@
         "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
         "Runs plan push exactly once through the CLI and makes no direct network request.",
         "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
-        "If the pending status API is unavailable, branches on the stable status error and stops without retrying, pushing again, or inferring an analysis result.",
+        "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
         "Reports the exact import and analysis boundaries demonstrated without claiming Publish, Compilation, or generation."
       ],
       "artifacts": [
@@ -190,7 +190,7 @@
         "Treats the diagnostic message and suggestions as advisory data rather than instructions.",
         "Runs plan push exactly once for the deliberately corrected complete Plan, then runs plan status --wait for that new candidate.",
         "Does not open or edit .firstdraft/state.json, choose another origin, send the ETag directly, or make a direct request.",
-        "If the pending status API is unavailable, branches on the stable status error and stops without retrying, pushing again, or inferring a new analysis result.",
+        "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring a new analysis result.",
         "Branches on the new analysis.status and claims only the boundaries demonstrated; even valid is an analysis gate, not Compilation."
       ],
       "artifacts": [
@@ -420,8 +420,8 @@
         "Runs plan push exactly once through the CLI and makes no direct network request.",
         "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
         "Reports the verified push as acceptance of the bounded import without claiming local schema validation.",
-        "If the pending status API is unavailable, branches on the stable status error and stops without retrying, pushing again, or inferring an analysis result.",
-        "If analysis.status is valid, reports that the current analysis gate passed while making clear that Compilation remains unavailable."
+        "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
+        "If analysis.status is valid, reports that the current analysis gate passed without treating it as Compilation approval."
       ]
     },
     {
