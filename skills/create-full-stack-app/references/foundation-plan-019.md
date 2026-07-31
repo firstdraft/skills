@@ -20,23 +20,33 @@ authorized.
 - Structural validity does not prove readable-link resolution, whole-application consistency, target support, or
   compilability.
 - The reviewed conditional PUT imports empty drafts and a bounded subset of Entities, ten scalar Field kinds, enum
-  Fields with ordered values, schema-valid tagged Field defaults, and Field or system-Field Primary Descriptors.
-- The reviewed CLI can read or wait for a bounded current whole-graph analysis. The matching server AnalysisRun
-  response is not yet released end to end.
-- There is no released end-to-end CLI/API workflow, complete nonempty import, Plan GET or pull operation, complete
-  semantic analyzer, Publish action, Compilation action, or generated Foundation.
+  Fields with ordered values, schema-valid tagged Field and Reference defaults, References with ordered targets and
+  mechanically derived forward Associations, Predicates with exact Expression JSON, and Field or system-Field
+  Primary Descriptors.
+- The project-scoped server implements bounded AnalysisRun status and Compilation start, status, cancellation, and
+  artifact transport for the reviewed CLI contract.
+- First Draft's committed controlled CLI smoke at server baseline `9e29606` reproducibly exercises an installed CLI,
+  loopback Rails, and real Solid Queue through 151-file application materialization.
+- Separately, a one-off observation on 2026-07-30 used a fresh Codex invocation at Skill baseline `e24b438`, server
+  baseline `9e29606`, and CLI baseline `36f1292` to go from a prose request through valid analysis and Movie
+  application materialization. That observation is not a reproducible agent eval.
+- That path remains unreleased, unpublished, unauthenticated, local, and bounded to one Entity using supported
+  scalar Fields. It exercised successful Compilation start, status, artifact, and materialization, not cancellation.
+  Neither form of evidence is representative-user, deployed, or production evidence.
+- There is no Plan GET or pull operation, complete semantic analyzer, Publish action, arbitrary application
+  generation, deployment workflow, or support for the rest of the Foundation Plan.
 
 The bundled schema was copied from the
 [First Draft source at revision `12fa2a6`](https://github.com/firstdraft/firstdraft/blob/12fa2a6bcac122196d55f5528fbc3f1363c684e3/docs/architecture/design/foundation-plan.schema.json)
 and has SHA-256
-`5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The merged public API baseline is
-[`500d23e689bdb88325a2b00d2eac4132d846ceff`](https://github.com/firstdraft/firstdraft/commit/500d23e689bdb88325a2b00d2eac4132d846ceff)
+`5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5`. The merged server baseline is
+[`9e296062bf543e89387e2f1044dd29eb52123c9c`](https://github.com/firstdraft/firstdraft/commit/9e296062bf543e89387e2f1044dd29eb52123c9c)
 and contains those same schema bytes.
 The merged CLI baseline is
-[`74e3d4203587bcecbaf85362596037cb71d5154c`](https://github.com/firstdraft/cli/commit/74e3d4203587bcecbaf85362596037cb71d5154c);
-it has not been released and exposes `plan init`, `plan subject-id`, `plan push`, and `plan status`. Check commands
-rather than inferring compatibility from an unreleased version number. Update this Skill deliberately when either
-contract changes.
+[`36f12921c0f6641f073820734234c11e47fdb834`](https://github.com/firstdraft/cli/commit/36f12921c0f6641f073820734234c11e47fdb834);
+it has not been released and exposes `plan init`, `plan subject-id`, `plan push`, `plan status`, and `plan compile`.
+Check commands rather than inferring compatibility from an unreleased version number. Update this Skill deliberately
+when either contract changes.
 
 ## Closed envelope
 
@@ -112,7 +122,8 @@ App Schema artifact.
 
 The reviewed importer accepts the required Application properties `key`, `name`, `native`, `delivery`, and
 `entities`. `native` and `delivery` must remain empty. `entities` may contain any number of Entities with
-`subject_uuid`, `key`, `name`, optional `icon` and `fields`, and one required `primary_descriptor`.
+`subject_uuid`, `key`, `name`, optional `icon`, `fields`, `references`, and `predicates`, and one required
+`primary_descriptor`.
 
 The smallest accepted Application remains:
 
@@ -172,9 +183,19 @@ This retention is structural, not default analysis. It does not prove literal co
 enum membership, readable-locator resolution, nullability, normalization behavior, or Compiler lowering. Preserve
 the intended default when reporting any later semantic gap.
 
+An Entity may also own supported References and Predicates. A Reference retains schema-valid combinations of
+`subject_uuid`, `key`, `name`, `targets`, `required`, `one_to_one`, `on_referenced_deleted`, `default`, `immutable`,
+and `realization`. Its ordered target Entity keys are resolved during import, and the Project graph mechanically
+maintains its same-key forward Association. Reference `validations` remain outside this boundary.
+
+A Predicate retains schema-valid combinations of `subject_uuid`, `key`, `name`, and `expression`. Import preserves
+the Expression's exact decoded JSON meaning without claiming link resolution, type checking, or target lowering.
+Importability does not imply that the current bounded whole-graph analyzer or Compiler accepts a Project containing
+References or Predicates.
+
 Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other
 settings shape is structurally invalid rather than an importer capability gap. Schema-valid Field types outside
-the list above, Validations, derivations, References, Associations, and other Entity or Application capabilities
-remain unsupported. One unsupported pointer rejects the complete conditional PUT with
+the list above, Validations, derivations, authored Associations, and other Entity or Application capabilities remain
+unsupported. One unsupported pointer rejects the complete conditional PUT with
 `foundation_plan.import.unsupported_capability` and no mutation. That diagnostic describes server capability, not
 invalid product meaning. Preserve the authored Plan and report the exact gap.

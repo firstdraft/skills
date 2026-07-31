@@ -18,11 +18,11 @@ const foundationPlanTarget = {
 const foundationPlanSchemaDigest =
   "5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5";
 const foundationPlanServerBaseline =
-  "500d23e689bdb88325a2b00d2eac4132d846ceff";
-const foundationPlanCliBaseline =
-  "74e3d4203587bcecbaf85362596037cb71d5154c";
+  "9e296062bf543e89387e2f1044dd29eb52123c9c";
 const planCompileCliBaseline =
   "36f12921c0f6641f073820734234c11e47fdb834";
+const agentSmokeSkillBaseline =
+  "e24b438918f406e8638e79598b6d83605bd4c15a";
 const planInitErrorCodes = [
   "invalid_arguments",
   "local_initialization_failed",
@@ -89,6 +89,24 @@ const supportedFieldProperties = [
   "normalizations",
   "encrypted_at_rest",
   "redact_from_logs",
+];
+const supportedReferenceProperties = [
+  "subject_uuid",
+  "key",
+  "name",
+  "targets",
+  "required",
+  "one_to_one",
+  "on_referenced_deleted",
+  "default",
+  "immutable",
+  "realization",
+];
+const supportedPredicateProperties = [
+  "subject_uuid",
+  "key",
+  "name",
+  "expression",
 ];
 
 test("installable Skills follow the portable repository profile", async () => {
@@ -226,6 +244,10 @@ test("authored JSON examples parse and retain the pinned Plan contract", async (
 });
 
 test("bounded importer prose remains bound to the exact allowlists", async () => {
+  const skillSource = await readFile(
+    path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
+    "utf8",
+  );
   const referencesDirectory = path.join(
     skillsDirectory,
     "create-full-stack-app",
@@ -318,6 +340,52 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   assert.match(
     foundationPlanReference,
     /retention is structural, not default analysis[\s\S]*?does not prove literal compatibility[\s\S]*?Compiler lowering/,
+  );
+  const documentedReferenceSection = foundationPlanReference.match(
+    /A Reference retains schema-valid combinations of\s+([\s\S]*?)\. Its ordered target Entity keys/,
+  );
+  assert(
+    documentedReferenceSection,
+    "foundation-plan-019.md: missing retained Reference property list",
+  );
+  assert.deepEqual(
+    [...documentedReferenceSection[1].matchAll(/`([^`]+)`/g)].map(
+      (match) => match[1],
+    ),
+    supportedReferenceProperties,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Project graph mechanically\s+maintains its same-key forward Association/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Reference `validations` remain outside this boundary/,
+  );
+  const documentedPredicateSection = foundationPlanReference.match(
+    /A Predicate retains schema-valid combinations of ([\s\S]*?)\. Import preserves/,
+  );
+  assert(
+    documentedPredicateSection,
+    "foundation-plan-019.md: missing retained Predicate property list",
+  );
+  assert.deepEqual(
+    [...documentedPredicateSection[1].matchAll(/`([^`]+)`/g)].map(
+      (match) => match[1],
+    ),
+    supportedPredicateProperties,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Importability does not imply that the current bounded whole-graph analyzer or Compiler accepts a Project containing\s+References or Predicates/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Schema-valid Field types outside\s+the list above, Validations, derivations, authored Associations, and other Entity or Application capabilities remain\s+unsupported/,
+  );
+  assert.match(
+    skillSource,
+    /schema-valid tagged Field and Reference defaults, References with ordered targets and\s+mechanically derived forward Associations, Predicates with exact Expression JSON/,
   );
 
   const diagnosticsReference = await readFile(
@@ -528,10 +596,10 @@ test("complete examples and eval Plans validate against the bundled exact schema
   );
   assert(referenceSource.includes(foundationPlanSchemaDigest));
   assert(referenceSource.includes(foundationPlanServerBaseline));
-  assert(referenceSource.includes(foundationPlanCliBaseline));
+  assert(referenceSource.includes(planCompileCliBaseline));
   assert.match(
     referenceSource,
-    /merged public API baseline is[\s\S]*?and contains those same schema bytes/,
+    /merged server baseline is[\s\S]*?and contains those same schema bytes/,
   );
 
   const validate = new Ajv2020({
@@ -1144,12 +1212,65 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     readme,
-    /The `\*-analysis\.json` fixtures and Compilation eval prompts are behavioral examples accepted by the pinned CLI\s+contract[\s\S]*?not evidence that the pending server AnalysisRun and Compilation lifecycle slices are merged,\s+deployed, or released/,
+    /The `\*-analysis\.json` fixtures and Compilation eval prompts are behavioral examples accepted by the pinned CLI\s+contract, not execution evidence by themselves/,
   );
   assert.match(
     readme,
-    /Until those server slices land[\s\S]*?cannot be graded as though a terminal analysis or materialized application\s+were reachable/,
+    /project-scoped AnalysisRun and Compilation transport is merged[\s\S]*?server-backed eval may now exercise terminal analysis and materialization only when it is prepared and run against\s+a fresh compatible local server, queue, CLI, Project, and Compilation/,
   );
+  assert(
+    readme.includes(
+      `firstdraft/firstdraft/blob/${foundationPlanServerBaseline}/script/compilation_http_cli_smoke`,
+    ),
+  );
+  assert.match(
+    readme,
+    /committed[\s\S]*?controlled CLI smoke[\s\S]*?reproducibly exercises[\s\S]*?Separately, a one-off observation on 2026-07-30/,
+  );
+  assert(readme.includes(agentSmokeSkillBaseline));
+  assert.match(readme, /observation is narrow\s+development evidence, not a reproducible agent eval/);
+  assert.match(
+    readme,
+    /does not establish\s+released or authenticated operation, representative external-agent use, deployment, production readiness, or\s+capabilities beyond the one-Entity scalar compiler slice/,
+  );
+  const skillEvidence = skillSource.match(
+    /This Skill is experimental\.([\s\S]*?)## Load the relevant references/,
+  );
+  const foundationPlanEvidence = foundationPlanReference.match(
+    /## Current evidence boundary([\s\S]*?)The bundled schema was copied/,
+  );
+  assert(skillEvidence, "SKILL.md: missing current evidence boundary");
+  assert(
+    foundationPlanEvidence,
+    "foundation-plan-019.md: missing current evidence boundary",
+  );
+  for (const source of [skillEvidence[1], foundationPlanEvidence[1]]) {
+    assert(source.includes("loopback Rails"));
+    assert(source.includes("real Solid Queue"));
+    assert.match(source, /committed controlled CLI smoke/);
+    assert.match(source, /reproducibly exercises/);
+    assert.match(source, /Separately, a one-off observation\s+on 2026-07-30/);
+    assert.match(source, /fresh\s+Codex/);
+    assert(source.includes("e24b438"));
+    assert(source.includes("9e29606"));
+    assert(source.includes("36f1292"));
+    assert.match(source, /not a reproducible agent eval/);
+    assert.match(source, /151-file application\s+materialization/);
+    assert(source.includes("unauthenticated"));
+    assert.match(
+      source,
+      /(?:neither is|Neither form of evidence is) representative-user,\s+deployed, or production evidence/,
+    );
+    assert.match(source, /one Entity using supported\s+scalar\s+Fields/);
+    assert.match(
+      source,
+      /no Plan GET or pull operation,\s+complete semantic analyzer, Publish action, arbitrary\s+application\s+generation, deployment workflow/,
+    );
+    assert.match(
+      source,
+      /successful (?:Compilation )?start, status, artifact, and materialization[\s\S]*?not cancellation/,
+    );
+  }
 
   for (const id of [
     "initialize-empty-plan",
@@ -1179,9 +1300,9 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     const evaluation = cases.find((candidate) => candidate.id === id);
     assert(
       evaluation.expectations.some((expectation) =>
-        expectation.includes("pending status API is unavailable"),
+        expectation.includes("any other handled status error"),
       ),
-      `${id}: pending server path must stop on the status error`,
+      `${id}: every handled status failure must remain a stop condition`,
     );
   }
 
@@ -1466,7 +1587,7 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
   assert(referenceSection[1].includes(planCompileCliBaseline));
   assert.match(
     readme,
-    /first local\s+compiler smoke path is limited to one Entity using supported scalar Fields/,
+    /compiler path is narrower still:\s+one Entity using supported scalar Fields/,
   );
 
   const evaluation = (id) => {
@@ -1654,7 +1775,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     pushSection[1],
     /Invoke it once for each candidate attempt[\s\S]*?never wrap the command in an automatic retry/,
   );
-  assert(recoveryReference.includes(foundationPlanCliBaseline));
+  assert(recoveryReference.includes(planCompileCliBaseline));
   const pushReference = recoveryReference.match(
     /## Plan push error boundary([\s\S]*?)## Verified success/,
   );

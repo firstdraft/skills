@@ -2,12 +2,23 @@
 
 Portable Agent Skills for working with [First Draft](https://github.com/firstdraft/firstdraft).
 
-This repository is experimental. The bounded authoring API and required CLI are implemented in reviewed slices,
-including a CLI that can wait for analysis and verify and materialize one pinned Compilation. The matching server
-AnalysisRun and Compilation lifecycle slices are still landing, and the CLI has not been released. The first local
-compiler smoke path is limited to one Entity using supported scalar Fields; complete Foundation Plan import,
-arbitrary application generation, Publish, deployment, and mobile clients are not available end to end. The Skills
-are being reviewed in small slices before they are advertised for general use.
+This repository is experimental. The project-scoped server analysis and Compilation transport and the required CLI
+are implemented in reviewed slices. First Draft's committed
+[controlled CLI smoke](https://github.com/firstdraft/firstdraft/blob/9e296062bf543e89387e2f1044dd29eb52123c9c/script/compilation_http_cli_smoke)
+reproducibly exercises an installed CLI, loopback Rails, and real Solid Queue through 151-file application
+materialization. Separately, a one-off observation on 2026-07-30 used a fresh Codex invocation of this Skill at
+[`e24b438`](https://github.com/firstdraft/skills/commit/e24b438918f406e8638e79598b6d83605bd4c15a),
+server baseline
+[`9e29606`](https://github.com/firstdraft/firstdraft/commit/9e296062bf543e89387e2f1044dd29eb52123c9c),
+and CLI baseline
+[`36f1292`](https://github.com/firstdraft/cli/commit/36f12921c0f6641f073820734234c11e47fdb834)
+to go from a prose request through valid analysis and Movie application materialization. That observation is narrow
+development evidence, not a reproducible agent eval, release, authentication, representative-user, deployment, or
+production evidence. The CLI and Skill remain unpublished, and the importer supports only the bounded subset
+described by the Skill reference. The compiler path is narrower still: one Entity using supported scalar Fields.
+There is no Plan GET or pull operation, complete semantic analyzer, Publish action, arbitrary application generation,
+deployment workflow, or mobile-client generation. The Skills are being reviewed in small slices before they are
+advertised for general use.
 
 ## Skills
 
@@ -80,6 +91,11 @@ private state, leave the accepted Plan bytes unchanged, and ensure `./generated-
 starts. Never reuse a Project or Compilation across server-backed eval runs or expose state contents to the agent.
 
 The `*-analysis.json` fixtures and Compilation eval prompts are behavioral examples accepted by the pinned CLI
-contract. They are not evidence that the pending server AnalysisRun and Compilation lifecycle slices are merged,
-deployed, or released. Until those server slices land, server-backed evals can demonstrate handled stop paths but
-cannot be graded as though a terminal analysis or materialized application were reachable.
+contract, not execution evidence by themselves. The project-scoped AnalysisRun and Compilation transport is merged
+at server baseline
+[`9e29606`](https://github.com/firstdraft/firstdraft/commit/9e296062bf543e89387e2f1044dd29eb52123c9c).
+A server-backed eval may now exercise terminal analysis and materialization only when it is prepared and run against
+a fresh compatible local server, queue, CLI, Project, and Compilation. The committed CLI smoke does not establish
+released or authenticated operation, representative external-agent use, deployment, production readiness, or
+capabilities beyond the one-Entity scalar compiler slice. The dated agent observation above is not a reproducible
+eval.

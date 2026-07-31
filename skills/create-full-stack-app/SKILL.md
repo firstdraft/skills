@@ -12,12 +12,23 @@ concurrency, and network behavior in the `firstdraft` CLI.
 
 This Skill is experimental. The reviewed CLI can initialize a Plan, mint UUIDv7 subject IDs, push exact bytes, wait
 for the current whole-graph analysis, and perform one pinned Compilation whose complete artifact it verifies before
-atomically materializing a new local directory. The reviewed server can create and replace empty drafts plus a
-bounded subset of Entities, ten scalar Field kinds, enum Fields with ordered values, schema-valid tagged Field
-defaults, and Field or system-Field Primary Descriptors. The first local compiler smoke path is narrower: one Entity
-using supported scalar Fields. It is not arbitrary application generation, a deployment workflow, or support for
-the rest of the Foundation Plan. The matching server AnalysisRun and Compilation lifecycle slices are still
-landing, and none of these components is released end to end.
+atomically materializing a new local directory. The reviewed project-scoped server transport accepts complete Plan
+replacements, exposes bounded AnalysisRun status, and can start, poll, cancel, and return the artifact for one pinned
+Compilation. Its importer supports empty drafts plus a bounded subset of Entities, ten scalar Field kinds, enum
+Fields with ordered values, schema-valid tagged Field and Reference defaults, References with ordered targets and
+mechanically derived forward Associations, Predicates with exact Expression JSON, and Field or system-Field Primary
+Descriptors.
+
+First Draft's committed controlled CLI smoke at server baseline `9e29606` reproducibly exercises an installed CLI,
+loopback Rails, and real Solid Queue through 151-file application materialization. Separately, a one-off observation
+on 2026-07-30 used a fresh Codex invocation at Skill baseline `e24b438`, server baseline `9e29606`, and CLI baseline
+`36f1292` to go from a prose request through valid analysis and Movie application materialization. That observation
+is not a reproducible agent eval. Neither form of evidence makes the unauthenticated local transport, CLI, or Skill
+released or published, and neither is representative-user, deployed, or production evidence. The smoke exercised
+the successful start, status, artifact, and materialization path, not cancellation. The compiler path remains
+narrower than the importer: one Entity using supported scalar Fields. There is no Plan GET or pull operation,
+complete semantic analyzer, Publish action, arbitrary application generation, deployment workflow, or support for
+the rest of the Foundation Plan.
 
 ## Load the relevant references
 
