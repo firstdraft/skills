@@ -1,0 +1,46 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-08"
+  },
+  "application": {
+    "key": "movie_catalog",
+    "name": "Movie Catalog",
+    "domain": "movies.example.com",
+    "appearance": {
+      "theme": "auto",
+      "tint_color": "#4F46E5"
+    },
+    "native": {
+      "ios": {}
+    },
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fb300-0000-7000-8000-000000000001",
+        "key": "movie",
+        "name": "Movie",
+        "icon": "film",
+        "primary_descriptor": {
+          "field": "movie.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fb300-0000-7000-8000-000000000002",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": false
+          }
+        ],
+        "scaffold": {
+          "resource_routes": ["index"],
+          "index": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

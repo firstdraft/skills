@@ -13,13 +13,26 @@ const evalsDirectory = path.join(repository, "evals");
 const foundationPlanFormat = "firstdraft.foundation-plan.sketch/0.19";
 const foundationPlanTarget = {
   id: "rails",
-  profile: "rails-sketch/2026-07",
+  profile: "rails-sketch/2026-08",
 };
+const foundationPlanAnalyzerRelease = "foundation-plan-rails/application-2026-08";
+const foundationPlanCompilerRelease =
+  "foundation-plan-rails/compiler-application-2026-08";
 const foundationPlanSchemaDigest =
-  "5994c41f65eab52f92020fa24437e76b6957b7016ccf231dce06e8097f0b34b5";
+  "1954e5c95d6e6621578202ad4452686b56c150256ffcd75935078d9f4247c568";
 const foundationPlanServerBaseline =
-  "9e296062bf543e89387e2f1044dd29eb52123c9c";
+  "35ad070beb36c66dc6480f36b33767caaed160a9";
 const planCompileCliBaseline =
+  "121272cd592055354d09a4fe90e55c3ca002770c";
+const planCompileCliRuntimeDigest =
+  "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
+const foundationIosCoreRevision =
+  "aa2ac902fa52abab51a4502953b7b962f949a21d";
+const foundationIosCoreArchiveDigest =
+  "0807e76cf02296af27d4eb1aae68e298beef162a7daa8a3da55d83e88ab6d748";
+const priorJourneyServerBaseline =
+  "9e296062bf543e89387e2f1044dd29eb52123c9c";
+const priorJourneyCliBaseline =
   "36f12921c0f6641f073820734234c11e47fdb834";
 const agentSmokeSkillBaseline =
   "e24b438918f406e8638e79598b6d83605bd4c15a";
@@ -109,6 +122,112 @@ const supportedPredicateProperties = [
   "expression",
 ];
 
+test("revision pins remain exhaustive across coordination surfaces", async () => {
+  const revisionTokens = (source) =>
+    [
+      ...new Set(
+        source.match(/\b(?:[0-9a-f]{40}|[0-9a-f]{7})\b/g) ?? [],
+      ),
+    ].sort();
+  const assertRevisionTokens = (source, expected) =>
+    assert.deepEqual(revisionTokens(source), [...expected].sort());
+  const historicalAbbreviations = [
+    priorJourneyServerBaseline.slice(0, 7),
+    priorJourneyCliBaseline.slice(0, 7),
+    agentSmokeSkillBaseline.slice(0, 7),
+  ];
+
+  const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  assertRevisionTokens(readme, [
+    foundationPlanServerBaseline,
+    planCompileCliBaseline,
+    foundationIosCoreRevision,
+    priorJourneyServerBaseline,
+    priorJourneyCliBaseline,
+    agentSmokeSkillBaseline,
+    ...historicalAbbreviations,
+  ]);
+
+  const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
+  const referencesDirectory = path.join(
+    skillDirectory,
+    "references",
+  );
+  const referenceNames = (await readdir(referencesDirectory))
+    .filter((file) => file.endsWith(".md"))
+    .sort();
+  const references = await Promise.all(
+    referenceNames.map((file) =>
+      readFile(path.join(referencesDirectory, file), "utf8"),
+    ),
+  );
+  assertRevisionTokens(references.join("\n"), [
+    foundationPlanServerBaseline,
+    planCompileCliBaseline,
+    foundationIosCoreRevision,
+    ...historicalAbbreviations,
+  ]);
+  assertRevisionTokens(
+    await readFile(path.join(skillDirectory, "SKILL.md"), "utf8"),
+    historicalAbbreviations,
+  );
+
+  const foundationPlanReference = await readFile(
+    path.join(referencesDirectory, "foundation-plan-019.md"),
+    "utf8",
+  );
+  for (const source of [readme, foundationPlanReference]) {
+    assert(source.includes(foundationPlanAnalyzerRelease));
+    assert(source.includes(foundationPlanCompilerRelease));
+  }
+
+  const workflow = (
+    await readFile(path.join(repository, ".github", "workflows", "ci.yml"), "utf8")
+  ).replace(/^.*uses:\s+\S+@[0-9a-f]{40}.*$/gm, "");
+  assertRevisionTokens(workflow, [planCompileCliBaseline]);
+  const contractCheck = await readFile(
+    path.join(repository, "script", "check-cli-contract.mjs"),
+    "utf8",
+  );
+  assertRevisionTokens(contractCheck, [planCompileCliBaseline]);
+  assert(
+    contractCheck.includes(
+      `const compilerRelease = "${foundationPlanCompilerRelease}";`,
+    ),
+  );
+  assert(
+    contractCheck.includes(
+      `const compilationTarget = { id: "${foundationPlanTarget.id}", ` +
+        `profile: "${foundationPlanTarget.profile}" };`,
+    ),
+  );
+  assert(
+    contractCheck.includes(`release: "${foundationPlanAnalyzerRelease}",`),
+  );
+  assertRevisionTokens(
+    await readFile(path.join(repository, "test", "repository.test.mjs"), "utf8"),
+    [
+      foundationPlanServerBaseline,
+      planCompileCliBaseline,
+      foundationIosCoreRevision,
+      priorJourneyServerBaseline,
+      priorJourneyCliBaseline,
+      agentSmokeSkillBaseline,
+      agentSmokeSkillBaseline.slice(0, 7),
+    ],
+  );
+  for (const relativePath of [
+    ["evals", "create-full-stack-app", "cases.json"],
+    ["script", "check"],
+    ["skills", "create-full-stack-app", "agents", "openai.yaml"],
+  ]) {
+    assertRevisionTokens(
+      await readFile(path.join(repository, ...relativePath), "utf8"),
+      [],
+    );
+  }
+});
+
 test("installable Skills follow the portable repository profile", async () => {
   const entries = await readdir(skillsDirectory, { withFileTypes: true });
   const skillNames = entries
@@ -121,6 +240,46 @@ test("installable Skills follow the portable repository profile", async () => {
   for (const skillName of skillNames) {
     await checkSkill(skillName);
   }
+});
+
+test("CI checks the exact prepared successor CLI contract", async () => {
+  const workflow = await readFile(
+    path.join(repository, ".github", "workflows", "ci.yml"),
+    "utf8",
+  );
+  const contractCheck = await readFile(
+    path.join(repository, "script", "check-cli-contract.mjs"),
+    "utf8",
+  );
+  assert.match(
+    workflow,
+    new RegExp(
+      `repository: firstdraft/cli\\s+ref: ${planCompileCliBaseline}`,
+    ),
+  );
+  assert.match(
+    workflow,
+    /node script\/check-cli-contract\.mjs tmp\/firstdraft-cli/,
+  );
+  assert(
+    contractCheck.includes(
+      `const cliBaseline = "${planCompileCliBaseline}";`,
+    ),
+  );
+  assert(contractCheck.includes(planCompileCliRuntimeDigest));
+  assert.match(
+    contractCheck,
+    /ios\/FoundationApp\/Generated\/ApplicationDefinition\.swift[\s\S]*?ios\/bin\/ios[\s\S]*?mode: 0o755/,
+  );
+  assert.match(
+    contractCheck,
+    /statSync\(iosCommand\)\.mode & 0o777, 0o755/,
+  );
+  assert.match(
+    contractCheck,
+    /MAX_ARTIFACT_BYTES[\s\S]*?16 \* 1024 \* 1024/,
+  );
+  assert.match(contractCheck, /unsupported-graph-analysis\.json/);
 });
 
 test("behavioral eval cases are well-formed and reference real fixtures", async () => {
@@ -377,21 +536,85 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /Importability does not imply that the current bounded whole-graph analyzer or Compiler accepts a Project containing\s+References or Predicates/,
+    /Importability does not imply that the current bounded whole-graph analyzer or Compiler accepts a Project containing\s+enum Fields, References, or Predicates/,
   );
   assert.match(
     foundationPlanReference,
-    /Schema-valid Field types outside\s+the list above, Validations, derivations, authored Associations, and other Entity or Application capabilities remain\s+unsupported/,
+    /Schema-valid Field types outside\s+the list above, nonempty delivery, development data, Validations, derivations, authored Associations, broader\s+Scaffold shapes, and other unlisted Entity capabilities remain unsupported/,
   );
   assert.match(
     skillSource,
-    /schema-valid tagged Field and Reference defaults, References with ordered targets and\s+mechanically derived forward Associations, Predicates with exact Expression JSON/,
+    /schema-valid\s+tagged Field and Reference defaults, References with ordered targets and mechanically derived forward Associations,\s+Predicates with exact Expression JSON/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /`domain`, `appearance`, and `native` are retained as editable\s+graph state; a nonempty `delivery` remains outside this import boundary/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /prepared application analyzer and Compiler admit `domain` only when `native\.ios` is selected/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /selected iPhone\s+client may omit `domain`, but it requires at least one Entity with the exact public-index Scaffold/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /prepared Compilation emits admitted web public indexes and, when selected, an owned iPhone project beneath\s+`ios\/`/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /only admitted Scaffold shape requests exactly the public `index` resource route[\s\S]*?prepared analyzer and\s+Compiler admit this shape and emit the corresponding read-only web index[\s\S]*?optional semantic\s+icon also feed shared web and iPhone navigation/,
+  );
+  const modelingGuide = await readFile(
+    path.join(referencesDirectory, "modeling-guide.md"),
+    "utf8",
+  );
+  assert.match(
+    modelingGuide,
+    /current conditional PUT and prepared Compiler admit only one Scaffold subset[\s\S]*?`resource_routes` is exactly\s+`\["index"\]`[\s\S]*?produces a read-only public web\s+index/,
+  );
+  assert.match(
+    modelingGuide,
+    /Select `native\.ios` only when the user wants the bounded owned iPhone project[\s\S]*?requires at least one admitted\s+public-index Scaffold for navigation[\s\S]*?Application `domain` is admitted by analysis only with selected\s+iOS[\s\S]*?Appearance and Android are retained for editing but block Compilation at analysis; nonempty\s+delivery is not\s+importable[\s\S]*?iPad is not supported/,
+  );
+  assert.match(
+    modelingGuide,
+    /only admitted navigation Scaffold is public[\s\S]*?records\s+readable on the web without authentication[\s\S]*?Confirm that exposure with the user[\s\S]*?Do not add a public index merely to obtain `valid`[\s\S]*?do not silently decline the requested iPhone client/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /admitted Scaffold makes the Entity's records readable on the web without\s+authentication[\s\S]*?Confirm that exposure with the user[\s\S]*?selected iPhone request cannot yet pass analysis/,
+  );
+  assert.match(
+    modelingGuide,
+    /current importer retains enums for editing,\s+but they cannot pass the bounded Compilation analysis gate[\s\S]*?preserve the product meaning/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Enum Fields are retained for editing[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph` capability gap at `\/application`[\s\S]*?rather than weakening it to a scalar/,
   );
 
   const diagnosticsReference = await readFile(
     path.join(referencesDirectory, "diagnostics-and-recovery.md"),
     "utf8",
   );
+  const installedNarrativeSources = await Promise.all(
+    (await readdir(referencesDirectory))
+      .filter((file) => file.endsWith(".md"))
+      .sort()
+      .map((file) => readFile(path.join(referencesDirectory, file), "utf8")),
+  );
+  const agentMetadata = await readFile(
+    path.join(skillsDirectory, "create-full-stack-app", "agents", "openai.yaml"),
+    "utf8",
+  );
+  for (const source of [skillSource, agentMetadata, ...installedNarrativeSources]) {
+    assert.doesNotMatch(
+      source,
+      /before pushing this (?:Skill )?change|pending local-work|unmerged|unpushed/i,
+    );
+  }
   assert.match(
     diagnosticsReference,
     /`foundation_plan\.json\.number_out_of_range` and `foundation_plan\.json\.number_not_round_trippable` use the root\s+pointer `""`/,
@@ -460,6 +683,35 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     ),
   );
   assert.deepEqual(ordinalPlan, enumFixture);
+
+  const applicationIntentPlan = (await markdownJsonDocuments(
+    path.join(referencesDirectory, "examples.md"),
+  )).find((document) => document?.application?.key === "movie_catalog");
+  assert(applicationIntentPlan, "examples.md: missing bounded web and iPhone Plan");
+  assert.equal(applicationIntentPlan.application.domain, "movies.example.com");
+  assert(!("appearance" in applicationIntentPlan.application));
+  assert.deepEqual(applicationIntentPlan.application.native, { ios: {} });
+  assert.equal(applicationIntentPlan.application.entities[0].icon, "film");
+  assert.equal(
+    applicationIntentPlan.application.entities[0].primary_descriptor.field,
+    "movie.title",
+  );
+  assert.deepEqual(applicationIntentPlan.application.entities[0].scaffold, {
+    resource_routes: ["index"],
+    index: { authorization: "public" },
+  });
+  const applicationIntentFixture = JSON.parse(
+    await readFile(
+      path.join(
+        evalsDirectory,
+        "create-full-stack-app",
+        "fixtures",
+        "application-intent.foundation-plan.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.deepEqual(applicationIntentPlan, applicationIntentFixture);
 });
 
 test("validator routing preserves validation boundaries", async () => {
@@ -597,9 +849,12 @@ test("complete examples and eval Plans validate against the bundled exact schema
   assert(referenceSource.includes(foundationPlanSchemaDigest));
   assert(referenceSource.includes(foundationPlanServerBaseline));
   assert(referenceSource.includes(planCompileCliBaseline));
+  assert(referenceSource.includes(planCompileCliRuntimeDigest));
+  assert(referenceSource.includes(foundationIosCoreRevision));
+  assert(referenceSource.includes(foundationIosCoreArchiveDigest));
   assert.match(
     referenceSource,
-    /merged server baseline is[\s\S]*?and contains those same schema bytes/,
+    /bundled schema was copied from `docs\/architecture\/design\/foundation-plan\.schema\.json` at landed server\s+activation revision[\s\S]*?revision is exact contract provenance,\s+not release or execution evidence/,
   );
 
   const validate = new Ajv2020({
@@ -882,6 +1137,16 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     supportedEnumPlanArtifact,
     replaceBeforeServerEvaluationStateArtifact,
   ]);
+  assert(
+    supportedEnumEvaluation.expectations.some((expectation) =>
+      expectation.includes(
+        "foundation_plan.rails_target.compiler.unsupported_graph",
+      ) &&
+      expectation.includes("/application") &&
+      expectation.includes("preserves the enum") &&
+      expectation.includes("stops without editing, pushing again, or compiling"),
+    ),
+  );
   const replaceBeforeServerEvaluationState = JSON.parse(
     await readFile(
       path.join(
@@ -919,29 +1184,33 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   assert(readme.includes(planCompileCliBaseline));
   assert(
     readme.includes(
-      "| `create-full-stack-app` | Author and review an experimental First Draft Foundation Plan | Experimental scaffold |",
+      "| `create-full-stack-app` | Author, analyze, and locally compile an experimental First Draft Foundation Plan | Experimental scaffold |",
     ),
   );
   assert.match(readme, /state-placeholder\.txt.*deliberately unreadable/s);
   assert.match(
     readme,
-    /`initialize-empty-plan`, `author-without-local-validator`, `push-supported-enum-plan`, and\s+`repair-well-founded-analysis-issue` are server-backed analysis evals/,
+    /`initialize-empty-plan`, `author-without-local-validator`, `push-supported-enum-plan`,\s+and `repair-well-founded-analysis-issue` are server-backed analysis evals\. The first two create fresh state\s+themselves/,
   );
   assert.match(
     readme,
-    /`replace-before-server-eval\.state\.json` is an unmistakably synthetic placeholder that names no known Project;\s+never send it/,
+    /`validate-supported-application-intent`, `preserve-unsupported-appearance-intent`, and\s+`capability-gap-precedes-correctable-analysis-issue` attach synthetic analysis results and require no server; the\s+last exercises mixed-diagnostic precedence/,
   );
   assert.match(
     readme,
-    /Before either of the latter two runs, replace it with `\.firstdraft\/state\.json` generated by a fresh\s+`firstdraft plan init`[\s\S]*?in a scratch\s+directory before staging it/,
+    /`replace-before-server-eval\.state\.json` is an unmistakably synthetic\s+placeholder that names\s+no known Project; never send it/,
   );
   assert.match(
     readme,
-    /`compile-after-explicit-approval` is a server-backed Compilation eval[\s\S]*?push it to the compatible local\s+server, and wait for `analysis\.status: "valid"`[\s\S]*?ensure `\.\/generated-movies` is absent/,
+    /Before `push-supported-enum-plan` or\s+`repair-well-founded-analysis-issue`, replace it with `\.firstdraft\/state\.json` generated by a fresh\s+`firstdraft plan init` using the exact landed CLI in a scratch directory/,
   );
   assert.match(
     readme,
-    /Never reuse a\s+Project or Compilation across server-backed eval runs or expose state contents to the agent/,
+    /`compile-after-explicit-approval` is a server-backed Compilation eval[\s\S]*?Start a fresh compatible local server at the\s+exact revision above and a fresh queue[\s\S]*?replace its Plan with\s+`application-intent\.foundation-plan\.json`, push, and wait for `analysis\.status: "valid"`[\s\S]*?replace the eval's synthetic state fixture with that same Project's resulting post-push\s+`\.firstdraft\/state\.json`[\s\S]*?Ensure `\.\/generated-movies` is absent beneath the scratch Project[\s\S]*?explicitly approve that\s+path, and compile once/,
+  );
+  assert.match(
+    readme,
+    /Never reuse a Project or Compilation\s+across server-backed eval runs or expose state contents/,
   );
   const supportedEnumPlan = JSON.parse(
     await readFile(
@@ -1135,7 +1404,11 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     pushSection[1],
-    /corrected candidate also returns `issues_found`[\s\S]*?Do not make a second analysis-directed correction or push without fresh user\s+approval/,
+    /`foundation_plan\.rails_target\.compiler\.unsupported_application_configuration`[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph`[\s\S]*?current analyzer or output gap rather\s+than invalid product meaning[\s\S]*?addresses intentional product meaning that the current\s+Compiler cannot emit, preserve every addressed member, report every diagnostic and its exact pointer, and stop\s+without editing or another push/,
+  );
+  assert.match(
+    pushSection[1],
+    /corrected\s+candidate otherwise returns `issues_found`[\s\S]*?Do not make a second\s+analysis-directed correction or push without fresh user approval/,
   );
   assert.match(
     pushSection[1],
@@ -1204,7 +1477,11 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     statusReference[1],
-    /one corrected candidate also returns `issues_found`[\s\S]*?second\s+analysis-directed correction and push requires fresh user approval/,
+    /one\s+corrected candidate otherwise\s+returns `issues_found`[\s\S]*?A second\s+analysis-directed correction and push\s+requires fresh user approval/,
+  );
+  assert.match(
+    statusReference[1],
+    /`foundation_plan\.rails_target\.compiler\.unsupported_application_configuration`[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph`[\s\S]*?current Compiler capability gaps rather than\s+invalid product meaning[\s\S]*?addresses intentional meaning that\s+the current Compiler cannot\s+emit, preserve every addressed member, report every diagnostic and its exact pointer,\s+and stop without editing or\s+another push/,
   );
   assert.match(
     foundationPlanReference,
@@ -1216,11 +1493,11 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     readme,
-    /project-scoped AnalysisRun and Compilation transport is merged[\s\S]*?server-backed eval may now exercise terminal analysis and materialization only when it is prepared and run against\s+a fresh compatible local server, queue, CLI, Project, and Compilation/,
+    /exact landed server revision[\s\S]*?activates analyzer\s+`foundation-plan-rails\/application-2026-08` and compiler[\s\S]*?Start a fresh compatible local server at the\s+exact revision above and a fresh queue/,
   );
   assert(
     readme.includes(
-      `firstdraft/firstdraft/blob/${foundationPlanServerBaseline}/script/compilation_http_cli_smoke`,
+      `firstdraft/firstdraft/blob/${priorJourneyServerBaseline}/script/compilation_http_cli_smoke`,
     ),
   );
   assert.match(
@@ -1228,10 +1505,25 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /committed[\s\S]*?controlled CLI smoke[\s\S]*?reproducibly exercises[\s\S]*?Separately, a one-off observation on 2026-07-30/,
   );
   assert(readme.includes(agentSmokeSkillBaseline));
+  assert(readme.includes(priorJourneyServerBaseline));
+  assert(readme.includes(priorJourneyCliBaseline));
+  assert(readme.includes(foundationPlanServerBaseline));
+  assert(readme.includes(planCompileCliBaseline));
+  assert(readme.includes(planCompileCliRuntimeDigest));
+  assert(readme.includes(foundationIosCoreRevision));
+  assert(readme.includes(foundationIosCoreArchiveDigest));
   assert.match(readme, /observation is narrow\s+development evidence, not a reproducible agent eval/);
   assert.match(
     readme,
-    /does not establish\s+released or authenticated operation, representative external-agent use, deployment, production readiness, or\s+capabilities beyond the one-Entity scalar compiler slice/,
+    /successor smoke must record[\s\S]*?actual artifact byte size, file count, and manifest digest[\s\S]*?executable mode of `ios\/bin\/ios`[\s\S]*?below the CLI's 16 MiB limit/,
+  );
+  assert.match(
+    readme,
+    /Their `2026-07-30` timestamps are fixed deterministic transport\s+data, not execution-evidence dates/,
+  );
+  assert.match(
+    readme,
+    /does not establish the successor releases, authenticated operation, representative\s+external-agent use, deployment, production readiness, or capabilities beyond its historical one-Entity scalar\s+slice/,
   );
   const skillEvidence = skillSource.match(
     /This Skill is experimental\.([\s\S]*?)## Load the relevant references/,
@@ -1246,25 +1538,30 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   for (const source of [skillEvidence[1], foundationPlanEvidence[1]]) {
     assert(source.includes("loopback Rails"));
-    assert(source.includes("real Solid Queue"));
-    assert.match(source, /committed controlled CLI smoke/);
+    assert.match(source, /real Solid\s+Queue/);
+    assert.match(source, /committed controlled\s+CLI\s+smoke/);
     assert.match(source, /reproducibly exercises/);
+    assert.match(source, /prior `rails-sketch\/2026-07` journey/);
     assert.match(source, /Separately, a one-off observation\s+on 2026-07-30/);
     assert.match(source, /fresh\s+Codex/);
     assert(source.includes("e24b438"));
-    assert(source.includes("9e29606"));
-    assert(source.includes("36f1292"));
-    assert.match(source, /not a reproducible agent eval/);
+    assert(source.includes(priorJourneyServerBaseline.slice(0, 7)));
+    assert(source.includes(priorJourneyCliBaseline.slice(0, 7)));
+    assert.match(source, /not a reproducible agent\s+eval/);
     assert.match(source, /151-file application\s+materialization/);
+    assert.match(
+      source,
+      /successor `rails-sketch\/2026-08`[\s\S]*?not execution evidence/,
+    );
     assert(source.includes("unauthenticated"));
     assert.match(
       source,
       /(?:neither is|Neither form of evidence is) representative-user,\s+deployed, or production evidence/,
     );
-    assert.match(source, /one Entity using supported\s+scalar\s+Fields/);
+    assert.match(source, /one\s+Entity using supported\s+scalar\s+Fields/);
     assert.match(
       source,
-      /no Plan GET or pull operation,\s+complete semantic analyzer, Publish action, arbitrary\s+application\s+generation, deployment workflow/,
+      /no Plan GET or pull operation,\s+complete semantic analyzer,\s+Publish action, arbitrary\s+application\s+generation,\s+deployment workflow/,
     );
     assert.match(
       source,
@@ -1395,16 +1692,208 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     recurringIssues.analysis.diagnostics[0].subject.subject_uuid,
     recurringEntity.subject_uuid,
   );
+  const applicationIntent = cases.find(
+    ({ id }) => id === "validate-supported-application-intent",
+  );
+  assert(applicationIntent);
+  const applicationIntentPlan = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "application-intent.foundation-plan.json",
+      ),
+      "utf8",
+    ),
+  );
+  const applicationIntentValid = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "application-intent-valid-analysis.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(applicationIntentValid.analysis.status, "valid");
+  assert.deepEqual(applicationIntentValid.analysis.diagnostics, []);
+  assert.equal(applicationIntentPlan.application.key, "movie_catalog");
+  assert.equal(applicationIntentPlan.application.domain, "movies.example.com");
+  assert.deepEqual(applicationIntentPlan.application.native, { ios: {} });
+  assert.equal(applicationIntentPlan.application.entities[0].icon, "film");
+  assert.deepEqual(applicationIntentPlan.application.entities[0].scaffold, {
+    resource_routes: ["index"],
+    index: { authorization: "public" },
+  });
+  assert.deepEqual(
+    applicationIntent.artifacts.map(({ path: artifactPath }) => artifactPath),
+    [
+      "evals/create-full-stack-app/fixtures/application-intent-valid-analysis.json",
+      "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+      "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+    ],
+  );
+  assert(
+    applicationIntent.expectations.some((expectation) =>
+      expectation.includes("Preserves the complete staged Plan unchanged"),
+    ),
+  );
+  assert(
+    applicationIntent.expectations.some((expectation) =>
+      expectation.includes("analysis alone does not prove generated output"),
+    ),
+  );
+  const unsupportedGraph = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "unsupported-graph-analysis.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(unsupportedGraph.analysis.status, "issues_found");
+  assert.deepEqual(
+    unsupportedGraph.analysis.diagnostics.map(
+      ({ code, location, message }) => [
+        code,
+        location.source_pointer,
+        message,
+      ],
+    ),
+    [[
+      "foundation_plan.rails_target.compiler.unsupported_graph",
+      "/application",
+      "The current Rails Compiler cannot emit this Project: Domain rendering does not support nonempty Project#field_values",
+    ]],
+  );
+  const privateIosRequest = cases.find(
+    ({ id }) => id === "private-ios-request-requires-choice",
+  );
+  assert(privateIosRequest);
+  assert.match(privateIosRequest.prompt, /iPhone client/);
+  assert.match(privateIosRequest.prompt, /private to signed-in staff/);
+  assert.match(privateIosRequest.prompt, /index, show, create, update, and delete/);
+  for (const fragment of [
+    "readable on the web without authentication",
+    "Stops for a product choice",
+    "silently adding a public index",
+    "Preserves the complete staged Plan",
+    "does not run plan init",
+  ]) {
+    assert(
+      privateIosRequest.expectations.some((expectation) =>
+        expectation.includes(fragment),
+      ),
+    );
+  }
+  assert.deepEqual(
+    privateIosRequest.artifacts.map(({ path: artifactPath }) => artifactPath),
+    [
+      "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+      "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+    ],
+  );
+  const appearanceIntent = cases.find(
+    ({ id }) => id === "preserve-unsupported-appearance-intent",
+  );
+  assert(appearanceIntent);
+  const appearanceIssues = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "appearance-issues-analysis.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(appearanceIssues.analysis.status, "issues_found");
+  assert.deepEqual(
+    appearanceIssues.analysis.diagnostics.map(
+      ({ code, message, location }) => [
+        code,
+        location.source_pointer,
+        message,
+      ],
+    ),
+    [[
+      "foundation_plan.rails_target.compiler.unsupported_application_configuration",
+      "/application/appearance",
+      "Application Appearance is not emitted by the current Rails Compiler release.",
+    ]],
+  );
+  assert(
+    appearanceIntent.expectations.some((expectation) =>
+      expectation.includes("Preserves the complete Appearance request"),
+    ),
+  );
+  assert(
+    appearanceIntent.expectations.some((expectation) =>
+      expectation.includes("Does not run plan push or plan status again"),
+    ),
+  );
+  const mixedIntent = cases.find(
+    ({ id }) => id === "capability-gap-precedes-correctable-analysis-issue",
+  );
+  assert(mixedIntent);
+  const mixedIssues = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "mixed-application-issues-analysis.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(mixedIssues.analysis.status, "issues_found");
+  assert.deepEqual(
+    mixedIssues.analysis.diagnostics.map(({ code, location }) => [
+      code,
+      location.source_pointer,
+    ]),
+    [
+      [
+        "foundation_plan.rails_target.compiler.unsupported_application_configuration",
+        "/application/appearance",
+      ],
+      [
+        "foundation_plan.entity.primary_descriptor_field_optional",
+        "/application/entities/0/primary_descriptor/field",
+      ],
+    ],
+  );
+  assert(
+    mixedIntent.expectations.some((expectation) =>
+      expectation.includes("Gives the capability-gap stop rule precedence"),
+    ),
+  );
+  assert(
+    mixedIntent.expectations.some((expectation) =>
+      expectation.includes("preserves the complete Plan unchanged"),
+    ),
+  );
   const analysisFixtureNames = [
     "issues-found-analysis.json",
     "analysis-failed-analysis.json",
     "superseded-analysis.json",
     "recurring-issues-analysis.json",
+    "application-intent-valid-analysis.json",
+    "appearance-issues-analysis.json",
+    "mixed-application-issues-analysis.json",
+    "unsupported-graph-analysis.json",
   ];
   const analysisIds = await Promise.all(
     analysisFixtureNames.map(async (fixture) => {
       const response = JSON.parse(
         await readFile(path.join(evaluationDirectory, "fixtures", fixture), "utf8"),
+      );
+      assert.equal(
+        response.analysis.analyzer_release,
+        foundationPlanAnalyzerRelease,
       );
       return response.analysis.id;
     }),
@@ -1516,7 +2005,7 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     compileSection[1],
-    /one Entity using supported scalar Fields[\s\S]*?Do not imply that\s+References, Associations, Accounts, Policies, Scaffolds, arbitrary Foundation Plans, or deployment are supported/,
+    /prepared 2026-08 Compiler is designed to admit independent Entities using supported scalar\s+Fields, the exact public-index Scaffold, optional semantic Entity icons, and a selected iPhone project under\s+`ios\/`[\s\S]*?domain is admitted only with `native\.ios`[\s\S]*?selected iOS requires at least one admitted public-index\s+navigation entry[\s\S]*?Do not imply that\s+Appearance, nonempty delivery, Android, iPad, broader Scaffolds, References, Associations, Accounts, Policies,\s+arbitrary Foundation Plans, or deployment are supported/,
   );
   for (const field of [
     "output.file_count",
@@ -1524,6 +2013,7 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
     "compilation.id",
     "compilation.analysis_run_id",
     "compilation.artifact.sha256",
+    "compilation.artifact.byte_size",
   ]) {
     assert(
       compileSection[1].includes(`\`${field}\``),
@@ -1532,11 +2022,11 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
   }
   assert.match(
     compileSection[1],
-    /Do not dump the Foundation Plan, `\.firstdraft\/state\.json`, the full artifact\s+envelope, generated source, command environment, or raw command output/,
+    /Do not dump the Foundation Plan,\s+`\.firstdraft\/state\.json`, the full artifact envelope, generated source, command environment, or raw command output/,
   );
   assert.match(
     compileSection[1],
-    /approved output path[\s\S]*?project-relative path[\s\S]*?preserve that spelling instead of echoing the CLI's\s+resolved absolute `output\.path`/,
+    /approved output path[\s\S]*?project-relative path[\s\S]*?preserve that\s+spelling instead of echoing the CLI's resolved absolute `output\.path`/,
   );
   assert.match(
     compileSection[1],
@@ -1549,7 +2039,7 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
   assert(referenceSection, "diagnostics reference: missing Compilation boundary");
   assert.match(
     referenceSection[1],
-    /strong Plan ETag pinned by the last\s+successful push[\s\S]*?sends one conditional\s+Compilation start request[\s\S]*?It does\s+not retry any request/,
+    /strong Plan ETag pinned by the\s+last successful push[\s\S]*?sends one conditional\s+Compilation start request[\s\S]*?It does\s+not retry any request/,
   );
   assert.match(
     referenceSection[1],
@@ -1587,7 +2077,7 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
   assert(referenceSection[1].includes(planCompileCliBaseline));
   assert.match(
     readme,
-    /compiler path is narrower still:\s+one Entity using supported scalar Fields/,
+    /prepared compiler contract admits independent Entities using supported scalar Fields, the exact public-index\s+Scaffold, optional semantic Entity icons, and selected iPhone output under `ios\/`/,
   );
 
   const evaluation = (id) => {
@@ -1618,7 +2108,7 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
     "firstdraft plan compile --output ./generated-movies exactly once",
   );
   hasExpectation(approved, "conditional POST", "atomic materialization");
-  hasExpectation(approved, "one-Entity scalar compiler slice");
+  hasExpectation(approved, "submitted analyzer-valid Plan");
   assert.deepEqual(approved.artifacts.at(-1), {
     path:
       "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
@@ -1644,9 +2134,14 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
   hasExpectation(unknownFreshness, "fresh push and analysis", "separate approval");
 
   const success = evaluation("report-successful-compilation-privately");
+  assert(success.prompt.includes(foundationPlanCompilerRelease));
+  assert(success.prompt.includes(foundationPlanTarget.profile));
+  assert.match(success.prompt, /with 190 files/);
+  assert.doesNotMatch(success.prompt, /151 files/);
   for (const fragment of [
     "Compilation and AnalysisRun IDs",
     "artifact digest",
+    "byte size",
     "manifest digest",
   ]) {
     hasExpectation(success, fragment);
@@ -1860,7 +2355,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   );
 });
 
-test("initialization recovery consumes the merged CLI error envelope", async () => {
+test("initialization recovery consumes the prepared CLI error envelope", async () => {
   const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
   const cases = JSON.parse(
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
@@ -2037,8 +2532,11 @@ async function checkSkill(skillName) {
   assert.match(metadata.description, /^Experimental and in development:/);
   assert(metadata.description.includes("First Draft Foundation Plan"));
   assert(
+    metadata.description.includes("has not completed an end-to-end journey"),
+  );
+  assert(
     metadata.description.includes(
-      "Arbitrary applications, deployment, and web, iOS, or Android clients are not yet available.",
+      "Arbitrary applications, deployment, Android, iPad, and broader web or native clients are not available.",
     ),
   );
   assert(source.split("\n").length - 1 < 500);
