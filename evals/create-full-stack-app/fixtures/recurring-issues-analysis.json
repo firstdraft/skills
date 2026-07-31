@@ -1,0 +1,35 @@
+{
+  "project": {
+    "id": "01900000-0000-7000-8000-000000000010",
+    "graph_version": 2
+  },
+  "analysis": {
+    "id": "01900000-0000-7000-8000-000000000904",
+    "graph_version": 2,
+    "analyzer_release": "foundation-plan-rails/scalar-2026-07",
+    "status": "issues_found",
+    "diagnostics": [
+      {
+        "code": "foundation_plan.entity.primary_descriptor_field_optional",
+        "severity": "error",
+        "message": "A primary descriptor Field must be required.",
+        "location": {
+          "source_pointer": "/application/entities/0/primary_descriptor/field"
+        },
+        "subject": {
+          "kind": "entity",
+          "readable_path": "movie",
+          "subject_uuid": "01900000-0000-7000-8000-000000000011"
+        },
+        "related_locations": [
+          {
+            "source_pointer": "/application/entities/0/fields/0"
+          }
+        ],
+        "suggestions": []
+      }
+    ],
+    "started_at": "2026-07-30T12:01:00.000Z",
+    "completed_at": "2026-07-30T12:01:01.000Z"
+  }
+}

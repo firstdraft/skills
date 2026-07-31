@@ -21,7 +21,9 @@ authorized.
   compilability.
 - The reviewed conditional PUT imports empty drafts and a bounded subset of Entities, ten scalar Field kinds, enum
   Fields with ordered values, schema-valid tagged Field defaults, and Field or system-Field Primary Descriptors.
-- There is no released end-to-end CLI/API workflow, complete nonempty import, GET or pull operation, complete
+- The reviewed CLI can read or wait for a bounded current whole-graph analysis. The matching server AnalysisRun
+  response is not yet released end to end.
+- There is no released end-to-end CLI/API workflow, complete nonempty import, Plan GET or pull operation, complete
   semantic analyzer, Publish action, Compilation action, or generated Foundation.
 
 The bundled schema was copied from the
@@ -31,10 +33,10 @@ and has SHA-256
 [`500d23e689bdb88325a2b00d2eac4132d846ceff`](https://github.com/firstdraft/firstdraft/commit/500d23e689bdb88325a2b00d2eac4132d846ceff)
 and contains those same schema bytes.
 The merged CLI baseline is
-[`6019e2935079f4a844611443558176b44b770f81`](https://github.com/firstdraft/cli/commit/6019e2935079f4a844611443558176b44b770f81);
-it has not been released and exposes `plan init`, `plan subject-id`, and `plan push`. Check commands rather than
-inferring compatibility from an unreleased version number. Update this Skill deliberately when either contract
-changes.
+[`74e3d4203587bcecbaf85362596037cb71d5154c`](https://github.com/firstdraft/cli/commit/74e3d4203587bcecbaf85362596037cb71d5154c);
+it has not been released and exposes `plan init`, `plan subject-id`, `plan push`, and `plan status`. Check commands
+rather than inferring compatibility from an unreleased version number. Update this Skill deliberately when either
+contract changes.
 
 ## Closed envelope
 
@@ -124,8 +126,9 @@ The smallest accepted Application remains:
 }
 ```
 
-A Primary Descriptor may select a Field owned by that Entity or a schema-supported system Field. Association
-descriptors are not yet supported. A Field may use these types:
+A Primary Descriptor may select a required Field owned by that Entity or a schema-supported system Field. The
+whole-graph analyzer rejects an optional Field selected as a Primary Descriptor. Association descriptors are not
+yet supported. A Field may use these types:
 
 - `boolean`
 - `date`
