@@ -2,23 +2,26 @@
 
 Portable Agent Skills for working with [First Draft](https://github.com/firstdraft/firstdraft).
 
-This repository is experimental. The prior `rails-sketch/2026-07` journey is the only complete local evidence.
+This repository is experimental. The current `rails-sketch/2026-08` path has bounded local execution evidence.
 First Draft's committed
-[controlled CLI smoke](https://github.com/firstdraft/firstdraft/blob/9e296062bf543e89387e2f1044dd29eb52123c9c/script/compilation_http_cli_smoke)
-reproducibly exercises an installed CLI, loopback Rails, and real Solid Queue through 151-file application
-materialization. Separately, a one-off observation on 2026-07-30 used a fresh Codex invocation of this
-Skill at
-[`e24b438`](https://github.com/firstdraft/skills/commit/e24b438918f406e8638e79598b6d83605bd4c15a),
-server baseline
-[`9e29606`](https://github.com/firstdraft/firstdraft/commit/9e296062bf543e89387e2f1044dd29eb52123c9c),
-and CLI baseline
-[`36f1292`](https://github.com/firstdraft/cli/commit/36f12921c0f6641f073820734234c11e47fdb834)
-to go from a prose request through valid analysis and Movie application materialization. That observation is narrow
-development evidence, not a reproducible agent eval, release, authentication, representative-user, deployment, or
-production evidence.
+[controlled CLI smoke](https://github.com/firstdraft/firstdraft/blob/5847a349599f3cc28e1e0a1a8d8bace6742be7c3/script/compilation_http_cli_smoke)
+reproducibly drives an installed CLI through loopback Rails and real Solid Queue to valid analysis, one Compilation,
+artifact verification, and 194-file two-Entity materialization. It checks matching authored order in the emitted web
+and iPhone navigation declarations without executing the generated application.
 
-The successor `rails-sketch/2026-08` authoring, schema, eval, and contract fixtures are prepared for a bounded web
-and iPhone journey, but they have not completed it and are not execution evidence. The exact landed CLI revision is
+Separately, a dated 2026-07-31
+[field report](https://github.com/firstdraft/firstdraft/blob/16b056a6f55eb92cb6e5a6e02abd58e84b47abd5/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md)
+records one staff-prepared local observation using a fresh Claude Code Opus/high session and this Skill at
+[`5cad5ac`](https://github.com/firstdraft/skills/commit/5cad5acec23a983e6421d2d37420a74de63b47fb).
+The agent authored Movie and Director from prose, reached graph-version-1 valid analysis, invoked Compilation once,
+and materialized a 194-file, 542,894-byte artifact. The fresh agent session ended after the unmodified output passed
+its iOS doctor, lint, unsigned Xcode build, and generated Simulator tests. Afterward, an operator performed Rails
+setup and used a temporary test-only copy to exercise live generated Rails pages, tab switching, and scrolling;
+manual Simulator inspection covered the Dynamic Island and bottom safe area. This is not a reproducible agent
+evaluation, authenticated operation, representative-user evidence, a published release, physical-device or iPad
+proof, deployment, or production evidence.
+
+The exact landed CLI revision is
 `121272cd592055354d09a4fe90e55c3ca002770c`; its reviewed JavaScript-source runtime digest is
 `205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. The exact landed server revision is
 `35ad070beb36c66dc6480f36b33767caaed160a9`; it activates analyzer
@@ -114,16 +117,15 @@ path, and compile once. Never reuse a Project or Compilation across server-backe
 
 The `*-analysis.json` fixtures and Compilation eval prompts are behavioral examples accepted by the pinned CLI
 contract, not execution evidence by themselves. Their `2026-07-30` timestamps are fixed deterministic transport
-data, not execution-evidence dates. A successor smoke must record the exact server, CLI, runtime, Skill, analyzer,
+data, not execution-evidence dates. The dated field report records the server, CLI, runtime, Skill, analyzer,
 compiler, Rails Core, and iOS Core pins; Project and graph version; AnalysisRun and status; Compilation and artifact
-identity; actual artifact byte size, file count, and manifest digest; representative web and iPhone files; and the
-executable mode of `ios/bin/ios`. It must also establish that the artifact remains below the CLI's 16 MiB limit.
+identity; artifact byte size, file count, and manifest digest; representative web and iPhone files; executable mode;
+generated checks; the recovered authoring prompt and seed command; and composed local observation. It also records
+the observation's preparation and reproducibility limits.
 
-The current server-internal canonical Movie Catalog lifecycle fixture reports 190 Rails and iPhone files. That
-count may be used as the bounded compile-reporting eval expectation, but it is not an external CLI or Skill smoke.
-The iPhone output in that proof was byte-checked; it was not built or run in Xcode. Re-record the actual file count
-and digests during the successor smoke rather than treating the server-internal result as release evidence.
+The Compilation eval's 190-file response remains deterministic synthetic transport data; it is not the 194-file
+output observed by the controlled smoke and dated field report.
 
-The prior committed CLI smoke does not establish the successor releases, authenticated operation, representative
-external-agent use, deployment, production readiness, or capabilities beyond its historical one-Entity scalar
-slice. The dated observation above is not a reproducible eval.
+The committed smoke and dated observation do not establish authentication, representative external-agent or user
+operation, deployment, production readiness, or capabilities beyond the current independent-scalar-Entity and
+public-index slice.

@@ -30,12 +30,12 @@ const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
 const foundationIosCoreArchiveDigest =
   "0807e76cf02296af27d4eb1aae68e298beef162a7daa8a3da55d83e88ab6d748";
-const priorJourneyServerBaseline =
-  "9e296062bf543e89387e2f1044dd29eb52123c9c";
-const priorJourneyCliBaseline =
-  "36f12921c0f6641f073820734234c11e47fdb834";
-const agentSmokeSkillBaseline =
-  "e24b438918f406e8638e79598b6d83605bd4c15a";
+const controlledApplicationSmokeBaseline =
+  "5847a349599f3cc28e1e0a1a8d8bace6742be7c3";
+const freshAgentEvidenceBaseline =
+  "16b056a6f55eb92cb6e5a6e02abd58e84b47abd5";
+const freshAgentSkillBaseline =
+  "5cad5acec23a983e6421d2d37420a74de63b47fb";
 const planInitErrorCodes = [
   "invalid_arguments",
   "local_initialization_failed",
@@ -131,21 +131,15 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     ].sort();
   const assertRevisionTokens = (source, expected) =>
     assert.deepEqual(revisionTokens(source), [...expected].sort());
-  const historicalAbbreviations = [
-    priorJourneyServerBaseline.slice(0, 7),
-    priorJourneyCliBaseline.slice(0, 7),
-    agentSmokeSkillBaseline.slice(0, 7),
-  ];
-
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
   assertRevisionTokens(readme, [
     foundationPlanServerBaseline,
     planCompileCliBaseline,
     foundationIosCoreRevision,
-    priorJourneyServerBaseline,
-    priorJourneyCliBaseline,
-    agentSmokeSkillBaseline,
-    ...historicalAbbreviations,
+    controlledApplicationSmokeBaseline,
+    freshAgentEvidenceBaseline,
+    freshAgentSkillBaseline,
+    freshAgentSkillBaseline.slice(0, 7),
   ]);
 
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
@@ -165,11 +159,13 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     foundationPlanServerBaseline,
     planCompileCliBaseline,
     foundationIosCoreRevision,
-    ...historicalAbbreviations,
+    controlledApplicationSmokeBaseline,
+    freshAgentEvidenceBaseline,
+    freshAgentSkillBaseline,
   ]);
   assertRevisionTokens(
     await readFile(path.join(skillDirectory, "SKILL.md"), "utf8"),
-    historicalAbbreviations,
+    [],
   );
 
   const foundationPlanReference = await readFile(
@@ -210,10 +206,9 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       foundationPlanServerBaseline,
       planCompileCliBaseline,
       foundationIosCoreRevision,
-      priorJourneyServerBaseline,
-      priorJourneyCliBaseline,
-      agentSmokeSkillBaseline,
-      agentSmokeSkillBaseline.slice(0, 7),
+      controlledApplicationSmokeBaseline,
+      freshAgentEvidenceBaseline,
+      freshAgentSkillBaseline,
     ],
   );
   for (const relativePath of [
@@ -1497,33 +1492,44 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert(
     readme.includes(
-      `firstdraft/firstdraft/blob/${priorJourneyServerBaseline}/script/compilation_http_cli_smoke`,
+      `firstdraft/firstdraft/blob/${controlledApplicationSmokeBaseline}/script/compilation_http_cli_smoke`,
     ),
   );
-  assert.match(
-    readme,
-    /committed[\s\S]*?controlled CLI smoke[\s\S]*?reproducibly exercises[\s\S]*?Separately, a one-off observation on 2026-07-30/,
+  assert(
+    readme.includes(
+      `firstdraft/firstdraft/blob/${freshAgentEvidenceBaseline}/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md`,
+    ),
   );
-  assert(readme.includes(agentSmokeSkillBaseline));
-  assert(readme.includes(priorJourneyServerBaseline));
-  assert(readme.includes(priorJourneyCliBaseline));
+  assert(readme.includes(freshAgentSkillBaseline));
   assert(readme.includes(foundationPlanServerBaseline));
   assert(readme.includes(planCompileCliBaseline));
   assert(readme.includes(planCompileCliRuntimeDigest));
   assert(readme.includes(foundationIosCoreRevision));
   assert(readme.includes(foundationIosCoreArchiveDigest));
-  assert.match(readme, /observation is narrow\s+development evidence, not a reproducible agent eval/);
   assert.match(
     readme,
-    /successor smoke must record[\s\S]*?actual artifact byte size, file count, and manifest digest[\s\S]*?executable mode of `ios\/bin\/ios`[\s\S]*?below the CLI's 16 MiB limit/,
+    /committed[\s\S]*?controlled CLI smoke[\s\S]*?reproducibly drives[\s\S]*?194-file two-Entity materialization[\s\S]*?without executing the generated application/,
   );
   assert.match(
     readme,
-    /Their `2026-07-30` timestamps are fixed deterministic transport\s+data, not execution-evidence dates/,
+    /staff-prepared local observation[\s\S]*?fresh Claude Code Opus\/high[\s\S]*?Movie and Director[\s\S]*?graph-version-1 valid analysis[\s\S]*?Compilation once[\s\S]*?194-file, 542,894-byte artifact/,
+  );
+  assert.match(readme, /dated 2026-07-31\s+\[field report\]/);
+  assert.match(
+    readme,
+    /fresh agent session ended after the unmodified output passed\s+its iOS doctor, lint, unsigned Xcode build, and generated Simulator tests[\s\S]*?Afterward, an operator performed Rails\s+setup and used a temporary test-only copy[\s\S]*?Dynamic Island and bottom safe area/,
   );
   assert.match(
     readme,
-    /does not establish the successor releases, authenticated operation, representative\s+external-agent use, deployment, production readiness, or capabilities beyond its historical one-Entity scalar\s+slice/,
+    /not a reproducible agent\s+evaluation, authenticated operation, representative-user evidence, a published release, physical-device or iPad\s+proof, deployment, or production evidence/,
+  );
+  assert.match(
+    readme,
+    /dated field report records the server, CLI, runtime, Skill, analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
+  );
+  assert.match(
+    readme,
+    /Compilation eval's 190-file response remains deterministic synthetic transport data[\s\S]*?not the 194-file\s+output observed by the controlled smoke and dated field report/,
   );
   const skillEvidence = skillSource.match(
     /This Skill is experimental\.([\s\S]*?)## Load the relevant references/,
@@ -1539,35 +1545,43 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   for (const source of [skillEvidence[1], foundationPlanEvidence[1]]) {
     assert(source.includes("loopback Rails"));
     assert.match(source, /real Solid\s+Queue/);
-    assert.match(source, /committed controlled\s+CLI\s+smoke/);
-    assert.match(source, /reproducibly exercises/);
-    assert.match(source, /prior `rails-sketch\/2026-07` journey/);
-    assert.match(source, /Separately, a one-off observation\s+on 2026-07-30/);
-    assert.match(source, /fresh\s+Codex/);
-    assert(source.includes("e24b438"));
-    assert(source.includes(priorJourneyServerBaseline.slice(0, 7)));
-    assert(source.includes(priorJourneyCliBaseline.slice(0, 7)));
-    assert.match(source, /not a reproducible agent\s+eval/);
-    assert.match(source, /151-file application\s+materialization/);
-    assert.match(
-      source,
-      /successor `rails-sketch\/2026-08`[\s\S]*?not execution evidence/,
-    );
-    assert(source.includes("unauthenticated"));
-    assert.match(
-      source,
-      /(?:neither is|Neither form of evidence is) representative-user,\s+deployed, or production evidence/,
-    );
-    assert.match(source, /one\s+Entity using supported\s+scalar\s+Fields/);
+    assert.match(source, /committed[\s\S]*?controlled CLI\s+smoke/);
+    assert.match(source, /reproducibly drives/);
+    assert.match(source, /194-file two-Entity materialization/);
+    assert.match(source, /staff-prepared/);
+    assert.match(source, /fresh-agent|fresh Claude Code/);
+    assert.match(source, /not a reproducible agent\s+eval(?:uation)?/);
     assert.match(
       source,
       /no Plan GET or pull operation,\s+complete semantic analyzer,\s+Publish action, arbitrary\s+application\s+generation,\s+deployment workflow/,
     );
-    assert.match(
-      source,
-      /successful (?:Compilation )?start, status, artifact, and materialization[\s\S]*?not cancellation/,
-    );
   }
+  assert.match(
+    skillEvidence[1],
+    /Both paths\s+remain local, unreleased, unpublished, unauthenticated, and bounded[\s\S]*?do not establish cancellation, a physical\s+iPhone, iPad, deployment, or production readiness/,
+  );
+  assert.match(
+    foundationPlanEvidence[1],
+    /field observation is not a reproducible agent evaluation, authenticated operation, representative-user\s+evidence, a published release, physical-device or iPad proof, deployment, or production evidence[\s\S]*?Neither it nor\s+the controlled smoke widens the admitted graph or proves cancellation/,
+  );
+  assert(
+    foundationPlanEvidence[1].includes(
+      `firstdraft/firstdraft/blob/${freshAgentEvidenceBaseline}/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md`,
+    ),
+  );
+  assert(foundationPlanEvidence[1].includes(freshAgentSkillBaseline));
+  assert.match(
+    foundationPlanEvidence[1],
+    /Movie and Director[\s\S]*?graph-version-1 valid analysis[\s\S]*?Compilation once[\s\S]*?194-file, 542,894-byte artifact/,
+  );
+  assert.match(
+    foundationPlanEvidence[1],
+    /fresh agent session ended after the unmodified generated output passed its iOS doctor with 16 passes and no\s+failures[\s\S]*?Afterward, an operator performed Rails\s+setup and used a temporary test-only copy[\s\S]*?Manual Simulator inspection[\s\S]*?Dynamic Island and bottom safe area/,
+  );
+  assert.match(
+    skillEvidence[1],
+    /authored Movie and\s+Director from prose and compiled once[\s\S]*?fresh agent session ended after the unmodified output passed its generated\s+checks[\s\S]*?later operator performed Rails setup and used a temporary test-only copy to display live generated Rails\s+pages in an iPhone Simulator/,
+  );
 
   for (const id of [
     "initialize-empty-plan",
@@ -2137,7 +2151,7 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
   assert(success.prompt.includes(foundationPlanCompilerRelease));
   assert(success.prompt.includes(foundationPlanTarget.profile));
   assert.match(success.prompt, /with 190 files/);
-  assert.doesNotMatch(success.prompt, /151 files/);
+  assert.doesNotMatch(success.prompt, /194 files/);
   for (const fragment of [
     "Compilation and AnalysisRun IDs",
     "artifact digest",
@@ -2532,8 +2546,11 @@ async function checkSkill(skillName) {
   assert.match(metadata.description, /^Experimental and in development:/);
   assert(metadata.description.includes("First Draft Foundation Plan"));
   assert(
-    metadata.description.includes("has not completed an end-to-end journey"),
+    metadata.description.includes(
+      "prepared narrow Rails web-and-iPhone Compilation path through an unreleased CLI",
+    ),
   );
+  assert(!metadata.description.includes("end-to-end journey"));
   assert(
     metadata.description.includes(
       "Arbitrary applications, deployment, Android, iPad, and broader web or native clients are not available.",

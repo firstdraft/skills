@@ -32,17 +32,24 @@ authorized.
   are rejected atomically by the importer as described below.
 - The project-scoped server implements bounded AnalysisRun status and Compilation start, status, cancellation, and
   artifact transport for the reviewed CLI contract.
-- The prior `rails-sketch/2026-07` journey is the only complete local evidence. First Draft's committed controlled
-  CLI smoke at server baseline `9e29606` reproducibly exercises an installed CLI, loopback Rails, and real Solid
-  Queue through 151-file application materialization.
-- Separately, a one-off observation on 2026-07-30 used a fresh Codex invocation at Skill baseline `e24b438`, server
-  baseline `9e29606`, and CLI baseline `36f1292` to go from a prose request through valid analysis and Movie
-  application materialization. That observation is not a reproducible agent eval.
-- The successor `rails-sketch/2026-08` schema, examples, evals, and API-contract fixtures have not completed that
-  end-to-end journey and are not execution evidence.
-- The prior path remains unreleased, unpublished, unauthenticated, local, and bounded to one Entity using supported
-  scalar Fields. It exercised successful Compilation start, status, artifact, and materialization, not cancellation.
-  Neither form of evidence is representative-user, deployed, or production evidence.
+- First Draft's committed
+  [controlled CLI smoke](https://github.com/firstdraft/firstdraft/blob/5847a349599f3cc28e1e0a1a8d8bace6742be7c3/script/compilation_http_cli_smoke)
+  reproducibly drives the exact installed CLI through loopback Rails and real Solid Queue to valid analysis, one
+  Compilation, artifact verification, and 194-file two-Entity materialization. It checks matching web and iPhone
+  navigation declarations without executing the generated application.
+- A
+  [dated field report](https://github.com/firstdraft/firstdraft/blob/16b056a6f55eb92cb6e5a6e02abd58e84b47abd5/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md)
+  records one staff-prepared local observation using a fresh Claude Code Opus/high session, the exact
+  [`create-full-stack-app` Skill](https://github.com/firstdraft/skills/commit/5cad5acec23a983e6421d2d37420a74de63b47fb),
+  and the pins below. The agent authored Movie and Director from prose, reached graph-version-1 valid analysis,
+  invoked Compilation once, and materialized a 194-file, 542,894-byte artifact.
+- The fresh agent session ended after the unmodified generated output passed its iOS doctor with 16 passes and no
+  failures, lint, an unsigned Xcode build, and generated Simulator tests. Afterward, an operator performed Rails
+  setup and used a temporary test-only copy to exercise live generated Rails pages, tab switching, and scrolling.
+  Manual Simulator inspection covered the Dynamic Island and bottom safe area.
+- The field observation is not a reproducible agent evaluation, authenticated operation, representative-user
+  evidence, a published release, physical-device or iPad proof, deployment, or production evidence. Neither it nor
+  the controlled smoke widens the admitted graph or proves cancellation.
 - There is no Plan GET or pull operation, complete semantic analyzer, Publish action, arbitrary application
   generation, deployment workflow, or support for the rest of the Foundation Plan.
 
@@ -58,14 +65,15 @@ provenance rather than release or execution evidence. Its reviewed JavaScript-so
 from an unreleased version number.
 
 The activated server projections name analyzer release `foundation-plan-rails/application-2026-08` and compiler
-release `foundation-plan-rails/compiler-application-2026-08`. These exact names are part of the successor contract,
-not proof that an end-to-end journey has run.
+release `foundation-plan-rails/compiler-application-2026-08`. These exact names are contract provenance; the dated
+field report, not the names alone, is the bounded execution evidence.
 
 The selected iPhone project composes `firstdraft/foundation-ios-core` revision
 `aa2ac902fa52abab51a4502953b7b962f949a21d`, archive SHA-256
 `0807e76cf02296af27d4eb1aae68e298beef162a7daa8a3da55d83e88ab6d748`. The archive excludes `.github` and is
 materialized beneath `ios/`, including executable `ios/bin/ios`. This package is an iPhone baseline, not iPad
-support, and these pins are prepared provenance rather than end-to-end execution evidence.
+support. The pins alone are prepared provenance; the dated field report provides bounded execution evidence for one
+composed output.
 
 ## Closed envelope
 
