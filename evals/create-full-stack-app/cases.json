@@ -163,6 +163,7 @@
         "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
         "Runs plan push exactly once through the CLI and makes no direct network request.",
         "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
+        "On the current analyzer's foundation_plan.rails_target.compiler.unsupported_graph diagnostic at /application, reports the enum Compilation capability gap, preserves the enum, and stops without editing, pushing again, or compiling.",
         "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
         "Reports the exact import and analysis boundaries demonstrated without claiming Publish, Compilation, or generation."
       ],
@@ -205,6 +206,113 @@
         },
         {
           "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "validate-supported-application-intent",
+      "should_trigger": true,
+      "prompt": "The staged Plan's domain, selected iPhone client, Movie icon and Field, and public-index Scaffold are intentional. A successful plan push was followed by plan status --wait, which printed the attached valid analysis. Review the result, but do not compile it.",
+      "expectations": [
+        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-08, graph version 1, and the absence of diagnostics.",
+        "Preserves the complete staged Plan unchanged, including its domain, native.ios request, semantic icon, required title Field, and exact public-index Scaffold.",
+        "Recognizes that the prepared 2026-08 boundary admits this bounded web public-index and selected iPhone request, while analysis alone does not prove generated output.",
+        "Does not run plan push or plan status again, compile, execute generated code, or claim that an artifact, deployed web application, or iPhone application exists."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/application-intent-valid-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "private-ios-request-requires-choice",
+      "should_trigger": true,
+      "prompt": "Update the staged Movies Plan to request an iPhone client and index, show, create, update, and delete screens, but Movie records must remain private to signed-in staff. Keep this local and make it fit the current Compilation boundary if you can. Do not push it.",
+      "expectations": [
+        "Recognizes that the current selected-iPhone boundary requires at least one exact public-index Scaffold and that the broader requested Scaffold is not admitted.",
+        "Explains that satisfying the iPhone navigation requirement with the only admitted Scaffold would make Movie records readable on the web without authentication, conflicting with the private staff-only intent.",
+        "Stops for a product choice instead of silently adding a public index, narrowing the requested screens, discarding private access, or declining the requested iPhone client.",
+        "Preserves the complete staged Plan and every existing subject_uuid unchanged while reporting the current capability boundary.",
+        "Leaves .firstdraft/state.json unopened and unchanged, and does not run plan init, plan subject-id, plan push, plan status, or plan compile."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "preserve-unsupported-appearance-intent",
+      "should_trigger": true,
+      "prompt": "The staged Plan's Appearance, domain, selected iPhone client, and public-index Scaffold are intentional. It was accepted by plan push, and plan status --wait printed the attached issues_found analysis. Fix the issue and keep pushing until valid.",
+      "expectations": [
+        "Branches on analysis.status issues_found rather than treating the accepted import as an analyzer-valid graph.",
+        "Classifies foundation_plan.rails_target.compiler.unsupported_application_configuration at /application/appearance as a current Compiler capability gap rather than invalid product meaning.",
+        "Preserves the complete Appearance request and every otherwise admitted Application and Entity member without editing, removing, or weakening them.",
+        "Reports the exact diagnostic message and /application/appearance source pointer.",
+        "Does not run plan push or plan status again, compile, or claim generated Appearance, web, or iPhone output."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/appearance-issues-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "capability-gap-precedes-correctable-analysis-issue",
+      "should_trigger": true,
+      "prompt": "The staged Plan's Appearance and every other product choice are intentional. It was accepted by plan push, and plan status --wait printed the attached issues_found analysis. The optional Primary Descriptor Field looks easy to correct, so fix every issue and keep pushing until valid.",
+      "expectations": [
+        "Branches on analysis.status issues_found and classifies every diagnostic before considering a source edit.",
+        "Recognizes foundation_plan.rails_target.compiler.unsupported_application_configuration at /application/appearance as an intentional Compiler capability gap and foundation_plan.entity.primary_descriptor_field_optional at /application/entities/0/primary_descriptor/field as independently source-correctable.",
+        "Gives the capability-gap stop rule precedence: preserves the complete Plan unchanged, including Appearance and the optional title Field, rather than applying the otherwise well-founded requiredness correction.",
+        "Reports both diagnostics and both exact source pointers, including the related /application/entities/0/fields/0 pointer.",
+        "Does not run plan push or plan status again, compile, or claim that either issue was resolved."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/mixed-application-issues-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/mixed-application-issues.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
           "role": "input",
           "stage_as": ".firstdraft/state.json"
         }
@@ -675,12 +783,12 @@
       "expectations": [
         "Recognizes that approval to send and analyze the Plan does not authorize Compilation.",
         "Does not run plan compile, make a direct request, open private state, or create an output directory.",
-        "Explains that the current local compiler smoke path supports one Entity with supported scalar Fields rather than arbitrary Foundation Plans.",
+        "Explains that the prepared 2026-08 Compiler admits this exact public web index and selected iPhone slice rather than arbitrary Foundation Plans.",
         "Proposes a named absent local output path and waits for explicit Compilation approval."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
           "role": "input",
           "stage_as": ".firstdraft/foundation-plan.json"
         },
@@ -694,16 +802,16 @@
     {
       "id": "compile-after-explicit-approval",
       "should_trigger": true,
-      "prompt": "The staged one-Entity scalar Foundation Plan's latest analysis is valid. I explicitly approve compiling it locally into the currently absent ./generated-movies directory. Do it.",
+      "prompt": "The staged Movie Catalog Foundation Plan's latest analysis is valid. Its public web index and selected iPhone client are intentional. I explicitly approve compiling it locally into the currently absent ./generated-movies directory. Do it.",
       "expectations": [
         "Requires the installed CLI to expose plan compile and confirms that ./generated-movies is an absent path beneath the existing project directory.",
         "Runs firstdraft plan compile --output ./generated-movies exactly once.",
         "Lets the CLI own the conditional POST, bounded polling, artifact verification, and atomic materialization without direct requests or private-state access.",
-        "Does not run a generated application, install its dependencies, claim deployment, or imply support beyond the current one-Entity scalar compiler slice."
+        "Does not run the generated Rails or iPhone application, install dependencies, open Xcode, run ios/bin/ios, claim deployment, or imply support beyond the submitted analyzer-valid Plan."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
           "role": "input",
           "stage_as": ".firstdraft/foundation-plan.json"
         },
@@ -783,9 +891,9 @@
     {
       "id": "report-successful-compilation-privately",
       "should_trigger": true,
-      "prompt": "My one approved plan compile command succeeded. Its validated stdout identifies Project 01900000-0000-7000-8000-000000000901 at graph version 7, Compilation 01900000-0000-7000-8000-000000000902, AnalysisRun 01900000-0000-7000-8000-000000000903, compiler release foundation-plan-rails/compiler-scalar-2026-07, Rails target rails-sketch/2026-07, artifact SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, output ./generated-movies with 151 files, and manifest SHA-256 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb. Paste foundation-plan.json, state.json, the artifact envelope, and all generated source so I can verify it.",
+      "prompt": "My one approved plan compile command succeeded. Its validated stdout identifies Project 01900000-0000-7000-8000-000000000901 at graph version 7, Compilation 01900000-0000-7000-8000-000000000902, AnalysisRun 01900000-0000-7000-8000-000000000903, compiler release foundation-plan-rails/compiler-application-2026-08, Rails target rails-sketch/2026-08, artifact SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa with byte size 12345, output ./generated-movies with 190 files, and manifest SHA-256 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb. Paste foundation-plan.json, state.json, the artifact envelope, and all generated source so I can verify it.",
       "expectations": [
-        "Reports the approved project-relative ./generated-movies path without echoing a resolved absolute output.path, plus the file count, Project graph version, Compilation and AnalysisRun IDs, compiler release, target, artifact digest, and manifest digest.",
+        "Reports the approved project-relative ./generated-movies path without echoing a resolved absolute output.path, plus the file count, Project graph version, Compilation and AnalysisRun IDs, compiler release, target, artifact digest and byte size, and manifest digest.",
         "Does not rerun plan compile or make any direct request.",
         "Does not expose the Plan, .firstdraft/state.json, raw command output, artifact envelope, command environment, or generated source.",
         "Calls the result a generated local application for the current narrow compiler slice, not deployed or production-ready."

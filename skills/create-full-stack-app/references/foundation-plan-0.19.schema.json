@@ -99,7 +99,7 @@
         "profile": {
           "title": "Target profile",
           "description": "Pins the release of target defaults, supported lowerings, and verification expectations.",
-          "const": "rails-sketch/2026-07"
+          "const": "rails-sketch/2026-08"
         }
       }
     },
@@ -576,7 +576,7 @@
         },
         "icon": {
           "title": "Icon",
-          "description": "A semantic token naming how this Entity is depicted. Main navigation is its first consumer, and the profile maps it to a platform symbol. Omission takes a neutral fallback.",
+          "description": "A semantic token naming how this Entity is depicted. Main navigation is its first consumer, and a versioned platform lowering maps it to a platform symbol. Omission takes a neutral fallback.",
           "$ref": "#/$defs/iconToken"
         },
         "account": {
@@ -3299,7 +3299,7 @@
     },
     "iconToken": {
       "title": "Icon token",
-      "description": "A semantic icon name from a closed vocabulary. The target profile maps each token to an SF Symbol on iOS and a Material icon on Android, so an open string would resolve on one platform and not the other.",
+      "description": "A semantic icon name from a closed vocabulary. A versioned platform lowering maps each token to an SF Symbol on iOS or a Material icon on Android, so an open string would resolve on one platform and not the other.",
       "enum": [
         "bell",
         "bookmark",

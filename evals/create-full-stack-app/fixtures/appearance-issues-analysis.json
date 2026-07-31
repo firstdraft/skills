@@ -1,0 +1,27 @@
+{
+  "project": {
+    "id": "01900000-0000-7000-8000-000000000021",
+    "graph_version": 1
+  },
+  "analysis": {
+    "id": "01900000-0000-7000-8000-000000000906",
+    "graph_version": 1,
+    "analyzer_release": "foundation-plan-rails/application-2026-08",
+    "status": "issues_found",
+    "diagnostics": [
+      {
+        "code": "foundation_plan.rails_target.compiler.unsupported_application_configuration",
+        "severity": "error",
+        "message": "Application Appearance is not emitted by the current Rails Compiler release.",
+        "location": {
+          "source_pointer": "/application/appearance"
+        },
+        "subject": null,
+        "related_locations": [],
+        "suggestions": []
+      }
+    ],
+    "started_at": "2026-07-30T12:03:00.000Z",
+    "completed_at": "2026-07-30T12:03:01.000Z"
+  }
+}

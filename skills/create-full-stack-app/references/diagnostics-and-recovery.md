@@ -5,10 +5,9 @@ unverified response.
 
 ## Local initialization error boundary
 
-The merged CLI contract at
-[`36f12921c0f6641f073820734234c11e47fdb834`](https://github.com/firstdraft/cli/commit/36f12921c0f6641f073820734234c11e47fdb834)
-writes exactly one JSON object to standard error for every handled `plan init` failure. Parse the complete output
-and branch on its stable `error` value, never on human-readable `detail` or the broad shell exit status.
+The reviewed successor CLI contract at `121272cd592055354d09a4fe90e55c3ca002770c` writes exactly one JSON object to
+standard error for every handled `plan init` failure. Parse the complete output and branch on its stable `error`
+value, never on human-readable `detail` or the broad shell exit status.
 
 | `error`                       | Local state                                      | Recovery action                                                                                   |
 | ----------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
@@ -26,8 +25,8 @@ raw filesystem errors, command arguments, Plan bytes, state contents, or unparse
 
 ## Plan push error boundary
 
-The same merged CLI baseline writes exactly one JSON object to standard error for every handled `plan push`
-failure.
+The same reviewed successor CLI baseline writes exactly one JSON object to standard error for every handled
+`plan push` failure.
 Parse that object and branch on its stable `error` value. Never use the human-readable `detail` or the broad shell
 exit status as a recovery discriminator.
 
@@ -73,7 +72,7 @@ shell exit code:
 | `analysis.status` | Meaning for this candidate                                      | Recovery action                                                                                  |
 | ----------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `valid`           | This graph passed the named `analyzer_release`.                  | Surface warnings. Treat it as the current analysis gate, not proof of Compilation.               |
-| `issues_found`    | At least one structured error diagnostic blocks the graph.      | Make at most one well-founded corrective push per approval, then wait on its analysis.           |
+| `issues_found`    | At least one structured error diagnostic blocks the graph.      | Stop on capability gaps; otherwise make at most one well-founded corrective push per approval.  |
 | `analysis_failed` | The analyzer could not complete this run.                        | Stop and report the failure; do not edit or push the Plan as a speculative repair.               |
 | `superseded`      | A replacement graph displaced the observed analysis generation. | Stop for reconciliation; do not silently follow another run, edit the Plan, or push again.       |
 
@@ -81,7 +80,13 @@ An `issues_found` diagnostic uses the same closed diagnostic shape described bel
 suggestions remain advisory data. A source pointer makes a diagnostic locatable; it does not prove that changing
 the addressed product meaning is correct. Preserve unrelated content and stable subject identity. If the
 diagnostic describes an analyzer limitation or no source correction is well-founded, report the blocker and stop.
-If the one corrected candidate also returns `issues_found`, stop and report every remaining diagnostic. A second
+In particular, `foundation_plan.rails_target.compiler.unsupported_application_configuration` and
+`foundation_plan.rails_target.compiler.unsupported_graph` can describe current Compiler capability gaps rather than
+invalid product meaning. The latter is a project-wide `/application` diagnostic for graph breadth outside the
+independent scalar Entity slice, including enum Fields. If any error diagnostic addresses intentional meaning that
+the current Compiler cannot emit, preserve every addressed member, report every diagnostic and its exact pointer,
+and stop without editing or another push, even when another diagnostic appears source-correctable. If the one
+corrected candidate otherwise returns `issues_found`, stop and report every remaining diagnostic. A second
 analysis-directed correction and push requires fresh user approval, even if another repair appears well-founded.
 
 Handled `plan status --wait` failures write one JSON object to standard error. Read only its stable `error` value:
@@ -115,10 +120,9 @@ prove that an artifact can be produced.
 
 ## Compilation and local materialization
 
-The merged Compilation CLI contract is
-[`36f12921c0f6641f073820734234c11e47fdb834`](https://github.com/firstdraft/cli/commit/36f12921c0f6641f073820734234c11e47fdb834).
-`firstdraft plan compile --output <approved-absent-path>` uses the API origin and strong Plan ETag pinned by the last
-successful push. It preflights an absent output below an existing real directory, sends one conditional
+The reviewed successor Compilation CLI contract is `121272cd592055354d09a4fe90e55c3ca002770c`.
+`firstdraft plan compile --output <approved-absent-path>` uses the API origin and strong Plan ETag pinned by the
+last successful push. It preflights an absent output below an existing real directory, sends one conditional
 Compilation start request, pins that Compilation while polling for at most ten minutes, downloads only its declared
 artifact, verifies the transport metadata, exact bytes, artifact envelope, provenance, manifest, file digests,
 portable paths, and modes, then atomically renames a private sibling temporary tree into the output path. It does
@@ -139,14 +143,15 @@ A successful command writes one validated JSON object. Report the bounded identi
 object:
 
 - `project.id` and `project.graph_version`;
-- `compilation.id`, `analysis_run_id`, `compiler_release`, `target`, and `artifact.sha256`; and
+- `compilation.id`, `analysis_run_id`, `compiler_release`, `target`, `artifact.sha256`, and `artifact.byte_size`; and
 - the approved output path plus `file_count` and `manifest_sha256`; when the approved path was project-relative,
   preserve that spelling rather than echoing the CLI's resolved absolute `output.path`.
 
 Do not expose local private state, the Plan, the artifact envelope, generated source, raw output, or the command
-environment. Success proves verified local materialization for the named narrow compiler release and target. It
-does not prove deployment, production readiness, arbitrary Foundation Plan support, or support outside the current
-one-Entity scalar-Field smoke slice.
+environment. Success proves verified local materialization only for the submitted Plan under the named narrow
+compiler release and target. It does not prove another Plan, deployment, production readiness, iPad support, or
+arbitrary Foundation Plan support. Do not execute the generated Rails or iPhone application, open Xcode, or run
+`ios/bin/ios` without a separate request.
 
 Handled failures write one JSON object to standard error. Branch only on the stable `error` value:
 

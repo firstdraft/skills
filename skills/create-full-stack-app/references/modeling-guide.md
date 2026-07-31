@@ -32,7 +32,9 @@ Do not infer uniqueness from a label, presence from a form, or immutability from
 matter.
 
 Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
-order carries semantic rank rather than presentation order alone.
+order carries semantic rank rather than presentation order alone. The current importer retains enums for editing,
+but they cannot pass the bounded Compilation analysis gate; preserve the product meaning and report that capability
+gap rather than replacing an enum with a scalar.
 
 ## Model relationships
 
@@ -60,6 +62,22 @@ stable product name or behavior.
 Do not add a realization choice when the target profile has only one supported lowering. Do not repeat derived
 Capabilities or prerequisites as authored lists.
 
+The current conditional PUT and prepared Compiler admit only one Scaffold subset: `resource_routes` is exactly
+`["index"]`, and `index` contains only `{"authorization":"public"}`. That request produces a read-only public web
+index in the prepared 2026-08 slice. Do not silently narrow a broader requested Scaffold to this subset merely to
+make it importable or compilable.
+
+Select `native.ios` only when the user wants the bounded owned iPhone project. It requires at least one admitted
+public-index Scaffold for navigation. Application `domain` is admitted by analysis only with selected iOS; selected
+iOS may omit it. An Entity's optional semantic `icon` informs shared web and iPhone navigation, with a target
+fallback when omitted. The only admitted navigation Scaffold is public: adding it makes that Entity's records
+readable on the web without authentication. Confirm that exposure with the user before authoring it; otherwise
+preserve the private or broader access intent and report that the selected iPhone request cannot yet pass analysis.
+Do not add a public index merely to obtain `valid`, and do not silently decline the requested iPhone client.
+Appearance and Android are retained for editing but block Compilation at analysis; nonempty delivery is not
+importable. iPad is not supported. Preserve requested product meaning and describe the capability boundary before
+sending a Plan rather than removing intentional facts to obtain `valid`.
+
 ## Preserve intent during diagnostics
 
 Fix the smallest well-founded source problem. Preserve unrelated subjects, ordering, and stable identity. If a
@@ -76,7 +94,7 @@ Summarize choices that materially affect the generated Foundation, including:
 - required, immutable, or derived values;
 - relationship deletion and multiplicity;
 - authentication and authorization;
-- enabled native or delivery features;
+- requested native or delivery features;
 - target realization choices; and
 - warnings or unsupported target behavior.
 

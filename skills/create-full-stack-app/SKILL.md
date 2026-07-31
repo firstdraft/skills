@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Authors and revises a complete First Draft Foundation Plan, validates its JSON structure when a compatible local validator is available, submits exact Plan bytes, waits for bounded whole-graph analysis, and can compile the current narrow Rails slice into a verified local directory through an unreleased CLI. It preserves subject identity, product meaning, conditional-write state, explicit approval, and recovery boundaries. Arbitrary applications, deployment, and web, iOS, or Android clients are not yet available."
+description: "Experimental and in development: Authors and revises a complete First Draft Foundation Plan, validates its JSON structure when a compatible local validator is available, submits exact Plan bytes, waits for bounded whole-graph analysis, and can invoke the prepared narrow Rails web-and-iPhone Compilation path through an unreleased CLI; that path has not completed an end-to-end journey. It preserves subject identity, product meaning, conditional-write state, explicit approval, and recovery boundaries. Arbitrary applications, deployment, Android, iPad, and broader web or native clients are not available."
 ---
 
 # Create a Full-Stack App with First Draft
@@ -14,21 +14,31 @@ This Skill is experimental. The reviewed CLI can initialize a Plan, mint UUIDv7 
 for the current whole-graph analysis, and perform one pinned Compilation whose complete artifact it verifies before
 atomically materializing a new local directory. The reviewed project-scoped server transport accepts complete Plan
 replacements, exposes bounded AnalysisRun status, and can start, poll, cancel, and return the artifact for one pinned
-Compilation. Its importer supports empty drafts plus a bounded subset of Entities, ten scalar Field kinds, enum
-Fields with ordered values, schema-valid tagged Field and Reference defaults, References with ordered targets and
-mechanically derived forward Associations, Predicates with exact Expression JSON, and Field or system-Field Primary
-Descriptors.
+Compilation. Its importer supports empty drafts; Application domain, appearance, and native-client selections for
+editing; and a bounded subset of Entities, ten scalar Field kinds, enum Fields with ordered values, schema-valid
+tagged Field and Reference defaults, References with ordered targets and mechanically derived forward Associations,
+Predicates with exact Expression JSON, Field or system-Field Primary Descriptors, and one public-index Scaffold
+shape. The prepared application analyzer and Compiler admit independent scalar Entities, the exact public-index
+Scaffold, optional semantic Entity icons, and selected iPhone output under `ios/`. Application `domain` is admitted
+only when `native.ios` is selected, and selected iOS requires at least one admitted public-index navigation entry.
+The only admitted navigation Scaffold exposes that Entity's records on an unauthenticated public web index; confirm
+that exposure with the user instead of adding it merely to satisfy the iPhone requirement. Enum Fields remain
+importable for editing but cannot pass the current Compilation analysis gate. Appearance, nonempty delivery,
+Android, iPad, broader Scaffolds, and other graph breadth remain blocked.
 
-First Draft's committed controlled CLI smoke at server baseline `9e29606` reproducibly exercises an installed CLI,
-loopback Rails, and real Solid Queue through 151-file application materialization. Separately, a one-off observation
-on 2026-07-30 used a fresh Codex invocation at Skill baseline `e24b438`, server baseline `9e29606`, and CLI baseline
-`36f1292` to go from a prose request through valid analysis and Movie application materialization. That observation
-is not a reproducible agent eval. Neither form of evidence makes the unauthenticated local transport, CLI, or Skill
-released or published, and neither is representative-user, deployed, or production evidence. The smoke exercised
-the successful start, status, artifact, and materialization path, not cancellation. The compiler path remains
-narrower than the importer: one Entity using supported scalar Fields. There is no Plan GET or pull operation,
-complete semantic analyzer, Publish action, arbitrary application generation, deployment workflow, or support for
-the rest of the Foundation Plan.
+The prior `rails-sketch/2026-07` journey is the only complete local evidence. First Draft's committed controlled CLI
+smoke at server baseline `9e29606` reproducibly exercises an installed CLI, loopback Rails, and real Solid Queue
+through 151-file application materialization. Separately, a one-off observation on 2026-07-30 used a fresh Codex
+invocation at Skill baseline `e24b438`, server baseline `9e29606`, and CLI baseline `36f1292` to go from a prose
+request through valid analysis and Movie application materialization. That observation is not a reproducible agent
+eval. Neither form of evidence makes the unauthenticated local transport, CLI, or Skill released or published, and
+neither is representative-user, deployed, or production evidence. The successor `rails-sketch/2026-08` authoring
+and contract fixtures have not completed that end-to-end journey; they are not execution evidence. The prior smoke
+exercised the successful start, status, artifact, and materialization path, not cancellation, and was bounded to one
+Entity using supported scalar Fields. The prepared 2026-08 web-and-iPhone implementation and contract have not
+completed an end-to-end 2026-08 journey. There is no Plan GET or pull operation, complete semantic analyzer,
+Publish action, arbitrary application generation, deployment workflow, or support for the rest of the Foundation
+Plan.
 
 ## Load the relevant references
 
@@ -133,9 +143,14 @@ parallel or direct request, and never wrap the command in an automatic retry.
   - On `issues_found`, classify every diagnostic. Edit the complete local Plan only for a well-founded source
     correction that preserves unrelated content, stable subject identity, and intended product meaning. Then make
     one new `plan push` and run `plan status --wait` for that candidate. Do not weaken intended content merely to
-    obtain `valid`, and do not resubmit unchanged bytes. If that corrected candidate also returns `issues_found`,
-    stop and report its diagnostics. Do not make a second analysis-directed correction or push without fresh user
-    approval.
+    obtain `valid`, and do not resubmit unchanged bytes. A diagnostic such as
+    `foundation_plan.rails_target.compiler.unsupported_application_configuration` or
+    `foundation_plan.rails_target.compiler.unsupported_graph` can describe a current analyzer or output gap rather
+    than invalid product meaning. If an error diagnostic addresses intentional product meaning that the current
+    Compiler cannot emit, preserve every addressed member, report every diagnostic and its exact pointer, and stop
+    without editing or another push, even when another diagnostic appears source-correctable. If the one corrected
+    candidate otherwise returns `issues_found`, stop and report its diagnostics. Do not make a second
+    analysis-directed correction or push without fresh user approval.
   - On `analysis_failed`, report the analyzer failure and stop. Do not edit or push the Plan as a speculative
     repair.
   - On `superseded`, report that the observed graph was replaced and stop. Do not silently follow another
@@ -191,8 +206,13 @@ Before invoking the command:
 1. Confirm the output path with the user. It must be absent beneath an existing real directory.
 2. Preserve anything already present. Never delete, empty, move, merge into, or overwrite a destination to make it
    acceptable.
-3. Explain that the current local smoke path supports one Entity using supported scalar Fields. Do not imply that
-   References, Associations, Accounts, Policies, Scaffolds, arbitrary Foundation Plans, or deployment are supported.
+3. Explain that the prepared 2026-08 Compiler is designed to admit independent Entities using supported scalar
+   Fields, the exact public-index Scaffold, optional semantic Entity icons, and a selected iPhone project under
+   `ios/`. A domain is admitted only with `native.ios`, and selected iOS requires at least one admitted public-index
+   navigation entry. That entry exposes the Entity's records on an unauthenticated public web index and must reflect
+   the user's confirmed intent. This boundary has not completed an end-to-end 2026-08 journey. Do not imply that
+   Appearance, nonempty delivery, Android, iPad, broader Scaffolds, References, Associations, Accounts, Policies,
+   arbitrary Foundation Plans, or deployment are supported.
 4. Run exactly:
 
    ```sh
@@ -204,12 +224,13 @@ digest and protocol validation, and atomic materialization. Do not separately PO
 state, or wrap the command in a retry.
 
 On success, report the approved output path, `output.file_count`, `output.manifest_sha256`, `compilation.id`,
-`compilation.analysis_run_id`, `compilation.artifact.sha256`, compiler release, target, and graph version that the
-CLI validated. When the user approved a project-relative path, preserve that spelling instead of echoing the CLI's
-resolved absolute `output.path`. Do not dump the Foundation Plan, `.firstdraft/state.json`, the full artifact
-envelope, generated source, command environment, or raw command output. Call the result a generated local
-application for the current narrow compiler slice, not deployed or production-ready. Do not execute the generated
-application, install its dependencies, or deploy it without a separate user request.
+`compilation.analysis_run_id`, `compilation.artifact.sha256`, `compilation.artifact.byte_size`, compiler release,
+target, and graph version that the CLI validated. When the user approved a project-relative path, preserve that
+spelling instead of echoing the CLI's resolved absolute `output.path`. Do not dump the Foundation Plan,
+`.firstdraft/state.json`, the full artifact envelope, generated source, command environment, or raw command output.
+Call the result a generated local application for the admitted narrow web-and-iPhone slice, not deployed or
+production-ready. Do not execute the generated Rails or iPhone application, install dependencies, open Xcode, run
+`ios/bin/ios`, or deploy without a separate user request.
 
 If the command fails, require standard error to contain exactly one parseable JSON object and branch only on its
 stable `error` value:

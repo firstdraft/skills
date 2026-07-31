@@ -6,7 +6,7 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000903",
     "graph_version": 2,
-    "analyzer_release": "foundation-plan-rails/scalar-2026-07",
+    "analyzer_release": "foundation-plan-rails/application-2026-08",
     "status": "superseded",
     "diagnostics": [],
     "started_at": null,

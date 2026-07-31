@@ -8,13 +8,16 @@ import {
   readdirSync,
   readFileSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const cliBaseline = "36f12921c0f6641f073820734234c11e47fdb834";
+const cliBaseline = "121272cd592055354d09a4fe90e55c3ca002770c";
+const cliRuntimeSha256 =
+  "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const storedApiUrl = "http://127.0.0.1:1";
 const configuredApiUrl = "http://127.0.0.1:2";
 const compilationId = "01900000-0000-7000-8000-000000000981";
@@ -24,8 +27,8 @@ const headSourceSha256 = "1".repeat(64);
 const compilationEtag = `"sha256:${headSourceSha256}"`;
 const compilationArtifactMediaType =
   "application/vnd.firstdraft.compilation-artifact+json";
-const compilerRelease = "foundation-plan-rails/compiler-scalar-2026-07";
-const compilationTarget = { id: "rails", profile: "rails-sketch/2026-07" };
+const compilerRelease = "foundation-plan-rails/compiler-application-2026-08";
+const compilationTarget = { id: "rails", profile: "rails-sketch/2026-08" };
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const issuesFoundAnalysis = JSON.parse(
   readFileSync(
@@ -40,6 +43,54 @@ const issuesFoundAnalysis = JSON.parse(
   ),
 );
 const issuesFoundDiagnostics = issuesFoundAnalysis.analysis.diagnostics;
+const applicationIntentValidAnalysis = JSON.parse(
+  readFileSync(
+    path.join(
+      repository,
+      "evals",
+      "create-full-stack-app",
+      "fixtures",
+      "application-intent-valid-analysis.json",
+    ),
+    "utf8",
+  ),
+);
+const appearanceIssuesAnalysis = JSON.parse(
+  readFileSync(
+    path.join(
+      repository,
+      "evals",
+      "create-full-stack-app",
+      "fixtures",
+      "appearance-issues-analysis.json",
+    ),
+    "utf8",
+  ),
+);
+const mixedApplicationIssuesAnalysis = JSON.parse(
+  readFileSync(
+    path.join(
+      repository,
+      "evals",
+      "create-full-stack-app",
+      "fixtures",
+      "mixed-application-issues-analysis.json",
+    ),
+    "utf8",
+  ),
+);
+const unsupportedGraphAnalysis = JSON.parse(
+  readFileSync(
+    path.join(
+      repository,
+      "evals",
+      "create-full-stack-app",
+      "fixtures",
+      "unsupported-graph-analysis.json",
+    ),
+    "utf8",
+  ),
+);
 const supersededAnalysis = JSON.parse(
   readFileSync(
     path.join(
@@ -60,6 +111,7 @@ assert(cliDirectoryArgument, "usage: check-cli-contract.mjs <cli-directory>");
 const cliDirectory = path.resolve(cliDirectoryArgument);
 const revision = run("git", ["rev-parse", "HEAD"], cliDirectory);
 assert.equal(revision.stdout.trim(), cliBaseline);
+assert.equal(cliRuntimeDigest(cliDirectory), cliRuntimeSha256);
 const packageMetadata = JSON.parse(
   readFileSync(path.join(cliDirectory, "package.json"), "utf8"),
 );
@@ -83,6 +135,12 @@ try {
   const runner = await import(
     pathToFileURL(path.join(cliDirectory, "src", "cli.js")).href
   );
+  const { MAX_ARTIFACT_BYTES } = await import(
+    pathToFileURL(
+      path.join(cliDirectory, "src", "compilation-artifact.js"),
+    ).href
+  );
+  assert.equal(MAX_ARTIFACT_BYTES, 16 * 1024 * 1024);
   await verifyRunner(runner.run);
 
   const pack = run(
@@ -238,6 +296,7 @@ async function verifyRunnerPushFailures(runCli) {
     initialized,
   );
   assert.equal(initialization.status, 0);
+  assertInitializedPlanTarget(initialized);
   pinApiUrl(initialized, storedApiUrl);
   const invalidConfiguration = await invokeRunner(
     runCli,
@@ -283,6 +342,7 @@ function verifyExecutablePushFailures(executable) {
     initialized,
   );
   assert.equal(initialization.status, 0);
+  assertInitializedPlanTarget(initialized);
   pinApiUrl(initialized, storedApiUrl);
   const invalidConfiguration = invokeExecutable(
     executable,
@@ -412,6 +472,70 @@ async function verifyRunnerStatusContract(runCli) {
       );
     }
   }
+
+  const applicationIntentValid = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    remote,
+    {
+      fetchFunction: async () =>
+        fixtureAnalysisResponse(applicationIntentValidAnalysis, projectId),
+    },
+  );
+  assert.equal(applicationIntentValid.status, 0);
+  assert.equal(applicationIntentValid.stderr, "");
+  assert.deepEqual(
+    JSON.parse(applicationIntentValid.stdout).analysis,
+    applicationIntentValidAnalysis.analysis,
+  );
+
+  const appearanceIssues = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    remote,
+    {
+      fetchFunction: async () =>
+        fixtureAnalysisResponse(appearanceIssuesAnalysis, projectId),
+    },
+  );
+  assert.equal(appearanceIssues.status, 0);
+  assert.equal(appearanceIssues.stderr, "");
+  assert.deepEqual(
+    JSON.parse(appearanceIssues.stdout).analysis,
+    appearanceIssuesAnalysis.analysis,
+  );
+
+  const mixedApplicationIssues = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    remote,
+    {
+      fetchFunction: async () =>
+        fixtureAnalysisResponse(mixedApplicationIssuesAnalysis, projectId),
+    },
+  );
+  assert.equal(mixedApplicationIssues.status, 0);
+  assert.equal(mixedApplicationIssues.stderr, "");
+  assert.deepEqual(
+    JSON.parse(mixedApplicationIssues.stdout).analysis,
+    mixedApplicationIssuesAnalysis.analysis,
+  );
+
+  const unsupportedGraph = await invokeRunner(
+    runCli,
+    ["plan", "status", "--wait"],
+    remote,
+    {
+      fetchFunction: async () =>
+        fixtureAnalysisResponse(unsupportedGraphAnalysis, projectId),
+    },
+  );
+  assert.equal(unsupportedGraph.status, 0);
+  assert.equal(unsupportedGraph.stderr, "");
+  assert.deepEqual(
+    JSON.parse(unsupportedGraph.stdout).analysis,
+    unsupportedGraphAnalysis.analysis,
+  );
 
   const superseded = await invokeRunner(
     runCli,
@@ -727,18 +851,41 @@ async function verifyRunnerCompileContract(runCli) {
   assert.equal(success.stderr, "");
   const successBody = JSON.parse(success.stdout);
   assert.equal(successBody.project.id, projectId);
+  assert.equal(successBody.project.graph_version, 1);
   assert.equal(successBody.compilation.id, compilationId);
   assert.equal(successBody.compilation.analysis_run_id, compilationAnalysisId);
+  assert.equal(successBody.compilation.compiler_release, compilerRelease);
+  assert.deepEqual(successBody.compilation.target, compilationTarget);
   assert.equal(successBody.compilation.artifact.sha256, artifact.sha256);
+  assert.equal(
+    successBody.compilation.artifact.byte_size,
+    artifact.source.byteLength,
+  );
   assert.deepEqual(successBody.output, {
     path: output,
-    file_count: 1,
+    file_count: 4,
     manifest_sha256: artifact.manifestSha256,
   });
   assert.equal(
     readFileSync(path.join(output, "app", "models", "movie.rb"), "utf8"),
     "class Movie < ApplicationRecord\nend\n",
   );
+  assert.equal(
+    readFileSync(
+      path.join(
+        output,
+        "ios",
+        "FoundationApp",
+        "Generated",
+        "ApplicationDefinition.swift",
+      ),
+      "utf8",
+    ),
+    "enum ApplicationDefinition { static let name = \"Movie Catalog\" }\n",
+  );
+  const iosCommand = path.join(output, "ios", "bin", "ios");
+  assert.equal(readFileSync(iosCommand, "utf8"), "#!/bin/sh\nexit 0\n");
+  assert.equal(statSync(iosCommand).mode & 0o777, 0o755);
   assert.deepEqual(
     requests.map(({ method, url }) => [method, url]),
     [
@@ -1396,6 +1543,17 @@ function readProjectId(directory) {
   return state.project_id;
 }
 
+function assertInitializedPlanTarget(directory) {
+  const plan = JSON.parse(
+    readFileSync(
+      path.join(directory, ".firstdraft", "foundation-plan.json"),
+      "utf8",
+    ),
+  );
+  assert.equal(plan.format, "firstdraft.foundation-plan.sketch/0.19");
+  assert.deepEqual(plan.target, compilationTarget);
+}
+
 function pinCompileState(directory) {
   const statePath = path.join(directory, ".firstdraft", "state.json");
   const state = JSON.parse(readFileSync(statePath, "utf8"));
@@ -1448,31 +1606,53 @@ function compilationResponse(projectId, status, artifact = null) {
 function compilationArtifact(
   projectId,
   {
-    filePath = "app/models/movie.rb",
-    mode = 0o644,
+    filePath,
+    mode,
     fileDigest,
     manifestDigest,
     provenanceProjectId = projectId,
   } = {},
 ) {
-  const contents = Buffer.from("class Movie < ApplicationRecord\nend\n");
-  const file = {
-    path: filePath,
-    sha256: fileDigest ?? sha256(contents),
-    mode,
-    owner: "renderer:model",
-    source_subject_uuids: [],
-    contents_base64: contents.toString("base64"),
-  };
-  const metadata = [
-    {
-      path: file.path,
-      sha256: file.sha256,
-      mode: file.mode,
-      owner: file.owner,
-      source_subject_uuids: file.source_subject_uuids,
-    },
-  ];
+  const customFile = filePath !== undefined || mode !== undefined;
+  const files = customFile
+    ? [artifactFile({
+        path: filePath ?? "app/models/movie.rb",
+        mode: mode ?? 0o644,
+        owner: "renderer:model",
+        contents: "class Movie < ApplicationRecord\nend\n",
+      })]
+    : [
+        artifactFile({
+          path: "app/models/movie.rb",
+          owner: "renderer:model",
+          contents: "class Movie < ApplicationRecord\nend\n",
+        }),
+        artifactFile({
+          path: "app/views/movies/index.html.erb",
+          owner: "renderer:public_index_view",
+          contents: "<h1>Movies</h1>\n",
+        }),
+        artifactFile({
+          path: "ios/FoundationApp/Generated/ApplicationDefinition.swift",
+          owner: "renderer:ios_application",
+          contents:
+            "enum ApplicationDefinition { static let name = \"Movie Catalog\" }\n",
+        }),
+        artifactFile({
+          path: "ios/bin/ios",
+          mode: 0o755,
+          owner: "core:foundation-ios-core",
+          contents: "#!/bin/sh\nexit 0\n",
+        }),
+      ];
+  if (fileDigest !== undefined) files[0].sha256 = fileDigest;
+  const metadata = files.map((file) => ({
+    path: file.path,
+    sha256: file.sha256,
+    mode: file.mode,
+    owner: file.owner,
+    source_subject_uuids: file.source_subject_uuids,
+  }));
   const manifestSha256 =
     manifestDigest ??
     sha256(Buffer.from(JSON.stringify({ files: metadata })));
@@ -1489,7 +1669,7 @@ function compilationArtifact(
       },
       analysis: {
         id: compilationAnalysisId,
-        release: "foundation-plan-rails/scalar-2026-07",
+        release: "foundation-plan-rails/application-2026-08",
       },
       compiler_release: compilerRelease,
       target: compilationTarget,
@@ -1500,13 +1680,25 @@ function compilationArtifact(
       },
     },
     manifest_sha256: manifestSha256,
-    files: [file],
+    files,
   };
   const source = Buffer.from(JSON.stringify(body));
   return {
     source,
     sha256: sha256(source),
     manifestSha256,
+  };
+}
+
+function artifactFile({ path: filePath, owner, contents, mode = 0o644 }) {
+  const source = Buffer.from(contents);
+  return {
+    path: filePath,
+    sha256: sha256(source),
+    mode,
+    owner,
+    source_subject_uuids: [],
+    contents_base64: source.toString("base64"),
   };
 }
 
@@ -1536,6 +1728,38 @@ function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
+function cliRuntimeDigest(root) {
+  const sourceRoot = path.join(root, "src");
+  const paths = runtimeJavaScriptFiles(sourceRoot).concat([
+    path.join(root, "bin", "firstdraft.js"),
+    path.join(root, "package.json"),
+  ]).sort();
+  const digest = createHash("sha256");
+
+  for (const file of paths) {
+    const relativePath = path.relative(root, file).split(path.sep).join("/");
+    const source = readFileSync(file);
+    const relativePathLength = Buffer.alloc(4);
+    relativePathLength.writeUInt32BE(Buffer.byteLength(relativePath));
+    const sourceLength = Buffer.alloc(8);
+    sourceLength.writeBigUInt64BE(BigInt(source.byteLength));
+    digest.update(relativePathLength);
+    digest.update(relativePath);
+    digest.update(sourceLength);
+    digest.update(source);
+  }
+
+  return digest.digest("hex");
+}
+
+function runtimeJavaScriptFiles(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const candidate = path.join(directory, entry.name);
+    if (entry.isDirectory()) return runtimeJavaScriptFiles(candidate);
+    return entry.isFile() && entry.name.endsWith(".js") ? [candidate] : [];
+  });
+}
+
 function analysisResponse(
   projectId,
   status,
@@ -1559,7 +1783,7 @@ function analysisProjection(
     analysis: {
       id: analysisId,
       graph_version: 1,
-      analyzer_release: "foundation-plan-rails/scalar-2026-07",
+      analyzer_release: "foundation-plan-rails/application-2026-08",
       status,
       diagnostics,
       started_at: terminal ? "2026-07-30T12:00:00.000Z" : null,
