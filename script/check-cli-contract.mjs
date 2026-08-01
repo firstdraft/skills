@@ -15,9 +15,11 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const cliBaseline = "2d792f20424ae4fcc312d05be6201efb86b1f93b";
+const cliBaseline = "7944bf3cb0a2664a738f56b4ae928d1947babcb2";
 const cliRuntimeSha256 =
-  "7157b01e556d1c8a9eadf591995e251fe96b703bd612d15d991a304cea794e37";
+  "c90d6872f03c6782c0b371835df25801e7f54c5542fb071e9104bf52a49f4a2a";
+const cliPackageName = "@firstdraft.com/cli";
+const cliPackageVersion = "0.1.0-alpha.2";
 const storedApiUrl = "http://127.0.0.1:1";
 const configuredApiUrl = "http://127.0.0.1:2";
 const compilationId = "01900000-0000-7000-8000-000000000981";
@@ -122,6 +124,8 @@ assert.equal(cliRuntimeDigest(cliDirectory), cliRuntimeSha256);
 const packageMetadata = JSON.parse(
   readFileSync(path.join(cliDirectory, "package.json"), "utf8"),
 );
+assert.equal(packageMetadata.name, cliPackageName);
+assert.equal(packageMetadata.version, cliPackageVersion);
 assert.equal(packageMetadata.bin?.firstdraft, "bin/firstdraft.js");
 assert.equal(
   packageMetadata.dependencies,
@@ -1582,11 +1586,13 @@ async function verifyRunnerPublishContract(runCli) {
 
   const replayDirectory = await publishProject(
     runCli,
-    "runner-publish-replay",
+    "runner-publish-cross-invocation-identity-boundary",
   );
   const replayProjectId = readProjectId(replayDirectory);
+  const replayStatePath = path.join(replayDirectory, ".firstdraft", "state.json");
+  const replayStateBefore = readFileSync(replayStatePath);
   let replayRequests = 0;
-  const replay = await invokeRunner(
+  const initialReplayCandidate = await invokeRunner(
     runCli,
     ["plan", "publish"],
     replayDirectory,
@@ -1597,6 +1603,28 @@ async function verifyRunnerPublishContract(runCli) {
         assert.equal(options.method, "PUT");
         return jsonResponse(
           publicationResponse(replayProjectId, "succeeded"),
+          201,
+        );
+      },
+    },
+  );
+  assert.equal(initialReplayCandidate.status, 0, initialReplayCandidate.stderr);
+  assert.equal(initialReplayCandidate.stderr, "");
+  assert.equal(initialReplayCandidate.stdout, `${publicationRepositoryUrl}\n`);
+
+  const replay = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    replayDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async (_url, options) => {
+        replayRequests += 1;
+        assert.equal(options.method, "PUT");
+        return jsonResponse(
+          publicationResponse(replayProjectId, "succeeded", {
+            publicationIdentifier: changedPublicationId,
+          }),
           200,
         );
       },
@@ -1605,7 +1633,14 @@ async function verifyRunnerPublishContract(runCli) {
   assert.equal(replay.status, 0, replay.stderr);
   assert.equal(replay.stderr, "");
   assert.equal(replay.stdout, `${publicationRepositoryUrl}\n`);
-  assert.equal(replayRequests, 1);
+  assert.equal(replayRequests, 2);
+  assert.deepEqual(readFileSync(replayStatePath), replayStateBefore);
+  assert.deepEqual(Object.keys(JSON.parse(replayStateBefore)).sort(), [
+    "api_url",
+    "format",
+    "foundation_plan_etag",
+    "project_id",
+  ]);
 
   const reconciledDirectory = await publishProject(
     runCli,
@@ -1636,6 +1671,37 @@ async function verifyRunnerPublishContract(runCli) {
   assert.deepEqual(reconciledRequests, ["PUT", "GET"]);
   assert(!reconciled.stdout.includes("canary-private-ambiguous-put"));
 
+  for (const status of [408, 503]) {
+    const directory = await publishProject(
+      runCli,
+      `runner-publish-ambiguous-${status}`,
+    );
+    const projectIdentifier = readProjectId(directory);
+    const problem = {
+      type: "about:blank",
+      title: "Ambiguous start response",
+      status,
+      code: "publication_start_unknown",
+      detail: "The start outcome is unknown.",
+      canary: `canary-private-ambiguous-${status}`,
+    };
+    const methods = [];
+    const result = await invokeRunner(runCli, ["plan", "publish"], directory, {
+      apiToken: publicationApiToken,
+      fetchFunction: async (_url, options) => {
+        methods.push(options.method);
+        return options.method === "PUT"
+          ? problemResponse(problem, status)
+          : jsonResponse(publicationResponse(projectIdentifier, "succeeded"));
+      },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stderr, "");
+    assert.equal(result.stdout, `${publicationRepositoryUrl}\n`);
+    assert.deepEqual(methods, ["PUT", "GET"]);
+    assert(!result.stdout.includes(problem.canary));
+  }
+
   const mismatchedReconciliationDirectory = await publishProject(
     runCli,
     "runner-publish-mismatched-reconciliation",
@@ -1660,7 +1726,7 @@ async function verifyRunnerPublishContract(runCli) {
       },
     },
   );
-  assertErrorEnvelope(
+  const mismatchedReconciliationEnvelope = assertErrorEnvelope(
     mismatchedReconciliation,
     1,
     "request_outcome_unknown",
@@ -1672,6 +1738,117 @@ async function verifyRunnerPublishContract(runCli) {
       "canary-private-ambiguous-wrong-singleton",
     ],
   );
+  assert.equal(mismatchedReconciliationEnvelope.status, 200);
+  assert.equal(mismatchedReconciliationEnvelope.response, undefined);
+
+  const ambiguousProblemDirectory = await publishProject(
+    runCli,
+    "runner-publish-ambiguous-problem-then-network-error",
+  );
+  const ambiguousStartProblem = {
+    type: "about:blank",
+    title: "Ambiguous start response",
+    status: 503,
+    code: "publication_start_unknown",
+    detail: "The start outcome is unknown.",
+    canary: "canary-private-ambiguous-start-extension",
+  };
+  const ambiguousProblemMethods = [];
+  const ambiguousProblem = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    ambiguousProblemDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async (_url, options) => {
+        ambiguousProblemMethods.push(options.method);
+        if (options.method === "PUT") {
+          return problemResponse(ambiguousStartProblem, 503);
+        }
+        throw new TypeError("canary-private-reconciliation-network-error");
+      },
+    },
+  );
+  const ambiguousProblemEnvelope = assertErrorEnvelope(
+    ambiguousProblem,
+    1,
+    "request_outcome_unknown",
+    [
+      ambiguousProblemDirectory,
+      storedApiUrl,
+      publicationApiToken,
+      headSourceSha256,
+      ambiguousStartProblem.canary,
+      "canary-private-reconciliation-network-error",
+    ],
+  );
+  assert.equal(ambiguousProblemEnvelope.status, 503);
+  assert.deepEqual(ambiguousProblemEnvelope.response, {
+    type: ambiguousStartProblem.type,
+    title: ambiguousStartProblem.title,
+    status: ambiguousStartProblem.status,
+    code: ambiguousStartProblem.code,
+    detail: ambiguousStartProblem.detail,
+  });
+  assert.deepEqual(ambiguousProblemMethods, ["PUT", "GET"]);
+
+  const dualProblemDirectory = await publishProject(
+    runCli,
+    "runner-publish-dual-problem-get-precedence",
+  );
+  const dualPutProblem = {
+    type: "about:blank",
+    title: "Ambiguous start response",
+    status: 503,
+    code: "publication_start_unknown",
+    detail: "The start outcome is unknown.",
+    canary: "canary-private-dual-put-extension",
+  };
+  const dualGetProblem = {
+    type: "about:blank",
+    title: "Not Found",
+    status: 404,
+    code: "publication_not_found",
+    detail: "No singleton was found.",
+    canary: "canary-private-dual-get-extension",
+  };
+  const dualProblemMethods = [];
+  const dualProblem = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    dualProblemDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async (_url, options) => {
+        dualProblemMethods.push(options.method);
+        return options.method === "PUT"
+          ? problemResponse(dualPutProblem, 503)
+          : problemResponse(dualGetProblem, 404);
+      },
+    },
+  );
+  const dualProblemEnvelope = assertErrorEnvelope(
+    dualProblem,
+    1,
+    "request_outcome_unknown",
+    [
+      dualProblemDirectory,
+      storedApiUrl,
+      publicationApiToken,
+      headSourceSha256,
+      dualPutProblem.canary,
+      dualGetProblem.canary,
+    ],
+  );
+  assert.equal(dualProblemEnvelope.status, 404);
+  assert.deepEqual(dualProblemEnvelope.response, {
+    type: dualGetProblem.type,
+    title: dualGetProblem.title,
+    status: dualGetProblem.status,
+    code: dualGetProblem.code,
+    detail: dualGetProblem.detail,
+  });
+  assert.deepEqual(dualProblemMethods, ["PUT", "GET"]);
 
   const ambiguousDirectory = await publishProject(
     runCli,
@@ -1703,6 +1880,14 @@ async function verifyRunnerPublishContract(runCli) {
     runCli,
     "runner-publish-missing-reconciliation",
   );
+  const missingReconciliationProblem = {
+    type: "about:blank",
+    title: "Not Found",
+    status: 404,
+    code: "publication_not_found",
+    detail: "No singleton was found.",
+    canary: "canary-private-missing-reconciliation-extension",
+  };
   let missingReconciliationFetches = 0;
   const missingReconciliation = await invokeRunner(
     runCli,
@@ -1715,20 +1900,11 @@ async function verifyRunnerPublishContract(runCli) {
         if (options.method === "PUT") {
           throw new TypeError("canary-private-ambiguous-before-missing");
         }
-        return problemResponse(
-          {
-            type: "about:blank",
-            title: "Not Found",
-            status: 404,
-            code: "publication_not_found",
-            detail: "No singleton was found.",
-          },
-          404,
-        );
+        return problemResponse(missingReconciliationProblem, 404);
       },
     },
   );
-  assertErrorEnvelope(
+  const missingReconciliationEnvelope = assertErrorEnvelope(
     missingReconciliation,
     1,
     "request_outcome_unknown",
@@ -1738,8 +1914,17 @@ async function verifyRunnerPublishContract(runCli) {
       publicationApiToken,
       headSourceSha256,
       "canary-private-ambiguous-before-missing",
+      missingReconciliationProblem.canary,
     ],
   );
+  assert.equal(missingReconciliationEnvelope.status, 404);
+  assert.deepEqual(missingReconciliationEnvelope.response, {
+    type: missingReconciliationProblem.type,
+    title: missingReconciliationProblem.title,
+    status: missingReconciliationProblem.status,
+    code: missingReconciliationProblem.code,
+    detail: missingReconciliationProblem.detail,
+  });
   assert.equal(missingReconciliationFetches, 2);
 
   const reauthenticationDirectory = await publishProject(
@@ -1883,6 +2068,33 @@ async function verifyRunnerPublishContract(runCli) {
     detail: unavailableProblem.detail,
   });
 
+  for (const [currentStatus, rejectedStatus] of [
+    ["repository_unknown", "provisioning_repository"],
+    ["publication_unknown", "publishing"],
+  ]) {
+    const directory = await publishProject(
+      runCli,
+      `runner-publish-observation-only-${currentStatus}`,
+    );
+    const projectIdentifier = readProjectId(directory);
+    const current = publicationResponse(projectIdentifier, currentStatus);
+    const rejected = publicationResponse(projectIdentifier, rejectedStatus);
+    const responses = [jsonResponse(current, 201), jsonResponse(rejected)];
+    const result = await invokeRunner(runCli, ["plan", "publish"], directory, {
+      apiToken: publicationApiToken,
+      fetchFunction: async () => responses.shift(),
+      planPublishSleep: async () => {},
+    });
+    const envelope = assertErrorEnvelope(
+      result,
+      1,
+      "publication_changed",
+      [directory, storedApiUrl, publicationApiToken],
+    );
+    assert.equal(envelope.current.publication.status, currentStatus);
+    assert.equal(envelope.rejected.publication.status, rejectedStatus);
+  }
+
   const invalidProjectionCases = [
     {
       label: "public-repository",
@@ -1907,6 +2119,10 @@ async function verifyRunnerPublishContract(runCli) {
     {
       label: "different-compilation-source",
       options: { compilationHeadSourceSha256: "9".repeat(64) },
+    },
+    {
+      label: "different-compilation-graph-version",
+      options: { compilationGraphVersion: 2 },
     },
   ];
   for (const { label, options } of invalidProjectionCases) {
@@ -1939,6 +2155,39 @@ async function verifyRunnerPublishContract(runCli) {
     ]);
   }
 
+  const changedGraphDirectory = await publishProject(
+    runCli,
+    "runner-publish-changed-graph-version",
+  );
+  const changedGraphProjectId = readProjectId(changedGraphDirectory);
+  const changedGraphResponses = [
+    jsonResponse(publicationResponse(changedGraphProjectId, "compiling"), 201),
+    jsonResponse(
+      publicationResponse(changedGraphProjectId, "provisioning_repository", {
+        projectGraphVersion: 2,
+        compilationGraphVersion: 2,
+      }),
+    ),
+  ];
+  const changedGraphResult = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    changedGraphDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async () => changedGraphResponses.shift(),
+      planPublishSleep: async () => {},
+    },
+  );
+  const changedGraphEnvelope = assertErrorEnvelope(
+    changedGraphResult,
+    1,
+    "publication_changed",
+    [changedGraphDirectory, storedApiUrl, publicationApiToken],
+  );
+  assert.equal(changedGraphEnvelope.current.project.graph_version, 1);
+  assert.equal(changedGraphEnvelope.rejected.project.graph_version, 2);
+
   for (const [status, error] of [
     ["repository_conflict", "publication_failed"],
     ["failed", "publication_failed"],
@@ -1948,6 +2197,17 @@ async function verifyRunnerPublishContract(runCli) {
       runCli,
       `runner-publish-${status}`,
     );
+    const responseOptions =
+      status === "cancelled"
+        ? {
+            compilationStatusOverride: "succeeded",
+            forceRepository: true,
+            repositoryOverrides: {
+              tree_sha: "7".repeat(40),
+              commit_sha: "8".repeat(40),
+            },
+          }
+        : {};
     const result = await invokeRunner(
       runCli,
       ["plan", "publish"],
@@ -1955,7 +2215,10 @@ async function verifyRunnerPublishContract(runCli) {
       {
         apiToken: publicationApiToken,
         fetchFunction: async () =>
-          jsonResponse(publicationResponse(readProjectId(directory), status), 201),
+          jsonResponse(
+            publicationResponse(readProjectId(directory), status, responseOptions),
+            201,
+          ),
       },
     );
     const envelope = assertErrorEnvelope(result, 1, error, [
@@ -1964,7 +2227,55 @@ async function verifyRunnerPublishContract(runCli) {
       publicationApiToken,
     ]);
     assert.equal(envelope.current.publication.status, status);
+    if (status === "cancelled") {
+      assert.equal(
+        envelope.current.publication.repository.html_url,
+        publicationRepositoryUrl,
+      );
+      assert.equal(
+        envelope.current.publication.repository.tree_sha,
+        "7".repeat(40),
+      );
+      assert.equal(
+        envelope.current.publication.repository.commit_sha,
+        "8".repeat(40),
+      );
+    }
   }
+
+  const cancelledDuringCompilationDirectory = await publishProject(
+    runCli,
+    "runner-publish-cancelled-during-compilation",
+  );
+  const cancelledDuringCompilation = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    cancelledDuringCompilationDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async () =>
+        jsonResponse(
+          publicationResponse(
+            readProjectId(cancelledDuringCompilationDirectory),
+            "cancelled",
+          ),
+          201,
+        ),
+    },
+  );
+  const cancelledDuringCompilationEnvelope = assertErrorEnvelope(
+    cancelledDuringCompilation,
+    1,
+    "publication_cancelled",
+    [
+      cancelledDuringCompilationDirectory,
+      storedApiUrl,
+      publicationApiToken,
+    ],
+  );
+  assert.equal(cancelledDuringCompilationEnvelope.current.compilation.status, "cancelled");
+  assert.equal(cancelledDuringCompilationEnvelope.current.compilation.artifact, null);
+  assert.equal(cancelledDuringCompilationEnvelope.current.publication.repository, null);
 
   const timeoutDirectory = await publishProject(
     runCli,
@@ -2003,13 +2314,14 @@ async function verifyRunnerPublishContract(runCli) {
     "runner-publish-changed",
   );
   const changedProjectId = readProjectId(changedDirectory);
+  const current = publicationResponse(changedProjectId, "compiling");
   const replacement = publicationResponse(
     changedProjectId,
     "provisioning_repository",
     { publicationIdentifier: changedPublicationId },
   );
   const changedResponses = [
-    jsonResponse(publicationResponse(changedProjectId, "compiling"), 201),
+    jsonResponse(current, 201),
     jsonResponse(replacement),
   ];
   const changedResult = await invokeRunner(
@@ -2028,7 +2340,13 @@ async function verifyRunnerPublishContract(runCli) {
     "publication_changed",
     [changedDirectory, storedApiUrl, publicationApiToken],
   );
-  assert.equal(changedEnvelope.current.publication.id, changedPublicationId);
+  assert.equal(changedEnvelope.current.publication.id, publicationId);
+  assert.equal(changedEnvelope.current.publication.status, "compiling");
+  assert.equal(changedEnvelope.rejected.publication.id, changedPublicationId);
+  assert.equal(
+    changedEnvelope.rejected.publication.status,
+    "provisioning_repository",
+  );
 }
 
 function verifyExecutableStatusFailures(executable) {
@@ -2350,8 +2668,12 @@ function publicationResponse(
   {
     publicationIdentifier = publicationId,
     projectIdentifier = projectId,
+    projectGraphVersion = 1,
+    compilationGraphVersion = projectGraphVersion,
     projectHeadSourceSha256 = headSourceSha256,
     compilationHeadSourceSha256 = headSourceSha256,
+    compilationStatusOverride = null,
+    forceRepository = false,
     repositoryOverrides = {},
   } = {},
 ) {
@@ -2362,16 +2684,15 @@ function publicationResponse(
     "cancelled",
   ].includes(status);
   const compilationStatus =
-    status === "compiling"
+    compilationStatusOverride ??
+    (status === "compiling"
       ? "queued"
       : status === "cancelled"
         ? "cancelled"
-        : "succeeded";
-  const hasRepository = [
-    "publishing",
-    "publication_unknown",
-    "succeeded",
-  ].includes(status);
+        : "succeeded");
+  const hasRepository =
+    forceRepository ||
+    ["publishing", "publication_unknown", "succeeded"].includes(status);
   const repository = hasRepository
     ? {
         id: 987654321,
@@ -2395,13 +2716,13 @@ function publicationResponse(
   return {
     project: {
       id: projectIdentifier,
-      graph_version: 1,
+      graph_version: projectGraphVersion,
       head_source_sha256: projectHeadSourceSha256,
     },
     compilation: {
       id: compilationId,
       analysis_run_id: compilationAnalysisId,
-      graph_version: 1,
+      graph_version: compilationGraphVersion,
       head_source_sha256: compilationHeadSourceSha256,
       status: compilationStatus,
       compiler_release: compilerRelease,

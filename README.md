@@ -39,11 +39,12 @@ iPhone project composes `firstdraft/foundation-ios-core` revision
 iPad support. Appearance, nonempty delivery, Android, broader Scaffolds, relationships and other graph breadth,
 deployment, and arbitrary applications remain outside this Compilation boundary.
 
-The combined CLI, Skill, and service workflow remains unreleased. A prepared zero-flag `plan publish` contract can
-request one private personal-account GitHub repository after valid analysis, but no live endpoint or completed
-staging smoke establishes that path yet. There is no Plan GET or pull operation, complete semantic analyzer,
-deployment workflow, or general web or mobile generator. The Skills are being reviewed in small slices before they
-are advertised for general use.
+The combined CLI, Skill, and service workflow remains unreleased. The prepared successor source identifies itself as
+`@firstdraft.com/cli@0.1.0-alpha.2`, but that package remains unpublished. The prepared zero-flag `plan publish`
+contract can request one private personal-account GitHub repository after valid analysis, but no live endpoint or
+completed staging smoke establishes that path yet. There is no Plan GET or pull operation, complete semantic
+analyzer, deployment workflow, or general web or mobile generator. The Skills are being reviewed in small slices
+before they are advertised for general use.
 
 ## Skills
 
@@ -78,13 +79,13 @@ sh script/check
 ```
 
 The CLI contract check requires a checkout at the exact reviewed, merged revision
-`2d792f20424ae4fcc312d05be6201efb86b1f93b`, whose independently reproduced JavaScript-source runtime digest is
-`7157b01e556d1c8a9eadf591995e251fe96b703bd612d15d991a304cea794e37`:
+`7944bf3cb0a2664a738f56b4ae928d1947babcb2`, whose independently reproduced JavaScript-source runtime digest is
+`c90d6872f03c6782c0b371835df25801e7f54c5542fb071e9104bf52a49f4a2a`:
 
 ```sh
 git -C <path-to-cli-checkout> fetch origin main
-git -C <path-to-cli-checkout> merge-base --is-ancestor 2d792f20424ae4fcc312d05be6201efb86b1f93b origin/main
-git -C <path-to-cli-checkout> checkout --detach 2d792f20424ae4fcc312d05be6201efb86b1f93b
+git -C <path-to-cli-checkout> merge-base --is-ancestor 7944bf3cb0a2664a738f56b4ae928d1947babcb2 origin/main
+git -C <path-to-cli-checkout> checkout --detach 7944bf3cb0a2664a738f56b4ae928d1947babcb2
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 
@@ -129,7 +130,8 @@ point, run `publish-after-explicit-create-request` only from a fresh initialized
 synthetic state fixture with that Project's post-init `.firstdraft/state.json`, stage the eval Plan, and let the
 authorized workflow push, observe terminal analysis, and publish only if it reaches `valid` unchanged. A request to
 create or publish the app authorizes exactly one singleton publication after valid analysis; diagnostics-only
-requests stop at analysis. Any retry after a terminal Publication requires an explicit fork to a new Project.
+requests stop at analysis. After a terminal Publication, another attempt requires a fresh Plan in a separate
+directory whose first push creates a new Project. There is no Project-fork operation.
 
 The `*-analysis.json` fixtures and Compilation eval prompts are behavioral examples accepted by the pinned CLI
 contract, not execution evidence by themselves. Their `2026-07-30` timestamps are fixed deterministic transport
