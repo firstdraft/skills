@@ -15,20 +15,27 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const cliBaseline = "121272cd592055354d09a4fe90e55c3ca002770c";
+const cliBaseline = "2d792f20424ae4fcc312d05be6201efb86b1f93b";
 const cliRuntimeSha256 =
-  "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
+  "7157b01e556d1c8a9eadf591995e251fe96b703bd612d15d991a304cea794e37";
 const storedApiUrl = "http://127.0.0.1:1";
 const configuredApiUrl = "http://127.0.0.1:2";
 const compilationId = "01900000-0000-7000-8000-000000000981";
 const compilationAnalysisId = "01900000-0000-7000-8000-000000000982";
 const changedCompilationId = "01900000-0000-7000-8000-000000000983";
-const headSourceSha256 = "1".repeat(64);
+const publicationId = "01900000-0000-7000-8000-000000000984";
+const changedPublicationId = "01900000-0000-7000-8000-000000000985";
+const mismatchedPublicationProjectId =
+  "01900000-0000-7000-8000-000000000986";
+const headSourceSha256 =
+  "fbe445826e26b4a36808969e4dfccb884dde1b2704d18e4ab7a2f619fc8fb930";
 const compilationEtag = `"sha256:${headSourceSha256}"`;
 const compilationArtifactMediaType =
   "application/vnd.firstdraft.compilation-artifact+json";
 const compilerRelease = "foundation-plan-rails/compiler-application-2026-08";
 const compilationTarget = { id: "rails", profile: "rails-sketch/2026-08" };
+const publicationRepositoryUrl = "https://github.com/octocat/oscar-party";
+const publicationApiToken = "canary-private-api-token";
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const issuesFoundAnalysis = JSON.parse(
   readFileSync(
@@ -115,7 +122,7 @@ assert.equal(cliRuntimeDigest(cliDirectory), cliRuntimeSha256);
 const packageMetadata = JSON.parse(
   readFileSync(path.join(cliDirectory, "package.json"), "utf8"),
 );
-assert.equal(packageMetadata.bin?.firstdraft, "./bin/firstdraft.js");
+assert.equal(packageMetadata.bin?.firstdraft, "bin/firstdraft.js");
 assert.equal(
   packageMetadata.dependencies,
   undefined,
@@ -179,7 +186,8 @@ try {
     path.join(
       installationDirectory,
       "node_modules",
-      "firstdraft",
+      "@firstdraft.com",
+      "cli",
       "bin",
       "firstdraft.js",
     ),
@@ -223,6 +231,7 @@ async function verifyRunner(runCli) {
   await verifyRunnerPushFailures(runCli);
   await verifyRunnerStatusContract(runCli);
   await verifyRunnerCompileContract(runCli);
+  await verifyRunnerPublishContract(runCli);
 }
 
 function verifyPackedExecutable(executable) {
@@ -260,6 +269,7 @@ function verifyPackedExecutable(executable) {
   verifyExecutablePushFailures(executable);
   verifyExecutableStatusFailures(executable);
   verifyExecutableCompileFailures(executable);
+  verifyExecutablePublishFailures(executable);
 }
 
 async function verifyRunnerPushFailures(runCli) {
@@ -847,7 +857,7 @@ async function verifyRunnerCompileContract(runCli) {
       },
     },
   );
-  assert.equal(success.status, 0);
+  assert.equal(success.status, 0, success.stderr);
   assert.equal(success.stderr, "");
   const successBody = JSON.parse(success.stdout);
   assert.equal(successBody.project.id, projectId);
@@ -1398,6 +1408,629 @@ async function verifyRunnerCompileContract(runCli) {
   );
 }
 
+async function verifyRunnerPublishContract(runCli) {
+  const invalid = await invokeRunner(
+    runCli,
+    ["plan", "publish", "--canary-private-argument"],
+    temporaryDirectory,
+  );
+  assertErrorEnvelope(invalid, 2, "invalid_arguments", [
+    "canary-private-argument",
+  ]);
+
+  const unauthenticated = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    temporaryDirectory,
+    { apiToken: "" },
+  );
+  assertErrorEnvelope(unauthenticated, 1, "authentication_required", [
+    publicationApiToken,
+  ]);
+
+  const unreadableDirectory = emptyProject("runner-publish-unreadable");
+  const unreadable = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    unreadableDirectory,
+    { apiToken: publicationApiToken },
+  );
+  assertErrorEnvelope(unreadable, 1, "local_input_unreadable", [
+    unreadableDirectory,
+    publicationApiToken,
+  ]);
+
+  const unpushed = emptyProject("runner-publish-unpushed");
+  const initialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    unpushed,
+  );
+  assert.equal(initialization.status, 0);
+  const notPushed = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    unpushed,
+    { apiToken: publicationApiToken },
+  );
+  assertErrorEnvelope(notPushed, 1, "project_not_pushed", [
+    unpushed,
+    publicationApiToken,
+  ]);
+
+  const incompatible = emptyProject("runner-publish-incompatible");
+  const incompatibleInitialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    incompatible,
+  );
+  assert.equal(incompatibleInitialization.status, 0);
+  pinApiUrl(incompatible, storedApiUrl);
+  const invalidConfiguration = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    incompatible,
+    { apiToken: publicationApiToken },
+  );
+  assertErrorEnvelope(invalidConfiguration, 2, "invalid_configuration", [
+    incompatible,
+    storedApiUrl,
+    publicationApiToken,
+    "skill-contract",
+  ]);
+
+  const changed = await publishProject(runCli, "runner-publish-local-change");
+  writeFileSync(
+    path.join(changed, ".firstdraft", "foundation-plan.json"),
+    '{"canary":"private-local-change"}\n',
+  );
+  let changedFetches = 0;
+  const localPlanChanged = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    changed,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: () => {
+        changedFetches += 1;
+        throw new Error("canary-private-network");
+      },
+    },
+  );
+  assertErrorEnvelope(localPlanChanged, 1, "local_plan_changed", [
+    changed,
+    storedApiUrl,
+    publicationApiToken,
+    headSourceSha256,
+    "private-local-change",
+    "canary-private-network",
+  ]);
+  assert.equal(changedFetches, 0);
+
+  const remote = await publishProject(runCli, "runner-publish-success");
+  const projectId = readProjectId(remote);
+  const responses = [
+    jsonResponse(publicationResponse(projectId, "compiling"), 201),
+    jsonResponse(publicationResponse(projectId, "provisioning_repository")),
+    jsonResponse(publicationResponse(projectId, "repository_unknown")),
+    jsonResponse(publicationResponse(projectId, "publishing")),
+    jsonResponse(publicationResponse(projectId, "publication_unknown")),
+    jsonResponse(publicationResponse(projectId, "succeeded")),
+  ];
+  const requests = [];
+  let sleeps = 0;
+  const success = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    remote,
+    {
+      apiUrl: configuredApiUrl,
+      apiToken: publicationApiToken,
+      fetchFunction: async (url, options) => {
+        requests.push({
+          url: url.toString(),
+          method: options.method,
+          body: options.body,
+          headers: new Headers(options.headers),
+        });
+        return responses.shift();
+      },
+      planPublishSleep: async () => {
+        sleeps += 1;
+      },
+    },
+  );
+  assert.equal(success.status, 0, success.stderr);
+  assert.equal(success.stderr, "");
+  assert.equal(success.stdout, `${publicationRepositoryUrl}\n`);
+  assert.deepEqual(
+    requests.map(({ method, url }) => [method, url]),
+    [
+      ["PUT", publicationPath(projectId)],
+      ["GET", publicationPath(projectId)],
+      ["GET", publicationPath(projectId)],
+      ["GET", publicationPath(projectId)],
+      ["GET", publicationPath(projectId)],
+      ["GET", publicationPath(projectId)],
+    ],
+  );
+  assert.equal(sleeps, 5);
+  assert.equal(requests[0].headers.get("if-match"), compilationEtag);
+  assert(
+    requests.every(
+      ({ headers }) =>
+        headers.get("authorization") === `Bearer ${publicationApiToken}`,
+    ),
+  );
+  assert(requests.every(({ body }) => body === undefined));
+  assert(!success.stdout.includes(publicationApiToken));
+  assert(!success.stdout.includes(headSourceSha256));
+
+  const replayDirectory = await publishProject(
+    runCli,
+    "runner-publish-replay",
+  );
+  const replayProjectId = readProjectId(replayDirectory);
+  let replayRequests = 0;
+  const replay = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    replayDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async (_url, options) => {
+        replayRequests += 1;
+        assert.equal(options.method, "PUT");
+        return jsonResponse(
+          publicationResponse(replayProjectId, "succeeded"),
+          200,
+        );
+      },
+    },
+  );
+  assert.equal(replay.status, 0, replay.stderr);
+  assert.equal(replay.stderr, "");
+  assert.equal(replay.stdout, `${publicationRepositoryUrl}\n`);
+  assert.equal(replayRequests, 1);
+
+  const reconciledDirectory = await publishProject(
+    runCli,
+    "runner-publish-reconciled",
+  );
+  const reconciledProjectId = readProjectId(reconciledDirectory);
+  const reconciledRequests = [];
+  const reconciled = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    reconciledDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async (url, options) => {
+        reconciledRequests.push(options.method);
+        if (options.method === "PUT") {
+          throw new TypeError("canary-private-ambiguous-put");
+        }
+        return jsonResponse(
+          publicationResponse(reconciledProjectId, "succeeded"),
+        );
+      },
+    },
+  );
+  assert.equal(reconciled.status, 0);
+  assert.equal(reconciled.stderr, "");
+  assert.equal(reconciled.stdout, `${publicationRepositoryUrl}\n`);
+  assert.deepEqual(reconciledRequests, ["PUT", "GET"]);
+  assert(!reconciled.stdout.includes("canary-private-ambiguous-put"));
+
+  const mismatchedReconciliationDirectory = await publishProject(
+    runCli,
+    "runner-publish-mismatched-reconciliation",
+  );
+  const mismatchedReconciliation = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    mismatchedReconciliationDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async (_url, options) => {
+        if (options.method === "PUT") {
+          throw new TypeError("canary-private-ambiguous-wrong-singleton");
+        }
+        return jsonResponse(
+          publicationResponse(
+            readProjectId(mismatchedReconciliationDirectory),
+            "succeeded",
+            { projectIdentifier: mismatchedPublicationProjectId },
+          ),
+        );
+      },
+    },
+  );
+  assertErrorEnvelope(
+    mismatchedReconciliation,
+    1,
+    "request_outcome_unknown",
+    [
+      mismatchedReconciliationDirectory,
+      storedApiUrl,
+      publicationApiToken,
+      headSourceSha256,
+      "canary-private-ambiguous-wrong-singleton",
+    ],
+  );
+
+  const ambiguousDirectory = await publishProject(
+    runCli,
+    "runner-publish-ambiguous",
+  );
+  let ambiguousFetches = 0;
+  const ambiguous = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    ambiguousDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: () => {
+        ambiguousFetches += 1;
+        throw new TypeError("canary-private-ambiguous-publication");
+      },
+    },
+  );
+  assertErrorEnvelope(ambiguous, 1, "request_outcome_unknown", [
+    ambiguousDirectory,
+    storedApiUrl,
+    publicationApiToken,
+    headSourceSha256,
+    "canary-private-ambiguous-publication",
+  ]);
+  assert.equal(ambiguousFetches, 2);
+
+  const missingReconciliationDirectory = await publishProject(
+    runCli,
+    "runner-publish-missing-reconciliation",
+  );
+  let missingReconciliationFetches = 0;
+  const missingReconciliation = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    missingReconciliationDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async (_url, options) => {
+        missingReconciliationFetches += 1;
+        if (options.method === "PUT") {
+          throw new TypeError("canary-private-ambiguous-before-missing");
+        }
+        return problemResponse(
+          {
+            type: "about:blank",
+            title: "Not Found",
+            status: 404,
+            code: "publication_not_found",
+            detail: "No singleton was found.",
+          },
+          404,
+        );
+      },
+    },
+  );
+  assertErrorEnvelope(
+    missingReconciliation,
+    1,
+    "request_outcome_unknown",
+    [
+      missingReconciliationDirectory,
+      storedApiUrl,
+      publicationApiToken,
+      headSourceSha256,
+      "canary-private-ambiguous-before-missing",
+    ],
+  );
+  assert.equal(missingReconciliationFetches, 2);
+
+  const reauthenticationDirectory = await publishProject(
+    runCli,
+    "runner-publish-reauthentication",
+  );
+  const authenticationProblem = {
+    type: "about:blank",
+    title: "Unauthorized",
+    status: 401,
+    code: "authentication_required",
+    detail: "Replace the token.",
+    canary: "canary-private-auth-extension",
+  };
+  let reauthenticationFetches = 0;
+  const reauthentication = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    reauthenticationDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async (_url, options) => {
+        reauthenticationFetches += 1;
+        if (options.method === "PUT") {
+          throw new TypeError("canary-private-ambiguous-put-before-auth");
+        }
+        return problemResponse(authenticationProblem, 401);
+      },
+    },
+  );
+  const authenticationEnvelope = assertErrorEnvelope(
+    reauthentication,
+    1,
+    "authentication_required",
+    [
+      reauthenticationDirectory,
+      storedApiUrl,
+      publicationApiToken,
+      headSourceSha256,
+      "canary-private-ambiguous-put-before-auth",
+      "canary-private-auth-extension",
+    ],
+  );
+  assert.equal(authenticationEnvelope.status, 401);
+  assert.deepEqual(authenticationEnvelope.response, {
+    type: authenticationProblem.type,
+    title: authenticationProblem.title,
+    status: authenticationProblem.status,
+    code: authenticationProblem.code,
+    detail: authenticationProblem.detail,
+  });
+  assert.equal(reauthenticationFetches, 2);
+
+  const rejectedDirectory = await publishProject(
+    runCli,
+    "runner-publish-rejected",
+  );
+  const rejectedProblem = {
+    type: "about:blank",
+    title: "Conflict",
+    status: 409,
+    code: "project_not_valid",
+    detail: "Publish is unavailable.",
+    canary: "canary-private-problem-extension",
+  };
+  const rejected = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    rejectedDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async () => problemResponse(rejectedProblem, 409),
+    },
+  );
+  const rejectedEnvelope = assertErrorEnvelope(
+    rejected,
+    1,
+    "publication_start_rejected",
+    [
+      rejectedDirectory,
+      storedApiUrl,
+      publicationApiToken,
+      headSourceSha256,
+      "canary-private-problem-extension",
+    ],
+  );
+  assert.equal(rejectedEnvelope.status, 409);
+  assert.deepEqual(rejectedEnvelope.response, {
+    type: rejectedProblem.type,
+    title: rejectedProblem.title,
+    status: rejectedProblem.status,
+    code: rejectedProblem.code,
+    detail: rejectedProblem.detail,
+  });
+
+  const unavailableDirectory = await publishProject(
+    runCli,
+    "runner-publish-unavailable",
+  );
+  const unavailableProjectId = readProjectId(unavailableDirectory);
+  const unavailableProblem = {
+    type: "about:blank",
+    title: "Service Unavailable",
+    status: 503,
+    code: "publication_unavailable",
+    detail: "Try later.",
+    canary: "canary-private-status-extension",
+  };
+  const unavailableResponses = [
+    jsonResponse(publicationResponse(unavailableProjectId, "compiling"), 201),
+    problemResponse(unavailableProblem, 503),
+  ];
+  const unavailable = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    unavailableDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async () => unavailableResponses.shift(),
+      planPublishSleep: async () => {},
+    },
+  );
+  const unavailableEnvelope = assertErrorEnvelope(
+    unavailable,
+    1,
+    "publication_status_unavailable",
+    [
+      unavailableDirectory,
+      storedApiUrl,
+      publicationApiToken,
+      headSourceSha256,
+      unavailableProblem.canary,
+    ],
+  );
+  assert.equal(unavailableEnvelope.status, 503);
+  assert.deepEqual(unavailableEnvelope.response, {
+    type: unavailableProblem.type,
+    title: unavailableProblem.title,
+    status: unavailableProblem.status,
+    code: unavailableProblem.code,
+    detail: unavailableProblem.detail,
+  });
+
+  const invalidProjectionCases = [
+    {
+      label: "public-repository",
+      options: { repositoryOverrides: { private: false } },
+    },
+    {
+      label: "organization-owner",
+      options: {
+        repositoryOverrides: {
+          owner: { id: 123456, login: "octocat", type: "Organization" },
+        },
+      },
+    },
+    {
+      label: "different-project",
+      options: { projectIdentifier: mismatchedPublicationProjectId },
+    },
+    {
+      label: "different-project-source",
+      options: { projectHeadSourceSha256: "9".repeat(64) },
+    },
+    {
+      label: "different-compilation-source",
+      options: { compilationHeadSourceSha256: "9".repeat(64) },
+    },
+  ];
+  for (const { label, options } of invalidProjectionCases) {
+    const directory = await publishProject(
+      runCli,
+      `runner-publish-invalid-${label}`,
+    );
+    const projectIdentifier = readProjectId(directory);
+    const invalidResponses = [
+      jsonResponse(publicationResponse(projectIdentifier, "compiling"), 201),
+      jsonResponse(
+        publicationResponse(projectIdentifier, "succeeded", options),
+      ),
+    ];
+    const result = await invokeRunner(
+      runCli,
+      ["plan", "publish"],
+      directory,
+      {
+        apiToken: publicationApiToken,
+        fetchFunction: async () => invalidResponses.shift(),
+        planPublishSleep: async () => {},
+      },
+    );
+    assertErrorEnvelope(result, 1, "invalid_publication_status", [
+      directory,
+      storedApiUrl,
+      publicationApiToken,
+      headSourceSha256,
+    ]);
+  }
+
+  for (const [status, error] of [
+    ["repository_conflict", "publication_failed"],
+    ["failed", "publication_failed"],
+    ["cancelled", "publication_cancelled"],
+  ]) {
+    const directory = await publishProject(
+      runCli,
+      `runner-publish-${status}`,
+    );
+    const result = await invokeRunner(
+      runCli,
+      ["plan", "publish"],
+      directory,
+      {
+        apiToken: publicationApiToken,
+        fetchFunction: async () =>
+          jsonResponse(publicationResponse(readProjectId(directory), status), 201),
+      },
+    );
+    const envelope = assertErrorEnvelope(result, 1, error, [
+      directory,
+      storedApiUrl,
+      publicationApiToken,
+    ]);
+    assert.equal(envelope.current.publication.status, status);
+  }
+
+  const timeoutDirectory = await publishProject(
+    runCli,
+    "runner-publish-timeout",
+  );
+  const timeoutProjectId = readProjectId(timeoutDirectory);
+  let currentTime = 0;
+  let timeoutFetches = 0;
+  const timeout = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    timeoutDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async () => {
+        timeoutFetches += 1;
+        return jsonResponse(publicationResponse(timeoutProjectId, "compiling"), 201);
+      },
+      planPublishSleep: async () => {
+        currentTime = 600_000;
+      },
+      planPublishNow: () => currentTime,
+    },
+  );
+  const timeoutEnvelope = assertErrorEnvelope(
+    timeout,
+    1,
+    "publication_wait_timed_out",
+    [timeoutDirectory, storedApiUrl, publicationApiToken],
+  );
+  assert.equal(timeoutEnvelope.current.publication.status, "compiling");
+  assert.equal(timeoutFetches, 1);
+
+  const changedDirectory = await publishProject(
+    runCli,
+    "runner-publish-changed",
+  );
+  const changedProjectId = readProjectId(changedDirectory);
+  const replacement = publicationResponse(
+    changedProjectId,
+    "provisioning_repository",
+    { publicationIdentifier: changedPublicationId },
+  );
+  const changedResponses = [
+    jsonResponse(publicationResponse(changedProjectId, "compiling"), 201),
+    jsonResponse(replacement),
+  ];
+  const changedResult = await invokeRunner(
+    runCli,
+    ["plan", "publish"],
+    changedDirectory,
+    {
+      apiToken: publicationApiToken,
+      fetchFunction: async () => changedResponses.shift(),
+      planPublishSleep: async () => {},
+    },
+  );
+  const changedEnvelope = assertErrorEnvelope(
+    changedResult,
+    1,
+    "publication_changed",
+    [changedDirectory, storedApiUrl, publicationApiToken],
+  );
+  assert.equal(changedEnvelope.current.publication.id, changedPublicationId);
+}
+
 function verifyExecutableStatusFailures(executable) {
   const planHelp = invokeExecutable(executable, ["plan", "--help"]);
   assert.equal(planHelp.status, 0);
@@ -1517,7 +2150,115 @@ function verifyExecutableCompileFailures(executable) {
   ]);
 }
 
+function verifyExecutablePublishFailures(executable) {
+  const planHelp = invokeExecutable(executable, ["plan", "--help"]);
+  assert.equal(planHelp.status, 0);
+  assert.equal(planHelp.stderr, "");
+  assert.match(planHelp.stdout, /\bpublish\b/);
+
+  const help = invokeExecutable(executable, ["plan", "publish", "--help"]);
+  assert.equal(help.status, 0);
+  assert.equal(help.stderr, "");
+  assert.match(help.stdout, /firstdraft plan publish\n/);
+  assert.match(help.stdout, /waits up to ten minutes/);
+  assert.match(help.stdout, /prints the private GitHub repository URL/);
+
+  const invalid = invokeExecutable(executable, [
+    "plan",
+    "publish",
+    "--canary-private-argument",
+  ]);
+  assertErrorEnvelope(invalid, 2, "invalid_arguments", [
+    "canary-private-argument",
+  ]);
+
+  const unauthenticated = invokeExecutable(
+    executable,
+    ["plan", "publish"],
+    temporaryDirectory,
+    { FIRSTDRAFT_API_TOKEN: "" },
+  );
+  assertErrorEnvelope(unauthenticated, 1, "authentication_required", [
+    publicationApiToken,
+  ]);
+
+  const unpushed = emptyProject("package-publish-unpushed");
+  const initialization = invokeExecutable(
+    executable,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    unpushed,
+  );
+  assert.equal(initialization.status, 0);
+  const notPushed = invokeExecutable(
+    executable,
+    ["plan", "publish"],
+    unpushed,
+    { FIRSTDRAFT_API_TOKEN: publicationApiToken },
+  );
+  assertErrorEnvelope(notPushed, 1, "project_not_pushed", [
+    unpushed,
+    publicationApiToken,
+  ]);
+
+  const changed = emptyProject("package-publish-local-changed");
+  const changedInitialization = invokeExecutable(
+    executable,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    changed,
+  );
+  assert.equal(changedInitialization.status, 0);
+  pinCompileState(changed);
+  writeFileSync(
+    path.join(changed, ".firstdraft", "foundation-plan.json"),
+    '{"canary":"private-local-change"}\n',
+  );
+  const localPlanChanged = invokeExecutable(
+    executable,
+    ["plan", "publish"],
+    changed,
+    { FIRSTDRAFT_API_TOKEN: publicationApiToken },
+  );
+  assertErrorEnvelope(localPlanChanged, 1, "local_plan_changed", [
+    changed,
+    publicationApiToken,
+    "private-local-change",
+  ]);
+}
+
 async function compileProject(runCli, label) {
+  const directory = emptyProject(label);
+  const initialization = await invokeRunner(
+    runCli,
+    [
+      "plan",
+      "init",
+      "--application-key",
+      "oscar_party",
+      "--name",
+      "Oscar Party",
+    ],
+    directory,
+  );
+  assert.equal(initialization.status, 0);
+  pinCompileState(directory);
+  return directory;
+}
+
+async function publishProject(runCli, label) {
   const directory = emptyProject(label);
   const initialization = await invokeRunner(
     runCli,
@@ -1598,6 +2339,90 @@ function compilationResponse(projectId, status, artifact = null) {
       created_at: "2026-07-30T12:00:00.000Z",
       started_at:
         status === "queued" ? null : "2026-07-30T12:00:01.000Z",
+      completed_at: terminal ? "2026-07-30T12:00:02.000Z" : null,
+    },
+  };
+}
+
+function publicationResponse(
+  projectId,
+  status,
+  {
+    publicationIdentifier = publicationId,
+    projectIdentifier = projectId,
+    projectHeadSourceSha256 = headSourceSha256,
+    compilationHeadSourceSha256 = headSourceSha256,
+    repositoryOverrides = {},
+  } = {},
+) {
+  const terminal = [
+    "succeeded",
+    "repository_conflict",
+    "failed",
+    "cancelled",
+  ].includes(status);
+  const compilationStatus =
+    status === "compiling"
+      ? "queued"
+      : status === "cancelled"
+        ? "cancelled"
+        : "succeeded";
+  const hasRepository = [
+    "publishing",
+    "publication_unknown",
+    "succeeded",
+  ].includes(status);
+  const repository = hasRepository
+    ? {
+        id: 987654321,
+        private: true,
+        owner: { id: 123456, login: "octocat", type: "User" },
+        full_name: "octocat/oscar-party",
+        default_branch: "main",
+        html_url: publicationRepositoryUrl,
+        tree_sha: status === "succeeded" ? "5".repeat(40) : null,
+        commit_sha: status === "succeeded" ? "6".repeat(40) : null,
+        ...repositoryOverrides,
+      }
+    : null;
+  const failure =
+    status === "repository_conflict"
+      ? { phase: "repository", code: "repository_exists" }
+      : status === "failed"
+        ? { phase: "publication", code: "git_push_failed" }
+        : null;
+
+  return {
+    project: {
+      id: projectIdentifier,
+      graph_version: 1,
+      head_source_sha256: projectHeadSourceSha256,
+    },
+    compilation: {
+      id: compilationId,
+      analysis_run_id: compilationAnalysisId,
+      graph_version: 1,
+      head_source_sha256: compilationHeadSourceSha256,
+      status: compilationStatus,
+      compiler_release: compilerRelease,
+      target: compilationTarget,
+      artifact:
+        compilationStatus === "succeeded"
+          ? {
+              sha256: "7".repeat(64),
+              manifest_sha256: "8".repeat(64),
+              file_count: 194,
+            }
+          : null,
+    },
+    publication: {
+      id: publicationIdentifier,
+      status,
+      repository,
+      failure,
+      created_at: "2026-07-30T12:00:00.000Z",
+      started_at:
+        status === "compiling" ? null : "2026-07-30T12:00:01.000Z",
       completed_at: terminal ? "2026-07-30T12:00:02.000Z" : null,
     },
   };
@@ -1722,6 +2547,10 @@ function compilationStatusPath(projectId, identifier = compilationId) {
 
 function compilationArtifactPath(projectId) {
   return `${compilationStatusPath(projectId)}/artifact`;
+}
+
+function publicationPath(projectId) {
+  return `${storedApiUrl}/v1/projects/${projectId}/github-publication`;
 }
 
 function sha256(value) {
@@ -1859,6 +2688,7 @@ async function invokeRunner(
     stderr: { write: (value) => (stderr += value) },
     cwd,
     apiUrl: storedApiUrl,
+    apiToken: publicationApiToken,
     ...options,
   });
   return { status, stdout, stderr };
@@ -1873,7 +2703,11 @@ function invokeExecutable(
   return spawnSync(process.execPath, [executable, ...argv], {
     cwd,
     encoding: "utf8",
-    env: { ...cleanEnvironment, ...environment },
+    env: {
+      ...cleanEnvironment,
+      FIRSTDRAFT_API_TOKEN: publicationApiToken,
+      ...environment,
+    },
   });
 }
 
