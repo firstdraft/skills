@@ -32,6 +32,9 @@ authorized.
   are rejected atomically by the importer as described below.
 - The project-scoped server implements bounded AnalysisRun status and Compilation start, status, cancellation, and
   artifact transport for the reviewed CLI contract.
+- A prepared successor contract adds one conditional singleton private GitHub publication per Project. Its
+  zero-flag CLI command performs server-side Compilation, repository provisioning, and exact-tree publication, but
+  no live endpoint or completed staging smoke establishes that joined path yet.
 - First Draft's committed
   [controlled CLI smoke](https://github.com/firstdraft/firstdraft/blob/5847a349599f3cc28e1e0a1a8d8bace6742be7c3/script/compilation_http_cli_smoke)
   reproducibly drives the exact installed CLI through loopback Rails and real Solid Queue to valid analysis, one
@@ -50,19 +53,23 @@ authorized.
 - The field observation is not a reproducible agent evaluation, authenticated operation, representative-user
   evidence, a published release, physical-device or iPad proof, deployment, or production evidence. Neither it nor
   the controlled smoke widens the admitted graph or proves cancellation.
-- There is no Plan GET or pull operation, complete semantic analyzer, Publish action, arbitrary application
-  generation, deployment workflow, or support for the rest of the Foundation Plan.
+- There is no Plan GET or pull operation, complete semantic analyzer, proven live Publish path, arbitrary
+  application generation, deployment workflow, or support for the rest of the Foundation Plan.
 
 The bundled schema was copied from `docs/architecture/design/foundation-plan.schema.json` at landed server
 activation revision `35ad070beb36c66dc6480f36b33767caaed160a9` and has SHA-256
 `1954e5c95d6e6621578202ad4452686b56c150256ffcd75935078d9f4247c568`. That revision is exact contract provenance,
 not release or execution evidence.
 
-The CLI contract fixtures and check use landed revision `121272cd592055354d09a4fe90e55c3ca002770c` as contract
-provenance rather than release or execution evidence. Its reviewed JavaScript-source runtime digest is
-`205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. The prepared CLI exposes `plan init`,
-`plan subject-id`, `plan push`, `plan status`, and `plan compile`. Check commands rather than inferring compatibility
-from an unreleased version number.
+The bounded local Compilation evidence used reviewed CLI revision
+`121272cd592055354d09a4fe90e55c3ca002770c`, with JavaScript-source runtime digest
+`205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. The current contract fixtures and check use
+merged successor revision `2d792f20424ae4fcc312d05be6201efb86b1f93b`, with independently reproduced JavaScript-source runtime digest
+`7157b01e556d1c8a9eadf591995e251fe96b703bd612d15d991a304cea794e37`, as contract provenance rather than release
+or execution evidence. That successor exposes `plan init`, `plan subject-id`, `plan push`, `plan status`, `plan
+compile`, and the prepared zero-flag `plan publish`. Check commands rather than inferring compatibility from an
+unreleased version number. Publication capability remains prepared rather than execution evidence until the server
+endpoint and joined staging smoke exist.
 
 The activated server projections name analyzer release `foundation-plan-rails/application-2026-08` and compiler
 release `foundation-plan-rails/compiler-application-2026-08`. These exact names are contract provenance; the dated

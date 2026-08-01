@@ -1,4 +1,4 @@
 interface:
   display_name: "Create a Full-Stack App with First Draft"
-  short_description: "Experimental First Draft authoring and local compilation"
-  default_prompt: "Use $create-full-stack-app to help me author and review an experimental First Draft Foundation Plan. Keep it local unless I explicitly approve sending it for bounded analysis, and require separate approval before compiling it into a named local output path."
+  short_description: "Experimental First Draft authoring and prepared publication"
+  default_prompt: "Use $create-full-stack-app to author an experimental First Draft Foundation Plan, send it only when I ask, and use its prepared unreleased publication path exactly once after valid analysis only when I explicitly ask First Draft to create or publish the app."

@@ -22,10 +22,14 @@ const foundationPlanSchemaDigest =
   "1954e5c95d6e6621578202ad4452686b56c150256ffcd75935078d9f4247c568";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
-const planCompileCliBaseline =
+const compilationEvidenceCliBaseline =
   "121272cd592055354d09a4fe90e55c3ca002770c";
-const planCompileCliRuntimeDigest =
+const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
+const preparedCliBaseline =
+  "2d792f20424ae4fcc312d05be6201efb86b1f93b";
+const preparedCliRuntimeDigest =
+  "7157b01e556d1c8a9eadf591995e251fe96b703bd612d15d991a304cea794e37";
 const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
 const foundationIosCoreArchiveDigest =
@@ -41,6 +45,7 @@ const planInitErrorCodes = [
   "local_initialization_failed",
 ];
 const planPushErrorCodes = [
+  "authentication_required",
   "invalid_arguments",
   "invalid_configuration",
   "local_input_unreadable",
@@ -49,6 +54,7 @@ const planPushErrorCodes = [
   "local_state_not_saved",
 ];
 const planStatusErrorCodes = [
+  "authentication_required",
   "invalid_arguments",
   "local_input_unreadable",
   "project_not_pushed",
@@ -59,6 +65,7 @@ const planStatusErrorCodes = [
   "wait_timed_out",
 ];
 const planCompileErrorCodes = [
+  "authentication_required",
   "invalid_arguments",
   "local_input_unreadable",
   "invalid_configuration",
@@ -75,6 +82,33 @@ const planCompileErrorCodes = [
   "artifact_unavailable",
   "invalid_artifact",
   "materialization_failed",
+];
+const planPublishStatuses = [
+  "compiling",
+  "provisioning_repository",
+  "repository_unknown",
+  "publishing",
+  "publication_unknown",
+  "succeeded",
+  "repository_conflict",
+  "failed",
+  "cancelled",
+];
+const planPublishErrorCodes = [
+  "authentication_required",
+  "invalid_arguments",
+  "local_input_unreadable",
+  "invalid_configuration",
+  "project_not_pushed",
+  "local_plan_changed",
+  "request_outcome_unknown",
+  "publication_start_rejected",
+  "publication_status_unavailable",
+  "invalid_publication_status",
+  "publication_changed",
+  "publication_wait_timed_out",
+  "publication_failed",
+  "publication_cancelled",
 ];
 const supportedScalarFieldTypes = [
   "boolean",
@@ -134,7 +168,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
   assertRevisionTokens(readme, [
     foundationPlanServerBaseline,
-    planCompileCliBaseline,
+    compilationEvidenceCliBaseline,
+    preparedCliBaseline,
     foundationIosCoreRevision,
     controlledApplicationSmokeBaseline,
     freshAgentEvidenceBaseline,
@@ -157,7 +192,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   );
   assertRevisionTokens(references.join("\n"), [
     foundationPlanServerBaseline,
-    planCompileCliBaseline,
+    compilationEvidenceCliBaseline,
+    preparedCliBaseline,
     foundationIosCoreRevision,
     controlledApplicationSmokeBaseline,
     freshAgentEvidenceBaseline,
@@ -180,12 +216,12 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   const workflow = (
     await readFile(path.join(repository, ".github", "workflows", "ci.yml"), "utf8")
   ).replace(/^.*uses:\s+\S+@[0-9a-f]{40}.*$/gm, "");
-  assertRevisionTokens(workflow, [planCompileCliBaseline]);
+  assertRevisionTokens(workflow, [preparedCliBaseline]);
   const contractCheck = await readFile(
     path.join(repository, "script", "check-cli-contract.mjs"),
     "utf8",
   );
-  assertRevisionTokens(contractCheck, [planCompileCliBaseline]);
+  assertRevisionTokens(contractCheck, [preparedCliBaseline]);
   assert(
     contractCheck.includes(
       `const compilerRelease = "${foundationPlanCompilerRelease}";`,
@@ -204,7 +240,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     await readFile(path.join(repository, "test", "repository.test.mjs"), "utf8"),
     [
       foundationPlanServerBaseline,
-      planCompileCliBaseline,
+      compilationEvidenceCliBaseline,
+      preparedCliBaseline,
       foundationIosCoreRevision,
       controlledApplicationSmokeBaseline,
       freshAgentEvidenceBaseline,
@@ -237,7 +274,7 @@ test("installable Skills follow the portable repository profile", async () => {
   }
 });
 
-test("CI checks the exact prepared successor CLI contract", async () => {
+test("CI checks a permanent exact prepared successor CLI contract", async () => {
   const workflow = await readFile(
     path.join(repository, ".github", "workflows", "ci.yml"),
     "utf8",
@@ -249,8 +286,18 @@ test("CI checks the exact prepared successor CLI contract", async () => {
   assert.match(
     workflow,
     new RegExp(
-      `repository: firstdraft/cli\\s+ref: ${planCompileCliBaseline}`,
+      `repository: firstdraft/cli\\s+ref: main\\s+fetch-depth: 0`,
     ),
+  );
+  assert.match(
+    workflow,
+    new RegExp(
+      `merge-base --is-ancestor ${preparedCliBaseline} HEAD`,
+    ),
+  );
+  assert.match(
+    workflow,
+    new RegExp(`checkout --detach ${preparedCliBaseline}`),
   );
   assert.match(
     workflow,
@@ -258,10 +305,10 @@ test("CI checks the exact prepared successor CLI contract", async () => {
   );
   assert(
     contractCheck.includes(
-      `const cliBaseline = "${planCompileCliBaseline}";`,
+      `const cliBaseline = "${preparedCliBaseline}";`,
     ),
   );
-  assert(contractCheck.includes(planCompileCliRuntimeDigest));
+  assert(contractCheck.includes(preparedCliRuntimeDigest));
   assert.match(
     contractCheck,
     /ios\/FoundationApp\/Generated\/ApplicationDefinition\.swift[\s\S]*?ios\/bin\/ios[\s\S]*?mode: 0o755/,
@@ -275,6 +322,44 @@ test("CI checks the exact prepared successor CLI contract", async () => {
     /MAX_ARTIFACT_BYTES[\s\S]*?16 \* 1024 \* 1024/,
   );
   assert.match(contractCheck, /unsupported-graph-analysis\.json/);
+  assert.match(
+    contractCheck,
+    /\["plan", "publish"\][\s\S]*?publicationPath\(projectId\)[\s\S]*?firstdraft plan publish/,
+  );
+  assert.match(
+    contractCheck,
+    /provisioning_repository[\s\S]*?repository_unknown[\s\S]*?publishing[\s\S]*?publication_unknown[\s\S]*?repository_conflict/,
+  );
+  for (const code of planPublishErrorCodes) {
+    assert(
+      contractCheck.includes(`"${code}"`),
+      `CLI contract check: missing Publication error ${code}`,
+    );
+  }
+  assert.match(
+    contractCheck,
+    /authorization[\s\S]*?Bearer \$\{publicationApiToken\}/,
+  );
+  assert.match(
+    contractCheck,
+    /projectHeadSourceSha256 = headSourceSha256[\s\S]*?compilationHeadSourceSha256 = headSourceSha256[\s\S]*?project:[\s\S]*?head_source_sha256: projectHeadSourceSha256[\s\S]*?compilation:[\s\S]*?head_source_sha256: compilationHeadSourceSha256[\s\S]*?publication:/,
+  );
+  assert.match(
+    contractCheck,
+    /runner-publish-replay[\s\S]*?publicationResponse\(replayProjectId, "succeeded"\)[\s\S]*?200/,
+  );
+  assert.match(
+    contractCheck,
+    /publication_status_unavailable[\s\S]*?invalidProjectionCases[\s\S]*?private: false[\s\S]*?type: "Organization"[\s\S]*?projectIdentifier: mismatchedPublicationProjectId[\s\S]*?projectHeadSourceSha256[\s\S]*?compilationHeadSourceSha256/,
+  );
+  assert.match(
+    contractCheck,
+    /runner-publish-mismatched-reconciliation[\s\S]*?request_outcome_unknown/,
+  );
+  assert.match(
+    contractCheck,
+    /node_modules[\s\S]*?@firstdraft\.com[\s\S]*?cli[\s\S]*?bin[\s\S]*?firstdraft\.js/,
+  );
 });
 
 test("behavioral eval cases are well-formed and reference real fixtures", async () => {
@@ -843,8 +928,10 @@ test("complete examples and eval Plans validate against the bundled exact schema
   );
   assert(referenceSource.includes(foundationPlanSchemaDigest));
   assert(referenceSource.includes(foundationPlanServerBaseline));
-  assert(referenceSource.includes(planCompileCliBaseline));
-  assert(referenceSource.includes(planCompileCliRuntimeDigest));
+  assert(referenceSource.includes(compilationEvidenceCliBaseline));
+  assert(referenceSource.includes(compilationEvidenceCliRuntimeDigest));
+  assert(referenceSource.includes(preparedCliBaseline));
+  assert(referenceSource.includes(preparedCliRuntimeDigest));
   assert(referenceSource.includes(foundationIosCoreRevision));
   assert(referenceSource.includes(foundationIosCoreArchiveDigest));
   assert.match(
@@ -1176,10 +1263,10 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     );
   }
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
-  assert(readme.includes(planCompileCliBaseline));
+  assert(readme.includes(preparedCliBaseline));
   assert(
     readme.includes(
-      "| `create-full-stack-app` | Author, analyze, and locally compile an experimental First Draft Foundation Plan | Experimental scaffold |",
+      "| `create-full-stack-app` | Author, analyze, and prepare local Compilation or private GitHub publication | Experimental scaffold |",
     ),
   );
   assert.match(readme, /state-placeholder\.txt.*deliberately unreadable/s);
@@ -1197,11 +1284,11 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert.match(
     readme,
-    /Before `push-supported-enum-plan` or\s+`repair-well-founded-analysis-issue`, replace it with `\.firstdraft\/state\.json` generated by a fresh\s+`firstdraft plan init` using the exact landed CLI in a scratch directory/,
+    /Before `push-supported-enum-plan` or\s+`repair-well-founded-analysis-issue`, replace it with `\.firstdraft\/state\.json` generated by a fresh\s+`firstdraft plan init` using the exact prepared CLI revision above in a scratch directory/,
   );
   assert.match(
     readme,
-    /`compile-after-explicit-approval` is a server-backed Compilation eval[\s\S]*?Start a fresh compatible local server at the\s+exact revision above and a fresh queue[\s\S]*?replace its Plan with\s+`application-intent\.foundation-plan\.json`, push, and wait for `analysis\.status: "valid"`[\s\S]*?replace the eval's synthetic state fixture with that same Project's resulting post-push\s+`\.firstdraft\/state\.json`[\s\S]*?Ensure `\.\/generated-movies` is absent beneath the scratch Project[\s\S]*?explicitly approve that\s+path, and compile once/,
+    /`compile-after-explicit-approval` is a server-backed Compilation eval[\s\S]*?exact landed server revision named\s+above with a fresh queue[\s\S]*?exact prepared CLI revision[\s\S]*?replace its Plan with\s+`application-intent\.foundation-plan\.json`, push, and wait for `analysis\.status: "valid"`[\s\S]*?replace the eval's synthetic state fixture with that same Project's resulting post-push\s+`\.firstdraft\/state\.json`[\s\S]*?Ensure `\.\/generated-movies` is absent beneath the scratch Project[\s\S]*?explicitly approve that\s+path, and compile once/,
   );
   assert.match(
     readme,
@@ -1370,7 +1457,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
   const pushSection = skillSource.match(
-    /## Push and revise([\s\S]*?)## Hand off for review/,
+    /## Push and revise([\s\S]*?)## Publish an analyzer-valid Plan/,
   );
   assert(pushSection, "SKILL.md: missing Push and revise section");
   assert.match(
@@ -1431,7 +1518,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
 
   const statusReference = recoveryReference.match(
-    /## Whole-graph analysis status([\s\S]*?)## Compilation and local materialization/,
+    /## Whole-graph analysis status([\s\S]*?)## Singleton GitHub publication/,
   );
   assert(statusReference, "diagnostics reference: missing analysis status boundary");
   assert.match(
@@ -1468,7 +1555,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     statusReference[1],
-    /`valid` is the gate that Compilation requires[\s\S]*?does not authorize the separate Compilation action[\s\S]*?does not\s+prove that an artifact can be produced/,
+    /`valid` is the gate that Publication and local Compilation require[\s\S]*?authorizes neither action by itself[\s\S]*?does\s+not prove that an artifact or repository can be produced/,
   );
   assert.match(
     statusReference[1],
@@ -1488,7 +1575,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     readme,
-    /exact landed server revision[\s\S]*?activates analyzer\s+`foundation-plan-rails\/application-2026-08` and compiler[\s\S]*?Start a fresh compatible local server at the\s+exact revision above and a fresh queue/,
+    /exact landed server revision[\s\S]*?activates analyzer\s+`foundation-plan-rails\/application-2026-08` and compiler[\s\S]*?Start the exact landed server revision named\s+above with a fresh queue/,
   );
   assert(
     readme.includes(
@@ -1502,8 +1589,10 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert(readme.includes(freshAgentSkillBaseline));
   assert(readme.includes(foundationPlanServerBaseline));
-  assert(readme.includes(planCompileCliBaseline));
-  assert(readme.includes(planCompileCliRuntimeDigest));
+  assert(readme.includes(compilationEvidenceCliBaseline));
+  assert(readme.includes(compilationEvidenceCliRuntimeDigest));
+  assert(readme.includes(preparedCliBaseline));
+  assert(readme.includes(preparedCliRuntimeDigest));
   assert(readme.includes(foundationIosCoreRevision));
   assert(readme.includes(foundationIosCoreArchiveDigest));
   assert.match(
@@ -1553,12 +1642,12 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     assert.match(source, /not a reproducible agent\s+eval(?:uation)?/);
     assert.match(
       source,
-      /no Plan GET or pull operation,\s+complete semantic analyzer,\s+Publish action, arbitrary\s+application\s+generation,\s+deployment workflow/,
+      /no Plan GET or pull operation,\s+complete semantic analyzer,[\s\S]*?arbitrary\s+application generation, deployment workflow/,
     );
   }
   assert.match(
     skillEvidence[1],
-    /Both paths\s+remain local, unreleased, unpublished, unauthenticated, and bounded[\s\S]*?do not establish cancellation, a physical\s+iPhone, iPad, deployment, or production readiness/,
+    /Both proven\s+paths remain local, unreleased, unpublished, unauthenticated, and bounded[\s\S]*?do not establish cancellation, a\s+physical iPhone, iPad, deployment, or production readiness/,
   );
   assert.match(
     foundationPlanEvidence[1],
@@ -1969,6 +2058,215 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   }
 });
 
+test("Publication guidance follows the prepared singleton CLI contract", async () => {
+  const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
+  const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
+  const skillSource = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
+  const recoveryReference = await readFile(
+    path.join(skillDirectory, "references", "diagnostics-and-recovery.md"),
+    "utf8",
+  );
+  const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  const cases = JSON.parse(
+    await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
+  ).cases;
+  const publishSection = skillSource.match(
+    /## Publish an analyzer-valid Plan([\s\S]*?)## Compile locally for development/,
+  );
+  assert(publishSection, "SKILL.md: missing Publication section");
+  assert.match(skillSource, /Before private GitHub publication, also require `plan publish`/);
+  assert.match(
+    publishSection[1],
+    /explicit request to create or publish the app with First Draft authorizes exactly one singleton private GitHub\s+publication[\s\S]*?terminal\s+`valid` analysis[\s\S]*?no subsequent local Plan edit/,
+  );
+  assert.match(
+    publishSection[1],
+    /request only to author, review, send, validate, analyze, or\s+repair a Plan stops at analysis and never authorizes Publish/,
+  );
+  assert.match(
+    skillSource,
+    /Run `firstdraft plan push` only when the\s+user explicitly asks to send the Plan, obtain First Draft diagnostics, asks First Draft to create or publish the\s+app, or approves that action and its destination/,
+  );
+  assert.match(
+    skillSource,
+    /original explicit request for First Draft to create or publish the app already authorizes one Publish[\s\S]*?diagnostics-only request does not/,
+  );
+  assert.match(
+    publishSection[1],
+    /firstdraft plan publish/,
+  );
+  assert.match(
+    publishSection[1],
+    /Do not pass flags, run `plan compile` first, make a direct request, inspect private state, or wrap the command in an\s+automatic retry/,
+  );
+  assert.match(
+    publishSection[1],
+    /one conditional singleton PUT[\s\S]*?one bounded reconciliation read after an ambiguous PUT[\s\S]*?sequential status polling for up to ten minutes/,
+  );
+  assert.match(
+    publishSection[1],
+    /`200` response\s+can be a safe replay of the same Project's singleton[\s\S]*?not authorization for another publication/,
+  );
+  for (const status of planPublishStatuses) {
+    assert(
+      publishSection[1].includes(`\`${status}\``),
+      `SKILL.md: missing Publication status ${status}`,
+    );
+  }
+  for (const code of planPublishErrorCodes) {
+    assert(
+      publishSection[1].includes(`\`${code}\``),
+      `SKILL.md: missing plan publish branch for ${code}`,
+    );
+  }
+  assert.match(
+    publishSection[1],
+    /standard output is only the validated URL of the private personal-account GitHub repository/,
+  );
+  assert.match(
+    publishSection[1],
+    /Project's singleton publication is terminal[\s\S]*?Another attempt means explicitly forking to a new Project/,
+  );
+  assert.match(
+    publishSection[1],
+    /current CLI has no fork\s+command[\s\S]*?stop for the user to choose that separate workflow/,
+  );
+  assert.match(
+    publishSection[1],
+    /`request_outcome_unknown`[\s\S]*?Do not retry automatically[\s\S]*?fresh user request may run the same zero-flag command to reconcile the same singleton[\s\S]*?never\s+authorizes creating a second Publication/,
+  );
+  assert.match(
+    publishSection[1],
+    /`authentication_required`[\s\S]*?token may have been absent before any request[\s\S]*?singleton PUT was attempted[\s\S]*?fresh invocation after the token is replaced either creates or safely replays the same singleton[\s\S]*?cannot create a second Publication/,
+  );
+  assert.match(
+    publishSection[1],
+    /`publication_status_unavailable`[\s\S]*?singleton may still be running and its outcome is unknown[\s\S]*?`invalid_publication_status`[\s\S]*?singleton may still be running[\s\S]*?do not call the Publication failed, succeeded, or published[\s\S]*?same zero-flag command to reconcile the same singleton/,
+  );
+
+  const referenceSection = recoveryReference.match(
+    /## Singleton GitHub publication([\s\S]*?)## Compilation and local materialization/,
+  );
+  assert(referenceSection, "diagnostics reference: missing Publication boundary");
+  assert.match(
+    referenceSection[1],
+    /prepared, unreleased contract[\s\S]*?no live endpoint or completed staging smoke[\s\S]*?established local Compilation evidence does not prove Publication/,
+  );
+  assert.match(
+    referenceSection[1],
+    /`PUT \/v1\/projects\/:project_id\/github-publication`[\s\S]*?reconciles an ambiguous PUT with one singleton GET[\s\S]*?never auto-repeats the mutation/,
+  );
+  assert.match(
+    referenceSection[1],
+    /validated `201`\s+creates the singleton[\s\S]*?validated `200` safely replays it/,
+  );
+  assert.deepEqual(
+    [...referenceSection[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
+      .map(([, value]) => value)
+      .filter((value) => value !== "error"),
+    [...planPublishStatuses, ...planPublishErrorCodes],
+  );
+  assert.match(
+    referenceSection[1],
+    /terminal retry requires an explicit\s+fork to a new Project[\s\S]*?Never invoke Publish, push a replacement Plan, or start another Compilation on the consumed\s+Project/,
+  );
+  assert.match(
+    referenceSection[1],
+    /A fresh user\s+request may invoke the same zero-flag command to reconcile the same singleton[\s\S]*?never authorizes another\s+Publication/,
+  );
+  assert.match(
+    referenceSection[1],
+    /`authentication_required` is not terminal[\s\S]*?token may have been absent before any request[\s\S]*?singleton PUT was attempted[\s\S]*?create or\s+safely replay the same singleton/,
+  );
+  assert.match(
+    referenceSection[1],
+    /`publication_status_unavailable` and `invalid_publication_status`[\s\S]*?outcome unknown and\s+possibly nonterminal[\s\S]*?Do not call it failed, succeeded, or published[\s\S]*?same\s+zero-flag command to reconcile the same singleton/,
+  );
+  assert.match(
+    referenceSection[1],
+    /current CLI has no fork command[\s\S]*?separate, user-chosen project directory[\s\S]*?fresh `plan init`[\s\S]*?preserving subject UUIDs[\s\S]*?fresh\s+explicit user request/,
+  );
+
+  assert.match(
+    readme,
+    /combined CLI, Skill, and service workflow remains unreleased[\s\S]*?prepared zero-flag `plan publish` contract[\s\S]*?no live endpoint or completed\s+staging smoke/,
+  );
+  assert.match(
+    readme,
+    /publication evals are behavioral contract inputs only[\s\S]*?diagnostics-only\s+requests stop at analysis[\s\S]*?terminal Publication requires an explicit fork to a new Project/,
+  );
+
+  const evaluation = (id) => {
+    const value = cases.find((candidate) => candidate.id === id);
+    assert(value, `missing Publication eval: ${id}`);
+    assert.equal(value.should_trigger, true);
+    return value;
+  };
+  const hasExpectation = (value, ...fragments) => {
+    assert(
+      value.expectations.some((expectation) =>
+        fragments.every((fragment) => expectation.includes(fragment)),
+      ),
+      `${value.id}: missing expectation containing ${fragments.join(", ")}`,
+    );
+  };
+
+  const approved = evaluation("publish-after-explicit-create-request");
+  assert.match(approved.prompt, /create and publish/);
+  assert.match(approved.prompt, /Send this candidate, wait for its whole-graph analysis/);
+  hasExpectation(approved, "exactly one singleton private GitHub Publication");
+  hasExpectation(approved, "firstdraft plan publish exactly once with no flags");
+  hasExpectation(approved, "Does not run plan compile");
+  assert.equal(
+    approved.artifacts.find(({ stage_as: stageAs }) =>
+      stageAs === ".firstdraft/state.json"
+    ).path,
+    "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+  );
+
+  const resumed = evaluation("publish-resumed-session-without-evidence");
+  hasExpectation(resumed, "does not establish the current-workflow push");
+  hasExpectation(resumed, "Stops without running plan publish, plan push, plan status, or plan compile");
+
+  const diagnosticsOnly = evaluation("compile-requires-separate-approval");
+  hasExpectation(diagnosticsOnly, "Does not run plan publish or plan compile");
+
+  const blocked = evaluation("publish-blocked-by-analysis-issues");
+  hasExpectation(blocked, "does not bypass", "valid whole-graph analysis");
+  hasExpectation(blocked, "instead of running plan publish or plan compile");
+
+  const missing = evaluation("publish-command-missing");
+  hasExpectation(missing, "missing plan publish command");
+  hasExpectation(missing, "Does not approximate Publication", "direct requests or GitHub calls");
+
+  const success = evaluation("report-successful-private-publication");
+  hasExpectation(success, "validated private personal-account repository URL");
+  hasExpectation(success, "deployment is unsupported in this slice");
+  hasExpectation(success, "not public, deployed, production-ready, a completed staging smoke");
+
+  const authentication = evaluation("publish-authentication-required-stop");
+  hasExpectation(authentication, "Branches on authentication_required");
+  hasExpectation(authentication, "configure or replace FIRSTDRAFT_API_TOKEN outside the conversation");
+  hasExpectation(authentication, "Does not retry plan publish automatically");
+
+  const ambiguous = evaluation("publish-ambiguous-outcome-stop");
+  hasExpectation(ambiguous, "singleton PUT may have succeeded");
+  hasExpectation(ambiguous, "Stops instead of automatically rerunning plan publish");
+
+  const terminal = evaluation("publish-terminal-conflict-requires-fork");
+  hasExpectation(terminal, "repository_conflict as terminal");
+  hasExpectation(terminal, "explicitly fork to a new Project");
+
+  const timeout = evaluation("publish-wait-timeout-stop");
+  hasExpectation(timeout, "publication_unknown current projection as reportable context only");
+  hasExpectation(timeout, "Stops instead of polling GitHub or First Draft directly");
+
+  const unavailable = evaluation("publish-status-unavailable-stop");
+  hasExpectation(unavailable, "Branches on publication_status_unavailable");
+  hasExpectation(unavailable, "singleton may still be running", "outcome is unknown");
+  hasExpectation(unavailable, "same zero-flag command only to reconcile the same singleton");
+});
+
 test("Compilation guidance follows the pinned CLI contract", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
   const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
@@ -1982,16 +2280,16 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
   const compileSection = skillSource.match(
-    /## Compile an analyzer-valid Plan([\s\S]*?)## Hand off for review/,
+    /## Compile locally for development([\s\S]*?)## Hand off for review/,
   );
   assert(compileSection, "SKILL.md: missing Compilation section");
   assert.match(
     skillSource,
-    /Before Compilation, also require `plan compile`/,
+    /Before local Compilation, also require `plan compile`/,
   );
   assert.match(
     compileSection[1],
-    /distinct consequential action[\s\S]*?local Plan has not changed since that accepted candidate[\s\S]*?explicitly approves\s+Compilation to a named output path/,
+    /separate development path, not a prerequisite or fallback for Publish[\s\S]*?local Plan has not changed since that accepted candidate[\s\S]*?explicitly approves\s+Compilation to a named output path/,
   );
   assert.match(
     compileSection[1],
@@ -2087,8 +2385,8 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
     referenceSection[1],
     /sole recovery that can lead to another invocation[\s\S]*?`invalid_output_path`[\s\S]*?made no network request[\s\S]*?explicitly approve a different absent path/,
   );
-  assert(readme.includes(planCompileCliBaseline));
-  assert(referenceSection[1].includes(planCompileCliBaseline));
+  assert(readme.includes(preparedCliBaseline));
+  assert(referenceSection[1].includes(preparedCliBaseline));
   assert.match(
     readme,
     /prepared compiler contract admits independent Entities using supported scalar Fields, the exact public-index\s+Scaffold, optional semantic Entity icons, and selected iPhone output under `ios\/`/,
@@ -2112,7 +2410,7 @@ test("Compilation guidance follows the pinned CLI contract", async () => {
   const noApproval = evaluation("compile-requires-separate-approval");
   assert.match(noApproval.prompt, /have not asked you to compile/);
   hasExpectation(noApproval, "does not authorize Compilation");
-  hasExpectation(noApproval, "Does not run plan compile");
+  hasExpectation(noApproval, "Does not run", "plan compile");
   hasExpectation(noApproval, "waits for explicit Compilation approval");
 
   const approved = evaluation("compile-after-explicit-approval");
@@ -2239,6 +2537,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     "stale-writer-conflict",
     "ambiguous-network-outcome",
     "local-state-not-saved",
+    "authentication-required-stop",
     "invalid-push-arguments",
     "invalid-push-configuration",
     "local-input-unreadable",
@@ -2284,7 +2583,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     pushSection[1],
     /Invoke it once for each candidate attempt[\s\S]*?never wrap the command in an automatic retry/,
   );
-  assert(recoveryReference.includes(planCompileCliBaseline));
+  assert(recoveryReference.includes(preparedCliBaseline));
   const pushReference = recoveryReference.match(
     /## Plan push error boundary([\s\S]*?)## Verified success/,
   );
@@ -2305,7 +2604,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   );
   assert.match(
     recoveryReference,
-    /does not produce one parseable JSON object with one of these six `error` values[\s\S]*?also unknown/,
+    /does not produce one parseable JSON object with one of these seven `error` values[\s\S]*?also unknown/,
   );
   assert.doesNotMatch(
     recoveryReference,
@@ -2313,6 +2612,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   );
 
   const evaluationsByError = {
+    authentication_required: "authentication-required-stop",
     invalid_arguments: "invalid-push-arguments",
     invalid_configuration: "invalid-push-configuration",
     local_input_unreadable: "local-input-unreadable",
@@ -2334,6 +2634,10 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   assert.doesNotMatch(
     recoveryReference,
     /Could not read the local First Draft Plan or state\. No network request was made\./,
+  );
+  assert.match(
+    recoveryReference,
+    /Never ask the user to paste `FIRSTDRAFT_API_TOKEN`[\s\S]*?read, echo, log, or print it[\s\S]*?pass it inline on a command line[\s\S]*?persist it in project files[\s\S]*?expose it in output/,
   );
 
   const staleWriterEvaluation = cases.find(
@@ -2547,7 +2851,7 @@ async function checkSkill(skillName) {
   assert(metadata.description.includes("First Draft Foundation Plan"));
   assert(
     metadata.description.includes(
-      "prepared narrow Rails web-and-iPhone Compilation path through an unreleased CLI",
+      "prepared narrow Rails web-and-iPhone local Compilation or singleton private GitHub publication paths through an unreleased CLI",
     ),
   );
   assert(!metadata.description.includes("end-to-end journey"));
@@ -2592,12 +2896,12 @@ async function checkSkill(skillName) {
   assert(shortDescription.length >= 25 && shortDescription.length <= 64);
   assert.equal(
     shortDescription,
-    "Experimental First Draft authoring and local compilation",
+    "Experimental First Draft authoring and prepared publication",
   );
   assert(defaultPrompt.includes(`$${skillName}`));
   assert.equal(
     defaultPrompt,
-    `Use $${skillName} to help me author and review an experimental First Draft Foundation Plan. Keep it local unless I explicitly approve sending it for bounded analysis, and require separate approval before compiling it into a named local output path.`,
+    `Use $${skillName} to author an experimental First Draft Foundation Plan, send it only when I ask, and use its prepared unreleased publication path exactly once after valid analysis only when I explicitly ask First Draft to create or publish the app.`,
   );
 }
 

@@ -30,7 +30,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: firstdraft/cli
-          ref: 121272cd592055354d09a4fe90e55c3ca002770c
+          ref: main
+          fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 2d792f20424ae4fcc312d05be6201efb86b1f93b HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach 2d792f20424ae4fcc312d05be6201efb86b1f93b
       - run: node script/check-cli-contract.mjs tmp/firstdraft-cli

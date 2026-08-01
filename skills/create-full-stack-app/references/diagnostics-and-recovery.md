@@ -5,7 +5,7 @@ unverified response.
 
 ## Local initialization error boundary
 
-The reviewed successor CLI contract at `121272cd592055354d09a4fe90e55c3ca002770c` writes exactly one JSON object to
+The reviewed, merged successor CLI contract at `2d792f20424ae4fcc312d05be6201efb86b1f93b` writes exactly one JSON object to
 standard error for every handled `plan init` failure. Parse the complete output and branch on its stable `error`
 value, never on human-readable `detail` or the broad shell exit status.
 
@@ -32,6 +32,7 @@ exit status as a recovery discriminator.
 
 | `error`                   | Request state                                     | Recovery action                                                                               |
 | ------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `authentication_required` | No authenticated request can proceed.             | Configure or replace the token outside the conversation; continue only with fresh direction. |
 | `invalid_arguments`       | No request was made.                              | Correct only a well-understood invocation mistake.                                            |
 | `invalid_configuration`   | No request was made.                              | Correct only a well-understood API-origin or pinned-state mismatch.                           |
 | `local_input_unreadable`  | No request was made.                              | Stop and preserve the unreadable Plan or state for manual recovery.                           |
@@ -45,7 +46,12 @@ request failed. `server_rejected` contains a validated status and may contain a 
 Failure output does not expose command arguments, local Plan bytes, raw network errors, or unvalidated response
 bodies. Optional response fields can be absent; do not infer them.
 
-If a failed command does not produce one parseable JSON object with one of these six `error` values, its outcome is
+Never ask the user to paste `FIRSTDRAFT_API_TOKEN`; read, echo, log, or print it; pass it inline on a command line;
+persist it in project files; or expose it in output.
+After `authentication_required`, a fresh invocation is allowed only after the user configures or replaces the token
+outside the conversation and asks to continue.
+
+If a failed command does not produce one parseable JSON object with one of these seven `error` values, its outcome is
 also unknown. Stop, preserve the local files, and report the failure without exposing private state. Do not retry,
 reinitialize, or bypass the CLI.
 
@@ -93,6 +99,7 @@ Handled `plan status --wait` failures write one JSON object to standard error. R
 
 | `error`                   | Meaning                                                              |
 | ------------------------- | -------------------------------------------------------------------- |
+| `authentication_required` | The token is absent or the server returned a validated auth rejection. |
 | `invalid_arguments`       | The fixed invocation was not accepted by the installed CLI.          |
 | `local_input_unreadable`  | Required local private state is absent, damaged, or unreadable.       |
 | `project_not_pushed`      | Local state has no successfully pinned remote Project.                |
@@ -115,12 +122,94 @@ Every error in this table is a stop condition for the Skill. Do not retry, switc
 repeat at the protocol level, the Skill stops so the user can decide whether to continue after an operational or
 concurrency boundary. Unknown, missing, malformed, mixed, or additional output also fails closed.
 
-`valid` is the gate that Compilation requires. It does not authorize the separate Compilation action and does not
-prove that an artifact can be produced.
+`valid` is the gate that Publication and local Compilation require. It authorizes neither action by itself and does
+not prove that an artifact or repository can be produced.
+
+## Singleton GitHub publication
+
+The prepared successor CLI at `2d792f20424ae4fcc312d05be6201efb86b1f93b` adds `firstdraft plan publish`, a
+zero-flag command for one private personal-account
+GitHub repository. This is a prepared, unreleased contract: no live endpoint or completed staging smoke establishes
+the joined server-to-GitHub path yet. The established local Compilation evidence does not prove Publication.
+
+The command requires the strong Plan ETag saved by the last successful push and verifies that the current local Plan
+bytes still match it before any request. It sends one conditional
+`PUT /v1/projects/:project_id/github-publication`, reconciles an ambiguous PUT with one singleton GET, then polls
+that same lifecycle sequentially for at most ten minutes. It never auto-repeats the mutation. A validated `201`
+creates the singleton; a validated `200` safely replays it. On success, standard output is exactly one validated
+`https://github.com/<personal-owner>/<repository>` URL followed by a newline.
+
+Run it only when the current workflow observed a successful push and terminal `valid` analysis, no later local edit
+occurred, and the user explicitly asked First Draft to create or publish the app. That request authorizes exactly one
+singleton private publication, including its server-side Compilation. A diagnostics-only request stops at analysis.
+Do not run local `plan compile` before or instead of Publish.
+
+The outer lifecycle is closed:
+
+| `publication.status`      | Meaning                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| `compiling`               | The pinned server-side Compilation is queued or running.                     |
+| `provisioning_repository` | Compilation succeeded and the private repository is being created.          |
+| `repository_unknown`      | Repository creation outcome is being reconciled.                            |
+| `publishing`              | The exact compiled tree is being published to the private repository.       |
+| `publication_unknown`     | Git publication outcome is being reconciled.                                |
+| `succeeded`               | The private repository and exact root commit were verified.                 |
+| `repository_conflict`     | The intended repository could not be used without unsafe replacement.       |
+| `failed`                  | A bounded Compilation, repository, or publication phase failed terminally.  |
+| `cancelled`               | The singleton lifecycle was cancelled terminally.                           |
+
+`succeeded`, `repository_conflict`, `failed`, and `cancelled` are terminal. A terminal retry requires an explicit
+fork to a new Project. Never invoke Publish, push a replacement Plan, or start another Compilation on the consumed
+Project merely to try again.
+
+Handled failures write one JSON object to standard error. Branch only on the stable `error` value:
+
+| `error`                          | Established boundary                                                                    |
+| -------------------------------- | --------------------------------------------------------------------------------------- |
+| `authentication_required`        | The token was absent or an auth rejection ended the attempt; the PUT may have been sent. |
+| `invalid_arguments`              | The zero-flag invocation was rejected.                                                   |
+| `local_input_unreadable`         | Required private state or Plan bytes could not be read before the request.              |
+| `invalid_configuration`          | Saved state cannot safely identify the accepted Plan before the request.                |
+| `project_not_pushed`             | No accepted remote Project and strong Plan ETag are pinned.                             |
+| `local_plan_changed`             | Local Plan bytes differ from the last successfully pushed source.                       |
+| `request_outcome_unknown`        | The singleton PUT may have succeeded and one reconciliation GET did not establish it.   |
+| `publication_start_rejected`     | The server returned a validated bounded rejection.                                      |
+| `publication_status_unavailable` | The pinned singleton status could not be read.                                          |
+| `invalid_publication_status`     | A status response violated the reviewed protocol.                                       |
+| `publication_changed`            | The validated projection no longer described the pinned singleton lifecycle.           |
+| `publication_wait_timed_out`     | The pinned lifecycle remained nonterminal at the ten-minute deadline.                   |
+| `publication_failed`             | The lifecycle reached terminal `failed` or `repository_conflict`.                       |
+| `publication_cancelled`          | The lifecycle reached terminal `cancelled`.                                             |
+
+Every row stops the current Skill action. Never make a direct request, inspect or edit `.firstdraft/state.json`, or
+trust human-readable `detail` as retry authorization. `publication_start_rejected` and
+`publication_status_unavailable` can include a validated HTTP `status` and whitelisted `response`.
+`publication_changed`, `publication_wait_timed_out`, `publication_failed`, and `publication_cancelled` include a
+validated `current` projection. Report only fields relevant to the blocker.
+
+`authentication_required` is not terminal. The token may have been absent before any request, or an auth rejection
+may have ended reconciliation after the singleton PUT was attempted. Do not infer whether a Publication exists.
+Ask the user to configure or replace the token outside the conversation. A fresh user request may then create or
+safely replay the same singleton; never ask them to paste the token, and never authorize a second Publication.
+`request_outcome_unknown` is not a terminal Publication status either. Do not retry automatically. A fresh user
+request may invoke the same zero-flag command to reconcile the same singleton; it never authorizes another
+Publication.
+`publication_status_unavailable` and `invalid_publication_status` also leave the singleton's outcome unknown and
+possibly nonterminal. Do not call it failed, succeeded, or published. A fresh user request may invoke the same
+zero-flag command to reconcile the same singleton; it never authorizes another Publication.
+After `publication_failed` or `publication_cancelled`, report the terminal projection and explain that another
+attempt requires forking to a new Project.
+
+The current CLI has no fork command. A supported fork is a separate, user-chosen project directory with no existing
+`.firstdraft/`, followed by a fresh `plan init`. With the user's approval, copy the complete authored Plan into that
+new Project, preserving subject UUIDs for the same concepts and making any requested application-key or product
+changes explicitly. Push and analyze the new Project as a fresh candidate. Publication still requires a fresh
+explicit user request after that new Project reaches `valid`. Never reinitialize, overwrite, or mutate the consumed
+Project to simulate a fork.
 
 ## Compilation and local materialization
 
-The reviewed successor Compilation CLI contract is `121272cd592055354d09a4fe90e55c3ca002770c`.
+The reviewed, merged successor Compilation CLI contract is `2d792f20424ae4fcc312d05be6201efb86b1f93b`.
 `firstdraft plan compile --output <approved-absent-path>` uses the API origin and strong Plan ETag pinned by the
 last successful push. It preflights an absent output below an existing real directory, sends one conditional
 Compilation start request, pins that Compilation while polling for at most ten minutes, downloads only its declared
@@ -128,7 +217,8 @@ artifact, verifies the transport metadata, exact bytes, artifact envelope, prove
 portable paths, and modes, then atomically renames a private sibling temporary tree into the output path. It does
 not retry any request.
 
-Run it only after the user separately approves Compilation and the destination, the latest observed analysis is
+This is a separate local development path, not a prerequisite or fallback for GitHub Publication. Run it only after
+the user separately approves Compilation and the destination, the latest observed analysis is
 `valid`, and the local Plan has not changed since that accepted candidate. The command compiles the Plan identified
 by the last successful push; it never implicitly pushes later local edits. Prior approval to author, validate, push,
 analyze, or repair a Plan does not cover Compilation. Never remove or overwrite an existing path to satisfy the
@@ -157,6 +247,7 @@ Handled failures write one JSON object to standard error. Branch only on the sta
 
 | `error`                          | Established boundary                                                                                   |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `authentication_required`        | The token is absent or the server returned a validated auth rejection.                                |
 | `invalid_arguments`              | The invocation was rejected before local or network work.                                              |
 | `local_input_unreadable`         | Required local private state could not be read; no Compilation was started.                            |
 | `invalid_configuration`          | Saved local state cannot safely identify the accepted Plan; no Compilation was started.                |
