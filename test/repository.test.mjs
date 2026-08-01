@@ -27,9 +27,10 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const preparedCliBaseline =
-  "2d792f20424ae4fcc312d05be6201efb86b1f93b";
+  "7944bf3cb0a2664a738f56b4ae928d1947babcb2";
 const preparedCliRuntimeDigest =
-  "7157b01e556d1c8a9eadf591995e251fe96b703bd612d15d991a304cea794e37";
+  "c90d6872f03c6782c0b371835df25801e7f54c5542fb071e9104bf52a49f4a2a";
+const preparedCliPackage = "@firstdraft.com/cli@0.1.0-alpha.2";
 const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
 const foundationIosCoreArchiveDigest =
@@ -199,15 +200,29 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     freshAgentEvidenceBaseline,
     freshAgentSkillBaseline,
   ]);
-  assertRevisionTokens(
-    await readFile(path.join(skillDirectory, "SKILL.md"), "utf8"),
-    [],
+  const skillSource = await readFile(
+    path.join(skillDirectory, "SKILL.md"),
+    "utf8",
   );
+  assertRevisionTokens(skillSource, []);
 
   const foundationPlanReference = await readFile(
     path.join(referencesDirectory, "foundation-plan-019.md"),
     "utf8",
   );
+  const diagnosticsReference = await readFile(
+    path.join(referencesDirectory, "diagnostics-and-recovery.md"),
+    "utf8",
+  );
+  for (const source of [
+    readme,
+    skillSource,
+    foundationPlanReference,
+    diagnosticsReference,
+  ]) {
+    assert(source.includes(preparedCliPackage));
+    assert.match(source, /package remains unpublished/);
+  }
   for (const source of [readme, foundationPlanReference]) {
     assert(source.includes(foundationPlanAnalyzerRelease));
     assert(source.includes(foundationPlanCompilerRelease));
@@ -309,6 +324,16 @@ test("CI checks a permanent exact prepared successor CLI contract", async () => 
     ),
   );
   assert(contractCheck.includes(preparedCliRuntimeDigest));
+  assert(
+    contractCheck.includes('const cliPackageName = "@firstdraft.com/cli";'),
+  );
+  assert(
+    contractCheck.includes('const cliPackageVersion = "0.1.0-alpha.2";'),
+  );
+  assert.match(
+    contractCheck,
+    /assert\.equal\(packageMetadata\.name, cliPackageName\);[\s\S]*?assert\.equal\(packageMetadata\.version, cliPackageVersion\);/,
+  );
   assert.match(
     contractCheck,
     /ios\/FoundationApp\/Generated\/ApplicationDefinition\.swift[\s\S]*?ios\/bin\/ios[\s\S]*?mode: 0o755/,
@@ -346,7 +371,31 @@ test("CI checks a permanent exact prepared successor CLI contract", async () => 
   );
   assert.match(
     contractCheck,
-    /runner-publish-replay[\s\S]*?publicationResponse\(replayProjectId, "succeeded"\)[\s\S]*?200/,
+    /runner-publish-cross-invocation-identity-boundary[\s\S]*?replayStateBefore[\s\S]*?initialReplayCandidate[\s\S]*?publicationResponse\(replayProjectId, "succeeded"\)[\s\S]*?201[\s\S]*?publicationIdentifier: changedPublicationId[\s\S]*?200[\s\S]*?replayRequests, 2[\s\S]*?readFileSync\(replayStatePath\), replayStateBefore[\s\S]*?"foundation_plan_etag"[\s\S]*?"project_id"/,
+  );
+  assert.match(
+    contractCheck,
+    /for \(const status of \[408, 503\]\)[\s\S]*?problemResponse\(problem, status\)[\s\S]*?\["PUT", "GET"\]/,
+  );
+  assert.match(
+    contractCheck,
+    /repository_unknown[\s\S]*?provisioning_repository[\s\S]*?publication_unknown[\s\S]*?publishing[\s\S]*?runner-publish-observation-only-\$\{currentStatus\}[\s\S]*?envelope\.current\.publication\.status[\s\S]*?envelope\.rejected\.publication\.status/,
+  );
+  assert.match(
+    contractCheck,
+    /changedEnvelope\.current\.publication\.id, publicationId[\s\S]*?changedEnvelope\.rejected\.publication\.id, changedPublicationId/,
+  );
+  assert.match(
+    contractCheck,
+    /different-compilation-graph-version[\s\S]*?compilationGraphVersion: 2[\s\S]*?runner-publish-changed-graph-version[\s\S]*?projectGraphVersion: 2[\s\S]*?changedGraphEnvelope\.current\.project\.graph_version, 1[\s\S]*?changedGraphEnvelope\.rejected\.project\.graph_version, 2/,
+  );
+  assert.match(
+    contractCheck,
+    /status === "cancelled"[\s\S]*?compilationStatusOverride: "succeeded"[\s\S]*?forceRepository: true[\s\S]*?tree_sha: "7"\.repeat\(40\)[\s\S]*?commit_sha: "8"\.repeat\(40\)[\s\S]*?envelope\.current\.publication\.repository\.html_url[\s\S]*?envelope\.current\.publication\.repository\.tree_sha[\s\S]*?envelope\.current\.publication\.repository\.commit_sha/,
+  );
+  assert.match(
+    contractCheck,
+    /runner-publish-cancelled-during-compilation[\s\S]*?cancelledDuringCompilationEnvelope\.current\.compilation\.status, "cancelled"[\s\S]*?cancelledDuringCompilationEnvelope\.current\.compilation\.artifact, null[\s\S]*?cancelledDuringCompilationEnvelope\.current\.publication\.repository, null/,
   );
   assert.match(
     contractCheck,
@@ -355,6 +404,14 @@ test("CI checks a permanent exact prepared successor CLI contract", async () => 
   assert.match(
     contractCheck,
     /runner-publish-mismatched-reconciliation[\s\S]*?request_outcome_unknown/,
+  );
+  assert.match(
+    contractCheck,
+    /mismatchedReconciliationEnvelope\.status, 200[\s\S]*?mismatchedReconciliationEnvelope\.response, undefined[\s\S]*?runner-publish-ambiguous-problem-then-network-error[\s\S]*?ambiguousProblemEnvelope\.status, 503[\s\S]*?ambiguousProblemEnvelope\.response[\s\S]*?ambiguousProblemMethods, \["PUT", "GET"\]/,
+  );
+  assert.match(
+    contractCheck,
+    /runner-publish-dual-problem-get-precedence[\s\S]*?dualPutProblem[\s\S]*?status: 503[\s\S]*?dualGetProblem[\s\S]*?status: 404[\s\S]*?dualProblemEnvelope\.status, 404[\s\S]*?dualProblemEnvelope\.response[\s\S]*?dualProblemMethods, \["PUT", "GET"\]/,
   );
   assert.match(
     contractCheck,
@@ -796,7 +853,10 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
 
 test("validator routing preserves validation boundaries", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
-  const skillSource = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
+  const skillSource = await readFile(
+    path.join(skillDirectory, "SKILL.md"),
+    "utf8",
+  );
   const referenceSource = await readFile(
     path.join(skillDirectory, "references", "foundation-plan-019.md"),
     "utf8",
@@ -1106,6 +1166,32 @@ test("revision evals stage existing Plan identity and private state", async () =
     "Opaque evaluator state. Stage this file, but do not expose or open it in the agent context.\n",
   );
   assert.throws(() => JSON.parse(placeholder));
+});
+
+test("subject identities are minted locally before server submission", async () => {
+  const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
+  const skillSource = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
+  const foundationPlanReference = await readFile(
+    path.join(skillDirectory, "references", "foundation-plan-019.md"),
+    "utf8",
+  );
+
+  assert.match(
+    skillSource,
+    /`firstdraft plan subject-id` for each genuinely new subject[\s\S]*?locally minted ID into the complete\s+candidate before push/,
+  );
+  assert.match(
+    skillSource,
+    /`subject_uuid` is client-authored Plan input[\s\S]*?validates and preserves submitted IDs[\s\S]*?does not assign a missing subject identity or replace a submitted one/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Mint a new UUID locally with `firstdraft plan subject-id`[\s\S]*?write\s+it into the complete Plan before push/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Subject UUIDs are client-authored input[\s\S]*?server\s+validates and preserves them[\s\S]*?does not assign a missing identity or replace a submitted one/,
+  );
 });
 
 test("bounded import evals bind supported and unsupported Plan state", async () => {
@@ -2084,6 +2170,14 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
     /request only to author, review, send, validate, analyze, or\s+repair a Plan stops at analysis and never authorizes Publish/,
   );
   assert.match(
+    publishSection[1],
+    /Publication approval is bound to that exact accepted Plan Head,[\s\S]*?Project, graph version, and source digest[\s\S]*?never floats to a later Head/,
+  );
+  assert.match(
+    publishSection[1],
+    /session resumes[\s\S]*?stop before starting a Publication[\s\S]*?initial-start rule\s+does not block a fresh user-directed reconciliation when this current workflow observed its earlier `plan publish`\s+invocation return a handled Publication recovery error/,
+  );
+  assert.match(
     skillSource,
     /Run `firstdraft plan push` only when the\s+user explicitly asks to send the Plan, obtain First Draft diagnostics, asks First Draft to create or publish the\s+app, or approves that action and its destination/,
   );
@@ -2105,7 +2199,19 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
   );
   assert.match(
     publishSection[1],
-    /`200` response\s+can be a safe replay of the same Project's singleton[\s\S]*?not authorization for another publication/,
+    /initial\s+creation, the saved strong ETag must still identify the live Project Head[\s\S]*?response's `project`\s+object is immutable Publication provenance rather than a projection of the live mutable Project/,
+  );
+  assert.match(
+    publishSection[1],
+    /pins the Publication identity during that invocation's\s+polling[\s\S]*?Private state does not retain a Publication identity across invocations[\s\S]*?unreleased server endpoint,\s+not the CLI, is responsible for returning the one Project singleton on a later `200`[\s\S]*?initial projection/,
+  );
+  assert.match(
+    publishSection[1],
+    /live Project may\s+advance elsewhere while the\s+unchanged local file and state still pin and safely replay the original Publication Head[\s\S]*?advanced to a newer Head cannot adopt that older Publication/,
+  );
+  assert.match(
+    publishSection[1],
+    /`200` response can\s+therefore be a safe replay of\s+the same Project's singleton[\s\S]*?not authorization for another publication/,
   );
   for (const status of planPublishStatuses) {
     assert(
@@ -2125,23 +2231,35 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
   );
   assert.match(
     publishSection[1],
-    /Project's singleton publication is terminal[\s\S]*?Another attempt means explicitly forking to a new Project/,
+    /Reconciliation from `repository_unknown` or\s+`publication_unknown` is observation-only[\s\S]*?never repeat the uncertain mutation[\s\S]*?terminal `cancelled` state[\s\S]*?does not roll back/,
   );
   assert.match(
     publishSection[1],
-    /current CLI has no fork\s+command[\s\S]*?stop for the user to choose that separate workflow/,
+    /Project's singleton publication is terminal[\s\S]*?Another attempt requires creating a fresh Project[\s\S]*?no Project-fork operation[\s\S]*?fresh Plan whose first push creates a new\s+Project/,
   );
   assert.match(
     publishSection[1],
-    /`request_outcome_unknown`[\s\S]*?Do not retry automatically[\s\S]*?fresh user request may run the same zero-flag command to reconcile the same singleton[\s\S]*?never\s+authorizes creating a second Publication/,
+    /`request_outcome_unknown`[\s\S]*?optional validated `status` and whitelisted `response`[\s\S]*?Do not\s+retry automatically[\s\S]*?fresh user request may run the\s+same zero-flag command to ask the server to reconcile its singleton and validate the retained Head[\s\S]*?never\s+authorizes creating a second Publication/,
   );
   assert.match(
     publishSection[1],
-    /`authentication_required`[\s\S]*?token may have been absent before any request[\s\S]*?singleton PUT was attempted[\s\S]*?fresh invocation after the token is replaced either creates or safely replays the same singleton[\s\S]*?cannot create a second Publication/,
+    /`authentication_required`[\s\S]*?token may have been absent before any request[\s\S]*?singleton PUT was attempted[\s\S]*?Under the unreleased server singleton contract[\s\S]*?fresh invocation after the token is replaced either\s+creates or safely replays that singleton[\s\S]*?CLI does not compare it with a locally stored prior Publication ID[\s\S]*?cannot create or authorize a second Publication/,
   );
   assert.match(
     publishSection[1],
-    /`publication_status_unavailable`[\s\S]*?singleton may still be running and its outcome is unknown[\s\S]*?`invalid_publication_status`[\s\S]*?singleton may still be running[\s\S]*?do not call the Publication failed, succeeded, or published[\s\S]*?same zero-flag command to reconcile the same singleton/,
+    /`publication_status_unavailable`[\s\S]*?singleton may still be running and its outcome is unknown[\s\S]*?`invalid_publication_status`[\s\S]*?singleton may still be running[\s\S]*?do not call the Publication failed, succeeded, or published[\s\S]*?same zero-flag command to ask the server to reconcile its singleton and validate the retained Head/,
+  );
+  assert.match(
+    publishSection[1],
+    /fresh user-directed reconciliation invocation[\s\S]*?same zero-flag command from the unchanged Project\s+and local Plan[\s\S]*?Do not edit private state, reconstruct the saved strong Plan ETag, push a\s+replacement Plan, or run a separate Compilation[\s\S]*?validate the returned exact accepted\s+Head[\s\S]*?Cross-invocation Publication-identity continuity is an unreleased server singleton guarantee rather than\s+locally retained proof/,
+  );
+  assert.match(
+    publishSection[1],
+    /`publication_changed`[\s\S]*?`current` projection is the last accepted pinned lifecycle[\s\S]*?`rejected` projection is the next response that did not preserve it[\s\S]*?Do\s+not poll directly, follow the rejected projection/,
+  );
+  assert.match(
+    publishSection[1],
+    /unknown, failed, conflicted, or cancelled outcome[\s\S]*?may have left a private GitHub\s+repository or commit[\s\S]*?null or absent repository projection does not prove[\s\S]*?never delete or change a repository[\s\S]*?exact verified repository identity[\s\S]*?unidentified "anything left behind"/,
   );
 
   const referenceSection = recoveryReference.match(
@@ -2150,7 +2268,7 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
   assert(referenceSection, "diagnostics reference: missing Publication boundary");
   assert.match(
     referenceSection[1],
-    /prepared, unreleased contract[\s\S]*?no live endpoint or completed staging smoke[\s\S]*?established local Compilation evidence does not prove Publication/,
+    /prepared, unreleased contract[\s\S]*?no live endpoint or completed staging smoke[\s\S]*?established local\s+Compilation evidence does not prove Publication/,
   );
   assert.match(
     referenceSection[1],
@@ -2160,6 +2278,18 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
     referenceSection[1],
     /validated `201`\s+creates the singleton[\s\S]*?validated `200` safely replays it/,
   );
+  assert.match(
+    referenceSection[1],
+    /initial-start gate does not block a fresh user-directed reconciliation when the current workflow itself\s+observed an earlier `plan publish` return a handled recovery error[\s\S]*?reconciliation rules below govern that\s+bounded replay/,
+  );
+  assert.match(
+    referenceSection[1],
+    /initial\s+creation, the strong ETag must identify the live Project Head[\s\S]*?response's `project`\s+object is immutable Publication provenance rather than a projection of the live mutable Project[\s\S]*?live Project may\s+advance elsewhere[\s\S]*?local\s+state advanced to a newer Head cannot\s+adopt the older Publication/,
+  );
+  assert.match(
+    referenceSection[1],
+    /endpoint is unreleased[\s\S]*?singleton identity and replay after a live-Project advance remain server contract\s+assumptions[\s\S]*?local harness proves that the CLI accepts matching retained provenance, accepts a fresh `200`\s+identity because none is stored locally, and rejects changes after its initial projection/,
+  );
   assert.deepEqual(
     [...referenceSection[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
       .map(([, value]) => value)
@@ -2168,32 +2298,48 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
   );
   assert.match(
     referenceSection[1],
-    /terminal retry requires an explicit\s+fork to a new Project[\s\S]*?Never invoke Publish, push a replacement Plan, or start another Compilation on the consumed\s+Project/,
+    /Another attempt requires creating a\s+fresh Project[\s\S]*?observation-only[\s\S]*?never repeat\s+the uncertain mutation[\s\S]*?Cancellation fences later\s+promotion but does not roll back/,
   );
   assert.match(
     referenceSection[1],
-    /A fresh user\s+request may invoke the same zero-flag command to reconcile the same singleton[\s\S]*?never authorizes another\s+Publication/,
+    /A fresh user\s+request may invoke the same zero-flag command to ask the server to reconcile its singleton and validate the retained\s+Head[\s\S]*?never authorizes another Publication/,
   );
   assert.match(
     referenceSection[1],
-    /`authentication_required` is not terminal[\s\S]*?token may have been absent before any request[\s\S]*?singleton PUT was attempted[\s\S]*?create or\s+safely replay the same singleton/,
+    /`authentication_required` is not terminal[\s\S]*?token may have been absent before any request[\s\S]*?singleton PUT was attempted[\s\S]*?Under the unreleased server singleton\s+contract[\s\S]*?create or safely replay that singleton[\s\S]*?locally stored prior Publication ID/,
   );
   assert.match(
     referenceSection[1],
-    /`publication_status_unavailable` and `invalid_publication_status`[\s\S]*?outcome unknown and\s+possibly nonterminal[\s\S]*?Do not call it failed, succeeded, or published[\s\S]*?same\s+zero-flag command to reconcile the same singleton/,
+    /`publication_status_unavailable` and `invalid_publication_status`[\s\S]*?outcome unknown and\s+possibly nonterminal[\s\S]*?Do not call it failed, succeeded, or published[\s\S]*?same\s+zero-flag command to ask the server to reconcile its singleton and validate the retained Head/,
   );
   assert.match(
     referenceSection[1],
-    /current CLI has no fork command[\s\S]*?separate, user-chosen project directory[\s\S]*?fresh `plan init`[\s\S]*?preserving subject UUIDs[\s\S]*?fresh\s+explicit user request/,
+    /no Project-fork command or server operation[\s\S]*?separate, user-chosen project directory[\s\S]*?fresh `plan init`[\s\S]*?first successful push creates a distinct server Project[\s\S]*?fresh Project, not a fork[\s\S]*?fresh explicit user\s+request/,
+  );
+  assert.match(
+    referenceSection[1],
+    /user-directed reconciliation invocation[\s\S]*?unchanged Project and local Plan with the same saved\s+strong Plan ETag[\s\S]*?Do not edit private state, reconstruct the ETag, push a replacement Plan,[\s\S]*?validate the returned exact accepted Head[\s\S]*?Cross-invocation Publication-identity continuity is an unreleased server singleton guarantee rather than locally\s+retained proof/,
+  );
+  assert.match(
+    referenceSection[1],
+    /`publication_changed` includes both the last accepted pinned `current` projection[\s\S]*?inconsistent next `rejected` projection[\s\S]*?never follow `rejected`/,
+  );
+  assert.match(
+    referenceSection[1],
+    /`request_outcome_unknown` can also include a validated `status` and whitelisted `response`[\s\S]*?neither proves that the\s+singleton mutation failed[\s\S]*?reconciliation-GET\s+problem takes precedence[\s\S]*?bare `status` may even be a successful response/,
+  );
+  assert.match(
+    referenceSection[1],
+    /null or absent repository projection is not proof that none exists[\s\S]*?Even\s+when deletion is requested, first require the exact verified repository identity[\s\S]*?unidentified\s+"anything left behind"/,
   );
 
   assert.match(
     readme,
-    /combined CLI, Skill, and service workflow remains unreleased[\s\S]*?prepared zero-flag `plan publish` contract[\s\S]*?no live endpoint or completed\s+staging smoke/,
+    /combined CLI, Skill, and service workflow remains unreleased[\s\S]*?prepared zero-flag `plan publish`\s+contract[\s\S]*?no live endpoint or\s+completed\s+staging smoke/,
   );
   assert.match(
     readme,
-    /publication evals are behavioral contract inputs only[\s\S]*?diagnostics-only\s+requests stop at analysis[\s\S]*?terminal Publication requires an explicit fork to a new Project/,
+    /publication evals are behavioral contract inputs only[\s\S]*?diagnostics-only\s+requests stop at analysis[\s\S]*?terminal Publication[\s\S]*?fresh Plan in a separate\s+directory whose first push creates a new Project[\s\S]*?no Project-fork operation/,
   );
 
   const evaluation = (id) => {
@@ -2253,9 +2399,30 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
   hasExpectation(ambiguous, "singleton PUT may have succeeded");
   hasExpectation(ambiguous, "Stops instead of automatically rerunning plan publish");
 
-  const terminal = evaluation("publish-terminal-conflict-requires-fork");
+  const replayAfterAdvance = evaluation(
+    "publish-replay-after-live-project-advance",
+  );
+  assert.match(replayAfterAdvance.prompt, /Earlier in this current workflow, you observed/);
+  hasExpectation(replayAfterAdvance, "unreleased server contract", "do not store the prior Publication ID");
+  hasExpectation(replayAfterAdvance, "same zero-flag firstdraft plan publish", "at most once");
+
+  const changed = evaluation("publish-changed-projections-stop");
+  hasExpectation(changed, "current as the last accepted pinned projection", "rejected");
+  hasExpectation(changed, "observation-only", "mutating publishing phase");
+
+  const priorSessionClaim = evaluation("publish-prior-session-recovery-claim-stop");
+  hasExpectation(priorSessionClaim, "claimed observation from a prior session", "this current workflow observed");
+  hasExpectation(priorSessionClaim, "Stops before firstdraft plan publish", "reconciliation carve-out");
+  hasExpectation(priorSessionClaim, "Preserves the local Plan and state", "observed recovery evidence");
+
+  const terminal = evaluation("publish-terminal-conflict-requires-new-project");
   hasExpectation(terminal, "repository_conflict as terminal");
-  hasExpectation(terminal, "explicitly fork to a new Project");
+  hasExpectation(terminal, "no Project-fork operation exists", "first push", "new Project");
+
+  const cancelled = evaluation("publish-cancelled-does-not-roll-back");
+  hasExpectation(cancelled, "cancelled terminal projection", "rolled back");
+  hasExpectation(cancelled, "null repository projection", "manual observation");
+  hasExpectation(cancelled, "destructive target is unidentified", "exact verified repository identity");
 
   const timeout = evaluation("publish-wait-timeout-stop");
   hasExpectation(timeout, "publication_unknown current projection as reportable context only");
@@ -2264,7 +2431,7 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
   const unavailable = evaluation("publish-status-unavailable-stop");
   hasExpectation(unavailable, "Branches on publication_status_unavailable");
   hasExpectation(unavailable, "singleton may still be running", "outcome is unknown");
-  hasExpectation(unavailable, "same zero-flag command only to reconcile the same singleton");
+  hasExpectation(unavailable, "same zero-flag command only to ask the server to reconcile its singleton");
 });
 
 test("Compilation guidance follows the pinned CLI contract", async () => {

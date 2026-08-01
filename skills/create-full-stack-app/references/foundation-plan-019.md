@@ -64,12 +64,13 @@ not release or execution evidence.
 The bounded local Compilation evidence used reviewed CLI revision
 `121272cd592055354d09a4fe90e55c3ca002770c`, with JavaScript-source runtime digest
 `205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. The current contract fixtures and check use
-merged successor revision `2d792f20424ae4fcc312d05be6201efb86b1f93b`, with independently reproduced JavaScript-source runtime digest
-`7157b01e556d1c8a9eadf591995e251fe96b703bd612d15d991a304cea794e37`, as contract provenance rather than release
+merged successor revision `7944bf3cb0a2664a738f56b4ae928d1947babcb2`, with independently reproduced JavaScript-source runtime digest
+`c90d6872f03c6782c0b371835df25801e7f54c5542fb071e9104bf52a49f4a2a`, as contract provenance rather than release
 or execution evidence. That successor exposes `plan init`, `plan subject-id`, `plan push`, `plan status`, `plan
-compile`, and the prepared zero-flag `plan publish`. Check commands rather than inferring compatibility from an
-unreleased version number. Publication capability remains prepared rather than execution evidence until the server
-endpoint and joined staging smoke exist.
+compile`, and the prepared zero-flag `plan publish`. Its source package identity is
+`@firstdraft.com/cli@0.1.0-alpha.2`, but that package remains unpublished. Check commands rather than inferring
+compatibility from the version number. Publication capability remains prepared rather than execution evidence until
+the server endpoint and joined staging smoke exist.
 
 The activated server projections name analyzer release `foundation-plan-rails/application-2026-08` and compiler
 release `foundation-plan-rails/compiler-application-2026-08`. These exact names are contract provenance; the dated
@@ -114,7 +115,10 @@ Ordinary replacement must retain the Project's target and target-profile pin.
 - Subject UUIDs share one cross-kind namespace within a Project. The same UUID may appear in a different Project.
 - Keep the UUID when a subject is renamed or coherently moved without changing kind. Update every affected typed
   path in the same complete candidate.
-- Assign a new UUID to a genuinely new or replacement concept. Never reuse UUIDs from examples in a real Plan.
+- Mint a new UUID locally with `firstdraft plan subject-id` for a genuinely new or replacement concept, then write
+  it into the complete Plan before push. Subject UUIDs are client-authored input at this boundary: the server
+  validates and preserves them; it does not assign a missing identity or replace a submitted one. Never reuse UUIDs
+  from examples in a real Plan.
 - Typed links use readable scoped paths such as `movie.title`, `rating.movie`, and `movie.ratings`; they do not use
   UUIDs.
 

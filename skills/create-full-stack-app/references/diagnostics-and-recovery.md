@@ -5,7 +5,7 @@ unverified response.
 
 ## Local initialization error boundary
 
-The reviewed, merged successor CLI contract at `2d792f20424ae4fcc312d05be6201efb86b1f93b` writes exactly one JSON object to
+The reviewed, merged successor CLI contract at `7944bf3cb0a2664a738f56b4ae928d1947babcb2` writes exactly one JSON object to
 standard error for every handled `plan init` failure. Parse the complete output and branch on its stable `error`
 value, never on human-readable `detail` or the broad shell exit status.
 
@@ -127,10 +127,11 @@ not prove that an artifact or repository can be produced.
 
 ## Singleton GitHub publication
 
-The prepared successor CLI at `2d792f20424ae4fcc312d05be6201efb86b1f93b` adds `firstdraft plan publish`, a
-zero-flag command for one private personal-account
-GitHub repository. This is a prepared, unreleased contract: no live endpoint or completed staging smoke establishes
-the joined server-to-GitHub path yet. The established local Compilation evidence does not prove Publication.
+The prepared successor CLI at `7944bf3cb0a2664a738f56b4ae928d1947babcb2` adds `firstdraft plan publish`, a
+zero-flag command for one private personal-account GitHub repository. Its source package identity is
+`@firstdraft.com/cli@0.1.0-alpha.2`, but that package remains unpublished. This is a prepared, unreleased contract:
+no live endpoint or completed staging smoke establishes the joined server-to-GitHub path yet. The established local
+Compilation evidence does not prove Publication.
 
 The command requires the strong Plan ETag saved by the last successful push and verifies that the current local Plan
 bytes still match it before any request. It sends one conditional
@@ -139,10 +140,25 @@ that same lifecycle sequentially for at most ten minutes. It never auto-repeats 
 creates the singleton; a validated `200` safely replays it. On success, standard output is exactly one validated
 `https://github.com/<personal-owner>/<repository>` URL followed by a newline.
 
+For initial creation, the strong ETag must identify the live Project Head. For replay, the response's `project`
+object is immutable Publication provenance rather than a projection of the live mutable Project. The local Plan and
+private state must still identify that retained Head source digest. The returned Project and Compilation graph
+versions and Head source digests must agree, and the Publication identity must remain pinned within one invocation's
+polling. Private state does not retain a Publication identity across invocations. The unreleased server endpoint,
+not the CLI, must return the one Project singleton on a later `200`; the CLI treats that response as its initial
+projection and validates its retained-Head provenance. The live Project may advance elsewhere while the original
+local file, state, and retained Publication Head continue to agree; local state advanced to a newer Head cannot
+adopt the older Publication. Any mismatch fails closed instead of following a replacement lifecycle. Because the
+endpoint is unreleased, singleton identity and replay after a live-Project advance remain server contract
+assumptions: the local harness proves that the CLI accepts matching retained provenance, accepts a fresh `200`
+identity because none is stored locally, and rejects changes after its initial projection.
+
 Run it only when the current workflow observed a successful push and terminal `valid` analysis, no later local edit
 occurred, and the user explicitly asked First Draft to create or publish the app. That request authorizes exactly one
 singleton private publication, including its server-side Compilation. A diagnostics-only request stops at analysis.
-Do not run local `plan compile` before or instead of Publish.
+This initial-start gate does not block a fresh user-directed reconciliation when the current workflow itself
+observed an earlier `plan publish` return a handled recovery error. The reconciliation rules below govern that
+bounded replay. Do not run local `plan compile` before or instead of Publish.
 
 The outer lifecycle is closed:
 
@@ -158,9 +174,11 @@ The outer lifecycle is closed:
 | `failed`                  | A bounded Compilation, repository, or publication phase failed terminally.  |
 | `cancelled`               | The singleton lifecycle was cancelled terminally.                           |
 
-`succeeded`, `repository_conflict`, `failed`, and `cancelled` are terminal. A terminal retry requires an explicit
-fork to a new Project. Never invoke Publish, push a replacement Plan, or start another Compilation on the consumed
-Project merely to try again.
+`succeeded`, `repository_conflict`, `failed`, and `cancelled` are terminal. Another attempt requires creating a
+fresh Project. Reconciliation from `repository_unknown` and `publication_unknown` is observation-only: never repeat
+the uncertain mutation or regress to `provisioning_repository` or `publishing`. Cancellation fences later
+promotion but does not roll back or prove the absence of a repository, commit, or other remote side effect. Never
+invoke Publish, push a replacement Plan, or start another Compilation on the consumed Project merely to try again.
 
 Handled failures write one JSON object to standard error. Branch only on the stable `error` value:
 
@@ -184,32 +202,54 @@ Handled failures write one JSON object to standard error. Branch only on the sta
 Every row stops the current Skill action. Never make a direct request, inspect or edit `.firstdraft/state.json`, or
 trust human-readable `detail` as retry authorization. `publication_start_rejected` and
 `publication_status_unavailable` can include a validated HTTP `status` and whitelisted `response`.
-`publication_changed`, `publication_wait_timed_out`, `publication_failed`, and `publication_cancelled` include a
-validated `current` projection. Report only fields relevant to the blocker.
+`request_outcome_unknown` can also include a validated `status` and whitelisted `response`; neither proves that the
+singleton mutation failed. When both are present, they describe one response: a validated reconciliation-GET
+problem takes precedence, otherwise they describe the PUT. A bare `status` may even be a successful response whose
+projection was structurally invalid or foreign.
+`publication_changed` includes both the last accepted pinned `current` projection and the structurally validated
+but inconsistent next `rejected` projection. `publication_wait_timed_out`, `publication_failed`, and
+`publication_cancelled` include a validated `current` projection. Report only fields relevant to the blocker, and
+never follow `rejected` as the new lifecycle.
 
 `authentication_required` is not terminal. The token may have been absent before any request, or an auth rejection
 may have ended reconciliation after the singleton PUT was attempted. Do not infer whether a Publication exists.
-Ask the user to configure or replace the token outside the conversation. A fresh user request may then create or
-safely replay the same singleton; never ask them to paste the token, and never authorize a second Publication.
+Ask the user to configure or replace the token outside the conversation. Under the unreleased server singleton
+contract, a fresh user request may then create or safely replay that singleton; the CLI does not compare it with a
+locally stored prior Publication ID. Never ask the user to paste the token, and never authorize a second Publication.
 `request_outcome_unknown` is not a terminal Publication status either. Do not retry automatically. A fresh user
-request may invoke the same zero-flag command to reconcile the same singleton; it never authorizes another
-Publication.
+request may invoke the same zero-flag command to ask the server to reconcile its singleton and validate the retained
+Head; it never authorizes another Publication.
 `publication_status_unavailable` and `invalid_publication_status` also leave the singleton's outcome unknown and
 possibly nonterminal. Do not call it failed, succeeded, or published. A fresh user request may invoke the same
-zero-flag command to reconcile the same singleton; it never authorizes another Publication.
+zero-flag command to ask the server to reconcile its singleton and validate the retained Head; it never authorizes
+another Publication.
 After `publication_failed` or `publication_cancelled`, report the terminal projection and explain that another
-attempt requires forking to a new Project.
+attempt requires creating a fresh Project. Cancellation does not establish that remote effects were rolled back.
 
-The current CLI has no fork command. A supported fork is a separate, user-chosen project directory with no existing
-`.firstdraft/`, followed by a fresh `plan init`. With the user's approval, copy the complete authored Plan into that
-new Project, preserving subject UUIDs for the same concepts and making any requested application-key or product
-changes explicitly. Push and analyze the new Project as a fresh candidate. Publication still requires a fresh
-explicit user request after that new Project reaches `valid`. Never reinitialize, overwrite, or mutate the consumed
-Project to simulate a fork.
+Any unknown, failed, conflicted, or cancelled outcome after remote processing began may have left a private GitHub
+repository or commit. A null or absent repository projection is not proof that none exists. Report that manual
+observation may be required, and never delete or change a repository without a separate explicit user request. Even
+when deletion is requested, first require the exact verified repository identity; do not treat an unidentified
+"anything left behind" as a safe destructive target.
+
+Any user-directed reconciliation invocation must come from the unchanged Project and local Plan with the same saved
+strong Plan ETag. The live Project may have advanced, but the unchanged local file and private state must still name
+the Publication's original retained Head. Do not edit private state, reconstruct the ETag, push a replacement Plan,
+or run a separate Compilation between attempts. Let the CLI validate the returned exact accepted Head.
+Cross-invocation Publication-identity continuity is an unreleased server singleton guarantee rather than locally
+retained proof; if the returned provenance is inconsistent, stop.
+
+There is no Project-fork command or server operation. To try again, use a separate, user-chosen project directory
+with no existing `.firstdraft/`, then run a fresh `plan init`. With the user's approval, copy the complete authored
+Plan into that new local project, preserving subject UUIDs for the same concepts and making any requested
+application-key or product changes explicitly. Its first successful push creates a distinct server Project; this
+is a fresh Project, not a fork. Analyze it as a fresh candidate. Publication still requires a fresh explicit user
+request after that new Project reaches `valid`. Never reinitialize, overwrite, or mutate the consumed Project to
+simulate reuse.
 
 ## Compilation and local materialization
 
-The reviewed, merged successor Compilation CLI contract is `2d792f20424ae4fcc312d05be6201efb86b1f93b`.
+The reviewed, merged successor Compilation CLI contract is `7944bf3cb0a2664a738f56b4ae928d1947babcb2`.
 `firstdraft plan compile --output <approved-absent-path>` uses the API origin and strong Plan ETag pinned by the
 last successful push. It preflights an absent output below an existing real directory, sends one conditional
 Compilation start request, pins that Compilation while polling for at most ten minutes, downloads only its declared

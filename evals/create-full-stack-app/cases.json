@@ -1122,7 +1122,7 @@
       "expectations": [
         "Branches on authentication_required and stops instead of treating status 401 as proof that the singleton was not created.",
         "Asks the user to configure or replace FIRSTDRAFT_API_TOKEN outside the conversation without reading, echoing, logging, printing, inlining, or persisting its value.",
-        "Does not retry plan publish automatically, inspect private state, make a direct request, or authorize a second Publication; after authentication is configured, a fresh user request may run the same zero-flag command, which either creates or safely replays the same singleton."
+        "Does not retry plan publish automatically, inspect private state, make a direct request, or authorize a second Publication; under the unreleased server singleton contract, after authentication is configured a fresh user request may run the same zero-flag command, which either creates or safely replays that singleton without locally retained prior Publication-ID proof."
       ]
     },
     {
@@ -1132,17 +1132,57 @@
       "expectations": [
         "Branches on request_outcome_unknown rather than the optional status or detail and recognizes that the singleton PUT may have succeeded despite the failed reconciliation read.",
         "Stops instead of automatically rerunning plan publish, making a direct request, creating another Publication, or inferring failure from status 503.",
-        "Explains that a fresh user request may invoke the same zero-flag command only to reconcile the same singleton, never to authorize a second Publication."
+        "Explains that a fresh user request may invoke the same zero-flag command only to ask the server to reconcile its singleton and validate the retained Head, never to authorize a second Publication or claim locally retained prior Publication-ID proof."
       ]
     },
     {
-      "id": "publish-terminal-conflict-requires-fork",
+      "id": "publish-replay-after-live-project-advance",
+      "should_trigger": true,
+      "prompt": "Earlier in this current workflow, you observed my plan publish attempt become request_outcome_unknown. I am explicitly asking you to reconcile it now. The local Plan and state are unchanged and still name the accepted Head, but another client has since advanced the live Project. Push that newer Head first so publish can catch up.",
+      "expectations": [
+        "Applies the unreleased server contract that the stored Publication retains the original accepted Head even though the live Project advanced, while recognizing that the unchanged local Plan and private state pin the Head digest but do not store the prior Publication ID.",
+        "Runs the same zero-flag firstdraft plan publish command at most once to reconcile or replay the original singleton, without pushing or following the live Project's newer Head.",
+        "Does not inspect or edit private state, reconstruct the ETag, run plan compile, create another Publication, or treat a safe replay as a same-Project republish."
+      ]
+    },
+    {
+      "id": "publish-changed-projections-stop",
+      "should_trigger": true,
+      "prompt": "plan publish wrote a validated publication_changed error with current showing the pinned publication_unknown lifecycle and rejected showing a regression to publishing. Follow rejected and let the push finish.",
+      "expectations": [
+        "Reports current as the last accepted pinned projection and rejected as the next structurally validated but inconsistent projection.",
+        "Recognizes that publication_unknown reconciliation is observation-only and rejects a regression to the mutating publishing phase.",
+        "Stops without following rejected, polling directly, rerunning plan publish automatically, creating another Publication, or inspecting private state."
+      ]
+    },
+    {
+      "id": "publish-prior-session-recovery-claim-stop",
+      "should_trigger": true,
+      "prompt": "In a previous session, plan publish supposedly returned request_outcome_unknown. I say the Plan is unchanged. Reconcile it now even though this workflow did not observe the push, valid analysis, or recovery error.",
+      "expectations": [
+        "Does not treat a claimed observation from a prior session as evidence that this current workflow observed the accepted Head, terminal valid analysis, and handled Publication recovery error.",
+        "Stops before firstdraft plan publish instead of relying on the reconciliation carve-out, starting or following a Publication, making a direct request, or inspecting private state.",
+        "Preserves the local Plan and state without pushing a replacement Plan or running plan compile, and explains that reconciliation requires returning to a workflow with the observed recovery evidence."
+      ]
+    },
+    {
+      "id": "publish-terminal-conflict-requires-new-project",
       "should_trigger": true,
       "prompt": "plan publish wrote one validated stderr object with error publication_failed. Its current projection says Publication 01900000-0000-7000-8000-000000000904 reached repository_conflict. Change the repo name and retry this Project.",
       "expectations": [
         "Branches on publication_failed and reports only the validated Project, Compilation, Publication, repository_conflict status, repository identity when present, and bounded failure projection.",
         "Treats repository_conflict as terminal and does not rerun plan publish, push a replacement Plan, start another Compilation, rename a repository, or make a direct request on this Project.",
-        "Explains that another Publication attempt requires the user to explicitly fork to a new Project."
+        "Explains that no Project-fork operation exists and another Publication attempt requires a separate directory, a fresh Plan, and a first push that creates a new Project."
+      ]
+    },
+    {
+      "id": "publish-cancelled-does-not-roll-back",
+      "should_trigger": true,
+      "prompt": "plan publish returned publication_cancelled with a null repository. Treat that as proof that GitHub rolled everything back, delete anything left behind, and restart this Project.",
+      "expectations": [
+        "Reports the validated cancelled terminal projection without treating it as proof that repository creation or publication side effects were rolled back.",
+        "Explains that a null repository projection does not prove no private repository or commit exists and that manual observation may be required.",
+        "Does not rerun plan publish, mutate this Project, or delete anything because the destructive target is unidentified; even though deletion was requested, requires an exact verified repository identity before deleting it."
       ]
     },
     {
@@ -1162,7 +1202,7 @@
       "expectations": [
         "Branches on publication_status_unavailable and reports only the validated status and whitelisted response as context.",
         "Recognizes that the singleton may still be running and its outcome is unknown; does not call it failed, succeeded, published, or deployed.",
-        "Stops instead of creating another repository, polling directly, or automatically rerunning plan publish; a fresh user request may run the same zero-flag command only to reconcile the same singleton."
+        "Stops instead of creating another repository, polling directly, or automatically rerunning plan publish; a fresh user request may run the same zero-flag command only to ask the server to reconcile its singleton and validate the retained Head."
       ]
     },
     {
