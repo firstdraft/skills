@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "firstdraft-skills",
+  "description": "Experimental First Draft application-authoring skills for Claude Code",
+  "owner": {
+    "name": "First Draft",
+    "url": "https://github.com/firstdraft"
+  },
+  "plugins": [
+    {
+      "name": "firstdraft",
+      "source": "./skills/create-full-stack-app",
+      "strict": false,
+      "skills": [
+        "./"
+      ],
+      "displayName": "First Draft",
+      "description": "Experimental Foundation Plan authoring and bounded Rails application creation with First Draft",
+      "author": {
+        "name": "First Draft",
+        "url": "https://github.com/firstdraft"
+      },
+      "homepage": "https://github.com/firstdraft/skills",
+      "repository": "https://github.com/firstdraft/skills",
+      "license": "MIT",
+      "keywords": [
+        "foundation-plan",
+        "rails",
+        "application-generation"
+      ],
+      "category": "development",
+      "tags": [
+        "foundation-plan",
+        "rails"
+      ]
+    }
+  ]
+}
