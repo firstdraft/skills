@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "firstdraft-preview",
+  "displayName": "First Draft Preview",
+  "version": "0.1.0",
+  "description": "Experimental Foundation Plan authoring and bounded Rails application creation with First Draft",
+  "author": {
+    "name": "First Draft",
+    "url": "https://github.com/firstdraft"
+  },
+  "homepage": "https://github.com/firstdraft/skills",
+  "repository": "https://github.com/firstdraft/skills",
+  "license": "MIT",
+  "keywords": [
+    "foundation-plan",
+    "rails",
+    "application-generation"
+  ],
+  "skills": [
+    "./skills/create-full-stack-app"
+  ]
+}

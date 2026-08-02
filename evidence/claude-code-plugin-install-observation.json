@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 3,
+  "observedOn": "2026-08-02",
+  "claudeCode": {
+    "version": "2.1.220",
+    "componentInventory": {
+      "agents": 0,
+      "hooks": 0,
+      "lspServers": 0,
+      "mcpServers": 0,
+      "skillsAndCommands": 1
+    }
+  },
+  "manifestValidation": {
+    "marketplace": {
+      "capturedOutput": "Validating marketplace manifest: <checkout>/.claude-plugin/marketplace.json\n\n✔ Validation passed",
+      "normalizedArgv": [
+        "<claude-bin>",
+        "plugin",
+        "validate",
+        "--strict",
+        "<checkout>"
+      ],
+      "passed": true,
+      "path": ".",
+      "strict": true
+    },
+    "previewPlugin": {
+      "capturedOutput": "Validating plugin manifest: <checkout>/.claude-plugin/plugin.json\n\n✔ Validation passed",
+      "normalizedArgv": [
+        "<claude-bin>",
+        "plugin",
+        "validate",
+        "--strict",
+        "<checkout>/.claude-plugin/plugin.json"
+      ],
+      "passed": true,
+      "path": ".claude-plugin/plugin.json",
+      "strict": true
+    }
+  },
+  "installedPlugin": {
+    "marketplace": "firstdraft-skills",
+    "name": "firstdraft",
+    "commandsDeclared": false,
+    "fileCount": 8,
+    "totalBytes": 241779,
+    "treeSha256": "7675a721fd5a7d7dcbf497eb1f5591f90e9adc45bb4284a65f613b0b868b7e54",
+    "files": [
+      {
+        "path": "LICENSE.txt",
+        "bytes": 1068,
+        "sha256": "76e6c24352bbf1faebee87707bf069d5c5dddbab827b8308e9def44589ed58b0"
+      },
+      {
+        "path": "SKILL.md",
+        "bytes": 33276,
+        "sha256": "51a64614e96f23ba2de9e4ce5ce452d38ec362d7b22c45c5665204c57c8a3599"
+      },
+      {
+        "path": "agents/openai.yaml",
+        "bytes": 432,
+        "sha256": "8654a45a4c7e31abbd3e03e81d30e18d704d17c907c59b57fe60de8852a4e76f"
+      },
+      {
+        "path": "references/diagnostics-and-recovery.md",
+        "bytes": 34185,
+        "sha256": "b646eadd2069a0607de05ba62fa5e9e26947344dc1f61f65adf062004f62db4c"
+      },
+      {
+        "path": "references/examples.md",
+        "bytes": 9087,
+        "sha256": "d5f0d05693ccfefae0ab60e07ae97a3e1d27d821c130c67883f0bf6488076c57"
+      },
+      {
+        "path": "references/foundation-plan-0.19.schema.json",
+        "bytes": 139925,
+        "sha256": "1954e5c95d6e6621578202ad4452686b56c150256ffcd75935078d9f4247c568"
+      },
+      {
+        "path": "references/foundation-plan-019.md",
+        "bytes": 18086,
+        "sha256": "6e1c4f3cbf37bedf8ff2f5dd4d5ccb63d41dc6251ea2b6e9c5f8b4d5f23876e1"
+      },
+      {
+        "path": "references/modeling-guide.md",
+        "bytes": 5720,
+        "sha256": "c82780d88cd431d1b9d2558197779078e2058a482a4b9c975b8c46e5d8769338"
+      }
+    ]
+  },
+  "realStateMonitor": {
+    "present": [
+      "installedPlugins",
+      "knownMarketplaces",
+      "pluginCatalog",
+      "settings"
+    ],
+    "absent": [
+      "credentials",
+      "settingsLocal",
+      "targetCache",
+      "targetData",
+      "targetMarketplace"
+    ],
+    "requiredRegistryAnyOf": [
+      "installedPlugins",
+      "knownMarketplaces",
+      "pluginCatalog"
+    ],
+    "excluded": [
+      "~/.claude.json"
+    ]
+  },
+  "checks": {
+    "childWorkingDirectory": "isolated",
+    "packageManagerInvocation": "absent",
+    "realStateUnchanged": true,
+    "temporaryStateRemoved": true
+  }
+}
