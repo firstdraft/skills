@@ -61,6 +61,14 @@ const preparedCliBaseline =
   "7944bf3cb0a2664a738f56b4ae928d1947babcb2";
 const preparedCliRuntimeDigest =
   "c90d6872f03c6782c0b371835df25801e7f54c5542fb071e9104bf52a49f4a2a";
+const cliContractBaseline =
+  "f55edffc9e88924f9a4c95f41c4d0bc9b72422f8";
+const cliContractRuntimeDigest =
+  "9e5a4bd0f16f49ab2e17c04f7defc59366f8fa073f772b310d8f684177890eab";
+const compilationProvenanceServiceBaseline =
+  "5811bb3013cf25072db74355597f60d85be3c05b";
+const productJourneySmokeBaseline =
+  "8ebfc2ed82a610e63f47eb985c23ab7e634fe94e";
 const preparedCliPackage = "@firstdraft.com/cli@0.1.0-alpha.2";
 const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
@@ -95,52 +103,6 @@ const planStatusErrorCodes = [
   "server_rejected",
   "analysis_changed",
   "wait_timed_out",
-];
-const planCompileErrorCodes = [
-  "authentication_required",
-  "invalid_arguments",
-  "local_input_unreadable",
-  "invalid_configuration",
-  "project_not_pushed",
-  "invalid_output_path",
-  "request_outcome_unknown",
-  "compilation_start_rejected",
-  "compilation_status_unavailable",
-  "invalid_compilation_status",
-  "compilation_changed",
-  "compilation_wait_timed_out",
-  "compilation_failed",
-  "compilation_cancelled",
-  "artifact_unavailable",
-  "invalid_artifact",
-  "materialization_failed",
-];
-const planPublishStatuses = [
-  "compiling",
-  "provisioning_repository",
-  "repository_unknown",
-  "publishing",
-  "publication_unknown",
-  "succeeded",
-  "repository_conflict",
-  "failed",
-  "cancelled",
-];
-const planPublishErrorCodes = [
-  "authentication_required",
-  "invalid_arguments",
-  "local_input_unreadable",
-  "invalid_configuration",
-  "project_not_pushed",
-  "local_plan_changed",
-  "request_outcome_unknown",
-  "publication_start_rejected",
-  "publication_status_unavailable",
-  "invalid_publication_status",
-  "publication_changed",
-  "publication_wait_timed_out",
-  "publication_failed",
-  "publication_cancelled",
 ];
 const supportedScalarFieldTypes = [
   "boolean",
@@ -201,9 +163,10 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   assertRevisionTokens(readme, [
     foundationPlanServerBaseline,
     compilationEvidenceCliBaseline,
-    preparedCliBaseline,
+    cliContractBaseline,
+    compilationProvenanceServiceBaseline,
+    productJourneySmokeBaseline,
     foundationIosCoreRevision,
-    controlledApplicationSmokeBaseline,
     freshAgentEvidenceBaseline,
     freshAgentSkillBaseline,
     freshAgentSkillBaseline.slice(0, 7),
@@ -262,32 +225,25 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   const workflow = (
     await readFile(path.join(repository, ".github", "workflows", "ci.yml"), "utf8")
   ).replace(/^.*uses:\s+\S+@[0-9a-f]{40}.*$/gm, "");
-  assertRevisionTokens(workflow, [preparedCliBaseline]);
-  const contractCheck = await readFile(
-    path.join(repository, "script", "check-cli-contract.mjs"),
+  assertRevisionTokens(workflow, [cliContractBaseline]);
+  const contractConfig = await readFile(
+    path.join(repository, "script", "cli-contract", "config.mjs"),
     "utf8",
   );
-  assertRevisionTokens(contractCheck, [preparedCliBaseline]);
-  assert(
-    contractCheck.includes(
-      `const compilerRelease = "${foundationPlanCompilerRelease}";`,
-    ),
-  );
-  assert(
-    contractCheck.includes(
-      `const compilationTarget = { id: "${foundationPlanTarget.id}", ` +
-        `profile: "${foundationPlanTarget.profile}" };`,
-    ),
-  );
-  assert(
-    contractCheck.includes(`release: "${foundationPlanAnalyzerRelease}",`),
-  );
+  assertRevisionTokens(contractConfig, [cliContractBaseline]);
+  assert(contractConfig.includes(cliContractRuntimeDigest));
+  assert(contractConfig.includes(foundationPlanCompilerRelease));
+  assert(contractConfig.includes(foundationPlanAnalyzerRelease));
+  assert(contractConfig.includes(foundationPlanTarget.profile));
   assertRevisionTokens(
     await readFile(path.join(repository, "test", "repository.test.mjs"), "utf8"),
     [
       foundationPlanServerBaseline,
       compilationEvidenceCliBaseline,
       preparedCliBaseline,
+      cliContractBaseline,
+      compilationProvenanceServiceBaseline,
+      productJourneySmokeBaseline,
       foundationIosCoreRevision,
       controlledApplicationSmokeBaseline,
       freshAgentEvidenceBaseline,
@@ -1066,13 +1022,17 @@ test("repository inventory traverses .git directories and rejects unsafe .git en
   }
 });
 
-test("CI checks a permanent exact prepared successor CLI contract", async () => {
+test("CI checks the exact modular CLI contract", async () => {
   const workflow = await readFile(
     path.join(repository, ".github", "workflows", "ci.yml"),
     "utf8",
   );
   const contractCheck = await readFile(
     path.join(repository, "script", "check-cli-contract.mjs"),
+    "utf8",
+  );
+  const contractConfig = await readFile(
+    path.join(repository, "script", "cli-contract", "config.mjs"),
     "utf8",
   );
   assert.match(
@@ -1084,116 +1044,119 @@ test("CI checks a permanent exact prepared successor CLI contract", async () => 
   assert.match(
     workflow,
     new RegExp(
-      `merge-base --is-ancestor ${preparedCliBaseline} HEAD`,
+      `merge-base --is-ancestor ${cliContractBaseline} HEAD`,
     ),
   );
   assert.match(
     workflow,
-    new RegExp(`checkout --detach ${preparedCliBaseline}`),
+    new RegExp(`checkout --detach ${cliContractBaseline}`),
   );
   assert.match(
     workflow,
     /node script\/check-cli-contract\.mjs tmp\/firstdraft-cli/,
   );
-  assert(
-    contractCheck.includes(
-      `const cliBaseline = "${preparedCliBaseline}";`,
+  assert(contractConfig.includes(cliContractBaseline));
+  assert(contractConfig.includes(cliContractRuntimeDigest));
+  assert.match(contractConfig, /src\/commands\/compilation\.js/);
+  for (const module of [
+    "compilations",
+    "local-commands",
+    "packed-executable",
+    "plan-journey",
+    "plan-status",
+    "publication-validation",
+  ]) {
+    assert.match(contractCheck, new RegExp(`cli-contract/${module}\\.mjs`));
+  }
+  assert.match(contractCheck, /MAX_ARTIFACT_BYTES, 16 \* 1024 \* 1024/);
+  assert.match(contractCheck, /verifyPlanJourney/);
+  assert.match(contractCheck, /verifyPlanStatusGenerations/);
+  assert.match(contractCheck, /verifyCompilations/);
+  assert.match(contractCheck, /verifyPublicationValidation/);
+  assert.match(contractCheck, /verifyPackedExecutable/);
+
+  const contractModules = Object.fromEntries(
+    await Promise.all(
+      [
+        "artifact-safety",
+        "compilations",
+        "local-commands",
+        "packed-executable",
+        "plan-journey",
+        "plan-status",
+        "publication-validation",
+      ].map(async (name) => [
+        name,
+        await readFile(
+          path.join(repository, "script", "cli-contract", `${name}.mjs`),
+          "utf8",
+        ),
+      ]),
     ),
   );
-  assert(contractCheck.includes(preparedCliRuntimeDigest));
-  assert(
-    contractCheck.includes('const cliPackageName = "@firstdraft.com/cli";'),
-  );
-  assert(
-    contractCheck.includes('const cliPackageVersion = "0.1.0-alpha.2";'),
-  );
-  assert.match(
-    contractCheck,
-    /assert\.equal\(packageMetadata\.name, cliPackageName\);[\s\S]*?assert\.equal\(packageMetadata\.version, cliPackageVersion\);/,
-  );
-  assert.match(
-    contractCheck,
-    /ios\/FoundationApp\/Generated\/ApplicationDefinition\.swift[\s\S]*?ios\/bin\/ios[\s\S]*?mode: 0o755/,
-  );
-  assert.match(
-    contractCheck,
-    /statSync\(iosCommand\)\.mode & 0o777, 0o755/,
-  );
-  assert.match(
-    contractCheck,
-    /MAX_ARTIFACT_BYTES[\s\S]*?16 \* 1024 \* 1024/,
-  );
-  assert.match(contractCheck, /unsupported-graph-analysis\.json/);
-  assert.match(
-    contractCheck,
-    /\["plan", "publish"\][\s\S]*?publicationPath\(projectId\)[\s\S]*?firstdraft plan publish/,
-  );
-  assert.match(
-    contractCheck,
-    /provisioning_repository[\s\S]*?repository_unknown[\s\S]*?publishing[\s\S]*?publication_unknown[\s\S]*?repository_conflict/,
-  );
-  for (const code of planPublishErrorCodes) {
-    assert(
-      contractCheck.includes(`"${code}"`),
-      `CLI contract check: missing Publication error ${code}`,
-    );
+  const requiredCoverage = {
+    "artifact-safety": [
+      "invalid_artifact",
+      "materialization_failed",
+      "../traversal-escape.rb",
+      "0o4755",
+      "transport-digest",
+      "status-byte-size",
+      "provenanceHeadSourceSha256",
+    ],
+    compilations: [
+      "./artifact-safety.mjs",
+      "compilation_not_succeeded",
+      "artifact_unavailable",
+      "provenanceHeadSourceSha256",
+      "foundation_plan.sha256",
+    ],
+    "local-commands": [
+      "invalid_configuration",
+      "local_initialization_failed",
+      "authentication_required",
+      "compilationTarget",
+    ],
+    "packed-executable": [
+      "packed-download",
+      "foundation_plan.sha256",
+      "invokeExecutableAsync",
+      "compilationTarget",
+    ],
+    "plan-journey": [
+      "local_plan_changed",
+      "plan_not_valid",
+      "analysis_failed",
+      "analysis_wait_timed_out",
+      "request_outcome_unknown",
+      "malformed-json-diagnostics.json",
+    ],
+    "plan-status": [
+      "project_not_pushed",
+      "status_unavailable",
+      "invalid_server_response",
+      "server_rejected",
+      "recurring-issues-analysis.json",
+    ],
+    "publication-validation": [
+      "invalid_publication_status",
+      "publication_changed",
+      "publication_failed",
+      "publication_cancelled",
+      "publication_wait_timed_out",
+      "publication_status_unavailable",
+      "private: false",
+      'type: "Organization"',
+    ],
+  };
+  for (const [module, tokens] of Object.entries(requiredCoverage)) {
+    for (const token of tokens) {
+      assert(
+        contractModules[module].includes(token),
+        `${module}: missing contract coverage for ${token}`,
+      );
+    }
   }
-  assert.match(
-    contractCheck,
-    /authorization[\s\S]*?Bearer \$\{publicationApiToken\}/,
-  );
-  assert.match(
-    contractCheck,
-    /projectHeadSourceSha256 = headSourceSha256[\s\S]*?compilationHeadSourceSha256 = headSourceSha256[\s\S]*?project:[\s\S]*?head_source_sha256: projectHeadSourceSha256[\s\S]*?compilation:[\s\S]*?head_source_sha256: compilationHeadSourceSha256[\s\S]*?publication:/,
-  );
-  assert.match(
-    contractCheck,
-    /runner-publish-cross-invocation-identity-boundary[\s\S]*?replayStateBefore[\s\S]*?initialReplayCandidate[\s\S]*?publicationResponse\(replayProjectId, "succeeded"\)[\s\S]*?201[\s\S]*?publicationIdentifier: changedPublicationId[\s\S]*?200[\s\S]*?replayRequests, 2[\s\S]*?readFileSync\(replayStatePath\), replayStateBefore[\s\S]*?"foundation_plan_etag"[\s\S]*?"project_id"/,
-  );
-  assert.match(
-    contractCheck,
-    /for \(const status of \[408, 503\]\)[\s\S]*?problemResponse\(problem, status\)[\s\S]*?\["PUT", "GET"\]/,
-  );
-  assert.match(
-    contractCheck,
-    /repository_unknown[\s\S]*?provisioning_repository[\s\S]*?publication_unknown[\s\S]*?publishing[\s\S]*?runner-publish-observation-only-\$\{currentStatus\}[\s\S]*?envelope\.current\.publication\.status[\s\S]*?envelope\.rejected\.publication\.status/,
-  );
-  assert.match(
-    contractCheck,
-    /changedEnvelope\.current\.publication\.id, publicationId[\s\S]*?changedEnvelope\.rejected\.publication\.id, changedPublicationId/,
-  );
-  assert.match(
-    contractCheck,
-    /different-compilation-graph-version[\s\S]*?compilationGraphVersion: 2[\s\S]*?runner-publish-changed-graph-version[\s\S]*?projectGraphVersion: 2[\s\S]*?changedGraphEnvelope\.current\.project\.graph_version, 1[\s\S]*?changedGraphEnvelope\.rejected\.project\.graph_version, 2/,
-  );
-  assert.match(
-    contractCheck,
-    /status === "cancelled"[\s\S]*?compilationStatusOverride: "succeeded"[\s\S]*?forceRepository: true[\s\S]*?tree_sha: "7"\.repeat\(40\)[\s\S]*?commit_sha: "8"\.repeat\(40\)[\s\S]*?envelope\.current\.publication\.repository\.html_url[\s\S]*?envelope\.current\.publication\.repository\.tree_sha[\s\S]*?envelope\.current\.publication\.repository\.commit_sha/,
-  );
-  assert.match(
-    contractCheck,
-    /runner-publish-cancelled-during-compilation[\s\S]*?cancelledDuringCompilationEnvelope\.current\.compilation\.status, "cancelled"[\s\S]*?cancelledDuringCompilationEnvelope\.current\.compilation\.artifact, null[\s\S]*?cancelledDuringCompilationEnvelope\.current\.publication\.repository, null/,
-  );
-  assert.match(
-    contractCheck,
-    /publication_status_unavailable[\s\S]*?invalidProjectionCases[\s\S]*?private: false[\s\S]*?type: "Organization"[\s\S]*?projectIdentifier: mismatchedPublicationProjectId[\s\S]*?projectHeadSourceSha256[\s\S]*?compilationHeadSourceSha256/,
-  );
-  assert.match(
-    contractCheck,
-    /runner-publish-mismatched-reconciliation[\s\S]*?request_outcome_unknown/,
-  );
-  assert.match(
-    contractCheck,
-    /mismatchedReconciliationEnvelope\.status, 200[\s\S]*?mismatchedReconciliationEnvelope\.response, undefined[\s\S]*?runner-publish-ambiguous-problem-then-network-error[\s\S]*?ambiguousProblemEnvelope\.status, 503[\s\S]*?ambiguousProblemEnvelope\.response[\s\S]*?ambiguousProblemMethods, \["PUT", "GET"\]/,
-  );
-  assert.match(
-    contractCheck,
-    /runner-publish-dual-problem-get-precedence[\s\S]*?dualPutProblem[\s\S]*?status: 503[\s\S]*?dualGetProblem[\s\S]*?status: 404[\s\S]*?dualProblemEnvelope\.status, 404[\s\S]*?dualProblemEnvelope\.response[\s\S]*?dualProblemMethods, \["PUT", "GET"\]/,
-  );
-  assert.match(
-    contractCheck,
-    /node_modules[\s\S]*?@firstdraft\.com[\s\S]*?cli[\s\S]*?bin[\s\S]*?firstdraft\.js/,
-  );
 });
 
 test("behavioral eval cases are well-formed and reference real fixtures", async () => {
@@ -1686,7 +1649,7 @@ test("validator routing preserves validation boundaries", async () => {
   assert.match(withoutValidator.prompt, /no JSON Schema 2020-12 validator is available/);
   assert.match(withoutValidator.prompt, /Do not install or implement one/);
   assertExpectation(withoutValidator, "without opening the complete bundled schema");
-  assertExpectation(withoutValidator, "plan subject-id exactly eleven times");
+  assertExpectation(withoutValidator, "generate uuid --count 11 exactly once");
   assertExpectation(
     withoutValidator,
     "movie.rating",
@@ -1854,7 +1817,7 @@ test("revision evals stage existing Plan identity and private state", async () =
   );
   assert(
     enumRenameEvaluation.expectations.some((expectation) =>
-      expectation.includes("Does not run plan subject-id"),
+      expectation.includes("Does not run generate uuid"),
     ),
     "enum rename eval must not mint a replacement identity",
   );
@@ -1875,7 +1838,7 @@ test("revision evals stage existing Plan identity and private state", async () =
   );
   assert(
     mintingEvaluation.expectations.some((expectation) =>
-      expectation.includes("plan subject-id exactly once"),
+      expectation.includes("generate uuid exactly once"),
     ),
   );
   assert(
@@ -1888,7 +1851,7 @@ test("revision evals stage existing Plan identity and private state", async () =
   );
   assert(
     enumEvaluation.expectations.some((expectation) =>
-      expectation.includes("plan subject-id exactly four times"),
+      expectation.includes("generate uuid --count 4 exactly once"),
     ),
     "enum eval must mint exactly one Field and three value IDs",
   );
@@ -1945,30 +1908,40 @@ test("revision evals stage existing Plan identity and private state", async () =
   assert.throws(() => JSON.parse(placeholder));
 });
 
-test("subject identities are minted locally before server submission", async () => {
-  const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
-  const skillSource = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
-  const foundationPlanReference = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-019.md"),
-    "utf8",
+test("subject identity evals use the public UUID generator", async () => {
+  const cases = JSON.parse(
+    await readFile(
+      path.join(evalsDirectory, "create-full-stack-app", "cases.json"),
+      "utf8",
+    ),
+  ).cases;
+  const field = cases.find(({ id }) => id === "add-field-with-minted-id");
+  const enumeration = cases.find(
+    ({ id }) => id === "add-ordinal-enum-with-minted-ids",
   );
 
-  assert.match(
-    skillSource,
-    /`firstdraft plan subject-id` for each genuinely new subject[\s\S]*?locally minted ID into the complete\s+candidate before push/,
+  assert.match(field.prompt, /installed firstdraft CLI includes generate uuid/);
+  assert(
+    field.expectations.some((expectation) =>
+      expectation.includes("firstdraft generate uuid exactly once"),
+    ),
   );
   assert.match(
-    skillSource,
-    /`subject_uuid` is client-authored Plan input[\s\S]*?validates and preserves submitted IDs[\s\S]*?does not assign a missing subject identity or replace a submitted one/,
+    enumeration.prompt,
+    /installed firstdraft CLI includes generate uuid/,
   );
-  assert.match(
-    foundationPlanReference,
-    /Mint a new UUID locally with `firstdraft plan subject-id`[\s\S]*?write\s+it into the complete Plan before push/,
+  assert(
+    enumeration.expectations.some((expectation) =>
+      expectation.includes("firstdraft generate uuid --count 4 exactly once"),
+    ),
   );
-  assert.match(
-    foundationPlanReference,
-    /Subject UUIDs are client-authored input[\s\S]*?server\s+validates and preserves them[\s\S]*?does not assign a missing identity or replace a submitted one/,
-  );
+  for (const evaluation of [field, enumeration]) {
+    assert(
+      evaluation.expectations.some((expectation) =>
+        expectation.includes("Never fabricates a UUIDv7"),
+      ),
+    );
+  }
 });
 
 test("bounded import evals bind supported and unsupported Plan state", async () => {
@@ -2126,10 +2099,10 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     );
   }
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
-  assert(readme.includes(preparedCliBaseline));
+  assert(readme.includes(cliContractBaseline));
   assert(
     readme.includes(
-      "| `create-full-stack-app` | Author, analyze, and prepare local Compilation or private GitHub publication | Experimental scaffold |",
+      "| `create-full-stack-app` | Author, analyze, request product Compile, and inspect retained Compilations | Experimental scaffold |",
     ),
   );
   assert.match(readme, /state-placeholder\.txt.*deliberately unreadable/s);
@@ -2147,15 +2120,15 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert.match(
     readme,
-    /Before `push-supported-enum-plan` or\s+`repair-well-founded-analysis-issue`, replace it with `\.firstdraft\/state\.json` generated by a fresh\s+`firstdraft plan init` using the exact prepared CLI revision above in a scratch directory/,
+    /Before `push-supported-enum-plan` or\s+`repair-well-founded-analysis-issue`, replace it with `\.firstdraft\/state\.json` generated by a fresh\s+`firstdraft plan init` using the exact reviewed CLI revision above in a scratch directory/,
   );
   assert.match(
     readme,
-    /`compile-after-explicit-approval` is a server-backed Compilation eval[\s\S]*?exact landed server revision named\s+above with a fresh queue[\s\S]*?exact prepared CLI revision[\s\S]*?replace its Plan with\s+`application-intent\.foundation-plan\.json`, push, and wait for `analysis\.status: "valid"`[\s\S]*?replace the eval's synthetic state fixture with that same Project's resulting post-push\s+`\.firstdraft\/state\.json`[\s\S]*?Ensure `\.\/generated-movies` is absent beneath the scratch Project[\s\S]*?explicitly approve that\s+path, and compile once/,
+    /`compile-movie-catalog-once` is the executable product-journey fixture[\s\S]*?not a fresh-agent eval[\s\S]*?For a future live run[\s\S]*?exact reviewed CLI revision[\s\S]*?install\s+the candidate plugin[\s\S]*?stage\s+`application-intent\.foundation-plan\.json`[\s\S]*?zero-flag `firstdraft plan compile` command[\s\S]*?pushes the exact file[\s\S]*?matching graph generation[\s\S]*?final byte check/,
   );
   assert.match(
     readme,
-    /Never reuse a Project or Compilation\s+across server-backed eval runs or expose state contents/,
+    /Never expose the private state contents/,
   );
   const supportedEnumPlan = JSON.parse(
     await readFile(
@@ -2345,15 +2318,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   }
   assert.match(
     pushSection[1],
-    /issues_found[\s\S]*?well-founded source\s+correction[\s\S]*?one new `plan push`[\s\S]*?`plan status --wait`/,
-  );
-  assert.match(
-    pushSection[1],
     /`foundation_plan\.rails_target\.compiler\.unsupported_application_configuration`[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph`[\s\S]*?current analyzer or output gap rather\s+than invalid product meaning[\s\S]*?addresses intentional product meaning that the current\s+Compiler cannot emit, preserve every addressed member, report every diagnostic and its exact pointer, and stop\s+without editing or another push/,
-  );
-  assert.match(
-    pushSection[1],
-    /corrected\s+candidate otherwise returns `issues_found`[\s\S]*?Do not make a second\s+analysis-directed correction or push without fresh user approval/,
   );
   assert.match(
     pushSection[1],
@@ -2418,14 +2383,6 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     statusReference[1],
-    /`valid` is the gate that Publication and local Compilation require[\s\S]*?authorizes neither action by itself[\s\S]*?does\s+not prove that an artifact or repository can be produced/,
-  );
-  assert.match(
-    statusReference[1],
-    /one\s+corrected candidate otherwise\s+returns `issues_found`[\s\S]*?A second\s+analysis-directed correction and push\s+requires fresh user approval/,
-  );
-  assert.match(
-    statusReference[1],
     /`foundation_plan\.rails_target\.compiler\.unsupported_application_configuration`[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph`[\s\S]*?current Compiler capability gaps rather than\s+invalid product meaning[\s\S]*?addresses intentional meaning that\s+the current Compiler cannot\s+emit, preserve every addressed member, report every diagnostic and its exact pointer,\s+and stop without editing or\s+another push/,
   );
   assert.match(
@@ -2434,15 +2391,19 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     readme,
-    /The `\*-analysis\.json` fixtures and Compilation eval prompts are behavioral examples accepted by the pinned CLI\s+contract, not execution evidence by themselves/,
+    /The `\*-analysis\.json` fixtures and product Compile or retained Compilation eval prompts are behavioral examples\s+accepted by the pinned CLI contract, not execution evidence by themselves/,
   );
   assert.match(
     readme,
-    /exact landed server revision[\s\S]*?activates analyzer\s+`foundation-plan-rails\/application-2026-08` and compiler[\s\S]*?Start the exact landed server revision named\s+above with a fresh queue/,
+    /exact landed server revision used by the earlier bounded local Compilation evidence[\s\S]*?activates analyzer\s+`foundation-plan-rails\/application-2026-08` and compiler/,
+  );
+  assert.match(
+    readme,
+    /successor product-journey harness is pinned to service[\s\S]*?including prerequisite[\s\S]*?`compilation\.head_source_sha256` for historical artifact provenance/,
   );
   assert(
     readme.includes(
-      `firstdraft/firstdraft/blob/${controlledApplicationSmokeBaseline}/script/compilation_http_cli_smoke`,
+      `firstdraft/firstdraft/blob/${productJourneySmokeBaseline}/script/compilation_http_cli_smoke`,
     ),
   );
   assert(
@@ -2454,13 +2415,22 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert(readme.includes(foundationPlanServerBaseline));
   assert(readme.includes(compilationEvidenceCliBaseline));
   assert(readme.includes(compilationEvidenceCliRuntimeDigest));
-  assert(readme.includes(preparedCliBaseline));
-  assert(readme.includes(preparedCliRuntimeDigest));
+  assert(readme.includes(cliContractBaseline));
+  assert(readme.includes(cliContractRuntimeDigest));
+  assert(readme.includes(productJourneySmokeBaseline));
   assert(readme.includes(foundationIosCoreRevision));
   assert(readme.includes(foundationIosCoreArchiveDigest));
   assert.match(
     readme,
-    /committed[\s\S]*?controlled CLI smoke[\s\S]*?reproducibly drives[\s\S]*?194-file two-Entity materialization[\s\S]*?without executing the generated application/,
+    /committed[\s\S]*?controlled product-journey harness[\s\S]*?exact-byte push[\s\S]*?one product Compile[\s\S]*?one successful Publication against a strict fake GitHub remote[\s\S]*?historical download after the local Plan changes/,
+  );
+  assert.match(
+    readme,
+    /final two local runs each produced one Project,[\s\S]*?one Compilation, one Publication[\s\S]*?exact two-attempt fake-GitHub ledger for repository creation followed by\s+artifact publication[\s\S]*?194-file, 542,894-byte artifact[\s\S]*?distinct submitted-Head and canonical-Plan digests[\s\S]*?matching authored order/,
+  );
+  assert.match(
+    readme,
+    /does not contact live GitHub or staging, execute the generated application, or prove a\s+fresh-agent journey/,
   );
   assert.match(
     readme,
@@ -2477,11 +2447,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     readme,
-    /dated field report records the server, CLI, runtime, Skill, analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
-  );
-  assert.match(
-    readme,
-    /Compilation eval's 190-file response remains deterministic synthetic transport data[\s\S]*?not the 194-file\s+output observed by the controlled smoke and dated field report/,
+    /dated field report records the server, CLI, runtime,\s+Skill,\s+analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
   );
   const skillEvidence = skillSource.match(
     /This Skill is experimental\.([\s\S]*?)## Load the relevant references/,
@@ -2610,13 +2576,40 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.equal(reservedEntity.key, "string");
   assert.equal(reservedEntity.primary_descriptor.field, "string.title");
 
-  const recurring = cases.find(
-    ({ id }) => id === "recurring-analysis-issues-stop",
+  const acceptedGeneration = cases.find(
+    ({ id }) => id === "standalone-status-binds-accepted-generation",
   );
-  assert.match(recurring.prompt, /one analysis-directed correction/);
+  assert.match(acceptedGeneration.prompt, /push accepted graph version 8/);
+  assert(
+    acceptedGeneration.expectations.some((expectation) =>
+      expectation.includes("project.graph_version 8") &&
+      expectation.includes("foundation_plan.source_sha256"),
+    ),
+  );
+  assert(
+    acceptedGeneration.expectations.some((expectation) =>
+      expectation.includes("another bounded plan status --wait read"),
+    ),
+  );
+  assert(
+    acceptedGeneration.expectations.some((expectation) =>
+      expectation.includes("both project.graph_version and analysis.graph_version equal 8") &&
+      expectation.includes("replacement generation"),
+    ),
+  );
+
+  const recurring = cases.find(
+    ({ id }) => id === "recurring-analysis-issues",
+  );
+  assert.match(recurring.prompt, /Two diagnostic cycles/);
   assert(
     recurring.expectations.some((expectation) =>
-      expectation.includes("Stops after reporting"),
+      expectation.includes("have not produced new information"),
+    ),
+  );
+  assert(
+    recurring.expectations.some((expectation) =>
+      expectation.includes("Does not impose a universal retry count"),
     ),
   );
   assert.deepEqual(
@@ -2921,207 +2914,15 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   }
 });
 
-test("Publication guidance follows the prepared singleton CLI contract", async () => {
-  const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
+test("product Compile and retained Compilation evals match the CLI contract", async () => {
   const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
-  const skillSource = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
-  const recoveryReference = await readFile(
-    path.join(skillDirectory, "references", "diagnostics-and-recovery.md"),
-    "utf8",
-  );
-  const readme = await readFile(path.join(repository, "README.md"), "utf8");
   const cases = JSON.parse(
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
-  const publishSection = skillSource.match(
-    /## Publish an analyzer-valid Plan([\s\S]*?)## Compile locally for development/,
-  );
-  assert(publishSection, "SKILL.md: missing Publication section");
-  assert.match(skillSource, /Before private GitHub publication, also require `plan publish`/);
-  assert.match(
-    publishSection[1],
-    /explicit request to create or publish the app with First Draft authorizes exactly one singleton private GitHub\s+publication[\s\S]*?terminal\s+`valid` analysis[\s\S]*?no subsequent local Plan edit/,
-  );
-  assert.match(
-    publishSection[1],
-    /request only to author, review, send, validate, analyze, or\s+repair a Plan stops at analysis and never authorizes Publish/,
-  );
-  assert.match(
-    publishSection[1],
-    /Publication approval is bound to that exact accepted Plan Head,[\s\S]*?Project, graph version, and source digest[\s\S]*?never floats to a later Head/,
-  );
-  assert.match(
-    publishSection[1],
-    /session resumes[\s\S]*?stop before starting a Publication[\s\S]*?initial-start rule\s+does not block a fresh user-directed reconciliation when this current workflow observed its earlier `plan publish`\s+invocation return a handled Publication recovery error/,
-  );
-  assert.match(
-    skillSource,
-    /Run `firstdraft plan push` only when the\s+user explicitly asks to send the Plan, obtain First Draft diagnostics, asks First Draft to create or publish the\s+app, or approves that action and its destination/,
-  );
-  assert.match(
-    skillSource,
-    /original explicit request for First Draft to create or publish the app already authorizes one Publish[\s\S]*?diagnostics-only request does not/,
-  );
-  assert.match(
-    publishSection[1],
-    /firstdraft plan publish/,
-  );
-  assert.match(
-    publishSection[1],
-    /Do not pass flags, run `plan compile` first, make a direct request, inspect private state, or wrap the command in an\s+automatic retry/,
-  );
-  assert.match(
-    publishSection[1],
-    /one conditional singleton PUT[\s\S]*?one bounded reconciliation read after an ambiguous PUT[\s\S]*?sequential status polling for up to ten minutes/,
-  );
-  assert.match(
-    publishSection[1],
-    /initial\s+creation, the saved strong ETag must still identify the live Project Head[\s\S]*?response's `project`\s+object is immutable Publication provenance rather than a projection of the live mutable Project/,
-  );
-  assert.match(
-    publishSection[1],
-    /pins the Publication identity during that invocation's\s+polling[\s\S]*?Private state does not retain a Publication identity across invocations[\s\S]*?unreleased server endpoint,\s+not the CLI, is responsible for returning the one Project singleton on a later `200`[\s\S]*?initial projection/,
-  );
-  assert.match(
-    publishSection[1],
-    /live Project may\s+advance elsewhere while the\s+unchanged local file and state still pin and safely replay the original Publication Head[\s\S]*?advanced to a newer Head cannot adopt that older Publication/,
-  );
-  assert.match(
-    publishSection[1],
-    /`200` response can\s+therefore be a safe replay of\s+the same Project's singleton[\s\S]*?not authorization for another publication/,
-  );
-  for (const status of planPublishStatuses) {
-    assert(
-      publishSection[1].includes(`\`${status}\``),
-      `SKILL.md: missing Publication status ${status}`,
-    );
-  }
-  for (const code of planPublishErrorCodes) {
-    assert(
-      publishSection[1].includes(`\`${code}\``),
-      `SKILL.md: missing plan publish branch for ${code}`,
-    );
-  }
-  assert.match(
-    publishSection[1],
-    /standard output is only the validated URL of the private personal-account GitHub repository/,
-  );
-  assert.match(
-    publishSection[1],
-    /Reconciliation from `repository_unknown` or\s+`publication_unknown` is observation-only[\s\S]*?never repeat the uncertain mutation[\s\S]*?terminal `cancelled` state[\s\S]*?does not roll back/,
-  );
-  assert.match(
-    publishSection[1],
-    /Project's singleton publication is terminal[\s\S]*?Another attempt requires creating a fresh Project[\s\S]*?no Project-fork operation[\s\S]*?fresh Plan whose first push creates a new\s+Project/,
-  );
-  assert.match(
-    publishSection[1],
-    /`request_outcome_unknown`[\s\S]*?optional validated `status` and whitelisted `response`[\s\S]*?Do not\s+retry automatically[\s\S]*?fresh user request may run the\s+same zero-flag command to ask the server to reconcile its singleton and validate the retained Head[\s\S]*?never\s+authorizes creating a second Publication/,
-  );
-  assert.match(
-    publishSection[1],
-    /`authentication_required`[\s\S]*?token may have been absent before any request[\s\S]*?singleton PUT was attempted[\s\S]*?Under the unreleased server singleton contract[\s\S]*?fresh invocation after the token is replaced either\s+creates or safely replays that singleton[\s\S]*?CLI does not compare it with a locally stored prior Publication ID[\s\S]*?cannot create or authorize a second Publication/,
-  );
-  assert.match(
-    publishSection[1],
-    /`publication_status_unavailable`[\s\S]*?singleton may still be running and its outcome is unknown[\s\S]*?`invalid_publication_status`[\s\S]*?singleton may still be running[\s\S]*?do not call the Publication failed, succeeded, or published[\s\S]*?same zero-flag command to ask the server to reconcile its singleton and validate the retained Head/,
-  );
-  assert.match(
-    publishSection[1],
-    /fresh user-directed reconciliation invocation[\s\S]*?same zero-flag command from the unchanged Project\s+and local Plan[\s\S]*?Do not edit private state, reconstruct the saved strong Plan ETag, push a\s+replacement Plan, or run a separate Compilation[\s\S]*?validate the returned exact accepted\s+Head[\s\S]*?Cross-invocation Publication-identity continuity is an unreleased server singleton guarantee rather than\s+locally retained proof/,
-  );
-  assert.match(
-    publishSection[1],
-    /`publication_changed`[\s\S]*?`current` projection is the last accepted pinned lifecycle[\s\S]*?`rejected` projection is the next response that did not preserve it[\s\S]*?Do\s+not poll directly, follow the rejected projection/,
-  );
-  assert.match(
-    publishSection[1],
-    /unknown, failed, conflicted, or cancelled outcome[\s\S]*?may have left a private GitHub\s+repository or commit[\s\S]*?null or absent repository projection does not prove[\s\S]*?never delete or change a repository[\s\S]*?exact verified repository identity[\s\S]*?unidentified "anything left behind"/,
-  );
-
-  const referenceSection = recoveryReference.match(
-    /## Singleton GitHub publication([\s\S]*?)## Compilation and local materialization/,
-  );
-  assert(referenceSection, "diagnostics reference: missing Publication boundary");
-  assert.match(
-    referenceSection[1],
-    /prepared, unreleased contract[\s\S]*?no live endpoint or completed staging smoke[\s\S]*?established local\s+Compilation evidence does not prove Publication/,
-  );
-  assert.match(
-    referenceSection[1],
-    /`PUT \/v1\/projects\/:project_id\/github-publication`[\s\S]*?reconciles an ambiguous PUT with one singleton GET[\s\S]*?never auto-repeats the mutation/,
-  );
-  assert.match(
-    referenceSection[1],
-    /validated `201`\s+creates the singleton[\s\S]*?validated `200` safely replays it/,
-  );
-  assert.match(
-    referenceSection[1],
-    /initial-start gate does not block a fresh user-directed reconciliation when the current workflow itself\s+observed an earlier `plan publish` return a handled recovery error[\s\S]*?reconciliation rules below govern that\s+bounded replay/,
-  );
-  assert.match(
-    referenceSection[1],
-    /initial\s+creation, the strong ETag must identify the live Project Head[\s\S]*?response's `project`\s+object is immutable Publication provenance rather than a projection of the live mutable Project[\s\S]*?live Project may\s+advance elsewhere[\s\S]*?local\s+state advanced to a newer Head cannot\s+adopt the older Publication/,
-  );
-  assert.match(
-    referenceSection[1],
-    /endpoint is unreleased[\s\S]*?singleton identity and replay after a live-Project advance remain server contract\s+assumptions[\s\S]*?local harness proves that the CLI accepts matching retained provenance, accepts a fresh `200`\s+identity because none is stored locally, and rejects changes after its initial projection/,
-  );
-  assert.deepEqual(
-    [...referenceSection[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
-      .map(([, value]) => value)
-      .filter((value) => value !== "error"),
-    [...planPublishStatuses, ...planPublishErrorCodes],
-  );
-  assert.match(
-    referenceSection[1],
-    /Another attempt requires creating a\s+fresh Project[\s\S]*?observation-only[\s\S]*?never repeat\s+the uncertain mutation[\s\S]*?Cancellation fences later\s+promotion but does not roll back/,
-  );
-  assert.match(
-    referenceSection[1],
-    /A fresh user\s+request may invoke the same zero-flag command to ask the server to reconcile its singleton and validate the retained\s+Head[\s\S]*?never authorizes another Publication/,
-  );
-  assert.match(
-    referenceSection[1],
-    /`authentication_required` is not terminal[\s\S]*?token may have been absent before any request[\s\S]*?singleton PUT was attempted[\s\S]*?Under the unreleased server singleton\s+contract[\s\S]*?create or safely replay that singleton[\s\S]*?locally stored prior Publication ID/,
-  );
-  assert.match(
-    referenceSection[1],
-    /`publication_status_unavailable` and `invalid_publication_status`[\s\S]*?outcome unknown and\s+possibly nonterminal[\s\S]*?Do not call it failed, succeeded, or published[\s\S]*?same\s+zero-flag command to ask the server to reconcile its singleton and validate the retained Head/,
-  );
-  assert.match(
-    referenceSection[1],
-    /no Project-fork command or server operation[\s\S]*?separate, user-chosen project directory[\s\S]*?fresh `plan init`[\s\S]*?first successful push creates a distinct server Project[\s\S]*?fresh Project, not a fork[\s\S]*?fresh explicit user\s+request/,
-  );
-  assert.match(
-    referenceSection[1],
-    /user-directed reconciliation invocation[\s\S]*?unchanged Project and local Plan with the same saved\s+strong Plan ETag[\s\S]*?Do not edit private state, reconstruct the ETag, push a replacement Plan,[\s\S]*?validate the returned exact accepted Head[\s\S]*?Cross-invocation Publication-identity continuity is an unreleased server singleton guarantee rather than locally\s+retained proof/,
-  );
-  assert.match(
-    referenceSection[1],
-    /`publication_changed` includes both the last accepted pinned `current` projection[\s\S]*?inconsistent next `rejected` projection[\s\S]*?never follow `rejected`/,
-  );
-  assert.match(
-    referenceSection[1],
-    /`request_outcome_unknown` can also include a validated `status` and whitelisted `response`[\s\S]*?neither proves that the\s+singleton mutation failed[\s\S]*?reconciliation-GET\s+problem takes precedence[\s\S]*?bare `status` may even be a successful response/,
-  );
-  assert.match(
-    referenceSection[1],
-    /null or absent repository projection is not proof that none exists[\s\S]*?Even\s+when deletion is requested, first require the exact verified repository identity[\s\S]*?unidentified\s+"anything left behind"/,
-  );
-
-  assert.match(
-    readme,
-    /combined CLI, Skill, and service workflow remains unreleased[\s\S]*?prepared zero-flag `plan publish`\s+contract[\s\S]*?no live endpoint or\s+completed\s+staging smoke/,
-  );
-  assert.match(
-    readme,
-    /publication evals are behavioral contract inputs only[\s\S]*?diagnostics-only\s+requests stop at analysis[\s\S]*?terminal Publication[\s\S]*?fresh Plan in a separate\s+directory whose first push creates a new Project[\s\S]*?no Project-fork operation/,
-  );
-
+  const readme = await readFile(path.join(repository, "README.md"), "utf8");
   const evaluation = (id) => {
     const value = cases.find((candidate) => candidate.id === id);
-    assert(value, `missing Publication eval: ${id}`);
+    assert(value, `missing CLI workflow eval: ${id}`);
     assert.equal(value.should_trigger, true);
     return value;
   };
@@ -3134,325 +2935,190 @@ test("Publication guidance follows the prepared singleton CLI contract", async (
     );
   };
 
-  const approved = evaluation("publish-after-explicit-create-request");
-  assert.match(approved.prompt, /create and publish/);
-  assert.match(approved.prompt, /Send this candidate, wait for its whole-graph analysis/);
-  hasExpectation(approved, "exactly one singleton private GitHub Publication");
-  hasExpectation(approved, "firstdraft plan publish exactly once with no flags");
-  hasExpectation(approved, "Does not run plan compile");
+  assert(readme.includes(cliContractBaseline));
+  assert(readme.includes(cliContractRuntimeDigest));
+  assert(readme.includes(compilationProvenanceServiceBaseline));
+  assert.match(
+    readme,
+    /zero-flag `plan compile` command pushes[\s\S]*?accepted graph generation[\s\S]*?valid unchanged candidate/,
+  );
+  assert.match(
+    readme,
+    /Public `plan publish` and local-start\s+`plan compile --output` are not commands[\s\S]*?`compilation download <id> --output <path>`/,
+  );
+  assert.match(
+    readme,
+    /diagnostic corpus deliberately exercises malformed JSON, local schema diagnostics, semantic and recurring\s+diagnostics, a standalone status result older than its accepted push generation, stale product-Compile analysis,\s+stale local Plan bytes, and phase-specific ambiguous push and Publication outcomes/,
+  );
+  assert.match(
+    readme,
+    /retains the push graph version\s+and source digest, reads again when status is older, and surfaces a newer generation as a replacement/,
+  );
+  assert.match(
+    readme,
+    /does not\s+require a permission ceremony around ordinary pushes or impose an unchanged-byte or retry-count rule/,
+  );
+  assert.match(
+    readme,
+    /controlled local harness at service\s+revision[\s\S]*?corresponding service-backed Movie Catalog\s+journey through real local Compilation and Publication coordination with a strict fake for remote GitHub work[\s\S]*?not a fresh-agent eval/,
+  );
+  assert.match(
+    readme,
+    /does not establish a live GitHub or\s+staging Publication, generated-application execution, representative external-agent or user operation, deployment,\s+or production readiness/,
+  );
+
+  const schemaRepair = evaluation("repair-local-schema-diagnostic");
+  hasExpectation(schemaRepair, "instancePath", "application.key");
+  hasExpectation(schemaRepair, "one complete parseable Plan snapshot");
+  const schemaPlan = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "schema-invalid.foundation-plan.txt",
+      ),
+      "utf8",
+    ),
+  );
+  const schemaDiagnostics = JSON.parse(
+    await readFile(
+      path.join(
+        evaluationDirectory,
+        "fixtures",
+        "schema-key-diagnostics.json",
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(schemaPlan.application.key, "Movie Catalog");
+  assert.equal(schemaDiagnostics.errors[0].instancePath, "/application/key");
+
+  const malformed = evaluation("compile-invalid-candidate-is-safe");
+  hasExpectation(malformed, "zero-flag firstdraft plan compile");
+  hasExpectation(malformed, "invalid analysis prevents", "Publication phase");
+  hasExpectation(malformed, "early Compile attempt as harmful");
+
+  const movie = evaluation("compile-movie-catalog-once");
+  hasExpectation(movie, "not public plan publish or plan compile --output");
+  hasExpectation(movie, "firstdraft plan compile exactly once");
+  hasExpectation(movie, "pushes the exact whole file", "accepted graph generation");
+  hasExpectation(movie, "private GitHub repository URL");
+  assert.deepEqual(movie.artifacts, [
+    {
+      path:
+        "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+      role: "input",
+      stage_as: ".firstdraft/foundation-plan.json",
+    },
+    {
+      path:
+        "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+      role: "input",
+      stage_as: ".firstdraft/state.json",
+    },
+  ]);
+
+  const semantic = evaluation("compile-semantic-diagnostics");
+  hasExpectation(semantic, "Branches on plan_not_valid", "semantic diagnostics");
+  hasExpectation(semantic, "no Publication was requested");
+
+  const recurring = evaluation("compile-recurring-diagnostics");
+  hasExpectation(recurring, "recurring diagnostic has not produced new information");
+  hasExpectation(recurring, "Does not impose a universal retry count");
+  hasExpectation(recurring, "Does not claim successful Compilation or Publication");
+
+  const generation = evaluation(
+    "compile-waits-for-accepted-analysis-generation",
+  );
+  hasExpectation(generation, "ignores the stale graph-version-7 analysis");
+  hasExpectation(generation, "match accepted graph version 8");
+
+  const staleBytes = evaluation("compile-stale-plan-bytes");
+  hasExpectation(staleBytes, "Branches on local_plan_changed");
+  hasExpectation(staleBytes, "stopped before Publication");
+  hasExpectation(staleBytes, "reruns the whole zero-flag product Compile");
+
+  const ambiguousPush = evaluation("compile-ambiguous-push-outcome");
+  assert.match(ambiguousPush.prompt, /phase push/);
+  hasExpectation(ambiguousPush, "phase push", "before analysis or Publication");
+  hasExpectation(ambiguousPush, "conditional-write reconciliation");
+
+  const ambiguousPublication = evaluation(
+    "compile-ambiguous-publication-outcome",
+  );
+  assert.match(ambiguousPublication.prompt, /phase publication/);
+  hasExpectation(
+    ambiguousPublication,
+    "phase publication",
+    "repository creation may have succeeded",
+  );
+  hasExpectation(ambiguousPublication, "reconcile", "retained Head provenance");
+
+  const success = evaluation("report-successful-product-compile");
+  hasExpectation(success, "private repository URL");
+  hasExpectation(success, "successful product Compile and GitHub Publication");
+  hasExpectation(success, "not local artifact materialization or deployment");
+
+  const terminal = evaluation("compilation-status-terminal-failure");
+  hasExpectation(terminal, "firstdraft compilation status", "exact UUID");
+  hasExpectation(terminal, "failed", "exit status zero");
+  hasExpectation(terminal, "standalone status command", "plan compile");
+
+  const wait = evaluation("compilation-wait-success");
+  hasExpectation(wait, "firstdraft compilation status", "--wait");
+  hasExpectation(wait, "queued, running, then succeeded");
+
+  const download = evaluation("compilation-download-success");
+  hasExpectation(download, "firstdraft compilation download", "--output");
+  hasExpectation(
+    download,
+    "artifact Head digest against the retained Compilation",
+    "atomic materialization",
+  );
+  hasExpectation(
+    download,
+    "canonical Foundation Plan digest",
+    "may legitimately differ",
+  );
+  hasExpectation(download, "historical download can succeed", "live Project Head has advanced");
+
+  const provenance = evaluation("compilation-download-provenance-failure");
+  hasExpectation(provenance, "Branches on invalid_artifact");
+  hasExpectation(provenance, "do not prove one exact Plan snapshot");
+  hasExpectation(provenance, "Does not weaken provenance validation");
+
+  const publicationFailure = evaluation(
+    "compile-terminal-publication-failure",
+  );
+  hasExpectation(publicationFailure, "Branches on publication_failed");
+  hasExpectation(
+    publicationFailure,
+    "private repository identity",
+    "actually contains",
+  );
+  hasExpectation(
+    publicationFailure,
+    "Does not promise",
+    "terminal name conflict",
+  );
+
+  const nonsucceeded = evaluation("compilation-download-not-succeeded");
+  hasExpectation(nonsucceeded, "Branches on compilation_not_succeeded");
+  hasExpectation(nonsucceeded, "Does not request an artifact");
+
+  const existing = evaluation("compilation-download-existing-output");
+  hasExpectation(existing, "local preflight failure", "no status or artifact request");
+  hasExpectation(existing, "Preserves the existing destination");
+
+  const unavailable = evaluation("compilation-artifact-unavailable");
+  hasExpectation(unavailable, "Branches on artifact_unavailable");
+  hasExpectation(unavailable, "without changing", "succeeded status");
+
   assert.equal(
-    approved.artifacts.find(({ stage_as: stageAs }) =>
-      stageAs === ".firstdraft/state.json"
-    ).path,
-    "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+    cases.filter(({ id }) => id.startsWith("publish-")).length,
+    0,
+    "the eval corpus must not retain the removed public plan publish workflow",
   );
-
-  const resumed = evaluation("publish-resumed-session-without-evidence");
-  hasExpectation(resumed, "does not establish the current-workflow push");
-  hasExpectation(resumed, "Stops without running plan publish, plan push, plan status, or plan compile");
-
-  const diagnosticsOnly = evaluation("compile-requires-separate-approval");
-  hasExpectation(diagnosticsOnly, "Does not run plan publish or plan compile");
-
-  const blocked = evaluation("publish-blocked-by-analysis-issues");
-  hasExpectation(blocked, "does not bypass", "valid whole-graph analysis");
-  hasExpectation(blocked, "instead of running plan publish or plan compile");
-
-  const missing = evaluation("publish-command-missing");
-  hasExpectation(missing, "missing plan publish command");
-  hasExpectation(missing, "Does not approximate Publication", "direct requests or GitHub calls");
-
-  const success = evaluation("report-successful-private-publication");
-  hasExpectation(success, "validated private personal-account repository URL");
-  hasExpectation(success, "deployment is unsupported in this slice");
-  hasExpectation(success, "not public, deployed, production-ready, a completed staging smoke");
-
-  const authentication = evaluation("publish-authentication-required-stop");
-  hasExpectation(authentication, "Branches on authentication_required");
-  hasExpectation(authentication, "configure or replace FIRSTDRAFT_API_TOKEN outside the conversation");
-  hasExpectation(authentication, "Does not retry plan publish automatically");
-
-  const ambiguous = evaluation("publish-ambiguous-outcome-stop");
-  hasExpectation(ambiguous, "singleton PUT may have succeeded");
-  hasExpectation(ambiguous, "Stops instead of automatically rerunning plan publish");
-
-  const replayAfterAdvance = evaluation(
-    "publish-replay-after-live-project-advance",
-  );
-  assert.match(replayAfterAdvance.prompt, /Earlier in this current workflow, you observed/);
-  hasExpectation(replayAfterAdvance, "unreleased server contract", "do not store the prior Publication ID");
-  hasExpectation(replayAfterAdvance, "same zero-flag firstdraft plan publish", "at most once");
-
-  const changed = evaluation("publish-changed-projections-stop");
-  hasExpectation(changed, "current as the last accepted pinned projection", "rejected");
-  hasExpectation(changed, "observation-only", "mutating publishing phase");
-
-  const priorSessionClaim = evaluation("publish-prior-session-recovery-claim-stop");
-  hasExpectation(priorSessionClaim, "claimed observation from a prior session", "this current workflow observed");
-  hasExpectation(priorSessionClaim, "Stops before firstdraft plan publish", "reconciliation carve-out");
-  hasExpectation(priorSessionClaim, "Preserves the local Plan and state", "observed recovery evidence");
-
-  const terminal = evaluation("publish-terminal-conflict-requires-new-project");
-  hasExpectation(terminal, "repository_conflict as terminal");
-  hasExpectation(terminal, "no Project-fork operation exists", "first push", "new Project");
-
-  const cancelled = evaluation("publish-cancelled-does-not-roll-back");
-  hasExpectation(cancelled, "cancelled terminal projection", "rolled back");
-  hasExpectation(cancelled, "null repository projection", "manual observation");
-  hasExpectation(cancelled, "destructive target is unidentified", "exact verified repository identity");
-
-  const timeout = evaluation("publish-wait-timeout-stop");
-  hasExpectation(timeout, "publication_unknown current projection as reportable context only");
-  hasExpectation(timeout, "Stops instead of polling GitHub or First Draft directly");
-
-  const unavailable = evaluation("publish-status-unavailable-stop");
-  hasExpectation(unavailable, "Branches on publication_status_unavailable");
-  hasExpectation(unavailable, "singleton may still be running", "outcome is unknown");
-  hasExpectation(unavailable, "same zero-flag command only to ask the server to reconcile its singleton");
-});
-
-test("Compilation guidance follows the pinned CLI contract", async () => {
-  const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
-  const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
-  const skillSource = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
-  const recoveryReference = await readFile(
-    path.join(skillDirectory, "references", "diagnostics-and-recovery.md"),
-    "utf8",
-  );
-  const readme = await readFile(path.join(repository, "README.md"), "utf8");
-  const cases = JSON.parse(
-    await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
-  ).cases;
-  const compileSection = skillSource.match(
-    /## Compile locally for development([\s\S]*?)## Hand off for review/,
-  );
-  assert(compileSection, "SKILL.md: missing Compilation section");
-  assert.match(
-    skillSource,
-    /Before local Compilation, also require `plan compile`/,
-  );
-  assert.match(
-    compileSection[1],
-    /separate development path, not a prerequisite or fallback for Publish[\s\S]*?local Plan has not changed since that accepted candidate[\s\S]*?explicitly approves\s+Compilation to a named output path/,
-  );
-  assert.match(
-    compileSection[1],
-    /uses the last successfully pushed Plan[\s\S]*?does not implicitly push\s+later local edits/,
-  );
-  assert.match(
-    compileSection[1],
-    /Establish the unchanged-candidate precondition only from the current workflow[\s\S]*?session resumes without that evidence[\s\S]*?Do not inspect private state or compile speculatively[\s\S]*?require the user's separate approval/,
-  );
-  assert.match(
-    compileSection[1],
-    /request to author, push,\s+validate, analyze, or correct a Plan is not Compilation approval/,
-  );
-  assert.match(
-    compileSection[1],
-    /firstdraft plan compile --output <approved-absent-path>/,
-  );
-  assert.match(
-    compileSection[1],
-    /single conditional start request[\s\S]*?pinned status polling for up to ten minutes[\s\S]*?artifact download[\s\S]*?atomic materialization/,
-  );
-  assert.match(
-    compileSection[1],
-    /Do not separately POST, poll, download, inspect private\s+state, or wrap the command in a retry/,
-  );
-  assert.match(
-    compileSection[1],
-    /prepared 2026-08 Compiler is designed to admit independent Entities using supported scalar\s+Fields, the exact public-index Scaffold, optional semantic Entity icons, and a selected iPhone project under\s+`ios\/`[\s\S]*?domain is admitted only with `native\.ios`[\s\S]*?selected iOS requires at least one admitted public-index\s+navigation entry[\s\S]*?Do not imply that\s+Appearance, nonempty delivery, Android, iPad, broader Scaffolds, References, Associations, Accounts, Policies,\s+arbitrary Foundation Plans, or deployment are supported/,
-  );
-  for (const field of [
-    "output.file_count",
-    "output.manifest_sha256",
-    "compilation.id",
-    "compilation.analysis_run_id",
-    "compilation.artifact.sha256",
-    "compilation.artifact.byte_size",
-  ]) {
-    assert(
-      compileSection[1].includes(`\`${field}\``),
-      `SKILL.md: missing successful Compilation field ${field}`,
-    );
-  }
-  assert.match(
-    compileSection[1],
-    /Do not dump the Foundation Plan,\s+`\.firstdraft\/state\.json`, the full artifact envelope, generated source, command environment, or raw command output/,
-  );
-  assert.match(
-    compileSection[1],
-    /approved output path[\s\S]*?project-relative path[\s\S]*?preserve that\s+spelling instead of echoing the CLI's resolved absolute `output\.path`/,
-  );
-  assert.match(
-    compileSection[1],
-    /Every handled compile failure is a stop condition[\s\S]*?explicitly chooses a new absent path after\s+`invalid_output_path`[\s\S]*?no network request occurred/,
-  );
-
-  const referenceSection = recoveryReference.match(
-    /## Compilation and local materialization([\s\S]*?)## Diagnostics response/,
-  );
-  assert(referenceSection, "diagnostics reference: missing Compilation boundary");
-  assert.match(
-    referenceSection[1],
-    /strong Plan ETag pinned by the\s+last successful push[\s\S]*?sends one conditional\s+Compilation start request[\s\S]*?It does\s+not retry any request/,
-  );
-  assert.match(
-    referenceSection[1],
-    /local Plan has not changed since that accepted candidate[\s\S]*?compiles the Plan identified\s+by the last successful push[\s\S]*?never implicitly pushes later local edits/,
-  );
-  assert.match(
-    referenceSection[1],
-    /resumed session without that evidence, stop without\s+opening private state or compiling[\s\S]*?only with separate user\s+approval/,
-  );
-  assert.deepEqual(
-    [...referenceSection[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
-      .map(([, value]) => value)
-      .filter((value) => value !== "error"),
-    planCompileErrorCodes,
-  );
-  for (const code of planCompileErrorCodes) {
-    assert(
-      compileSection[1].includes(`\`${code}\``),
-      `SKILL.md: missing plan compile branch for ${code}`,
-    );
-  }
-  assert.match(
-    referenceSection[1],
-    /Every row is a stop condition[\s\S]*?Do not retry, make direct requests, inspect or edit `\.firstdraft\/state\.json`/,
-  );
-  assert.match(
-    referenceSection[1],
-    /`request_outcome_unknown` remains ambiguous even when it includes an HTTP `status`/,
-  );
-  assert.match(
-    referenceSection[1],
-    /sole recovery that can lead to another invocation[\s\S]*?`invalid_output_path`[\s\S]*?made no network request[\s\S]*?explicitly approve a different absent path/,
-  );
-  assert(readme.includes(preparedCliBaseline));
-  assert(referenceSection[1].includes(preparedCliBaseline));
-  assert.match(
-    readme,
-    /prepared compiler contract admits independent Entities using supported scalar Fields, the exact public-index\s+Scaffold, optional semantic Entity icons, and selected iPhone output under `ios\/`/,
-  );
-
-  const evaluation = (id) => {
-    const value = cases.find((candidate) => candidate.id === id);
-    assert(value, `missing Compilation eval: ${id}`);
-    assert.equal(value.should_trigger, true);
-    return value;
-  };
-  const hasExpectation = (value, ...fragments) => {
-    assert(
-      value.expectations.some((expectation) =>
-        fragments.every((fragment) => expectation.includes(fragment)),
-      ),
-      `${value.id}: missing expectation containing ${fragments.join(", ")}`,
-    );
-  };
-
-  const noApproval = evaluation("compile-requires-separate-approval");
-  assert.match(noApproval.prompt, /have not asked you to compile/);
-  hasExpectation(noApproval, "does not authorize Compilation");
-  hasExpectation(noApproval, "Does not run", "plan compile");
-  hasExpectation(noApproval, "waits for explicit Compilation approval");
-
-  const approved = evaluation("compile-after-explicit-approval");
-  assert.match(approved.prompt, /explicitly approve compiling/);
-  hasExpectation(
-    approved,
-    "firstdraft plan compile --output ./generated-movies exactly once",
-  );
-  hasExpectation(approved, "conditional POST", "atomic materialization");
-  hasExpectation(approved, "submitted analyzer-valid Plan");
-  assert.deepEqual(approved.artifacts.at(-1), {
-    path:
-      "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
-    role: "input",
-    stage_as: ".firstdraft/state.json",
-  });
-
-  const blocked = evaluation("compile-blocked-by-analysis-issues");
-  assert.match(blocked.prompt, /latest plan status --wait result was issues_found/);
-  hasExpectation(blocked, "does not bypass", "valid whole-graph analysis");
-  hasExpectation(blocked, "instead of running plan compile");
-  hasExpectation(blocked, "Does not edit or push the Plan");
-
-  const missingCommand = evaluation("compile-command-missing");
-  assert.match(missingCommand.prompt, /not compile/);
-  hasExpectation(missingCommand, "missing plan compile command", "stops");
-  hasExpectation(missingCommand, "Does not approximate Compilation");
-
-  const unknownFreshness = evaluation("compile-plan-freshness-unknown");
-  assert.match(unknownFreshness.prompt, /cannot establish whether.*changed/);
-  hasExpectation(unknownFreshness, "Stops instead of running plan compile");
-  hasExpectation(unknownFreshness, "Does not inspect .firstdraft/state.json");
-  hasExpectation(unknownFreshness, "fresh push and analysis", "separate approval");
-
-  const success = evaluation("report-successful-compilation-privately");
-  assert(success.prompt.includes(foundationPlanCompilerRelease));
-  assert(success.prompt.includes(foundationPlanTarget.profile));
-  assert.match(success.prompt, /with 190 files/);
-  assert.doesNotMatch(success.prompt, /194 files/);
-  for (const fragment of [
-    "Compilation and AnalysisRun IDs",
-    "artifact digest",
-    "byte size",
-    "manifest digest",
-  ]) {
-    hasExpectation(success, fragment);
-  }
-  hasExpectation(
-    success,
-    "approved project-relative ./generated-movies path",
-    "without echoing a resolved absolute output.path",
-  );
-  hasExpectation(
-    success,
-    "Does not expose the Plan",
-    ".firstdraft/state.json",
-    "artifact envelope",
-    "generated source",
-  );
-  hasExpectation(success, "not deployed or production-ready");
-
-  for (const [id, code] of [
-    ["compile-invalid-output-stop", "invalid_output_path"],
-    ["compile-ambiguous-start-stop", "request_outcome_unknown"],
-    ["compile-failed-stop", "compilation_failed"],
-    ["compile-cancelled-stop", "compilation_cancelled"],
-    ["compile-wait-timeout-stop", "compilation_wait_timed_out"],
-    ["compile-protocol-failure-stop", "invalid_compilation_status"],
-    ["compile-digest-failure-stop", "invalid_artifact"],
-    ["compile-materialization-failure-stop", "materialization_failed"],
-  ]) {
-    const value = evaluation(id);
-    assert.match(value.prompt, new RegExp(code));
-    hasExpectation(value, `Branches on ${code}`);
-    assert(
-      value.expectations.some((expectation) => /stop/i.test(expectation)),
-      `${id}: missing stop expectation`,
-    );
-  }
-  const invalidOutput = evaluation("compile-invalid-output-stop");
-  hasExpectation(invalidOutput, "no network request was made");
-  hasExpectation(invalidOutput, "Preserves the existing destination");
-  hasExpectation(invalidOutput, "explicitly approve a different absent output path");
-
-  const ambiguous = evaluation("compile-ambiguous-start-stop");
-  hasExpectation(ambiguous, "Compilation may have started");
-  hasExpectation(ambiguous, "Does not retry plan compile");
-
-  for (const [id, prohibited] of [
-    ["compile-failed-stop", "retrying Compilation"],
-    ["compile-cancelled-stop", "starting a replacement Compilation"],
-    ["compile-wait-timeout-stop", "polling again"],
-    ["compile-protocol-failure-stop", "polling directly"],
-    ["compile-digest-failure-stop", "weakening digest or protocol checks"],
-    ["compile-materialization-failure-stop", "retry materialization"],
-  ]) {
-    hasExpectation(evaluation(id), prohibited);
-  }
 });
 
 test("recovery evals stage and preserve existing Plan state", async () => {
@@ -3522,10 +3188,6 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   assert.match(
     pushSection[1],
     /do not infer a repair from the human-readable `detail`/,
-  );
-  assert.match(
-    pushSection[1],
-    /Invoke it once for each candidate attempt[\s\S]*?never wrap the command in an automatic retry/,
   );
   assert(recoveryReference.includes(preparedCliBaseline));
   const pushReference = recoveryReference.match(

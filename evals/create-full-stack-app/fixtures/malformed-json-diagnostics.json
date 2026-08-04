@@ -1,6 +1,6 @@
 {
   "error": "server_rejected",
-  "detail": "First Draft rejected the Plan.",
+  "detail": "First Draft rejected the current Foundation Plan.",
   "status": 422,
   "response": {
     "source_sha256": "f57ff35e8450b8b8749c94c115f7e0575e1c928528ce0a139146ef8a1b49f3f8",
