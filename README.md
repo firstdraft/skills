@@ -269,6 +269,10 @@ prompt; one with `stage_as` is copied to that project-relative path before the a
 is retained for comparison and is not shown to the agent. Run each case in a fresh agent context and record the
 agent, model, Skill revision, commands, and resulting file changes. They are not deterministic CI tests.
 
+`references/candidate-interview-protocol.md` is candidate interview guidance attached to the prompt of the
+local-only `interview-home-inventory-consequential-ambiguity` case. It is not part of the packaged Skill and
+requires no server.
+
 `state-placeholder.txt` is deliberately unreadable opaque state for local-only, recovery, and attached-analysis
 cases.
 `initialize-empty-plan`, `author-without-local-validator`, `push-supported-enum-plan`,
