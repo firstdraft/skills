@@ -296,8 +296,16 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   );
   for (const relativePath of [
     ["evals", "create-full-stack-app", "cases.json"],
+    [
+      "evals",
+      "create-full-stack-app",
+      "references",
+      "candidate-interview-protocol.md",
+    ],
     ["script", "check"],
     ["skills", "create-full-stack-app", "agents", "openai.yaml"],
+    ["test", "interview-evaluation-foundation.test.mjs"],
+    ["script", "support", "create-full-stack-app-evaluation.mjs"],
   ]) {
     assertRevisionTokens(
       await readFile(path.join(repository, ...relativePath), "utf8"),

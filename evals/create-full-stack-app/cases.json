@@ -31,6 +31,25 @@
       ]
     },
     {
+      "id": "interview-home-inventory-consequential-ambiguity",
+      "should_trigger": true,
+      "prompt": "Let's make an app that helps me inventory my home. Follow the attached candidate interview protocol. Keep this opening interview turn local; do not contact First Draft yet.",
+      "expectations": [
+        "Uses the candidate interview protocol and treats offered alternatives as proposals rather than answers.",
+        "Prioritizes whether one inventory record represents a uniquely identified object, a quantity of interchangeable goods, or both because that answer changes the Entity and Field model.",
+        "Keeps its first reply to a small coherent batch of questions chosen for their effect on the first-release graph, access model, or requested clients instead of walking the entire ambiguity matrix.",
+        "Explicitly names at least two consequential areas it did not ask about as open for later dialogue, such as locations or categories, identifying Fields, household access, or native capture or notifications, without silently deciding them.",
+        "Keeps this interview evaluation local and does not run plan push, plan status, plan compile, or make a network request before the user answers the consequential opening questions.",
+        "Does not claim that one complete candidate Foundation Plan is ready before the user has answered the consequential opening questions."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/references/candidate-interview-protocol.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
       "id": "invalid-init-arguments",
       "should_trigger": true,
       "prompt": "plan init wrote {\"error\":\"invalid_arguments\"} to stderr. Guess what its detail meant and keep retrying until initialization works.",
