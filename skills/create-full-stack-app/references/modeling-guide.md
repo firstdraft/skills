@@ -18,12 +18,63 @@ Use these distinctions:
 Ask whether a concept needs independent records, merely describes another record, or is derivable. Prefer the
 smallest structured meaning that preserves the user's product intent.
 
+## Interview toward one coherent candidate
+
+Treat the interview as an incremental design conversation, not a questionnaire that must finish before local work
+begins. Ask no more than three closely related questions in the opening turn. Prioritize answers that change the
+graph, access model, or requested clients, then explicitly reserve at least two other consequential areas for later
+dialogue. Offer concrete alternatives when they help, but label them as proposals rather than treating them as
+answers.
+
+When modeling a collection, distinguish one uniquely identified object, a quantity of interchangeable goods, and a
+mixed product that needs both meanings. Do not collapse that branch into only individual-versus-group wording.
+For an underspecified opening request, ask only about intended product meaning and name deferred product areas;
+wait for the user's answer before discussing target support or capability gaps unless feasibility was itself part
+of the request. Do not promote a common use case into an assumption. When target support later matters, ask for
+desired access before describing the current public-index Scaffold. Compile creates source in a private repository.
+It does not deploy the application or itself make records public. Keep one candidate Plan: do not maintain a
+parallel flattened or capability-friendly shape merely so one version can Compile.
+
+Track consequential choices as:
+
+- **Confirmed:** the user chose it.
+- **Delegated:** the user asked the agent to choose; include the choice in the read-back.
+- **Out of scope:** the user excluded it from this candidate.
+- **Open:** it could still materially change this candidate.
+- **Capability gap:** the intended meaning may exceed current First Draft support.
+
+Establish enough product meaning to answer these questions for the included first-release slice:
+
+- What is the application for, who uses it, and which workflows belong in this candidate?
+- Which concepts need independent records, and what does one record represent?
+- Which always-present value identifies each record to a person?
+- Which semantic Fields are stored or derived, and which rules, defaults, mutability, normalization, or protection
+  affect their meaning?
+- Which References connect records, who owns each relationship fact, and what are its requiredness, deletion,
+  mutability, multiplicity, and target-realization choices?
+- Which list, detail, create, update, or delete experiences are requested, and who may use each one?
+- Are Accounts, public access, web or native clients, capture or offline behavior, delivery channels,
+  notifications, domains, or external prerequisites part of this slice?
+
+The ambiguity matrix guides the dialogue; it is not a one-message checklist. The agent may edit the local Plan
+incrementally and may submit the current whole-file snapshot for diagnostics whenever useful. A malformed,
+incomplete, or invalid snapshot may produce descriptive diagnostics. Compilation still receives one complete
+candidate snapshot accepted by whole-graph analysis.
+
+One complete candidate is ready for read-back when it expresses a coherent, honest first-release slice; every
+included Entity, Field, and Reference has enough meaning to represent that slice without silent guesses; access and
+requested-client choices that change the slice are explicit; and remaining unknowns are clearly nonblocking or
+deferred. Read back delegated choices, exclusions, open questions, and capability gaps. Readiness does not require
+resolving every imaginable future product decision, and it does not prohibit earlier local edits or diagnostic
+submissions.
+
 ## Model Entities and Fields
 
 For each Entity:
 
 1. Choose a stable lower-snake-case `key` and a human-facing singular `name`.
-2. Select a typed `primary_descriptor` that can identify a record to a person.
+2. Select a typed `primary_descriptor` that can identify a record to a person. A selected Field must be required;
+   do not infer that the descriptor is unique.
 3. Add only Fields that represent stored or continuously derived product facts.
 4. Choose a semantic Field `type`, not a target column type.
 5. Decide requiredness, immutability, default, normalization, and structured validations independently.
@@ -51,6 +102,9 @@ Do not author the Reference's same-key forward Association. Add a referenced-sid
 needs a meaningful reverse traversal. Add an indirect Association only when the composed traversal itself has a
 stable product name or behavior.
 
+The current importer can retain References and Predicates for editing, but a graph containing them cannot pass the
+bounded Compilation analysis gate. Preserve that product meaning and report the capability gap.
+
 ## Add behavior deliberately
 
 - Add Predicates and Orderings when generated queries or surfaces need reusable product meaning.
@@ -75,8 +129,8 @@ readable on the web without authentication. Confirm that exposure with the user 
 preserve the private or broader access intent and report that the selected iPhone request cannot yet pass analysis.
 Do not add a public index merely to obtain `valid`, and do not silently decline the requested iPhone client.
 Appearance and Android are retained for editing but block Compilation at analysis; nonempty delivery is not
-importable. iPad is not supported. Preserve requested product meaning and describe the capability boundary before
-sending a Plan rather than removing intentional facts to obtain `valid`.
+importable. iPad is not supported. Preserve requested product meaning and report the capability boundary rather
+than removing intentional facts to obtain `valid`.
 
 ## Preserve intent during diagnostics
 

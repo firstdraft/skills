@@ -14,6 +14,19 @@ distinct submitted-Head and canonical-Plan digests and matching authored order i
 navigation declarations. It does not contact live GitHub or staging, execute the generated application, or prove a
 fresh-agent journey.
 
+A successor
+[fresh-model rehearsal driver](https://github.com/firstdraft/firstdraft/blob/3a029a8b425addbbba4f56d9197878cc002752f4/script/compilation_http_cli_model_rehearsal)
+used native Claude Code 2.1.221 with Opus/high, candidate plugin revision
+`b5c3897b240bfa3a9117d1a564d8e6b7d783e993`, and a freshly packed CLI at the reviewed successor revision. The
+agent made two exact-byte pushes through the driver's own two-Entity Movie Catalog fixture, repaired the expected
+reserved-constant diagnostic, waited for valid graph-version-2 analysis, and invoked product Compile once. The
+service then verified the 194-file, 542,894-byte artifact, strict fake-GitHub Publication, retained download, and
+materialized output. The dated
+[model evaluation report](evidence/2026-08-04-fresh-claude-code-evaluations.md) records reproducibly derived runtime
+digests, normalized command forms, exact command counts, materialization checks, cleanup, and limitations. It remains
+one pinned local fixture: it does not establish published distribution, arbitrary application support, deployment,
+generated-app execution, or real GitHub, staging, or production operation.
+
 Separately, a dated 2026-07-31
 [field report](https://github.com/firstdraft/firstdraft/blob/16b056a6f55eb92cb6e5a6e02abd58e84b47abd5/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md)
 records one staff-prepared local observation using a fresh Claude Code Opus/high session and this Skill at
@@ -37,6 +50,8 @@ exact landed server revision used by the earlier bounded local Compilation evide
 revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e`, including prerequisite
 `5811bb3013cf25072db74355597f60d85be3c05b`, which exposes the retained
 `compilation.head_source_sha256` for historical artifact provenance.
+The fresh-model successor is pinned to service revision
+`3a029a8b425addbbba4f56d9197878cc002752f4`.
 
 The prepared compiler contract admits independent Entities using supported scalar Fields, the exact public-index
 Scaffold, optional semantic Entity icons, and selected iPhone output under `ios/`. Application `domain` is admitted
@@ -112,18 +127,25 @@ says a Git-hosted marketplace falls back to the commit SHA when a plugin version
 expectation here, not observed Git-hosted installation evidence. Add a marketplace semantic version only when plugin
 changes follow an explicit release-and-version-bump cadence.
 
-Based on the documented local-development behavior, the expected future preview path is to start one local Claude
-Code session from the checkout without registering a marketplace or installing the plugin:
+The documented local-development path starts one Claude Code session from the checkout without registering a
+marketplace or installing the plugin:
 
 ```sh
 claude --plugin-dir .
 ```
 
-That no-registration/no-install behavior has not been observed here; this repository has not started a model-backed
-preview session.
+The 2026-08-04 Home Inventory evaluation observed a headless Claude Code 2.1.221 session load the
+`Skill(firstdraft-preview:create-full-stack-app)` identifier from candidate revision
+`b5c3897b240bfa3a9117d1a564d8e6b7d783e993` through an explicit `--plugin-dir <checkout>` without marketplace
+registration or installation. It did not exercise the interactive command above. The Movie Catalog process also
+received the candidate through `--plugin-dir`, but its retained evidence does not record Skill discovery or
+invocation. Neither run establishes a model-backed session using the separately marketplace-installed plugin.
+The isolated 2026-08-04 installation established the Claude Code 2.1.221 runtime observation. As a separate renewal
+step, the current official plugin reference was rechecked and the allowlist below was pinned to its documented
+locations.
 
 Under that documented preview model, the whole checkout is the preview plugin root. Repository checks therefore
-forbid every other default component location documented for Claude Code 2.1.220: root `SKILL.md`, `agents/`, `bin/`,
+forbid every other default component location documented for Claude Code 2.1.221: root `SKILL.md`, `agents/`, `bin/`,
 `commands/`, `hooks/`, `monitors/`, `output-styles/`, `themes/`, `workflows/`, `settings.json`, `.mcp.json`, and
 `.lsp.json`. They also require exactly one canonical subtree beneath `skills/`. Checks examine Git-index entries at
 those enumerated checkout-root component locations, verify those locations on disk, and recursively inventory the
@@ -132,8 +154,9 @@ silently growing a component outside the narrow marketplace source without claim
 path.
 
 The [official plugin documentation](https://code.claude.com/docs/en/plugins) says `--plugin-dir` loads a plugin for
-local development and plugin Skills use the `plugin-name:skill-name` namespace. The expected invocation is therefore
-`/firstdraft-preview:create-full-stack-app`. That namespacing also remains a documented expectation.
+local development and plugin Skills use the `plugin-name:skill-name` namespace. The Home run observed the headless
+tool identifier above. Interactive `/firstdraft-preview:create-full-stack-app` invocation and invocation through an
+installed `firstdraft@firstdraft-skills` marketplace plugin remain unobserved.
 
 Before release, when Claude Code is available, manually exercise the real add-and-install path with child state
 redirected away from the user's Claude configuration and plugin cache and with the scoped monitoring described
@@ -161,9 +184,10 @@ npm run record:claude-plugin-install
 The recording command regenerates only the machine-readable JSON. Its UTC date and observed Claude Code version are
 deliberate review pins. If either changes, rename the dated Markdown evidence file to the new observation date,
 refresh its title, CLI version, transcript, inventory, digest table, state-presence bullets, and real-state monitor
-summary line; update the evidence path and the expected date/version pins in `test/repository.test.mjs`; then rerun
-the repository checks and both strict validations. Recheck the checkout-root default-component allowlist against the
-new version's documented discovery locations as part of that review. A changed pin is a request to re-review current
+summary line, dated default-component-location recheck, and model-session conclusion against any newer evaluation
+evidence; update the evidence path and the expected date/version pins in `test/repository.test.mjs`; then rerun the
+repository checks and both strict validations. Recheck the checkout-root default-component allowlist against the new
+version's documented discovery locations as part of that review. A changed pin is a request to re-review current
 component discovery and isolation behavior, not a mechanical update.
 The smoke's expected live component inventory is deliberately hardcoded. If a reviewed Claude Code discovery change
 alters it, update the assertion in `script/check-claude-plugin-install.mjs`, its repository-test pins, the generated
@@ -195,7 +219,7 @@ Real-state monitoring is deliberately scoped rather than recursive over all Clau
 metadata for the plugin registries and catalog, the `firstdraft-skills` cache, data, and marketplace trees, and
 metadata for settings and credentials. It excludes the high-churn `~/.claude.json`, plugin maintenance markers,
 session history, and unrelated Claude configuration; the smoke makes no whole-configuration monitoring claim.
-Claude Code 2.1.220 did not create `plugins/marketplaces/firstdraft-skills` for the isolated local-directory
+Claude Code 2.1.221 did not create `plugins/marketplaces/firstdraft-skills` for the isolated local-directory
 registration or `plugins/data/firstdraft-firstdraft-skills` during its isolated install. `targetMarketplace` and
 `targetData` are conservative candidate-path monitors for the unobserved Git-hosted installation, not confirmed
 current CLI storage layouts; their absence is not load-bearing isolation evidence.
@@ -213,7 +237,7 @@ inventory, and installed bytes with the committed observation. Real-state presen
 than a cross-machine release-gate value: every run independently requires at least one core registry target and
 proves the monitored targets unchanged. Packaging drift fails closed and directs the operator through the explicit
 evidence-renewal review. The dated
-[Claude Code plugin install smoke evidence](evidence/2026-08-02-claude-code-plugin-install-smoke.md) and its
+[Claude Code plugin install smoke evidence](evidence/2026-08-04-claude-code-plugin-install-smoke.md) and its
 [generated machine-readable observation](evidence/claude-code-plugin-install-observation.json) record the current
 CLI version, per-file sizes and SHA-256 digests, installed tree digest, component inventory, cleanup, and exact
 real-state target presence. Source drift fails with an instruction to rerun the isolated recording command instead
@@ -294,19 +318,25 @@ cases.
 `initialize-empty-plan`, `author-without-local-validator`, `push-supported-enum-plan`,
 and `repair-well-founded-analysis-issue` are server-backed analysis evals. The first two create fresh state
 themselves. `validate-supported-application-intent`, `preserve-unsupported-appearance-intent`, and
-`capability-gap-precedes-correctable-analysis-issue` attach synthetic analysis results and require no server; the
-last exercises mixed-diagnostic precedence. `replace-before-server-eval.state.json` is an unmistakably synthetic
+`correct-source-issue-alongside-capability-gap` attach synthetic analysis results and require no server; the last
+exercises independent correction alongside a preserved capability gap.
+`replace-before-server-eval.state.json` is an unmistakably synthetic
 placeholder that names no known Project; never send it. Before `push-supported-enum-plan` or
 `repair-well-founded-analysis-issue`, replace it with `.firstdraft/state.json` generated by a fresh
 `firstdraft plan init` using the exact reviewed CLI revision above in a scratch directory.
 
-`compile-movie-catalog-once` is the executable product-journey fixture. The controlled local harness at service
+`compile-prepared-movie-catalog` is the executable product-journey fixture. The controlled local harness at service
 revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e` establishes the corresponding service-backed Movie Catalog
 journey through real local Compilation and Publication coordination with a strict fake for remote GitHub work. It is
-not a fresh-agent eval and does not make the synthetic state fixture live. Until a compatible authenticated endpoint
-is available, run the eval only through an isolated fake transport or local rehearsal that cannot create a real
-repository. For a future live run, initialize a fresh scratch Project with the exact reviewed CLI revision, install
-the candidate plugin, replace the synthetic state fixture with that Project's private state, stage
+not itself a fresh-agent eval and does not make the synthetic state fixture live. Separately, the successor driver at
+service revision `3a029a8b425addbbba4f56d9197878cc002752f4` owns a related two-Entity Movie Catalog
+reserved-constant fixture; it does not stage the eval artifact. That driver has run through a fresh Claude Code process
+with candidate plugin revision `b5c3897b240bfa3a9117d1a564d8e6b7d783e993` and a freshly packed CLI. The dated
+[report](evidence/2026-08-04-fresh-claude-code-evaluations.md) records that bounded result. Until a compatible
+authenticated endpoint is available, run the eval only through an isolated fake transport or local rehearsal that
+cannot create a real repository. For a future live run, initialize a fresh scratch Project with the exact reviewed
+CLI revision, install the candidate plugin, replace the synthetic state fixture with that Project's private state,
+stage
 `application-intent.foundation-plan.json`, and invoke the zero-flag `firstdraft plan compile` command. The command
 itself pushes the exact file, waits for the matching graph generation, and requests Publication only after valid
 analysis and a final byte check. Never expose the private state contents.
@@ -315,8 +345,9 @@ The diagnostic corpus deliberately exercises malformed JSON, local schema diagno
 diagnostics, a standalone status result older than its accepted push generation, stale product-Compile analysis,
 stale local Plan bytes, and phase-specific ambiguous push and Publication outcomes. It retains the push graph version
 and source digest, reads again when status is older, and surfaces a newer generation as a replacement. It does not
-require a permission ceremony around ordinary pushes or impose an unchanged-byte or retry-count rule. The successful
-Movie Catalog case expects one product Compile invocation for that journey. The contract also preserves bounded
+require a permission ceremony around ordinary pushes or impose an unchanged-byte or retry-count rule. The prepared
+Movie Catalog case expects the zero-flag product Compile to own the journey and treats a separate push or status read
+as optional. The contract also preserves bounded
 analysis and Publication waits, unavailable Publication status, terminal failure and cancellation projections, and
 repository identity when a conflict response contains one. Standalone retained
 Compilation cases cover terminal status, bounded waiting, successful historical download, matching Head provenance,
@@ -334,6 +365,8 @@ generated checks; the recovered authoring prompt and seed command; and composed 
 the observation's preparation and reproducibility limits.
 
 The controlled product-journey harness authenticates its local CLI requests but does not establish a live GitHub or
-staging Publication, generated-application execution, representative external-agent or user operation, deployment,
-or production readiness. The dated observation separately records generated-app execution but does not widen those
-journey claims or capabilities beyond the current independent-scalar-Entity and public-index slice.
+staging Publication, generated-application execution, representative user operation, deployment, or production
+readiness. The 2026-08-04 report establishes one pinned fresh Claude Code operation of that local fixture, not a
+published or representative-user journey. The older dated observation separately records generated-app execution
+but does not widen those journey claims or capabilities beyond the current independent-scalar-Entity and
+public-index slice.

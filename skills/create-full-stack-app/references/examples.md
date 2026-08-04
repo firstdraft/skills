@@ -5,7 +5,9 @@ in a real Project.
 
 ## Empty starter
 
-`firstdraft plan init` creates this valid starting point with the user's application key and name. It is the
+`firstdraft plan init` creates this valid starting point from `--name`, `--application-key`, or both. Name-only
+initialization derives the key; key-only initialization derives the display name. Use
+`firstdraft generate application-key --name "Oscar Party"` to preview the deterministic derived key. This is the
 smallest subset accepted by the reviewed conditional PUT.
 
 ```json
@@ -207,7 +209,7 @@ the reviewed bounded importer. Here, priority order carries semantic rank, so `o
 ```
 
 The Entity, Fields, and every enum value have independent UUIDs. The default is a tagged value owned by the Field,
-so it has no UUID and does not require `plan subject-id`. Its literal names the selected enum value by owner-local
+so it has no UUID and does not require `generate uuid`. Its literal names the selected enum value by owner-local
 key. If `medium` is renamed, update the default in the same candidate while preserving that value's UUID. Omit
 `ordinal` when order is presentational rather than ranked.
 

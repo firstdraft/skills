@@ -1,0 +1,132 @@
+{
+  "format": "firstdraft.compilation-http-cli-model-rehearsal/1",
+  "fixture": "Movie Catalog reserved-constant diagnostic repair",
+  "child": {
+    "interface": "Claude Code CLI contract",
+    "reported_version": "2.1.221 (Claude Code)",
+    "executable_sha256": "7a181f36ed0fc4fbac6cee4ecf2b615eff93d8b434221fff5d7c878dc5ebf380",
+    "model": "opus",
+    "effort": "high"
+  },
+  "service": {
+    "revision": "3a029a8b425addbbba4f56d9197878cc002752f4",
+    "tree_sha": "076415a4b1e34cc458a85186e1e335503eb30612"
+  },
+  "cli": {
+    "revision": "f55edffc9e88924f9a4c95f41c4d0bc9b72422f8",
+    "runtime_sha256": "9e5a4bd0f16f49ab2e17c04f7defc59366f8fa073f772b310d8f684177890eab",
+    "version": "0.1.0-alpha.2"
+  },
+  "plugin": {
+    "revision": "b5c3897b240bfa3a9117d1a564d8e6b7d783e993",
+    "runtime_sha256": "a5c3bfe0dd8d5396a692c4204c670e10cbc4b996883f76025d9e8a6586becc7b"
+  },
+  "command_ledger": {
+    "compilation.help": 1,
+    "generate.help": 1,
+    "plan.compile": 1,
+    "plan.compile.help": 1,
+    "plan.help": 1,
+    "plan.push": 2,
+    "plan.push.help": 1,
+    "plan.status.help": 1,
+    "plan.status_wait": 2,
+    "version": 1
+  },
+  "project": {
+    "id": "019fce46-f6dd-71a2-a724-68cade3b5656",
+    "graph_version": 2,
+    "head_source_sha256": "7e38b27f532199abae5f3b824e40f8bce4cf900c0d74dfdcf7229654bfd45a5c"
+  },
+  "analysis": {
+    "initial": {
+      "id": "019fce47-8450-7551-8386-62870646b3c0",
+      "graph_version": 1,
+      "status": "issues_found",
+      "diagnostic_code": "foundation_plan.identity.reserved_constant_collision"
+    },
+    "final": {
+      "id": "019fce47-b0b6-7e7c-8024-19ae395bf643",
+      "graph_version": 2,
+      "status": "valid",
+      "analyzer_release": "foundation-plan-rails/application-2026-08"
+    }
+  },
+  "compilation": {
+    "id": "019fce47-ce4e-732c-bccd-3d1ca6d8d132",
+    "analysis_run_id": "019fce47-b0b6-7e7c-8024-19ae395bf643",
+    "graph_version": 2,
+    "head_source_sha256": "7e38b27f532199abae5f3b824e40f8bce4cf900c0d74dfdcf7229654bfd45a5c",
+    "status": "succeeded",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-08",
+    "target": {
+      "id": "rails",
+      "profile": "rails-sketch/2026-08"
+    },
+    "artifact_sha256": "5bd7848e494df38ef67b7a08a4234bf97f60b84954e8bf4c634398ffef481b26",
+    "artifact_manifest_sha256": "2085eea15114724e87810aa55f612bfb7c91df8be4f042185578490f2c9253ed",
+    "artifact_byte_size": 542894,
+    "artifact_file_count": 194
+  },
+  "publication": {
+    "id": "019fce47-ce57-79ca-b2c3-cdd811904085",
+    "status": "succeeded",
+    "repository_full_name": "fd-smoke-89991adc1acf/movie-catalog",
+    "tree_sha": "5815d094e204f8b3928ff5b5467ef85e2551d109",
+    "commit_sha": "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead",
+    "attempts": [
+      [
+        1,
+        "create_repository",
+        "succeeded"
+      ],
+      [
+        2,
+        "publish_artifact",
+        "succeeded"
+      ]
+    ]
+  },
+  "retained_download": {
+    "file_count": 194,
+    "manifest_sha256": "2085eea15114724e87810aa55f612bfb7c91df8be4f042185578490f2c9253ed"
+  },
+  "materialization": {
+    "observed_file_count": 194,
+    "observed_modes": {
+      "bin/rails": "0755",
+      "ios/bin/ios": "0755"
+    },
+    "verified_required_paths": [
+      ".ruby-version",
+      "Gemfile.lock",
+      "app/controllers/directors_controller.rb",
+      "app/controllers/movies_controller.rb",
+      "app/models/director.rb",
+      "app/models/movie.rb",
+      "app/views/directors/index.html.erb",
+      "app/views/movies/index.html.erb",
+      "app/views/shared/_main_navigation.html.erb",
+      "bin/rails",
+      "config/database.yml",
+      "config/routes/foundation_domain.rb",
+      "db/migrate/20260710000001_create_directors.rb",
+      "db/migrate/20260710000000_create_movies.rb",
+      "db/schema.rb",
+      "ios/FoundationApp/AppDelegate.swift",
+      "ios/FoundationApp/Generated/ApplicationDefinition.swift",
+      "ios/FoundationAppUITests/Generated/ApplicationNavigationUITests.swift",
+      "ios/bin/ios"
+    ],
+    "verified_navigation_order": [
+      "movies",
+      "directors"
+    ]
+  },
+  "limitations": [
+    "The service and packaged CLI run locally against a strict fake GitHub executor; no real GitHub, staging, or production state is mutated.",
+    "The Movie Catalog fixture covers the currently admitted Rails and iOS Compilation slice, not arbitrary Foundation Plans.",
+    "The result proves one pinned local Claude Code and plugin revision, not published distribution."
+  ],
+  "cleanup": "private state, traces, workspace, and database removed"
+}

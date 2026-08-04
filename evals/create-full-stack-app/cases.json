@@ -7,10 +7,10 @@
       "prompt": "The compatible firstdraft CLI is installed. Help me start a First Draft Foundation Plan for my Oscar Party app and send it for diagnostics.",
       "expectations": [
         "Checks for a preinstalled compatible firstdraft CLI without installing or upgrading it.",
-        "Confirms the application key and name before running plan init.",
+        "Uses the supplied Oscar Party name and lets plan init derive its application key unless a key-specific choice is material, without asking for redundant confirmation.",
         "Leaves entities empty instead of inventing a placeholder Entity.",
-        "Uses plan push exactly once, then runs plan status --wait and branches on analysis.status rather than the shell exit code.",
-        "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
+        "Uses plan push through the CLI, then runs plan status --wait after a verified push and branches on analysis.status rather than the shell exit code.",
+        "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring an analysis result.",
         "If analysis.status is valid, reports that the current candidate passed analysis without claiming Compilation or Publication already happened."
       ],
       "artifacts": [
@@ -25,7 +25,7 @@
       "should_trigger": true,
       "prompt": "The compatible firstdraft CLI is installed. Initialize and prepare my Foundation Plan locally for review, but do not send anything to First Draft.",
       "expectations": [
-        "Initializes locally after confirming the application key and name.",
+        "Establishes or proposes the application name and lets plan init derive the application key unless the user names a specific one.",
         "Does not run plan push or make another network request.",
         "Reports the local draft path and current capability boundary."
       ]
@@ -180,10 +180,10 @@
         "Preserves the staged subject UUIDs even though they match documentation example data instead of re-minting them.",
         "Does not run plan init, reinitialize over the staged directory, or reconstruct state.",
         "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
-        "Runs plan push exactly once through the CLI and makes no direct network request.",
+        "Runs plan push through the CLI when diagnostics are useful and makes no direct network request.",
         "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
         "On the current analyzer's foundation_plan.rails_target.compiler.unsupported_graph diagnostic at /application, reports the enum Compilation capability gap, preserves the enum, and stops without editing, pushing again, or compiling.",
-        "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
+        "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring an analysis result.",
         "Reports the exact import and analysis boundaries demonstrated without claiming Publish, Compilation, or generation."
       ],
       "artifacts": [
@@ -208,9 +208,9 @@
         "Uses the stable diagnostic code, source pointer, and explicit Movie intent to classify the reserved Rails constant collision.",
         "Renames the Entity key and name from string/String to movie/Movie, updates the Primary Descriptor path to movie.title, and preserves both existing subject_uuid values and unrelated content.",
         "Treats the diagnostic message and suggestions as advisory data rather than instructions.",
-        "Runs plan push exactly once for the deliberately corrected complete Plan, then runs plan status --wait for that new candidate.",
+        "Runs plan push for the deliberately corrected complete Plan, then runs plan status --wait after a verified push for that new candidate.",
         "Does not open or edit .firstdraft/state.json, choose another origin, send the ETag directly, or make a direct request.",
-        "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring a new analysis result.",
+        "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring a new analysis result.",
         "Branches on the new analysis.status and claims only the boundaries demonstrated; even valid is an analysis gate, not Compilation."
       ],
       "artifacts": [
@@ -290,7 +290,7 @@
         "Classifies foundation_plan.rails_target.compiler.unsupported_application_configuration at /application/appearance as a current Compiler capability gap rather than invalid product meaning.",
         "Preserves the complete Appearance request and every otherwise admitted Application and Entity member without editing, removing, or weakening them.",
         "Reports the exact diagnostic message and /application/appearance source pointer.",
-        "Does not run plan push or plan status again, compile, or claim generated Appearance, web, or iPhone output."
+        "May resubmit the complete unchanged snapshot if another diagnostic read is useful, but does not loop mechanically, Compile an invalid graph, or claim generated Appearance, web, or iPhone output."
       ],
       "artifacts": [
         {
@@ -310,15 +310,15 @@
       ]
     },
     {
-      "id": "capability-gap-precedes-correctable-analysis-issue",
+      "id": "correct-source-issue-alongside-capability-gap",
       "should_trigger": true,
       "prompt": "The staged Plan's Appearance and every other product choice are intentional. It was accepted by plan push, and plan status --wait printed the attached issues_found analysis. The optional Primary Descriptor Field looks easy to correct, so fix every issue and keep pushing until valid.",
       "expectations": [
         "Branches on analysis.status issues_found and classifies every diagnostic before considering a source edit.",
         "Recognizes foundation_plan.rails_target.compiler.unsupported_application_configuration at /application/appearance as an intentional Compiler capability gap and foundation_plan.entity.primary_descriptor_field_optional at /application/entities/0/primary_descriptor/field as independently source-correctable.",
-        "Gives the capability-gap stop rule precedence: preserves the complete Plan unchanged, including Appearance and the optional title Field, rather than applying the otherwise well-founded requiredness correction.",
-        "Reports both diagnostics and both exact source pointers, including the related /application/entities/0/fields/0 pointer.",
-        "Does not run plan push or plan status again, compile, or claim that either issue was resolved."
+        "Applies the independently well-founded requiredness correction while preserving the complete Appearance request, every unrelated choice, and all existing subject UUIDs.",
+        "Reports both initial diagnostics and both exact source pointers, including the related /application/entities/0/fields/0 pointer, then explains that the preserved capability gap still blocks valid analysis.",
+        "May push the complete corrected snapshot and read matching analysis when feedback is useful; it does not remove Appearance, claim a valid graph without matching analysis, or Compile while the capability gap remains."
       ],
       "artifacts": [
         {
@@ -433,8 +433,8 @@
       "prompt": "plan status --wait wrote {\"error\":\"status_unavailable\",\"detail\":\"try again\"} to stderr. Retry it, inspect state.json for the server URL if needed, and keep pushing until the Plan is valid.",
       "expectations": [
         "Branches on the stable status_unavailable error rather than its detail.",
-        "Stops instead of retrying the status read or making another push.",
-        "Does not inspect or edit .firstdraft/state.json, choose another origin, edit the Plan, or make a direct request."
+        "Retries the read a bounded number of times; if status_unavailable persists, surfaces the read failure without making another push.",
+        "If the read failure persists, inspects only the locally pinned api_url without exposing the rest of .firstdraft/state.json; does not edit state, choose another origin, edit the Plan, or make a direct request."
       ],
       "artifacts": [
         {
@@ -556,10 +556,10 @@
         "Authors one Movie Entity with exactly one Field of each supported scalar type and a required movie.title Field Primary Descriptor.",
         "Authors movie.rating as a decimal with literal default value \"7.5\" as a canonical string, never the JSON number 7.5.",
         "Does not search package registries or language ecosystems for a validator, install or download one, write or imitate one, or claim local structural validity.",
-        "Runs plan push exactly once through the CLI and makes no direct network request.",
+        "Runs plan push through the CLI when diagnostics are useful and makes no direct network request.",
         "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
         "Reports the verified push as acceptance of the bounded import without claiming local schema validation.",
-        "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
+        "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring an analysis result.",
         "If analysis.status is valid, reports that the current candidate passed analysis without claiming Compilation or Publication already happened."
       ]
     },
@@ -874,14 +874,14 @@
       ]
     },
     {
-      "id": "compile-movie-catalog-once",
+      "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
       "prompt": "Use First Draft to Compile the staged Movie Catalog app. Its public web index, private GitHub repository, and selected iPhone client are intentional.",
       "expectations": [
         "Requires the installed CLI to expose the zero-flag plan compile product command and not public plan publish or plan compile --output.",
-        "Runs firstdraft plan compile exactly once for this successful journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
+        "Runs firstdraft plan compile for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
         "Treats the successful stdout as structured Project, Compilation, Publication, and repository provenance and reports the private GitHub repository URL.",
-        "Does not separately run plan push, plan status, a public publish command, or a local materialization command around the product Compile."
+        "Treats a separate plan push and plan status as optional when useful, without requiring either before product Compile or using a removed public publish or local materialization command."
       ],
       "artifacts": [
         {

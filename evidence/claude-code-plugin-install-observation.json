@@ -1,8 +1,8 @@
 {
   "schemaVersion": 3,
-  "observedOn": "2026-08-02",
+  "observedOn": "2026-08-04",
   "claudeCode": {
-    "version": "2.1.220",
+    "version": "2.1.221",
     "componentInventory": {
       "agents": 0,
       "hooks": 0,
@@ -44,8 +44,8 @@
     "name": "firstdraft",
     "commandsDeclared": false,
     "fileCount": 8,
-    "totalBytes": 241779,
-    "treeSha256": "7675a721fd5a7d7dcbf497eb1f5591f90e9adc45bb4284a65f613b0b868b7e54",
+    "totalBytes": 207433,
+    "treeSha256": "2560eee0c1f974c2938187bf48acd777dcb03e144ba3f2c550d4b9d8295460df",
     "files": [
       {
         "path": "LICENSE.txt",
@@ -54,23 +54,23 @@
       },
       {
         "path": "SKILL.md",
-        "bytes": 33276,
-        "sha256": "51a64614e96f23ba2de9e4ce5ce452d38ec362d7b22c45c5665204c57c8a3599"
+        "bytes": 15272,
+        "sha256": "4c4dc9f3c2084d7699c2d96e829c90a195d4953fc78cc140630e7d4ec75fea04"
       },
       {
         "path": "agents/openai.yaml",
-        "bytes": 432,
-        "sha256": "8654a45a4c7e31abbd3e03e81d30e18d704d17c907c59b57fe60de8852a4e76f"
+        "bytes": 360,
+        "sha256": "a8c7fdd2a8cfdebec754d77071fc0354ff44e00a5fdd299e3c1c1780b858108f"
       },
       {
         "path": "references/diagnostics-and-recovery.md",
-        "bytes": 34185,
-        "sha256": "b646eadd2069a0607de05ba62fa5e9e26947344dc1f61f65adf062004f62db4c"
+        "bytes": 13600,
+        "sha256": "310de78a4cf7e5cdf75e5784cffe50b3a2acd5a0f54ef658e5e899cbedec140a"
       },
       {
         "path": "references/examples.md",
-        "bytes": 9087,
-        "sha256": "d5f0d05693ccfefae0ab60e07ae97a3e1d27d821c130c67883f0bf6488076c57"
+        "bytes": 9287,
+        "sha256": "5d8f9ee71460b9ed59e74affa6f08ad2e2a15e8b8b15e1574a9d43a3e434099a"
       },
       {
         "path": "references/foundation-plan-0.19.schema.json",
@@ -79,13 +79,13 @@
       },
       {
         "path": "references/foundation-plan-019.md",
-        "bytes": 18086,
-        "sha256": "6e1c4f3cbf37bedf8ff2f5dd4d5ccb63d41dc6251ea2b6e9c5f8b4d5f23876e1"
+        "bytes": 18309,
+        "sha256": "50c24c43163d3d820153df1fcc50fec19cd1b57e6420d1c8c1bbb727582dde76"
       },
       {
         "path": "references/modeling-guide.md",
-        "bytes": 5720,
-        "sha256": "c82780d88cd431d1b9d2558197779078e2058a482a4b9c975b8c46e5d8769338"
+        "bytes": 9612,
+        "sha256": "b4172d5bed75261bab588bc396d02b8ab6b21450e313b80611e8e3039005eb3b"
       }
     ]
   },

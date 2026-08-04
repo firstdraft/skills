@@ -26,7 +26,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
 
   assert.match(
     protocol,
-    /candidate protocol exercised by the evaluation corpus\. It is not yet part of the packaged/,
+    /evaluator-facing protocol exercises the interview behavior carried by the packaged `create-full-stack-app`\s+Skill and modeling guide/,
   );
   assert.match(
     protocol,
@@ -107,6 +107,42 @@ test("home-inventory corpus case probes consequential ambiguity without invented
       `missing home-inventory expectation: ${fragments.join(", ")}`,
     );
   }
+});
+
+test("packaged interview guidance keeps the opening turn focused on one product candidate", async () => {
+  const skill = await readFile(
+    path.join(repository, "skills", "create-full-stack-app", "SKILL.md"),
+    "utf8",
+  );
+  const modelingGuide = await readFile(
+    path.join(
+      repository,
+      "skills",
+      "create-full-stack-app",
+      "references",
+      "modeling-guide.md",
+    ),
+    "utf8",
+  );
+
+  assert.match(skill, /opening turn, ask no more than three\s+closely related questions/);
+  assert.match(
+    skill,
+    /one record per unique object, one record carrying a quantity, or both with distinct\s+meaning/,
+  );
+  assert.match(skill, /Name at least two consequential areas being left open for later/);
+  assert.match(
+    modelingGuide,
+    /For an underspecified opening request, ask only about intended product meaning and name deferred product areas;\s+wait for the user's answer before discussing target support or capability gaps/,
+  );
+  assert.match(
+    skill,
+    /Compile creates a\s+private GitHub repository and does not\s+deploy the application or make records publicly reachable/,
+  );
+  assert.match(
+    modelingGuide,
+    /Keep one candidate Plan: do not maintain a\s+parallel flattened or capability-friendly shape/,
+  );
 });
 
 test("evaluation harness exposes the representative Movie Catalog fixture", async () => {

@@ -1,4 +1,4 @@
-# Claude Code plugin install smoke — 2026-08-02
+# Claude Code plugin install smoke — 2026-08-04
 
 This report records one local source-only packaging check. It is evidence for the
 Claude Code marketplace shape and isolated install cache, not evidence of a
@@ -6,11 +6,11 @@ released First Draft plugin or service.
 
 ## Command and result
 
-The check used Claude Code 2.1.220:
+The check used Claude Code 2.1.221:
 
 ```text
 $ claude --version
-2.1.220 (Claude Code)
+2.1.221 (Claude Code)
 ```
 
 The marketplace manifest and root preview manifest both passed strict validation inside the isolated recording
@@ -55,7 +55,7 @@ The exact recording command was:
 
 ```text
 $ npm run record:claude-plugin-install
-Claude Code strict validation: marketplace=passed, preview=passed; isolated install: 8 canonical Skill files, 241779 bytes; live inventory Skills=1, Agents=0, Hooks=0, MCP servers=0, LSP servers=0; derived Commands=absent from manifest declaration and exact installed files because CLI combines Skills/Commands; no PATH-level package manager invocation; real-state monitor present=installedPlugins,knownMarketplaces,pluginCatalog,settings, absent=credentials,settingsLocal,targetCache,targetData,targetMarketplace, excluded=~/.claude.json
+Claude Code strict validation: marketplace=passed, preview=passed; isolated install: 8 canonical Skill files, 207433 bytes; live inventory Skills=1, Agents=0, Hooks=0, MCP servers=0, LSP servers=0; derived Commands=absent from manifest declaration and exact installed files because CLI combines Skills/Commands; no PATH-level package manager invocation; real-state monitor present=installedPlugins,knownMarketplaces,pluginCatalog,settings, absent=credentials,settingsLocal,targetCache,targetData,targetMarketplace, excluded=~/.claude.json
 ```
 
 The smoke generated the
@@ -75,13 +75,21 @@ CLI combines Skills and Commands in its Skills group, so Commands absence is
 derived separately from the manifest's lack of a Commands declaration and the
 exact installed file set. It is not a live Commands count.
 
-The portable `agents/openai.yaml` file is Skill metadata. Claude Code 2.1.220
+The portable `agents/openai.yaml` file is Skill metadata. Claude Code 2.1.221
 reported `Agents=0` because its current
 [plugin component rules](https://code.claude.com/docs/en/plugins-reference)
 discover Agent definitions from Markdown files under `agents/` or explicit
 manifest paths, neither of which this package contains. That discovery rule is
 version-sensitive, so the isolated recording must be rerun whenever Claude Code
 is upgraded.
+
+During this 2.1.221 evidence renewal, the current official plugin reference was
+also rechecked. It documents canonical `skills/` discovery plus the same twelve
+other default root locations guarded by the repository preview boundary: root
+`SKILL.md`, `commands/`, `agents/`, `workflows/`, `output-styles/`, `themes/`,
+`hooks/`, `.mcp.json`, `.lsp.json`, `monitors/`, `bin/`, and `settings.json`.
+The installation observation itself does not establish that documentation-wide
+completeness claim.
 
 ## Canonical installed source
 
@@ -90,14 +98,14 @@ The cache contained these eight files and no others:
 | Path | Bytes |
 |---|---:|
 | `LICENSE.txt` | 1,068 |
-| `SKILL.md` | 33,276 |
-| `agents/openai.yaml` | 432 |
-| `references/diagnostics-and-recovery.md` | 34,185 |
-| `references/examples.md` | 9,087 |
+| `SKILL.md` | 15,272 |
+| `agents/openai.yaml` | 360 |
+| `references/diagnostics-and-recovery.md` | 13,600 |
+| `references/examples.md` | 9,287 |
 | `references/foundation-plan-0.19.schema.json` | 139,925 |
-| `references/foundation-plan-019.md` | 18,086 |
-| `references/modeling-guide.md` | 5,720 |
-| **Total** | **241,779** |
+| `references/foundation-plan-019.md` | 18,309 |
+| `references/modeling-guide.md` | 9,612 |
+| **Total** | **207,433** |
 
 Every cached file was byte-compared with the canonical portable Skill source.
 The generated observation records the SHA-256 digest of every installed file
@@ -143,7 +151,7 @@ excludes the high-churn `~/.claude.json`, plugin maintenance markers, session
 history, and unrelated Claude configuration. Its real-state claim is limited to
 the plugin registries and catalog, the target-specific cache, data, and
 marketplace trees, and settings and credential metadata described above.
-Claude Code 2.1.220 did not create
+Claude Code 2.1.221 did not create
 `<isolated>/plugins/marketplaces/firstdraft-skills` for the local-directory
 registration or `<isolated>/plugins/data/firstdraft-firstdraft-skills` during
 installation. `targetMarketplace` and `targetData` are conservative
@@ -158,5 +166,9 @@ check did not publish or release the plugin, install the unpublished First Draft
 CLI, authenticate to First Draft, contact a compatible staging service, or
 exercise the agent-to-private-GitHub journey. Environment isolation does not
 establish isolation from operating-system facilities such as the macOS Keychain.
-No model-backed session was started, so `--plugin-dir` namespacing remains a
-documented expectation rather than an observation.
+This isolated installation check started no model-backed session. Separately,
+the 2026-08-04 Home Inventory evaluation observed the headless
+`Skill(firstdraft-preview:create-full-stack-app)` identifier through an explicit
+direct-source `--plugin-dir`; the Movie Catalog evidence does not record Skill
+discovery or invocation. Neither evaluation exercised the marketplace-installed
+plugin.

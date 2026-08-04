@@ -30,12 +30,27 @@ const claudePluginDirectory = path.join(repository, ".claude-plugin");
 const claudePluginEvidence = path.join(
   repository,
   "evidence",
-  "2026-08-02-claude-code-plugin-install-smoke.md",
+  "2026-08-04-claude-code-plugin-install-smoke.md",
 );
 const claudePluginObservation = path.join(
   repository,
   "evidence",
   "claude-code-plugin-install-observation.json",
+);
+const freshClaudeEvaluationEvidence = path.join(
+  repository,
+  "evidence",
+  "2026-08-04-fresh-claude-code-evaluations.md",
+);
+const homeInventoryOpeningResponse = path.join(
+  repository,
+  "evidence",
+  "2026-08-04-home-inventory-opening-response.txt",
+);
+const movieCatalogModelObservation = path.join(
+  repository,
+  "evidence",
+  "2026-08-04-movie-catalog-model-rehearsal.json",
 );
 const claudePluginName = "firstdraft";
 const claudePreviewPluginName = "firstdraft-preview";
@@ -57,10 +72,6 @@ const compilationEvidenceCliBaseline =
   "121272cd592055354d09a4fe90e55c3ca002770c";
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
-const preparedCliBaseline =
-  "7944bf3cb0a2664a738f56b4ae928d1947babcb2";
-const preparedCliRuntimeDigest =
-  "c90d6872f03c6782c0b371835df25801e7f54c5542fb071e9104bf52a49f4a2a";
 const cliContractBaseline =
   "f55edffc9e88924f9a4c95f41c4d0bc9b72422f8";
 const cliContractRuntimeDigest =
@@ -69,21 +80,29 @@ const compilationProvenanceServiceBaseline =
   "5811bb3013cf25072db74355597f60d85be3c05b";
 const productJourneySmokeBaseline =
   "8ebfc2ed82a610e63f47eb985c23ab7e634fe94e";
+const freshModelServiceBaseline =
+  "3a029a8b425addbbba4f56d9197878cc002752f4";
+const freshModelServiceTree =
+  "076415a4b1e34cc458a85186e1e335503eb30612";
+const freshModelPluginBaseline =
+  "b5c3897b240bfa3a9117d1a564d8e6b7d783e993";
+const freshModelPluginRuntimeDigest =
+  "a5c3bfe0dd8d5396a692c4204c670e10cbc4b996883f76025d9e8a6586becc7b";
+const freshModelClaudeExecutableDigest =
+  "7a181f36ed0fc4fbac6cee4ecf2b615eff93d8b434221fff5d7c878dc5ebf380";
+const freshModelPublicationTree =
+  "5815d094e204f8b3928ff5b5467ef85e2551d109";
+const freshModelPublicationCommit =
+  "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead";
 const preparedCliPackage = "@firstdraft.com/cli@0.1.0-alpha.2";
 const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
 const foundationIosCoreArchiveDigest =
   "0807e76cf02296af27d4eb1aae68e298beef162a7daa8a3da55d83e88ab6d748";
-const controlledApplicationSmokeBaseline =
-  "5847a349599f3cc28e1e0a1a8d8bace6742be7c3";
 const freshAgentEvidenceBaseline =
   "16b056a6f55eb92cb6e5a6e02abd58e84b47abd5";
 const freshAgentSkillBaseline =
   "5cad5acec23a983e6421d2d37420a74de63b47fb";
-const planInitErrorCodes = [
-  "invalid_arguments",
-  "local_initialization_failed",
-];
 const planPushErrorCodes = [
   "authentication_required",
   "invalid_arguments",
@@ -92,17 +111,6 @@ const planPushErrorCodes = [
   "request_outcome_unknown",
   "server_rejected",
   "local_state_not_saved",
-];
-const planStatusErrorCodes = [
-  "authentication_required",
-  "invalid_arguments",
-  "local_input_unreadable",
-  "project_not_pushed",
-  "status_unavailable",
-  "invalid_server_response",
-  "server_rejected",
-  "analysis_changed",
-  "wait_timed_out",
 ];
 const supportedScalarFieldTypes = [
   "boolean",
@@ -151,14 +159,6 @@ const supportedPredicateProperties = [
 ];
 
 test("revision pins remain exhaustive across coordination surfaces", async () => {
-  const revisionTokens = (source) =>
-    [
-      ...new Set(
-        source.match(/\b(?:[0-9a-f]{40}|[0-9a-f]{7})\b/g) ?? [],
-      ),
-    ].sort();
-  const assertRevisionTokens = (source, expected) =>
-    assert.deepEqual(revisionTokens(source), [...expected].sort());
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
   assertRevisionTokens(readme, [
     foundationPlanServerBaseline,
@@ -166,6 +166,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     cliContractBaseline,
     compilationProvenanceServiceBaseline,
     productJourneySmokeBaseline,
+    freshModelServiceBaseline,
+    freshModelPluginBaseline,
     foundationIosCoreRevision,
     freshAgentEvidenceBaseline,
     freshAgentSkillBaseline,
@@ -188,9 +190,9 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   assertRevisionTokens(references.join("\n"), [
     foundationPlanServerBaseline,
     compilationEvidenceCliBaseline,
-    preparedCliBaseline,
+    cliContractBaseline,
+    productJourneySmokeBaseline,
     foundationIosCoreRevision,
-    controlledApplicationSmokeBaseline,
     freshAgentEvidenceBaseline,
     freshAgentSkillBaseline,
   ]);
@@ -208,14 +210,9 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     path.join(referencesDirectory, "diagnostics-and-recovery.md"),
     "utf8",
   );
-  for (const source of [
-    readme,
-    skillSource,
-    foundationPlanReference,
-    diagnosticsReference,
-  ]) {
+  for (const source of [readme, foundationPlanReference, diagnosticsReference]) {
     assert(source.includes(preparedCliPackage));
-    assert.match(source, /package remains unpublished/);
+    assert.match(source, /(?:package )?remains unpublished/);
   }
   for (const source of [readme, foundationPlanReference]) {
     assert(source.includes(foundationPlanAnalyzerRelease));
@@ -240,12 +237,15 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     [
       foundationPlanServerBaseline,
       compilationEvidenceCliBaseline,
-      preparedCliBaseline,
       cliContractBaseline,
       compilationProvenanceServiceBaseline,
       productJourneySmokeBaseline,
+      freshModelServiceBaseline,
+      freshModelServiceTree,
+      freshModelPluginBaseline,
+      freshModelPublicationTree,
+      freshModelPublicationCommit,
       foundationIosCoreRevision,
-      controlledApplicationSmokeBaseline,
       freshAgentEvidenceBaseline,
       freshAgentSkillBaseline,
     ],
@@ -268,6 +268,240 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       [],
     );
   }
+});
+
+test("fresh Claude Code evidence is exact and bounded", async () => {
+  const evidence = await readFile(freshClaudeEvaluationEvidence, "utf8");
+  const observationSource = await readFile(
+    movieCatalogModelObservation,
+    "utf8",
+  );
+  const homeResponse = await readFile(homeInventoryOpeningResponse, "utf8");
+  const observation = JSON.parse(observationSource);
+  assertRevisionTokens(evidence, [
+    cliContractBaseline,
+    freshModelServiceBaseline,
+    freshModelPluginBaseline,
+  ]);
+  assertRevisionTokens(homeResponse, []);
+  assertRevisionTokens(observationSource, [
+    cliContractBaseline,
+    freshModelServiceBaseline,
+    freshModelServiceTree,
+    freshModelPluginBaseline,
+    freshModelPublicationTree,
+    freshModelPublicationCommit,
+  ]);
+  assertNoObservationAbsolutePathLeaks({
+    evidenceMarkdown: evidence,
+    homeResponse,
+    modelObservation: observation,
+  });
+
+  for (const source of [evidence, homeResponse, observationSource]) {
+    assert(!source.includes(repository));
+    assert.doesNotMatch(source, /(?:\/Users\/|\/home\/|[A-Za-z]:\\)/);
+    assert.doesNotMatch(source, /\.firstdraft\/state\.json/);
+    assert.doesNotMatch(
+      source,
+      /(?:authorization|bearer|api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|BEGIN [A-Z ]+PRIVATE KEY)/i,
+    );
+  }
+  assert.equal(
+    createHash("sha256").update(homeResponse).digest("hex"),
+    "ac9c699f8fee9848a5c5ab83a3383d08a9406f70aa41b1991d4ab036c2b8563e",
+  );
+  assert.match(
+    homeResponse,
+    /What is one record\?[\s\S]*?one unique object per record[\s\S]*?one quantity-bearing record[\s\S]*?both as two distinct kinds/,
+  );
+
+  for (const value of [
+    freshModelServiceBaseline,
+    freshModelPluginBaseline,
+    freshModelPluginRuntimeDigest,
+    freshModelClaudeExecutableDigest,
+    cliContractBaseline,
+    cliContractRuntimeDigest,
+  ]) {
+    assert(evidence.includes(value));
+  }
+  assert.match(
+    evidence,
+    /Home Inventory opening interview[\s\S]*?unique objects, quantities of an item, or\s+both[\s\S]*?location is a label or an independently managed flat or\s+nested subject[\s\S]*?who uses the app[\s\S]*?photos and documents[\s\S]*?financial information[\s\S]*?lifecycle\s+or history/,
+  );
+  assert.match(
+    evidence,
+    /One independent grader scored the exact response supplied as the candidate\s+evidence run[\s\S]*?passed all six[\s\S]*?grader did not inspect private traces/,
+  );
+  assert.match(
+    evidence,
+    /No CLI command or Plan write occurred[\s\S]*?both web counters were zero[\s\S]*?no denied tool was\s+attempted, not that tools were unrestricted[\s\S]*?model-service network[\s\S]*?not evidence of literally zero network traffic/,
+  );
+  assert.match(
+    evidence,
+    /evidence for one opening interview turn only[\s\S]*?does not evidence\s+incremental file authoring, CLI operation, First Draft transport, a complete\s+Plan, or Compilation/,
+  );
+  assert.match(
+    evidence,
+    /claims that “nothing” ran and that there\s+was “no network” are overbroad[\s\S]*?Skill invocation ran[\s\S]*?model-service network/,
+  );
+  assert.match(
+    evidence,
+    /npm pack --pack-destination <private-temporary-directory>[\s\S]*?npm install --prefix <private-temporary-directory>[\s\S]*?script\/compilation_http_cli_model_rehearsal[\s\S]*?--child <native-claude-2\.1\.221>[\s\S]*?--plugin-dir <skills-checkout-at-candidate-revision>/,
+  );
+  assert.match(
+    evidence,
+    /service harness recomputed the CLI digest from the freshly installed\s+package's sorted `src\/\*\*\/\*\.js`, `bin\/firstdraft\.js`, and `package\.json` paths[\s\S]*?4-byte big-endian relative-path length[\s\S]*?8-byte big-endian content length[\s\S]*?plugin digest uses the same\s+framing over sorted `\.claude-plugin\/\*\.json` paths and every regular file beneath\s+`skills\/create-full-stack-app\/`/,
+  );
+  assert.match(
+    evidence,
+    /two `plan push`\s+calls[\s\S]*?two bounded `plan status --wait` calls[\s\S]*?invoked `plan compile` exactly once/,
+  );
+  assert.match(
+    evidence,
+    /command ledger shows that the agent exercised `--version`[\s\S]*?did not exercise help for `generate uuid`,\s+`generate application-key`, `plan init`, `compilation status`, or\s+`compilation download`[\s\S]*?not evidence that the Skill's complete capability-verification list\s+was followed/,
+  );
+  assert.match(
+    evidence,
+    /did not contact real GitHub, staging, or production, did not deploy or\s+execute the generated application[\s\S]*?not evidence of published distribution or a general\s+compiler boundary/,
+  );
+
+  assert.equal(
+    observation.format,
+    "firstdraft.compilation-http-cli-model-rehearsal/1",
+  );
+  assert.deepEqual(Object.keys(observation).sort(), [
+    "analysis",
+    "child",
+    "cleanup",
+    "cli",
+    "command_ledger",
+    "compilation",
+    "fixture",
+    "format",
+    "limitations",
+    "materialization",
+    "plugin",
+    "project",
+    "publication",
+    "retained_download",
+    "service",
+  ]);
+  assert.doesNotMatch(
+    observationSource,
+    /"(?:authorization|contents|credentials?|plan|source|state|token)"\s*:/i,
+  );
+  assert.doesNotMatch(
+    observationSource,
+    /(?:foundation-plan\.json|state\.json|\bfd_[A-Za-z0-9_-]+)/i,
+  );
+  assert.equal(
+    observation.fixture,
+    "Movie Catalog reserved-constant diagnostic repair",
+  );
+  assert.deepEqual(observation.child, {
+    interface: "Claude Code CLI contract",
+    reported_version: "2.1.221 (Claude Code)",
+    executable_sha256: freshModelClaudeExecutableDigest,
+    model: "opus",
+    effort: "high",
+  });
+  assert.deepEqual(observation.service, {
+    revision: freshModelServiceBaseline,
+    tree_sha: freshModelServiceTree,
+  });
+  assert.deepEqual(observation.cli, {
+    revision: cliContractBaseline,
+    runtime_sha256: cliContractRuntimeDigest,
+    version: "0.1.0-alpha.2",
+  });
+  assert.deepEqual(observation.plugin, {
+    revision: freshModelPluginBaseline,
+    runtime_sha256: freshModelPluginRuntimeDigest,
+  });
+  assert.equal(await pluginRuntimeDigest(), freshModelPluginRuntimeDigest);
+  assert.deepEqual(observation.command_ledger, {
+    "compilation.help": 1,
+    "generate.help": 1,
+    "plan.compile": 1,
+    "plan.compile.help": 1,
+    "plan.help": 1,
+    "plan.push": 2,
+    "plan.push.help": 1,
+    "plan.status.help": 1,
+    "plan.status_wait": 2,
+    version: 1,
+  });
+  assert.equal(observation.project.graph_version, 2);
+  assert.equal(observation.analysis.initial.graph_version, 1);
+  assert.equal(observation.analysis.initial.status, "issues_found");
+  assert.equal(
+    observation.analysis.initial.diagnostic_code,
+    "foundation_plan.identity.reserved_constant_collision",
+  );
+  assert.equal(observation.analysis.final.graph_version, 2);
+  assert.equal(observation.analysis.final.status, "valid");
+  assert.equal(
+    observation.analysis.final.analyzer_release,
+    foundationPlanAnalyzerRelease,
+  );
+  assert.equal(observation.compilation.graph_version, 2);
+  assert.equal(observation.compilation.status, "succeeded");
+  assert.equal(
+    observation.compilation.compiler_release,
+    foundationPlanCompilerRelease,
+  );
+  assert.deepEqual(observation.compilation.target, foundationPlanTarget);
+  assert.equal(observation.compilation.artifact_file_count, 194);
+  assert.equal(observation.compilation.artifact_byte_size, 542_894);
+  assert.equal(
+    observation.compilation.head_source_sha256,
+    observation.project.head_source_sha256,
+  );
+  assert.equal(observation.publication.status, "succeeded");
+  assert.equal(observation.publication.tree_sha, freshModelPublicationTree);
+  assert.equal(observation.publication.commit_sha, freshModelPublicationCommit);
+  assert.match(
+    observation.publication.repository_full_name,
+    /^fd-smoke-[0-9a-f]+\/movie-catalog$/,
+  );
+  assert.deepEqual(observation.publication.attempts, [
+    [1, "create_repository", "succeeded"],
+    [2, "publish_artifact", "succeeded"],
+  ]);
+  assert.equal(observation.retained_download.file_count, 194);
+  assert.equal(
+    observation.retained_download.manifest_sha256,
+    observation.compilation.artifact_manifest_sha256,
+  );
+  assert.equal(observation.materialization.observed_file_count, 194);
+  assert.deepEqual(observation.materialization.observed_modes, {
+    "bin/rails": "0755",
+    "ios/bin/ios": "0755",
+  });
+  assert.deepEqual(observation.materialization.verified_navigation_order, [
+    "movies",
+    "directors",
+  ]);
+  for (const path of [
+    "app/models/movie.rb",
+    "app/models/director.rb",
+    "db/schema.rb",
+    "ios/FoundationApp/Generated/ApplicationDefinition.swift",
+    "ios/FoundationAppUITests/Generated/ApplicationNavigationUITests.swift",
+  ]) {
+    assert(observation.materialization.verified_required_paths.includes(path));
+  }
+  assert.deepEqual(observation.limitations, [
+    "The service and packaged CLI run locally against a strict fake GitHub executor; no real GitHub, staging, or production state is mutated.",
+    "The Movie Catalog fixture covers the currently admitted Rails and iOS Compilation slice, not arbitrary Foundation Plans.",
+    "The result proves one pinned local Claude Code and plugin revision, not published distribution.",
+  ]);
+  assert.equal(
+    observation.cleanup,
+    "private state, traces, workspace, and database removed",
+  );
 });
 
 test("installable Skills follow the portable repository profile", async () => {
@@ -497,7 +731,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     )
   ).reduce((total, size) => total + size, 0);
   assert.equal(installedSourceFiles.length, 8);
-  assert.equal(installedSourceBytes, 241_779);
+  assert.equal(installedSourceBytes, 207_433);
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
   assert.match(readme, /eight canonical Skill files/);
   assert.match(
@@ -512,7 +746,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     readme,
     /validate the marketplace manifest and root preview manifest without installing either one/,
   );
-  assert(readme.includes("evidence/2026-08-02-claude-code-plugin-install-smoke.md"));
+  assert(readme.includes("evidence/2026-08-04-claude-code-plugin-install-smoke.md"));
   assert(
     readme.includes(
       "evidence/claude-code-plugin-install-observation.json",
@@ -559,15 +793,15 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   );
   assert.match(
     readme,
-    /root preview manifest uses the distinct name `firstdraft-preview`[\s\S]*?cannot collide with an\s+installed `firstdraft@firstdraft-skills`[\s\S]*?expected future preview path[\s\S]*?without registering a marketplace or installing the plugin[\s\S]*?claude --plugin-dir \.[\s\S]*?no-registration\/no-install behavior has not been observed[\s\S]*?expected invocation is therefore\s+`\/firstdraft-preview:create-full-stack-app`[\s\S]*?documented expectation/,
+    /root preview manifest uses the distinct name `firstdraft-preview`[\s\S]*?cannot collide with an\s+installed `firstdraft@firstdraft-skills`[\s\S]*?documented local-development path[\s\S]*?without registering a\s+marketplace or installing the plugin[\s\S]*?claude --plugin-dir \.[\s\S]*?Home Inventory evaluation observed a headless Claude Code 2\.1\.221 session load the\s+`Skill\(firstdraft-preview:create-full-stack-app\)` identifier[\s\S]*?explicit `--plugin-dir <checkout>` without marketplace\s+registration or installation[\s\S]*?did not exercise the interactive command[\s\S]*?Movie Catalog process[\s\S]*?retained evidence does not record Skill discovery or\s+invocation[\s\S]*?Home run observed the headless\s+tool identifier[\s\S]*?Interactive `\/firstdraft-preview:create-full-stack-app` invocation[\s\S]*?remain unobserved/,
   );
   assert.match(
     readme,
-    /whole checkout is the preview plugin root[\s\S]*?default component location documented for Claude Code 2\.1\.220[\s\S]*?exactly one canonical subtree beneath `skills\/`[\s\S]*?enumerated checkout-root component locations[\s\S]*?complete on-disk `skills\/` subtree[\s\S]*?including untracked entries there[\s\S]*?without claiming a scan of every working-tree/,
+    /whole checkout is the preview plugin root[\s\S]*?default component location documented for Claude Code 2\.1\.221[\s\S]*?exactly one canonical subtree beneath `skills\/`[\s\S]*?enumerated checkout-root component locations[\s\S]*?complete on-disk `skills\/` subtree[\s\S]*?including untracked entries there[\s\S]*?without claiming a scan of every working-tree/,
   );
   assert.match(
     readme,
-    /recording command regenerates only the machine-readable JSON[\s\S]*?UTC date and observed Claude Code version[\s\S]*?rename the dated Markdown evidence file[\s\S]*?state-presence bullets, and real-state monitor\s+summary line[\s\S]*?update the evidence path and the expected date\/version pins[\s\S]*?rerun\s+the repository checks and both strict validations[\s\S]*?Recheck the checkout-root default-component allowlist/,
+    /recording command regenerates only the machine-readable JSON[\s\S]*?UTC date and observed Claude Code version[\s\S]*?rename the dated Markdown evidence file[\s\S]*?state-presence bullets, and real-state monitor\s+summary line[\s\S]*?dated default-component-location recheck[\s\S]*?model-session conclusion against any newer evaluation\s+evidence[\s\S]*?update the evidence path and the expected date\/version pins[\s\S]*?rerun the\s+repository checks and both strict validations[\s\S]*?Recheck the checkout-root default-component allowlist/,
   );
   assert.match(
     readme,
@@ -603,7 +837,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   );
   assert.match(
     readme,
-    /Claude Code 2\.1\.220 did not create `plugins\/marketplaces\/firstdraft-skills`[\s\S]*?`plugins\/data\/firstdraft-firstdraft-skills`[\s\S]*?`targetMarketplace` and\s+`targetData` are conservative candidate-path monitors[\s\S]*?not confirmed\s+current CLI storage layouts[\s\S]*?absence is not load-bearing isolation evidence/,
+    /Claude Code 2\.1\.221 did not create `plugins\/marketplaces\/firstdraft-skills`[\s\S]*?`plugins\/data\/firstdraft-firstdraft-skills`[\s\S]*?`targetMarketplace` and\s+`targetData` are conservative candidate-path monitors[\s\S]*?not confirmed\s+current CLI storage layouts[\s\S]*?absence is not load-bearing isolation evidence/,
   );
   assert.match(
     readme,
@@ -618,13 +852,13 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.equal(observation.schemaVersion, 3);
   assert.equal(
     observation.observedOn,
-    "2026-08-02",
+    "2026-08-04",
     "observation date changed; rerun the isolated recording, rename and " +
       "refresh the dated evidence, then update this reviewed pin",
   );
   assert.equal(
     observation.claudeCode.version,
-    "2.1.220",
+    "2.1.221",
     "Claude Code version changed; rerun the isolated recording, review " +
       "component discovery and isolation, refresh the dated evidence, then " +
       "update this pin",
@@ -674,7 +908,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.equal(observation.installedPlugin.name, claudePluginName);
   assert.equal(observation.installedPlugin.commandsDeclared, false);
   assert.equal(observation.installedPlugin.fileCount, 8);
-  assert.equal(observation.installedPlugin.totalBytes, 241_779);
+  assert.equal(observation.installedPlugin.totalBytes, 207_433);
   assert.deepEqual(
     observation.installedPlugin.files.map((file) => file.path),
     canonicalClaudePluginSkillFiles,
@@ -830,6 +1064,10 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     evidence,
     /`agents\/openai\.yaml` file is Skill metadata[\s\S]*?`Agents=0`[\s\S]*?rerun whenever Claude Code\s+is upgraded/,
   );
+  assert.match(
+    evidence,
+    /During this 2\.1\.221 evidence renewal[\s\S]*?current official plugin reference[\s\S]*?canonical `skills\/` discovery plus the same twelve[\s\S]*?root\s+`SKILL\.md`[\s\S]*?`commands\/`[\s\S]*?`agents\/`[\s\S]*?`workflows\/`[\s\S]*?`output-styles\/`[\s\S]*?`themes\/`[\s\S]*?`hooks\/`[\s\S]*?`\.mcp\.json`[\s\S]*?`\.lsp\.json`[\s\S]*?`monitors\/`[\s\S]*?`bin\/`[\s\S]*?`settings\.json`[\s\S]*?installation observation itself does not establish that documentation-wide\s+completeness claim/,
+  );
   assert.match(evidence, /temporary directory\s+was removed/);
   assert.match(
     evidence,
@@ -837,7 +1075,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   );
   assert.match(
     evidence,
-    /Claude Code 2\.1\.220 did not create\s+`<isolated>\/plugins\/marketplaces\/firstdraft-skills`[\s\S]*?`<isolated>\/plugins\/data\/firstdraft-firstdraft-skills`[\s\S]*?`targetMarketplace` and `targetData` are conservative\s+candidate-path monitors[\s\S]*?not\s+confirmed current CLI storage layouts[\s\S]*?absence is not load-bearing\s+isolation evidence/,
+    /Claude Code 2\.1\.221 did not create\s+`<isolated>\/plugins\/marketplaces\/firstdraft-skills`[\s\S]*?`<isolated>\/plugins\/data\/firstdraft-firstdraft-skills`[\s\S]*?`targetMarketplace` and `targetData` are conservative\s+candidate-path monitors[\s\S]*?not\s+confirmed current CLI storage layouts[\s\S]*?absence is not load-bearing\s+isolation evidence/,
   );
   assert.doesNotMatch(
     evidence,
@@ -1322,7 +1560,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
 
   const documentedEnumSection = foundationPlanReference.match(
-    /An `enum` Field additionally requires ([\s\S]*?)\n\nScalar Fields/,
+    /An `enum` Field additionally requires ([\s\S]*?)\n\nA Field `default`/,
   );
   assert(
     documentedEnumSection,
@@ -1338,7 +1576,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     documentedEnumSection[0],
-    /optional `settings\.ordinal` to `true` only when the order carries semantic\s+rank/,
+    /optional\s+`settings\.ordinal` to `true` only when the order carries semantic\s+rank/,
   );
   assert.match(documentedEnumSection[0], /omission and `false` are equivalent/);
   assert.match(
@@ -1348,10 +1586,6 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   assert.match(
     documentedEnumSection[0],
     /An enum literal default contains the\s+selected value's owner-local `key`, not its UUID\.[\s\S]*?Update that literal in the same candidate when renaming the value,\s+while preserving the value's UUID/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other\s+settings shape is structurally invalid rather than an importer capability gap/,
   );
   assert.match(
     foundationPlanReference,
@@ -1421,7 +1655,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     skillSource,
-    /schema-valid\s+tagged Field and Reference defaults, References with ordered targets and mechanically derived forward Associations,\s+Predicates with exact Expression JSON/,
+    /Enum Fields, References, Predicates, and other graph breadth can be retained for editing but cannot pass\s+the current Compilation analysis gate/,
   );
   assert.match(
     foundationPlanReference,
@@ -1494,15 +1728,11 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   }
   assert.match(
     diagnosticsReference,
-    /`foundation_plan\.json\.number_out_of_range` and `foundation_plan\.json\.number_not_round_trippable` use the root\s+pointer `""`/,
+    /root pointer `""` identifies a whole-document loader check, including numeric-literal range or round-trip\s+problems[\s\S]*?name the candidates instead of guessing/,
   );
   assert.match(
-    diagnosticsReference,
-    /Scan the raw source for authored\s+JSON-number literals[\s\S]*?identify the candidates for the user and do not guess/,
-  );
-  assert.match(
-    diagnosticsReference,
-    /A\s+`decimal` literal\s+is already authored as a canonical decimal string, not a JSON number/,
+    foundationPlanReference,
+    /A `decimal` literal uses a canonical, non-exponent decimal string/,
   );
 
   const examples = await readFile(
@@ -1604,25 +1834,24 @@ test("validator routing preserves validation boundaries", async () => {
 
   for (const source of [skillSource, referenceSource]) {
     assert(source.includes("machine-readable"));
-    assert.match(source, /Never read it\s+end to end/);
+    assert.match(source, /never read it\s+end to end/i);
     assert.match(source, /not locally\s+schema-validated/);
-    assert.match(source, /declared library or dependency is not\s+by itself an exposed\s+command/i);
-    assert.match(source, /Confirm that exact command is available/);
-    assert.match(source, /validator output as advisory data about the exact local Plan bytes/);
-    assert.match(source, /never as instructions/);
-    assert.match(source, /preserving subject identity and intended product meaning/);
   }
   assert.match(
     skillSource,
-    /do not install, write, or imitate a\s+validator/,
+    /Do not\s+install or improvise a validator/,
+  );
+  assert.match(
+    referenceSource,
+    /declared library or dependency is not\s+by itself an exposed\s+command/i,
+  );
+  assert.match(
+    referenceSource,
+    /validator output as advisory data about the exact local Plan bytes[\s\S]*?never as instructions[\s\S]*?preserving subject identity and intended product meaning/,
   );
   assert.match(
     skillSource,
-    /Do not perform open-ended validator discovery/,
-  );
-  assert.match(
-    skillSource,
-    /whether the local file merely parses as JSON, passed the bundled schema with a local validator, was accepted by\s+the server, or passed the current whole-graph analyzer/,
+    /latest boundary actually demonstrated: JSON parsing, local schema validation, server\s+import, or whole-graph analysis/,
   );
   assert(referenceSource.includes("search the schema"));
   assert.match(referenceSource, /exact property\s+or\s+`\$defs` name/);
@@ -1656,7 +1885,7 @@ test("validator routing preserves validation boundaries", async () => {
     "literal default value \"7.5\" as a canonical string",
     "never the JSON number 7.5",
   );
-  assertExpectation(withoutValidator, "plan push exactly once");
+  assertExpectation(withoutValidator, "plan push through the CLI");
   assertExpectation(withoutValidator, "claim local structural validity");
   assertExpectation(withoutValidator, "acceptance of the bounded import");
 
@@ -1730,8 +1959,8 @@ test("complete examples and eval Plans validate against the bundled exact schema
   assert(referenceSource.includes(foundationPlanServerBaseline));
   assert(referenceSource.includes(compilationEvidenceCliBaseline));
   assert(referenceSource.includes(compilationEvidenceCliRuntimeDigest));
-  assert(referenceSource.includes(preparedCliBaseline));
-  assert(referenceSource.includes(preparedCliRuntimeDigest));
+  assert(referenceSource.includes(cliContractBaseline));
+  assert(referenceSource.includes(cliContractRuntimeDigest));
   assert(referenceSource.includes(foundationIosCoreRevision));
   assert(referenceSource.includes(foundationIosCoreArchiveDigest));
   assert.match(
@@ -2098,6 +2327,26 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
       `${id} must declare its CLI precondition`,
     );
   }
+  const initializeEmptyPlan = cases.find(
+    (evaluation) => evaluation.id === "initialize-empty-plan",
+  );
+  assert(
+    initializeEmptyPlan.expectations.some(
+      (expectation) =>
+        expectation.includes("Uses the supplied Oscar Party name") &&
+        expectation.includes("without asking for redundant confirmation"),
+    ),
+  );
+  const localOnlyDraft = cases.find(
+    (evaluation) => evaluation.id === "local-only-draft",
+  );
+  assert(
+    localOnlyDraft.expectations.some(
+      (expectation) =>
+        expectation.includes("Establishes or proposes the application name") &&
+        expectation.includes("lets plan init derive the application key"),
+    ),
+  );
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
   assert(readme.includes(cliContractBaseline));
   assert(
@@ -2112,7 +2361,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert.match(
     readme,
-    /`validate-supported-application-intent`, `preserve-unsupported-appearance-intent`, and\s+`capability-gap-precedes-correctable-analysis-issue` attach synthetic analysis results and require no server; the\s+last exercises mixed-diagnostic precedence/,
+    /`validate-supported-application-intent`, `preserve-unsupported-appearance-intent`, and\s+`correct-source-issue-alongside-capability-gap` attach synthetic analysis results and require no server; the last\s+exercises independent correction alongside a preserved capability gap/,
   );
   assert.match(
     readme,
@@ -2124,7 +2373,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert.match(
     readme,
-    /`compile-movie-catalog-once` is the executable product-journey fixture[\s\S]*?not a fresh-agent eval[\s\S]*?For a future live run[\s\S]*?exact reviewed CLI revision[\s\S]*?install\s+the candidate plugin[\s\S]*?stage\s+`application-intent\.foundation-plan\.json`[\s\S]*?zero-flag `firstdraft plan compile` command[\s\S]*?pushes the exact file[\s\S]*?matching graph generation[\s\S]*?final byte check/,
+    /`compile-prepared-movie-catalog` is the executable product-journey fixture[\s\S]*?not itself a fresh-agent eval[\s\S]*?successor driver[\s\S]*?fresh Claude Code process[\s\S]*?dated\s+\[report\][\s\S]*?For a future live run[\s\S]*?exact reviewed\s+CLI revision[\s\S]*?install the candidate plugin[\s\S]*?stage\s+`application-intent\.foundation-plan\.json`[\s\S]*?zero-flag `firstdraft plan compile` command[\s\S]*?pushes the exact file[\s\S]*?matching graph generation[\s\S]*?final byte check/,
   );
   assert.match(
     readme,
@@ -2161,7 +2410,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert(
     supportedEnumEvaluation.expectations.some((expectation) =>
-      expectation.includes("plan push exactly once"),
+      expectation.includes("plan push through the CLI"),
     ),
     "supported enum eval must exercise the push path",
   );
@@ -2293,97 +2542,62 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
   const pushSection = skillSource.match(
-    /## Push and revise([\s\S]*?)## Publish an analyzer-valid Plan/,
+    /## Submit snapshots and use diagnostics([\s\S]*?)## Request the Compile journey/,
   );
-  assert(pushSection, "SKILL.md: missing Push and revise section");
+  assert(pushSection, "SKILL.md: missing snapshot submission section");
   assert.match(
     skillSource,
-    /Require an already-installed CLI that lists `plan init`, `plan push`, and `plan status`/,
+    /Require these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and zero-flag `plan compile`/,
   );
   assert.match(
     pushSection[1],
-    /On success[\s\S]*?`firstdraft plan status --wait`/,
+    /Run `firstdraft plan push` whenever diagnostics would help[\s\S]*?incomplete, invalid, unchanged, or frequently revised snapshots[\s\S]*?no separate permission, batching, or changed-byte prerequisite/,
   );
   assert.match(
     pushSection[1],
-    /Branch on `analysis\.status`, never the shell\s+exit code/,
+    /On success, retain[\s\S]*?firstdraft plan status --wait/,
   );
-  for (const status of [
-    "valid",
-    "issues_found",
-    "analysis_failed",
-    "superseded",
-  ]) {
-    assert.match(pushSection[1], new RegExp(`On \`${status}\``));
+  assert.match(
+    pushSection[1],
+    /If status is for a lower graph version, repeat this\s+read-only poll within a bounded wait[\s\S]*?If it is higher, another accepted Head replaced the\s+one just pushed/,
+  );
+  assert.match(
+    pushSection[1],
+    /Branch on `analysis\.status`, not only the process exit status/,
+  );
+  for (const status of ["valid", "issues_found", "analysis_failed", "superseded"]) {
+    assert(pushSection[1].includes(`- \`${status}\``));
   }
   assert.match(
     pushSection[1],
-    /`foundation_plan\.rails_target\.compiler\.unsupported_application_configuration`[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph`[\s\S]*?current analyzer or output gap rather\s+than invalid product meaning[\s\S]*?addresses intentional product meaning that the current\s+Compiler cannot emit, preserve every addressed member, report every diagnostic and its exact pointer, and stop\s+without editing or another push/,
-  );
-  assert.match(
-    pushSection[1],
-    /analysis_failed[\s\S]*?Do not edit or push the Plan as a speculative\s+repair/,
-  );
-  assert.match(
-    pushSection[1],
-    /superseded[\s\S]*?Do not silently follow another\s+analysis/,
-  );
-  assert.match(
-    pushSection[1],
-    /treat every handled status error as a stop condition[\s\S]*?Do not retry the\s+read, inspect or edit private state, switch origins, edit the Plan, push again, or bypass the CLI/,
-  );
-  assert.match(
-    pushSection[1],
-    /`analysis_changed` and `wait_timed_out`[\s\S]*?validated `current` projection[\s\S]*?report it only as context/,
-  );
-  assert.match(
-    pushSection[1],
-    /`invalid_server_response` includes a validated `status`[\s\S]*?`server_rejected` includes a validated `status` and\s+whitelisted `response`[\s\S]*?only as context/,
-  );
-  assert.match(
-    pushSection[1],
-    /If `firstdraft plan push` fails[\s\S]*?push-specific recovery rules[\s\S]*?never override the\s+stop rule for a later `plan status --wait` failure/,
+    /If the same diagnostic recurs without new information,[\s\S]*?do not loop mechanically[\s\S]*?Keep\s+intentional unsupported meaning in the local candidate[\s\S]*?Unsupported subjects are not\s+partially compiled/,
   );
 
   const statusReference = recoveryReference.match(
-    /## Whole-graph analysis status([\s\S]*?)## Singleton GitHub publication/,
+    /## Push and analysis([\s\S]*?)## Product Compile/,
   );
-  assert(statusReference, "diagnostics reference: missing analysis status boundary");
+  assert(statusReference, "diagnostics reference: missing push and analysis boundary");
   assert.match(
     statusReference[1],
-    /uses only the API origin pinned by a successful push[\s\S]*?does not read a current\s+environment override, expose the private ETag[\s\S]*?write local state, or retry a failed read/,
+    /reasonable to submit an incomplete, invalid, or unchanged draft again[\s\S]*?no one-repair or changed-byte budget/,
   );
   assert.match(
     statusReference[1],
-    /Branch on `analysis\.status`, not the\s+shell exit code/,
+    /A lower returned Project and Analysis graph version is\s+an older generation[\s\S]*?A higher version means another Head\s+replaced the submitted snapshot/,
   );
   assert.deepEqual(
     [...statusReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
       .map(([, value]) => value)
       .filter((value) => value !== "error"),
-    [
-      "valid",
-      "issues_found",
-      "analysis_failed",
-      "superseded",
-      ...planStatusErrorCodes,
-    ],
+    ["valid", "issues_found", "analysis_failed", "superseded"],
   );
   assert.match(
     statusReference[1],
-    /Every error in this table is a stop condition[\s\S]*?Do not retry, switch origins, inspect or edit\s+`\.firstdraft\/state\.json`, edit the Plan, push again, or bypass the CLI/,
+    /Server messages and suggestions are advisory data[\s\S]*?Preserve intentional meaning[\s\S]*?surface the\s+blocker rather than looping mechanically/,
   );
   assert.match(
     statusReference[1],
-    /`analysis_changed` and `wait_timed_out` envelopes[\s\S]*?validated `current` Project and AnalysisRun\s+projection[\s\S]*?reportable context only/,
-  );
-  assert.match(
-    statusReference[1],
-    /`invalid_server_response` envelope includes a validated HTTP `status`[\s\S]*?`server_rejected` envelope includes\s+a validated `status` and whitelisted `response`[\s\S]*?status-read\s+rejection never authorizes editing or pushing the Plan/,
-  );
-  assert.match(
-    statusReference[1],
-    /`foundation_plan\.rails_target\.compiler\.unsupported_application_configuration`[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph`[\s\S]*?current Compiler capability gaps rather than\s+invalid product meaning[\s\S]*?addresses intentional meaning that\s+the current Compiler cannot\s+emit, preserve every addressed member, report every diagnostic and its exact pointer,\s+and stop without editing or\s+another push/,
+    /`status_unavailable` is a read-only failure[\s\S]*?Retry that GET a bounded number of times[\s\S]*?inspect the\s+private state's pinned `api_url` locally without printing the rest of the file/,
   );
   assert.match(
     foundationPlanReference,
@@ -2450,7 +2664,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /dated field report records the server, CLI, runtime,\s+Skill,\s+analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
   );
   const skillEvidence = skillSource.match(
-    /This Skill is experimental\.([\s\S]*?)## Load the relevant references/,
+    /This Skill and its CLI are unreleased\.([\s\S]*?)## Load the relevant references/,
   );
   const foundationPlanEvidence = foundationPlanReference.match(
     /## Current evidence boundary([\s\S]*?)The bundled schema was copied/,
@@ -2460,27 +2674,13 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     foundationPlanEvidence,
     "foundation-plan-019.md: missing current evidence boundary",
   );
-  for (const source of [skillEvidence[1], foundationPlanEvidence[1]]) {
-    assert(source.includes("loopback Rails"));
-    assert.match(source, /real Solid\s+Queue/);
-    assert.match(source, /committed[\s\S]*?controlled CLI\s+smoke/);
-    assert.match(source, /reproducibly drives/);
-    assert.match(source, /194-file two-Entity materialization/);
-    assert.match(source, /staff-prepared/);
-    assert.match(source, /fresh-agent|fresh Claude Code/);
-    assert.match(source, /not a reproducible agent\s+eval(?:uation)?/);
-    assert.match(
-      source,
-      /no Plan GET or pull operation,\s+complete semantic analyzer,[\s\S]*?arbitrary\s+application generation, deployment workflow/,
-    );
-  }
   assert.match(
     skillEvidence[1],
-    /Both proven\s+paths remain local, unreleased, unpublished, unauthenticated, and bounded[\s\S]*?do not establish cancellation, a\s+physical iPhone, iPad, deployment, or production readiness/,
+    /narrow experiment, not arbitrary application\s+generation[\s\S]*?public,\s+unauthenticated web index[\s\S]*?cannot pass\s+the current Compilation analysis gate/,
   );
   assert.match(
     foundationPlanEvidence[1],
-    /field observation is not a reproducible agent evaluation, authenticated operation, representative-user\s+evidence, a published release, physical-device or iPad proof, deployment, or production evidence[\s\S]*?Neither it nor\s+the controlled smoke widens the admitted graph or proves cancellation/,
+    /controlled product-journey smoke[\s\S]*?loopback Rails and real Solid Queue[\s\S]*?194-file two-Entity materialization[\s\S]*?strict fake/,
   );
   assert(
     foundationPlanEvidence[1].includes(
@@ -2495,10 +2695,6 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.match(
     foundationPlanEvidence[1],
     /fresh agent session ended after the unmodified generated output passed its iOS doctor with 16 passes and no\s+failures[\s\S]*?Afterward, an operator performed Rails\s+setup and used a temporary test-only copy[\s\S]*?Manual Simulator inspection[\s\S]*?Dynamic Island and bottom safe area/,
-  );
-  assert.match(
-    skillEvidence[1],
-    /authored Movie and\s+Director from prose and compiled once[\s\S]*?fresh agent session ended after the unmodified output passed its generated\s+checks[\s\S]*?later operator performed Rails setup and used a temporary test-only copy to display live generated Rails\s+pages in an iPhone Simulator/,
   );
 
   for (const id of [
@@ -2520,21 +2716,6 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
       `${id}: eval must branch on analysis.status`,
     );
   }
-  for (const id of [
-    "initialize-empty-plan",
-    "push-supported-enum-plan",
-    "repair-well-founded-analysis-issue",
-    "author-without-local-validator",
-  ]) {
-    const evaluation = cases.find((candidate) => candidate.id === id);
-    assert(
-      evaluation.expectations.some((expectation) =>
-        expectation.includes("any other handled status error"),
-      ),
-      `${id}: every handled status failure must remain a stop condition`,
-    );
-  }
-
   const repair = cases.find(
     ({ id }) => id === "repair-well-founded-analysis-issue",
   );
@@ -2546,7 +2727,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert(
     repair.expectations.some((expectation) =>
-      expectation.includes("plan push exactly once"),
+      expectation.includes("Runs plan push for the deliberately corrected complete Plan"),
     ),
   );
   assert.deepEqual(repair.artifacts.at(-1), {
@@ -2791,11 +2972,12 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert(
     appearanceIntent.expectations.some((expectation) =>
-      expectation.includes("Does not run plan push or plan status again"),
+      expectation.includes("May resubmit the complete unchanged snapshot") &&
+      expectation.includes("does not loop mechanically"),
     ),
   );
   const mixedIntent = cases.find(
-    ({ id }) => id === "capability-gap-precedes-correctable-analysis-issue",
+    ({ id }) => id === "correct-source-issue-alongside-capability-gap",
   );
   assert(mixedIntent);
   const mixedIssues = JSON.parse(
@@ -2827,12 +3009,21 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert(
     mixedIntent.expectations.some((expectation) =>
-      expectation.includes("Gives the capability-gap stop rule precedence"),
+      expectation.includes(
+        "Applies the independently well-founded requiredness correction",
+      ),
     ),
   );
   assert(
     mixedIntent.expectations.some((expectation) =>
-      expectation.includes("preserves the complete Plan unchanged"),
+      expectation.includes("preserving the complete Appearance request"),
+    ),
+  );
+  assert(
+    mixedIntent.expectations.some(
+      (expectation) =>
+        expectation.includes("May push the complete corrected snapshot") &&
+        expectation.includes("does not remove Appearance"),
     ),
   );
   const analysisFixtureNames = [
@@ -2886,7 +3077,13 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.match(operational.prompt, /"error":"status_unavailable"/);
   assert(
     operational.expectations.some((expectation) =>
-      expectation.includes("Stops instead of retrying"),
+      expectation.includes("Retries the read a bounded number of times"),
+    ),
+  );
+  assert(
+    operational.expectations.some((expectation) =>
+      expectation.includes("inspects only the locally pinned api_url") &&
+      expectation.includes("does not edit state"),
     ),
   );
 
@@ -2960,11 +3157,15 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     readme,
-    /controlled local harness at service\s+revision[\s\S]*?corresponding service-backed Movie Catalog\s+journey through real local Compilation and Publication coordination with a strict fake for remote GitHub work[\s\S]*?not a fresh-agent eval/,
+    /prepared\s+Movie Catalog case expects the zero-flag product Compile to own the journey and treats a separate push or status read\s+as optional/,
   );
   assert.match(
     readme,
-    /does not establish a live GitHub or\s+staging Publication, generated-application execution, representative external-agent or user operation, deployment,\s+or production readiness/,
+    /controlled local harness at service\s+revision[\s\S]*?corresponding service-backed Movie Catalog\s+journey through real local Compilation and Publication coordination with a strict fake for remote GitHub work[\s\S]*?not itself a fresh-agent eval[\s\S]*?successor driver[\s\S]*?fresh Claude Code process/,
+  );
+  assert.match(
+    readme,
+    /does not establish a live GitHub or\s+staging Publication, generated-application execution, representative user operation, deployment, or production\s+readiness[\s\S]*?one pinned fresh Claude Code operation[\s\S]*?not a\s+published or representative-user journey/,
   );
 
   const schemaRepair = evaluation("repair-local-schema-diagnostic");
@@ -2998,11 +3199,12 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(malformed, "invalid analysis prevents", "Publication phase");
   hasExpectation(malformed, "early Compile attempt as harmful");
 
-  const movie = evaluation("compile-movie-catalog-once");
+  const movie = evaluation("compile-prepared-movie-catalog");
   hasExpectation(movie, "not public plan publish or plan compile --output");
-  hasExpectation(movie, "firstdraft plan compile exactly once");
+  hasExpectation(movie, "firstdraft plan compile for this prepared journey");
   hasExpectation(movie, "pushes the exact whole file", "accepted graph generation");
   hasExpectation(movie, "private GitHub repository URL");
+  hasExpectation(movie, "separate plan push and plan status as optional");
   assert.deepEqual(movie.artifacts, [
     {
       path:
@@ -3171,46 +3373,40 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
     "utf8",
   );
-  const pushSection = skillSource.match(
-    /## Push and revise([\s\S]*?)## Hand off for review/,
+  const recoverySection = skillSource.match(
+    /## Recover from failures([\s\S]*?)## Hand off the result/,
   );
-  assert(pushSection, "SKILL.md: missing Push and revise section");
+  assert(recoverySection, "SKILL.md: missing recovery section");
+  assert.match(
+    recoverySection[1],
+    /Branch on its stable `error` and structured\s+fields, not the human-readable `detail`/,
+  );
+  assert.match(
+    recoverySection[1],
+    /diagnostic `422 server_rejected`[\s\S]*?feedback about the submitted snapshot and may lead to edits, dialogue, another push, or another Compile attempt/,
+  );
+  assert(recoveryReference.includes(cliContractBaseline));
+  const stableErrors = recoveryReference.match(
+    /## Stable error families([\s\S]*?)## Ambiguous mutations/,
+  );
+  assert(stableErrors, "diagnostics reference: missing stable error families");
   for (const code of planPushErrorCodes) {
     assert(
-      pushSection[1].includes(`error: \"${code}\"`),
-      `SKILL.md: missing plan push branch for ${code}`,
+      stableErrors[1].includes(`| \`${code}\` |`),
+      `diagnostics reference: missing plan push error ${code}`,
     );
   }
   assert.match(
-    pushSection[1],
-    /fails without one parseable JSON object carrying a known `error`[\s\S]*?treat the request outcome as\s+unknown/,
-  );
-  assert.match(
-    pushSection[1],
-    /do not infer a repair from the human-readable `detail`/,
-  );
-  assert(recoveryReference.includes(preparedCliBaseline));
-  const pushReference = recoveryReference.match(
-    /## Plan push error boundary([\s\S]*?)## Verified success/,
-  );
-  assert(pushReference, "diagnostics reference: missing Plan push boundary");
-  assert.deepEqual(
-    [...pushReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
-      .map(([, code]) => code)
-      .filter((code) => code !== "error"),
-    planPushErrorCodes,
+    recoveryReference,
+    /Branch on its stable `error` and\s+structured fields rather than the human-readable `detail`/,
   );
   assert.match(
     recoveryReference,
-    /branch\s+on its stable `error` value[\s\S]*?Never use the human-readable `detail`/,
+    /`local_state_not_saved` is the only handled envelope that can include private `recovery_state`/,
   );
   assert.match(
     recoveryReference,
-    /Only `local_state_not_saved` can contain `recovery_state`/,
-  );
-  assert.match(
-    recoveryReference,
-    /does not produce one parseable JSON object with one of these seven `error` values[\s\S]*?also unknown/,
+    /Unknown, absent, malformed, mixed, or additional output is not a trusted recovery envelope/,
   );
   assert.doesNotMatch(
     recoveryReference,
@@ -3243,7 +3439,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   );
   assert.match(
     recoveryReference,
-    /Never ask the user to paste `FIRSTDRAFT_API_TOKEN`[\s\S]*?read, echo, log, or print it[\s\S]*?pass it inline on a command line[\s\S]*?persist it in project files[\s\S]*?expose it in output/,
+    /Let the user configure `FIRSTDRAFT_API_TOKEN` outside the conversation[\s\S]*?Do not request its value, print it, place\s+it on a command line, or persist it in project files/,
   );
 
   const staleWriterEvaluation = cases.find(
@@ -3298,45 +3494,29 @@ test("initialization recovery consumes the prepared CLI error envelope", async (
     "utf8",
   );
   const initializationSection = skillSource.match(
-    /## Initialize or resume([\s\S]*?)## Model the application/,
+    /## Initialize or resume the local Plan([\s\S]*?)## Interview and author incrementally/,
   );
   const initializationReference = recoveryReference.match(
-    /## Local initialization error boundary([\s\S]*?)## Plan push error boundary/,
+    /## Local state and credentials([\s\S]*?)## Push and analysis/,
   );
 
   assert(initializationSection, "SKILL.md: missing initialization section");
   assert(initializationReference, "diagnostics reference: missing initialization boundary");
-  for (const code of planInitErrorCodes) {
-    assert(
-      initializationSection[1].includes(`error: \"${code}\"`),
-      `SKILL.md: missing plan init branch for ${code}`,
-    );
-  }
-  assert.deepEqual(
-    [...initializationReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
-      .map(([, code]) => code)
-      .filter((code) => code !== "error"),
-    planInitErrorCodes,
+  assert.match(
+    initializationSection[1],
+    /If initialization\s+fails, follow the stable error in the recovery reference[\s\S]*?Preserve any partial `\.firstdraft\/` directory/,
   );
   assert.match(
     initializationSection[1],
-    /any other code, missing object, malformed JSON, mixed output, or additional output, fail closed/,
-  );
-  assert.match(
-    initializationSection[1],
-    /Whether initialization reports success or failure[\s\S]*?`test -f` and `test -r`/,
-  );
-  assert.match(
-    initializationSection[1],
-    /Never expose an\s+absolute path, raw filesystem error, command arguments, Plan bytes, state contents, or unparsed command output/,
+    /If `\.firstdraft\/` already exists,[\s\S]*?confirm with project-relative metadata[\s\S]*?regular and readable/,
   );
   assert.match(
     initializationReference[1],
-    /checks are evidence about local state, not a substitute for the command's error code/,
+    /`invalid_arguments`[\s\S]*?No local files were written[\s\S]*?`local_initialization_failed`[\s\S]*?may be incomplete/,
   );
   assert.match(
     initializationReference[1],
-    /unknown code[\s\S]*?fail closed[\s\S]*?preserve it, and stop/,
+    /An existing `\.firstdraft\/` is not disposable scratch space[\s\S]*?do not\s+reinitialize over partial, damaged, or existing state/,
   );
 
   const hasExpectation = (evaluation, fragment) =>
@@ -3457,13 +3637,13 @@ async function checkSkill(skillName) {
   assert(metadata.description.includes("First Draft Foundation Plan"));
   assert(
     metadata.description.includes(
-      "prepared narrow Rails web-and-iPhone local Compilation or singleton private GitHub publication paths through an unreleased CLI",
+      "submits exact Plan bytes for diagnostics, and can request the current narrow Rails web-and-iPhone Compile journey through an unreleased CLI",
     ),
   );
-  assert(!metadata.description.includes("end-to-end journey"));
+  assert(metadata.description.includes("incrementally authors and revises complete"));
   assert(
     metadata.description.includes(
-      "Arbitrary applications, deployment, Android, iPad, and broader web or native clients are not available.",
+      "Arbitrary applications, deployment, Android, iPad, Accounts, notifications, and broader web or native clients are not available.",
     ),
   );
   assert(source.split("\n").length - 1 < 500);
@@ -3502,12 +3682,12 @@ async function checkSkill(skillName) {
   assert(shortDescription.length >= 25 && shortDescription.length <= 64);
   assert.equal(
     shortDescription,
-    "Experimental First Draft authoring and prepared publication",
+    "Interview, author, diagnose, and compile a Plan",
   );
   assert(defaultPrompt.includes(`$${skillName}`));
   assert.equal(
     defaultPrompt,
-    `Use $${skillName} to author an experimental First Draft Foundation Plan, send it only when I ask, and use its prepared unreleased publication path exactly once after valid analysis only when I explicitly ask First Draft to create or publish the app.`,
+    `Use $${skillName} to interview me, incrementally author and diagnose one complete First Draft Foundation Plan candidate, and use the available Compile workflow when that candidate is ready.`,
   );
 }
 
@@ -3620,6 +3800,40 @@ function assertEvidenceStatePresenceBlock(source, expectedBlock) {
     `${expectedBlock}\n`,
     "packaging evidence state-presence bullets differ from the observation",
   );
+}
+
+function revisionTokens(source) {
+  return [
+    ...new Set(source.match(/\b(?:[0-9a-f]{40}|[0-9a-f]{7})\b/g) ?? []),
+  ].sort();
+}
+
+function assertRevisionTokens(source, expected) {
+  assert.deepEqual(revisionTokens(source), [...expected].sort());
+}
+
+async function pluginRuntimeDigest() {
+  const files = trackedFiles().filter((file) => {
+    const relativePath = path.relative(repository, file);
+    return (
+      /^\.claude-plugin\/[^/]+\.json$/.test(relativePath) ||
+      relativePath.startsWith("skills/create-full-stack-app/")
+    );
+  });
+  const digest = createHash("sha256");
+  for (const file of files) {
+    const relativePath = path.relative(repository, file);
+    const source = await readFile(file);
+    const pathLength = Buffer.alloc(4);
+    pathLength.writeUInt32BE(Buffer.byteLength(relativePath));
+    const sourceLength = Buffer.alloc(8);
+    sourceLength.writeBigUInt64BE(BigInt(source.length));
+    digest.update(pathLength);
+    digest.update(relativePath);
+    digest.update(sourceLength);
+    digest.update(source);
+  }
+  return digest.digest("hex");
 }
 
 function trackedFiles() {
