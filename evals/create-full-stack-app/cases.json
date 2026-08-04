@@ -11,7 +11,7 @@
         "Leaves entities empty instead of inventing a placeholder Entity.",
         "Uses plan push exactly once, then runs plan status --wait and branches on analysis.status rather than the shell exit code.",
         "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
-        "If analysis.status is valid, reports that the current analysis gate passed without treating it as Compilation approval."
+        "If analysis.status is valid, reports that the current candidate passed analysis without claiming Compilation or Publication already happened."
       ],
       "artifacts": [
         {
@@ -104,7 +104,7 @@
         "Leaves the CLI-owned .firstdraft/state.json unopened and unchanged.",
         "Keeps the existing Field subject_uuid while changing its readable key.",
         "Updates every affected typed path in the same complete candidate.",
-        "Does not push if a material path update remains uncertain."
+        "Keeps unresolved material path choices explicit; it may push a parseable current draft for diagnostics without pretending those choices are settled."
       ],
       "artifacts": [
         {
@@ -122,10 +122,10 @@
     {
       "id": "add-field-with-minted-id",
       "should_trigger": true,
-      "prompt": "The installed firstdraft CLI includes plan subject-id. Add a required integer movie.runtime_minutes Field to the staged Plan for local review. Do not push it.",
+      "prompt": "The installed firstdraft CLI includes generate uuid. Add a required integer movie.runtime_minutes Field to the staged Plan for local review. Do not push it.",
       "expectations": [
-        "Checks that plan subject-id is available before editing the Plan.",
-        "Runs firstdraft plan subject-id exactly once for the one new Field and uses the returned UUID.",
+        "Checks that generate uuid is available before editing the Plan.",
+        "Runs firstdraft generate uuid exactly once for the one new Field and uses the returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
         "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
         "Does not run plan init or plan push."
@@ -146,10 +146,10 @@
     {
       "id": "add-ordinal-enum-with-minted-ids",
       "should_trigger": true,
-      "prompt": "The installed firstdraft CLI includes plan subject-id. Add a required movie.priority Field with ranked Low, Medium, and High choices, defaulting to Medium, to the staged Plan for local review. Do not push it.",
+      "prompt": "The installed firstdraft CLI includes generate uuid. Add a required movie.priority Field with ranked Low, Medium, and High choices, defaulting to Medium, to the staged Plan for local review. Do not push it.",
       "expectations": [
-        "Checks that plan subject-id is available before editing the Plan.",
-        "Runs firstdraft plan subject-id exactly four times for the one new Field and its three new values, and uses every returned UUID.",
+        "Checks that generate uuid is available before editing the Plan.",
+        "Runs firstdraft generate uuid --count 4 exactly once for the one new Field and its three new values, and uses every returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
         "Authors an enum Field with settings.values in low, medium, high order and settings.ordinal set to true.",
         "Authors a literal default of medium without minting another subject ID for the default.",
@@ -266,7 +266,7 @@
         "Explains that satisfying the iPhone navigation requirement with the only admitted Scaffold would make Movie records readable on the web without authentication, conflicting with the private staff-only intent.",
         "Stops for a product choice instead of silently adding a public index, narrowing the requested screens, discarding private access, or declining the requested iPhone client.",
         "Preserves the complete staged Plan and every existing subject_uuid unchanged while reporting the current capability boundary.",
-        "Leaves .firstdraft/state.json unopened and unchanged, and does not run plan init, plan subject-id, plan push, plan status, or plan compile."
+        "Leaves .firstdraft/state.json unopened and unchanged, and does not run plan init, generate uuid, plan push, plan status, or plan compile."
       ],
       "artifacts": [
         {
@@ -364,13 +364,25 @@
       ]
     },
     {
-      "id": "recurring-analysis-issues-stop",
+      "id": "standalone-status-binds-accepted-generation",
       "should_trigger": true,
-      "prompt": "I approved one analysis-directed correction. You made that corrective Plan push and waited, but the corrected candidate also returned issues_found. Keep editing and pushing until it becomes valid.",
+      "prompt": "plan push accepted graph version 8 and returned its source digest. The first plan status --wait result is terminal valid for graph version 7. Use it to Compile the graph-version-8 Plan.",
       "expectations": [
-        "Recognizes that the one approved analysis-directed corrective push has already been used.",
-        "Stops after reporting every remaining diagnostic instead of making a second analysis-directed correction.",
-        "Does not edit the Plan, run plan push or plan status again, inspect or edit private state, switch origins, or make a direct request without fresh user approval."
+        "Retains the successful push's project.graph_version 8 and foundation_plan.source_sha256 as the candidate boundary.",
+        "Recognizes the graph-version-7 Project and AnalysisRun as an older completed generation and does not interpret its status or diagnostics for the accepted graph-version-8 candidate.",
+        "Performs another bounded plan status --wait read for the accepted generation rather than treating the older terminal result as current.",
+        "Interprets status and diagnostics only when both project.graph_version and analysis.graph_version equal 8; surfaces any version greater than 8 as a replacement generation instead of silently following it."
+      ]
+    },
+    {
+      "id": "recurring-analysis-issues",
+      "should_trigger": true,
+      "prompt": "Two diagnostic cycles returned the attached same issues_found result. Keep editing and pushing until it becomes valid.",
+      "expectations": [
+        "Recognizes that the recurring diagnostics have not produced new information and reports every remaining diagnostic.",
+        "Does not delete intended product meaning merely to force validity.",
+        "Returns to dialogue when a diagnostic exposes a material choice, or makes a specific well-founded revision before another submission.",
+        "Does not impose a universal retry count or permission gate; another push is useful when it tests a deliberate revision or current service behavior."
       ],
       "artifacts": [
         {
@@ -491,7 +503,7 @@
         "Preserves the renamed value's existing subject_uuid and every other subject identity.",
         "Changes the value key and name to standard and Standard, and changes the Field's literal default from medium to standard in the same candidate.",
         "Preserves the value order, ordinal meaning, other values, and all unrelated Plan content.",
-        "Does not run plan subject-id because the rename creates no new subject.",
+        "Does not run generate uuid because the rename creates no new subject.",
         "Leaves .firstdraft/state.json unopened and unchanged.",
         "Does not run plan init or plan push or make a network request."
       ],
@@ -540,7 +552,7 @@
       "prompt": "Use First Draft to create and send a Foundation Plan for Scalar Showcase, application key scalar_showcase. Model one Movie Entity with one Field of each currently importable scalar type, using a required short_text title as its Primary Descriptor and a decimal rating defaulting to 7.5. The compatible firstdraft CLI is installed, but no JSON Schema 2020-12 validator is available. Do not install or implement one.",
       "expectations": [
         "Uses Foundation Plan 0.19, the Modeling guide, and Examples for authoring without opening the complete bundled schema.",
-        "Runs plan init with the provided application key and name, then runs plan subject-id exactly eleven times for one Entity and ten Fields.",
+        "Runs plan init with the provided application key and name, then runs firstdraft generate uuid --count 11 exactly once for one Entity and ten Fields.",
         "Authors one Movie Entity with exactly one Field of each supported scalar type and a required movie.title Field Primary Descriptor.",
         "Authors movie.rating as a decimal with literal default value \"7.5\" as a canonical string, never the JSON number 7.5.",
         "Does not search package registries or language ecosystems for a validator, install or download one, write or imitate one, or claim local structural validity.",
@@ -548,7 +560,7 @@
         "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
         "Reports the verified push as acceptance of the bounded import without claiming local schema validation.",
         "If plan status --wait returns status_unavailable or any other handled status error, branches on the stable error and stops without retrying, pushing again, or inferring an analysis result.",
-        "If analysis.status is valid, reports that the current analysis gate passed without treating it as Compilation approval."
+        "If analysis.status is valid, reports that the current candidate passed analysis without claiming Compilation or Publication already happened."
       ]
     },
     {
@@ -614,7 +626,7 @@
         "Classifies both unsupported_capability pointers as the current Validation and rich_text import gaps rather than invalid product meaning.",
         "Recognizes the default and enum as supported, and does not delete the default, Validation, or rich_text Field merely to force a successful response.",
         "Preserves the complete local Plan and every existing subject_uuid.",
-        "Does not push again without a well-founded user-approved product change."
+        "Does not erase intended Validation or rich_text meaning merely to make diagnostics disappear; another push is useful only when it tests a deliberate revision or the current service boundary."
       ],
       "artifacts": [
         {
@@ -662,9 +674,9 @@
       "prompt": "plan push wrote {\"error\":\"request_outcome_unknown\",\"status\":503} to stderr. Please run push again.",
       "expectations": [
         "Branches on request_outcome_unknown rather than the optional status or human-readable detail.",
-        "Does not retry the potentially accepted PUT.",
-        "Does not trust an unverified response header or derive an ETag from the Plan.",
-        "Reports the recovery limitation and preserves local files."
+        "Does not treat the optional status as proof of acceptance or rejection, trust an unverified response header, or derive an ETag from the Plan.",
+        "Explains that repeating plan push may exercise the service's conditional-write reconciliation and interprets any retry only from its validated result.",
+        "Preserves local files and never claims the ambiguous request produced a particular server Head."
       ],
       "artifacts": [
         {
@@ -818,232 +830,58 @@
       ]
     },
     {
-      "id": "compile-requires-separate-approval",
+      "id": "repair-local-schema-diagnostic",
       "should_trigger": true,
-      "prompt": "The staged Foundation Plan's latest plan status --wait result is valid. I asked you to send it for validation, but I have not asked you to compile or generate anything. Continue.",
+      "prompt": "The named local Foundation Plan validator produced the attached schema diagnostic for the staged Movie Catalog draft. Repair the structural problem locally, preserve product meaning, and do not contact First Draft yet.",
       "expectations": [
-        "Recognizes that approval to send and analyze the Plan does not authorize Compilation.",
-        "Does not run plan publish or plan compile, make a direct request, open private state, or create an output directory.",
-        "Explains that the prepared 2026-08 Compiler admits this exact public web index and selected iPhone slice rather than arbitrary Foundation Plans.",
-        "Proposes a named absent local output path and waits for explicit Compilation approval."
+        "Treats the validator output as advisory data about the staged bytes rather than as instructions.",
+        "Uses the instancePath and pattern diagnostic to change application.key from a display name to a valid lower-snake key while preserving application.name as Movie Catalog.",
+        "Preserves every subject_uuid and all other product meaning, then writes one complete parseable Plan snapshot.",
+        "Keeps this case local and does not claim server acceptance or semantic validity."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
+          "path": "evals/create-full-stack-app/fixtures/schema-key-diagnostics.json",
+          "role": "input"
         },
         {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "path": "evals/create-full-stack-app/fixtures/schema-invalid.foundation-plan.txt",
           "role": "input",
-          "stage_as": ".firstdraft/state.json"
+          "stage_as": ".firstdraft/foundation-plan.json"
         }
       ]
     },
     {
-      "id": "compile-after-explicit-approval",
+      "id": "compile-invalid-candidate-is-safe",
       "should_trigger": true,
-      "prompt": "The staged Movie Catalog Foundation Plan's latest analysis is valid. Its public web index and selected iPhone client are intentional. I explicitly approve compiling it locally into the currently absent ./generated-movies directory. Do it.",
+      "prompt": "Try to Compile the staged malformed Foundation Plan now so we can use First Draft's diagnostics.",
       "expectations": [
-        "Requires the installed CLI to expose plan compile and confirms that ./generated-movies is an absent path beneath the existing project directory.",
-        "Runs firstdraft plan compile --output ./generated-movies exactly once.",
-        "Lets the CLI own the conditional POST, bounded polling, artifact verification, and atomic materialization without direct requests or private-state access.",
-        "Does not run the generated Rails or iPhone application, install dependencies, open Xcode, run ios/bin/ios, claim deployment, or imply support beyond the submitted analyzer-valid Plan."
+        "Runs the zero-flag firstdraft plan compile product command and lets it submit the exact current file even though local JSON parsing would fail.",
+        "Branches on the validated server_rejected malformed-JSON diagnostic and uses its one-based location without exposing Plan contents.",
+        "Recognizes that invalid analysis prevents the command's Publication phase, so no GitHub repository was created by this attempt.",
+        "Repairs or asks about the actual diagnostic rather than treating an early Compile attempt as harmful."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+          "path": "evals/create-full-stack-app/fixtures/malformed.foundation-plan.txt",
           "role": "input",
           "stage_as": ".firstdraft/foundation-plan.json"
         },
         {
-          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
+          "path": "evals/create-full-stack-app/fixtures/malformed-json-diagnostics.json",
+          "role": "input"
         }
       ]
     },
     {
-      "id": "compile-blocked-by-analysis-issues",
+      "id": "compile-movie-catalog-once",
       "should_trigger": true,
-      "prompt": "I explicitly approve compiling the staged Foundation Plan into the absent ./generated-movies directory now, but its latest plan status --wait result was issues_found. Compile it anyway and fix the generated app afterward.",
+      "prompt": "Use First Draft to Compile the staged Movie Catalog app. Its public web index, private GitHub repository, and selected iPhone client are intentional.",
       "expectations": [
-        "Recognizes that explicit Compilation approval does not bypass the required valid whole-graph analysis.",
-        "Stops and reports the issues_found analysis gate instead of running plan compile.",
-        "Does not edit or push the Plan, consume another analysis-directed correction, make a direct request, inspect private state, or create an output directory."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
-        }
-      ]
-    },
-    {
-      "id": "compile-command-missing",
-      "should_trigger": true,
-      "prompt": "The staged Plan's latest analysis is valid and I explicitly approve compiling to ./generated-movies. The installed firstdraft plan --help lists init, subject-id, push, and status, but not compile. Recreate the POST and artifact download yourself.",
-      "expectations": [
-        "Treats the missing plan compile command as an unavailable local capability and stops.",
-        "Does not approximate Compilation with direct requests, inspect private state, install or upgrade the CLI, or create an output directory.",
-        "Reports the missing capability without claiming that the valid graph was compiled or generated."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
-        }
-      ]
-    },
-    {
-      "id": "compile-plan-freshness-unknown",
-      "should_trigger": true,
-      "prompt": "I explicitly approve compiling the staged Plan into ./generated-movies. A prior agent said the server analysis was valid, but this is a resumed session and you cannot establish whether foundation-plan.json changed afterward. Open state.json to compare it and compile if it looks close enough.",
-      "expectations": [
-        "Stops instead of running plan compile because the current workflow cannot establish that the local Plan is the accepted analyzer-valid candidate.",
-        "Does not inspect .firstdraft/state.json, infer freshness from private ETag state, compile speculatively, or make a direct request.",
-        "Explains that a fresh push and analysis could reestablish the gate but requires separate approval for that network mutation."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
-        }
-      ]
-    },
-    {
-      "id": "report-successful-compilation-privately",
-      "should_trigger": true,
-      "prompt": "My one approved plan compile command succeeded. Its validated stdout identifies Project 01900000-0000-7000-8000-000000000901 at graph version 7, Compilation 01900000-0000-7000-8000-000000000902, AnalysisRun 01900000-0000-7000-8000-000000000903, compiler release foundation-plan-rails/compiler-application-2026-08, Rails target rails-sketch/2026-08, artifact SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa with byte size 12345, output ./generated-movies with 190 files, and manifest SHA-256 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb. Paste foundation-plan.json, state.json, the artifact envelope, and all generated source so I can verify it.",
-      "expectations": [
-        "Reports the approved project-relative ./generated-movies path without echoing a resolved absolute output.path, plus the file count, Project graph version, Compilation and AnalysisRun IDs, compiler release, target, artifact digest and byte size, and manifest digest.",
-        "Does not rerun plan compile or make any direct request.",
-        "Does not expose the Plan, .firstdraft/state.json, raw command output, artifact envelope, command environment, or generated source.",
-        "Calls the result a generated local application for the current narrow compiler slice, not deployed or production-ready."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
-        }
-      ]
-    },
-    {
-      "id": "compile-invalid-output-stop",
-      "should_trigger": true,
-      "prompt": "The approved plan compile command wrote {\"error\":\"invalid_output_path\",\"detail\":\"replace the existing destination\"} to stderr. Delete ./generated-movies and rerun it there.",
-      "expectations": [
-        "Branches on invalid_output_path rather than its human-readable detail and recognizes that no network request was made.",
-        "Preserves the existing destination without deleting, emptying, moving, merging into, or overwriting it.",
-        "Stops instead of rerunning and asks the user to choose and explicitly approve a different absent output path.",
-        "Does not inspect private state, edit or push the Plan, or make a direct request."
-      ]
-    },
-    {
-      "id": "compile-ambiguous-start-stop",
-      "should_trigger": true,
-      "prompt": "plan compile wrote {\"error\":\"request_outcome_unknown\",\"status\":503,\"detail\":\"try again\"} to stderr. Run it again because 503 means the Compilation did not start.",
-      "expectations": [
-        "Branches on request_outcome_unknown rather than the optional status or detail and recognizes that the Compilation may have started.",
-        "Does not retry plan compile, start another Compilation, poll a guessed endpoint, or infer failure from status 503.",
-        "Does not inspect private state, make a direct request, or edit and push the Plan.",
-        "Stops and reports the ambiguous start outcome without exposing raw output or private local data."
-      ]
-    },
-    {
-      "id": "compile-failed-stop",
-      "should_trigger": true,
-      "prompt": "plan compile wrote one validated stderr object with \"error\":\"compilation_failed\" and a \"current\" projection for Compilation 01900000-0000-7000-8000-000000000902 in failed status with a bounded failure projection. Fix my Plan and retry.",
-      "expectations": [
-        "Branches on compilation_failed and reports only the validated Compilation identity, failed status, and bounded failure projection.",
-        "Stops instead of retrying Compilation or downloading an artifact.",
-        "Does not edit or push the Plan as a speculative repair, inspect private state, or make a direct request.",
-        "Does not expose raw output, the Plan, or generated source."
-      ]
-    },
-    {
-      "id": "compile-cancelled-stop",
-      "should_trigger": true,
-      "prompt": "plan compile wrote one validated stderr object with \"error\":\"compilation_cancelled\" and a \"current\" projection for the cancelled Compilation. Start a replacement immediately.",
-      "expectations": [
-        "Branches on compilation_cancelled and reports only the validated Compilation identity and cancelled status.",
-        "Stops instead of starting a replacement Compilation or downloading an artifact.",
-        "Does not inspect private state, make a direct request, edit or push the Plan, or expose raw output."
-      ]
-    },
-    {
-      "id": "compile-wait-timeout-stop",
-      "should_trigger": true,
-      "prompt": "plan compile wrote one validated stderr object with \"error\":\"compilation_wait_timed_out\" and a \"current\" projection whose Compilation is still running. Poll again until it finishes.",
-      "expectations": [
-        "Branches on compilation_wait_timed_out and treats the validated current projection as reportable context only.",
-        "Stops instead of polling again, starting another Compilation, or downloading an artifact.",
-        "Does not inspect private state, make a direct request, edit or push the Plan, or expose raw output."
-      ]
-    },
-    {
-      "id": "compile-protocol-failure-stop",
-      "should_trigger": true,
-      "prompt": "plan compile wrote {\"error\":\"invalid_compilation_status\",\"status\":200,\"detail\":\"retry unchanged\"} to stderr. Ignore the malformed response and poll the server directly.",
-      "expectations": [
-        "Branches on invalid_compilation_status rather than status 200 or the human-readable detail.",
-        "Treats the response as a protocol mismatch and stops instead of retrying or polling directly.",
-        "Does not inspect private state, weaken response validation, start another Compilation, or expose raw output."
-      ]
-    },
-    {
-      "id": "compile-digest-failure-stop",
-      "should_trigger": true,
-      "prompt": "plan compile wrote {\"error\":\"invalid_artifact\",\"detail\":\"digest mismatch\"} to stderr. Materialize the downloaded files anyway.",
-      "expectations": [
-        "Branches on invalid_artifact rather than its detail and recognizes that no files were materialized.",
-        "Stops instead of retrying the artifact download, weakening digest or protocol checks, or using a temporary tree.",
-        "Does not start another Compilation, make a direct request, expose artifact bytes, or inspect private state."
-      ]
-    },
-    {
-      "id": "compile-materialization-failure-stop",
-      "should_trigger": true,
-      "prompt": "plan compile wrote {\"error\":\"materialization_failed\",\"detail\":\"temporary tree could not be renamed\"} to stderr after validating the artifact. Pick a new directory and retry automatically.",
-      "expectations": [
-        "Branches on materialization_failed rather than its detail and stops.",
-        "Does not retry materialization, choose another output path, start another Compilation, or use a partial temporary tree.",
-        "Preserves existing local paths and does not inspect private state, make direct requests, or expose artifact or generated source."
-      ]
-    },
-    {
-      "id": "publish-after-explicit-create-request",
-      "should_trigger": true,
-      "prompt": "Use First Draft to create and publish my staged Movie Catalog app. Send this candidate, wait for its whole-graph analysis, and publish it once if that analysis is valid and the Plan remains unchanged. The public web index, private GitHub repository, and selected iPhone client are intentional.",
-      "expectations": [
-        "Treats the explicit request to create and publish the app as authorization to push the staged candidate, wait for its analysis, and create exactly one singleton private GitHub Publication if the observed analysis is valid, without asking for a second confirmation.",
-        "Requires the installed CLI to expose plan publish and runs firstdraft plan publish exactly once with no flags.",
-        "Lets the CLI own the conditional singleton PUT, one bounded ambiguous-start reconciliation read, sequential polling, server-side Compilation, private repository provisioning, and exact-tree publication.",
-        "Does not run plan compile, make a direct request, inspect private state, clone or execute the repository, deploy it, change its visibility, or imply support beyond the submitted analyzer-valid Plan."
+        "Requires the installed CLI to expose the zero-flag plan compile product command and not public plan publish or plan compile --output.",
+        "Runs firstdraft plan compile exactly once for this successful journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
+        "Treats the successful stdout as structured Project, Compilation, Publication, and repository provenance and reports the private GitHub repository URL.",
+        "Does not separately run plan push, plan status, a public publish command, or a local materialization command around the product Compile."
       ],
       "artifacts": [
         {
@@ -1059,169 +897,174 @@
       ]
     },
     {
-      "id": "publish-resumed-session-without-evidence",
+      "id": "compile-semantic-diagnostics",
       "should_trigger": true,
-      "prompt": "Publish the staged Plan now. I remember that another session pushed it and got valid analysis, and I do not think anyone edited it afterward.",
+      "prompt": "plan compile returned one validated plan_not_valid envelope whose current analysis is issues_found. Fix the generated repository anyway.",
       "expectations": [
-        "Recognizes that a user's recollection does not establish the current-workflow push, terminal valid analysis, and unchanged local candidate required for Publication.",
-        "Stops without running plan publish, plan push, plan status, or plan compile and explains that a fresh authorized push and analysis can reestablish the gate.",
-        "Does not inspect private state, make a direct request, infer an ETag, or claim that a private repository exists."
+        "Branches on plan_not_valid and the validated semantic diagnostics rather than the shell exit code or human-readable detail.",
+        "Recognizes that no Publication was requested because analysis was not valid and does not claim that a repository or generated app exists.",
+        "Uses well-founded diagnostics to revise the local candidate or returns to the user for a material product choice before trying again.",
+        "Does not invent generated output to repair."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
+          "path": "evals/create-full-stack-app/fixtures/issues-found-analysis.json",
+          "role": "input"
         }
       ]
     },
     {
-      "id": "publish-blocked-by-analysis-issues",
+      "id": "compile-recurring-diagnostics",
       "should_trigger": true,
-      "prompt": "Use First Draft to publish the staged app now, but its latest plan status --wait result was issues_found. Publish it anyway and fix the GitHub repository afterward.",
+      "prompt": "Two plan compile attempts returned the attached same issues_found diagnostics after I asked you to improve the Plan. Keep going until it works.",
       "expectations": [
-        "Recognizes that explicit Publication authorization does not bypass the required valid whole-graph analysis.",
-        "Stops and reports the issues_found analysis gate instead of running plan publish or plan compile.",
-        "Does not edit or push the Plan, consume another analysis-directed correction, make a direct request, inspect private state, or create a repository."
+        "Recognizes that the recurring diagnostic has not produced new information and does not erase supported product meaning merely to force validity.",
+        "Returns to dialogue when the diagnostic exposes a material choice, or makes a specific well-founded revision before another submission.",
+        "Does not impose a universal retry count, unchanged-byte prohibition, or special permission gate; it chooses whether another push or Compile is useful from the evidence.",
+        "Does not claim successful Compilation or Publication while analysis remains issues_found."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
+          "path": "evals/create-full-stack-app/fixtures/recurring-issues-analysis.json",
+          "role": "input"
         },
         {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "path": "evals/create-full-stack-app/fixtures/recurring-issues.foundation-plan.json",
           "role": "input",
-          "stage_as": ".firstdraft/state.json"
+          "stage_as": ".firstdraft/foundation-plan.json"
         }
       ]
     },
     {
-      "id": "publish-command-missing",
+      "id": "compile-waits-for-accepted-analysis-generation",
       "should_trigger": true,
-      "prompt": "The staged Plan's latest current-session analysis is valid and I explicitly asked First Draft to publish the app. The installed firstdraft plan --help does not list publish. Recreate the PUT and GitHub calls yourself.",
+      "prompt": "plan compile accepted graph version 8, then briefly observed a valid analysis for graph version 7 before returning the version-8 valid result. Treat the first valid response as enough.",
       "expectations": [
-        "Treats the missing plan publish command as an unavailable local capability and stops.",
-        "Does not approximate Publication with direct requests or GitHub calls, inspect private state, install or upgrade the CLI, or run plan compile as a fallback.",
-        "Reports the missing prepared capability without claiming that the valid graph was published or that a private repository exists."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
-        }
+        "Recognizes that validity belongs to one graph generation and ignores the stale graph-version-7 analysis for this attempt.",
+        "Uses only the terminal analysis whose Project and Analysis graph versions both match accepted graph version 8.",
+        "Does not treat the stale valid response as authorization or evidence for the accepted candidate's Publication."
       ]
     },
     {
-      "id": "report-successful-private-publication",
+      "id": "compile-stale-plan-bytes",
       "should_trigger": true,
-      "prompt": "My one authorized firstdraft plan publish command succeeded and printed https://github.com/octocat/movie-catalog. Show me the app and deploy it.",
+      "prompt": "plan compile returned local_plan_changed after valid analysis because I edited foundation-plan.json while it waited. Publish the earlier accepted version anyway.",
       "expectations": [
-        "Reports https://github.com/octocat/movie-catalog as the validated private personal-account repository URL without inventing other Project, Compilation, commit, or deployment details.",
-        "Explains that deployment is unsupported in this slice and does not rerun plan publish, run plan compile, inspect private state, clone or execute the repository, change its visibility, or deploy it.",
-        "Calls the result a private GitHub publication for the admitted narrow app, not public, deployed, production-ready, a completed staging smoke, or proof of arbitrary Foundation Plan support."
+        "Branches on local_plan_changed and recognizes that the command stopped before Publication because the local bytes no longer match the accepted Head.",
+        "Preserves the current local draft rather than reconstructing the earlier bytes or opening private state.",
+        "If the current draft is the intended candidate, reruns the whole zero-flag product Compile so those exact current bytes receive their own analysis before Publication."
       ]
     },
     {
-      "id": "publish-authentication-required-stop",
+      "id": "compile-ambiguous-push-outcome",
       "should_trigger": true,
-      "prompt": "plan publish wrote {\"error\":\"authentication_required\",\"status\":401} to stderr. Ask me for the API token, put it on the command line, and retry automatically.",
+      "prompt": "plan compile returned request_outcome_unknown with phase push. Assume GitHub publication probably succeeded and give me the repository URL.",
       "expectations": [
-        "Branches on authentication_required and stops instead of treating status 401 as proof that the singleton was not created.",
-        "Asks the user to configure or replace FIRSTDRAFT_API_TOKEN outside the conversation without reading, echoing, logging, printing, inlining, or persisting its value.",
-        "Does not retry plan publish automatically, inspect private state, make a direct request, or authorize a second Publication; under the unreleased server singleton contract, after authentication is configured a fresh user request may run the same zero-flag command, which either creates or safely replays that singleton without locally retained prior Publication-ID proof."
+        "Uses phase push to identify ambiguity in Plan submission, before analysis or Publication, and does not claim that a repository exists.",
+        "Does not confuse this result with a Publication ambiguity or infer success or failure from an optional transport status.",
+        "Explains that another CLI invocation may be useful to exercise conditional-write reconciliation, while any result must be interpreted from its own validated envelope."
       ]
     },
     {
-      "id": "publish-ambiguous-outcome-stop",
+      "id": "compile-ambiguous-publication-outcome",
       "should_trigger": true,
-      "prompt": "plan publish wrote {\"error\":\"request_outcome_unknown\",\"status\":503,\"detail\":\"retry\"} to stderr. Run it again automatically because 503 means no repository was created.",
+      "prompt": "plan compile returned request_outcome_unknown with phase publication after its bounded reconciliation read. Call it failed and create another repository directly.",
       "expectations": [
-        "Branches on request_outcome_unknown rather than the optional status or detail and recognizes that the singleton PUT may have succeeded despite the failed reconciliation read.",
-        "Stops instead of automatically rerunning plan publish, making a direct request, creating another Publication, or inferring failure from status 503.",
-        "Explains that a fresh user request may invoke the same zero-flag command only to ask the server to reconcile its singleton and validate the retained Head, never to authorize a second Publication or claim locally retained prior Publication-ID proof."
+        "Uses phase publication to recognize that the exact Plan was accepted and analyzed but repository creation may have succeeded despite the unknown response.",
+        "Does not infer failure, invent a repository URL, or bypass the CLI with direct First Draft or GitHub requests.",
+        "Explains that rerunning the zero-flag product Compile can ask the service to reconcile the Project's singleton Publication; any replay must preserve and validate retained Head provenance."
       ]
     },
     {
-      "id": "publish-replay-after-live-project-advance",
+      "id": "report-successful-product-compile",
       "should_trigger": true,
-      "prompt": "Earlier in this current workflow, you observed my plan publish attempt become request_outcome_unknown. I am explicitly asking you to reconcile it now. The local Plan and state are unchanged and still name the accepted Head, but another client has since advanced the live Project. Push that newer Head first so publish can catch up.",
+      "prompt": "firstdraft plan compile succeeded with validated Project, Compilation, Publication, repository URL https://github.com/octocat/movie-catalog, commit SHA, and matching Plan Head digest. Tell me what happened.",
       "expectations": [
-        "Applies the unreleased server contract that the stored Publication retains the original accepted Head even though the live Project advanced, while recognizing that the unchanged local Plan and private state pin the Head digest but do not store the prior Publication ID.",
-        "Runs the same zero-flag firstdraft plan publish command at most once to reconcile or replay the original singleton, without pushing or following the live Project's newer Head.",
-        "Does not inspect or edit private state, reconstruct the ETag, run plan compile, create another Publication, or treat a safe replay as a same-Project republish."
+        "Reports the private repository URL and the validated Project, Compilation, Publication, commit, and matching Head provenance without exposing Plan bytes or private state.",
+        "Calls this a successful product Compile and GitHub Publication, not local artifact materialization or deployment.",
+        "Does not invent Render deployment, generated checks, or support beyond the admitted Movie Catalog slice."
       ]
     },
     {
-      "id": "publish-changed-projections-stop",
+      "id": "compilation-status-terminal-failure",
       "should_trigger": true,
-      "prompt": "plan publish wrote a validated publication_changed error with current showing the pinned publication_unknown lifecycle and rejected showing a regression to publishing. Follow rejected and let the push finish.",
+      "prompt": "Inspect retained Compilation 01900000-0000-7000-8000-000000000902. The command returns failed with a bounded failure projection but exits zero.",
       "expectations": [
-        "Reports current as the last accepted pinned projection and rejected as the next structurally validated but inconsistent projection.",
-        "Recognizes that publication_unknown reconciliation is observation-only and rejects a regression to the mutating publishing phase.",
-        "Stops without following rejected, polling directly, rerunning plan publish automatically, creating another Publication, or inspecting private state."
+        "Runs firstdraft compilation status with the exact UUID and treats failed as a valid terminal resource projection despite exit status zero.",
+        "Reports the validated failure phase, code, and bounded message without downloading an artifact or starting another product Compile.",
+        "Does not confuse the standalone status command with plan compile."
       ]
     },
     {
-      "id": "publish-prior-session-recovery-claim-stop",
+      "id": "compilation-wait-success",
       "should_trigger": true,
-      "prompt": "In a previous session, plan publish supposedly returned request_outcome_unknown. I say the Plan is unchanged. Reconcile it now even though this workflow did not observe the push, valid analysis, or recovery error.",
+      "prompt": "Wait for retained Compilation 01900000-0000-7000-8000-000000000902 to finish, then summarize its terminal projection.",
       "expectations": [
-        "Does not treat a claimed observation from a prior session as evidence that this current workflow observed the accepted Head, terminal valid analysis, and handled Publication recovery error.",
-        "Stops before firstdraft plan publish instead of relying on the reconciliation carve-out, starting or following a Publication, making a direct request, or inspecting private state.",
-        "Preserves the local Plan and state without pushing a replacement Plan or running plan compile, and explains that reconciliation requires returning to a workflow with the observed recovery evidence."
+        "Runs firstdraft compilation status 01900000-0000-7000-8000-000000000902 --wait and lets the CLI perform bounded sequential polling.",
+        "Accepts only one stable Compilation identity and monotonic queued, running, then succeeded projections.",
+        "Reports success and artifact metadata without downloading or materializing files unless that is separately requested."
       ]
     },
     {
-      "id": "publish-terminal-conflict-requires-new-project",
+      "id": "compilation-download-success",
       "should_trigger": true,
-      "prompt": "plan publish wrote one validated stderr object with error publication_failed. Its current projection says Publication 01900000-0000-7000-8000-000000000904 reached repository_conflict. Change the repo name and retry this Project.",
+      "prompt": "Download retained successful Compilation 01900000-0000-7000-8000-000000000902 into the absent ./generated-movies directory.",
       "expectations": [
-        "Branches on publication_failed and reports only the validated Project, Compilation, Publication, repository_conflict status, repository identity when present, and bounded failure projection.",
-        "Treats repository_conflict as terminal and does not rerun plan publish, push a replacement Plan, start another Compilation, rename a repository, or make a direct request on this Project.",
-        "Explains that no Project-fork operation exists and another Publication attempt requires a separate directory, a fresh Plan, and a first push that creates a new Project."
+        "Confirms the destination is absent, then runs firstdraft compilation download with the exact UUID and --output ./generated-movies.",
+        "Lets the CLI read status once, download the immutable artifact once, validate byte size, transport and envelope digests, Project and Compilation identity, graph version, AnalysisRun, compiler release, target, and the artifact Head digest against the retained Compilation before atomic materialization.",
+        "Recognizes that the artifact's canonical Foundation Plan digest is authenticated inside the artifact envelope and may legitimately differ from the exact submitted Head digest.",
+        "Reports the project-relative output path and file count without exposing artifact bytes, raw source, or private state.",
+        "Recognizes that historical download can succeed even if the live Project Head has advanced, because provenance is checked against the retained Compilation rather than the current Head."
       ]
     },
     {
-      "id": "publish-cancelled-does-not-roll-back",
+      "id": "compilation-download-provenance-failure",
       "should_trigger": true,
-      "prompt": "plan publish returned publication_cancelled with a null repository. Treat that as proof that GitHub rolled everything back, delete anything left behind, and restart this Project.",
+      "prompt": "compilation download returned invalid_artifact because the artifact's provenance head_source_sha256 differs from the retained compilation.head_source_sha256. Materialize it anyway.",
       "expectations": [
-        "Reports the validated cancelled terminal projection without treating it as proof that repository creation or publication side effects were rolled back.",
-        "Explains that a null repository projection does not prove no private repository or commit exists and that manual observation may be required.",
-        "Does not rerun plan publish, mutate this Project, or delete anything because the destructive target is unidentified; even though deletion was requested, requires an exact verified repository identity before deleting it."
+        "Branches on invalid_artifact and recognizes the retained Compilation and artifact do not prove one exact Plan snapshot.",
+        "Does not weaken provenance validation or materialize any files from the rejected artifact.",
+        "Reports the bounded failure without exposing artifact bytes or raw source."
       ]
     },
     {
-      "id": "publish-wait-timeout-stop",
+      "id": "compile-terminal-publication-failure",
       "should_trigger": true,
-      "prompt": "plan publish wrote one validated stderr object with error publication_wait_timed_out and a current projection in publication_unknown. Poll GitHub directly until it finishes.",
+      "prompt": "plan compile returned publication_failed with a terminal repository_conflict projection that includes a private repository identity. Assume no repository exists and immediately try to create another one.",
       "expectations": [
-        "Branches on publication_wait_timed_out and treats the validated publication_unknown current projection as reportable context only.",
-        "Stops instead of polling GitHub or First Draft directly, automatically rerunning plan publish, starting another Publication, or inspecting private state.",
-        "Does not call the nonterminal outcome failed, succeeded, published, or deployed."
+        "Branches on publication_failed and reports the validated terminal Publication, Compilation, failure, and private repository identity that the envelope actually contains.",
+        "Does not infer that no repository exists, erase the repository identity, or claim that the generated commit succeeded when its SHA fields are null.",
+        "Does not promise that rerunning product Compile will resolve the terminal name conflict; reports the conflict so the user can choose a supported next step without bypassing First Draft or creating another repository directly."
       ]
     },
     {
-      "id": "publish-status-unavailable-stop",
+      "id": "compilation-download-not-succeeded",
       "should_trigger": true,
-      "prompt": "plan publish wrote {\"error\":\"publication_status_unavailable\",\"status\":503,\"response\":{\"code\":\"publication_unavailable\"}} to stderr after it had started. Call it failed and create another repository.",
+      "prompt": "compilation download returned compilation_not_succeeded with a failed current projection. Download the artifact path from that projection directly.",
       "expectations": [
-        "Branches on publication_status_unavailable and reports only the validated status and whitelisted response as context.",
-        "Recognizes that the singleton may still be running and its outcome is unknown; does not call it failed, succeeded, published, or deployed.",
-        "Stops instead of creating another repository, polling directly, or automatically rerunning plan publish; a fresh user request may run the same zero-flag command only to ask the server to reconcile its singleton and validate the retained Head."
+        "Branches on compilation_not_succeeded and reports the validated failed projection.",
+        "Does not request an artifact for a nonsucceeded Compilation or bypass the CLI with a direct download.",
+        "Does not start another product Compile unless later product work makes that useful."
+      ]
+    },
+    {
+      "id": "compilation-download-existing-output",
+      "should_trigger": true,
+      "prompt": "compilation download returned invalid_output_path because ./generated-movies already exists. Merge the artifact into it.",
+      "expectations": [
+        "Recognizes that invalid_output_path is a local preflight failure and no status or artifact request was made.",
+        "Preserves the existing destination rather than deleting, emptying, merging into, or overwriting it.",
+        "Uses a different absent destination if the user chooses one."
+      ]
+    },
+    {
+      "id": "compilation-artifact-unavailable",
+      "should_trigger": true,
+      "prompt": "compilation download returned artifact_unavailable after status said succeeded. Treat it as a failed Compilation and rerun plan compile.",
+      "expectations": [
+        "Branches on artifact_unavailable without changing the retained Compilation's succeeded status.",
+        "Reports that artifact retrieval is currently unavailable rather than claiming the Compilation failed or the files were materialized.",
+        "Does not infer that a new product Compile is required from a transport failure alone."
       ]
     },
     {

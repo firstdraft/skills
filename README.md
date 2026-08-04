@@ -4,10 +4,15 @@ Portable Agent Skills for working with [First Draft](https://github.com/firstdra
 
 This repository is experimental. The current `rails-sketch/2026-08` path has bounded local execution evidence.
 First Draft's committed
-[controlled CLI smoke](https://github.com/firstdraft/firstdraft/blob/5847a349599f3cc28e1e0a1a8d8bace6742be7c3/script/compilation_http_cli_smoke)
-reproducibly drives an installed CLI through loopback Rails and real Solid Queue to valid analysis, one Compilation,
-artifact verification, and 194-file two-Entity materialization. It checks matching authored order in the emitted web
-and iPhone navigation declarations without executing the generated application.
+[controlled product-journey harness](https://github.com/firstdraft/firstdraft/blob/8ebfc2ed82a610e63f47eb985c23ab7e634fe94e/script/compilation_http_cli_smoke)
+reproducibly drives the pinned successor CLI through loopback Rails and real Solid Queue to exact-byte push, valid
+analysis, one product Compile, one successful Publication against a strict fake GitHub remote, retained Compilation
+status, and historical download after the local Plan changes. Its final two local runs each produced one Project,
+one Compilation, one Publication, an exact two-attempt fake-GitHub ledger for repository creation followed by
+artifact publication, and a 194-file, 542,894-byte artifact with
+distinct submitted-Head and canonical-Plan digests and matching authored order in the emitted web and iPhone
+navigation declarations. It does not contact live GitHub or staging, execute the generated application, or prove a
+fresh-agent journey.
 
 Separately, a dated 2026-07-31
 [field report](https://github.com/firstdraft/firstdraft/blob/16b056a6f55eb92cb6e5a6e02abd58e84b47abd5/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md)
@@ -23,11 +28,15 @@ proof, deployment, or production evidence.
 
 The bounded local Compilation evidence used CLI revision
 `121272cd592055354d09a4fe90e55c3ca002770c`; its reviewed JavaScript-source runtime digest is
-`205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. The prepared successor contract, including
-zero-flag Publication, is pinned separately below. The exact landed server revision is
+`205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. The reviewed successor CLI contract,
+including the zero-flag product Compile journey and retained Compilation download, is pinned separately below. The
+exact landed server revision used by the earlier bounded local Compilation evidence is
 `35ad070beb36c66dc6480f36b33767caaed160a9`; it activates analyzer
 `foundation-plan-rails/application-2026-08` and compiler
-`foundation-plan-rails/compiler-application-2026-08`.
+`foundation-plan-rails/compiler-application-2026-08`. The successor product-journey harness is pinned to service
+revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e`, including prerequisite
+`5811bb3013cf25072db74355597f60d85be3c05b`, which exposes the retained
+`compilation.head_source_sha256` for historical artifact provenance.
 
 The prepared compiler contract admits independent Entities using supported scalar Fields, the exact public-index
 Scaffold, optional semantic Entity icons, and selected iPhone output under `ios/`. Application `domain` is admitted
@@ -39,10 +48,14 @@ iPhone project composes `firstdraft/foundation-ios-core` revision
 iPad support. Appearance, nonempty delivery, Android, broader Scaffolds, relationships and other graph breadth,
 deployment, and arbitrary applications remain outside this Compilation boundary.
 
-The combined CLI, Skill, and service workflow remains unreleased. The prepared successor source identifies itself as
-`@firstdraft.com/cli@0.1.0-alpha.2`, but that package remains unpublished. The prepared zero-flag `plan publish`
-contract can request one private personal-account GitHub repository after valid analysis, but no live endpoint or
-completed staging smoke establishes that path yet. There is no Plan GET or pull operation, complete semantic
+The combined CLI, Skill, and service workflow remains unreleased. The reviewed successor source identifies itself as
+`@firstdraft.com/cli@0.1.0-alpha.2`, but that package remains unpublished. Its zero-flag `plan compile` command pushes
+the exact current Plan, waits for analysis of that accepted graph generation, and invokes the internal GitHub
+Publication lifecycle only for a valid unchanged candidate. Public `plan publish` and local-start
+`plan compile --output` are not commands; retained successful artifacts are materialized with
+`compilation download <id> --output <path>`. The controlled local harness establishes this product-Compile shape
+only against a strict fake GitHub remote; no live endpoint, staging run, or real GitHub mutation establishes it.
+There is no Plan GET or pull operation, complete semantic
 analyzer, deployment workflow, or general web or mobile generator. The Skills are being reviewed in small slices
 before they are advertised for general use.
 
@@ -50,7 +63,7 @@ before they are advertised for general use.
 
 | Skill | Purpose | Status |
 |---|---|---|
-| `create-full-stack-app` | Author, analyze, and prepare local Compilation or private GitHub publication | Experimental scaffold |
+| `create-full-stack-app` | Author, analyze, request product Compile, and inspect retained Compilations | Experimental scaffold |
 
 Each directory under `skills/` is an independently installable portable Skill. Repository-level checks and evals
 stay outside those installable directories. The product-specific plugin packaging now points to and reuses this
@@ -242,21 +255,24 @@ npm ci --ignore-scripts
 sh script/check
 ```
 
-The CLI contract check requires a checkout at the exact reviewed, merged revision
-`7944bf3cb0a2664a738f56b4ae928d1947babcb2`, whose independently reproduced JavaScript-source runtime digest is
-`c90d6872f03c6782c0b371835df25801e7f54c5542fb071e9104bf52a49f4a2a`:
+The CLI contract check requires a checkout at the exact reviewed revision
+`f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, whose independently reproduced JavaScript-source runtime digest is
+`9e5a4bd0f16f49ab2e17c04f7defc59366f8fa073f772b310d8f684177890eab`:
 
 ```sh
 git -C <path-to-cli-checkout> fetch origin main
-git -C <path-to-cli-checkout> merge-base --is-ancestor 7944bf3cb0a2664a738f56b4ae928d1947babcb2 origin/main
-git -C <path-to-cli-checkout> checkout --detach 7944bf3cb0a2664a738f56b4ae928d1947babcb2
+git -C <path-to-cli-checkout> merge-base --is-ancestor f55edffc9e88924f9a4c95f41c4d0bc9b72422f8 origin/main
+git -C <path-to-cli-checkout> checkout --detach f55edffc9e88924f9a4c95f41c4d0bc9b72422f8
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 
-It exercises the source runner, including nested `ios/` artifact paths, the executable mode on `ios/bin/ios`, and
-the zero-flag singleton publication lifecycle. Separately, it verifies a freshly packed and installed CLI's command
-help and handled failure envelopes. The workflow records the same revision. This is contract evidence, not a
-server-backed Compilation or GitHub Publication.
+It exercises the source runner's generators, flexible initialization, exact-byte product Compile, phase-specific
+ambiguous outcomes, retained Compilation status and historical artifact download. It also verifies the removed
+`plan subject-id`, public `plan publish`, and local-start `plan compile --output` surfaces, then checks representative
+behavior through a freshly packed and installed CLI. The workflow records the same revision. This is contract
+evidence, not a server-backed Compilation or GitHub Publication. The separately pinned controlled product-journey
+harness at service revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e` crosses the local service and queue
+boundary while replacing only remote GitHub work with a strict fake.
 
 Before proposing a release, validate the collection with the same CLI:
 
@@ -282,36 +298,42 @@ themselves. `validate-supported-application-intent`, `preserve-unsupported-appea
 last exercises mixed-diagnostic precedence. `replace-before-server-eval.state.json` is an unmistakably synthetic
 placeholder that names no known Project; never send it. Before `push-supported-enum-plan` or
 `repair-well-founded-analysis-issue`, replace it with `.firstdraft/state.json` generated by a fresh
-`firstdraft plan init` using the exact prepared CLI revision above in a scratch directory.
+`firstdraft plan init` using the exact reviewed CLI revision above in a scratch directory.
 
-`compile-after-explicit-approval` is a server-backed Compilation eval. Start the exact landed server revision named
-above with a fresh queue, initialize a fresh scratch Project with the exact prepared CLI revision, install the
-candidate Skill, replace its Plan with
-`application-intent.foundation-plan.json`, push, and wait for `analysis.status: "valid"`. Preserve the accepted
-Plan bytes, then replace the eval's synthetic state fixture with that same Project's resulting post-push
-`.firstdraft/state.json`. Ensure `./generated-movies` is absent beneath the scratch Project, explicitly approve that
-path, and compile once. Never reuse a Project or Compilation across server-backed eval runs or expose state contents.
+`compile-movie-catalog-once` is the executable product-journey fixture. The controlled local harness at service
+revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e` establishes the corresponding service-backed Movie Catalog
+journey through real local Compilation and Publication coordination with a strict fake for remote GitHub work. It is
+not a fresh-agent eval and does not make the synthetic state fixture live. Until a compatible authenticated endpoint
+is available, run the eval only through an isolated fake transport or local rehearsal that cannot create a real
+repository. For a future live run, initialize a fresh scratch Project with the exact reviewed CLI revision, install
+the candidate plugin, replace the synthetic state fixture with that Project's private state, stage
+`application-intent.foundation-plan.json`, and invoke the zero-flag `firstdraft plan compile` command. The command
+itself pushes the exact file, waits for the matching graph generation, and requests Publication only after valid
+analysis and a final byte check. Never expose the private state contents.
 
-The publication evals are behavioral contract inputs only. Do not run them against a real GitHub account until a
-compatible authenticated endpoint is live and the evaluator explicitly authorizes one private repository. At that
-point, run `publish-after-explicit-create-request` only from a fresh initialized scratch Project: replace its
-synthetic state fixture with that Project's post-init `.firstdraft/state.json`, stage the eval Plan, and let the
-authorized workflow push, observe terminal analysis, and publish only if it reaches `valid` unchanged. A request to
-create or publish the app authorizes exactly one singleton publication after valid analysis; diagnostics-only
-requests stop at analysis. After a terminal Publication, another attempt requires a fresh Plan in a separate
-directory whose first push creates a new Project. There is no Project-fork operation.
+The diagnostic corpus deliberately exercises malformed JSON, local schema diagnostics, semantic and recurring
+diagnostics, a standalone status result older than its accepted push generation, stale product-Compile analysis,
+stale local Plan bytes, and phase-specific ambiguous push and Publication outcomes. It retains the push graph version
+and source digest, reads again when status is older, and surfaces a newer generation as a replacement. It does not
+require a permission ceremony around ordinary pushes or impose an unchanged-byte or retry-count rule. The successful
+Movie Catalog case expects one product Compile invocation for that journey. The contract also preserves bounded
+analysis and Publication waits, unavailable Publication status, terminal failure and cancellation projections, and
+repository identity when a conflict response contains one. Standalone retained
+Compilation cases cover terminal status, bounded waiting, successful historical download, matching Head provenance,
+nonsucceeded and unavailable artifacts, provenance rejection, and existing-output preflight. A canonical Foundation
+Plan artifact digest may differ from the retained exact-byte Head digest; the artifact Head digest must still match
+the retained Compilation.
 
-The `*-analysis.json` fixtures and Compilation eval prompts are behavioral examples accepted by the pinned CLI
-contract, not execution evidence by themselves. Their `2026-07-30` timestamps are fixed deterministic transport
-data, not execution-evidence dates. The dated field report records the server, CLI, runtime, Skill, analyzer,
-compiler, Rails Core, and iOS Core pins; Project and graph version; AnalysisRun and status; Compilation and artifact
+The `*-analysis.json` fixtures and product Compile or retained Compilation eval prompts are behavioral examples
+accepted by the pinned CLI contract, not execution evidence by themselves. Their `2026-07-30` timestamps are fixed
+deterministic transport data, not execution-evidence dates. The dated field report records the server, CLI, runtime, Skill,
+analyzer, compiler, Rails Core, and iOS Core pins; Project and graph version; AnalysisRun and status;
+Compilation and artifact
 identity; artifact byte size, file count, and manifest digest; representative web and iPhone files; executable mode;
 generated checks; the recovered authoring prompt and seed command; and composed local observation. It also records
 the observation's preparation and reproducibility limits.
 
-The Compilation eval's 190-file response remains deterministic synthetic transport data; it is not the 194-file
-output observed by the controlled smoke and dated field report.
-
-The committed smoke and dated observation do not establish authentication, GitHub publication, representative
-external-agent or user operation, deployment, production readiness, or capabilities beyond the current
-independent-scalar-Entity and public-index slice.
+The controlled product-journey harness authenticates its local CLI requests but does not establish a live GitHub or
+staging Publication, generated-application execution, representative external-agent or user operation, deployment,
+or production readiness. The dated observation separately records generated-app execution but does not widen those
+journey claims or capabilities beyond the current independent-scalar-Entity and public-index slice.

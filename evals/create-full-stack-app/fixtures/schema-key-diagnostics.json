@@ -1,0 +1,14 @@
+{
+  "valid": false,
+  "errors": [
+    {
+      "instancePath": "/application/key",
+      "schemaPath": "#/$defs/localKey/pattern",
+      "keyword": "pattern",
+      "params": {
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "message": "must match pattern ^[a-z][a-z0-9_]*$"
+    }
+  ]
+}
