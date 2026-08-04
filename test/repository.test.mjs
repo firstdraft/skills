@@ -57,10 +57,6 @@ const compilationEvidenceCliBaseline =
   "121272cd592055354d09a4fe90e55c3ca002770c";
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
-const preparedCliBaseline =
-  "7944bf3cb0a2664a738f56b4ae928d1947babcb2";
-const preparedCliRuntimeDigest =
-  "c90d6872f03c6782c0b371835df25801e7f54c5542fb071e9104bf52a49f4a2a";
 const cliContractBaseline =
   "f55edffc9e88924f9a4c95f41c4d0bc9b72422f8";
 const cliContractRuntimeDigest =
@@ -74,16 +70,10 @@ const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
 const foundationIosCoreArchiveDigest =
   "0807e76cf02296af27d4eb1aae68e298beef162a7daa8a3da55d83e88ab6d748";
-const controlledApplicationSmokeBaseline =
-  "5847a349599f3cc28e1e0a1a8d8bace6742be7c3";
 const freshAgentEvidenceBaseline =
   "16b056a6f55eb92cb6e5a6e02abd58e84b47abd5";
 const freshAgentSkillBaseline =
   "5cad5acec23a983e6421d2d37420a74de63b47fb";
-const planInitErrorCodes = [
-  "invalid_arguments",
-  "local_initialization_failed",
-];
 const planPushErrorCodes = [
   "authentication_required",
   "invalid_arguments",
@@ -92,17 +82,6 @@ const planPushErrorCodes = [
   "request_outcome_unknown",
   "server_rejected",
   "local_state_not_saved",
-];
-const planStatusErrorCodes = [
-  "authentication_required",
-  "invalid_arguments",
-  "local_input_unreadable",
-  "project_not_pushed",
-  "status_unavailable",
-  "invalid_server_response",
-  "server_rejected",
-  "analysis_changed",
-  "wait_timed_out",
 ];
 const supportedScalarFieldTypes = [
   "boolean",
@@ -188,9 +167,9 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   assertRevisionTokens(references.join("\n"), [
     foundationPlanServerBaseline,
     compilationEvidenceCliBaseline,
-    preparedCliBaseline,
+    cliContractBaseline,
+    productJourneySmokeBaseline,
     foundationIosCoreRevision,
-    controlledApplicationSmokeBaseline,
     freshAgentEvidenceBaseline,
     freshAgentSkillBaseline,
   ]);
@@ -208,14 +187,9 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     path.join(referencesDirectory, "diagnostics-and-recovery.md"),
     "utf8",
   );
-  for (const source of [
-    readme,
-    skillSource,
-    foundationPlanReference,
-    diagnosticsReference,
-  ]) {
+  for (const source of [readme, foundationPlanReference, diagnosticsReference]) {
     assert(source.includes(preparedCliPackage));
-    assert.match(source, /package remains unpublished/);
+    assert.match(source, /(?:package )?remains unpublished/);
   }
   for (const source of [readme, foundationPlanReference]) {
     assert(source.includes(foundationPlanAnalyzerRelease));
@@ -240,12 +214,10 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     [
       foundationPlanServerBaseline,
       compilationEvidenceCliBaseline,
-      preparedCliBaseline,
       cliContractBaseline,
       compilationProvenanceServiceBaseline,
       productJourneySmokeBaseline,
       foundationIosCoreRevision,
-      controlledApplicationSmokeBaseline,
       freshAgentEvidenceBaseline,
       freshAgentSkillBaseline,
     ],
@@ -497,7 +469,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     )
   ).reduce((total, size) => total + size, 0);
   assert.equal(installedSourceFiles.length, 8);
-  assert.equal(installedSourceBytes, 241_779);
+  assert.equal(installedSourceBytes, 205_290);
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
   assert.match(readme, /eight canonical Skill files/);
   assert.match(
@@ -1322,7 +1294,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
 
   const documentedEnumSection = foundationPlanReference.match(
-    /An `enum` Field additionally requires ([\s\S]*?)\n\nScalar Fields/,
+    /An `enum` Field additionally requires ([\s\S]*?)\n\nA Field `default`/,
   );
   assert(
     documentedEnumSection,
@@ -1338,7 +1310,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     documentedEnumSection[0],
-    /optional `settings\.ordinal` to `true` only when the order carries semantic\s+rank/,
+    /optional\s+`settings\.ordinal` to `true` only when the order carries semantic\s+rank/,
   );
   assert.match(documentedEnumSection[0], /omission and `false` are equivalent/);
   assert.match(
@@ -1348,10 +1320,6 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   assert.match(
     documentedEnumSection[0],
     /An enum literal default contains the\s+selected value's owner-local `key`, not its UUID\.[\s\S]*?Update that literal in the same candidate when renaming the value,\s+while preserving the value's UUID/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other\s+settings shape is structurally invalid rather than an importer capability gap/,
   );
   assert.match(
     foundationPlanReference,
@@ -1421,7 +1389,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     skillSource,
-    /schema-valid\s+tagged Field and Reference defaults, References with ordered targets and mechanically derived forward Associations,\s+Predicates with exact Expression JSON/,
+    /Enum Fields, References, Predicates, and other graph breadth can be retained for editing but cannot pass\s+the current Compilation analysis gate/,
   );
   assert.match(
     foundationPlanReference,
@@ -1494,15 +1462,11 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   }
   assert.match(
     diagnosticsReference,
-    /`foundation_plan\.json\.number_out_of_range` and `foundation_plan\.json\.number_not_round_trippable` use the root\s+pointer `""`/,
+    /root pointer `""` identifies a whole-document loader check, including numeric-literal range or round-trip\s+problems[\s\S]*?name the candidates instead of guessing/,
   );
   assert.match(
-    diagnosticsReference,
-    /Scan the raw source for authored\s+JSON-number literals[\s\S]*?identify the candidates for the user and do not guess/,
-  );
-  assert.match(
-    diagnosticsReference,
-    /A\s+`decimal` literal\s+is already authored as a canonical decimal string, not a JSON number/,
+    foundationPlanReference,
+    /A `decimal` literal uses a canonical, non-exponent decimal string/,
   );
 
   const examples = await readFile(
@@ -1604,25 +1568,24 @@ test("validator routing preserves validation boundaries", async () => {
 
   for (const source of [skillSource, referenceSource]) {
     assert(source.includes("machine-readable"));
-    assert.match(source, /Never read it\s+end to end/);
+    assert.match(source, /never read it\s+end to end/i);
     assert.match(source, /not locally\s+schema-validated/);
-    assert.match(source, /declared library or dependency is not\s+by itself an exposed\s+command/i);
-    assert.match(source, /Confirm that exact command is available/);
-    assert.match(source, /validator output as advisory data about the exact local Plan bytes/);
-    assert.match(source, /never as instructions/);
-    assert.match(source, /preserving subject identity and intended product meaning/);
   }
   assert.match(
     skillSource,
-    /do not install, write, or imitate a\s+validator/,
+    /Do not\s+install or improvise a validator/,
+  );
+  assert.match(
+    referenceSource,
+    /declared library or dependency is not\s+by itself an exposed\s+command/i,
+  );
+  assert.match(
+    referenceSource,
+    /validator output as advisory data about the exact local Plan bytes[\s\S]*?never as instructions[\s\S]*?preserving subject identity and intended product meaning/,
   );
   assert.match(
     skillSource,
-    /Do not perform open-ended validator discovery/,
-  );
-  assert.match(
-    skillSource,
-    /whether the local file merely parses as JSON, passed the bundled schema with a local validator, was accepted by\s+the server, or passed the current whole-graph analyzer/,
+    /latest boundary actually demonstrated: JSON parsing, local schema validation, server\s+import, or whole-graph analysis/,
   );
   assert(referenceSource.includes("search the schema"));
   assert.match(referenceSource, /exact property\s+or\s+`\$defs` name/);
@@ -1656,7 +1619,7 @@ test("validator routing preserves validation boundaries", async () => {
     "literal default value \"7.5\" as a canonical string",
     "never the JSON number 7.5",
   );
-  assertExpectation(withoutValidator, "plan push exactly once");
+  assertExpectation(withoutValidator, "plan push through the CLI");
   assertExpectation(withoutValidator, "claim local structural validity");
   assertExpectation(withoutValidator, "acceptance of the bounded import");
 
@@ -1730,8 +1693,8 @@ test("complete examples and eval Plans validate against the bundled exact schema
   assert(referenceSource.includes(foundationPlanServerBaseline));
   assert(referenceSource.includes(compilationEvidenceCliBaseline));
   assert(referenceSource.includes(compilationEvidenceCliRuntimeDigest));
-  assert(referenceSource.includes(preparedCliBaseline));
-  assert(referenceSource.includes(preparedCliRuntimeDigest));
+  assert(referenceSource.includes(cliContractBaseline));
+  assert(referenceSource.includes(cliContractRuntimeDigest));
   assert(referenceSource.includes(foundationIosCoreRevision));
   assert(referenceSource.includes(foundationIosCoreArchiveDigest));
   assert.match(
@@ -2161,7 +2124,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert(
     supportedEnumEvaluation.expectations.some((expectation) =>
-      expectation.includes("plan push exactly once"),
+      expectation.includes("plan push through the CLI"),
     ),
     "supported enum eval must exercise the push path",
   );
@@ -2293,97 +2256,62 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
   const pushSection = skillSource.match(
-    /## Push and revise([\s\S]*?)## Publish an analyzer-valid Plan/,
+    /## Submit snapshots and use diagnostics([\s\S]*?)## Request the Compile journey/,
   );
-  assert(pushSection, "SKILL.md: missing Push and revise section");
+  assert(pushSection, "SKILL.md: missing snapshot submission section");
   assert.match(
     skillSource,
-    /Require an already-installed CLI that lists `plan init`, `plan push`, and `plan status`/,
+    /Require these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and zero-flag `plan compile`/,
   );
   assert.match(
     pushSection[1],
-    /On success[\s\S]*?`firstdraft plan status --wait`/,
+    /Run `firstdraft plan push` whenever diagnostics would help[\s\S]*?incomplete, invalid, unchanged, or frequently revised snapshots[\s\S]*?no separate permission, batching, or changed-byte prerequisite/,
   );
   assert.match(
     pushSection[1],
-    /Branch on `analysis\.status`, never the shell\s+exit code/,
+    /On success, retain[\s\S]*?firstdraft plan status --wait/,
   );
-  for (const status of [
-    "valid",
-    "issues_found",
-    "analysis_failed",
-    "superseded",
-  ]) {
-    assert.match(pushSection[1], new RegExp(`On \`${status}\``));
+  assert.match(
+    pushSection[1],
+    /If status is for a lower graph version, repeat this\s+read-only poll within a bounded wait[\s\S]*?If it is higher, another accepted Head replaced the\s+one just pushed/,
+  );
+  assert.match(
+    pushSection[1],
+    /Branch on `analysis\.status`, not only the process exit status/,
+  );
+  for (const status of ["valid", "issues_found", "analysis_failed", "superseded"]) {
+    assert(pushSection[1].includes(`- \`${status}\``));
   }
   assert.match(
     pushSection[1],
-    /`foundation_plan\.rails_target\.compiler\.unsupported_application_configuration`[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph`[\s\S]*?current analyzer or output gap rather\s+than invalid product meaning[\s\S]*?addresses intentional product meaning that the current\s+Compiler cannot emit, preserve every addressed member, report every diagnostic and its exact pointer, and stop\s+without editing or another push/,
-  );
-  assert.match(
-    pushSection[1],
-    /analysis_failed[\s\S]*?Do not edit or push the Plan as a speculative\s+repair/,
-  );
-  assert.match(
-    pushSection[1],
-    /superseded[\s\S]*?Do not silently follow another\s+analysis/,
-  );
-  assert.match(
-    pushSection[1],
-    /treat every handled status error as a stop condition[\s\S]*?Do not retry the\s+read, inspect or edit private state, switch origins, edit the Plan, push again, or bypass the CLI/,
-  );
-  assert.match(
-    pushSection[1],
-    /`analysis_changed` and `wait_timed_out`[\s\S]*?validated `current` projection[\s\S]*?report it only as context/,
-  );
-  assert.match(
-    pushSection[1],
-    /`invalid_server_response` includes a validated `status`[\s\S]*?`server_rejected` includes a validated `status` and\s+whitelisted `response`[\s\S]*?only as context/,
-  );
-  assert.match(
-    pushSection[1],
-    /If `firstdraft plan push` fails[\s\S]*?push-specific recovery rules[\s\S]*?never override the\s+stop rule for a later `plan status --wait` failure/,
+    /If the same diagnostic recurs without new information,[\s\S]*?do not loop mechanically[\s\S]*?Keep\s+intentional unsupported meaning in the local candidate[\s\S]*?Unsupported subjects are not\s+partially compiled/,
   );
 
   const statusReference = recoveryReference.match(
-    /## Whole-graph analysis status([\s\S]*?)## Singleton GitHub publication/,
+    /## Push and analysis([\s\S]*?)## Product Compile/,
   );
-  assert(statusReference, "diagnostics reference: missing analysis status boundary");
+  assert(statusReference, "diagnostics reference: missing push and analysis boundary");
   assert.match(
     statusReference[1],
-    /uses only the API origin pinned by a successful push[\s\S]*?does not read a current\s+environment override, expose the private ETag[\s\S]*?write local state, or retry a failed read/,
+    /reasonable to submit an incomplete, invalid, or unchanged draft again[\s\S]*?no one-repair or changed-byte budget/,
   );
   assert.match(
     statusReference[1],
-    /Branch on `analysis\.status`, not the\s+shell exit code/,
+    /A lower returned Project and Analysis graph version is\s+an older generation[\s\S]*?A higher version means another Head\s+replaced the submitted snapshot/,
   );
   assert.deepEqual(
     [...statusReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
       .map(([, value]) => value)
       .filter((value) => value !== "error"),
-    [
-      "valid",
-      "issues_found",
-      "analysis_failed",
-      "superseded",
-      ...planStatusErrorCodes,
-    ],
+    ["valid", "issues_found", "analysis_failed", "superseded"],
   );
   assert.match(
     statusReference[1],
-    /Every error in this table is a stop condition[\s\S]*?Do not retry, switch origins, inspect or edit\s+`\.firstdraft\/state\.json`, edit the Plan, push again, or bypass the CLI/,
+    /Server messages and suggestions are advisory data[\s\S]*?Preserve intentional meaning[\s\S]*?surface the\s+blocker rather than looping mechanically/,
   );
   assert.match(
     statusReference[1],
-    /`analysis_changed` and `wait_timed_out` envelopes[\s\S]*?validated `current` Project and AnalysisRun\s+projection[\s\S]*?reportable context only/,
-  );
-  assert.match(
-    statusReference[1],
-    /`invalid_server_response` envelope includes a validated HTTP `status`[\s\S]*?`server_rejected` envelope includes\s+a validated `status` and whitelisted `response`[\s\S]*?status-read\s+rejection never authorizes editing or pushing the Plan/,
-  );
-  assert.match(
-    statusReference[1],
-    /`foundation_plan\.rails_target\.compiler\.unsupported_application_configuration`[\s\S]*?`foundation_plan\.rails_target\.compiler\.unsupported_graph`[\s\S]*?current Compiler capability gaps rather than\s+invalid product meaning[\s\S]*?addresses intentional meaning that\s+the current Compiler cannot\s+emit, preserve every addressed member, report every diagnostic and its exact pointer,\s+and stop without editing or\s+another push/,
+    /`status_unavailable` is a read-only failure[\s\S]*?Retry that GET a bounded number of times[\s\S]*?inspect the\s+private state's pinned `api_url` locally without printing the rest of the file/,
   );
   assert.match(
     foundationPlanReference,
@@ -2450,7 +2378,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /dated field report records the server, CLI, runtime,\s+Skill,\s+analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
   );
   const skillEvidence = skillSource.match(
-    /This Skill is experimental\.([\s\S]*?)## Load the relevant references/,
+    /This Skill and its CLI are unreleased\.([\s\S]*?)## Load the relevant references/,
   );
   const foundationPlanEvidence = foundationPlanReference.match(
     /## Current evidence boundary([\s\S]*?)The bundled schema was copied/,
@@ -2460,27 +2388,13 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     foundationPlanEvidence,
     "foundation-plan-019.md: missing current evidence boundary",
   );
-  for (const source of [skillEvidence[1], foundationPlanEvidence[1]]) {
-    assert(source.includes("loopback Rails"));
-    assert.match(source, /real Solid\s+Queue/);
-    assert.match(source, /committed[\s\S]*?controlled CLI\s+smoke/);
-    assert.match(source, /reproducibly drives/);
-    assert.match(source, /194-file two-Entity materialization/);
-    assert.match(source, /staff-prepared/);
-    assert.match(source, /fresh-agent|fresh Claude Code/);
-    assert.match(source, /not a reproducible agent\s+eval(?:uation)?/);
-    assert.match(
-      source,
-      /no Plan GET or pull operation,\s+complete semantic analyzer,[\s\S]*?arbitrary\s+application generation, deployment workflow/,
-    );
-  }
   assert.match(
     skillEvidence[1],
-    /Both proven\s+paths remain local, unreleased, unpublished, unauthenticated, and bounded[\s\S]*?do not establish cancellation, a\s+physical iPhone, iPad, deployment, or production readiness/,
+    /narrow experiment, not arbitrary application\s+generation[\s\S]*?public,\s+unauthenticated web index[\s\S]*?cannot pass\s+the current Compilation analysis gate/,
   );
   assert.match(
     foundationPlanEvidence[1],
-    /field observation is not a reproducible agent evaluation, authenticated operation, representative-user\s+evidence, a published release, physical-device or iPad proof, deployment, or production evidence[\s\S]*?Neither it nor\s+the controlled smoke widens the admitted graph or proves cancellation/,
+    /controlled product-journey smoke[\s\S]*?loopback Rails and real Solid Queue[\s\S]*?194-file two-Entity materialization[\s\S]*?strict fake/,
   );
   assert(
     foundationPlanEvidence[1].includes(
@@ -2495,10 +2409,6 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.match(
     foundationPlanEvidence[1],
     /fresh agent session ended after the unmodified generated output passed its iOS doctor with 16 passes and no\s+failures[\s\S]*?Afterward, an operator performed Rails\s+setup and used a temporary test-only copy[\s\S]*?Manual Simulator inspection[\s\S]*?Dynamic Island and bottom safe area/,
-  );
-  assert.match(
-    skillEvidence[1],
-    /authored Movie and\s+Director from prose and compiled once[\s\S]*?fresh agent session ended after the unmodified output passed its generated\s+checks[\s\S]*?later operator performed Rails setup and used a temporary test-only copy to display live generated Rails\s+pages in an iPhone Simulator/,
   );
 
   for (const id of [
@@ -2520,21 +2430,6 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
       `${id}: eval must branch on analysis.status`,
     );
   }
-  for (const id of [
-    "initialize-empty-plan",
-    "push-supported-enum-plan",
-    "repair-well-founded-analysis-issue",
-    "author-without-local-validator",
-  ]) {
-    const evaluation = cases.find((candidate) => candidate.id === id);
-    assert(
-      evaluation.expectations.some((expectation) =>
-        expectation.includes("any other handled status error"),
-      ),
-      `${id}: every handled status failure must remain a stop condition`,
-    );
-  }
-
   const repair = cases.find(
     ({ id }) => id === "repair-well-founded-analysis-issue",
   );
@@ -2546,7 +2441,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert(
     repair.expectations.some((expectation) =>
-      expectation.includes("plan push exactly once"),
+      expectation.includes("Runs plan push for the deliberately corrected complete Plan"),
     ),
   );
   assert.deepEqual(repair.artifacts.at(-1), {
@@ -2886,7 +2781,13 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.match(operational.prompt, /"error":"status_unavailable"/);
   assert(
     operational.expectations.some((expectation) =>
-      expectation.includes("Stops instead of retrying"),
+      expectation.includes("Retries the read a bounded number of times"),
+    ),
+  );
+  assert(
+    operational.expectations.some((expectation) =>
+      expectation.includes("inspects only the locally pinned api_url") &&
+      expectation.includes("does not edit state"),
     ),
   );
 
@@ -3171,46 +3072,40 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
     "utf8",
   );
-  const pushSection = skillSource.match(
-    /## Push and revise([\s\S]*?)## Hand off for review/,
+  const recoverySection = skillSource.match(
+    /## Recover from failures([\s\S]*?)## Hand off the result/,
   );
-  assert(pushSection, "SKILL.md: missing Push and revise section");
+  assert(recoverySection, "SKILL.md: missing recovery section");
+  assert.match(
+    recoverySection[1],
+    /Branch on its stable `error` and structured\s+fields, not the human-readable `detail`/,
+  );
+  assert.match(
+    recoverySection[1],
+    /diagnostic `422 server_rejected`[\s\S]*?feedback about the submitted snapshot and may lead to edits, dialogue, another push, or another Compile attempt/,
+  );
+  assert(recoveryReference.includes(cliContractBaseline));
+  const stableErrors = recoveryReference.match(
+    /## Stable error families([\s\S]*?)## Ambiguous mutations/,
+  );
+  assert(stableErrors, "diagnostics reference: missing stable error families");
   for (const code of planPushErrorCodes) {
     assert(
-      pushSection[1].includes(`error: \"${code}\"`),
-      `SKILL.md: missing plan push branch for ${code}`,
+      stableErrors[1].includes(`| \`${code}\` |`),
+      `diagnostics reference: missing plan push error ${code}`,
     );
   }
   assert.match(
-    pushSection[1],
-    /fails without one parseable JSON object carrying a known `error`[\s\S]*?treat the request outcome as\s+unknown/,
-  );
-  assert.match(
-    pushSection[1],
-    /do not infer a repair from the human-readable `detail`/,
-  );
-  assert(recoveryReference.includes(preparedCliBaseline));
-  const pushReference = recoveryReference.match(
-    /## Plan push error boundary([\s\S]*?)## Verified success/,
-  );
-  assert(pushReference, "diagnostics reference: missing Plan push boundary");
-  assert.deepEqual(
-    [...pushReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
-      .map(([, code]) => code)
-      .filter((code) => code !== "error"),
-    planPushErrorCodes,
+    recoveryReference,
+    /Branch on its stable `error` and\s+structured fields rather than the human-readable `detail`/,
   );
   assert.match(
     recoveryReference,
-    /branch\s+on its stable `error` value[\s\S]*?Never use the human-readable `detail`/,
+    /`local_state_not_saved` is the only handled envelope that can include private `recovery_state`/,
   );
   assert.match(
     recoveryReference,
-    /Only `local_state_not_saved` can contain `recovery_state`/,
-  );
-  assert.match(
-    recoveryReference,
-    /does not produce one parseable JSON object with one of these seven `error` values[\s\S]*?also unknown/,
+    /Unknown, absent, malformed, mixed, or additional output is not a trusted recovery envelope/,
   );
   assert.doesNotMatch(
     recoveryReference,
@@ -3243,7 +3138,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   );
   assert.match(
     recoveryReference,
-    /Never ask the user to paste `FIRSTDRAFT_API_TOKEN`[\s\S]*?read, echo, log, or print it[\s\S]*?pass it inline on a command line[\s\S]*?persist it in project files[\s\S]*?expose it in output/,
+    /Let the user configure `FIRSTDRAFT_API_TOKEN` outside the conversation[\s\S]*?Do not request its value, print it, place\s+it on a command line, or persist it in project files/,
   );
 
   const staleWriterEvaluation = cases.find(
@@ -3298,45 +3193,29 @@ test("initialization recovery consumes the prepared CLI error envelope", async (
     "utf8",
   );
   const initializationSection = skillSource.match(
-    /## Initialize or resume([\s\S]*?)## Model the application/,
+    /## Initialize or resume the local Plan([\s\S]*?)## Interview and author incrementally/,
   );
   const initializationReference = recoveryReference.match(
-    /## Local initialization error boundary([\s\S]*?)## Plan push error boundary/,
+    /## Local state and credentials([\s\S]*?)## Push and analysis/,
   );
 
   assert(initializationSection, "SKILL.md: missing initialization section");
   assert(initializationReference, "diagnostics reference: missing initialization boundary");
-  for (const code of planInitErrorCodes) {
-    assert(
-      initializationSection[1].includes(`error: \"${code}\"`),
-      `SKILL.md: missing plan init branch for ${code}`,
-    );
-  }
-  assert.deepEqual(
-    [...initializationReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
-      .map(([, code]) => code)
-      .filter((code) => code !== "error"),
-    planInitErrorCodes,
+  assert.match(
+    initializationSection[1],
+    /If initialization\s+fails, follow the stable error in the recovery reference[\s\S]*?Preserve any partial `\.firstdraft\/` directory/,
   );
   assert.match(
     initializationSection[1],
-    /any other code, missing object, malformed JSON, mixed output, or additional output, fail closed/,
-  );
-  assert.match(
-    initializationSection[1],
-    /Whether initialization reports success or failure[\s\S]*?`test -f` and `test -r`/,
-  );
-  assert.match(
-    initializationSection[1],
-    /Never expose an\s+absolute path, raw filesystem error, command arguments, Plan bytes, state contents, or unparsed command output/,
+    /If `\.firstdraft\/` already exists,[\s\S]*?confirm with project-relative metadata[\s\S]*?regular and readable/,
   );
   assert.match(
     initializationReference[1],
-    /checks are evidence about local state, not a substitute for the command's error code/,
+    /`invalid_arguments`[\s\S]*?No local files were written[\s\S]*?`local_initialization_failed`[\s\S]*?may be incomplete/,
   );
   assert.match(
     initializationReference[1],
-    /unknown code[\s\S]*?fail closed[\s\S]*?preserve it, and stop/,
+    /An existing `\.firstdraft\/` is not disposable scratch space[\s\S]*?do not\s+reinitialize over partial, damaged, or existing state/,
   );
 
   const hasExpectation = (evaluation, fragment) =>
@@ -3457,13 +3336,13 @@ async function checkSkill(skillName) {
   assert(metadata.description.includes("First Draft Foundation Plan"));
   assert(
     metadata.description.includes(
-      "prepared narrow Rails web-and-iPhone local Compilation or singleton private GitHub publication paths through an unreleased CLI",
+      "submits exact Plan bytes for diagnostics, and can request the current narrow Rails web-and-iPhone Compile journey through an unreleased CLI",
     ),
   );
-  assert(!metadata.description.includes("end-to-end journey"));
+  assert(metadata.description.includes("incrementally authors and revises complete"));
   assert(
     metadata.description.includes(
-      "Arbitrary applications, deployment, Android, iPad, and broader web or native clients are not available.",
+      "Arbitrary applications, deployment, Android, iPad, Accounts, notifications, and broader web or native clients are not available.",
     ),
   );
   assert(source.split("\n").length - 1 < 500);
@@ -3502,12 +3381,12 @@ async function checkSkill(skillName) {
   assert(shortDescription.length >= 25 && shortDescription.length <= 64);
   assert.equal(
     shortDescription,
-    "Experimental First Draft authoring and prepared publication",
+    "Interview, author, diagnose, and compile a Plan",
   );
   assert(defaultPrompt.includes(`$${skillName}`));
   assert.equal(
     defaultPrompt,
-    `Use $${skillName} to author an experimental First Draft Foundation Plan, send it only when I ask, and use its prepared unreleased publication path exactly once after valid analysis only when I explicitly ask First Draft to create or publish the app.`,
+    `Use $${skillName} to interview me, incrementally author and diagnose one complete First Draft Foundation Plan candidate, and use the available Compile workflow when that candidate is ready.`,
   );
 }
 
