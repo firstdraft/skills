@@ -88,9 +88,20 @@ again.
 
 ## Interview and author incrementally
 
-Use the modeling guide's decision ledger and readiness criteria. Ask a small, prioritized batch of questions,
-starting with choices that change Entity boundaries, record granularity, access, or requested clients. Concrete
-alternatives are proposals, not answers. The user may delegate choices; include those choices in the read-back.
+Use the modeling guide's decision ledger and readiness criteria. In the opening turn, ask no more than three
+closely related questions, starting with choices that change Entity boundaries, record granularity, access, or
+requested clients. When a collection might contain both unique objects and interchangeable goods, offer all three
+record-granularity branches: one record per unique object, one record carrying a quantity, or both with distinct
+meaning. Name at least two consequential areas being left open for later instead of walking the whole ambiguity
+matrix. Concrete alternatives are proposals, not answers. The user may delegate choices; include those choices in
+the read-back.
+
+For an underspecified opening request, keep the first interview reply to product questions and explicitly deferred
+product areas. Wait for the user's answer before comparing intent with current target support or naming capability
+gaps, unless the user asks about feasibility in that opening request. Do not turn a common use case into an assumed
+requirement. When support later becomes relevant, state the public-index boundary precisely: the current Scaffold
+generates an unauthenticated read-only index in source; Compile creates a private GitHub repository and does not
+deploy the application or make records publicly reachable.
 
 Edit `.firstdraft/foundation-plan.json` throughout the interview. There is no requirement to resolve every
 material choice before writing locally. Aim to keep one complete document representing the current candidate, but
@@ -108,8 +119,10 @@ Write the generated IDs into `subject_uuid`. Preserve an existing subject's UUID
 same-kind moves, update every affected readable path in the same snapshot, and use a new UUID for a replacement
 concept. Defaults and other owner-inherited values do not receive UUIDs.
 
-Model product meaning rather than Rails tables, macros, callbacks, gems, or arbitrary code. Keep capability gaps
-separate from product choices; an unsupported feature is not permission to silently remove the user's intent.
+Model product meaning rather than Rails tables, macros, callbacks, gems, or arbitrary code. Establish intended
+meaning before optimizing for the current target. Keep capability gaps separate from product choices; an
+unsupported feature is not permission to silently remove the user's intent or maintain a second flattened,
+capability-friendly candidate beside it.
 
 ## Submit snapshots and use diagnostics
 

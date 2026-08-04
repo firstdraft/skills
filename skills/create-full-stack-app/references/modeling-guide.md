@@ -21,8 +21,19 @@ smallest structured meaning that preserves the user's product intent.
 ## Interview toward one coherent candidate
 
 Treat the interview as an incremental design conversation, not a questionnaire that must finish before local work
-begins. Prioritize questions whose answers change the graph, access model, or requested clients. Offer concrete
-alternatives when they help, but label them as proposals rather than treating them as answers.
+begins. Ask no more than three closely related questions in the opening turn. Prioritize answers that change the
+graph, access model, or requested clients, then explicitly reserve at least two other consequential areas for later
+dialogue. Offer concrete alternatives when they help, but label them as proposals rather than treating them as
+answers.
+
+When modeling a collection, distinguish one uniquely identified object, a quantity of interchangeable goods, and a
+mixed product that needs both meanings. Do not collapse that branch into only individual-versus-group wording.
+For an underspecified opening request, ask only about intended product meaning and name deferred product areas;
+wait for the user's answer before discussing target support or capability gaps unless feasibility was itself part
+of the request. Do not promote a common use case into an assumption. When target support later matters, ask for
+desired access before describing the current public-index Scaffold. Compile creates source in a private repository.
+It does not deploy the application or itself make records public. Keep one candidate Plan: do not maintain a
+parallel flattened or capability-friendly shape merely so one version can Compile.
 
 Track consequential choices as:
 

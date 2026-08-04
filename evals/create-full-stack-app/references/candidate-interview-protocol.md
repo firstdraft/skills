@@ -1,7 +1,8 @@
 # Candidate interview protocol
 
-This is the candidate protocol exercised by the evaluation corpus. It is not yet part of the packaged
-`create-full-stack-app` Skill.
+This evaluator-facing protocol exercises the interview behavior carried by the packaged `create-full-stack-app`
+Skill and modeling guide. It remains a separate staged input so a harness can grade that behavior without installing
+an extra protocol file beside the Skill.
 
 The interview turns an underspecified product request into explicit product meaning without inventing consequential
 answers. It is not a gate on local work: the agent may edit a local Plan incrementally and may submit the current
@@ -61,11 +62,11 @@ to silently narrow the user's intent.
 | Delivery | Requested channels, notification events, and prerequisites | A native client implies push notifications |
 | Unsupported meaning | Whether the feature remains intentional despite a tooling gap | It may be removed merely to obtain `valid` analysis |
 
-For a home inventory, consequential examples include whether a record is one uniquely identified object or a
-quantity of interchangeable goods; whether locations nest or moves need history; whether categories are exclusive or
-tag-like; which identifier, quantity, condition, serial or barcode, photo, purchase, value, and warranty facts matter;
-who shares the inventory; and whether camera capture, barcode scanning, offline use, reminders, or push notifications
-belong in the first release.
+For a home inventory, consequential examples include whether a record is one uniquely identified object, a quantity
+of interchangeable goods, or both with distinct meaning; whether locations nest or moves need history; whether
+categories are exclusive or tag-like; which identifier, quantity, condition, serial or barcode, photo, purchase,
+value, and warranty facts matter; who shares the inventory; and whether camera capture, barcode scanning, offline
+use, reminders, or push notifications belong in the first release.
 
 ## Know when one complete candidate is possible
 
