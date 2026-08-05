@@ -5,7 +5,7 @@ Handled leaf-command failures write exactly one JSON object to standard error. B
 structured fields rather than the human-readable `detail` or the broad process exit status.
 
 The reviewed CLI contract in this stack is revision
-`1c5f44bf5f905b45931ec2c280d71d69b0d0ac78`, with JavaScript-source runtime digest
+`e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, with JavaScript-source runtime digest
 `0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`. Its source package identifies itself as
 `@firstdraft.com/cli@0.1.0-alpha.2`, but remains unpublished. Check the command surface rather than assuming the
 version alone establishes compatibility.
