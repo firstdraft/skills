@@ -3,134 +3,83 @@
 This repository participates in a coordinated release with
 [`firstdraft/firstdraft`](https://github.com/firstdraft/firstdraft) and
 [`firstdraft/cli`](https://github.com/firstdraft/cli). A merge to `main` integrates source; it does not authorize a
-plugin release, npm publication, or a First Draft deployment.
+plugin release, npm publication, or First Draft deployment.
 
-## Release identity and compatibility
+## Release identity
 
-The installable `firstdraft@firstdraft-skills` marketplace entry in
-[`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) owns the Skills/plugin SemVer. The separate
-`firstdraft-preview` manifest at [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) exists for checkout-local
-preview and is not the installable plugin's version authority. The root `@firstdraft/skills` package is private test
-tooling; its `0.0.0` package version is also not a release identity.
+The installable `firstdraft@firstdraft-skills` plugin is the public npm package
+`@firstdraft.com/claude-code`. Its current candidate version is `0.1.0-alpha.2`. The marketplace catalog points to
+that exact package and version. The checkout-local `firstdraft-preview` manifest and private root
+`@firstdraft/skills@0.0.0` package are test tooling, not release identities.
 
-The current installable marketplace version is `0.1.0-alpha.1`. The preview manifest remains independently
-`0.1.0`; matching or ordering those unrelated numbers is not a release rule.
+Packing deterministically assembles the plugin from the canonical `skills/create-full-stack-app` directory, the
+installable manifest and CLI adapter under `packages/claude-plugin`, the exact packed files from
+`@firstdraft.com/cli@0.1.0-alpha.2`, and the repository license. Colleagues therefore install the Skill and compatible
+CLI together through Claude Code rather than managing a separate global CLI or relying on transitive installation.
 
-[`release/compatibility.json`](release/compatibility.json) mirrors the marketplace plugin version and declares the
-immutable installed-byte source SHA and subdirectory, service API contract, CLI version, and exact Foundation Plan
-format required by this source. Repository checks fail if that metadata drifts from the marketplace entry or its
-closed shape. The current metadata can reject an incompatible three-repository candidate, but a compatible result
-never authorizes promotion.
+[`release/compatibility.json`](release/compatibility.json) records the plugin package name, exact packed tarball
+SHA-256, compatible service API range, exact CLI version, and Foundation Plan format. One marketplace SemVer maps
+forever to exactly one package tarball. Never reuse a published npm version or catalog version for different bytes.
+A compatible result establishes candidate eligibility only; it never authorizes deployment or publication.
 
-Claude Code's official
-[`git-subdir` source documentation](https://code.claude.com/docs/en/plugin-marketplaces#plugin-sources) defines its
-`url`, `path`, optional `ref`, and full `sha` fields. This marketplace source is pinned to full commit
-`8ffbd9688f39118ddeeb48a3da7e5bc309b7be5e` and path `skills/create-full-stack-app`. Content can therefore merge to
-`main` without changing the bytes selected by that catalog entry. Do not infer a release from a version number: the
-exact catalog checkout SHA, installed-byte source SHA and path, and service and CLI SHAs identify the candidate that
-was reviewed and qualified. See Claude Code's official
-[version-resolution documentation](https://code.claude.com/docs/en/plugin-marketplaces#version-resolution-and-release-channels).
-One marketplace SemVer maps forever to exactly one source SHA. Every failed or revised candidate gets a new
-prerelease version, catalog commit, and immutable candidate tag; never reuse a version for different bytes. The
-local compatibility gate searches the committed compatibility documents reachable through every local Git ref and
-rejects a reused version with a different source identity. Fetch all immutable candidate tags before relying on
-that result; protected remote refs make this history an enforceable release record rather than mutable prose.
-README records the dated official-documentation recheck for the source and marketplace-add shapes; renew that
-check before release rather than treating the citation alone as runtime evidence.
+## Candidate flow
 
-`main` holds marketplace candidates. The dedicated `stable` ref is the distributable channel, and ordinary
-installation must use `claude plugin marketplace add firstdraft/skills@stable`. A catalog commit on `main` is not a
-release. Merging catalog commit B integrates that candidate on `main`; a separately approved fast-forward of
-`stable` to exact B is the release mutation. If `stable` does not yet exist, creating it at exact B is the initial
-release mutation and requires the same approval and reconciliation boundary.
+1. Resolve clean, full-history checkouts at exact SHAs for all three repositories. Run each repository's checks and
+   the cross-repository compatibility gates.
+2. Pack the exact CLI and Claude plugin candidates. Verify the plugin tarball SHA-256 against
+   `release/compatibility.json`, install both tarballs into an isolated temporary npm project, and confirm the
+   plugin-local `firstdraft` adapter runs the exact CLI version.
+3. Validate the staged plugin with the real Claude Code CLI. Exercise a local marketplace in isolated Claude state
+   and confirm Skill discovery, sensitive configuration handling, and CLI invocation. This is prepublication
+   evidence, not proof of a public install.
+4. One operator deploys the exact service candidate to staging and runs the approved Movie Catalog qualification
+   and singleton replay with the exact CLI and Skill candidates. Preserve the three repository SHAs, package
+   hashes, service revision, retained identifiers, and evidence.
+5. A human decides whether the same candidate should be promoted. Publishing and catalog promotion require new,
+   explicit authorization.
 
-Plugin promotion separates content and catalog commits:
+## Publication order
 
-1. Merge content normally without changing the marketplace SemVer or pinned source. Report the merged content SHA
-   as unpromoted and ask whether to prepare and qualify a coordinated candidate.
-2. With explicit approval, prepare a separate catalog commit that bumps the marketplace version according to SemVer
-   and points its `sha` at the already-existing content commit. Update `release/compatibility.json` in that same
-   commit. After separate candidate-preparation approval, create one immutable tag such as
-   `marketplace-v0.1.0-alpha.1-candidate.1` at that exact catalog commit. Never move or delete a candidate tag. If tag
-   creation has an ambiguous outcome, inspect the remote ref read-only and do not retry until its identity is known.
+After approval, one operator performs these mutations serially:
 
-## Remote ref prerequisites
+Before pushing a release tag, verify that a GitHub ruleset protects `claude-v*` tags from deletion and unauthorized
+updates, the `npm` environment requires the intended human reviewer, and its `NPM_RELEASE_ENABLED` variable is
+deliberately set to `true`. The workflow fails closed unless the tag is protected and its commit is on `main`.
 
-Before creating the first candidate tag or `stable`, a human administrator must verify GitHub rulesets that:
+1. Publish the exact compatible CLI package and reconcile its registry identity read-only.
+2. Publish the already-qualified `@firstdraft.com/claude-code` tarball with npm provenance under the prerelease
+   dist-tag, then verify the registry returns the expected version and integrity.
+3. Merge or fast-forward the marketplace catalog on `main` so
+   `claude plugin marketplace add firstdraft/skills` resolves to the published package version.
+4. In fresh isolated Claude state, run the exact public installation:
 
-- block force-push and deletion of `stable`;
-- restrict creation and updates of `stable` to the designated release operator;
-- block update and deletion for `marketplace-v*-candidate.*` tags; and
-- leave ordinary `main` integration unable to advance the distributable ref.
+   ```sh
+   claude plugin marketplace add firstdraft/skills
+   claude plugin install firstdraft@firstdraft-skills
+   ```
 
-Protection changes are separate external mutations and are not performed by repository checks. If the required
-rulesets are absent, stop before tag or branch creation and request approval for that administration work.
+5. Start a fresh model session, confirm the Skill is discoverable, complete staging token onboarding without
+   exposing the token in chat or logs, and repeat the bounded qualification if required by the release decision.
 
-Release corrections are forward-only. Publish a new SemVer, source pin, catalog commit, and candidate tag, then
-fast-forward `stable` after qualification. Never rewrite a released version's source, move a candidate tag, force
-`stable`, or rewind it to an earlier catalog.
+If any external mutation has an ambiguous result, stop and inspect the registry, Git ref, or deployment read-only.
+Do not retry until its identity is known. Release corrections are forward-only and use a new SemVer.
 
-## Candidate and promotion flow
-
-After merging a change to `main`:
-
-1. Report this repository's exact merged SHA and ask the user whether to coordinate and promote a three-repository
-   candidate. If the user declines, record the SHA as unpromoted and stop.
-2. With explicit approval, resolve clean checkouts at exact SHAs for `firstdraft` and `cli`, the exact Skills catalog
-   commit, and its immutable plugin source SHA. Run each repository's checks and the First Draft cross-repository
-   compatibility gate. The Skills checkout must contain full, unshallowed history including the historical evidence
-   and pinned source commits, plus every immutable candidate tag; fetch tags, use
-   `git rev-parse --is-shallow-repository`, and fetch any missing history before the check. The local gate verifies
-   that the source SHA is an ancestor of catalog HEAD and that no compatibility document reachable from a local ref
-   already maps this version to another source. A SemVer-compatible result makes the candidate eligible for
-   qualification only.
-3. One operator manually deploys the exact service candidate to staging and uses the exact CLI and Skills candidates
-   for the approved staging qualification and replay. Add the marketplace as
-   `firstdraft/skills@<immutable-candidate-tag>` so the externally fetched catalog is exact. The plugin must then be
-   installed from that catalog's pinned source SHA, not from the catalog checkout's current `skills/` subtree. Do
-   not substitute newer `main` revisions during the journey. Claude Code's official
-   [`plugin marketplace add` reference](https://code.claude.com/docs/en/plugin-marketplaces#plugin-marketplace-add)
-   documents this `owner/repo@ref` form.
-4. During live plugin qualification, verify that the cache directory uses the expected SemVer and byte-compare every
-   installed file and mode with the pinned source tree. The pinned subtree must remain manifestless so no
-   `plugin.json` can override the marketplace version. The existing isolation harness was designed for a local
-   marketplace; review it before this run because the pinned Git source may require a narrowly scrubbed Git path.
-   Do not weaken its credential or host-state boundaries, and do not present local checks as this live observation.
-5. Verify remote reachability read-only before release: fetch the candidate tag and `origin/main`, confirm the tag
-   resolves to the qualified catalog commit, and confirm the source SHA is an ancestor of the fetched remote main.
-   A local object alone is insufficient evidence that Claude Code can fetch it.
-6. Preserve the candidate tag, qualified catalog SHA, plugin source SHA/version, other component SHAs, and evidence.
-   A human decides whether to promote the same candidate to production and release its CLI and plugin components.
-7. With separate explicit approval, one operator creates `stable` at the exact qualified catalog commit for the
-   initial release, or fast-forwards the existing ref for a later release. If the ref update outcome is ambiguous,
-   reconcile the remote ref read-only before any retry; never retry or advance another ref until the outcome is
-   known. Each external mutation remains serialized through that operator.
-
-The CLI package and this plugin remain unreleased, and the repository does not currently claim a completed staging
-or production journey. The dated fresh-model and isolated-install observations predate the explicit marketplace
-version and remain bound to their recorded Git revisions; they do not qualify this candidate. Do not run
-`npm publish`; this repository's npm package is private test tooling.
+The plugin package is published by pushing protected tag `claude-v$package_version`. That tag triggers
+`.github/workflows/publish.yml`, which rechecks the source commit, verifies the exact CLI release already exists in
+npm, vendors that exact CLI checkout, reproduces the recorded plugin tarball digest, and publishes those bytes. Pushing the tag is therefore the
+publication mutation and requires the explicit approval above.
 
 ## Checks
 
-Run the compatibility check by itself with:
-
-```sh
-npm run check:release-compatibility
-```
-
-Run the normal repository checks from a full-history checkout. Strict validation through the real Claude Code CLI is
-a separate manual candidate gate; a passing invocation is useful preflight evidence, not durable Git-hosted
-installation qualification:
+From a full-history checkout, run:
 
 ```sh
 npm ci --ignore-scripts
 npm run check
-claude plugin validate --strict .
-claude plugin validate --strict .claude-plugin/plugin.json
+node script/check-claude-plugin-package.mjs --cli-root /path/to/exact/cli
 ```
 
-The old local-directory install smoke described in [`README.md`](README.md) intentionally rejects the remote-pinned
-source before resolving Claude or inspecting host state. Git-hosted qualification must use the reviewed successor
-harness, immutable candidate tag, and pinned remote source. Neither strict validation nor any local check authorizes
-release.
+Stage the package and validate it with the current supported Claude Code CLI. Use isolated Claude configuration for
+install tests; do not alter a colleague's real Claude state during qualification. A local validation or packed
+install does not prove the two public commands until both npm packages and the GitHub marketplace catalog are
+reachable externally.

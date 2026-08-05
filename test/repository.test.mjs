@@ -72,8 +72,12 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "f55edffc9e88924f9a4c95f41c4d0bc9b72422f8";
+  "1c5f44bf5f905b45931ec2c280d71d69b0d0ac78";
 const cliContractRuntimeDigest =
+  "0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad";
+const historicalCliContractBaseline =
+  "f55edffc9e88924f9a4c95f41c4d0bc9b72422f8";
+const historicalCliContractRuntimeDigest =
   "9e5a4bd0f16f49ab2e17c04f7defc59366f8fa073f772b310d8f684177890eab";
 const compilationProvenanceServiceBaseline =
   "5811bb3013cf25072db74355597f60d85be3c05b";
@@ -239,6 +243,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       foundationPlanServerBaseline,
       compilationEvidenceCliBaseline,
       cliContractBaseline,
+      historicalCliContractBaseline,
       compilationProvenanceServiceBaseline,
       productJourneySmokeBaseline,
       freshModelServiceBaseline,
@@ -281,13 +286,13 @@ test("fresh Claude Code evidence is exact and bounded", async () => {
   const homeResponse = await readFile(homeInventoryOpeningResponse, "utf8");
   const observation = JSON.parse(observationSource);
   assertRevisionTokens(evidence, [
-    cliContractBaseline,
+    historicalCliContractBaseline,
     freshModelServiceBaseline,
     freshModelPluginBaseline,
   ]);
   assertRevisionTokens(homeResponse, []);
   assertRevisionTokens(observationSource, [
-    cliContractBaseline,
+    historicalCliContractBaseline,
     freshModelServiceBaseline,
     freshModelServiceTree,
     freshModelPluginBaseline,
@@ -323,8 +328,8 @@ test("fresh Claude Code evidence is exact and bounded", async () => {
     freshModelPluginBaseline,
     freshModelPluginRuntimeDigest,
     freshModelClaudeExecutableDigest,
-    cliContractBaseline,
-    cliContractRuntimeDigest,
+    historicalCliContractBaseline,
+    historicalCliContractRuntimeDigest,
   ]) {
     assert(evidence.includes(value));
   }
@@ -414,8 +419,8 @@ test("fresh Claude Code evidence is exact and bounded", async () => {
     tree_sha: freshModelServiceTree,
   });
   assert.deepEqual(observation.cli, {
-    revision: cliContractBaseline,
-    runtime_sha256: cliContractRuntimeDigest,
+    revision: historicalCliContractBaseline,
+    runtime_sha256: historicalCliContractRuntimeDigest,
     version: "0.1.0-alpha.2",
   });
   assert.deepEqual(observation.plugin, {
@@ -524,144 +529,64 @@ test("installable Skills follow the portable repository profile", async () => {
 });
 
 test("Claude Code packaging reuses the portable Skill exactly once", async () => {
-  const plugin = JSON.parse(
+  const previewManifest = JSON.parse(
     await readFile(path.join(claudePluginDirectory, "plugin.json"), "utf8"),
   );
   const marketplace = JSON.parse(
     await readFile(path.join(claudePluginDirectory, "marketplace.json"), "utf8"),
   );
-  const portableSkillPath = `./skills/${portableSkillName}`;
-  const marketplaceSourcePath = `skills/${portableSkillName}`;
+  const packageTemplate = JSON.parse(
+    await readFile(
+      path.join(repository, "packages", "claude-plugin", "package.template.json"),
+      "utf8",
+    ),
+  );
+  const installableManifest = JSON.parse(
+    await readFile(
+      path.join(repository, "packages", "claude-plugin", ".claude-plugin", "plugin.json"),
+      "utf8",
+    ),
+  );
 
-  assert.deepEqual(plugin, {
-    $schema: "https://json.schemastore.org/claude-code-plugin-manifest.json",
-    name: claudePreviewPluginName,
-    displayName: "First Draft Preview",
-    version: "0.1.0",
-    description:
-      "Experimental Foundation Plan authoring and bounded Rails application creation with First Draft",
-    author: {
-      name: "First Draft",
-      url: "https://github.com/firstdraft",
-    },
-    homepage: "https://github.com/firstdraft/skills",
-    repository: "https://github.com/firstdraft/skills",
-    license: "MIT",
-    keywords: ["foundation-plan", "rails", "application-generation"],
-    skills: [portableSkillPath],
+  assert.equal(previewManifest.name, claudePreviewPluginName);
+  assert.deepEqual(previewManifest.skills, [`./skills/${portableSkillName}`]);
+  assert.equal(marketplace.name, claudeMarketplaceName);
+  assert.equal(marketplace.plugins.length, 1);
+  assert.equal(marketplace.plugins[0].name, claudePluginName);
+  assert.equal(marketplace.plugins[0].version, "0.1.0-alpha.2");
+  assert.deepEqual(marketplace.plugins[0].source, {
+    source: "npm",
+    package: "@firstdraft.com/claude-code",
+    version: "0.1.0-alpha.2",
+    registry: "https://registry.npmjs.org/",
   });
-  assert.deepEqual(marketplace, {
-    $schema: "https://json.schemastore.org/claude-code-marketplace.json",
-    name: claudeMarketplaceName,
-    description: "Experimental First Draft application-authoring skills for Claude Code",
-    owner: {
-      name: "First Draft",
-      url: "https://github.com/firstdraft",
-    },
-    plugins: [
-      {
-        name: claudePluginName,
-        version: "0.1.0-alpha.1",
-        source: {
-          source: "git-subdir",
-          url: "https://github.com/firstdraft/skills.git",
-          path: marketplaceSourcePath,
-          sha: marketplacePluginSourceBaseline,
-        },
-        strict: false,
-        skills: ["./"],
-        displayName: "First Draft",
-        description:
-          "Experimental Foundation Plan authoring and bounded Rails application creation with First Draft",
-        author: {
-          name: "First Draft",
-          url: "https://github.com/firstdraft",
-        },
-        homepage: "https://github.com/firstdraft/skills",
-        repository: "https://github.com/firstdraft/skills",
-        license: "MIT",
-        keywords: ["foundation-plan", "rails", "application-generation"],
-        category: "development",
-        tags: ["foundation-plan", "rails"],
-      },
-    ],
-  });
-
-  const pluginSkillDirectory = path.resolve(repository, portableSkillPath);
-  assert.equal(
-    pluginSkillDirectory,
-    path.join(skillsDirectory, portableSkillName),
-  );
-  assert.equal(
-    path.resolve(repository, marketplace.plugins[0].source.path),
-    pluginSkillDirectory,
-  );
-  assert.equal(
-    path.resolve(pluginSkillDirectory, marketplace.plugins[0].skills[0]),
-    pluginSkillDirectory,
-  );
-  assert((await stat(path.join(pluginSkillDirectory, "SKILL.md"))).isFile());
+  assert.equal(packageTemplate.dependencies, undefined);
+  assert.deepEqual(installableManifest.skills, [
+    "./skills/create-full-stack-app",
+  ]);
+  assert.equal(installableManifest.userConfig.api_token.sensitive, true);
 
   const repositoryFiles = trackedFiles();
   const previewComponents = repositoryFiles
     .map((file) => path.relative(repository, file))
-    .filter((relativePath) => {
-      const segments = relativePath.split(path.sep);
-      return forbiddenCheckoutRootClaudePluginComponentPaths.includes(
-        segments[0],
-      );
-    });
-  assert.deepEqual(
-    previewComponents,
-    [],
-    "the checkout-root plugin preview must not auto-discover components " +
-      "outside the marketplace source",
-  );
-  assert.deepEqual(forbiddenCheckoutRootClaudePluginComponentPaths, [
-    ".lsp.json",
-    ".mcp.json",
-    "SKILL.md",
-    "agents",
-    "bin",
-    "commands",
-    "hooks",
-    "monitors",
-    "output-styles",
-    "settings.json",
-    "themes",
-    "workflows",
-  ]);
+    .filter((relativePath) =>
+      forbiddenCheckoutRootClaudePluginComponentPaths.includes(
+        relativePath.split(path.sep)[0],
+      ),
+    );
+  assert.deepEqual(previewComponents, []);
   for (const relativePath of forbiddenCheckoutRootClaudePluginComponentPaths) {
     await assert.rejects(
       lstat(path.join(repository, relativePath)),
       (error) => error.code === "ENOENT",
-      `the checkout-root preview discovers ${relativePath} from the working tree`,
     );
   }
-  const checkoutSkillsDirectoryDetails = await lstat(skillsDirectory);
-  assert.equal(
-    checkoutSkillsDirectoryDetails.isDirectory(),
-    true,
-    "the checkout-root skills path must be a directory, not a link",
-  );
-  const checkoutSkillEntries = await readdir(skillsDirectory, {
-    withFileTypes: true,
-  });
-  assert.deepEqual(
-    checkoutSkillEntries.map((entry) => entry.name).sort(),
-    [portableSkillName],
-    "the checkout-root preview must expose only the canonical portable Skill",
-  );
-  assert.equal(
-    checkoutSkillEntries[0].isDirectory(),
-    true,
-    "the canonical checkout-root Skill must be a directory, not a link",
-  );
+
+  const pluginSkillDirectory = path.join(skillsDirectory, portableSkillName);
   const skillFiles = repositoryFiles.filter(
     (file) => path.basename(file) === "SKILL.md",
   );
   assert.deepEqual(skillFiles, [path.join(pluginSkillDirectory, "SKILL.md")]);
-
   const canonicalBody = await readFile(skillFiles[0]);
   const exactCopies = [];
   for (const file of repositoryFiles) {
@@ -673,563 +598,48 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   const installedSourceFiles = (await filesUnder(pluginSkillDirectory)).map(
     (file) => path.relative(pluginSkillDirectory, file),
   );
-  assert.deepEqual(canonicalClaudePluginSkillFiles, [
-    "LICENSE.txt",
-    "SKILL.md",
-    "agents/openai.yaml",
-    "references/diagnostics-and-recovery.md",
-    "references/examples.md",
-    "references/foundation-plan-0.19.schema.json",
-    "references/foundation-plan-019.md",
-    "references/modeling-guide.md",
-  ]);
-  const pinnedSourceFiles = gitTreePathsAtRevision(
-    marketplacePluginSourceBaseline,
-    marketplaceSourcePath,
-  ).map((file) => path.posix.relative(marketplaceSourcePath, file));
-  assert.deepEqual(pinnedSourceFiles, canonicalClaudePluginSkillFiles);
-  assert.equal(
-    pinnedSourceFiles.some((file) => file === ".claude-plugin/plugin.json"),
-    false,
-    "the pinned plugin source must remain manifestless",
-  );
   assert.deepEqual(installedSourceFiles, canonicalClaudePluginSkillFiles);
-  assert.deepEqual(forbiddenClaudePluginPathSegments, [
-    "evals",
-    "node_modules",
-    "package-lock.json",
-    "package.json",
-    "script",
-    "scripts",
-    "test",
-  ]);
   const forbiddenSegments = new Set(forbiddenClaudePluginPathSegments);
   for (const relativePath of installedSourceFiles) {
-    const segments = relativePath.split(path.sep);
     assert.equal(
-      segments.some((segment) => forbiddenSegments.has(segment)),
+      relativePath
+        .split(path.sep)
+        .some((segment) => forbiddenSegments.has(segment)),
       false,
-      `unexpected installed source path: ${relativePath}`,
+      `unexpected portable Skill path: ${relativePath}`,
     );
-    assert.equal(
-      segments.includes("commands"),
-      false,
-      `installed source contains a Commands component: ${relativePath}`,
-    );
-    assert.equal(
-      segments.includes("hooks"),
-      false,
-      `installed source contains a Hooks component: ${relativePath}`,
-    );
-    assert.notEqual(
-      path.basename(relativePath),
-      ".mcp.json",
-      `installed source contains an MCP component: ${relativePath}`,
-    );
-    if (segments.includes("agents")) {
-      assert.notEqual(
-        path.extname(relativePath),
-        ".md",
-        `installed source contains an Agent component: ${relativePath}`,
-      );
-    }
-  }
-  for (const component of [
-    "agents",
-    "commands",
-    "hooks",
-    "lspServers",
-    "mcpServers",
-  ]) {
-    assert(!Object.hasOwn(marketplace.plugins[0], component));
   }
 
-  assert.equal(installedSourceFiles.length, 8);
-  const readme = await readFile(path.join(repository, "README.md"), "utf8");
-  assert.match(readme, /eight canonical Skill files/);
-  assert.match(
-    readme,
-    /product-specific plugin packaging now points to and reuses this\s+canonical Skill; it does not fork the instructions/,
-  );
-  assert.match(
-    readme,
-    /observed isolated installed\s+plugin cache contained no second copy of the Skill instructions, repository test harness, or runtime dependency\s+tree[\s\S]*?marketplace tree is a separate footprint[\s\S]*?did not inventory an isolated marketplace tree[\s\S]*?no\s+Git-hosted marketplace tree has been observed/,
-  );
-  assert.match(
-    readme,
-    /validate the marketplace manifest and root preview manifest without installing either one/,
-  );
-  assert(readme.includes("evidence/2026-08-04-claude-code-plugin-install-smoke.md"));
-  assert(
-    readme.includes(
-      "evidence/claude-code-plugin-install-observation.json",
-    ),
-  );
-  assert.match(
-    readme,
-    /preview-only `0\.1\.0` version[\s\S]*?excluded from the marketplace\s+plugin source[\s\S]*?installable marketplace entry independently owns\s+the plugin release version, currently `0\.1\.0-alpha\.1`[\s\S]*?checkout preview's separate `0\.1\.0` does not govern that\s+installation[\s\S]*?private root npm package[\s\S]*?`0\.0\.0` version[\s\S]*?not plugin identity/,
-  );
-  assert(
-    readme.includes(
-      "https://code.claude.com/docs/en/plugin-marketplaces#plugin-sources",
-    ),
-  );
-  assert.match(
-    readme,
-    /`git-subdir` field set and the `owner\/repo@ref` add form[\s\S]*?rechecked on 2026-08-05[\s\S]*?dated documentation check is not installation evidence/,
-  );
-  assert(
-    readme.includes(
-      "https://code.claude.com/docs/en/plugin-marketplaces#version-resolution-and-release-channels",
-    ),
-  );
-  assert.match(
-    readme,
-    /One marketplace SemVer maps permanently to one source SHA[\s\S]*?failed or revised candidate\s+must receive a new prerelease version and immutable candidate tag[\s\S]*?never reuse an earlier version with new bytes[\s\S]*?explicitly versioned plugin remains cached until that version changes[\s\S]*?Every revised candidate therefore\s+requires a deliberate, never-reused SemVer bump[\s\S]*?version only participates in compatibility eligibility and never authorizes release/,
-  );
-  assert(
-    readme.includes(
-      "https://code.claude.com/docs/en/plugin-marketplaces#strict-mode",
-    ),
-  );
-  assert(
-    readme.includes(
-      "https://code.claude.com/docs/en/plugins-reference#unrecognized-fields",
-    ),
-  );
-  assert.match(
-    readme,
-    /marketplace entry's `"strict": false` selects the marketplace entry as the entire plugin definition[\s\S]*?raw source directory without its own `plugin\.json`[\s\S]*?source manifest that also declares\s+components would conflict[\s\S]*?does not relax validation[\s\S]*?strict validation commands above remain manual release gates[\s\S]*?successful local invocation is not durable\s+qualification of a Git-hosted catalog or installation/,
-  );
-  assert(readme.includes("https://code.claude.com/docs/en/plugins"));
-  assert(readme.includes("https://code.claude.com/docs/en/plugins-reference"));
-  assert(readme.includes("https://code.claude.com/docs/en/env-vars"));
-  const marketplaceAddSources = [
-    ...readme.matchAll(/\bclaude plugin marketplace add ([^\s`]+)/g),
-  ].map((match) => match[1]);
-  assert(marketplaceAddSources.includes("firstdraft/skills@stable"));
-  assert(
-    marketplaceAddSources.every(
-      (source) =>
-        source === "firstdraft/skills@stable" ||
-        /^firstdraft\/skills@marketplace-v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?-candidate\.\d+$/.test(
-          source,
-        ),
-    ),
-  );
-  assert.doesNotMatch(
-    readme,
-    /claude plugin marketplace add firstdraft\/skills(?:@main)?(?=\s|`|$)/,
-  );
-  assert(
-    readme.includes(
-      "https://code.claude.com/docs/en/plugin-marketplaces#plugin-marketplace-add",
-    ),
-  );
-  assert.match(
-    readme,
-    /`CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` for cloning GitHub `owner\/repo` shorthand over HTTPS rather than SSH[\s\S]*?users with working GitHub SSH configuration may\s+omit it[\s\S]*?documents `owner\/repo@ref`[\s\S]*?`@stable` ref is the intended distributable channel[\s\S]*?ordinary installation must not\s+track mutable `main`[\s\S]*?No live GitHub clone from either ref has been observed for this package/,
-  );
-  assert.match(
-    readme,
-    /root preview manifest uses the distinct name `firstdraft-preview`[\s\S]*?cannot collide with an\s+installed `firstdraft@firstdraft-skills`[\s\S]*?documented local-development path[\s\S]*?without registering a\s+marketplace or installing the plugin[\s\S]*?claude --plugin-dir \.[\s\S]*?Home Inventory evaluation observed a headless Claude Code 2\.1\.221 session load the\s+`Skill\(firstdraft-preview:create-full-stack-app\)` identifier[\s\S]*?explicit `--plugin-dir <checkout>` without marketplace\s+registration or installation[\s\S]*?did not exercise the interactive command[\s\S]*?Movie Catalog process[\s\S]*?retained evidence does not record Skill discovery or\s+invocation[\s\S]*?Home run observed the headless\s+tool identifier[\s\S]*?Interactive `\/firstdraft-preview:create-full-stack-app` invocation[\s\S]*?remain unobserved/,
-  );
-  assert.match(
-    readme,
-    /whole checkout is the preview plugin root[\s\S]*?default component location documented for Claude Code 2\.1\.221[\s\S]*?exactly one canonical subtree beneath `skills\/`[\s\S]*?enumerated checkout-root component locations[\s\S]*?complete on-disk `skills\/` subtree[\s\S]*?including untracked entries there[\s\S]*?without claiming a scan of every working-tree/,
-  );
-  assert.match(
-    readme,
-    /machine-readable observation[\s\S]*?remain bound to the\s+eight canonical Skill files at historical revision `b5c3897b240bfa3a9117d1a564d8e6b7d783e993`[\s\S]*?reconstruct\s+those Git objects rather than requiring today's unpromoted source to match them[\s\S]*?does not qualify this remote-pinned catalog/,
-  );
-  assert.match(
-    readme,
-    /old local-directory harness cannot exercise the current remote-pinned `git-subdir` source[\s\S]*?child\s+PATH intentionally provided no Git[\s\S]*?`npm run check:claude-plugin-install` and `npm run record:claude-plugin-install` now fail before resolving Claude,\s+inspecting real state, or creating temporary state[\s\S]*?Do not use either\s+command to renew or qualify the current candidate/,
-  );
-  assert.match(
-    readme,
-    /Git-hosted qualification requires a reviewed successor harness[\s\S]*?`owner\/repo@ref` form[\s\S]*?immutable candidate tag[\s\S]*?cache directory is exactly the\s+candidate SemVer[\s\S]*?byte- and mode-compare[\s\S]*?narrowly scrubbed executable path[\s\S]*?do not inherit\s+the operator's general PATH, tokens, SSH agent, or unrelated environment/,
-  );
-  assert.match(
-    readme,
-    /Repository checks require `git` on `PATH` and a real Git checkout with its index and working tree available[\s\S]*?source\s+archive, exported tree, or installed plugin cache is insufficient[\s\S]*?complete `skills\/`\s+subtree on disk[\s\S]*?full,\s+unshallowed history[\s\S]*?`git rev-parse --is-shallow-repository`[\s\S]*?`git fetch --unshallow origin`/,
-  );
-  const observationSource = await readFile(claudePluginObservation, "utf8");
-  const observation = JSON.parse(observationSource);
-  assert.equal(observation.schemaVersion, 3);
-  assert.equal(
-    observation.observedOn,
-    "2026-08-04",
-    "historical observation date changed; preserve this pinned evidence. " +
-      "Use the reviewed candidate-tag and pinned-remote-source successor " +
-      "harness for a new dated observation with byte and mode comparison",
+  const packageSources = trackedFiles().filter((file) =>
+    file.startsWith(path.join(repository, "packages", "claude-plugin")),
   );
   assert.equal(
-    observation.claudeCode.version,
-    "2.1.221",
-    "historical Claude Code version changed; preserve this pinned evidence. " +
-      "Use the reviewed candidate-tag and pinned-remote-source successor " +
-      "harness for a new dated observation with byte and mode comparison",
-  );
-  assert.deepEqual(observation.claudeCode.componentInventory, {
-    agents: 0,
-    hooks: 0,
-    lspServers: 0,
-    mcpServers: 0,
-    skillsAndCommands: 1,
-  });
-  assert.deepEqual(
-    observation.manifestValidation.marketplace.normalizedArgv,
-    ["<claude-bin>", "plugin", "validate", "--strict", "<checkout>"],
-  );
-  assert.deepEqual(
-    observation.manifestValidation.previewPlugin.normalizedArgv,
-    [
-      "<claude-bin>",
-      "plugin",
-      "validate",
-      "--strict",
-      "<checkout>/.claude-plugin/plugin.json",
-    ],
-  );
-  assert.deepEqual(
-    Object.fromEntries(
-      Object.entries(observation.manifestValidation).map(([name, value]) => [
-        name,
-        { passed: value.passed, path: value.path, strict: value.strict },
-      ]),
-    ),
-    {
-      marketplace: { passed: true, path: ".", strict: true },
-      previewPlugin: {
-        passed: true,
-        path: ".claude-plugin/plugin.json",
-        strict: true,
-      },
-    },
-  );
-  for (const validation of Object.values(observation.manifestValidation)) {
-    assert.match(validation.capturedOutput, /Validation passed$/);
-    assert(!validation.capturedOutput.includes(repository));
-  }
-  assert.equal(observation.installedPlugin.marketplace, claudeMarketplaceName);
-  assert.equal(observation.installedPlugin.name, claudePluginName);
-  assert.equal(observation.installedPlugin.commandsDeclared, false);
-  assert.equal(observation.installedPlugin.fileCount, 8);
-  assert.equal(observation.installedPlugin.totalBytes, 207_433);
-  assert.deepEqual(
-    observation.installedPlugin.files.map((file) => file.path),
-    canonicalClaudePluginSkillFiles,
-  );
-  const historicalFileInventory = canonicalClaudePluginSkillFiles.map(
-    (relativePath) => {
-      const source = gitBlobAtRevision(
-        freshModelPluginBaseline,
-        `skills/create-full-stack-app/${relativePath}`,
-      );
-      return {
-        path: relativePath,
-        bytes: source.length,
-        sha256: createHash("sha256").update(source).digest("hex"),
-      };
-    },
-  );
-  assert.deepEqual(
-    historicalFileInventory,
-    observation.installedPlugin.files,
-    "the pinned historical Skill bytes differ from the dated observation",
-  );
-  assert.equal(
-    observedFileBytes(observation.installedPlugin.files),
-    observation.installedPlugin.totalBytes,
-  );
-  assert.equal(
-    observedFileTreeSha256(observation.installedPlugin.files),
-    observation.installedPlugin.treeSha256,
-  );
-  assert.match(observation.installedPlugin.treeSha256, /^[0-9a-f]{64}$/);
-  for (const file of observation.installedPlugin.files) {
-    assert.match(file.sha256, /^[0-9a-f]{64}$/, file.path);
-  }
-  assert.deepEqual(observation.checks, {
-    childWorkingDirectory: "isolated",
-    packageManagerInvocation: "absent",
-    realStateUnchanged: true,
-    temporaryStateRemoved: true,
-  });
-  assert.deepEqual(observation.realStateMonitor.requiredRegistryAnyOf, [
-    "installedPlugins",
-    "knownMarketplaces",
-    "pluginCatalog",
-  ]);
-  assert.deepEqual(observation.realStateMonitor.excluded, ["~/.claude.json"]);
-  assert(
-    observation.realStateMonitor.requiredRegistryAnyOf.some((name) =>
-      observation.realStateMonitor.present.includes(name),
-    ),
-    "observed real-state monitoring is vacuous",
-  );
-  assert.deepEqual(
-    [
-      ...observation.realStateMonitor.present,
-      ...observation.realStateMonitor.absent,
-    ].sort(),
-    [
-      "credentials",
-      "installedPlugins",
-      "knownMarketplaces",
-      "pluginCatalog",
-      "settings",
-      "settingsLocal",
-      "targetCache",
-      "targetData",
-      "targetMarketplace",
-    ],
-  );
-  assertNoObservationAbsolutePathLeaks(observation);
-
-  const evidence = await readFile(claudePluginEvidence, "utf8");
-  assertNoObservationAbsolutePathLeaks({ evidenceMarkdown: evidence });
-  assert(evidence.includes(`Claude Code ${observation.claudeCode.version}`));
-  assert(evidence.includes(`# Claude Code plugin install smoke — ${observation.observedOn}`));
-  assert(
-    evidence.includes(
-      `${observation.installedPlugin.fileCount} canonical Skill files, ${observation.installedPlugin.totalBytes} bytes`,
-    ),
-  );
-  assert(
-    evidence.includes(
-      "live inventory Skills=1, Agents=0, Hooks=0, MCP servers=0, LSP servers=0",
-    ),
-  );
-  assert(evidence.includes("derived Commands=absent"));
-  assert(evidence.includes("CLI combines Skills/Commands"));
-  assert(!evidence.includes("Commands=0"));
-  assert(evidence.includes("no PATH-level package manager invocation"));
-  const documentedPresenceSummary =
-    `real-state monitor present=${renderStatePresenceNames(observation.realStateMonitor.present)}, ` +
-    `absent=${renderStatePresenceNames(observation.realStateMonitor.absent)}, ` +
-    `excluded=${renderStatePresenceNames(observation.realStateMonitor.excluded)}`;
-  assert(
-    evidence.includes(documentedPresenceSummary),
-    `packaging evidence must contain the canonical real-state summary: ${documentedPresenceSummary}`,
-  );
-  const documentedStatePresenceBlock = [
-    `- Present: ${renderEvidenceStateNames(observation.realStateMonitor.present)}`,
-    `- Absent: ${renderEvidenceStateNames(observation.realStateMonitor.absent)}`,
-    `- Excluded: ${renderEvidenceStateNames(observation.realStateMonitor.excluded)}`,
-  ].join("\n");
-  assertEvidenceStatePresenceBlock(
-    evidence,
-    documentedStatePresenceBlock,
-  );
-  const evidenceWithAppendedStateBullet = evidence.replace(
-    `${documentedStatePresenceBlock}\n\nAt least one`,
-    `${documentedStatePresenceBlock}\n- Unexpected: \`notObserved\`\n\nAt least one`,
-  );
-  assert.notEqual(evidenceWithAppendedStateBullet, evidence);
-  assert.throws(
-    () =>
-      assertEvidenceStatePresenceBlock(
-        evidenceWithAppendedStateBullet,
-        documentedStatePresenceBlock,
-      ),
-    /state-presence bullets differ from the observation/,
-  );
-  for (const [label, validation] of [
-    ["marketplace", observation.manifestValidation.marketplace],
-    ["preview plugin", observation.manifestValidation.previewPlugin],
-  ]) {
-    const renderedValidation = renderManifestValidationEvidence(
-      label,
-      validation,
-    );
-    assert(
-      evidence.includes(renderedValidation),
-      `packaging evidence must render the observed ${label} validation:\n${renderedValidation}`,
-    );
-  }
-  assert.match(
-    evidence,
-    /rendered from\s+the machine-readable observation's repository-relative target,\s+normalized child argv, and captured normalized\s+output[\s\S]*?normalized evidence fields, not verbatim shell commands\s+or npm-wrapper output/,
-  );
-  assert.match(
-    evidence,
-    /marketplace manifest and root preview manifest both passed strict validation/,
-  );
-  assert.equal(
-    [...evidence.matchAll(/^✔ Validation passed$/gm)].length,
-    2,
-    "packaging evidence must contain one captured success line per strict validation",
-  );
-  assert.match(
-    evidence,
-    /Real-state presence remains run-local information and is not compared across machines[\s\S]*?every\s+run still requires a core registry target and proves monitored state unchanged/,
-  );
-  assert(evidence.includes("The exact recording command was:"));
-  assert(evidence.includes("$ npm run record:claude-plugin-install"));
-  assert(evidence.includes("local source-only packaging check"));
-  assert(evidence.includes("explicit isolated values only"));
-  assert(evidence.includes("without traversing symlinks"));
-  assert.match(evidence, /all\s+monitored real-state entries were unchanged/);
-  assert.match(
-    evidence,
-    /excludes the high-churn `~\/\.claude\.json`[\s\S]*?real-state claim is limited/,
-  );
-  assert.match(
-    evidence,
-    /`agents\/openai\.yaml` file is Skill metadata[\s\S]*?`Agents=0`[\s\S]*?rerun whenever Claude Code\s+is upgraded/,
-  );
-  assert.match(
-    evidence,
-    /During this 2\.1\.221 evidence renewal[\s\S]*?current official plugin reference[\s\S]*?canonical `skills\/` discovery plus the same twelve[\s\S]*?root\s+`SKILL\.md`[\s\S]*?`commands\/`[\s\S]*?`agents\/`[\s\S]*?`workflows\/`[\s\S]*?`output-styles\/`[\s\S]*?`themes\/`[\s\S]*?`hooks\/`[\s\S]*?`\.mcp\.json`[\s\S]*?`\.lsp\.json`[\s\S]*?`monitors\/`[\s\S]*?`bin\/`[\s\S]*?`settings\.json`[\s\S]*?installation observation itself does not establish that documentation-wide\s+completeness claim/,
-  );
-  assert.match(evidence, /temporary directory\s+was removed/);
-  assert.match(
-    evidence,
-    /None of the monitored real Claude registry, catalog, target-cache, settings, or\s+credential targets changed[\s\S]*?two conservative candidate paths also remained\s+absent/,
-  );
-  assert.match(
-    evidence,
-    /Claude Code 2\.1\.221 did not create\s+`<isolated>\/plugins\/marketplaces\/firstdraft-skills`[\s\S]*?`<isolated>\/plugins\/data\/firstdraft-firstdraft-skills`[\s\S]*?`targetMarketplace` and `targetData` are conservative\s+candidate-path monitors[\s\S]*?not\s+confirmed current CLI storage layouts[\s\S]*?absence is not load-bearing\s+isolation evidence/,
-  );
-  assert.doesNotMatch(
-    evidence,
-    /No marketplace or plugin was added to the operator's real Claude configuration/,
-  );
-  assert.match(evidence, /did not\s+publish or release the plugin/);
-  assert.doesNotMatch(evidence, /\b[0-9a-f]{40}\b/);
-  const documentedFileRows = [
-    ...evidence.matchAll(/^\| `([^`]+)` \| ([\d,]+) \|$/gm),
-  ].map((match) => [
-    match[1],
-    Number.parseInt(match[2].replaceAll(",", ""), 10),
-  ]);
-  assert.deepEqual(
-    documentedFileRows,
-    observation.installedPlugin.files.map((file) => [file.path, file.bytes]),
-  );
-  const documentedTotal = evidence.match(
-    /^\| \*\*Total\*\* \| \*\*([\d,]+)\*\* \|$/m,
-  );
-  assert(documentedTotal, "packaging evidence omits the byte total");
-  assert.equal(
-    Number.parseInt(documentedTotal[1].replaceAll(",", ""), 10),
-    observation.installedPlugin.totalBytes,
+    packageSources.some((file) => path.basename(file) === "SKILL.md"),
+    false,
+    "the installable package must not commit a second editable Skill copy",
   );
 
-  const smokeScript = path.join(
-    repository,
-    "script",
-    "check-claude-plugin-install.mjs",
-  );
-  assert((await stat(smokeScript)).isFile());
-  const syntaxCheck = spawnSync(process.execPath, ["--check", smokeScript], {
-    cwd: repository,
-    encoding: "utf8",
-  });
-  assert.equal(syntaxCheck.status, 0, syntaxCheck.stderr);
-  const unsupportedSmoke = spawnSync(process.execPath, [smokeScript], {
-    cwd: repository,
-    encoding: "utf8",
-    env: {},
-  });
-  assert.notEqual(unsupportedSmoke.status, 0);
+  const packageReadme = await readFile(path.join(repository, "README.md"), "utf8");
   assert.match(
-    unsupportedSmoke.stderr,
-    /local Claude Code install smoke does not support the remote-pinned git-subdir plugin source[\s\S]*?qualify the immutable candidate tag and its pinned remote source with the reviewed release harness/,
-  );
-  const smokeSource = await readFile(smokeScript, "utf8");
-  const remoteSourcePrecondition = smokeSource.indexOf(
-    "assertLocalInstallSmokeSupported(installSmokeMarketplace)",
-  );
-  const defaultStateLocationPrecondition = smokeSource.indexOf(
-    "assertDefaultClaudeStateLocations(process.env)",
-  );
-  const claudeResolution = smokeSource.indexOf(
-    'const claude = resolveNativeExecutable(process.env.CLAUDE_BIN ?? "claude")',
-  );
-  const realStateSnapshot = smokeSource.indexOf(
-    "const realStateBefore = realClaudeStateSnapshot()",
-  );
-  assert(
-    remoteSourcePrecondition >= 0 &&
-      remoteSourcePrecondition < defaultStateLocationPrecondition &&
-      defaultStateLocationPrecondition < claudeResolution &&
-      claudeResolution < realStateSnapshot,
-    "remote-source and real-state preconditions must run before Claude resolution and state inspection",
-  );
-  assert.doesNotMatch(
-    smokeSource,
-    /process\.env\.(?:CLAUDE_CONFIG_DIR|CLAUDE_CODE_PLUGIN_CACHE_DIR)\s*\?\?/,
-  );
-  const versionRead = smokeSource.indexOf(
-    'runPluginCommand(claude, ["--version"], commandOptions)',
-  );
-  const marketplaceValidation = smokeSource.indexOf(
-    "const marketplaceValidationArguments = [",
-  );
-  const marketplaceValidationEvidence = smokeSource.indexOf(
-    "const marketplaceValidation = observedManifestValidation({",
-  );
-  const previewValidationEvidence = smokeSource.indexOf(
-    "const previewValidation = observedManifestValidation({",
-  );
-  const marketplaceAdd = smokeSource.indexOf(
-    '["plugin", "marketplace", "add", repository, "--scope", "user"]',
-  );
-  const marketplaceGuard = smokeSource.indexOf(
-    'assertRealStateUnchanged("after isolated marketplace add")',
-  );
-  const isolatedMarketplaceTreeCheck = smokeSource.indexOf(
-    '"isolated directory marketplace unexpectedly created a persistent tree"',
+    packageReadme,
+    /Packing copies the canonical `skills\/create-full-stack-app` directory/,
   );
   assert.match(
-    smokeSource,
-    /pathEntryExists\(isolatedMarketplaceTree\)[\s\S]*?pathEntryExists\(isolatedPluginData\)/,
-  );
-  const pluginInstall = smokeSource.indexOf(
-    '["plugin", "install", `${pluginName}@${marketplaceName}`, "--scope", "user"]',
-  );
-  const pluginGuard = smokeSource.indexOf(
-    'assertRealStateUnchanged("after isolated plugin install")',
-  );
-  assert(
-    versionRead >= 0 &&
-      versionRead < marketplaceValidation &&
-      marketplaceValidation < marketplaceValidationEvidence &&
-      marketplaceValidationEvidence < previewValidationEvidence &&
-      previewValidationEvidence < marketplaceAdd &&
-      marketplaceAdd < isolatedMarketplaceTreeCheck &&
-      isolatedMarketplaceTreeCheck < marketplaceGuard &&
-      marketplaceGuard < pluginInstall &&
-      pluginInstall < pluginGuard,
-    "the real-state guard must run between isolated mutations and after install",
+    packageReadme,
+    /plugin-root `bin\/` directory are added to the Bash tool's `PATH`/,
   );
   assert.match(
-    smokeSource,
-    /claude plugin uninstall firstdraft@firstdraft-skills --scope user[\s\S]*?claude plugin marketplace remove firstdraft-skills --scope user/,
+    packageReadme,
+    /claude plugin marketplace add firstdraft\/skills[\s\S]*?claude plugin install firstdraft@firstdraft-skills/,
   );
-  assert.match(
-    smokeSource,
-    /resolvedStateTargetDiagnostics\(changedRealState, realStateTargets\)\.join\(", "\)/,
+  const vendoredSmoke = await readFile(
+    path.join(repository, "evidence", "2026-08-05-claude-plugin-vendored-cli-smoke.md"),
+    "utf8",
   );
-  assert.match(
-    smokeSource,
-    /assertMatchesCommittedObservation\(observation\)[\s\S]*?reviewedPackagingObservation\(current\)[\s\S]*?reviewedPackagingObservation\(committed\)[\s\S]*?review current discovery and isolation behavior/,
-  );
-  const packageDocument = JSON.parse(
-    await readFile(path.join(repository, "package.json"), "utf8"),
-  );
-  assert.equal(
-    packageDocument.scripts["check:claude-plugin-install"],
-    "node script/check-claude-plugin-install.mjs",
-  );
-  assert.equal(
-    packageDocument.scripts["record:claude-plugin-install"],
-    "node script/check-claude-plugin-install.mjs --observation-output " +
-      "evidence/claude-code-plugin-install-observation.json",
-  );
+  assert.match(vendoredSmoke, /Claude Code 2\.1\.222/);
+  assert.match(vendoredSmoke, /printing exactly `0\.1\.0-alpha\.2`/);
+  assert.match(vendoredSmoke, /did not materialize its dependency/);
+  assert.doesNotMatch(vendoredSmoke, /(?:\/Users\/|\/home\/|[A-Za-z]:\\)/);
 });
 
 test("repository inventory traverses .git directories and rejects unsafe .git entries", async () => {
@@ -1295,6 +705,10 @@ test("CI checks the exact modular CLI contract", async () => {
     path.join(repository, ".github", "workflows", "ci.yml"),
     "utf8",
   );
+  const publishWorkflow = await readFile(
+    path.join(repository, ".github", "workflows", "publish.yml"),
+    "utf8",
+  );
   const contractCheck = await readFile(
     path.join(repository, "script", "check-cli-contract.mjs"),
     "utf8",
@@ -1309,6 +723,18 @@ test("CI checks the exact modular CLI contract", async () => {
       `repository: firstdraft/cli\\s+ref: main\\s+fetch-depth: 0`,
     ),
   );
+  assert.equal(
+    [...publishWorkflow.matchAll(/[0-9a-f]{40}/g)].filter(
+      ([revision]) => revision === cliContractBaseline,
+    ).length,
+    4,
+  );
+  assert.doesNotMatch(
+    publishWorkflow
+      .replace(/^.*uses:\s+\S+@[0-9a-f]{40}.*$/gm, "")
+      .replaceAll(cliContractBaseline, ""),
+    /\b[0-9a-f]{40}\b/,
+  );
   assert.match(
     workflow,
     new RegExp(
@@ -1322,6 +748,10 @@ test("CI checks the exact modular CLI contract", async () => {
   assert.match(
     workflow,
     /node script\/check-cli-contract\.mjs tmp\/firstdraft-cli/,
+  );
+  assert.match(
+    workflow,
+    /node script\/check-claude-plugin-package\.mjs --cli-root tmp\/firstdraft-cli/,
   );
   assert(contractConfig.includes(cliContractBaseline));
   assert(contractConfig.includes(cliContractRuntimeDigest));

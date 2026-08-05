@@ -35,6 +35,7 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor f55edffc9e88924f9a4c95f41c4d0bc9b72422f8 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach f55edffc9e88924f9a4c95f41c4d0bc9b72422f8
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78
       - run: node script/check-cli-contract.mjs tmp/firstdraft-cli
+      - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli

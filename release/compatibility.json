@@ -1,10 +1,10 @@
 {
   "format": "firstdraft.release-compatibility/1",
   "component": "skills",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "plugin_source": {
-    "git_sha": "8ffbd9688f39118ddeeb48a3da7e5bc309b7be5e",
-    "path": "skills/create-full-stack-app"
+    "package": "@firstdraft.com/claude-code",
+    "tarball_sha256": "2dccdc0a635557aad8cd9c520685f25eaa8caaa09750f533d797103636ad9261"
   },
   "requires": {
     "api_contract": [

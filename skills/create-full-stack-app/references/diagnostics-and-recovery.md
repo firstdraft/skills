@@ -5,8 +5,8 @@ Handled leaf-command failures write exactly one JSON object to standard error. B
 structured fields rather than the human-readable `detail` or the broad process exit status.
 
 The reviewed CLI contract in this stack is revision
-`f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, with JavaScript-source runtime digest
-`9e5a4bd0f16f49ab2e17c04f7defc59366f8fa073f772b310d8f684177890eab`. Its source package identifies itself as
+`1c5f44bf5f905b45931ec2c280d71d69b0d0ac78`, with JavaScript-source runtime digest
+`0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`. Its source package identifies itself as
 `@firstdraft.com/cli@0.1.0-alpha.2`, but remains unpublished. Check the command surface rather than assuming the
 version alone establishes compatibility.
 
@@ -123,6 +123,7 @@ tree.
 | Commands | `error` | Recovery meaning |
 | --- | --- | --- |
 | Any leaf command | `invalid_arguments` | Syntax failed before the requested action. Read that command's help. |
+| Plugin adapter | `plugin_configuration_incomplete` | Configure the missing API URL through Claude Code's plugin configuration prompt. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `authentication_required` | Configure the token outside the conversation. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |

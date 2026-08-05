@@ -20,8 +20,10 @@ export function isSemanticVersion(value) {
 
 export function assertSkillsReleaseCompatibility({
   compatibility,
+  installableManifest,
   marketplace,
   packageDocument,
+  packageTemplate,
   previewManifest,
 }) {
   assertExactKeys(
@@ -37,17 +39,17 @@ export function assertSkillsReleaseCompatibility({
   assertSemanticVersion(compatibility.version, "Skills compatibility version");
   assertExactKeys(
     compatibility.plugin_source,
-    ["git_sha", "path"],
+    ["package", "tarball_sha256"],
     "plugin source identity",
   );
-  assert.match(
-    compatibility.plugin_source.git_sha,
-    /^[0-9a-f]{40}$/,
-    "plugin source identity must use a full lowercase Git SHA",
-  );
   assert.equal(
-    compatibility.plugin_source.path,
-    "skills/create-full-stack-app",
+    compatibility.plugin_source.package,
+    "@firstdraft.com/claude-code",
+  );
+  assert.match(
+    compatibility.plugin_source.tarball_sha256,
+    /^[0-9a-f]{64}$/,
+    "plugin source identity must use a full lowercase SHA-256",
   );
 
   assertExactKeys(
@@ -92,24 +94,34 @@ export function assertSkillsReleaseCompatibility({
   );
   assertExactKeys(
     installablePlugin.source,
-    ["path", "sha", "source", "url"],
+    ["package", "registry", "source", "version"],
     "installable marketplace plugin source",
   );
-  assert.equal(installablePlugin.source.source, "git-subdir");
+  assert.equal(installablePlugin.source.source, "npm");
   assert.equal(
-    installablePlugin.source.url,
-    "https://github.com/firstdraft/skills.git",
+    installablePlugin.source.registry,
+    "https://registry.npmjs.org/",
   );
   assert.equal(
-    compatibility.plugin_source.git_sha,
-    installablePlugin.source.sha,
-    "compatibility source SHA must match the marketplace plugin source",
+    compatibility.plugin_source.package,
+    installablePlugin.source.package,
+    "compatibility package must match the marketplace plugin source",
   );
   assert.equal(
-    compatibility.plugin_source.path,
-    installablePlugin.source.path,
-    "compatibility source path must match the marketplace plugin source",
+    compatibility.version,
+    installablePlugin.source.version,
+    "compatibility version must match the marketplace package source",
   );
+
+  assert.equal(installableManifest.name, installablePlugin.name);
+  assert.equal(installableManifest.version, compatibility.version);
+  assert.deepEqual(installableManifest.skills, [
+    "./skills/create-full-stack-app",
+  ]);
+
+  assert.equal(packageTemplate.name, compatibility.plugin_source.package);
+  assert.equal(packageTemplate.version, compatibility.version);
+  assert.equal(packageTemplate.dependencies, undefined);
 
   assert.equal(previewManifest.name, "firstdraft-preview");
   assert.notEqual(
@@ -129,23 +141,44 @@ export function assertSkillsReleaseCompatibility({
 }
 
 export async function checkSkillsReleaseCompatibility(root = repository) {
-  const [compatibility, marketplace, packageDocument, previewManifest] =
-    await Promise.all([
-      readJson(path.join(root, "release", "compatibility.json")),
-      readJson(path.join(root, ".claude-plugin", "marketplace.json")),
-      readJson(path.join(root, "package.json")),
-      readJson(path.join(root, ".claude-plugin", "plugin.json")),
-    ]);
+  const [
+    compatibility,
+    installableManifest,
+    marketplace,
+    packageDocument,
+    packageTemplate,
+    previewManifest,
+  ] = await Promise.all([
+    readJson(path.join(root, "release", "compatibility.json")),
+    readJson(
+      path.join(
+        root,
+        "packages",
+        "claude-plugin",
+        ".claude-plugin",
+        "plugin.json",
+      ),
+    ),
+    readJson(path.join(root, ".claude-plugin", "marketplace.json")),
+    readJson(path.join(root, "package.json")),
+    readJson(
+      path.join(
+        root,
+        "packages",
+        "claude-plugin",
+        "package.template.json",
+      ),
+    ),
+    readJson(path.join(root, ".claude-plugin", "plugin.json")),
+  ]);
 
   const checked = assertSkillsReleaseCompatibility({
     compatibility,
+    installableManifest,
     marketplace,
     packageDocument,
+    packageTemplate,
     previewManifest,
-  });
-  assertPluginSourceAncestor({
-    gitSha: checked.plugin_source.git_sha,
-    root,
   });
   assertVersionSourceHistory({
     compatibility: checked,
@@ -216,31 +249,6 @@ export function readHistoricalCompatibilities({
         compatibility: JSON.parse(document.stdout),
       };
     });
-}
-
-export function assertPluginSourceAncestor({
-  gitSha,
-  root,
-  spawn = spawnSync,
-}) {
-  const result = spawn(
-    "git",
-    ["merge-base", "--is-ancestor", gitSha, "HEAD"],
-    { cwd: root, encoding: "utf8" },
-  );
-  if (result.status === 1) {
-    assert.fail(
-      `plugin source ${gitSha} is not an ancestor of catalog HEAD; ` +
-        "the pin or catalog checkout is wrong",
-    );
-  }
-  assert.equal(
-    result.status,
-    0,
-    "could not verify plugin source ancestry: " +
-      [result.error?.message, result.stderr].filter(Boolean).join("; ") +
-      "; fetch full unshallowed history containing the pinned commit",
-  );
 }
 
 function assertGitSucceeded(result, message) {

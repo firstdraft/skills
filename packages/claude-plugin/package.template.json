@@ -1,0 +1,27 @@
+{
+  "name": "@firstdraft.com/claude-code",
+  "version": "0.1.0-alpha.2",
+  "description": "First Draft Foundation Plan authoring for Claude Code",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "firstdraft": "bin/firstdraft"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/firstdraft/skills.git"
+  },
+  "homepage": "https://github.com/firstdraft/skills#readme",
+  "bugs": {
+    "url": "https://github.com/firstdraft/skills/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
+  }
+}

@@ -5,7 +5,6 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
-  assertPluginSourceAncestor,
   assertSkillsReleaseCompatibility,
   assertVersionSourceHistory,
   checkSkillsReleaseCompatibility,
@@ -25,10 +24,11 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.1.0-alpha.1",
+    version: "0.1.0-alpha.2",
     plugin_source: {
-      git_sha: "8ffbd9688f39118ddeeb48a3da7e5bc309b7be5e",
-      path: "skills/create-full-stack-app",
+      package: "@firstdraft.com/claude-code",
+      tarball_sha256:
+        "2dccdc0a635557aad8cd9c520685f25eaa8caaa09750f533d797103636ad9261",
     },
     requires: {
       api_contract: [">= 0.1.0", "< 0.2.0"],
@@ -62,17 +62,17 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withSourceDrift = structuredClone(documents);
-  withSourceDrift.marketplace.plugins[0].source.sha = "0".repeat(40);
+  withSourceDrift.marketplace.plugins[0].source.package = "@other/plugin";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withSourceDrift),
-    /source SHA must match/,
+    /package must match/,
   );
 
-  const withShortSourceIdentity = structuredClone(documents);
-  withShortSourceIdentity.compatibility.plugin_source.git_sha = "8ffbd96";
+  const withShortDigest = structuredClone(documents);
+  withShortDigest.compatibility.plugin_source.tarball_sha256 = "abc123";
   assert.throws(
-    () => assertSkillsReleaseCompatibility(withShortSourceIdentity),
-    /full lowercase Git SHA/,
+    () => assertSkillsReleaseCompatibility(withShortDigest),
+    /full lowercase SHA-256/,
   );
 });
 
@@ -85,51 +85,13 @@ test("release compatibility uses strict semantic versions", () => {
   }
 });
 
-test("plugin source must be an ancestor of the catalog checkout", () => {
-  let invocation;
-  assert.doesNotThrow(() =>
-    assertPluginSourceAncestor({
-      gitSha: "1".repeat(40),
-      root: "/catalog",
-      spawn(...arguments_) {
-        invocation = arguments_;
-        return { status: 0, stderr: "" };
-      },
-    }),
-  );
-  assert.deepEqual(invocation, [
-    "git",
-    ["merge-base", "--is-ancestor", "1".repeat(40), "HEAD"],
-    { cwd: "/catalog", encoding: "utf8" },
-  ]);
-
-  assert.throws(
-    () =>
-      assertPluginSourceAncestor({
-        gitSha: "2".repeat(40),
-        root: "/catalog",
-        spawn: () => ({ status: 1, stderr: "" }),
-      }),
-    /is not an ancestor of catalog HEAD.*pin or catalog checkout is wrong/,
-  );
-  assert.throws(
-    () =>
-      assertPluginSourceAncestor({
-        gitSha: "3".repeat(40),
-        root: "/catalog",
-        spawn: () => ({ status: 128, stderr: "missing commit" }),
-      }),
-    /could not verify plugin source ancestry: missing commit.*full unshallowed history/,
-  );
-});
-
 test("one Skills version maps permanently to one plugin source", () => {
   const current = {
     component: "skills",
     version: "0.1.0-alpha.1",
     plugin_source: {
-      git_sha: "1".repeat(40),
-      path: "skills/create-full-stack-app",
+      package: "@firstdraft.com/claude-code",
+      tarball_sha256: "1".repeat(64),
     },
   };
   assert.doesNotThrow(() =>
@@ -147,7 +109,7 @@ test("one Skills version maps permanently to one plugin source", () => {
             version: "0.1.0-alpha.2",
             plugin_source: {
               ...current.plugin_source,
-              git_sha: "4".repeat(40),
+              tarball_sha256: "4".repeat(64),
             },
           },
         },
@@ -166,7 +128,7 @@ test("one Skills version maps permanently to one plugin source", () => {
               ...structuredClone(current),
               plugin_source: {
                 ...current.plugin_source,
-                git_sha: "6".repeat(40),
+                tarball_sha256: "6".repeat(64),
               },
             },
           },
@@ -192,8 +154,8 @@ test("release history is read from every committed ref", () => {
           component: "skills",
           version: "0.1.0-alpha.1",
           plugin_source: {
-            git_sha: "8".repeat(40),
-            path: "skills/create-full-stack-app",
+            package: "@firstdraft.com/claude-code",
+            tarball_sha256: "8".repeat(64),
           },
         }),
       };
@@ -223,7 +185,10 @@ test("release history is read from every committed ref", () => {
   ]);
   assert.equal(historical.length, 1);
   assert.equal(historical[0].revision, "7".repeat(40));
-  assert.equal(historical[0].compatibility.plugin_source.git_sha, "8".repeat(40));
+  assert.equal(
+    historical[0].compatibility.plugin_source.tarball_sha256,
+    "8".repeat(64),
+  );
 });
 
 test("release operator and agent instructions track the candidate", async () => {
@@ -235,50 +200,61 @@ test("release operator and agent instructions track the candidate", async () => 
   const candidate = marketplace.plugins.find(({ name }) => name === "firstdraft");
 
   assert(releasing.includes(`version is \`${candidate.version}\``));
-  assert(releasing.includes(candidate.source.sha));
-  assert(
-    releasing.includes(
-      `marketplace-v${candidate.version}-candidate.1`,
-    ),
+  assert(releasing.includes(candidate.source.package));
+  assert(releasing.includes("claude-v$package_version"));
+  assert.match(
+    releasing,
+    /One marketplace SemVer maps\s+forever to exactly one package tarball/,
   );
   assert.match(
     releasing,
-    /One marketplace SemVer maps forever to exactly one source SHA/,
+    /Publishing and catalog promotion require new,[\s\S]*?explicit authorization/,
   );
   assert.match(
     releasing,
-    /block force-push and deletion of `stable`[\s\S]*?restrict creation and updates of `stable`[\s\S]*?block update and deletion for `marketplace-v\*-candidate\.\*` tags[\s\S]*?ordinary `main` integration unable to advance the distributable ref/,
+    /reconcile its registry identity read-only/,
   );
   assert.match(
     releasing,
-    /Verify remote reachability read-only before release/,
-  );
-  assert.match(
-    releasing,
-    /Release corrections are forward-only[\s\S]*?Never rewrite a released version's source[\s\S]*?force\s+`stable`[\s\S]*?rewind it/,
+    /Release corrections are forward-only and use a new SemVer/,
   );
 
   assert.match(
     agents,
-    /Never reuse a marketplace SemVer with a different source SHA/,
+    /Never reuse a published npm version or marketplace SemVer with different package bytes/,
   );
   assert.match(
     agents,
-    /verify read-only that rulesets block `stable` force-push\/deletion[\s\S]*?candidate tags immutable/,
+    /Reconcile an ambiguous publication or push outcome read-only before retrying/,
   );
-  assert.match(agents, /move\s+`stable` forward only after qualification/);
+  assert.match(agents, /serialized through one[\s\S]*?operator/);
 });
 
 async function releaseDocuments() {
-  const [compatibility, marketplace, packageDocument, previewManifest] =
-    await Promise.all([
-      readJson("release/compatibility.json"),
-      readJson(".claude-plugin/marketplace.json"),
-      readJson("package.json"),
-      readJson(".claude-plugin/plugin.json"),
-    ]);
+  const [
+    compatibility,
+    installableManifest,
+    marketplace,
+    packageDocument,
+    packageTemplate,
+    previewManifest,
+  ] = await Promise.all([
+    readJson("release/compatibility.json"),
+    readJson("packages/claude-plugin/.claude-plugin/plugin.json"),
+    readJson(".claude-plugin/marketplace.json"),
+    readJson("package.json"),
+    readJson("packages/claude-plugin/package.template.json"),
+    readJson(".claude-plugin/plugin.json"),
+  ]);
 
-  return { compatibility, marketplace, packageDocument, previewManifest };
+  return {
+    compatibility,
+    installableManifest,
+    marketplace,
+    packageDocument,
+    packageTemplate,
+    previewManifest,
+  };
 }
 
 async function readJson(relativePath) {
