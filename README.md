@@ -113,19 +113,40 @@ claude plugin validate --strict .claude-plugin/plugin.json
 The root preview manifest uses the distinct name `firstdraft-preview` and carries a preview-only `0.1.0` version
 because direct strict manifest validation requires a semantic version. The separate name cannot collide with an
 installed `firstdraft@firstdraft-skills` plugin in the same session. That manifest is excluded from the marketplace
-plugin source and does not version an ordinary installation. The source-only marketplace plugin deliberately omits
-a semantic version while it is experimental.
+plugin source and does not version an ordinary installation. The installable marketplace entry independently owns
+the plugin release version, currently `0.1.0-alpha.1`; the checkout preview's separate `0.1.0` does not govern that
+installation. The private root npm package and its `0.0.0` version are repository test tooling, not plugin identity.
+The marketplace uses the officially documented
+[`git-subdir` `url`, `path`, `ref`, and `sha` source shape](https://code.claude.com/docs/en/plugin-marketplaces#plugin-sources)
+and pins a full commit SHA. One marketplace SemVer maps permanently to one source SHA: a failed or revised candidate
+must receive a new prerelease version and immutable candidate tag, never reuse an earlier version with new bytes.
+The compatibility check searches the committed compatibility documents reachable through every local Git ref and
+rejects a reused version whose source identity differs. Release checkouts must therefore fetch candidate tags as
+well as full branch history. Later `main` changes remain unpromoted until an explicit catalog candidate advances
+both the source SHA and SemVer.
+The distributable
+marketplace channel is the dedicated `stable` ref; `main` holds candidates, and moving `stable` is a separate
+approval-gated release mutation. Before that move, qualification uses a retained immutable candidate tag at the
+exact catalog commit so the Git-hosted catalog and its pinned source are both exercised. No `stable` ref is created
+by this candidate; initial channel creation remains part of a future approved release.
 The marketplace entry's `"strict": false` selects the marketplace entry as the entire plugin definition. The
 [official marketplace strict-mode documentation](https://code.claude.com/docs/en/plugin-marketplaces#strict-mode)
 says this mode permits a raw source directory without its own `plugin.json`; a source manifest that also declares
 components would conflict with the marketplace definition. It does not relax validation. Separately, the
 [official plugin validation reference](https://code.claude.com/docs/en/plugins-reference#unrecognized-fields) says
 `claude plugin validate --strict` treats validation warnings, including unrecognized fields, as errors for CI. Both
-strict validation commands above remain release gates.
+strict validation commands above remain manual release gates, but a successful local invocation is not durable
+qualification of a Git-hosted catalog or installation.
+The `git-subdir` field set and the `owner/repo@ref` add form used below were rechecked on 2026-08-05 against those
+two official marketplace sections. Recheck both claims when renewing the supported Claude Code floor or preparing
+a release; this dated documentation check is not installation evidence.
 The [official marketplace documentation](https://code.claude.com/docs/en/plugin-marketplaces#version-resolution-and-release-channels)
-says a Git-hosted marketplace falls back to the commit SHA when a plugin version is omitted. That is the documented
-expectation here, not observed Git-hosted installation evidence. Add a marketplace semantic version only when plugin
-changes follow an explicit release-and-version-bump cadence.
+says an explicitly versioned plugin remains cached until that version changes. Every revised candidate therefore
+requires a deliberate, never-reused SemVer bump. Exact Git SHAs still identify coordinated release candidates;
+the version only participates in compatibility eligibility and never authorizes release. This remains packaging
+policy, not observed Git-hosted installation evidence. This explicitly versioned candidate has not completed a
+fresh-model rehearsal or an isolated marketplace installation; the dated observations remain evidence only for
+their pinned earlier revisions and do not qualify this candidate.
 
 The documented local-development path starts one Claude Code session from the checkout without registering a
 marketplace or installing the plugin:
@@ -158,106 +179,47 @@ local development and plugin Skills use the `plugin-name:skill-name` namespace. 
 tool identifier above. Interactive `/firstdraft-preview:create-full-stack-app` invocation and invocation through an
 installed `firstdraft@firstdraft-skills` marketplace plugin remain unobserved.
 
-Before release, when Claude Code is available, manually exercise the real add-and-install path with child state
-redirected away from the user's Claude configuration and plugin cache and with the scoped monitoring described
-below:
-
-Close every other Claude Code session before running the smoke. Claude Code sessions share plugin registries and
-caches; a concurrent legitimate update will change a monitored real-state path and correctly make this check fail.
-
-The dated evidence's `~/.claude.json` exclusion and default real-state targets require `CLAUDE_CONFIG_DIR` and
-`CLAUDE_CODE_PLUGIN_CACHE_DIR` to be unset in the parent shell. Both smoke commands fail before resolving Claude,
-inspecting real Claude state, or creating temporary state if either override is present. The diagnostic names only
-the override variables, never their values.
-
-```sh
-npm run check:claude-plugin-install
-```
-
-That check does not write repository evidence. To renew the machine-readable observation after intentionally
-reviewing a Claude Code upgrade or packaging change, run:
-
-```sh
-npm run record:claude-plugin-install
-```
-
-The recording command regenerates only the machine-readable JSON. Its UTC date and observed Claude Code version are
-deliberate review pins. If either changes, rename the dated Markdown evidence file to the new observation date,
-refresh its title, CLI version, transcript, inventory, digest table, state-presence bullets, and real-state monitor
-summary line, dated default-component-location recheck, and model-session conclusion against any newer evaluation
-evidence; update the evidence path and the expected date/version pins in `test/repository.test.mjs`; then rerun the
-repository checks and both strict validations. Recheck the checkout-root default-component allowlist against the new
-version's documented discovery locations as part of that review. A changed pin is a request to re-review current
-component discovery and isolation behavior, not a mechanical update.
-The smoke's expected live component inventory is deliberately hardcoded. If a reviewed Claude Code discovery change
-alters it, update the assertion in `script/check-claude-plugin-install.mjs`, its repository-test pins, the generated
-observation, and the dated prose together. Rerunning the recording command alone cannot renew that expectation.
-
-The smoke runs both strict manifest validations through the native CLI before any mutation and derives each recorded
-validation result from that exact invocation's captured successful validator output. It then constructs a
-minimal child environment containing only isolated Claude, home, temporary, and XDG state;
-traffic and updater controls; and a guard-only PATH. It does not inherit credentials, tokens, API keys, SSH agent,
-proxy, Git, Node, dynamic-loader, or unrelated variables. The PATH guards block and record common Node
-package-manager invocations. Every child command runs from a newly created isolated working directory rather than
-the checkout. Because that guard-only PATH cannot safely support arbitrary interpreter lookup, the smoke requires
-`CLAUDE_BIN` or the parent PATH to resolve to a regular, executable native Claude Code binary and rejects shebang
-wrappers. Before and after, it recursively fingerprints content and metadata beneath the real target plugin's cache,
-data, and marketplace paths while monitoring the real Claude registries, settings, and credential metadata. It
-byte-compares the installed cache with the eight canonical Skill files, checks the live Claude component inventory
-is one combined Skills/Commands entry and zero Agents, Hooks, MCP servers, and LSP servers, and removes all temporary
-state before returning. Claude Code reports Skills and Commands in one combined Skills count. The smoke therefore
-derives Commands absence separately from the marketplace's lack of a Commands declaration and the exact installed
-file set; it does not present Commands as a live count. The PATH guards detect ordinary package-manager lookup; they
-are not a claim that an executable invoked by an absolute path is impossible.
-
-The portable `agents/openai.yaml` file is Skill metadata, not a Claude Code Agent definition. The
-[official plugin reference](https://code.claude.com/docs/en/plugins-reference) currently discovers plugin Agents
-from Markdown definitions under `agents/` or explicit manifest paths. The observed `Agents=0` result therefore
-depends on current Claude Code discovery behavior and must be rechecked whenever the CLI version changes.
-
-Real-state monitoring is deliberately scoped rather than recursive over all Claude state. It covers content and
-metadata for the plugin registries and catalog, the `firstdraft-skills` cache, data, and marketplace trees, and
-metadata for settings and credentials. It excludes the high-churn `~/.claude.json`, plugin maintenance markers,
-session history, and unrelated Claude configuration; the smoke makes no whole-configuration monitoring claim.
-Claude Code 2.1.221 did not create `plugins/marketplaces/firstdraft-skills` for the isolated local-directory
-registration or `plugins/data/firstdraft-firstdraft-skills` during its isolated install. `targetMarketplace` and
-`targetData` are conservative candidate-path monitors for the unobserved Git-hosted installation, not confirmed
-current CLI storage layouts; their absence is not load-bearing isolation evidence.
-It refuses to make an unchanged-state claim if any monitored target or nested entry is a symbolic link.
-The smoke reports which named targets were present and absent and refuses to make an unchanged-state claim unless at
-least one core registry target is present. It checks the real targets immediately after marketplace registration
-and again after plugin installation, aborting before the second mutation if the first escaped isolation. A detected
-escape reports the exact uninstall and marketplace-removal commands for the operator to inspect and run.
-Its diagnostic names every changed monitor together with its resolved absolute filesystem path.
-
-The ordinary repository test owns the exact eight-file allowlist and fails if this documented count, the canonical
-source shape, the checkout-root preview component paths on disk, or the smoke's isolation assignments drift. The
-non-recording isolated smoke also compares its live CLI version, captured strict-validation results, component
-inventory, and installed bytes with the committed observation. Real-state presence is run-local information rather
-than a cross-machine release-gate value: every run independently requires at least one core registry target and
-proves the monitored targets unchanged. Packaging drift fails closed and directs the operator through the explicit
-evidence-renewal review. The dated
+The dated
 [Claude Code plugin install smoke evidence](evidence/2026-08-04-claude-code-plugin-install-smoke.md) and its
-[generated machine-readable observation](evidence/claude-code-plugin-install-observation.json) record the current
-CLI version, per-file sizes and SHA-256 digests, installed tree digest, component inventory, cleanup, and exact
-real-state target presence. Source drift fails with an instruction to rerun the isolated recording command instead
-of treating hand-edited prose as installation evidence.
+[generated machine-readable observation](evidence/claude-code-plugin-install-observation.json) remain bound to the
+eight canonical Skill files at historical revision `b5c3897b240bfa3a9117d1a564d8e6b7d783e993`. Repository tests reconstruct
+those Git objects rather than requiring today's unpromoted source to match them. The report retains the observed
+Claude Code version, file digests, component inventory, cleanup, and scoped real-state result at that historical
+boundary; it does not qualify this remote-pinned catalog.
 
-This isolated install smoke is a manual release check. Ordinary `sh script/check` and hosted CI retain structural
-and syntax assertions but do not assume Claude Code is installed.
+The old local-directory harness cannot exercise the current remote-pinned `git-subdir` source: its isolated child
+PATH intentionally provided no Git, and it compared the cache with the checkout's current subtree. Both
+`npm run check:claude-plugin-install` and `npm run record:claude-plugin-install` now fail before resolving Claude,
+inspecting real state, or creating temporary state with a precise unsupported-source diagnostic. Do not use either
+command to renew or qualify the current candidate.
+
+Git-hosted qualification requires a reviewed successor harness. It must add the exact catalog through the officially
+documented [`owner/repo@ref` form](https://code.claude.com/docs/en/plugin-marketplaces#plugin-marketplace-add) using
+the immutable candidate tag, install the catalog's pinned remote source, confirm the cache directory is exactly the
+candidate SemVer, and byte- and mode-compare the cache with that pinned Git tree. It must retain the catalog SHA,
+source SHA and path, version, command transcript, and scoped host-state and credential-leak observations. Supplying
+Git to the isolated child requires a narrowly scrubbed executable path and a fresh security review; do not inherit
+the operator's general PATH, tokens, SSH agent, or unrelated environment. Close other Claude Code sessions before
+that run so legitimate concurrent registry changes do not invalidate the isolation result.
+
+Ordinary `sh script/check` and hosted CI retain structural, historical-evidence, compatibility, and syntax
+assertions. They neither install the plugin nor claim remote reachability or qualification.
 
 Once this packaging is merged and the release gates below are satisfied, the intended ordinary installation from
 GitHub is:
 
 ```sh
-CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1 claude plugin marketplace add firstdraft/skills
+CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1 claude plugin marketplace add firstdraft/skills@stable
 claude plugin install firstdraft@firstdraft-skills
 ```
 
 The [official environment-variable reference](https://code.claude.com/docs/en/env-vars) documents
 `CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` for cloning GitHub `owner/repo` shorthand over HTTPS rather than SSH. The
 assignment above makes the intended path independent of SSH setup; users with working GitHub SSH configuration may
-omit it. No live GitHub clone has been observed for this package.
+omit it. The official
+[`plugin marketplace add` reference](https://code.claude.com/docs/en/plugin-marketplaces#plugin-marketplace-add)
+documents `owner/repo@ref`. The `@stable` ref is the intended distributable channel; ordinary installation must not
+track mutable `main`. No live GitHub clone from either ref has been observed for this package.
 
 Do not run those installation commands for ordinary use yet. The required
 `@firstdraft.com/cli@0.1.0-alpha.2` package remains unpublished, and no compatible First Draft staging or live
@@ -266,13 +228,21 @@ execution evidence. Keep using `gh skill preview` when evaluating the portable S
 
 ## Development
 
+Cross-repository compatibility metadata and the approval-gated release process are documented in
+[`RELEASING.md`](RELEASING.md).
+
 The installed Skills contain no executable code or runtime packages. Repository checks use Node.js 22 or newer
 and one locked development dependency for exact JSON Schema validation:
 
 Repository checks require `git` on `PATH` and a real Git checkout with its index and working tree available. A source
 archive, exported tree, or installed plugin cache is insufficient because the preview-boundary checks use the Git
 index for the enumerated checkout-root component locations and inspect those paths plus the complete `skills/`
-subtree on disk.
+subtree on disk. Evidence and compatibility checks also read pinned historical commits and require full,
+unshallowed history containing them. The version-to-source check also reads compatibility documents reachable from
+every local ref, including fetched immutable candidate tags. Hosted CI uses `fetch-depth: 0`. In a local clone,
+fetch tags with `git fetch origin --tags`, then inspect `git rev-parse --is-shallow-repository`; when it returns
+`true`, run `git fetch --unshallow origin` or fetch the required full commits through an approved equivalent before
+running checks.
 
 ```sh
 npm ci --ignore-scripts

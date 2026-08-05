@@ -9,7 +9,13 @@
   "plugins": [
     {
       "name": "firstdraft",
-      "source": "./skills/create-full-stack-app",
+      "version": "0.1.0-alpha.1",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/firstdraft/skills.git",
+        "path": "skills/create-full-stack-app",
+        "sha": "8ffbd9688f39118ddeeb48a3da7e5bc309b7be5e"
+      },
       "strict": false,
       "skills": [
         "./"

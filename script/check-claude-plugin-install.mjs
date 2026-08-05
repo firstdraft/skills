@@ -45,9 +45,16 @@ import {
   stateTargetPresence,
 } from "./plugin-isolation.mjs";
 
+const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const installSmokeMarketplace = JSON.parse(
+  readFileSync(
+    path.join(repository, ".claude-plugin", "marketplace.json"),
+    "utf8",
+  ),
+);
+assertLocalInstallSmokeSupported(installSmokeMarketplace);
 assertDefaultClaudeStateLocations(process.env);
 
-const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const portableSkill = path.join(
   repository,
   "skills",
@@ -553,4 +560,18 @@ function requestedObservationPath(arguments_) {
     "--observation-output requires exactly one path",
   );
   return path.resolve(arguments_[1]);
+}
+
+function assertLocalInstallSmokeSupported(marketplace) {
+  const marketplacePlugin = marketplace.plugins?.find(
+    ({ name }) => name === "firstdraft",
+  );
+  assert(marketplacePlugin, "marketplace plugin entry is missing");
+  assert.equal(
+    typeof marketplacePlugin.source,
+    "string",
+    "the local Claude Code install smoke does not support the remote-pinned " +
+      "git-subdir plugin source; qualify the immutable candidate tag and its " +
+      "pinned remote source with the reviewed release harness",
+  );
 }
