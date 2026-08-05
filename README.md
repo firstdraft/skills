@@ -105,7 +105,7 @@ adapter and the exact packed bytes of `@firstdraft.com/cli@0.1.0-alpha.2`, so in
 Skill and its compatible CLI without requiring Claude Code to install transitive npm dependencies.
 
 The marketplace catalog uses Claude Code's documented `npm` plugin source and pins
-`@firstdraft.com/claude-code@0.1.0-alpha.2`. The installable manifest asks Claude Code for the staging API URL and a
+`@firstdraft.com/claude-code@0.1.0-alpha.3`. The installable manifest asks Claude Code for the staging API URL and a
 sensitive API token. Claude stores sensitive configuration in secure storage and exports plugin options only to
 plugin subprocesses. The adapter maps those options to the CLI's environment without printing them. Users should
 create the token in First Draft's browser UI and enter it in Claude's configuration prompt, never paste it into an
@@ -174,13 +174,13 @@ sh script/check
 ```
 
 The CLI contract check requires a checkout at the exact reviewed revision
-`1c5f44bf5f905b45931ec2c280d71d69b0d0ac78`, whose independently reproduced JavaScript-source runtime digest is
+`e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, whose independently reproduced JavaScript-source runtime digest is
 `0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`:
 
 ```sh
 git -C <path-to-cli-checkout> fetch origin main
-git -C <path-to-cli-checkout> merge-base --is-ancestor 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78 origin/main
-git -C <path-to-cli-checkout> checkout --detach 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78
+git -C <path-to-cli-checkout> merge-base --is-ancestor e53eb38d7e8254e6ba1e660b38c5d32d0314be17 origin/main
+git -C <path-to-cli-checkout> checkout --detach e53eb38d7e8254e6ba1e660b38c5d32d0314be17
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 

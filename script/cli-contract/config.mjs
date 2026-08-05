@@ -1,4 +1,4 @@
-export const cliRevision = "1c5f44bf5f905b45931ec2c280d71d69b0d0ac78";
+export const cliRevision = "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
 export const cliRuntimeSha256 =
   "0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad";
 export const cliPackageName = "@firstdraft.com/cli";

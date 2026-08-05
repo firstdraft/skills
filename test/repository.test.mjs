@@ -72,7 +72,7 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "1c5f44bf5f905b45931ec2c280d71d69b0d0ac78";
+  "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
 const cliContractRuntimeDigest =
   "0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad";
 const historicalCliContractBaseline =
@@ -553,11 +553,11 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.equal(marketplace.name, claudeMarketplaceName);
   assert.equal(marketplace.plugins.length, 1);
   assert.equal(marketplace.plugins[0].name, claudePluginName);
-  assert.equal(marketplace.plugins[0].version, "0.1.0-alpha.2");
+  assert.equal(marketplace.plugins[0].version, "0.1.0-alpha.3");
   assert.deepEqual(marketplace.plugins[0].source, {
     source: "npm",
     package: "@firstdraft.com/claude-code",
-    version: "0.1.0-alpha.2",
+    version: "0.1.0-alpha.3",
     registry: "https://registry.npmjs.org/",
   });
   assert.equal(packageTemplate.dependencies, undefined);

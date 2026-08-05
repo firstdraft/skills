@@ -8,7 +8,7 @@ plugin release, npm publication, or First Draft deployment.
 ## Release identity
 
 The installable `firstdraft@firstdraft-skills` plugin is the public npm package
-`@firstdraft.com/claude-code`. Its current candidate version is `0.1.0-alpha.2`. The marketplace catalog points to
+`@firstdraft.com/claude-code`. Its current candidate version is `0.1.0-alpha.3`. The marketplace catalog points to
 that exact package and version. The checkout-local `firstdraft-preview` manifest and private root
 `@firstdraft/skills@0.0.0` package are test tooling, not release identities.
 
