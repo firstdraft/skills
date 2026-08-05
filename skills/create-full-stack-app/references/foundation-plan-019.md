@@ -64,8 +64,8 @@ not release or execution evidence.
 The bounded local Compilation evidence used reviewed CLI revision
 `121272cd592055354d09a4fe90e55c3ca002770c`, with JavaScript-source runtime digest
 `205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. The current contract fixtures and check use
-reviewed successor revision `f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, with independently reproduced
-JavaScript-source runtime digest `9e5a4bd0f16f49ab2e17c04f7defc59366f8fa073f772b310d8f684177890eab`, as
+reviewed successor revision `1c5f44bf5f905b45931ec2c280d71d69b0d0ac78`, with independently reproduced
+JavaScript-source runtime digest `0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`, as
 contract provenance rather than release or execution evidence. That successor exposes `generate uuid`, `generate
 application-key`, `plan init`, `plan push`, `plan status`, zero-flag `plan compile`, `compilation status`, and
 `compilation download`. It deliberately has no public `plan subject-id`, `plan publish`, or local-start

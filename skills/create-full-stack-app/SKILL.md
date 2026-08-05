@@ -59,13 +59,16 @@ Require these public commands:
 - `plan init`, `plan push`, `plan status`, and zero-flag `plan compile`; and
 - `compilation status` and `compilation download`.
 
-There is no public `plan publish`, `plan subject-id`, or `plan compile --output` contract. Do not install,
-download, or upgrade the unreleased CLI automatically. If a required command is missing, report that capability
-gap rather than approximating it with direct HTTP.
+There is no public `plan publish`, `plan subject-id`, or `plan compile --output` contract. A marketplace installation
+of this Skill supplies its exact compatible CLI dependency. Do not install, download, or upgrade another CLI
+automatically. If a required command is missing or reports a different version, report a plugin installation defect
+and ask the user to reinstall or update the plugin rather than approximating it with direct HTTP.
 
 `.firstdraft/state.json` is private CLI-owned concurrency state. Do not print, paste, commit, or treat it as
-agent-authored Plan content. Let the user configure `FIRSTDRAFT_API_TOKEN` outside the conversation; never ask them
-to paste it or place it on a command line.
+agent-authored Plan content. For an installed plugin, let the user configure the API token through the plugin's
+sensitive configuration prompt; it is authoritative and an ambient `FIRSTDRAFT_API_TOKEN` is deliberately ignored
+when plugin configuration supplies the API URL. `FIRSTDRAFT_API_TOKEN` remains available to a standalone CLI. Never
+ask the user to paste a token or place it on a command line.
 
 ## Initialize or resume the local Plan
 

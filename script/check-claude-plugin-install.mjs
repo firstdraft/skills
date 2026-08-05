@@ -531,9 +531,8 @@ function assertMatchesCommittedObservation(current) {
     reviewedPackagingObservation(current),
     reviewedPackagingObservation(committed),
     "live Claude Code plugin observation differs from committed evidence; " +
-      "review current discovery and isolation behavior, run " +
-      "`npm run record:claude-plugin-install`, rename and refresh the dated " +
-      "evidence, then update the reviewed test pins",
+      "the historical recording path is retired, so use the vendored-package " +
+      "qualification in RELEASING.md for new evidence",
   );
 }
 
@@ -570,8 +569,8 @@ function assertLocalInstallSmokeSupported(marketplace) {
   assert.equal(
     typeof marketplacePlugin.source,
     "string",
-    "the local Claude Code install smoke does not support the remote-pinned " +
-      "git-subdir plugin source; qualify the immutable candidate tag and its " +
-      "pinned remote source with the reviewed release harness",
+    "the historical local Claude Code install smoke does not support the npm " +
+      "plugin source; use the staged-package preflight and then qualify the " +
+      "published package through the public marketplace",
   );
 }

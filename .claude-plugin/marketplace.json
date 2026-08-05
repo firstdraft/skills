@@ -9,17 +9,13 @@
   "plugins": [
     {
       "name": "firstdraft",
-      "version": "0.1.0-alpha.1",
+      "version": "0.1.0-alpha.2",
       "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/firstdraft/skills.git",
-        "path": "skills/create-full-stack-app",
-        "sha": "8ffbd9688f39118ddeeb48a3da7e5bc309b7be5e"
+        "source": "npm",
+        "package": "@firstdraft.com/claude-code",
+        "version": "0.1.0-alpha.2",
+        "registry": "https://registry.npmjs.org/"
       },
-      "strict": false,
-      "skills": [
-        "./"
-      ],
       "displayName": "First Draft",
       "description": "Experimental Foundation Plan authoring and bounded Rails application creation with First Draft",
       "author": {

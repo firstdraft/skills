@@ -11,10 +11,12 @@
   "devDependencies": {
     "ajv": "8.20.0"
   },
+  "overrides": {
+    "fast-uri": "3.1.5"
+  },
   "scripts": {
     "check": "sh script/check",
-    "check:release-compatibility": "node script/check-release-compatibility.mjs",
-    "check:claude-plugin-install": "node script/check-claude-plugin-install.mjs",
-    "record:claude-plugin-install": "node script/check-claude-plugin-install.mjs --observation-output evidence/claude-code-plugin-install-observation.json"
+    "check:claude-plugin-package": "node script/check-claude-plugin-package.mjs",
+    "check:release-compatibility": "node script/check-release-compatibility.mjs"
   }
 }

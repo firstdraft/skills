@@ -5,4 +5,5 @@ repository=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$repository"
 
 node script/check-release-compatibility.mjs
+node script/check-claude-plugin-package.mjs
 node --test 'test/**/*.test.mjs'

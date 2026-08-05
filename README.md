@@ -98,141 +98,65 @@ its full prepared capability boundary.
 
 ### Claude Code plugin preview
 
-The repository also packages a source-only Claude Code plugin named `firstdraft`. Its marketplace entry points only
-at the canonical `skills/create-full-stack-app` directory used by the portable Skill. The observed isolated installed
-plugin cache contained no second copy of the Skill instructions, repository test harness, or runtime dependency
-tree. A marketplace tree is a separate footprint: the smoke did not inventory an isolated marketplace tree, and no
-Git-hosted marketplace tree has been observed. The root manifest exists only for the one-session local preview
-below. From a checkout, validate the marketplace manifest and root preview manifest without installing either one:
+The repository assembles an installable Claude Code plugin named `firstdraft` as the public npm package
+`@firstdraft.com/claude-code`. Packing copies the canonical `skills/create-full-stack-app` directory into a temporary
+staging tree; the generated copy is never edited or committed. The package also includes a small `firstdraft`
+adapter and the exact packed bytes of `@firstdraft.com/cli@0.1.0-alpha.2`, so installing the plugin supplies both the
+Skill and its compatible CLI without requiring Claude Code to install transitive npm dependencies.
+
+The marketplace catalog uses Claude Code's documented `npm` plugin source and pins
+`@firstdraft.com/claude-code@0.1.0-alpha.2`. The installable manifest asks Claude Code for the staging API URL and a
+sensitive API token. Claude stores sensitive configuration in secure storage and exports plugin options only to
+plugin subprocesses. The adapter maps those options to the CLI's environment without printing them. Users should
+create the token in First Draft's browser UI and enter it in Claude's configuration prompt, never paste it into an
+agent conversation or command line. Installed-plugin configuration is authoritative: when it supplies the API URL,
+the adapter deliberately ignores any ambient `FIRSTDRAFT_API_TOKEN` so a credential cannot cross API origins. The
+environment variable remains a standalone-CLI configuration path.
+
+The root `firstdraft-preview` manifest remains a checkout-local development path and has a separate preview-only
+version. From a checkout, validate the marketplace and preview manifests without installing either one:
 
 ```sh
 claude plugin validate --strict .
 claude plugin validate --strict .claude-plugin/plugin.json
 ```
 
-The root preview manifest uses the distinct name `firstdraft-preview` and carries a preview-only `0.1.0` version
-because direct strict manifest validation requires a semantic version. The separate name cannot collide with an
-installed `firstdraft@firstdraft-skills` plugin in the same session. That manifest is excluded from the marketplace
-plugin source and does not version an ordinary installation. The installable marketplace entry independently owns
-the plugin release version, currently `0.1.0-alpha.1`; the checkout preview's separate `0.1.0` does not govern that
-installation. The private root npm package and its `0.0.0` version are repository test tooling, not plugin identity.
-The marketplace uses the officially documented
-[`git-subdir` `url`, `path`, `ref`, and `sha` source shape](https://code.claude.com/docs/en/plugin-marketplaces#plugin-sources)
-and pins a full commit SHA. One marketplace SemVer maps permanently to one source SHA: a failed or revised candidate
-must receive a new prerelease version and immutable candidate tag, never reuse an earlier version with new bytes.
-The compatibility check searches the committed compatibility documents reachable through every local Git ref and
-rejects a reused version whose source identity differs. Release checkouts must therefore fetch candidate tags as
-well as full branch history. Later `main` changes remain unpromoted until an explicit catalog candidate advances
-both the source SHA and SemVer.
-The distributable
-marketplace channel is the dedicated `stable` ref; `main` holds candidates, and moving `stable` is a separate
-approval-gated release mutation. Before that move, qualification uses a retained immutable candidate tag at the
-exact catalog commit so the Git-hosted catalog and its pinned source are both exercised. No `stable` ref is created
-by this candidate; initial channel creation remains part of a future approved release.
-The marketplace entry's `"strict": false` selects the marketplace entry as the entire plugin definition. The
-[official marketplace strict-mode documentation](https://code.claude.com/docs/en/plugin-marketplaces#strict-mode)
-says this mode permits a raw source directory without its own `plugin.json`; a source manifest that also declares
-components would conflict with the marketplace definition. It does not relax validation. Separately, the
-[official plugin validation reference](https://code.claude.com/docs/en/plugins-reference#unrecognized-fields) says
-`claude plugin validate --strict` treats validation warnings, including unrecognized fields, as errors for CI. Both
-strict validation commands above remain manual release gates, but a successful local invocation is not durable
-qualification of a Git-hosted catalog or installation.
-The `git-subdir` field set and the `owner/repo@ref` add form used below were rechecked on 2026-08-05 against those
-two official marketplace sections. Recheck both claims when renewing the supported Claude Code floor or preparing
-a release; this dated documentation check is not installation evidence.
-The [official marketplace documentation](https://code.claude.com/docs/en/plugin-marketplaces#version-resolution-and-release-channels)
-says an explicitly versioned plugin remains cached until that version changes. Every revised candidate therefore
-requires a deliberate, never-reused SemVer bump. Exact Git SHAs still identify coordinated release candidates;
-the version only participates in compatibility eligibility and never authorizes release. This remains packaging
-policy, not observed Git-hosted installation evidence. This explicitly versioned candidate has not completed a
-fresh-model rehearsal or an isolated marketplace installation; the dated observations remain evidence only for
-their pinned earlier revisions and do not qualify this candidate.
+The official [marketplace documentation](https://code.claude.com/docs/en/plugin-marketplaces#plugin-sources)
+documents npm plugin sources and notes that installed plugins are copied into Claude Code's cache. The official
+[plugin reference](https://code.claude.com/docs/en/plugins-reference#file-locations-reference) documents that
+executables in a plugin-root `bin/` directory are added to the Bash tool's `PATH`. Its
+[user-configuration section](https://code.claude.com/docs/en/plugins-reference#user-configuration) documents
+sensitive `userConfig` values and their `CLAUDE_PLUGIN_OPTION_*` subprocess environment variables. These claims
+were rechecked on 2026-08-05; public installation remains unobserved until publication.
 
-The documented local-development path starts one Claude Code session from the checkout without registering a
-marketplace or installing the plugin:
+For checkout-local development, start one Claude Code session without registering a marketplace:
 
 ```sh
 claude --plugin-dir .
 ```
 
-The 2026-08-04 Home Inventory evaluation observed a headless Claude Code 2.1.221 session load the
-`Skill(firstdraft-preview:create-full-stack-app)` identifier from candidate revision
-`b5c3897b240bfa3a9117d1a564d8e6b7d783e993` through an explicit `--plugin-dir <checkout>` without marketplace
-registration or installation. It did not exercise the interactive command above. The Movie Catalog process also
-received the candidate through `--plugin-dir`, but its retained evidence does not record Skill discovery or
-invocation. Neither run establishes a model-backed session using the separately marketplace-installed plugin.
-The isolated 2026-08-04 installation established the Claude Code 2.1.221 runtime observation. As a separate renewal
-step, the current official plugin reference was rechecked and the allowlist below was pinned to its documented
-locations.
-
-Under that documented preview model, the whole checkout is the preview plugin root. Repository checks therefore
-forbid every other default component location documented for Claude Code 2.1.221: root `SKILL.md`, `agents/`, `bin/`,
-`commands/`, `hooks/`, `monitors/`, `output-styles/`, `themes/`, `workflows/`, `settings.json`, `.mcp.json`, and
-`.lsp.json`. They also require exactly one canonical subtree beneath `skills/`. Checks examine Git-index entries at
-those enumerated checkout-root component locations, verify those locations on disk, and recursively inventory the
-complete on-disk `skills/` subtree, including untracked entries there. That coverage prevents the preview from
-silently growing a component outside the narrow marketplace source without claiming a scan of every working-tree
-path.
-
-The [official plugin documentation](https://code.claude.com/docs/en/plugins) says `--plugin-dir` loads a plugin for
-local development and plugin Skills use the `plugin-name:skill-name` namespace. The Home run observed the headless
-tool identifier above. Interactive `/firstdraft-preview:create-full-stack-app` invocation and invocation through an
-installed `firstdraft@firstdraft-skills` marketplace plugin remain unobserved.
-
-The dated
-[Claude Code plugin install smoke evidence](evidence/2026-08-04-claude-code-plugin-install-smoke.md) and its
-[generated machine-readable observation](evidence/claude-code-plugin-install-observation.json) remain bound to the
-eight canonical Skill files at historical revision `b5c3897b240bfa3a9117d1a564d8e6b7d783e993`. Repository tests reconstruct
-those Git objects rather than requiring today's unpromoted source to match them. The report retains the observed
-Claude Code version, file digests, component inventory, cleanup, and scoped real-state result at that historical
-boundary; it does not qualify this remote-pinned catalog.
-
-The old local-directory harness cannot exercise the current remote-pinned `git-subdir` source: its isolated child
-PATH intentionally provided no Git, and it compared the cache with the checkout's current subtree. Both
-`npm run check:claude-plugin-install` and `npm run record:claude-plugin-install` now fail before resolving Claude,
-inspecting real state, or creating temporary state with a precise unsupported-source diagnostic. Do not use either
-command to renew or qualify the current candidate.
-
-Git-hosted qualification requires a reviewed successor harness. It must add the exact catalog through the officially
-documented [`owner/repo@ref` form](https://code.claude.com/docs/en/plugin-marketplaces#plugin-marketplace-add) using
-the immutable candidate tag, install the catalog's pinned remote source, confirm the cache directory is exactly the
-candidate SemVer, and byte- and mode-compare the cache with that pinned Git tree. It must retain the catalog SHA,
-source SHA and path, version, command transcript, and scoped host-state and credential-leak observations. Supplying
-Git to the isolated child requires a narrowly scrubbed executable path and a fresh security review; do not inherit
-the operator's general PATH, tokens, SSH agent, or unrelated environment. Close other Claude Code sessions before
-that run so legitimate concurrent registry changes do not invalidate the isolation result.
-
-Ordinary `sh script/check` and hosted CI retain structural, historical-evidence, compatibility, and syntax
-assertions. They neither install the plugin nor claim remote reachability or qualification.
-
-Once this packaging is merged and the release gates below are satisfied, the intended ordinary installation from
-GitHub is:
+Once both npm packages and the catalog are explicitly released, the intended colleague installation is:
 
 ```sh
-CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1 claude plugin marketplace add firstdraft/skills@stable
+claude plugin marketplace add firstdraft/skills
 claude plugin install firstdraft@firstdraft-skills
 ```
 
-The [official environment-variable reference](https://code.claude.com/docs/en/env-vars) documents
-`CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` for cloning GitHub `owner/repo` shorthand over HTTPS rather than SSH. The
-assignment above makes the intended path independent of SSH setup; users with working GitHub SSH configuration may
-omit it. The official
-[`plugin marketplace add` reference](https://code.claude.com/docs/en/plugin-marketplaces#plugin-marketplace-add)
-documents `owner/repo@ref`. The `@stable` ref is the intended distributable channel; ordinary installation must not
-track mutable `main`. No live GitHub clone from either ref has been observed for this package.
-
-Do not run those installation commands for ordinary use yet. The required
-`@firstdraft.com/cli@0.1.0-alpha.2` package remains unpublished, and no compatible First Draft staging or live
-endpoint has completed the agent-to-private-GitHub journey. The plugin metadata is source packaging, not release or
-execution evidence. Keep using `gh skill preview` when evaluating the portable Skill path.
+Those public commands are not yet expected to work: neither npm package has been published and this catalog change
+has not been released. Local packed-install and isolated-Claude checks establish only prepublication behavior. The
+historical 2026-08-04 source-only install report remains evidence for its recorded revision, not this composite
+package. A dated [vendored-CLI smoke](evidence/2026-08-05-claude-plugin-vendored-cli-smoke.md) records the current
+local npm-source install, the rejected transitive-dependency design, and successful bare-command discovery. See
+[`RELEASING.md`](RELEASING.md) for the approval-gated qualification and publication sequence.
 
 ## Development
 
 Cross-repository compatibility metadata and the approval-gated release process are documented in
 [`RELEASING.md`](RELEASING.md).
 
-The installed Skills contain no executable code or runtime packages. Repository checks use Node.js 22 or newer
-and one locked development dependency for exact JSON Schema validation:
+The portable Skill directories contain no executable code or runtime packages. The assembled Claude plugin adds
+only its CLI adapter and exact vendored CLI package. Repository checks use Node.js 22 or newer and one locked development
+dependency for exact JSON Schema validation:
 
 Repository checks require `git` on `PATH` and a real Git checkout with its index and working tree available. A source
 archive, exported tree, or installed plugin cache is insufficient because the preview-boundary checks use the Git
@@ -250,13 +174,13 @@ sh script/check
 ```
 
 The CLI contract check requires a checkout at the exact reviewed revision
-`f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, whose independently reproduced JavaScript-source runtime digest is
-`9e5a4bd0f16f49ab2e17c04f7defc59366f8fa073f772b310d8f684177890eab`:
+`1c5f44bf5f905b45931ec2c280d71d69b0d0ac78`, whose independently reproduced JavaScript-source runtime digest is
+`0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`:
 
 ```sh
 git -C <path-to-cli-checkout> fetch origin main
-git -C <path-to-cli-checkout> merge-base --is-ancestor f55edffc9e88924f9a4c95f41c4d0bc9b72422f8 origin/main
-git -C <path-to-cli-checkout> checkout --detach f55edffc9e88924f9a4c95f41c4d0bc9b72422f8
+git -C <path-to-cli-checkout> merge-base --is-ancestor 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78 origin/main
+git -C <path-to-cli-checkout> checkout --detach 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 

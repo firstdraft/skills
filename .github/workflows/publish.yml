@@ -1,0 +1,127 @@
+name: Publish Claude plugin
+
+on:
+  push:
+    tags: ["claude-v*"]
+
+permissions: {}
+
+concurrency:
+  group: claude-plugin-npm-publish
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.18.0
+          package-manager-cache: false
+      - name: Verify tag and source commit
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = "firstdraft/skills"
+          test "$GITHUB_EVENT_NAME" = "push"
+          test "$GITHUB_REF_TYPE" = "tag"
+          test "$GITHUB_REF_PROTECTED" = "true"
+          release_sha="$(git rev-parse 'HEAD^{commit}')"
+          event_sha="$(git rev-parse "${GITHUB_SHA}^{commit}")"
+          test "$release_sha" = "$event_sha"
+          git fetch --force --no-tags origin \
+            "+refs/heads/main:refs/remotes/origin/main" \
+            "+refs/tags/${GITHUB_REF_NAME}:refs/release-check/tag"
+          test "$release_sha" = "$(git rev-parse 'refs/release-check/tag^{commit}')"
+          package_version="$(node --print 'JSON.parse(require("node:fs").readFileSync("packages/claude-plugin/package.template.json", "utf8")).version')"
+          test "$GITHUB_REF_NAME" = "claude-v$package_version"
+          git rev-list --first-parent refs/remotes/origin/main > "$RUNNER_TEMP/main-first-parent"
+          grep -Fqx "$release_sha" "$RUNNER_TEMP/main-first-parent"
+      - run: npm ci --ignore-scripts
+      - run: npm audit
+      - run: npm run check
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: firstdraft/cli
+          ref: main
+          fetch-depth: 0
+          path: tmp/firstdraft-cli
+          persist-credentials: false
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78
+      - run: node script/claude-plugin-package.mjs pack "$RUNNER_TEMP/plugin" --cli-root tmp/firstdraft-cli
+
+  publish:
+    name: Publish to npm
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.18.0
+          package-manager-cache: false
+          registry-url: https://registry.npmjs.org/
+      - name: Verify approved release
+        env:
+          NPM_RELEASE_ENABLED: ${{ vars.NPM_RELEASE_ENABLED }}
+        run: |
+          set -euo pipefail
+          test "$NPM_RELEASE_ENABLED" = "true"
+          test "$GITHUB_REPOSITORY" = "firstdraft/skills"
+          test "$GITHUB_EVENT_NAME" = "push"
+          test "$GITHUB_REF_TYPE" = "tag"
+          test "$GITHUB_REF_PROTECTED" = "true"
+          release_sha="$(git rev-parse 'HEAD^{commit}')"
+          event_sha="$(git rev-parse "${GITHUB_SHA}^{commit}")"
+          test "$release_sha" = "$event_sha"
+          git fetch --force --no-tags origin \
+            "+refs/heads/main:refs/remotes/origin/main" \
+            "+refs/tags/${GITHUB_REF_NAME}:refs/release-check/tag"
+          test "$release_sha" = "$(git rev-parse 'refs/release-check/tag^{commit}')"
+          package_version="$(node --print 'JSON.parse(require("node:fs").readFileSync("packages/claude-plugin/package.template.json", "utf8")).version')"
+          test "$GITHUB_REF_NAME" = "claude-v$package_version"
+          git rev-list --first-parent refs/remotes/origin/main > "$RUNNER_TEMP/main-first-parent"
+          grep -Fqx "$release_sha" "$RUNNER_TEMP/main-first-parent"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: firstdraft/cli
+          ref: main
+          fetch-depth: 0
+          path: tmp/firstdraft-cli
+          persist-credentials: false
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach 1c5f44bf5f905b45931ec2c280d71d69b0d0ac78
+      - name: Verify CLI release is published
+        run: |
+          set -euo pipefail
+          cli_version="$(node --print 'JSON.parse(require("node:fs").readFileSync("tmp/firstdraft-cli/package.json", "utf8")).version')"
+          test "$(npm view "@firstdraft.com/cli@$cli_version" version)" = "$cli_version"
+      - run: node script/claude-plugin-package.mjs pack "$RUNNER_TEMP/plugin" --cli-root tmp/firstdraft-cli
+      - name: Verify publication bytes
+        run: |
+          set -euo pipefail
+          package_version="${GITHUB_REF_NAME#claude-v}"
+          tarball="$RUNNER_TEMP/plugin/firstdraft.com-claude-code-$package_version.tgz"
+          expected="$(node --print 'JSON.parse(require("node:fs").readFileSync("release/compatibility.json", "utf8")).plugin_source.tarball_sha256')"
+          actual="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+          test "$actual" = "$expected"
+      - name: Publish verified package
+        run: npm publish "$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz" --access public --tag next --provenance --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
