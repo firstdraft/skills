@@ -17,7 +17,6 @@ import {
 import {
   assertNoObservationAbsolutePathLeaks,
   observedFileBytes,
-  observedFileInventory,
   observedFileTreeSha256,
   renderManifestValidationEvidence,
   renderStatePresenceNames,
@@ -86,6 +85,8 @@ const freshModelServiceTree =
   "076415a4b1e34cc458a85186e1e335503eb30612";
 const freshModelPluginBaseline =
   "b5c3897b240bfa3a9117d1a564d8e6b7d783e993";
+const marketplacePluginSourceBaseline =
+  "8ffbd9688f39118ddeeb48a3da7e5bc309b7be5e";
 const freshModelPluginRuntimeDigest =
   "a5c3bfe0dd8d5396a692c4204c670e10cbc4b996883f76025d9e8a6586becc7b";
 const freshModelClaudeExecutableDigest =
@@ -243,6 +244,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       freshModelServiceBaseline,
       freshModelServiceTree,
       freshModelPluginBaseline,
+      marketplacePluginSourceBaseline,
       freshModelPublicationTree,
       freshModelPublicationCommit,
       foundationIosCoreRevision,
@@ -420,7 +422,10 @@ test("fresh Claude Code evidence is exact and bounded", async () => {
     revision: freshModelPluginBaseline,
     runtime_sha256: freshModelPluginRuntimeDigest,
   });
-  assert.equal(await pluginRuntimeDigest(), freshModelPluginRuntimeDigest);
+  assert.equal(
+    pluginRuntimeDigestAtRevision(freshModelPluginBaseline),
+    freshModelPluginRuntimeDigest,
+  );
   assert.deepEqual(observation.command_ledger, {
     "compilation.help": 1,
     "generate.help": 1,
@@ -526,6 +531,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     await readFile(path.join(claudePluginDirectory, "marketplace.json"), "utf8"),
   );
   const portableSkillPath = `./skills/${portableSkillName}`;
+  const marketplaceSourcePath = `skills/${portableSkillName}`;
 
   assert.deepEqual(plugin, {
     $schema: "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -555,7 +561,13 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     plugins: [
       {
         name: claudePluginName,
-        source: "./skills/create-full-stack-app",
+        version: "0.1.0-alpha.1",
+        source: {
+          source: "git-subdir",
+          url: "https://github.com/firstdraft/skills.git",
+          path: marketplaceSourcePath,
+          sha: marketplacePluginSourceBaseline,
+        },
         strict: false,
         skills: ["./"],
         displayName: "First Draft",
@@ -574,7 +586,6 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
       },
     ],
   });
-  assert(!("version" in marketplace.plugins[0]));
 
   const pluginSkillDirectory = path.resolve(repository, portableSkillPath);
   assert.equal(
@@ -582,7 +593,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     path.join(skillsDirectory, portableSkillName),
   );
   assert.equal(
-    path.resolve(repository, marketplace.plugins[0].source),
+    path.resolve(repository, marketplace.plugins[0].source.path),
     pluginSkillDirectory,
   );
   assert.equal(
@@ -672,6 +683,16 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     "references/foundation-plan-019.md",
     "references/modeling-guide.md",
   ]);
+  const pinnedSourceFiles = gitTreePathsAtRevision(
+    marketplacePluginSourceBaseline,
+    marketplaceSourcePath,
+  ).map((file) => path.posix.relative(marketplaceSourcePath, file));
+  assert.deepEqual(pinnedSourceFiles, canonicalClaudePluginSkillFiles);
+  assert.equal(
+    pinnedSourceFiles.some((file) => file === ".claude-plugin/plugin.json"),
+    false,
+    "the pinned plugin source must remain manifestless",
+  );
   assert.deepEqual(installedSourceFiles, canonicalClaudePluginSkillFiles);
   assert.deepEqual(forbiddenClaudePluginPathSegments, [
     "evals",
@@ -723,15 +744,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     assert(!Object.hasOwn(marketplace.plugins[0], component));
   }
 
-  const installedSourceBytes = (
-    await Promise.all(
-      installedSourceFiles.map(async (relativePath) =>
-        (await stat(path.join(pluginSkillDirectory, relativePath))).size,
-      ),
-    )
-  ).reduce((total, size) => total + size, 0);
   assert.equal(installedSourceFiles.length, 8);
-  assert.equal(installedSourceBytes, 207_433);
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
   assert.match(readme, /eight canonical Skill files/);
   assert.match(
@@ -754,7 +767,16 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   );
   assert.match(
     readme,
-    /preview-only `0\.1\.0` version[\s\S]*?direct strict manifest validation[\s\S]*?excluded from the marketplace\s+plugin source/,
+    /preview-only `0\.1\.0` version[\s\S]*?excluded from the marketplace\s+plugin source[\s\S]*?installable marketplace entry independently owns\s+the plugin release version, currently `0\.1\.0-alpha\.1`[\s\S]*?checkout preview's separate `0\.1\.0` does not govern that\s+installation[\s\S]*?private root npm package[\s\S]*?`0\.0\.0` version[\s\S]*?not plugin identity/,
+  );
+  assert(
+    readme.includes(
+      "https://code.claude.com/docs/en/plugin-marketplaces#plugin-sources",
+    ),
+  );
+  assert.match(
+    readme,
+    /`git-subdir` field set and the `owner\/repo@ref` add form[\s\S]*?rechecked on 2026-08-05[\s\S]*?dated documentation check is not installation evidence/,
   );
   assert(
     readme.includes(
@@ -763,7 +785,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   );
   assert.match(
     readme,
-    /Git-hosted marketplace falls back to the commit SHA[\s\S]*?documented\s+expectation here, not observed Git-hosted installation evidence/,
+    /One marketplace SemVer maps permanently to one source SHA[\s\S]*?failed or revised candidate\s+must receive a new prerelease version and immutable candidate tag[\s\S]*?never reuse an earlier version with new bytes[\s\S]*?explicitly versioned plugin remains cached until that version changes[\s\S]*?Every revised candidate therefore\s+requires a deliberate, never-reused SemVer bump[\s\S]*?version only participates in compatibility eligibility and never authorizes release/,
   );
   assert(
     readme.includes(
@@ -777,19 +799,36 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   );
   assert.match(
     readme,
-    /marketplace entry's `"strict": false` selects the marketplace entry as the entire plugin definition[\s\S]*?raw source directory without its own `plugin\.json`[\s\S]*?source manifest that also declares\s+components would conflict[\s\S]*?does not relax validation[\s\S]*?`claude plugin validate --strict` treats validation warnings, including unrecognized fields, as errors for CI[\s\S]*?Both\s+strict validation commands above remain release gates/,
+    /marketplace entry's `"strict": false` selects the marketplace entry as the entire plugin definition[\s\S]*?raw source directory without its own `plugin\.json`[\s\S]*?source manifest that also declares\s+components would conflict[\s\S]*?does not relax validation[\s\S]*?strict validation commands above remain manual release gates[\s\S]*?successful local invocation is not durable\s+qualification of a Git-hosted catalog or installation/,
   );
   assert(readme.includes("https://code.claude.com/docs/en/plugins"));
   assert(readme.includes("https://code.claude.com/docs/en/plugins-reference"));
   assert(readme.includes("https://code.claude.com/docs/en/env-vars"));
+  const marketplaceAddSources = [
+    ...readme.matchAll(/\bclaude plugin marketplace add ([^\s`]+)/g),
+  ].map((match) => match[1]);
+  assert(marketplaceAddSources.includes("firstdraft/skills@stable"));
+  assert(
+    marketplaceAddSources.every(
+      (source) =>
+        source === "firstdraft/skills@stable" ||
+        /^firstdraft\/skills@marketplace-v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?-candidate\.\d+$/.test(
+          source,
+        ),
+    ),
+  );
+  assert.doesNotMatch(
+    readme,
+    /claude plugin marketplace add firstdraft\/skills(?:@main)?(?=\s|`|$)/,
+  );
   assert(
     readme.includes(
-      "CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1 claude plugin marketplace add firstdraft/skills",
+      "https://code.claude.com/docs/en/plugin-marketplaces#plugin-marketplace-add",
     ),
   );
   assert.match(
     readme,
-    /`CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` for cloning GitHub `owner\/repo` shorthand over HTTPS rather than SSH[\s\S]*?users with working GitHub SSH configuration may\s+omit it[\s\S]*?No live GitHub clone has been observed for this package/,
+    /`CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` for cloning GitHub `owner\/repo` shorthand over HTTPS rather than SSH[\s\S]*?users with working GitHub SSH configuration may\s+omit it[\s\S]*?documents `owner\/repo@ref`[\s\S]*?`@stable` ref is the intended distributable channel[\s\S]*?ordinary installation must not\s+track mutable `main`[\s\S]*?No live GitHub clone from either ref has been observed for this package/,
   );
   assert.match(
     readme,
@@ -801,51 +840,19 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   );
   assert.match(
     readme,
-    /recording command regenerates only the machine-readable JSON[\s\S]*?UTC date and observed Claude Code version[\s\S]*?rename the dated Markdown evidence file[\s\S]*?state-presence bullets, and real-state monitor\s+summary line[\s\S]*?dated default-component-location recheck[\s\S]*?model-session conclusion against any newer evaluation\s+evidence[\s\S]*?update the evidence path and the expected date\/version pins[\s\S]*?rerun the\s+repository checks and both strict validations[\s\S]*?Recheck the checkout-root default-component allowlist/,
+    /machine-readable observation[\s\S]*?remain bound to the\s+eight canonical Skill files at historical revision `b5c3897b240bfa3a9117d1a564d8e6b7d783e993`[\s\S]*?reconstruct\s+those Git objects rather than requiring today's unpromoted source to match them[\s\S]*?does not qualify this remote-pinned catalog/,
   );
   assert.match(
     readme,
-    /`~\/\.claude\.json` exclusion and default real-state targets require `CLAUDE_CONFIG_DIR` and\s+`CLAUDE_CODE_PLUGIN_CACHE_DIR` to be unset[\s\S]*?fail before resolving Claude,\s+inspecting real Claude state, or creating temporary state[\s\S]*?names only\s+the override variables, never their values/,
+    /old local-directory harness cannot exercise the current remote-pinned `git-subdir` source[\s\S]*?child\s+PATH intentionally provided no Git[\s\S]*?`npm run check:claude-plugin-install` and `npm run record:claude-plugin-install` now fail before resolving Claude,\s+inspecting real state, or creating temporary state[\s\S]*?Do not use either\s+command to renew or qualify the current candidate/,
   );
   assert.match(
     readme,
-    /expected live component inventory is deliberately hardcoded[\s\S]*?assertion in `script\/check-claude-plugin-install\.mjs`[\s\S]*?repository-test pins[\s\S]*?generated\s+observation[\s\S]*?dated prose together[\s\S]*?Rerunning the recording command alone cannot renew that expectation/,
+    /Git-hosted qualification requires a reviewed successor harness[\s\S]*?`owner\/repo@ref` form[\s\S]*?immutable candidate tag[\s\S]*?cache directory is exactly the\s+candidate SemVer[\s\S]*?byte- and mode-compare[\s\S]*?narrowly scrubbed executable path[\s\S]*?do not inherit\s+the operator's general PATH, tokens, SSH agent, or unrelated environment/,
   );
   assert.match(
     readme,
-    /`agents\/openai\.yaml` file is Skill metadata, not a Claude Code Agent definition[\s\S]*?observed `Agents=0` result[\s\S]*?rechecked whenever the CLI version changes/,
-  );
-  assert.match(
-    readme,
-    /Every child command runs from a newly created isolated working directory[\s\S]*?requires\s+`CLAUDE_BIN` or the parent PATH to resolve to a regular, executable native Claude Code binary and rejects shebang\s+wrappers/,
-  );
-  assert.match(
-    readme,
-    /excludes the high-churn `~\/\.claude\.json`[\s\S]*?no whole-configuration monitoring claim/,
-  );
-  assert.match(
-    readme,
-    /refuses to make an unchanged-state claim if any monitored target or nested entry is a symbolic link/,
-  );
-  assert.match(
-    readme,
-    /Close every other Claude Code session before running the smoke[\s\S]*?share plugin registries and\s+caches[\s\S]*?concurrent legitimate update[\s\S]*?make this check fail/,
-  );
-  assert.match(
-    readme,
-    /diagnostic names every changed monitor together with its resolved absolute filesystem path/,
-  );
-  assert.match(
-    readme,
-    /Claude Code 2\.1\.221 did not create `plugins\/marketplaces\/firstdraft-skills`[\s\S]*?`plugins\/data\/firstdraft-firstdraft-skills`[\s\S]*?`targetMarketplace` and\s+`targetData` are conservative candidate-path monitors[\s\S]*?not confirmed\s+current CLI storage layouts[\s\S]*?absence is not load-bearing isolation evidence/,
-  );
-  assert.match(
-    readme,
-    /compares its live CLI version, captured strict-validation results, component\s+inventory, and installed bytes with the committed observation[\s\S]*?Real-state presence is run-local information rather\s+than a cross-machine release-gate value[\s\S]*?independently requires at least one core registry target and\s+proves the monitored targets unchanged/,
-  );
-  assert.match(
-    readme,
-    /Repository checks require `git` on `PATH` and a real Git checkout with its index and working tree available[\s\S]*?source\s+archive, exported tree, or installed plugin cache is insufficient[\s\S]*?Git\s+index for the enumerated checkout-root component locations[\s\S]*?complete `skills\/`\s+subtree on disk/,
+    /Repository checks require `git` on `PATH` and a real Git checkout with its index and working tree available[\s\S]*?source\s+archive, exported tree, or installed plugin cache is insufficient[\s\S]*?complete `skills\/`\s+subtree on disk[\s\S]*?full,\s+unshallowed history[\s\S]*?`git rev-parse --is-shallow-repository`[\s\S]*?`git fetch --unshallow origin`/,
   );
   const observationSource = await readFile(claudePluginObservation, "utf8");
   const observation = JSON.parse(observationSource);
@@ -853,15 +860,16 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.equal(
     observation.observedOn,
     "2026-08-04",
-    "observation date changed; rerun the isolated recording, rename and " +
-      "refresh the dated evidence, then update this reviewed pin",
+    "historical observation date changed; preserve this pinned evidence. " +
+      "Use the reviewed candidate-tag and pinned-remote-source successor " +
+      "harness for a new dated observation with byte and mode comparison",
   );
   assert.equal(
     observation.claudeCode.version,
     "2.1.221",
-    "Claude Code version changed; rerun the isolated recording, review " +
-      "component discovery and isolation, refresh the dated evidence, then " +
-      "update this pin",
+    "historical Claude Code version changed; preserve this pinned evidence. " +
+      "Use the reviewed candidate-tag and pinned-remote-source successor " +
+      "harness for a new dated observation with byte and mode comparison",
   );
   assert.deepEqual(observation.claudeCode.componentInventory, {
     agents: 0,
@@ -913,15 +921,23 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     observation.installedPlugin.files.map((file) => file.path),
     canonicalClaudePluginSkillFiles,
   );
-  const currentFileInventory = observedFileInventory(
-    pluginSkillDirectory,
-    canonicalClaudePluginSkillFiles,
+  const historicalFileInventory = canonicalClaudePluginSkillFiles.map(
+    (relativePath) => {
+      const source = gitBlobAtRevision(
+        freshModelPluginBaseline,
+        `skills/create-full-stack-app/${relativePath}`,
+      );
+      return {
+        path: relativePath,
+        bytes: source.length,
+        sha256: createHash("sha256").update(source).digest("hex"),
+      };
+    },
   );
   assert.deepEqual(
-    currentFileInventory,
+    historicalFileInventory,
     observation.installedPlugin.files,
-    "canonical Skill bytes differ from the observed isolated install; " +
-      "rerun `npm run record:claude-plugin-install` to regenerate evidence",
+    "the pinned historical Skill bytes differ from the dated observation",
   );
   assert.equal(
     observedFileBytes(observation.installedPlugin.files),
@@ -1113,7 +1129,20 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     encoding: "utf8",
   });
   assert.equal(syntaxCheck.status, 0, syntaxCheck.stderr);
+  const unsupportedSmoke = spawnSync(process.execPath, [smokeScript], {
+    cwd: repository,
+    encoding: "utf8",
+    env: {},
+  });
+  assert.notEqual(unsupportedSmoke.status, 0);
+  assert.match(
+    unsupportedSmoke.stderr,
+    /local Claude Code install smoke does not support the remote-pinned git-subdir plugin source[\s\S]*?qualify the immutable candidate tag and its pinned remote source with the reviewed release harness/,
+  );
   const smokeSource = await readFile(smokeScript, "utf8");
+  const remoteSourcePrecondition = smokeSource.indexOf(
+    "assertLocalInstallSmokeSupported(installSmokeMarketplace)",
+  );
   const defaultStateLocationPrecondition = smokeSource.indexOf(
     "assertDefaultClaudeStateLocations(process.env)",
   );
@@ -1124,10 +1153,11 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     "const realStateBefore = realClaudeStateSnapshot()",
   );
   assert(
-    defaultStateLocationPrecondition >= 0 &&
+    remoteSourcePrecondition >= 0 &&
+      remoteSourcePrecondition < defaultStateLocationPrecondition &&
       defaultStateLocationPrecondition < claudeResolution &&
       claudeResolution < realStateSnapshot,
-    "default real-state location precondition must run before Claude resolution and state inspection",
+    "remote-source and real-state preconditions must run before Claude resolution and state inspection",
   );
   assert.doesNotMatch(
     smokeSource,
@@ -3812,18 +3842,19 @@ function assertRevisionTokens(source, expected) {
   assert.deepEqual(revisionTokens(source), [...expected].sort());
 }
 
-async function pluginRuntimeDigest() {
-  const files = trackedFiles().filter((file) => {
-    const relativePath = path.relative(repository, file);
-    return (
+function pluginRuntimeDigestAtRevision(revision) {
+  const relativePaths = gitTreePathsAtRevision(
+    revision,
+    ".claude-plugin",
+    "skills/create-full-stack-app",
+  ).filter(
+    (relativePath) =>
       /^\.claude-plugin\/[^/]+\.json$/.test(relativePath) ||
-      relativePath.startsWith("skills/create-full-stack-app/")
-    );
-  });
+      relativePath.startsWith("skills/create-full-stack-app/"),
+  );
   const digest = createHash("sha256");
-  for (const file of files) {
-    const relativePath = path.relative(repository, file);
-    const source = await readFile(file);
+  for (const relativePath of relativePaths) {
+    const source = gitBlobAtRevision(revision, relativePath);
     const pathLength = Buffer.alloc(4);
     pathLength.writeUInt32BE(Buffer.byteLength(relativePath));
     const sourceLength = Buffer.alloc(8);
@@ -3834,6 +3865,48 @@ async function pluginRuntimeDigest() {
     digest.update(source);
   }
   return digest.digest("hex");
+}
+
+function gitBlobAtRevision(revision, relativePath) {
+  const blob = spawnSync("git", ["show", `${revision}:${relativePath}`], {
+    cwd: repository,
+    encoding: "buffer",
+    maxBuffer: 10 * 1024 * 1024,
+  });
+  assert.equal(
+    blob.status,
+    0,
+    `git show failed for ${revision}:${relativePath}: ` +
+      spawnBufferText(blob.stderr),
+  );
+  return blob.stdout;
+}
+
+function gitTreePathsAtRevision(revision, ...roots) {
+  const tree = spawnSync(
+    "git",
+    [
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "-z",
+      revision,
+      "--",
+      ...roots,
+    ],
+    { cwd: repository, encoding: "buffer" },
+  );
+  assert.equal(
+    tree.status,
+    0,
+    `git ls-tree failed for ${revision}: ${spawnBufferText(tree.stderr)}`,
+  );
+  const relativePaths = spawnBufferText(tree.stdout)
+    .split("\0")
+    .filter(Boolean)
+    .sort();
+  assert(relativePaths.length > 0, `no Git tree paths found for ${revision}`);
+  return relativePaths;
 }
 
 function trackedFiles() {

@@ -12,7 +12,8 @@
     "ajv": "8.20.0"
   },
   "scripts": {
-    "check": "node --test",
+    "check": "sh script/check",
+    "check:release-compatibility": "node script/check-release-compatibility.mjs",
     "check:claude-plugin-install": "node script/check-claude-plugin-install.mjs",
     "record:claude-plugin-install": "node script/check-claude-plugin-install.mjs --observation-output evidence/claude-code-plugin-install-observation.json"
   }

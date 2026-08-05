@@ -1,0 +1,21 @@
+{
+  "format": "firstdraft.release-compatibility/1",
+  "component": "skills",
+  "version": "0.1.0-alpha.1",
+  "plugin_source": {
+    "git_sha": "8ffbd9688f39118ddeeb48a3da7e5bc309b7be5e",
+    "path": "skills/create-full-stack-app"
+  },
+  "requires": {
+    "api_contract": [
+      ">= 0.1.0",
+      "< 0.2.0"
+    ],
+    "cli": [
+      "= 0.1.0-alpha.2"
+    ],
+    "foundation_plan_formats": [
+      "firstdraft.foundation-plan.sketch/0.19"
+    ]
+  }
+}
