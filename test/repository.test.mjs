@@ -795,6 +795,10 @@ test("CI checks the exact modular CLI contract", async () => {
     path.join(repository, "script", "cli-contract", "config.mjs"),
     "utf8",
   );
+  const repositoryCheck = await readFile(
+    path.join(repository, "script", "check"),
+    "utf8",
+  );
   assert.match(
     workflow,
     new RegExp(
@@ -822,6 +826,24 @@ test("CI checks the exact modular CLI contract", async () => {
     publishWorkflow,
     /environment: npm[\s\S]*?permissions:[\s\S]*?id-token: write/,
   );
+  assert.equal(
+    publishWorkflow.match(
+      /node script\/check-cli-registry-package\.mjs --cli-root tmp\/firstdraft-cli/g,
+    )?.length,
+    2,
+  );
+  const [publishVerification, publishApproval] = publishWorkflow.split(
+    /^  publish:/m,
+  );
+  assert.match(
+    publishVerification,
+    /node script\/check-cli-registry-package\.mjs --cli-root tmp\/firstdraft-cli[\s\S]*?node script\/check-claude-plugin-package\.mjs --cli-root tmp\/firstdraft-cli/,
+  );
+  assert.match(
+    publishApproval,
+    /environment: npm[\s\S]*?node script\/check-cli-registry-package\.mjs --cli-root tmp\/firstdraft-cli/,
+  );
+  assert.doesNotMatch(repositoryCheck, /check-cli-registry-package/);
   assert.match(
     workflow,
     new RegExp(

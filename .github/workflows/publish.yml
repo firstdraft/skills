@@ -56,7 +56,8 @@ jobs:
           persist-credentials: false
       - run: git -C tmp/firstdraft-cli merge-base --is-ancestor e53eb38d7e8254e6ba1e660b38c5d32d0314be17 HEAD
       - run: git -C tmp/firstdraft-cli checkout --detach e53eb38d7e8254e6ba1e660b38c5d32d0314be17
-      - run: node script/claude-plugin-package.mjs pack "$RUNNER_TEMP/plugin" --cli-root tmp/firstdraft-cli
+      - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
+      - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli
 
   publish:
     name: Publish to npm
@@ -107,11 +108,7 @@ jobs:
           persist-credentials: false
       - run: git -C tmp/firstdraft-cli merge-base --is-ancestor e53eb38d7e8254e6ba1e660b38c5d32d0314be17 HEAD
       - run: git -C tmp/firstdraft-cli checkout --detach e53eb38d7e8254e6ba1e660b38c5d32d0314be17
-      - name: Verify CLI release is published
-        run: |
-          set -euo pipefail
-          cli_version="$(node --print 'JSON.parse(require("node:fs").readFileSync("tmp/firstdraft-cli/package.json", "utf8")).version')"
-          test "$(npm view "@firstdraft.com/cli@$cli_version" version)" = "$cli_version"
+      - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
       - run: node script/claude-plugin-package.mjs pack "$RUNNER_TEMP/plugin" --cli-root tmp/firstdraft-cli
       - name: Verify publication bytes
         run: |
