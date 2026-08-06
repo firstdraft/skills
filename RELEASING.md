@@ -9,8 +9,8 @@ plugin release, npm publication, or First Draft deployment.
 
 The installable `firstdraft@firstdraft-skills` plugin is the public npm package
 `@firstdraft.com/claude-code`. Its current candidate version is `0.1.0-alpha.3`. The marketplace catalog points to
-that exact package and version. The checkout-local `firstdraft-preview` manifest and private root
-`@firstdraft/skills@0.0.0` package are test tooling, not release identities.
+that exact package and version. The checkout-local `firstdraft` manifest and private root `@firstdraft/skills@0.0.0`
+package are test tooling, not release identities.
 
 Packing deterministically assembles the plugin from the canonical `skills/create-full-stack-app` directory, the
 installable manifest and CLI adapter under `packages/claude-plugin`, the exact packed files from

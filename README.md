@@ -113,8 +113,8 @@ agent conversation or command line. Installed-plugin configuration is authoritat
 the adapter deliberately ignores any ambient `FIRSTDRAFT_API_TOKEN` so a credential cannot cross API origins. The
 environment variable remains a standalone-CLI configuration path.
 
-The root `firstdraft-preview` manifest remains a checkout-local development path and has a separate preview-only
-version. From a checkout, validate the marketplace and preview manifests without installing either one:
+The root `firstdraft` manifest remains a checkout-local development path and has a separate checkout-only version.
+From a checkout, validate the marketplace and checkout manifests without installing either one:
 
 ```sh
 claude plugin validate --strict .
@@ -159,7 +159,7 @@ only its CLI adapter and exact vendored CLI package. Repository checks use Node.
 dependency for exact JSON Schema validation:
 
 Repository checks require `git` on `PATH` and a real Git checkout with its index and working tree available. A source
-archive, exported tree, or installed plugin cache is insufficient because the preview-boundary checks use the Git
+archive, exported tree, or installed plugin cache is insufficient because the checkout-boundary checks use the Git
 index for the enumerated checkout-root component locations and inspect those paths plus the complete `skills/`
 subtree on disk. Evidence and compatibility checks also read pinned historical commits and require full,
 unshallowed history containing them. The version-to-source check also reads compatibility documents reachable from

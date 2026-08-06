@@ -26,7 +26,7 @@ export const forbiddenCheckoutRootClaudePluginComponentPaths = Object.freeze([
   "workflows",
 ]);
 
-// The checkout preview deliberately exposes only the portable Skill. The assembled
+// The checkout plugin deliberately exposes only the portable Skill. The assembled
 // installable plugin separately admits bin/ as Claude Code's documented executable
 // component so the exact CLI adapter is available to the Bash tool.
 

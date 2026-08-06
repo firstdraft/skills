@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "firstdraft-preview",
-  "displayName": "First Draft Preview",
+  "name": "firstdraft",
+  "displayName": "First Draft",
   "version": "0.1.0",
   "description": "Experimental Foundation Plan authoring and bounded Rails application creation with First Draft",
   "author": {

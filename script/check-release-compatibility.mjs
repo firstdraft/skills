@@ -24,7 +24,7 @@ export function assertSkillsReleaseCompatibility({
   marketplace,
   packageDocument,
   packageTemplate,
-  previewManifest,
+  checkoutManifest,
 }) {
   assertExactKeys(
     compatibility,
@@ -123,11 +123,15 @@ export function assertSkillsReleaseCompatibility({
   assert.equal(packageTemplate.version, compatibility.version);
   assert.equal(packageTemplate.dependencies, undefined);
 
-  assert.equal(previewManifest.name, "firstdraft-preview");
-  assert.notEqual(
-    previewManifest.name,
+  assert.equal(
+    checkoutManifest.name,
     installablePlugin.name,
-    "checkout preview manifest must remain distinct from the installable plugin",
+    "checkout and installable plugin identities must match",
+  );
+  assert.equal(
+    checkoutManifest.displayName,
+    installableManifest.displayName,
+    "checkout and installable plugin display names must match",
   );
   assert.equal(packageDocument.name, "@firstdraft/skills");
   assert.equal(packageDocument.version, "0.0.0");
@@ -147,7 +151,7 @@ export async function checkSkillsReleaseCompatibility(root = repository) {
     marketplace,
     packageDocument,
     packageTemplate,
-    previewManifest,
+    checkoutManifest,
   ] = await Promise.all([
     readJson(path.join(root, "release", "compatibility.json")),
     readJson(
@@ -178,7 +182,7 @@ export async function checkSkillsReleaseCompatibility(root = repository) {
     marketplace,
     packageDocument,
     packageTemplate,
-    previewManifest,
+    checkoutManifest,
   });
   assertVersionSourceHistory({
     compatibility: checked,
