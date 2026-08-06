@@ -52,7 +52,6 @@ const movieCatalogModelObservation = path.join(
   "2026-08-04-movie-catalog-model-rehearsal.json",
 );
 const claudePluginName = "firstdraft";
-const claudePreviewPluginName = "firstdraft-preview";
 const claudeMarketplaceName = "firstdraft-skills";
 const portableSkillName = "create-full-stack-app";
 const foundationPlanFormat = "firstdraft.foundation-plan.sketch/0.19";
@@ -529,7 +528,7 @@ test("installable Skills follow the portable repository profile", async () => {
 });
 
 test("Claude Code packaging reuses the portable Skill exactly once", async () => {
-  const previewManifest = JSON.parse(
+  const checkoutManifest = JSON.parse(
     await readFile(path.join(claudePluginDirectory, "plugin.json"), "utf8"),
   );
   const marketplace = JSON.parse(
@@ -548,8 +547,9 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     ),
   );
 
-  assert.equal(previewManifest.name, claudePreviewPluginName);
-  assert.deepEqual(previewManifest.skills, [`./skills/${portableSkillName}`]);
+  assert.equal(checkoutManifest.name, claudePluginName);
+  assert.equal(checkoutManifest.displayName, "First Draft");
+  assert.deepEqual(checkoutManifest.skills, [`./skills/${portableSkillName}`]);
   assert.equal(marketplace.name, claudeMarketplaceName);
   assert.equal(marketplace.plugins.length, 1);
   assert.equal(marketplace.plugins[0].name, claudePluginName);
@@ -567,14 +567,14 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.equal(installableManifest.userConfig.api_token.sensitive, true);
 
   const repositoryFiles = trackedFiles();
-  const previewComponents = repositoryFiles
+  const checkoutComponents = repositoryFiles
     .map((file) => path.relative(repository, file))
     .filter((relativePath) =>
       forbiddenCheckoutRootClaudePluginComponentPaths.includes(
         relativePath.split(path.sep)[0],
       ),
     );
-  assert.deepEqual(previewComponents, []);
+  assert.deepEqual(checkoutComponents, []);
   for (const relativePath of forbiddenCheckoutRootClaudePluginComponentPaths) {
     await assert.rejects(
       lstat(path.join(repository, relativePath)),

@@ -74,6 +74,20 @@ test("release compatibility rejects shape and manifest drift", async () => {
     () => assertSkillsReleaseCompatibility(withShortDigest),
     /full lowercase SHA-256/,
   );
+
+  const withCheckoutIdentityDrift = structuredClone(documents);
+  withCheckoutIdentityDrift.checkoutManifest.name = "other";
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withCheckoutIdentityDrift),
+    /checkout and installable plugin identities must match/,
+  );
+
+  const withCheckoutDisplayNameDrift = structuredClone(documents);
+  withCheckoutDisplayNameDrift.checkoutManifest.displayName = "Other";
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withCheckoutDisplayNameDrift),
+    /checkout and installable plugin display names must match/,
+  );
 });
 
 test("release compatibility uses strict semantic versions", () => {
@@ -237,7 +251,7 @@ async function releaseDocuments() {
     marketplace,
     packageDocument,
     packageTemplate,
-    previewManifest,
+    checkoutManifest,
   ] = await Promise.all([
     readJson("release/compatibility.json"),
     readJson("packages/claude-plugin/.claude-plugin/plugin.json"),
@@ -253,7 +267,7 @@ async function releaseDocuments() {
     marketplace,
     packageDocument,
     packageTemplate,
-    previewManifest,
+    checkoutManifest,
   };
 }
 
