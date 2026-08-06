@@ -1,8 +1,9 @@
 # Claude Code plugin install smoke — 2026-08-04
 
-This report records one local source-only packaging check. It is evidence for the
-Claude Code marketplace shape and isolated install cache, not evidence of a
-released First Draft plugin or service.
+This report records one local source-only packaging check at Skills revision
+`3777ae515bd366e7d6e55df0c2add3a7f12a9d12`. It is historical evidence for that revision's local-directory Claude
+Code marketplace shape and isolated install cache, not evidence of the later npm-source marketplace, a released
+First Draft plugin, or the service.
 
 ## Command and result
 
@@ -51,21 +52,20 @@ Validating plugin manifest: <checkout>/.claude-plugin/plugin.json
 ✔ Validation passed
 ```
 
-The exact recording command was:
+At the recorded revision, the exact recording command was:
 
 ```text
 $ npm run record:claude-plugin-install
 Claude Code strict validation: marketplace=passed, preview=passed; isolated install: 8 canonical Skill files, 207433 bytes; live inventory Skills=1, Agents=0, Hooks=0, MCP servers=0, LSP servers=0; derived Commands=absent from manifest declaration and exact installed files because CLI combines Skills/Commands; no PATH-level package manager invocation; real-state monitor present=installedPlugins,knownMarketplaces,pluginCatalog,settings, absent=credentials,settingsLocal,targetCache,targetData,targetMarketplace, excluded=~/.claude.json
 ```
 
-The smoke generated the
+At that revision, the smoke generated the
 [machine-readable observation](claude-code-plugin-install-observation.json), which owns the per-file byte sizes and
 SHA-256 digests, installed tree digest, CLI version and component inventory, strict-validation results, and
-real-state target presence for this run. Ordinary repository tests compare canonical source bytes with that
-observation. The non-recording smoke compares the reviewed packaging and Claude Code compatibility fields with the
-committed observation. Real-state presence remains run-local information and is not compared across machines; every
-run still requires a core registry target and proves monitored state unchanged. Packaging drift directs the operator
-to the recording command; editing this prose does not renew observed installation evidence.
+real-state target presence for this run. Tests and a non-recording smoke at that revision compared canonical source
+bytes and reviewed compatibility fields with the committed observation. Real-state presence was run-local and was
+not compared across machines. The later npm-source packaging path retired that recording command and no current test
+compares the working tree with this historical observation. Editing this prose does not renew the evidence.
 
 The smoke registered the checkout as an isolated user-scope marketplace,
 installed `firstdraft@firstdraft-skills` into an isolated cache, and read the

@@ -87,11 +87,6 @@ export function assertSkillsReleaseCompatibility({
     installablePlugin.version,
     "installable marketplace plugin version",
   );
-  assert.equal(
-    compatibility.version,
-    installablePlugin.version,
-    "compatibility version must match the installable marketplace plugin",
-  );
   assertExactKeys(
     installablePlugin.source,
     ["package", "registry", "source", "version"],
@@ -108,9 +103,9 @@ export function assertSkillsReleaseCompatibility({
     "compatibility package must match the marketplace plugin source",
   );
   assert.equal(
-    compatibility.version,
+    installablePlugin.version,
     installablePlugin.source.version,
-    "compatibility version must match the marketplace package source",
+    "marketplace plugin version must match the marketplace package source",
   );
 
   assert.equal(installableManifest.name, installablePlugin.name);

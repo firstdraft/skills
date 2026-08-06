@@ -122,6 +122,9 @@ jobs:
           actual="$(shasum -a 256 "$tarball" | awk '{print $1}')"
           test "$actual" = "$expected"
       - name: Publish verified package
-        run: npm publish "$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz" --access public --tag next --provenance --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -z "${NODE_AUTH_TOKEN+x}"
+          test -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}"
+          test -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"
+          npm publish "$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz" --access public --tag next --provenance --ignore-scripts

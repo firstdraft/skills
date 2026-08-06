@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Interviews a user, incrementally authors and revises complete First Draft Foundation Plan snapshots, submits exact Plan bytes for diagnostics, and can request the current narrow Rails web-and-iPhone Compile journey through an unreleased CLI. It preserves product meaning, subject identity, private CLI state, and retained artifact provenance. Arbitrary applications, deployment, Android, iPad, Accounts, notifications, and broader web or native clients are not available."
+description: "Experimental and in development: Interviews a user, incrementally authors and revises complete First Draft Foundation Plan snapshots, submits exact Plan bytes for diagnostics, and can request the current narrow Rails web-and-iPhone Compile journey through its bundled CLI. It preserves product meaning, subject identity, private CLI state, and retained artifact provenance. Arbitrary applications, automatic deployment, Android, iPad, Accounts, notifications, and broader web or native clients are not available; preserve unsupported user intent rather than omitting it."
 ---
 
 # Create a Full-Stack App with First Draft
@@ -8,15 +8,20 @@ description: "Experimental and in development: Interviews a user, incrementally 
 Help the user turn a product idea into one coherent Foundation Plan candidate, using ordinary conversation and
 incremental local edits. First Draft diagnostics can inform that conversation at any point. When the candidate is
 as good as the agent and user can currently make it, the CLI can submit the exact current snapshot, require valid
-whole-graph analysis, and request the prepared Compile journey that produces one private GitHub repository.
+whole-graph analysis, and request the prepared Compile contract whose successful Publication is intended to create
+one private GitHub repository. Live GitHub publication remains outside the current evidence boundary.
 
-This Skill and its CLI are unreleased. The current Compiler is a narrow experiment, not arbitrary application
-generation: it admits independent Entities with supported scalar Fields, the exact public-index Scaffold, optional
-semantic icons, and a selected iPhone project beneath `ios/`. The admitted Scaffold exposes records on a public,
-unauthenticated web index. Confirm that this reflects the product rather than adding it merely to obtain a valid
-analysis. Enum Fields, References, Predicates, and other graph breadth can be retained for editing but cannot pass
-the current Compilation analysis gate. Accounts, authentication, broader CRUD, notifications, deployment, Android,
-and iPad are outside the proven path.
+This Skill and its bundled CLI are publicly available experimental prereleases. The current Compiler is a narrow
+experiment, not arbitrary application generation. It admits ten scalar Field kinds; ordinary single-target
+References; direct referenced-side inverses and one narrow indirect collection; a bounded Validation subset including
+conditional text length; exact public web index, create/update, show-projection, return-destination, and destroy
+Scaffold shapes; optional semantic icons; and an iPhone project limited to index/navigation beneath `ios/`. Richer
+web routes do not become native detail or mutation screens. Every admitted web Scaffold route is public and
+unauthenticated in generated source; Compile does not deploy it. Confirm that exposure with the user rather than
+adding it merely to obtain valid analysis. Accounts and authentication, notifications and push, automatic deployment
+and live deployment proof, Android, iPad, broader graph or Scaffold shapes, broader native screens, and gap-aware
+partial Compilation may remain intentional product meaning but cannot pass this release. Do not omit or weaken them
+to obtain a valid candidate. Unsupported shapes fail the complete candidate closed.
 
 See [Foundation Plan 0.19](references/foundation-plan-019.md#current-evidence-boundary) for the exact current
 evidence boundary.
@@ -102,9 +107,10 @@ the read-back.
 For an underspecified opening request, keep the first interview reply to product questions and explicitly deferred
 product areas. Wait for the user's answer before comparing intent with current target support or naming capability
 gaps, unless the user asks about feasibility in that opening request. Do not turn a common use case into an assumed
-requirement. When support later becomes relevant, state the public-index boundary precisely: the current Scaffold
-generates an unauthenticated read-only index in source; Compile creates a private GitHub repository and does not
-deploy the application or make records publicly reachable.
+requirement. When support later becomes relevant, state the current Scaffold boundary precisely: it admits the
+smallest public index and the exact create/update, show-projection, return-destination, and destroy extensions named
+above, with every generated route public and unauthenticated. Successful Publication is intended to create a private
+GitHub repository, but live publication remains unproved and Compile does not deploy the application.
 
 Edit `.firstdraft/foundation-plan.json` throughout the interview. There is no requirement to resolve every
 material choice before writing locally. Aim to keep one complete document representing the current candidate, but

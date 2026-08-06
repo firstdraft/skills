@@ -7,8 +7,9 @@ structured fields rather than the human-readable `detail` or the broad process e
 The reviewed CLI contract in this stack is revision
 `e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, with JavaScript-source runtime digest
 `0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`. Its source package identifies itself as
-`@firstdraft.com/cli@0.1.0-alpha.2`, but remains unpublished. Check the command surface rather than assuming the
-version alone establishes compatibility.
+the published `@firstdraft.com/cli@0.1.0-alpha.2`. Check the command surface rather than assuming the version alone
+establishes compatibility. Publication does not prove service authentication, staging compatibility, or a complete
+user journey.
 
 ## Local state and credentials
 
