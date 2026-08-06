@@ -24,11 +24,11 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.1.0-alpha.3",
+    version: "0.1.0-alpha.4",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "1167fcdf43fba9040fc4068371fe263e779f26c6c88eb3fe3207369e12d32ba0",
+        "d662b86f33dd75c7a22e89e092c51497b0df9e14958a369d7ac96b85088ac3bd",
     },
     requires: {
       api_contract: [">= 0.1.0", "< 0.2.0"],
@@ -58,7 +58,14 @@ test("release compatibility rejects shape and manifest drift", async () => {
   withMarketplaceDrift.marketplace.plugins[0].version = "0.1.1";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withMarketplaceDrift),
-    /must match the installable marketplace plugin/,
+    /marketplace plugin version must match the marketplace package source/,
+  );
+
+  const withCandidateDrift = structuredClone(documents);
+  withCandidateDrift.packageTemplate.version = "0.1.0-alpha.5";
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withCandidateDrift),
+    /Expected values to be strictly equal/,
   );
 
   const withSourceDrift = structuredClone(documents);
@@ -206,15 +213,21 @@ test("release history is read from every committed ref", () => {
 });
 
 test("release operator and agent instructions track the candidate", async () => {
-  const [marketplace, releasing, agents] = await Promise.all([
+  const [compatibility, marketplace, releasing, agents] = await Promise.all([
+    readJson("release/compatibility.json"),
     readJson(".claude-plugin/marketplace.json"),
     readText("RELEASING.md"),
     readText("AGENTS.md"),
   ]);
-  const candidate = marketplace.plugins.find(({ name }) => name === "firstdraft");
+  const catalogPlugin = marketplace.plugins.find(
+    ({ name }) => name === "firstdraft",
+  );
 
-  assert(releasing.includes(`version is \`${candidate.version}\``));
-  assert(releasing.includes(candidate.source.package));
+  assert(releasing.includes(`version is \`${compatibility.version}\``));
+  assert(releasing.includes(compatibility.plugin_source.package));
+  assert.equal(catalogPlugin.version, "0.1.0-alpha.3");
+  assert.match(releasing, /marketplace catalog deliberately\s+remains pinned to alpha\.3/);
+  assert.match(releasing, /separate marketplace-promotion change/);
   assert(releasing.includes("claude-v$package_version"));
   assert.match(
     releasing,

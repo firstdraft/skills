@@ -31,11 +31,11 @@ An empty Plan is preferable to a fake Entity. Tell the user that the application
 
 ## Bounded web and iPhone application
 
-This complete document is the canonical prepared `rails-sketch/2026-08` success candidate. It requests one
-read-only public web index and one selected iPhone project with the same navigation label and semantic icon. The
-domain is coupled to the selected iPhone client, and the required title Field supplies the human-facing Primary
-Descriptor. The prepared analyzer is designed to return `valid`; that result is still only the Compilation gate,
-not proof that output exists.
+This complete document is the smallest canonical `rails-sketch/2026-08` web-and-iPhone success candidate. It
+requests one read-only public web index and one selected iPhone project with the same navigation label and semantic
+icon. The domain is coupled to the selected iPhone client, and the required title Field supplies the human-facing
+Primary Descriptor. The prepared analyzer is designed to return `valid`; that result is still only the Compilation
+gate, not proof that output exists.
 
 ```json
 {
@@ -92,6 +92,125 @@ Adding `appearance` to this candidate remains structurally valid and importable,
 `foundation_plan.rails_target.compiler.unsupported_application_configuration` at `/application/appearance`.
 Preserve an intentional Appearance request and report the capability gap rather than deleting it merely to obtain
 `valid`.
+
+## Conditional text length
+
+This Field fragment is admitted when it belongs to the same `movie` Entity as the optional `released_on` date Field
+named by its condition. The condition is total because it reads one direct same-record Field. The minimum applies
+only after a release date exists; nil title handling still comes from requiredness rather than the length rule.
+
+```jsonc
+{
+  "subject_uuid": "019fb300-0000-7000-8000-000000000012",
+  "key": "title",
+  "name": "Title",
+  "type": "short_text",
+  "required": true,
+  "validations": [
+    {
+      "subject_uuid": "019fb300-0000-7000-8000-000000000013",
+      "key": "reasonable_length",
+      "kind": "length",
+      "maximum": 120
+    },
+    {
+      "subject_uuid": "019fb300-0000-7000-8000-000000000014",
+      "key": "minimum_length_when_released",
+      "kind": "length",
+      "minimum": 3,
+      "when": {
+        "kind": "not",
+        "expression": {
+          "kind": "is_null",
+          "operand": {
+            "target": {
+              "field": "movie.released_on"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+The same release also admits unconditional ordered integer-literal range comparisons and conditional text or
+ordinary-Reference presence and absence. See the Foundation Plan reference for the exact closed subset. A
+conditional maximum does not become an unconditional form `maxlength`.
+
+## Public mutation, show projection, returns, and destroy
+
+This Scaffold fragment is the complete show-and-destroy extension for a `movie` Entity with owner-local `title` and
+`notes` short-text Fields and a required ordinary `director` Reference. The `movie.director` input names the
+Reference's mechanically derived forward Association. Route order, public authorizations, nonempty create and
+update inputs, and return destinations are coupled exactly as shown.
+
+```jsonc
+{
+  "resource_routes": [
+    "index",
+    "show",
+    "new",
+    "create",
+    "edit",
+    "update",
+    "destroy"
+  ],
+  "index": {
+    "authorization": "public"
+  },
+  "show": {
+    "authorization": "public",
+    "projection": [
+      { "field": "movie.notes" },
+      { "field": "movie.title" }
+    ]
+  },
+  "create": {
+    "inputs": [
+      { "field": "movie.title" },
+      { "field": "movie.notes" },
+      { "association": "movie.director" }
+    ],
+    "authorization": "public",
+    "return_to": {
+      "kind": "resource",
+      "entity": "movie",
+      "route": "show",
+      "record": { "from": "mutation_record" }
+    }
+  },
+  "update": {
+    "inputs": [
+      { "field": "movie.title" },
+      { "field": "movie.notes" },
+      { "association": "movie.director" }
+    ],
+    "authorization": "public",
+    "return_to": {
+      "kind": "resource",
+      "entity": "movie",
+      "route": "show",
+      "record": { "from": "mutation_record" }
+    }
+  },
+  "destroy": {
+    "authorization": "public",
+    "return_to": {
+      "kind": "resource",
+      "entity": "movie",
+      "route": "index"
+    }
+  }
+}
+```
+
+Omit `show.projection` for descriptor-only detail. Without destroy, omit its route and definition. The base
+create/update shape omits show and returns both mutations to the same Entity's public index. Standalone show,
+Association or nested projections, cross-Entity returns, and other destroy destinations remain unsupported.
+A Reference-owned conditional-presence Validation can compile outside this form, but cannot fit these inputs:
+Association inputs currently admit only required References, while conditional presence applies to an optional
+Reference.
 
 ## One Entity and scalar Field
 
@@ -215,10 +334,9 @@ key. If `medium` is renamed, update the default in the same candidate while pres
 
 ## Stored and reverse relationship
 
-This complete document is structurally valid v0.19. Its Reference is within the reviewed importer subset, but its
-authored reverse Association is not, so the complete document is rejected at the current conditional PUT boundary.
-It is not analyzer- or Compiler-proven. `Task` owns the stored `project` Reference. `Project` owns the meaningful
-reverse `tasks` Association. The forward `task.project` Association is derived and therefore omitted.
+This complete document is structurally valid v0.19 and lies within the current ordinary Reference and direct inverse
+Compiler subset. `Task` owns the stored `project` Reference. `Project` owns the meaningful reverse `tasks`
+Association. The forward `task.project` Association is derived and therefore omitted.
 
 ```json
 {
@@ -283,6 +401,7 @@ reverse `tasks` Association. The forward `task.project` Association is derived a
             "name": "Project",
             "targets": ["project"],
             "required": true,
+            "one_to_one": false,
             "on_referenced_deleted": "delete_referencing_record"
           }
         ]
@@ -293,3 +412,21 @@ reverse `tasks` Association. The forward `task.project` Association is derived a
 ```
 
 Changing the deletion behavior is a product decision. Do not choose it silently from target convention.
+
+The current Compiler also admits one narrow indirect collection. For example, if `Task` additionally owns an
+admitted ordinary `team` Reference to `Team`—whose mechanically derived forward `task.team` Association is omitted
+from the Plan—and `Project` owns the admitted `project.tasks` inverse above, Project may author:
+
+```jsonc
+{
+  "subject_uuid": "019fac46-9420-7414-809f-a03650562200",
+  "key": "teams",
+  "kind": "indirect",
+  "name": "Teams",
+  "through": "project.tasks",
+  "source": "task.team"
+}
+```
+
+The generated collection is distinct. The `through` step must be an admitted referenced-side inverse and `source`
+must be an admitted mechanically derived forward Association. Other indirect paths remain unsupported.

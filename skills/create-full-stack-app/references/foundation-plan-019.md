@@ -21,25 +21,34 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
   compilability.
 - The reviewed conditional PUT imports empty drafts; Application domain, appearance, and native-client selections;
   and a bounded subset of Entities, ten scalar Field kinds, enum Fields with ordered values, schema-valid tagged
-  Field and Reference defaults, References with ordered targets and mechanically derived forward Associations,
-  Predicates with exact Expression JSON, Field or system-Field Primary Descriptors, and one public-index Scaffold
-  shape.
-- The prepared application analyzer and Compiler admit independent scalar Entities, the exact public-index
-  Scaffold, optional semantic Entity icons, and selected iPhone output. Application `domain` is admitted only with
-  `native.ios`, and selected iOS requires at least one admitted public-index navigation entry.
-- Enum Fields, Appearance, nonempty delivery, Android, iPad, broader Scaffolds, relationships, and other graph
-  breadth remain outside that Compilation boundary. Some are retained for editing and rejected by analysis; others
-  are rejected atomically by the importer as described below.
+  Field and Reference defaults, ordinary References and their forward Associations, direct referenced-side
+  inverses, one narrow indirect Association, representative owner-local Validations, Predicates with exact
+  Expression JSON, Field or system-Field Primary Descriptors, and the bounded public Scaffold envelope below.
+- The application analyzer and Compiler admit scalar Entities, ordinary References, the admitted inverse and
+  indirect Association shapes, the first Validation subset, exact public Scaffold shapes, optional semantic Entity
+  icons, and selected iPhone output. Application `domain` is admitted only with `native.ios`, and selected iOS
+  requires at least one admitted public-index navigation entry.
+- Enum Fields, Appearance, nonempty delivery, Android, iPad, Accounts, broader Associations, Validations and
+  Scaffolds, and other graph breadth remain outside that Compilation boundary. Some are retained for editing and
+  rejected by analysis; others are rejected atomically by the importer as described below. The current release does
+  not partially compile a candidate containing an unsupported shape.
 - The project-scoped server implements bounded AnalysisRun status and Compilation start, status, cancellation, and
   artifact transport for the reviewed CLI contract.
 - First Draft's
   [controlled product-journey smoke](https://github.com/firstdraft/firstdraft/blob/8ebfc2ed82a610e63f47eb985c23ab7e634fe94e/script/compilation_http_cli_smoke)
-  reproducibly drives the packed reviewed CLI through loopback Rails and real Solid Queue from exact-byte push and
-  analysis through one `plan compile`, one retained Compilation and Publication, historical download, provenance
-  verification, and 194-file two-Entity materialization. It verifies matching web and iPhone navigation order.
-- That smoke replaces only remote GitHub operations with a strict fake. It is controlled local evidence for the
-  joined product contract, not a live GitHub, staging, deployment, generated-application execution, or
-  representative-user observation.
+  produced its recorded runs at service revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e`. It drove the packed reviewed
+  CLI through loopback Rails and real Solid Queue from exact-byte push and analysis through one `plan compile`, one
+  retained Compilation and Publication, historical download, provenance verification, and 194-file two-Entity
+  materialization. It verified matching web and iPhone navigation order.
+- At the later service revision,
+  [Compiler materialization smoke](https://github.com/firstdraft/firstdraft/blob/6002be2685542fedf515879f940b97ad73b1a469/script/compiler_materialization_smoke)
+  separately exercises a 201-file four-Entity Rails-and-iPhone application with the admitted relationships and
+  Validations, plus a 172-file browser-only application with the exact public create/update/show/projection/return
+  and destroy shapes, after both migration and schema-load setup.
+- The recorded product-journey smoke replaces only remote GitHub operations with a strict fake. The later
+  materialization smoke at service revision `6002be2685542fedf515879f940b97ad73b1a469` migrates, schema-loads, boots,
+  and exercises its generated applications locally. Neither establishes live GitHub, staging, deployment, or
+  representative-user operation.
 - A
   [dated field report](https://github.com/firstdraft/firstdraft/blob/16b056a6f55eb92cb6e5a6e02abd58e84b47abd5/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md)
   records one staff-prepared local observation using a fresh Claude Code Opus/high session, the exact
@@ -69,14 +78,15 @@ JavaScript-source runtime digest `0983106d7c1054137d70dccb1091eeadd8272ffcca1f7b
 contract provenance rather than release or execution evidence. That successor exposes `generate uuid`, `generate
 application-key`, `plan init`, `plan push`, `plan status`, zero-flag `plan compile`, `compilation status`, and
 `compilation download`. It deliberately has no public `plan subject-id`, `plan publish`, or local-start
-`plan compile --output` contract. Its source package identity is `@firstdraft.com/cli@0.1.0-alpha.2`, but that
-package remains unpublished. Check commands rather than inferring compatibility from the version number. The joined
-private-GitHub Compile journey remains prepared rather than execution evidence until the controlled service smoke
-observes it.
+`plan compile --output` contract. The reviewed checkout declares `@firstdraft.com/cli@0.1.0-alpha.2`; its packed file
+inventory, contents, and relevant modes match the published package even though npm's raw gzip containers need not
+be byte-identical. Check commands rather than inferring compatibility from the version number. Package publication
+does not prove authentication, staging compatibility, or a complete user journey.
 
-The activated server projections name analyzer release `foundation-plan-rails/application-2026-08` and compiler
-release `foundation-plan-rails/compiler-application-2026-08`. These exact names are contract provenance; the dated
-field report, not the names alone, is the bounded execution evidence.
+Service revision `6002be2685542fedf515879f940b97ad73b1a469` names analyzer release
+`foundation-plan-rails/application-2026-08-05-conditional-length` and Compiler release
+`foundation-plan-rails/compiler-application-2026-08-05-conditional-length`. These exact names are contract
+provenance; the controlled smokes above, not the names alone, are the current bounded execution evidence.
 
 The selected iPhone project composes `firstdraft/foundation-ios-core` revision
 `aa2ac902fa52abab51a4502953b7b962f949a21d`, archive SHA-256
@@ -166,18 +176,22 @@ The reviewed importer accepts the required Application properties `key`, `name`,
 graph state; a nonempty `delivery` remains outside this import boundary.
 
 The prepared application analyzer and Compiler admit `domain` only when `native.ios` is selected. A selected iPhone
-client may omit `domain`, but it requires at least one Entity with the exact public-index Scaffold below so its
-navigation is nonempty. That admitted Scaffold makes the Entity's records readable on the web without
-authentication. Confirm that exposure with the user before authoring it; otherwise preserve the private or broader
-access intent and report that the selected iPhone request cannot yet pass analysis. `appearance`, Android, a domain
-without selected iOS, and any other admitted but unconsumed Application configuration return `issues_found` with
-source-addressed `foundation_plan.rails_target.compiler.unsupported_application_configuration` diagnostics.
+client may omit `domain`, but it requires at least one admitted Scaffold containing a public index so its navigation
+is nonempty. The index supplies the native navigation entry even when that Scaffold includes the exact admitted web
+mutation, show, or destroy extensions; those extensions do not add native detail or mutation screens. That admitted
+Scaffold makes the Entity's records readable on the web without authentication. Confirm that exposure with the user
+before authoring it; otherwise preserve the private or broader access intent and report that the selected iPhone
+request cannot yet pass analysis. `appearance`, Android, a domain without selected iOS, and any other admitted but
+unconsumed Application configuration return `issues_found` with source-addressed
+`foundation_plan.rails_target.compiler.unsupported_application_configuration` diagnostics.
 
 The prepared Compilation emits admitted web public indexes and, when selected, an owned iPhone project beneath
 `ios/`; this is not general generated resource UI, Android, or iPad support.
 
 `entities` may contain any number of Entities with `subject_uuid`, `key`, `name`, optional `icon`, `fields`,
-`references`, `predicates`, and the bounded `scaffold` described below, plus one required `primary_descriptor`.
+`references`, `associations`, `predicates`, and the bounded `scaffold` described below, plus one required
+`primary_descriptor`. Fields, References, and Entities may own schema-valid `validations`; only the exact Compiler
+subset below can pass current target admission.
 
 The smallest accepted Application remains:
 
@@ -220,9 +234,8 @@ UUID through renames, reordering, and coherent moves between enum Fields. An enu
 selected value's owner-local `key`, not its UUID. Update that literal in the same candidate when renaming the value,
 while preserving the value's UUID.
 
-Enum Fields are retained for editing, but the current bounded whole-graph analyzer reports the project-wide
-`foundation_plan.rails_target.compiler.unsupported_graph` capability gap at `/application`; they cannot yet pass
-the Compilation analysis gate. Preserve the enum and report that boundary rather than weakening it to a scalar.
+Enum Fields are retained for editing, but they cannot pass the current Compilation analysis gate. Preserve the enum
+and report that boundary rather than weakening it to a scalar.
 
 A Field `default` is one closed tagged Value. Its tag is `literal`, `environment`, `environment_path`, or
 `reference_record`. A literal wraps its JSON value under `value`; an environment names `current_account`,
@@ -242,26 +255,72 @@ This retention is structural, not default analysis. It does not prove literal co
 enum membership, readable-locator resolution, nullability, normalization behavior, or Compiler lowering. Preserve
 the intended default when reporting any later semantic gap.
 
-An Entity may also own supported References and Predicates. A Reference retains schema-valid combinations of
-`subject_uuid`, `key`, `name`, `targets`, `required`, `one_to_one`, `on_referenced_deleted`, `default`, `immutable`,
-and `realization`. Its ordered target Entity keys are resolved during import, and the Project graph mechanically
-maintains its same-key forward Association. Reference `validations` remain outside this boundary.
+An Entity may also own supported References, Associations, and Predicates.
+A Reference retains schema-valid combinations of
+`subject_uuid`, `key`, `name`, `targets`, `required`, `one_to_one`, `on_referenced_deleted`,
+`default`, `immutable`, and `realization`. Its ordered target Entity keys are resolved during import, and the
+Project graph mechanically maintains its same-key forward Association.
+
+The Compiler admits only an ordinary Reference with one target, omitted or false `one_to_one` and `immutable`, no
+default or realization, and one of the three deletion outcomes: `restrict`, `nullify_reference`, or
+`delete_referencing_record`. It emits the same-key forward traversal, UUID foreign-key storage, nullability, an
+index, and a post-table foreign key. That post-table migration supports self-References and migration-order cycles.
+The database foreign key, not generated Association `dependent` behavior, owns target deletion.
+
+One authored direct Association is admitted when it is unqualified, on the referenced side of an admitted
+Reference, and that Reference is not one-to-one. One authored indirect collection is admitted when its `through`
+step is such an inverse and its `source` step is an admitted mechanically derived forward Association. The Compiler
+emits the indirect collection with distinct traversal. Referencing-side aliases, other indirect paths, predicates,
+cardinality bounds, polymorphism, exclusive arcs, one-to-one, immutable or defaulted References, and broader
+Association shapes fail closed.
+
+The first Rails Validation subset admits:
+
+- unconditional ordered integer-literal comparisons on stored integer Fields, using `greater_than`,
+  `greater_than_or_equal_to`, `less_than`, or `less_than_or_equal_to`;
+- unconditional or conditional `length` on `short_text` or `long_text`, using `minimum`, `maximum`, or
+  `exact_length`;
+- conditional `presence` or `absence` on text Fields; and
+- conditional `presence` or `absence` on an admitted ordinary Reference.
+
+Conditions are limited to total, direct same-record Field null tests, `not`, and `and` or `or` groups. Comparison
+and length rules allow nil so requiredness owns the missing-value error. Required scalar Fields separately derive
+ordinary Rails presence, except Boolean Fields use inclusion in `[true, false]`. Conditional comparisons,
+Entity-owned rules, noninteger comparison owners, equality or linked operands, non-text presence or absence,
+nonordinary References, `format`, `exclusion`, `uniqueness`, and other condition shapes fail closed.
 
 A Predicate retains schema-valid combinations of `subject_uuid`, `key`, `name`, and `expression`. Import preserves
 the Expression's exact decoded JSON meaning without claiming link resolution, type checking, or target lowering.
 Importability does not imply that the current bounded whole-graph analyzer or Compiler accepts a Project containing
-enum Fields, References, or Predicates.
+enum Fields or Predicates.
 
-The only admitted Scaffold shape requests exactly the public `index` resource route and gives its index definition
-`public` authorization; [Examples](examples.md) shows the exact coupled JSON members. The prepared analyzer and
-Compiler admit this shape and emit the corresponding read-only web index. Its Entity name and optional semantic
-icon also feed shared web and iPhone navigation when `native.ios` is selected. Do not add this Scaffold solely to
-satisfy the iPhone navigation requirement without confirming that unauthenticated record exposure is intentional.
+The smallest admitted Scaffold requests exactly the public `index` resource route and gives its index definition
+`public` authorization. Its Entity name and optional semantic icon feed shared web and iPhone navigation when
+`native.ios` is selected. Do not add this Scaffold solely to satisfy the iPhone navigation requirement without
+confirming that unauthenticated record exposure is intentional.
+
+One exact create/update extension requires ordered `index`, `new`, `create`, `edit`, and `update` routes; public
+`index`, `create`, and `update`; nonempty create and update inputs; and a return from each mutation to that Entity's
+public index. Inputs are owner-local `short_text` Fields or forward Associations over admitted required References.
+Every required Field and Reference must be a create input. An admitted conditional-presence Validation owner must
+be present in both input lists. A Reference input's target needs an admitted scalar Primary Descriptor. Because
+Association inputs admit only required References, a conditional-presence Validation on an optional Reference
+cannot fit this current Scaffold form subset even though that Validation can compile outside the form.
+
+One exact show extension inserts `show` after `index`, makes it public, and otherwise retains the complete mutation
+shape. Its projection is omitted for descriptor-only detail or is a nonempty ordered list of direct owner-local
+Fields from the ten admitted scalar kinds. Create and update may return to the same Entity's index or to the
+mutation record's selected show route with exactly `"record":{"from":"mutation_record"}`. Association or nested
+projections, duplicates, cross-Entity Fields, and a standalone public index plus show are unsupported.
+
+One exact destroy variant appends `destroy` to the complete show-bearing shape, gives destroy public authorization,
+and returns only to the same Entity's selected public index. Other destroy destinations are unsupported. No current
+Scaffold emits a native detail or mutation surface.
 
 Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other
-settings shape is structurally invalid rather than an importer capability gap. Schema-valid Field types outside
-the list above, nonempty delivery, development data, Validations, derivations, authored Associations, broader
-Scaffold shapes, and other unlisted Entity capabilities remain unsupported. One unsupported pointer rejects the
-complete conditional PUT with
-`foundation_plan.import.unsupported_capability` and no mutation. That diagnostic describes server capability, not
-invalid product meaning. Preserve the authored Plan and report the exact gap.
+settings shape is structurally invalid rather than an importer capability gap. Nonempty delivery, development
+data, derivations, Accounts, and other graph slices outside the importer boundary reject the complete conditional
+PUT with source-addressed `foundation_plan.import.unsupported_capability` diagnostics and no mutation. Imported
+but unadmitted shapes, including enum Fields, Predicates, broader References, Associations, Validations, and
+Scaffolds, instead fail the complete candidate at target analysis. Either diagnostic describes current service
+capability, not invalid product meaning. Preserve the authored Plan and report the exact gap.

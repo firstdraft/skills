@@ -8,14 +8,17 @@ plugin release, npm publication, or First Draft deployment.
 ## Release identity
 
 The installable `firstdraft@firstdraft-skills` plugin is the public npm package
-`@firstdraft.com/claude-code`. Its current candidate version is `0.1.0-alpha.3`. The marketplace catalog points to
-that exact package and version. The checkout-local `firstdraft` manifest and private root `@firstdraft/skills@0.0.0`
-package are test tooling, not release identities.
+`@firstdraft.com/claude-code`. Version `0.1.0-alpha.3` is published. This source prepares the forward-only alpha.4
+candidate; its current candidate version is `0.1.0-alpha.4`. The marketplace catalog deliberately
+remains pinned to alpha.3. Merging this source neither publishes alpha.4 nor promotes the catalog; those actions are
+approved separately. The checkout-local `firstdraft` manifest and private root `@firstdraft/skills@0.0.0` package are
+test tooling, not release identities.
 
 Packing deterministically assembles the plugin from the canonical `skills/create-full-stack-app` directory, the
 installable manifest and CLI adapter under `packages/claude-plugin`, the exact packed files from
 `@firstdraft.com/cli@0.1.0-alpha.2`, and the repository license. Colleagues therefore install the Skill and compatible
 CLI together through Claude Code rather than managing a separate global CLI or relying on transitive installation.
+That exact CLI version is already published and must not be republished for this candidate.
 
 [`release/compatibility.json`](release/compatibility.json) records the plugin package name, exact packed tarball
 SHA-256, compatible service API range, exact CLI version, and Foundation Plan format. One marketplace SemVer maps
@@ -29,9 +32,11 @@ A compatible result establishes candidate eligibility only; it never authorizes 
 2. Pack the exact CLI and Claude plugin candidates. Verify the plugin tarball SHA-256 against
    `release/compatibility.json`, install both tarballs into an isolated temporary npm project, and confirm the
    plugin-local `firstdraft` adapter runs the exact CLI version.
-3. Validate the staged plugin with the real Claude Code CLI. Exercise a local marketplace in isolated Claude state
-   and confirm Skill discovery, sensitive configuration handling, and CLI invocation. This is prepublication
-   evidence, not proof of a public install.
+3. Validate the staged plugin with the real Claude Code CLI. Exercise an ephemeral marketplace or the assembled
+   alpha.4 plugin in isolated Claude state; the committed public catalog intentionally continues to exercise
+   alpha.3. Confirm Skill discovery, sensitive configuration handling, and CLI invocation. This is prepublication
+   evidence for alpha.4. The dated public-install observation proves the prior alpha.3 package and bundled alpha.2
+   CLI only.
 4. One operator deploys the exact service candidate to staging and runs the approved Movie Catalog qualification
    and singleton replay with the exact CLI and Skill candidates. Preserve the three repository SHAs, package
    hashes, service revision, retained identifiers, and evidence.
@@ -46,11 +51,14 @@ Before pushing a release tag, verify that a GitHub ruleset protects `claude-v*` 
 updates, the `npm` environment requires the intended human reviewer, and its `NPM_RELEASE_ENABLED` variable is
 deliberately set to `true`. The workflow fails closed unless the tag is protected and its commit is on `main`.
 
-1. Publish the exact compatible CLI package and reconcile its registry identity read-only.
+1. Confirm the exact published CLI package, then reconcile its registry identity read-only. Do not republish alpha.2.
+   A future candidate that requires a new CLI version must publish and reconcile that new package before the plugin.
 2. Publish the already-qualified `@firstdraft.com/claude-code` tarball with npm provenance under the prerelease
-   dist-tag, then verify the registry returns the expected version and integrity.
-3. Merge or fast-forward the marketplace catalog on `main` so
-   `claude plugin marketplace add firstdraft/skills` resolves to the published package version.
+   `next` dist-tag, then verify the registry returns the expected version and integrity. `next` identifies the newest
+   published candidate; the exact-version marketplace catalog remains the colleague installation channel.
+3. After registry reconciliation, merge a separate marketplace-promotion change on `main` so
+   `claude plugin marketplace add firstdraft/skills` resolves to the published alpha.4 package. Never point the public
+   catalog at an unpublished candidate.
 4. In fresh isolated Claude state, run the exact public installation:
 
    ```sh
@@ -66,8 +74,10 @@ Do not retry until its identity is known. Release corrections are forward-only a
 
 The plugin package is published by pushing protected tag `claude-v$package_version`. That tag triggers
 `.github/workflows/publish.yml`, which rechecks the source commit, verifies the exact CLI release already exists in
-npm, vendors that exact CLI checkout, reproduces the recorded plugin tarball digest, and publishes those bytes. Pushing the tag is therefore the
-publication mutation and requires the explicit approval above.
+npm, vendors that exact CLI checkout, reproduces the recorded plugin tarball digest, and publishes those bytes
+through npm trusted publishing. The npm trusted-publisher binding for this repository and workflow is an explicit
+pre-tag prerequisite. Pushing the tag is therefore the publication mutation and requires the explicit approval
+above.
 
 ## Checks
 
@@ -81,5 +91,5 @@ node script/check-claude-plugin-package.mjs --cli-root /path/to/exact/cli
 
 Stage the package and validate it with the current supported Claude Code CLI. Use isolated Claude configuration for
 install tests; do not alter a colleague's real Claude state during qualification. A local validation or packed
-install does not prove the two public commands until both npm packages and the GitHub marketplace catalog are
-reachable externally.
+install does not prove alpha.4 through the two public commands until that exact npm package and the GitHub marketplace
+catalog are reachable externally.

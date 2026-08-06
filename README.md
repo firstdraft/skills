@@ -53,26 +53,35 @@ revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e`, including prerequisite
 The fresh-model successor is pinned to service revision
 `3a029a8b425addbbba4f56d9197878cc002752f4`.
 
-The prepared compiler contract admits independent Entities using supported scalar Fields, the exact public-index
-Scaffold, optional semantic Entity icons, and selected iPhone output under `ios/`. Application `domain` is admitted
-only when `native.ios` is selected, and selected iOS requires at least one admitted public-index navigation entry.
-Enum Fields remain importable for editing but cannot pass the current Compilation analysis gate. The selected
-iPhone project composes `firstdraft/foundation-ios-core` revision
+At service revision `6002be2685542fedf515879f940b97ad73b1a469`, the prepared compiler contract admits Entities
+using ten scalar Field kinds; ordinary single-target References; direct referenced-side inverses and one narrow
+indirect Association; a closed Validation subset including conditional text length; exact public index,
+create/update, show-projection, return-destination, and destroy Scaffolds; optional semantic Entity icons; and
+selected iPhone output under `ios/`. Application `domain` is admitted only when `native.ios` is selected, and
+selected iOS requires at least one admitted public-index navigation entry. Every admitted Scaffold is public and
+unauthenticated. Enum Fields remain importable for editing but cannot pass the current Compilation analysis gate.
+That service revision names analyzer release `foundation-plan-rails/application-2026-08-05-conditional-length` and
+Compiler release `foundation-plan-rails/compiler-application-2026-08-05-conditional-length`.
+The selected iPhone project composes `firstdraft/foundation-ios-core` revision
 `aa2ac902fa52abab51a4502953b7b962f949a21d`, archive SHA-256
 `0807e76cf02296af27d4eb1aae68e298beef162a7daa8a3da55d83e88ab6d748`. That package is iPhone-only; it is not
-iPad support. Appearance, nonempty delivery, Android, broader Scaffolds, relationships and other graph breadth,
-deployment, and arbitrary applications remain outside this Compilation boundary.
+iPad support. Accounts and authentication, notifications and push, deployment, Android, iPad, broader graph and
+Scaffold shapes, and gap-aware partial Compilation remain outside this boundary. Unsupported shapes fail the
+complete candidate closed.
 
-The combined CLI, Skill, and service workflow remains unreleased. The reviewed successor source identifies itself as
-`@firstdraft.com/cli@0.1.0-alpha.2`, but that package remains unpublished. Its zero-flag `plan compile` command pushes
-the exact current Plan, waits for analysis of that accepted graph generation, and invokes the internal GitHub
-Publication lifecycle only for a valid unchanged candidate. Public `plan publish` and local-start
-`plan compile --output` are not commands; retained successful artifacts are materialized with
+The exact CLI `@firstdraft.com/cli@0.1.0-alpha.2` and Claude plugin
+`@firstdraft.com/claude-code@0.1.0-alpha.3` are public experimental prereleases. A dated
+[isolated public-install observation](evidence/2026-08-06-public-claude-code-plugin-install.md) confirms Claude Code
+2.1.223 could register the GitHub marketplace, install alpha.3 from npm, discover its one Skill, and run its bundled
+alpha.2 CLI. This source prepares forward-only plugin alpha.4; the public catalog does not serve alpha.4, and its
+publication and catalog promotion remain separate approval-gated actions. The CLI's
+zero-flag `plan compile` command pushes the exact current Plan, waits for analysis of that accepted graph generation,
+and invokes the internal GitHub Publication lifecycle only for a valid unchanged candidate. Public `plan publish`
+and local-start `plan compile --output` are not commands; retained successful artifacts are materialized with
 `compilation download <id> --output <path>`. The controlled local harness establishes this product-Compile shape
-only against a strict fake GitHub remote; no live endpoint, staging run, or real GitHub mutation establishes it.
-There is no Plan GET or pull operation, complete semantic
-analyzer, deployment workflow, or general web or mobile generator. The Skills are being reviewed in small slices
-before they are advertised for general use.
+only against a strict fake GitHub remote; the public-install observation did not authenticate a model session or
+exercise staging. No live endpoint, staging run, or real GitHub mutation establishes this full journey. There is no
+Plan GET or pull operation, complete semantic analyzer, deployment workflow, or general web or mobile generator.
 
 ## Skills
 
@@ -93,25 +102,29 @@ with:
 gh skill preview firstdraft/skills create-full-stack-app
 ```
 
-Do not install this Skill for ordinary use yet. No released `firstdraft` CLI and server pair currently satisfies
-its full prepared capability boundary.
+Do not install this Skill for ordinary use yet. Public experimental distribution exists, but an authenticated
+public-install-to-staging journey has not established the prepared capability boundary.
 
 ### Claude Code plugin preview
 
 The repository assembles an installable Claude Code plugin named `firstdraft` as the public npm package
 `@firstdraft.com/claude-code`. Packing copies the canonical `skills/create-full-stack-app` directory into a temporary
 staging tree; the generated copy is never edited or committed. The package also includes a small `firstdraft`
-adapter and the exact packed bytes of `@firstdraft.com/cli@0.1.0-alpha.2`, so installing the plugin supplies both the
-Skill and its compatible CLI without requiring Claude Code to install transitive npm dependencies.
+adapter and the CLI package contents packed from reviewed revision
+`e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, reconciled with published
+`@firstdraft.com/cli@0.1.0-alpha.2`. Installing the plugin therefore supplies both the Skill and its compatible CLI
+without requiring Claude Code to install transitive npm dependencies.
 
-The marketplace catalog uses Claude Code's documented `npm` plugin source and pins
-`@firstdraft.com/claude-code@0.1.0-alpha.3`. The installable manifest asks Claude Code for the staging API URL and a
-sensitive API token. Claude stores sensitive configuration in secure storage and exports plugin options only to
-plugin subprocesses. The adapter maps those options to the CLI's environment without printing them. Users should
-create the token in First Draft's browser UI and enter it in Claude's configuration prompt, never paste it into an
-agent conversation or command line. Installed-plugin configuration is authoritative: when it supplies the API URL,
-the adapter deliberately ignores any ambient `FIRSTDRAFT_API_TOKEN` so a credential cannot cross API origins. The
-environment variable remains a standalone-CLI configuration path.
+The marketplace catalog uses Claude Code's documented `npm` plugin source and remains pinned to the published
+`@firstdraft.com/claude-code@0.1.0-alpha.3`. The package template, installable manifest, and compatibility record in
+this source prepare alpha.4 without promoting it. A separate post-publication catalog change may point fresh installs
+to alpha.4 only after its exact registry identity has been reconciled. The installable manifest asks Claude Code for
+the staging API URL and a sensitive API token. Claude stores sensitive configuration in secure storage and exports
+plugin options only to plugin subprocesses. The adapter maps those options to the CLI's environment without printing
+them. Users should create the token in First Draft's browser UI and enter it in Claude's configuration prompt, never
+paste it into an agent conversation or command line. Installed-plugin configuration is authoritative: when it
+supplies the API URL, the adapter deliberately ignores any ambient `FIRSTDRAFT_API_TOKEN` so a credential cannot
+cross API origins. The environment variable remains a standalone-CLI configuration path.
 
 The root `firstdraft` manifest remains a checkout-local development path and has a separate checkout-only version.
 From a checkout, validate the marketplace and checkout manifests without installing either one:
@@ -127,7 +140,8 @@ documents npm plugin sources and notes that installed plugins are copied into Cl
 executables in a plugin-root `bin/` directory are added to the Bash tool's `PATH`. Its
 [user-configuration section](https://code.claude.com/docs/en/plugins-reference#user-configuration) documents
 sensitive `userConfig` values and their `CLAUDE_PLUGIN_OPTION_*` subprocess environment variables. These claims
-were rechecked on 2026-08-05; public installation remains unobserved until publication.
+were rechecked on 2026-08-05. Public installation of the prior alpha.3 plugin with its alpha.2 CLI was observed in
+isolated Claude Code 2.1.223 state on 2026-08-06.
 
 For checkout-local development, start one Claude Code session without registering a marketplace:
 
@@ -135,19 +149,20 @@ For checkout-local development, start one Claude Code session without registerin
 claude --plugin-dir .
 ```
 
-Once both npm packages and the catalog are explicitly released, the intended colleague installation is:
+The public colleague installation commands are:
 
 ```sh
 claude plugin marketplace add firstdraft/skills
 claude plugin install firstdraft@firstdraft-skills
 ```
 
-Those public commands are not yet expected to work: neither npm package has been published and this catalog change
-has not been released. Local packed-install and isolated-Claude checks establish only prepublication behavior. The
-historical 2026-08-04 source-only install report remains evidence for its recorded revision, not this composite
-package. A dated [vendored-CLI smoke](evidence/2026-08-05-claude-plugin-vendored-cli-smoke.md) records the current
-local npm-source install, the rejected transitive-dependency design, and successful bare-command discovery. See
-[`RELEASING.md`](RELEASING.md) for the approval-gated qualification and publication sequence.
+Those exact commands succeeded for alpha.3 on 2026-08-06. They will not establish this alpha.4 candidate until its
+exact tarball is published and the catalog change is promoted. The isolated lane was not logged in, so it did not
+prove model-backed Skill invocation, token onboarding, staging compatibility, or the product journey. The historical
+2026-08-04 source-only install report remains evidence for its recorded revision. A dated
+[vendored-CLI smoke](evidence/2026-08-05-claude-plugin-vendored-cli-smoke.md) records the local npm-source assembly,
+the rejected transitive-dependency design, and successful bare-command discovery. See
+[`RELEASING.md`](RELEASING.md) for the approval-gated qualification and forward-only publication sequence.
 
 ## Development
 
@@ -155,8 +170,8 @@ Cross-repository compatibility metadata and the approval-gated release process a
 [`RELEASING.md`](RELEASING.md).
 
 The portable Skill directories contain no executable code or runtime packages. The assembled Claude plugin adds
-only its CLI adapter and exact vendored CLI package. Repository checks use Node.js 22 or newer and one locked development
-dependency for exact JSON Schema validation:
+only its CLI adapter and exact vendored CLI package. Repository checks use Node.js 22 or newer and one locked
+development dependency for exact JSON Schema validation:
 
 Repository checks require `git` on `PATH` and a real Git checkout with its index and working tree available. A source
 archive, exported tree, or installed plugin cache is insufficient because the checkout-boundary checks use the Git
@@ -262,5 +277,4 @@ The controlled product-journey harness authenticates its local CLI requests but 
 staging Publication, generated-application execution, representative user operation, deployment, or production
 readiness. The 2026-08-04 report establishes one pinned fresh Claude Code operation of that local fixture, not a
 published or representative-user journey. The older dated observation separately records generated-app execution
-but does not widen those journey claims or capabilities beyond the current independent-scalar-Entity and
-public-index slice.
+but does not widen those journey claims beyond the independent-scalar-Entity and public-index slice it exercised.

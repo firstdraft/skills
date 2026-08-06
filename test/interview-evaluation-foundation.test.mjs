@@ -137,11 +137,16 @@ test("packaged interview guidance keeps the opening turn focused on one product 
   );
   assert.match(
     skill,
-    /Compile creates a\s+private GitHub repository and does not\s+deploy the application or make records publicly reachable/,
+    /smallest public index and the exact create\/update, show-projection, return-destination, and destroy extensions/,
+  );
+  assert.match(skill, /every generated route public and unauthenticated/);
+  assert.match(
+    skill,
+    /Successful Publication is intended to create a private\s+GitHub repository, but live publication remains unproved and Compile does not deploy/,
   );
   assert.match(
     modelingGuide,
-    /Keep one candidate Plan: do not maintain a\s+parallel flattened or capability-friendly shape/,
+    /Keep one candidate Plan: do not maintain a parallel flattened or capability-friendly\s+shape/,
   );
 });
 
