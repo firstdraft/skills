@@ -1,8 +1,27 @@
-export const cliRevision = "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
+export const cliRevision = "d37d8b6775a0b97ce10bd651485bd308fed1dda2";
 export const cliRuntimeSha256 =
-  "0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad";
+  "019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.1.0-alpha.2";
+export const cliPackageVersion = "0.1.0";
+
+export const safeGithubReasonCodes = Object.freeze([
+  "github.configuration_missing",
+  "github.oauth_unavailable",
+  "github.api_unavailable",
+  "github.reauthorization_required",
+  "github.account_mismatch",
+  "github.installation_unavailable",
+  "github.installation_not_ready",
+  "github.preflight_unavailable",
+  "github.preflight_unclassified",
+  "github.preflight_unavailable.configuration",
+  "github.preflight_unavailable.authorization",
+  "github.preflight_unavailable.repository_client",
+  "github.preflight_unavailable.artifact_preparation",
+  "github.preflight_unavailable.installation_token",
+  "github.preflight_unavailable.publication_preparation",
+  "github.preflight_unavailable.repository_ref_client",
+]);
 
 export const projectId = "01900000-0000-7000-8000-000000000980";
 export const compilationId = "01900000-0000-7000-8000-000000000981";
@@ -45,6 +64,7 @@ export const packedFileAllowlist = [
   "src/commands/plan-status.js",
   "src/compilation-artifact.js",
   "src/file-system.js",
+  "src/plan-compile-progress.js",
   "src/plan-state.js",
   "src/uuid-v7.js",
   "src/version.js",

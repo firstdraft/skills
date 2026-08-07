@@ -1,14 +1,19 @@
 # Diagnostics and recovery
 
 Read every result as evidence about one exact invocation and, for Plan mutations, one exact local byte sequence.
-Handled leaf-command failures write exactly one JSON object to standard error. Branch on its stable `error` and
-structured fields rather than the human-readable `detail` or the broad process exit status.
+Handled leaf-command failures end standard error with exactly one JSON object. `plan compile` may first emit the
+recognized progress lines documented below. Remove only one leading contiguous block of complete lines whose text
+after the exact `First Draft: ` prefix matches the stable message table below. Then require the remainder to be one
+JSON object. An unrecognized prefixed line, a progress line after the envelope, any other prefix or suffix, and any
+interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
+human-readable `detail` or broad process exit status.
 
 The reviewed CLI contract in this stack is revision
-`e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, with JavaScript-source runtime digest
-`0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`. Its source package identifies itself as
-the published `@firstdraft.com/cli@0.1.0-alpha.2`. Check the command surface rather than assuming the version alone
-establishes compatibility. Publication does not prove service authentication, staging compatibility, or a complete
+`d37d8b6775a0b97ce10bd651485bd308fed1dda2`, with JavaScript-source runtime digest
+`019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72`. Its source package is
+`@firstdraft.com/cli@0.1.0`. Check the command surface rather than assuming the version alone
+establishes compatibility. Candidate
+qualification or package publication does not prove service authentication, staging compatibility, or a complete
 user journey.
 
 ## Local state and credentials
@@ -71,12 +76,81 @@ means the CLI and service contract must be reconciled.
 `plan compile` performs a new exact-byte push, waits for the analysis generation whose graph version came from
 that accepted push, and requests the internal singleton GitHub Publication only when the result is `valid`.
 
-The command produces no progress output on standard output. Success is one validated object containing:
+The command reserves standard output for one validated private GitHub repository URL on success. While waiting, its
+progress output distinguishes the retained Compilation from GitHub Publication. Treat
+`compilation.status: "succeeded"` as definitive Compilation completion even when Publication remains nonterminal.
+Do not call a nonterminal GitHub phase "still compiling", and do not call the application published until the
+Publication reaches `succeeded` and the CLI emits the validated URL.
 
-- `project.id`, `graph_version`, and `head_source_sha256`;
-- the retained `compilation`, its analyzer and Compiler provenance, target, status, Head digest, and artifact
-  metadata; and
-- the retained `publication`, its terminal status and private repository identity and URL.
+The Publication follow is bounded to ten minutes. Four minutes alone remains inside that window and is not evidence
+of a stall; use the validated progress tuple. A timeout stops only the current invocation's wait, not retained work.
+Let an active invocation follow a non-null `retry_at`. A parked singleton has no scheduled retry; report that
+operator recovery is required and do not mechanically loop Compile or invent a recovery action.
+
+Every accepted Publication projection contains exactly these progress fields:
+
+| Field | Meaning |
+| --- | --- |
+| `phase` | Current coarse retained stage from the closed phase set below. |
+| `retry_at` | UTC RFC 3339 timestamp with six fractional digits for scheduled automatic work, or `null`. |
+| `retry_count` | Retained retry count from 0 through 7; report it as a count, not a guessed provider-attempt number. |
+| `reason_code` | One safe coarse reason from the closed allowlist below, or `null` when no safe reason is available. |
+
+The phase set is `compiling`, `preparing_repository`, `github_preflight`, `creating_repository`,
+`preparing_repository_reconciliation`, `reconciling_repository`, `preparing_artifact`, `publishing_artifact`,
+`preparing_publication_reconciliation`, `reconciling_publication`, `completed`, `failed`, and `cancelled`.
+
+The reason-code allowlist is `github.configuration_missing`, `github.oauth_unavailable`,
+`github.api_unavailable`, `github.reauthorization_required`, `github.account_mismatch`,
+`github.installation_unavailable`, `github.installation_not_ready`, `github.preflight_unavailable`,
+`github.preflight_unclassified`, `github.preflight_unavailable.configuration`,
+`github.preflight_unavailable.authorization`, `github.preflight_unavailable.repository_client`,
+`github.preflight_unavailable.artifact_preparation`, `github.preflight_unavailable.installation_token`,
+`github.preflight_unavailable.publication_preparation`, and
+`github.preflight_unavailable.repository_ref_client`.
+
+A non-null `retry_at` identifies the exact scheduled time to report. A positive `retry_count` from 1 through 7 with
+null `retry_at` means automatic work is parked and needs operator attention. Zero with both nullable fields null
+means no current wait or safe reason is projected. The coarse code never proves a bad token, absent account
+provisioning, wrong endpoint, permanent authorization defect, or provider outage. Do not infer a root cause or
+recommend origin changes, reinstallation, or support escalation from the phase, elapsed time, HTTP status, or
+human-readable detail. `github.preflight_unclassified` says only that a retained legacy retry had no classified
+reason. Each dotted `github.preflight_unavailable.*` fallback identifies the coarse pre-claim stage that contained an
+otherwise-unclassified error; it does not expose the exception or establish a provider cause.
+
+The CLI emits only state-changing lines, suppresses consecutive duplicate text, and prefixes every line with
+`First Draft: `. The stable messages are:
+
+| Observation | Message after the prefix |
+| --- | --- |
+| Analysis started | `Analyzing Foundation Plan...` |
+| Analysis valid | `Foundation Plan analysis valid.` |
+| Compilation started | `Compiling application...` |
+| `compilation.status` first becomes `succeeded` | `Application compiled.` |
+| `preparing_repository` | `Preparing private GitHub repository...` |
+| `github_preflight`, no retry | `Checking GitHub access...` |
+| `github_preflight`, scheduled | `Checking GitHub access (reason: CODE; retry count: N; next retry: TIMESTAMP).` |
+| `github_preflight`, parked | `Checking GitHub access (reason: CODE; retry count: N; automatic retries paused; operator recovery required).` |
+| `creating_repository` | `Creating private GitHub repository...` |
+| `preparing_repository_reconciliation` | `Preparing to verify GitHub repository creation...` |
+| `reconciling_repository` | `Verifying GitHub repository creation...` |
+| `preparing_artifact` | `Preparing compiled application...` |
+| `publishing_artifact` | `Publishing compiled application to GitHub...` |
+| `preparing_publication_reconciliation` | `Preparing to verify GitHub publication...` |
+| `reconciling_publication` | `Verifying GitHub publication...` |
+| `completed` | `GitHub publication complete.` |
+| `failed` with `compilation.status: "failed"` | `Application compilation failed.` |
+| `cancelled` with `compilation.status: "cancelled"` | `Application compilation cancelled.` |
+| `failed` with `compilation.status: "succeeded"` | `GitHub publication failed.` |
+| `cancelled` with `compilation.status: "succeeded"` | `GitHub publication cancelled.` |
+
+The `compiling` Publication phase emits no additional line beyond Compilation progress. None of these messages
+contains a URL, resource ID, digest, raw Plan, or lower-level provider detail. Do not reverse-engineer fields from
+the prose; the CLI has already validated the projection before rendering it. A failed or cancelled Compilation
+means GitHub Publication work was not reached. A failed or cancelled Publication paired with a succeeded Compilation
+is a later GitHub delivery outcome. A terminal failed Publication permits only a failed or succeeded Compilation; a
+terminal cancelled Publication permits only a cancelled or succeeded Compilation. The CLI rejects terminal
+projections paired with a queued or running Compilation instead of rendering an unspecified message.
 
 `plan_not_valid` includes the validated current analysis and means no Publication was requested. When its status is
 `issues_found`, continue the product conversation, edit, push, or invoke Compile again when useful. Treat
@@ -84,9 +158,15 @@ The command produces no progress output on standard output. Success is one valid
 source correction. `local_plan_changed` means the bytes changed after acceptance or analysis and before the
 Publication mutation; a later invocation submits the current bytes as a new candidate.
 
-The first accepted Publication request establishes this release's Project singleton, whether it later succeeds or
-ends in another terminal state. A repeat of `plan compile` safely asks for that same retained Publication; it cannot
-repoint it to a later Head.
+The first accepted Publication request establishes this release's Project singleton, whether it later succeeds,
+parks, or ends in another terminal state. While one `plan compile` invocation polls it, do not launch a concurrent
+Compile or another start request. If that invocation exits on an outcome-unknown, unavailable status, timeout, or
+interruption, wait and rerun the same zero-flag `firstdraft plan compile` with exact unchanged
+Plan bytes. Its conditional singleton PUT resumes or reconciles the retained Publication without creating another
+Compilation, repository, or push. There is no separate public Publication status command. The singleton cannot be
+repointed to a later Head. `invalid_publication_status` is different: unchanged replay cannot repair its protocol
+mismatch. Preserve the exact Plan bytes and private state, reconcile the coordinated CLI/service versions first,
+and do not start a competing or direct mutation.
 
 ## Retained Compilation status
 
@@ -139,7 +219,9 @@ tree.
 | `plan compile` | `analysis_status_unavailable`, `invalid_analysis_status`, `analysis_status_rejected` | Compile's analysis read failed or was rejected. |
 | `plan compile` | `plan_not_valid` | The accepted graph did not reach `valid`; inspect `current`. |
 | `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before Publication. |
-| `plan compile` | `publication_start_rejected`, `publication_status_unavailable`, `invalid_publication_status` | Publication transport or response validation failed. |
+| `plan compile` | `publication_start_rejected` | First Draft returned a validated non-timeout 4xx rejection; Publication success was not verified. |
+| `plan compile` | `publication_status_unavailable` | The retained Publication status read failed. |
+| `plan compile` | `invalid_publication_status` | The response did not satisfy the coordinated Publication protocol. |
 | `plan compile` | `publication_changed`, `publication_wait_timed_out` | The pinned singleton changed or remained nonterminal. |
 | `plan compile` | `publication_failed`, `publication_cancelled` | The retained singleton reached a non-success terminal state. |
 | `compilation status`, `compilation download` | `compilation_status_unavailable`, `invalid_compilation_status` | The retained status could not be verified. |
@@ -151,27 +233,48 @@ tree.
 
 ## Ambiguous mutations
 
+`publication_start_rejected` is a validated non-timeout 4xx result and establishes only that Publication success was
+not verified. The envelope does not establish whether this request reached the service's start boundary, whether it
+left retained or remote work, or whether earlier retained work exists. Report only its validated structured status
+and code; preserve the exact Plan and private state; and do not infer a GitHub, account, endpoint, or provider cause.
+The rejection alone authorizes no replay, concurrent Compile, or direct mutation. Resolve a named structured recovery
+action or coordinated route/service defect before a separately supported retry. A 408 or 5xx response to the start
+request is not this family: the CLI treats its outcome as unknown and performs the bounded singleton reconciliation
+described below.
+
 `request_outcome_unknown` on ordinary `plan push` or with `phase: "push"` from `plan compile` means the Plan
 PUT may have been accepted but local state cannot prove the new Head. There is no Plan GET/reconciliation command,
 so preserve the local files and stop rather than repeating that mutation or manufacturing an ETag.
 
 `request_outcome_unknown` with `phase: "publication"` has a different recovery boundary. The Publication
-endpoint is a Project singleton, and the CLI already attempted one read-only reconciliation. A later
-`plan compile` invocation safely asks the server to create or replay that same retained singleton and validates
-its Head provenance; it cannot create a second Publication or repoint the first one.
+endpoint is a Project singleton, and the CLI already attempted one read-only reconciliation. The singleton may
+already exist even though the response is unknown. Do not start a concurrent Compile, preserve the retained Head
+boundary, and do not infer whether repository creation ran. After the current invocation exits, wait and rerun the
+same zero-flag `firstdraft plan compile` with unchanged Plan bytes to reconcile or resume that singleton.
 
-`publication_status_unavailable`, `invalid_publication_status`, and `publication_wait_timed_out` leave the retained
-singleton possibly running or otherwise unknown. Do not call it failed, succeeded, or published.
-`publication_failed` and `publication_cancelled` are terminal for that singleton; report the validated projection.
-Remote processing may have left a repository or commit even when the projection does not identify one, so manual
-observation may be necessary. A different repository or later Head requires a fresh Project. Repository deletion or
-visibility changes require a separate user request and the exact verified repository identity.
+`publication_status_unavailable` and `publication_wait_timed_out` leave the retained
+singleton possibly running, scheduled for retry, parked, or otherwise unknown. Report only the last validated
+progress fields when present. Do not call it failed, succeeded, or published, and do not run concurrent Compile
+commands. After the current invocation exits, wait and rerun the same zero-flag Compile with unchanged Plan bytes
+to resume the singleton.
+`invalid_publication_status` also leaves the singleton result unverified, but retrying unchanged cannot repair a
+protocol mismatch. Preserve the bytes and local state, reconcile compatible CLI/service versions, and do not start
+a competing or direct mutation.
+`publication_failed` and `publication_cancelled` are terminal for that singleton; inspect
+`current.compilation.status` before reporting the failed stage. A failed or cancelled Compilation means GitHub work
+was not reached, so do not warn about repository or commit effects. When Compilation succeeded, the later GitHub
+Publication failed or was cancelled, and remote processing may have left a repository or commit even when the
+projection does not identify one; manual observation may then be necessary. A different repository or later Head
+requires a fresh Project. Repository deletion or visibility changes require a separate user request and the exact
+verified repository identity.
 
 `local_state_not_saved` is the only handled envelope that can include private `recovery_state`. Keep it local.
 Do not paste, log, or commit it.
 
-Unknown, absent, malformed, mixed, or additional output is not a trusted recovery envelope. Preserve local state and
-avoid guessing whether a mutation happened.
+Unknown, absent, malformed, or additional output after removing only recognized complete `First Draft: ` lines is
+not a trusted recovery envelope. Preserve local state and avoid guessing whether a mutation happened. An HTTP status
+by itself does not prove that an account lacks provisioning or that an endpoint does not exist, and it is not a
+basis for a support recommendation.
 
 ## Diagnostic shape
 

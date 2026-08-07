@@ -17,8 +17,8 @@ import {
   assertErrorEnvelope,
   initializedProject,
   invokeRunner,
-  jsonLine,
   planPath,
+  progressMessages,
   sequenceFetch,
   sha256,
 } from "./harness.mjs";
@@ -50,9 +50,21 @@ async function verifyHappyCompile(context, planSource) {
 
   assert.deepEqual(result, {
     status: 0,
-    stdout: jsonLine(published),
-    stderr: "",
+    stdout: "https://github.com/octocat/movie-catalog\n",
+    stderr:
+      "First Draft: Analyzing Foundation Plan...\n" +
+      "First Draft: Foundation Plan analysis valid.\n" +
+      "First Draft: Compiling application...\n" +
+      "First Draft: Application compiled.\n" +
+      "First Draft: GitHub publication complete.\n",
   });
+  assert.deepEqual(progressMessages(result), [
+    "First Draft: Analyzing Foundation Plan...",
+    "First Draft: Foundation Plan analysis valid.",
+    "First Draft: Compiling application...",
+    "First Draft: Application compiled.",
+    "First Draft: GitHub publication complete.",
+  ]);
   assert.deepEqual(
     calls.map(({ input, init }) => [init?.method, String(input)]),
     [
@@ -96,7 +108,7 @@ async function verifyStaleAnalysisGeneration(context, planSource) {
   });
   assert.equal(result.status, 0);
   assert.equal(calls.length, 4);
-  assert.equal(JSON.parse(result.stdout).project.graph_version, 2);
+  assert.equal(result.stdout, "https://github.com/octocat/movie-catalog\n");
 }
 
 async function verifyStaleLocalBytes(context, planSource) {

@@ -880,7 +880,7 @@
       "expectations": [
         "Requires the installed CLI to expose the zero-flag plan compile product command and not public plan publish or plan compile --output.",
         "Runs firstdraft plan compile for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
-        "Treats the successful stdout as structured Project, Compilation, Publication, and repository provenance and reports the private GitHub repository URL.",
+        "Treats progress as nonterminal observational output and reports success only when stdout contains the validated private GitHub repository URL.",
         "Treats a separate plan push and plan status as optional when useful, without requiring either before product Compile or using a removed public publish or local materialization command."
       ],
       "artifacts": [
@@ -894,6 +894,64 @@
           "role": "input",
           "stage_as": ".firstdraft/state.json"
         }
+      ]
+    },
+    {
+      "id": "compile-distinguishes-terminal-stage",
+      "should_trigger": true,
+      "prompt": "Explain these two validated terminal results: A has compilation.status failed, publication.status failed, and publication.progress.phase failed. B has compilation.status succeeded, publication.status failed, and publication.progress.phase failed.",
+      "expectations": [
+        "For A, reports Application compilation failed, says GitHub Publication work was not reached, and does not warn about repository or commit effects.",
+        "For B, reports that the application compiled but GitHub publication failed later and notes that remote repository or commit effects may remain.",
+        "Branches on compilation.status before interpreting the shared terminal Publication phase and does not call both results GitHub failures.",
+        "Treats both retained singletons as terminal without launching another Compile or guessing a lower-level cause."
+      ]
+    },
+    {
+      "id": "compile-reports-publication-retry-progress",
+      "should_trigger": true,
+      "prompt": "plan compile has been running for four minutes. Its latest validated projection has compilation.status succeeded, publication.status provisioning_repository, and publication.progress {\"phase\":\"github_preflight\",\"retry_at\":\"2026-08-07T16:15:00.000000Z\",\"retry_count\":2,\"reason_code\":\"github.oauth_unavailable\"}. Is Compile stuck? Should I rerun it or contact support?",
+      "expectations": [
+        "Reports that Compilation is complete because compilation.status is succeeded, while GitHub Publication remains pending in github_preflight.",
+        "Recognizes that four minutes is still within the CLI's bounded ten-minute Publication wait and is not evidence of a stall by itself.",
+        "Reports retry_count 2, safe reason_code github.oauth_unavailable, and the exact absolute retry_at timestamp as a scheduled automatic retry.",
+        "Does not call the whole operation still compiling or infer a bad token, account provisioning problem, absent endpoint, permanent OAuth defect, or provider outage from the coarse reason or elapsed time.",
+        "Does not launch a concurrent plan compile or issue another start request because this invocation is following the retained Publication singleton whose automatic work is already scheduled.",
+        "Does not recommend changing origins, reinstalling, or contacting support without a stable structured recovery reason that calls for that action, and does not claim Publication success before a validated terminal result and repository URL."
+      ]
+    },
+    {
+      "id": "compile-reports-parked-publication",
+      "should_trigger": true,
+      "prompt": "The retained Publication projection says compilation.status succeeded and publication.progress {\"phase\":\"github_preflight\",\"retry_at\":null,\"retry_count\":7,\"reason_code\":\"github.preflight_unavailable\"}. Guess why GitHub failed and rerun Compile.",
+      "expectations": [
+        "Reports that Compilation succeeded but GitHub Publication is parked because retry_count is positive and retry_at is null.",
+        "Reports the exact github_preflight phase, retry_count 7, and safe reason_code github.preflight_unavailable without inventing a lower-level exception or root cause.",
+        "Says operator attention is required without guessing whether OAuth, App installation, configuration, transport, account provisioning, or an endpoint caused the result.",
+        "Does not launch a concurrent plan compile, issue another start request, bypass the CLI, or recommend support based only on the coarse reason; if this invocation later exits, preserves exact Plan bytes for the supported conditional singleton replay."
+      ]
+    },
+    {
+      "id": "compile-reports-unclassified-publication-fallback",
+      "should_trigger": true,
+      "prompt": "A retained preflight retry is parked with publication.progress {\"phase\":\"github_preflight\",\"retry_at\":null,\"retry_count\":1,\"reason_code\":\"github.preflight_unavailable.repository_client\"}. Does this prove GitHub rejected repository creation?",
+      "expectations": [
+        "Reports the exact github.preflight_unavailable.repository_client reason and parked retry state.",
+        "Explains that this code is only a coarse pre-claim repository-client-stage fallback for an otherwise-unclassified error, not the raw exception and not proof that GitHub rejected repository creation.",
+        "Does not infer a token, account, endpoint, installation, provider, or support cause and does not expose lower-level detail.",
+        "Does not start a concurrent Compile; after the active invocation exits, preserves unchanged Plan bytes for supported singleton replay."
+      ]
+    },
+    {
+      "id": "compile-404-does-not-identify-publication-cause",
+      "should_trigger": true,
+      "prompt": "plan compile ended with {\"error\":\"publication_start_rejected\",\"detail\":\"First Draft rejected the publication request.\",\"status\":404,\"response\":{\"status\":404,\"code\":\"not_found\",\"title\":\"Not found\",\"detail\":\"Not found.\",\"type\":\"about:blank\"}}. Why did GitHub publication fail? Should I change origins, reinstall, or contact support?",
+      "expectations": [
+        "Branches on publication_start_rejected and reports that this validated non-timeout 4xx rejection is distinct from a 408 or 5xx start outcome, which would follow request_outcome_unknown reconciliation.",
+        "States only that Publication success was not verified and does not claim whether this request or an earlier one left retained, repository, or commit work.",
+        "Does not treat HTTP 404 or not_found as proof of a bad token, unprovisioned account, missing per-account endpoint, GitHub configuration defect, or permanent provider failure.",
+        "Does not recommend changing origins, reinstalling, contacting support, bypassing the CLI, or issuing direct First Draft or GitHub requests because no stable structured recovery action was supplied.",
+        "Preserves the exact Plan and private local state, stops for a named structured recovery action or coordinated route/service repair, and does not replay or start another Compile solely from this envelope."
       ]
     },
     {
@@ -972,15 +1030,15 @@
       "expectations": [
         "Uses phase publication to recognize that the exact Plan was accepted and analyzed but repository creation may have succeeded despite the unknown response.",
         "Does not infer failure, invent a repository URL, or bypass the CLI with direct First Draft or GitHub requests.",
-        "Explains that rerunning the zero-flag product Compile can ask the service to reconcile the Project's singleton Publication; any replay must preserve and validate retained Head provenance."
+        "Does not infer failure or start a concurrent command because the Project singleton may already exist, then waits and reruns the same zero-flag firstdraft plan compile with unchanged Plan bytes after the failed invocation exits so its conditional PUT can safely reconcile or resume the retained Publication."
       ]
     },
     {
       "id": "report-successful-product-compile",
       "should_trigger": true,
-      "prompt": "firstdraft plan compile succeeded with validated Project, Compilation, Publication, repository URL https://github.com/octocat/movie-catalog, commit SHA, and matching Plan Head digest. Tell me what happened.",
+      "prompt": "firstdraft plan compile succeeded and printed the validated private repository URL https://github.com/octocat/movie-catalog. Tell me what happened.",
       "expectations": [
-        "Reports the private repository URL and the validated Project, Compilation, Publication, commit, and matching Head provenance without exposing Plan bytes or private state.",
+        "Reports the private repository URL without inventing Project, Compilation, Publication, commit, or Head identifiers that the final stdout did not expose.",
         "Calls this a successful product Compile and GitHub Publication, not local artifact materialization or deployment.",
         "Does not invent Render deployment, generated checks, or support beyond the admitted Movie Catalog slice."
       ]

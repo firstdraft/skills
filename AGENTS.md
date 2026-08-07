@@ -8,11 +8,16 @@
   packed Claude plugin SHA-256, then follow [`RELEASING.md`](RELEASING.md).
 - Do not publish npm packages, deploy First Draft, or release the plugin without explicit user approval. If the user
   declines promotion, identify the merged SHA as unpromoted.
-- Never reuse a published npm version or marketplace SemVer with different package bytes. Revisions and corrections
-  use a new version.
+- Never reuse a published npm version, protected release tag, or marketplace SemVer with different package bytes.
+  An unpublished and unpromoted candidate is identified by its exact commit and digest and may be revised before
+  release without consuming another SemVer. Revisions after any release identity exists use a new version.
+- Before 1.0, use a minor bump for a breaking compatibility-line change and a patch bump for an otherwise
+  backward-compatible change. Current candidates use ordinary `0.MINOR.PATCH` versions; do not add compatibility
+  aliases or treat an npm dist-tag as version semantics.
 - Keep deployment, package publication, marketplace promotion, and replay mutations serialized through one
   operator. Reconcile an ambiguous publication or push outcome read-only before retrying.
 - Before pushing a `claude-v*` publication tag, verify its protection ruleset, the `npm` environment's required
-  reviewers, and the deliberately enabled `NPM_RELEASE_ENABLED` gate.
+  reviewers, the deliberately enabled `NPM_RELEASE_ENABLED` gate, and monotonic version order against npm,
+  protected release tags, and the marketplace catalog.
 - The installable Claude package is assembled from the canonical Skill during packing. Do not commit a second
   editable copy under `packages/`.

@@ -26,6 +26,10 @@ jobs:
         with:
           node-version: 24.18.0
           package-manager-cache: false
+      - name: Verify Node and npm versions
+        run: |
+          test "$(node --version)" = "v24.18.0"
+          test "$(npm --version)" = "11.16.0"
       - name: Verify tag and source commit
         run: |
           set -euo pipefail
@@ -38,7 +42,8 @@ jobs:
           test "$release_sha" = "$event_sha"
           git fetch --force --no-tags origin \
             "+refs/heads/main:refs/remotes/origin/main" \
-            "+refs/tags/${GITHUB_REF_NAME}:refs/release-check/tag"
+            "+refs/tags/${GITHUB_REF_NAME}:refs/release-check/tag" \
+            "+refs/tags/claude-v*:refs/release-check/tags/claude-v*"
           test "$release_sha" = "$(git rev-parse 'refs/release-check/tag^{commit}')"
           package_version="$(node --print 'JSON.parse(require("node:fs").readFileSync("packages/claude-plugin/package.template.json", "utf8")).version')"
           test "$GITHUB_REF_NAME" = "claude-v$package_version"
@@ -47,6 +52,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm audit
       - run: npm run check
+      - run: node script/check-plugin-release-order.mjs
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: firstdraft/cli
@@ -54,8 +60,8 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor e53eb38d7e8254e6ba1e660b38c5d32d0314be17 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach e53eb38d7e8254e6ba1e660b38c5d32d0314be17
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor d37d8b6775a0b97ce10bd651485bd308fed1dda2 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach d37d8b6775a0b97ce10bd651485bd308fed1dda2
       - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
       - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli
 
@@ -78,6 +84,10 @@ jobs:
           node-version: 24.18.0
           package-manager-cache: false
           registry-url: https://registry.npmjs.org/
+      - name: Verify Node and npm versions
+        run: |
+          test "$(node --version)" = "v24.18.0"
+          test "$(npm --version)" = "11.16.0"
       - name: Verify approved release
         env:
           NPM_RELEASE_ENABLED: ${{ vars.NPM_RELEASE_ENABLED }}
@@ -93,12 +103,14 @@ jobs:
           test "$release_sha" = "$event_sha"
           git fetch --force --no-tags origin \
             "+refs/heads/main:refs/remotes/origin/main" \
-            "+refs/tags/${GITHUB_REF_NAME}:refs/release-check/tag"
+            "+refs/tags/${GITHUB_REF_NAME}:refs/release-check/tag" \
+            "+refs/tags/claude-v*:refs/release-check/tags/claude-v*"
           test "$release_sha" = "$(git rev-parse 'refs/release-check/tag^{commit}')"
           package_version="$(node --print 'JSON.parse(require("node:fs").readFileSync("packages/claude-plugin/package.template.json", "utf8")).version')"
           test "$GITHUB_REF_NAME" = "claude-v$package_version"
           git rev-list --first-parent refs/remotes/origin/main > "$RUNNER_TEMP/main-first-parent"
           grep -Fqx "$release_sha" "$RUNNER_TEMP/main-first-parent"
+      - run: node script/check-plugin-release-order.mjs
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: firstdraft/cli
@@ -106,8 +118,8 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor e53eb38d7e8254e6ba1e660b38c5d32d0314be17 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach e53eb38d7e8254e6ba1e660b38c5d32d0314be17
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor d37d8b6775a0b97ce10bd651485bd308fed1dda2 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach d37d8b6775a0b97ce10bd651485bd308fed1dda2
       - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
       - run: node script/claude-plugin-package.mjs pack "$RUNNER_TEMP/plugin" --cli-root tmp/firstdraft-cli
       - name: Verify publication bytes
@@ -118,10 +130,9 @@ jobs:
           expected="$(node --print 'JSON.parse(require("node:fs").readFileSync("release/compatibility.json", "utf8")).plugin_source.tarball_sha256')"
           actual="$(shasum -a 256 "$tarball" | awk '{print $1}')"
           test "$actual" = "$expected"
-      - name: Publish verified package
+      - name: Publish verified package with OIDC
         run: |
           set -euo pipefail
-          test -z "${NODE_AUTH_TOKEN+x}"
           test -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}"
           test -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"
           npm publish "$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz" --access public --tag next --provenance --ignore-scripts

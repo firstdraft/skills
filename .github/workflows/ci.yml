@@ -26,8 +26,19 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           package-manager-cache: false
+      - name: Verify release toolchain
+        if: matrix.node == '24.18.0'
+        run: |
+          test "$(node --version)" = "v24.18.0"
+          test "$(npm --version)" = "11.16.0"
       - run: npm ci --ignore-scripts
       - run: sh script/check
+      - name: Rehearse release ordering
+        if: matrix.node == '24.18.0'
+        run: |
+          git fetch --force --no-tags origin \
+            "+refs/tags/claude-v*:refs/release-check/tags/claude-v*"
+          node script/check-plugin-release-order.mjs --prospective
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: firstdraft/cli
@@ -35,7 +46,7 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor e53eb38d7e8254e6ba1e660b38c5d32d0314be17 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach e53eb38d7e8254e6ba1e660b38c5d32d0314be17
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor d37d8b6775a0b97ce10bd651485bd308fed1dda2 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach d37d8b6775a0b97ce10bd651485bd308fed1dda2
       - run: node script/check-cli-contract.mjs tmp/firstdraft-cli
       - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli

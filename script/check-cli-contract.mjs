@@ -6,8 +6,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { verifyCompilations } from "./cli-contract/compilations.mjs";
 import {
+  cliPackageVersion,
   cliRevision,
   cliRuntimeSha256,
+  foundationPlanFormat,
   packedFileAllowlist,
 } from "./cli-contract/config.mjs";
 import {
@@ -32,6 +34,23 @@ assert.equal(revision.stdout.trim(), cliRevision);
 assert.equal(cliRuntimeDigest(cliDirectory), cliRuntimeSha256);
 verifyPackageMetadata(
   JSON.parse(readFileSync(path.join(cliDirectory, "package.json"), "utf8")),
+);
+assert.deepEqual(
+  JSON.parse(
+    readFileSync(
+      path.join(cliDirectory, "release", "compatibility.json"),
+      "utf8",
+    ),
+  ),
+  {
+    format: "firstdraft.release-compatibility/1",
+    component: "cli",
+    version: cliPackageVersion,
+    requires: {
+      api_contract: [">= 0.2.0", "< 0.3.0"],
+      foundation_plan_formats: [foundationPlanFormat],
+    },
+  },
 );
 
 const temporaryDirectory = mkdtempSync(

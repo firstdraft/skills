@@ -69,19 +69,46 @@ iPad support. Accounts and authentication, notifications and push, deployment, A
 Scaffold shapes, and gap-aware partial Compilation remain outside this boundary. Unsupported shapes fail the
 complete candidate closed.
 
-The exact CLI `@firstdraft.com/cli@0.1.0-alpha.2` and Claude plugin
-`@firstdraft.com/claude-code@0.1.0-alpha.3` are public experimental prereleases. A dated
+The Claude plugin `@firstdraft.com/claude-code@0.1.0-alpha.3` and its bundled CLI
+`@firstdraft.com/cli@0.1.0-alpha.2` are public experimental prereleases. The coordinated
+[`@firstdraft.com/cli@0.1.0` release](evidence/2026-08-07-cli-0.1.0-release.md) is separately published under `next`;
+`latest` remains alpha.2. A dated
 [isolated public-install observation](evidence/2026-08-06-public-claude-code-plugin-install.md) confirms Claude Code
 2.1.223 could register the GitHub marketplace, install alpha.3 from npm, discover its one Skill, and run its bundled
-alpha.2 CLI. This source prepares forward-only plugin alpha.4; the public catalog does not serve alpha.4, and its
-publication and catalog promotion remain separate approval-gated actions. The CLI's
+alpha.2 CLI. Plugin alpha.4 and alpha.5 were assembled as source candidates and abandoned before catalog promotion;
+their source changes did not publish packages. Current registry state remains a release-time read-only check. This
+source prepares ordinary plugin 0.1.0 with the coordinated published CLI 0.1.0. The public catalog still serves
+alpha.3, and plugin publication and catalog promotion remain separate approval-gated actions. The 0.1.0 CLI's
 zero-flag `plan compile` command pushes the exact current Plan, waits for analysis of that accepted graph generation,
 and invokes the internal GitHub Publication lifecycle only for a valid unchanged candidate. Public `plan publish`
 and local-start `plan compile --output` are not commands; retained successful artifacts are materialized with
-`compilation download <id> --output <path>`. The controlled local harness establishes this product-Compile shape
-only against a strict fake GitHub remote; the public-install observation did not authenticate a model session or
-exercise staging. No live endpoint, staging run, or real GitHub mutation establishes this full journey. There is no
-Plan GET or pull operation, complete semantic analyzer, deployment workflow, or general web or mobile generator.
+`compilation download <id> --output <path>`. The 0.1.0 CLI reports Compilation and GitHub Publication as
+separate stages: `compilation.status: "succeeded"` proves the artifact finished while Publication may still be
+waiting on GitHub. Its retained Publication progress exposes one safe phase, retry time, retry count, and coarse
+reason code. A scheduled or parked singleton is followed without a concurrent Compile; elapsed time, an HTTP
+status, or a coarse reason never justifies guessing at account provisioning, endpoint availability, or a support
+remedy. The CLI's Publication follow is bounded to ten minutes, so four minutes alone is not evidence of a stall.
+After an invocation exits on an unknown outcome, unavailable status, timeout, or interruption,
+the same zero-flag command with unchanged Plan bytes conditionally resumes the retained singleton; there is no
+separate public Publication status command. An invalid projection is instead a protocol mismatch that requires
+coordinated CLI/service version reconciliation before replay. The controlled local harness establishes the candidate
+product-Compile and progress shape only against a strict fake GitHub remote; the public-install observation did not
+authenticate a model session or exercise staging. No live endpoint, staging run, or real GitHub mutation establishes this full
+journey. There is no Plan GET or pull operation, complete semantic analyzer, deployment workflow, or general web or
+mobile generator.
+
+The required Publication progress object breaks the existing API-contract 0.1 line. Plugin 0.1.0 and CLI 0.1.0
+require service API contract `>= 0.2.0` and `< 0.3.0`. Publishing the CLI under `next` does not activate that service
+contract or upgrade an installed plugin; service 0.2 activation and plugin 0.1.0 publication/promotion remain a
+coordinated maintenance-window rollout and are not independently deployable. Activating service contract 0.2 on
+shared staging makes the alpha.2 CLI bundled in public plugin alpha.3 incompatible, and catalog promotion does not
+upgrade existing installations. No interruption is approved here. A human must explicitly approve and announce the
+window, affected-user notice, ordered rollout, rollback point, and completion checks before staging activation.
+
+Beginning with ordinary 0.1.0, pre-1.0 component versions use a minor bump for a breaking compatibility-line
+change and a patch bump for an otherwise backward-compatible change. Versions are never aliased. The npm `next`
+dist-tag remains an approval-gated distribution channel that keeps this rollout from moving `latest`; it has no
+SemVer meaning and does not make 0.1.0 a prerelease.
 
 ## Skills
 
@@ -110,23 +137,22 @@ public-install-to-staging journey has not established the prepared capability bo
 The repository assembles an installable Claude Code plugin named `firstdraft` as the public npm package
 `@firstdraft.com/claude-code`. Packing copies the canonical `skills/create-full-stack-app` directory into a temporary
 staging tree; the generated copy is never edited or committed. The package also includes a small `firstdraft`
-adapter and the CLI package contents packed from reviewed revision
-`e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, reconciled with published
-`@firstdraft.com/cli@0.1.0-alpha.2`. Installing the plugin therefore supplies both the Skill and its compatible CLI
-without requiring Claude Code to install transitive npm dependencies.
+adapter and the CLI package contents packed from the exact reviewed revision named below, the coordinated
+`@firstdraft.com/cli@0.1.0` contract. Installing the plugin therefore supplies both the Skill and its
+compatible CLI without requiring Claude Code to install transitive npm dependencies.
 
 The marketplace catalog uses Claude Code's documented `npm` plugin source and remains pinned to the published
 `@firstdraft.com/claude-code@0.1.0-alpha.3`. The package template, installable manifest, and compatibility record in
-this source prepare alpha.4 without promoting it. A separate post-publication catalog change may point fresh installs
-to alpha.4 only after its exact registry identity has been reconciled. The installable manifest asks Claude Code for
-the staging API URL and a sensitive API token. Claude stores sensitive configuration in secure storage and exports
+this source prepare ordinary 0.1.0 without promoting it. A separate post-publication catalog change may point fresh
+installs to 0.1.0 only after its exact registry identity has been reconciled. The installable manifest asks Claude
+Code for the staging API URL and a sensitive API token. Claude stores sensitive configuration in secure storage and exports
 plugin options only to plugin subprocesses. The adapter maps those options to the CLI's environment without printing
 them. Users should create the token in First Draft's browser UI and enter it in Claude's configuration prompt, never
 paste it into an agent conversation or command line. Installed-plugin configuration is authoritative: when it
 supplies the API URL, the adapter deliberately ignores any ambient `FIRSTDRAFT_API_TOKEN` so a credential cannot
 cross API origins. The environment variable remains a standalone-CLI configuration path.
 
-The root `firstdraft` manifest remains a checkout-local development path and has a separate checkout-only version.
+The root `firstdraft` manifest remains a checkout-local development path and uses the non-release version `0.0.0`.
 From a checkout, validate the marketplace and checkout manifests without installing either one:
 
 ```sh
@@ -156,7 +182,7 @@ claude plugin marketplace add firstdraft/skills
 claude plugin install firstdraft@firstdraft-skills
 ```
 
-Those exact commands succeeded for alpha.3 on 2026-08-06. They will not establish this alpha.4 candidate until its
+Those exact commands succeeded for alpha.3 on 2026-08-06. They will not establish this 0.1.0 candidate until its
 exact tarball is published and the catalog change is promoted. The isolated lane was not logged in, so it did not
 prove model-backed Skill invocation, token onboarding, staging compatibility, or the product journey. The historical
 2026-08-04 source-only install report remains evidence for its recorded revision. A dated
@@ -177,11 +203,15 @@ Repository checks require `git` on `PATH` and a real Git checkout with its index
 archive, exported tree, or installed plugin cache is insufficient because the checkout-boundary checks use the Git
 index for the enumerated checkout-root component locations and inspect those paths plus the complete `skills/`
 subtree on disk. Evidence and compatibility checks also read pinned historical commits and require full,
-unshallowed history containing them. The version-to-source check also reads compatibility documents reachable from
-every local ref, including fetched immutable candidate tags. Hosted CI uses `fetch-depth: 0`. In a local clone,
-fetch tags with `git fetch origin --tags`, then inspect `git rev-parse --is-shallow-repository`; when it returns
-`true`, run `git fetch --unshallow origin` or fetch the required full commits through an approved equivalent before
-running checks.
+unshallowed history containing them. They do not scan local refs or tags as a candidate-version ledger, so fetching
+tags is not a prerequisite for `script/check`. Hosted CI uses `fetch-depth: 0`. In a local clone, inspect
+`git rev-parse --is-shallow-repository`; when it returns `true`, run `git fetch --unshallow origin` or fetch the
+required full commits through an approved equivalent before running checks. Version ordering against the npm
+registry, protected `claude-v*` tags, and the exact-version catalog is a separate networked release check. The Node
+24 CI leg rehearses it read-only before a release tag exists. Once that exact candidate is tagged, published, or
+promoted, CI instead accepts only a coherent current identity so the catalog-promotion change and later work remain
+buildable; a newer or inconsistent registry, tag, or catalog identity still fails closed. Both publication jobs
+require the one exact current protected tag before they can publish.
 
 ```sh
 npm ci --ignore-scripts
@@ -189,13 +219,13 @@ sh script/check
 ```
 
 The CLI contract check requires a checkout at the exact reviewed revision
-`e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, whose independently reproduced JavaScript-source runtime digest is
-`0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`:
+`d37d8b6775a0b97ce10bd651485bd308fed1dda2`, whose independently reproduced JavaScript-source runtime digest is
+`019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72`:
 
 ```sh
 git -C <path-to-cli-checkout> fetch origin main
-git -C <path-to-cli-checkout> merge-base --is-ancestor e53eb38d7e8254e6ba1e660b38c5d32d0314be17 origin/main
-git -C <path-to-cli-checkout> checkout --detach e53eb38d7e8254e6ba1e660b38c5d32d0314be17
+git -C <path-to-cli-checkout> merge-base --is-ancestor d37d8b6775a0b97ce10bd651485bd308fed1dda2 origin/main
+git -C <path-to-cli-checkout> checkout --detach d37d8b6775a0b97ce10bd651485bd308fed1dda2
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 
@@ -256,9 +286,12 @@ stale local Plan bytes, and phase-specific ambiguous push and Publication outcom
 and source digest, reads again when status is older, and surfaces a newer generation as a replacement. It does not
 require a permission ceremony around ordinary pushes or impose an unchanged-byte or retry-count rule. The prepared
 Movie Catalog case expects the zero-flag product Compile to own the journey and treats a separate push or status read
-as optional. The contract also preserves bounded
-analysis and Publication waits, unavailable Publication status, terminal failure and cancellation projections, and
-repository identity when a conflict response contains one. Standalone retained
+as optional. Dedicated progress cases distinguish completed Compilation from pending Publication, report scheduled
+and parked retries from exact safe fields, refuse a concurrent Compile while the retained singleton is being
+followed, and require unchanged-byte singleton replay only after an invocation exits. A direct 404 rejection case
+prohibits account, endpoint, origin, reinstall, or support guesses from coarse data. The contract also preserves
+bounded analysis and Publication waits, unavailable Publication status, terminal failure and cancellation
+projections, and repository identity when a conflict response contains one. Standalone retained
 Compilation cases cover terminal status, bounded waiting, successful historical download, matching Head provenance,
 nonsucceeded and unavailable artifacts, provenance rejection, and existing-output preflight. A canonical Foundation
 Plan artifact digest may differ from the retained exact-byte Head digest; the artifact Head digest must still match
