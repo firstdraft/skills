@@ -9,9 +9,9 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 The reviewed CLI contract in this stack is revision
-`2a1e4a95b2a89cd7890ca001eb72c97376c7e018`, with JavaScript-source runtime digest
-`1728b2a3dda5eef4e6455875dd964587ca24d39eb229d61f0f08a83d95a08dea`. Its source package is the experimental
-`@firstdraft.com/cli@0.1.0-alpha.3` prerelease. Check the command surface rather than assuming the version alone
+`d37d8b6775a0b97ce10bd651485bd308fed1dda2`, with JavaScript-source runtime digest
+`019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72`. Its source package is
+`@firstdraft.com/cli@0.1.0`. Check the command surface rather than assuming the version alone
 establishes compatibility. Candidate
 qualification or package publication does not prove service authentication, staging compatibility, or a complete
 user journey.

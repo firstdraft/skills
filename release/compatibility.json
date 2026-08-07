@@ -1,10 +1,10 @@
 {
   "format": "firstdraft.release-compatibility/1",
   "component": "skills",
-  "version": "0.1.0-alpha.5",
+  "version": "0.1.0",
   "plugin_source": {
     "package": "@firstdraft.com/claude-code",
-    "tarball_sha256": "62449f123a6056e9df996b7d3ebd6386c5b8d8399dbedb8a7c361b191e6be39b"
+    "tarball_sha256": "02fad6cd2207f3d2ab7598f0aa67825520ebc5b807294e0c241774ee3ac6a89d"
   },
   "requires": {
     "api_contract": [
@@ -12,7 +12,7 @@
       "< 0.3.0"
     ],
     "cli": [
-      "= 0.1.0-alpha.3"
+      "= 0.1.0"
     ],
     "foundation_plan_formats": [
       "firstdraft.foundation-plan.sketch/0.19"

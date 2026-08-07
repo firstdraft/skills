@@ -69,17 +69,20 @@ iPad support. Accounts and authentication, notifications and push, deployment, A
 Scaffold shapes, and gap-aware partial Compilation remain outside this boundary. Unsupported shapes fail the
 complete candidate closed.
 
-The exact CLI `@firstdraft.com/cli@0.1.0-alpha.2` and Claude plugin
-`@firstdraft.com/claude-code@0.1.0-alpha.3` are public experimental prereleases. A dated
+The Claude plugin `@firstdraft.com/claude-code@0.1.0-alpha.3` and its bundled CLI
+`@firstdraft.com/cli@0.1.0-alpha.2` are public experimental prereleases. The coordinated
+[`@firstdraft.com/cli@0.1.0` release](evidence/2026-08-07-cli-0.1.0-release.md) is separately published under `next`;
+`latest` remains alpha.2. A dated
 [isolated public-install observation](evidence/2026-08-06-public-claude-code-plugin-install.md) confirms Claude Code
 2.1.223 could register the GitHub marketplace, install alpha.3 from npm, discover its one Skill, and run its bundled
-alpha.2 CLI. The unpromoted plugin alpha.4 candidate remains bound to its recorded bytes. This source prepares
-forward-only plugin alpha.5 with the unreleased CLI alpha.3 candidate; the public catalog serves neither candidate,
-and package publication and catalog promotion remain separate approval-gated actions. The candidate CLI's
+alpha.2 CLI. Plugin alpha.4 and alpha.5 were assembled as source candidates and abandoned before catalog promotion;
+their source changes did not publish packages. Current registry state remains a release-time read-only check. This
+source prepares ordinary plugin 0.1.0 with the coordinated published CLI 0.1.0. The public catalog still serves
+alpha.3, and plugin publication and catalog promotion remain separate approval-gated actions. The 0.1.0 CLI's
 zero-flag `plan compile` command pushes the exact current Plan, waits for analysis of that accepted graph generation,
 and invokes the internal GitHub Publication lifecycle only for a valid unchanged candidate. Public `plan publish`
 and local-start `plan compile --output` are not commands; retained successful artifacts are materialized with
-`compilation download <id> --output <path>`. The candidate CLI reports Compilation and GitHub Publication as
+`compilation download <id> --output <path>`. The 0.1.0 CLI reports Compilation and GitHub Publication as
 separate stages: `compilation.status: "succeeded"` proves the artifact finished while Publication may still be
 waiting on GitHub. Its retained Publication progress exposes one safe phase, retry time, retry count, and coarse
 reason code. A scheduled or parked singleton is followed without a concurrent Compile; elapsed time, an HTTP
@@ -94,12 +97,18 @@ authenticate a model session or exercise staging. No live endpoint, staging run,
 journey. There is no Plan GET or pull operation, complete semantic analyzer, deployment workflow, or general web or
 mobile generator.
 
-The required Publication progress object breaks the strict prerelease `0.1.x` client contract. Plugin alpha.5 and
-CLI alpha.3 require service API contract `>= 0.2.0` and `< 0.3.0`; the three candidates must roll out together in a
-coordinated maintenance window and are not independently deployable. Conversely, activating service contract 0.2
-on shared staging makes the alpha.2 CLI bundled in public plugin alpha.3 incompatible; catalog promotion does not
+The required Publication progress object breaks the existing API-contract 0.1 line. Plugin 0.1.0 and CLI 0.1.0
+require service API contract `>= 0.2.0` and `< 0.3.0`. Publishing the CLI under `next` does not activate that service
+contract or upgrade an installed plugin; service 0.2 activation and plugin 0.1.0 publication/promotion remain a
+coordinated maintenance-window rollout and are not independently deployable. Activating service contract 0.2 on
+shared staging makes the alpha.2 CLI bundled in public plugin alpha.3 incompatible, and catalog promotion does not
 upgrade existing installations. No interruption is approved here. A human must explicitly approve and announce the
 window, affected-user notice, ordered rollout, rollback point, and completion checks before staging activation.
+
+Beginning with ordinary 0.1.0, pre-1.0 component versions use a minor bump for a breaking compatibility-line
+change and a patch bump for an otherwise backward-compatible change. Versions are never aliased. The npm `next`
+dist-tag remains an approval-gated distribution channel that keeps this rollout from moving `latest`; it has no
+SemVer meaning and does not make 0.1.0 a prerelease.
 
 ## Skills
 
@@ -128,16 +137,15 @@ public-install-to-staging journey has not established the prepared capability bo
 The repository assembles an installable Claude Code plugin named `firstdraft` as the public npm package
 `@firstdraft.com/claude-code`. Packing copies the canonical `skills/create-full-stack-app` directory into a temporary
 staging tree; the generated copy is never edited or committed. The package also includes a small `firstdraft`
-adapter and the CLI package contents packed from reviewed revision
-`2a1e4a95b2a89cd7890ca001eb72c97376c7e018`, the coordinated unreleased
-`@firstdraft.com/cli@0.1.0-alpha.3` contract. Installing the plugin therefore supplies both the Skill and its
+adapter and the CLI package contents packed from the exact reviewed revision named below, the coordinated
+`@firstdraft.com/cli@0.1.0` contract. Installing the plugin therefore supplies both the Skill and its
 compatible CLI without requiring Claude Code to install transitive npm dependencies.
 
 The marketplace catalog uses Claude Code's documented `npm` plugin source and remains pinned to the published
 `@firstdraft.com/claude-code@0.1.0-alpha.3`. The package template, installable manifest, and compatibility record in
-this source prepare alpha.5 without promoting it. A separate post-publication catalog change may point fresh installs
-to alpha.5 only after its exact registry identity has been reconciled. The installable manifest asks Claude Code for
-the staging API URL and a sensitive API token. Claude stores sensitive configuration in secure storage and exports
+this source prepare ordinary 0.1.0 without promoting it. A separate post-publication catalog change may point fresh
+installs to 0.1.0 only after its exact registry identity has been reconciled. The installable manifest asks Claude
+Code for the staging API URL and a sensitive API token. Claude stores sensitive configuration in secure storage and exports
 plugin options only to plugin subprocesses. The adapter maps those options to the CLI's environment without printing
 them. Users should create the token in First Draft's browser UI and enter it in Claude's configuration prompt, never
 paste it into an agent conversation or command line. Installed-plugin configuration is authoritative: when it
@@ -174,7 +182,7 @@ claude plugin marketplace add firstdraft/skills
 claude plugin install firstdraft@firstdraft-skills
 ```
 
-Those exact commands succeeded for alpha.3 on 2026-08-06. They will not establish this alpha.5 candidate until its
+Those exact commands succeeded for alpha.3 on 2026-08-06. They will not establish this 0.1.0 candidate until its
 exact tarball is published and the catalog change is promoted. The isolated lane was not logged in, so it did not
 prove model-backed Skill invocation, token onboarding, staging compatibility, or the product journey. The historical
 2026-08-04 source-only install report remains evidence for its recorded revision. A dated
@@ -207,13 +215,13 @@ sh script/check
 ```
 
 The CLI contract check requires a checkout at the exact reviewed revision
-`2a1e4a95b2a89cd7890ca001eb72c97376c7e018`, whose independently reproduced JavaScript-source runtime digest is
-`1728b2a3dda5eef4e6455875dd964587ca24d39eb229d61f0f08a83d95a08dea`:
+`d37d8b6775a0b97ce10bd651485bd308fed1dda2`, whose independently reproduced JavaScript-source runtime digest is
+`019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72`:
 
 ```sh
 git -C <path-to-cli-checkout> fetch origin main
-git -C <path-to-cli-checkout> merge-base --is-ancestor 2a1e4a95b2a89cd7890ca001eb72c97376c7e018 origin/main
-git -C <path-to-cli-checkout> checkout --detach 2a1e4a95b2a89cd7890ca001eb72c97376c7e018
+git -C <path-to-cli-checkout> merge-base --is-ancestor d37d8b6775a0b97ce10bd651485bd308fed1dda2 origin/main
+git -C <path-to-cli-checkout> checkout --detach d37d8b6775a0b97ce10bd651485bd308fed1dda2
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 

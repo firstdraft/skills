@@ -78,9 +78,9 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "2a1e4a95b2a89cd7890ca001eb72c97376c7e018";
+  "d37d8b6775a0b97ce10bd651485bd308fed1dda2";
 const cliContractRuntimeDigest =
-  "1728b2a3dda5eef4e6455875dd964587ca24d39eb229d61f0f08a83d95a08dea";
+  "019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72";
 const previousCliContractBaseline =
   "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
 const previousCliContractRuntimeDigest =
@@ -111,7 +111,7 @@ const freshModelPublicationTree =
   "5815d094e204f8b3928ff5b5467ef85e2551d109";
 const freshModelPublicationCommit =
   "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead";
-const preparedCliPackage = "@firstdraft.com/cli@0.1.0-alpha.3";
+const preparedCliPackage = "@firstdraft.com/cli@0.1.0";
 const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
 const foundationIosCoreArchiveDigest =
@@ -231,7 +231,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     "utf8",
   );
   for (const source of [readme, foundationPlanReference, diagnosticsReference]) {
-    assert(source.includes(preparedCliPackage));
+    assert(source.includes(`\`${preparedCliPackage}\``));
     assert.doesNotMatch(source, /(?:package )?remains unpublished/);
   }
   for (const source of [readme, foundationPlanReference]) {
@@ -644,8 +644,8 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.1.0-alpha.3",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.1.0-alpha.5");
-  assert.equal(installableManifest.version, "0.1.0-alpha.5");
+  assert.equal(packageTemplate.version, "0.1.0");
+  assert.equal(installableManifest.version, "0.1.0");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, [
     "./skills/create-full-stack-app",
@@ -825,14 +825,21 @@ test("CI checks the exact modular CLI contract", async () => {
       .replaceAll(cliContractBaseline, ""),
     /\b[0-9a-f]{40}\b/,
   );
-  assert.doesNotMatch(publishWorkflow, /NPM_TOKEN|secrets\./);
-  assert.match(
+  assert.doesNotMatch(
     publishWorkflow,
-    /test -z "\$\{NODE_AUTH_TOKEN\+x\}"[\s\S]*?test -n "\$\{ACTIONS_ID_TOKEN_REQUEST_URL:-\}"[\s\S]*?test -n "\$\{ACTIONS_ID_TOKEN_REQUEST_TOKEN:-\}"[\s\S]*?npm publish[\s\S]*?--provenance/,
+    /secrets|auth[_-]?token|NODE_AUTH_TOKEN|NPM_TOKEN/i,
   );
-  assert.match(
-    publishWorkflow,
-    /environment: npm[\s\S]*?permissions:[\s\S]*?id-token: write/,
+  assert.doesNotMatch(publishWorkflow, /npm dist-tag|--tag latest/);
+  assert.equal(
+    publishWorkflow.match(/node script\/check-plugin-release-order\.mjs/g)
+      ?.length,
+    2,
+  );
+  assert.equal(
+    publishWorkflow.match(
+      /\+refs\/tags\/claude-v\*:refs\/release-check\/tags\/claude-v\*/g,
+    )?.length,
+    2,
   );
   assert.equal(
     publishWorkflow.match(
@@ -840,8 +847,103 @@ test("CI checks the exact modular CLI contract", async () => {
     )?.length,
     2,
   );
-  const [publishVerification, publishApproval] = publishWorkflow.split(
-    /^  publish:/m,
+  const publishVerification = workflowJobSource(publishWorkflow, "verify");
+  const publishApproval = workflowJobSource(publishWorkflow, "publish");
+  const jobsSource = publishWorkflow.slice(
+    publishWorkflow.indexOf("\njobs:\n") + "\njobs:\n".length,
+  );
+  assert.match(publishWorkflow, /^permissions: \{\}$/m);
+  assert.deepEqual(jobsSource.match(/^  [a-z0-9_-]+:$/gm), [
+    "  verify:",
+    "  publish:",
+  ]);
+  assert.equal(publishWorkflow.match(/id-token: write/g)?.length, 1);
+  const approvalEnvironmentKey = "\n    environment:";
+  const approvalEnvironment = "\n    environment: npm\n";
+  const approvalEnvironmentIndex = publishApproval.indexOf(
+    approvalEnvironment,
+  );
+  const oidcPermission = "\n      id-token: write\n";
+  const oidcPermissionIndex = publishApproval.indexOf(oidcPermission);
+  assert.equal(
+    publishVerification.includes(approvalEnvironmentKey),
+    false,
+    "verification must not enter the npm environment",
+  );
+  assert.equal(
+    publishVerification.includes(oidcPermission),
+    false,
+    "only publication may request an OIDC token",
+  );
+  assert.ok(
+    approvalEnvironmentIndex >= 0,
+    "publication must select the approval-gated npm environment",
+  );
+  assert.equal(
+    publishApproval.indexOf(approvalEnvironmentKey),
+    approvalEnvironmentIndex,
+  );
+  assert.equal(
+    publishApproval.indexOf(
+      approvalEnvironmentKey,
+      approvalEnvironmentIndex + approvalEnvironmentKey.length,
+    ),
+    -1,
+    "the approval-gated environment must be unique",
+  );
+  assert.ok(oidcPermissionIndex >= 0, "publication must permit OIDC tokens");
+  assert.equal(
+    publishApproval.indexOf(
+      oidcPermission,
+      oidcPermissionIndex + oidcPermission.length,
+    ),
+    -1,
+    "the OIDC permission must be unique",
+  );
+  assert.match(
+    publishApproval,
+    /permissions:[\s\S]*?contents: read[\s\S]*?id-token: write/,
+  );
+  for (const job of [publishVerification, publishApproval]) {
+    const approvedRunner = "\n    runs-on: ubuntu-latest\n";
+    const runnerKey = "\n    runs-on:";
+    const approvedRunnerIndex = job.indexOf(approvedRunner);
+    assert.ok(approvedRunnerIndex >= 0, "jobs must use the approved runner");
+    assert.equal(job.indexOf(runnerKey), approvedRunnerIndex);
+    assert.equal(
+      job.indexOf(runnerKey, approvedRunnerIndex + runnerKey.length),
+      -1,
+      "each job must declare one runner",
+    );
+    assert.match(job, /node-version: 24\.18\.0/);
+    assert.match(job, /package-manager-cache: false/);
+    assert.match(job, /test "\$\(node --version\)" = "v24\.18\.0"/);
+    assert.match(job, /test "\$\(npm --version\)" = "11\.16\.0"/);
+  }
+  const checkoutAction =
+    "actions/checkout@" +
+    "3d3c42e5" +
+    "aac5ba805825da76410c181273ba90b1";
+  const setupNodeAction =
+    "actions/setup-node@" +
+    "82076278" +
+    "6026740c76f36085b0efc47a31fe5020";
+  for (const job of [publishVerification, publishApproval]) {
+    assert.deepEqual(
+      [...job.matchAll(/^      - uses: (\S+)/gm)].map(([, action]) => action),
+      [checkoutAction, setupNodeAction, checkoutAction],
+      "release jobs may use only the reviewed checkout and setup-node actions",
+    );
+  }
+  assert.match(
+    publishApproval,
+    /registry-url: https:\/\/registry\.npmjs\.org\/[\s\S]*?test -n "\$\{ACTIONS_ID_TOKEN_REQUEST_URL:-\}"[\s\S]*?test -n "\$\{ACTIONS_ID_TOKEN_REQUEST_TOKEN:-\}"/,
+  );
+  assert.deepEqual(
+    publishWorkflow.match(/^\s+npm publish .*$/gm),
+    [
+      "          npm publish \"$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz\" --access public --tag next --provenance --ignore-scripts",
+    ],
   );
   assert.match(
     publishVerification,
@@ -2283,7 +2385,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /dated field report records the server, CLI, runtime,\s+Skill,\s+analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
   );
   const skillEvidence = skillSource.match(
-    /This workflow is experimental and targets the coordinated plugin alpha\.5, CLI alpha\.3, and service-contract 0\.2\s+contract\.[\s\S]*?bundled bytes do not establish whether that exact combination is currently available from the\s+public catalog; verify availability independently before advising an installation change\.([\s\S]*?)## Load the relevant references/,
+    /This workflow is experimental and targets the coordinated plugin 0\.1\.0, CLI 0\.1\.0, and service-contract 0\.2\s+contract\.[\s\S]*?bundled bytes do not establish whether that exact combination is currently available from the\s+public catalog; verify availability independently before advising an installation change\.([\s\S]*?)## Load the relevant references/,
   );
   const foundationPlanEvidence = foundationPlanReference.match(
     /## Current evidence boundary([\s\S]*?)The bundled schema was copied/,
@@ -2299,7 +2401,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     skillSource,
-    /Recommend a marketplace install, reinstall, or\s+update only after independently verifying that the catalog serves this exact plugin alpha\.5 and CLI alpha\.3 pair,[\s\S]*?Otherwise report that no verified public repair is known/,
+    /Recommend a marketplace install, reinstall, or\s+update only after independently verifying that the catalog serves this exact plugin 0\.1\.0 and CLI 0\.1\.0 pair,[\s\S]*?Otherwise report that no verified public repair is known/,
   );
   assert.match(
     foundationPlanEvidence[1],
@@ -3680,6 +3782,25 @@ function revisionTokens(source) {
   return [
     ...new Set(source.match(/\b(?:[0-9a-f]{40}|[0-9a-f]{7})\b/g) ?? []),
   ].sort();
+}
+
+function workflowJobSource(source, name) {
+  const marker = `\n  ${name}:\n`;
+  const start = source.indexOf(marker);
+  assert.notEqual(start, -1, `workflow is missing the ${name} job`);
+  assert.equal(
+    source.indexOf(marker, start + marker.length),
+    -1,
+    `workflow must contain exactly one ${name} job`,
+  );
+  const contentStart = start + marker.length;
+  const followingJob = /\n {2}[a-zA-Z0-9_-]+:\n/.exec(
+    source.slice(contentStart),
+  );
+  const end = followingJob
+    ? contentStart + followingJob.index
+    : source.length;
+  return source.slice(start, end);
 }
 
 function assertRevisionTokens(source, expected) {

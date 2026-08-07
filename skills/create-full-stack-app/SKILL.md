@@ -11,7 +11,7 @@ as good as the agent and user can currently make it, the CLI can submit the exac
 whole-graph analysis, and request the prepared Compile contract whose successful Publication is intended to create
 one private GitHub repository. Live GitHub publication remains outside the current evidence boundary.
 
-This workflow is experimental and targets the coordinated plugin alpha.5, CLI alpha.3, and service-contract 0.2
+This workflow is experimental and targets the coordinated plugin 0.1.0, CLI 0.1.0, and service-contract 0.2
 contract. These bundled bytes do not establish whether that exact combination is currently available from the
 public catalog; verify availability independently before advising an installation change. The current Compiler is a
 narrow experiment, not arbitrary application generation. It admits ten scalar Field kinds; ordinary single-target
@@ -70,7 +70,7 @@ There is no public `plan publish`, `plan subject-id`, or `plan compile --output`
 of this Skill supplies its exact compatible CLI dependency. Do not install, download, or upgrade another CLI
 automatically. If a required command is missing or reports a different version, report the exact installation
 mismatch and stop rather than approximating it with direct HTTP. Recommend a marketplace install, reinstall, or
-update only after independently verifying that the catalog serves this exact plugin alpha.5 and CLI alpha.3 pair,
+update only after independently verifying that the catalog serves this exact plugin 0.1.0 and CLI 0.1.0 pair,
 and use only a separately verified marketplace procedure. Otherwise report that no verified public repair is known.
 
 `.firstdraft/state.json` is private CLI-owned concurrency state. Do not print, paste, commit, or treat it as

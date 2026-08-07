@@ -6,10 +6,10 @@ import { fileURLToPath } from "node:url";
 
 import {
   assertSkillsReleaseCompatibility,
-  assertVersionSourceHistory,
   checkSkillsReleaseCompatibility,
+  compareSemanticVersions,
+  isOrdinaryPreOneVersion,
   isSemanticVersion,
-  readHistoricalCompatibilities,
 } from "../script/check-release-compatibility.mjs";
 import {
   cliPackageVersion,
@@ -24,11 +24,11 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.1.0-alpha.5",
+    version: "0.1.0",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "62449f123a6056e9df996b7d3ebd6386c5b8d8399dbedb8a7c361b191e6be39b",
+        "02fad6cd2207f3d2ab7598f0aa67825520ebc5b807294e0c241774ee3ac6a89d",
     },
     requires: {
       api_contract: [">= 0.2.0", "< 0.3.0"],
@@ -48,7 +48,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withInvalidRequirement = structuredClone(documents);
-  withInvalidRequirement.compatibility.requires.cli = ["0.1.0-alpha.2"];
+  withInvalidRequirement.compatibility.requires.cli = ["0.1.0"];
   assert.throws(
     () => assertSkillsReleaseCompatibility(withInvalidRequirement),
     /invalid SemVer comparator/,
@@ -62,10 +62,33 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCandidateDrift = structuredClone(documents);
-  withCandidateDrift.packageTemplate.version = "0.1.0-alpha.6";
+  withCandidateDrift.packageTemplate.version = "0.1.1";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCandidateDrift),
     /Expected values to be strictly equal/,
+  );
+
+  const withPrereleaseCandidate = structuredClone(documents);
+  withPrereleaseCandidate.compatibility.version = "0.1.0-alpha.6";
+  withPrereleaseCandidate.installableManifest.version = "0.1.0-alpha.6";
+  withPrereleaseCandidate.packageTemplate.version = "0.1.0-alpha.6";
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withPrereleaseCandidate),
+    /must be an ordinary pre-1\.0 version/,
+  );
+
+  const withCliAlias = structuredClone(documents);
+  withCliAlias.compatibility.requires.cli.push("= 0.1.0-alpha.3");
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withCliAlias),
+    /Expected values to be strictly deep-equal/,
+  );
+
+  const withLatestChannel = structuredClone(documents);
+  withLatestChannel.packageTemplate.publishConfig.tag = "latest";
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withLatestChannel),
+    /Expected values to be strictly deep-equal/,
   );
 
   const withSourceDrift = structuredClone(documents);
@@ -113,110 +136,25 @@ test("release compatibility uses strict semantic versions", () => {
   }
 });
 
-test("one Skills version maps permanently to one plugin source", () => {
-  const current = {
-    component: "skills",
-    version: "0.1.0-alpha.1",
-    plugin_source: {
-      package: "@firstdraft.com/claude-code",
-      tarball_sha256: "1".repeat(64),
-    },
-  };
-  assert.doesNotThrow(() =>
-    assertVersionSourceHistory({
-      compatibility: current,
-      historicalCompatibilities: [
-        {
-          revision: "2".repeat(40),
-          compatibility: structuredClone(current),
-        },
-        {
-          revision: "3".repeat(40),
-          compatibility: {
-            ...structuredClone(current),
-            version: "0.1.0-alpha.2",
-            plugin_source: {
-              ...current.plugin_source,
-              tarball_sha256: "4".repeat(64),
-            },
-          },
-        },
-      ],
-    }),
-  );
-
-  assert.throws(
-    () =>
-      assertVersionSourceHistory({
-        compatibility: current,
-        historicalCompatibilities: [
-          {
-            revision: "5".repeat(40),
-            compatibility: {
-              ...structuredClone(current),
-              plugin_source: {
-                ...current.plugin_source,
-                tarball_sha256: "6".repeat(64),
-              },
-            },
-          },
-        ],
-      }),
-    /version 0\.1\.0-alpha\.1 was already mapped.*assign a new never-reused SemVer/,
-  );
+test("current candidates use ordinary pre-1.0 versions", () => {
+  for (const version of ["0.1.0", "0.1.1", "0.2.0"]) {
+    assert.equal(isOrdinaryPreOneVersion(version), true, version);
+  }
+  for (const version of ["0.1.0-alpha.5", "0.1.0+build.1", "1.0.0"]) {
+    assert.equal(isOrdinaryPreOneVersion(version), false, version);
+  }
 });
 
-test("release history is read from every committed ref", () => {
-  const invocations = [];
-  const historical = readHistoricalCompatibilities({
-    root: "/catalog",
-    spawn(command, arguments_, options) {
-      invocations.push([command, arguments_, options]);
-      if (arguments_[0] === "log") {
-        return { status: 0, stderr: "", stdout: `${"7".repeat(40)}\n` };
-      }
-      return {
-        status: 0,
-        stderr: "",
-        stdout: JSON.stringify({
-          component: "skills",
-          version: "0.1.0-alpha.1",
-          plugin_source: {
-            package: "@firstdraft.com/claude-code",
-            tarball_sha256: "8".repeat(64),
-          },
-        }),
-      };
-    },
-  });
-
-  assert.deepEqual(invocations, [
-    [
-      "git",
-      [
-        "log",
-        "--all",
-        "--diff-merges=first-parent",
-        "--no-patch",
-        "--diff-filter=AM",
-        "--format=%H",
-        "--",
-        "release/compatibility.json",
-      ],
-      { cwd: "/catalog", encoding: "utf8" },
-    ],
-    [
-      "git",
-      ["show", `${"7".repeat(40)}:release/compatibility.json`],
-      { cwd: "/catalog", encoding: "utf8" },
-    ],
-  ]);
-  assert.equal(historical.length, 1);
-  assert.equal(historical[0].revision, "7".repeat(40));
-  assert.equal(
-    historical[0].compatibility.plugin_source.tarball_sha256,
-    "8".repeat(64),
-  );
+test("semantic-version precedence orders ordinary and historical versions", () => {
+  for (const [left, right] of [
+    ["0.1.0", "0.1.0-alpha.5"],
+    ["0.1.0-alpha.10", "0.1.0-alpha.5"],
+    ["0.2.0", "0.1.99"],
+  ]) {
+    assert.equal(compareSemanticVersions(left, right), 1, `${left} > ${right}`);
+    assert.equal(compareSemanticVersions(right, left), -1, `${right} < ${left}`);
+  }
+  assert.equal(compareSemanticVersions("0.1.0+one", "0.1.0+two"), 0);
 });
 
 test("release operator and agent instructions track the candidate", async () => {
@@ -230,15 +168,37 @@ test("release operator and agent instructions track the candidate", async () => 
     ({ name }) => name === "firstdraft",
   );
 
-  assert(releasing.includes(`version is \`${compatibility.version}\``));
+  assert.match(
+    releasing,
+    new RegExp(
+      "version\\s+is `" +
+        compatibility.version.replaceAll(".", "\\.") +
+        "`",
+    ),
+  );
   assert(releasing.includes(compatibility.plugin_source.package));
   assert.equal(catalogPlugin.version, "0.1.0-alpha.3");
-  assert.match(releasing, /marketplace catalog deliberately\s+remains pinned to alpha\.3/);
+  assert.match(
+    releasing,
+    /marketplace catalog\s+deliberately remains pinned to alpha\.3/,
+  );
+  assert.match(
+    releasing,
+    /Alpha\.4 and alpha\.5 were assembled as\s+source\s+candidates and abandoned before catalog promotion/,
+  );
   assert.match(releasing, /separate marketplace-promotion change/);
   assert(releasing.includes("claude-v$package_version"));
   assert.match(
     releasing,
-    /One marketplace SemVer maps\s+forever to exactly one package tarball/,
+    /Once an npm version, protected release tag, or catalog version exists,[\s\S]*?maps\s+forever to exactly one package tarball/,
+  );
+  assert.match(
+    releasing,
+    /pre-1\.0 candidates use ordinary `0\.MINOR\.PATCH` versions[\s\S]*?minor component for a breaking compatibility-line change[\s\S]*?patch component for an otherwise\s+backward-compatible change/,
+  );
+  assert.match(
+    releasing,
+    /Do not add compatibility aliases[\s\S]*?`next` dist-tag[\s\S]*?does not\s+move `latest`[\s\S]*?has no SemVer meaning/,
   );
   assert.match(
     releasing,
@@ -266,16 +226,24 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /reconcile both identities read-only/,
+    /dated release observation[\s\S]*?CLI 0\.1\.0 under `next` while `latest`[\s\S]*?remains alpha\.2/,
   );
   assert.match(
     releasing,
-    /Release corrections are forward-only and use a new SemVer/,
+    /Confirm the already-qualified CLI 0\.1\.0 registry package still matches its exact release[\s\S]*?deploy the service API-contract 0\.2 candidate[\s\S]*?reconcile its identity read-only[\s\S]*?Do not republish the CLI/,
+  );
+  assert.match(
+    releasing,
+    /Corrections to an existing npm, protected-tag, or catalog release identity[\s\S]*?forward-only and use a new SemVer[\s\S]*?unpublished and unpromoted candidate may instead be revised/,
   );
 
   assert.match(
     agents,
-    /Never reuse a published npm version or marketplace SemVer with different package bytes/,
+    /Never reuse a published npm version, protected release tag, or marketplace SemVer with different package bytes/,
+  );
+  assert.match(
+    agents,
+    /Before 1\.0[\s\S]*?minor bump for a breaking compatibility-line change[\s\S]*?patch bump for an otherwise\s+backward-compatible change[\s\S]*?do not add compatibility\s+aliases/,
   );
   assert.match(
     agents,
