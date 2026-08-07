@@ -72,7 +72,24 @@ After approval, one operator performs these mutations serially:
 
 Before pushing a release tag, verify that a GitHub ruleset protects `claude-v*` tags from deletion and unauthorized
 updates, the `npm` environment requires the intended human reviewer, and its `NPM_RELEASE_ENABLED` variable is
-deliberately set to `true`. The workflow fails closed unless the tag is protected and its commit is on `main`.
+deliberately set to `true`. Confirm hosted CI passed the exact Node 24.18.0/npm 11.16.0 toolchain check and the
+read-only prospective registry/tag/catalog ordering rehearsal for the exact source commit. If any authoritative
+release identity changed after that CI run, repeat the prospective check from the exact checkout before tagging:
+
+```sh
+git fetch --force --no-tags origin \
+  '+refs/tags/claude-v*:refs/release-check/tags/claude-v*'
+node script/check-plugin-release-order.mjs --prospective
+```
+
+Before tagging, that command requires the candidate to follow every observed identity; a repository with no prior
+`claude-v*` tag is valid. After the exact current tag exists, the same CI command reconciles coherent tagged,
+published, and catalog states instead of repeating a pre-tag assertion. It still rejects any newer identity,
+published version without the exact protected tag, or catalog version without the matching published package. This
+keeps the required post-publication catalog-promotion change buildable without weakening the tag-triggered
+publication gate.
+
+The workflow fails closed unless the tag is protected and its commit is on `main`.
 Record the current `next` and `latest` package identities read-only before the mutation; the workflow may advance
 `next`, but `latest` must remain at its pre-window identity unless a later action is separately approved.
 The workflow also requires the candidate to follow every version observed in the npm registry and exact-version

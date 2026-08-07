@@ -152,7 +152,7 @@ paste it into an agent conversation or command line. Installed-plugin configurat
 supplies the API URL, the adapter deliberately ignores any ambient `FIRSTDRAFT_API_TOKEN` so a credential cannot
 cross API origins. The environment variable remains a standalone-CLI configuration path.
 
-The root `firstdraft` manifest remains a checkout-local development path and has a separate checkout-only version.
+The root `firstdraft` manifest remains a checkout-local development path and uses the non-release version `0.0.0`.
 From a checkout, validate the marketplace and checkout manifests without installing either one:
 
 ```sh
@@ -203,11 +203,15 @@ Repository checks require `git` on `PATH` and a real Git checkout with its index
 archive, exported tree, or installed plugin cache is insufficient because the checkout-boundary checks use the Git
 index for the enumerated checkout-root component locations and inspect those paths plus the complete `skills/`
 subtree on disk. Evidence and compatibility checks also read pinned historical commits and require full,
-unshallowed history containing them. The version-to-source check also reads compatibility documents reachable from
-every local ref, including fetched immutable candidate tags. Hosted CI uses `fetch-depth: 0`. In a local clone,
-fetch tags with `git fetch origin --tags`, then inspect `git rev-parse --is-shallow-repository`; when it returns
-`true`, run `git fetch --unshallow origin` or fetch the required full commits through an approved equivalent before
-running checks.
+unshallowed history containing them. They do not scan local refs or tags as a candidate-version ledger, so fetching
+tags is not a prerequisite for `script/check`. Hosted CI uses `fetch-depth: 0`. In a local clone, inspect
+`git rev-parse --is-shallow-repository`; when it returns `true`, run `git fetch --unshallow origin` or fetch the
+required full commits through an approved equivalent before running checks. Version ordering against the npm
+registry, protected `claude-v*` tags, and the exact-version catalog is a separate networked release check. The Node
+24 CI leg rehearses it read-only before a release tag exists. Once that exact candidate is tagged, published, or
+promoted, CI instead accepts only a coherent current identity so the catalog-promotion change and later work remain
+buildable; a newer or inconsistent registry, tag, or catalog identity still fails closed. Both publication jobs
+require the one exact current protected tag before they can publish.
 
 ```sh
 npm ci --ignore-scripts

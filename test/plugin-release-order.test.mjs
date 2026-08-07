@@ -19,7 +19,7 @@ const candidate = {
 };
 
 test("release order accepts one current tag after older public identities", () => {
-  assert.doesNotThrow(() => assertPluginReleaseOrder(candidate));
+  assert.equal(assertPluginReleaseOrder(candidate), "tagged");
 });
 
 test("release order rejects a reused or decreasing public version", () => {
@@ -59,7 +59,71 @@ test("release order requires one current protected tag after all prior tags", ()
         ...candidate,
         taggedVersions: ["0.1.0", "0.2.0"],
       }),
-    /must not precede protected release-tag version/,
+    /must follow protected release-tag version/,
+  );
+});
+
+test("prospective release order accepts zero or older protected tags", () => {
+  for (const taggedVersions of [[], ["0.1.0-alpha.3"]]) {
+    assert.equal(
+      assertPluginReleaseOrder({
+        ...candidate,
+        requireCurrentTag: false,
+        taggedVersions,
+      }),
+      "prospective",
+    );
+  }
+});
+
+test("prospective release order reconciles consumed current identities", () => {
+  assert.equal(
+    assertPluginReleaseOrder({
+      ...candidate,
+      requireCurrentTag: false,
+      publishedVersions: ["0.1.0-alpha.3"],
+    }),
+    "tagged",
+  );
+  assert.equal(
+    assertPluginReleaseOrder({
+      ...candidate,
+      requireCurrentTag: false,
+      publishedVersions: ["0.1.0-alpha.3", "0.1.0"],
+    }),
+    "published",
+  );
+  assert.equal(
+    assertPluginReleaseOrder({
+      ...candidate,
+      catalogVersions: ["0.1.0-alpha.3", "0.1.0"],
+      publishedVersions: ["0.1.0-alpha.3", "0.1.0"],
+      requireCurrentTag: false,
+    }),
+    "catalog",
+  );
+});
+
+test("prospective release order rejects incoherent current identities", () => {
+  assert.throws(
+    () =>
+      assertPluginReleaseOrder({
+        ...candidate,
+        requireCurrentTag: false,
+        taggedVersions: ["0.1.0-alpha.3"],
+        publishedVersions: ["0.1.0-alpha.3", "0.1.0"],
+      }),
+    /published candidate 0\.1\.0 must have one exact protected tag/,
+  );
+  assert.throws(
+    () =>
+      assertPluginReleaseOrder({
+        ...candidate,
+        catalogVersions: ["0.1.0-alpha.3", "0.1.0"],
+        publishedVersions: ["0.1.0-alpha.3"],
+        requireCurrentTag: false,
+      }),
+    /catalog candidate 0\.1\.0 must already be published/,
   );
 });
 

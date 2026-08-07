@@ -184,6 +184,16 @@ export function assertSkillsReleaseCompatibility({
     installableManifest.displayName,
     "checkout and installable plugin display names must match",
   );
+  assert.notEqual(
+    checkoutManifest.version,
+    compatibility.version,
+    "checkout tooling version must not reuse the installable plugin release version",
+  );
+  assert.equal(
+    checkoutManifest.version,
+    packageDocument.version,
+    "checkout tooling version must match the private root tooling version",
+  );
   assert.equal(packageDocument.name, "@firstdraft/skills");
   assert.equal(packageDocument.version, "0.0.0");
   assert.equal(

@@ -125,6 +125,20 @@ test("release compatibility rejects shape and manifest drift", async () => {
     () => assertSkillsReleaseCompatibility(withCheckoutDisplayNameDrift),
     /checkout and installable plugin display names must match/,
   );
+
+  const withCheckoutReleaseVersion = structuredClone(documents);
+  withCheckoutReleaseVersion.checkoutManifest.version = "0.1.0";
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withCheckoutReleaseVersion),
+    /must not reuse the installable plugin release version/,
+  );
+
+  const withCheckoutToolingVersionDrift = structuredClone(documents);
+  withCheckoutToolingVersionDrift.checkoutManifest.version = "0.0.1";
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withCheckoutToolingVersionDrift),
+    /must match the private root tooling version/,
+  );
 });
 
 test("release compatibility uses strict semantic versions", () => {

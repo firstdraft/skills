@@ -633,6 +633,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
 
   assert.equal(checkoutManifest.name, claudePluginName);
   assert.equal(checkoutManifest.displayName, "First Draft");
+  assert.equal(checkoutManifest.version, "0.0.0");
   assert.deepEqual(checkoutManifest.skills, [`./skills/${portableSkillName}`]);
   assert.equal(marketplace.name, claudeMarketplaceName);
   assert.equal(marketplace.plugins.length, 1);
@@ -830,16 +831,28 @@ test("CI checks the exact modular CLI contract", async () => {
     /secrets|auth[_-]?token|NODE_AUTH_TOKEN|NPM_TOKEN/i,
   );
   assert.doesNotMatch(publishWorkflow, /npm dist-tag|--tag latest/);
-  assert.equal(
-    publishWorkflow.match(/node script\/check-plugin-release-order\.mjs/g)
-      ?.length,
-    2,
+  assert.deepEqual(
+    publishWorkflow.match(
+      /^      - run: node script\/check-plugin-release-order\.mjs.*$/gm,
+    ),
+    [
+      "      - run: node script/check-plugin-release-order.mjs",
+      "      - run: node script/check-plugin-release-order.mjs",
+    ],
   );
   assert.equal(
     publishWorkflow.match(
       /\+refs\/tags\/claude-v\*:refs\/release-check\/tags\/claude-v\*/g,
     )?.length,
     2,
+  );
+  assert.match(
+    workflow,
+    /name: Verify release toolchain\s+if: matrix\.node == '24\.18\.0'[\s\S]*?test "\$\(node --version\)" = "v24\.18\.0"[\s\S]*?test "\$\(npm --version\)" = "11\.16\.0"/,
+  );
+  assert.match(
+    workflow,
+    /name: Rehearse release ordering\s+if: matrix\.node == '24\.18\.0'[\s\S]*?\+refs\/tags\/claude-v\*:refs\/release-check\/tags\/claude-v\*[\s\S]*?node script\/check-plugin-release-order\.mjs --prospective/,
   );
   assert.equal(
     publishWorkflow.match(
@@ -953,7 +966,12 @@ test("CI checks the exact modular CLI contract", async () => {
     publishApproval,
     /environment: npm[\s\S]*?node script\/check-cli-registry-package\.mjs --cli-root tmp\/firstdraft-cli/,
   );
-  assert.doesNotMatch(repositoryCheck, /check-cli-registry-package/);
+  for (const networkedCheck of [
+    "check-cli-registry-package",
+    "check-plugin-release-order",
+  ]) {
+    assert.doesNotMatch(repositoryCheck, new RegExp(networkedCheck));
+  }
   assert.match(
     workflow,
     new RegExp(

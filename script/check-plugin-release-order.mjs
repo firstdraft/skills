@@ -17,6 +17,7 @@ export function assertPluginReleaseOrder({
   candidateVersion,
   catalogVersions,
   publishedVersions,
+  requireCurrentTag = true,
   taggedVersions,
 }) {
   assert(
@@ -25,34 +26,52 @@ export function assertPluginReleaseOrder({
   );
   assertStringArray(catalogVersions, "catalog versions");
   assertStringArray(publishedVersions, "published npm versions");
-  assertStringArray(taggedVersions, "protected release-tag versions");
+  assertStringArray(taggedVersions, "protected release-tag versions", {
+    allowEmpty: !requireCurrentTag,
+  });
+  assert.equal(
+    typeof requireCurrentTag,
+    "boolean",
+    "current-tag requirement must be boolean",
+  );
 
-  for (const version of [...catalogVersions, ...publishedVersions]) {
-    assert(
-      compareSemanticVersions(candidateVersion, version) > 0,
-      `candidate ${candidateVersion} must be newer than authoritative ` +
-        `published or catalog version ${version}`,
-    );
+  if (!requireCurrentTag) {
+    return assertProspectiveReleaseOrder({
+      candidateVersion,
+      catalogVersions,
+      publishedVersions,
+      taggedVersions,
+    });
   }
 
+  assertCandidateIsNewerThan(
+    candidateVersion,
+    [...catalogVersions, ...publishedVersions],
+    "published or catalog",
+  );
   let currentTagCount = 0;
   for (const version of taggedVersions) {
+    if (version === candidateVersion) {
+      currentTagCount += 1;
+      continue;
+    }
     const comparison = compareSemanticVersions(candidateVersion, version);
     assert(
-      comparison >= 0,
-      `candidate ${candidateVersion} must not precede protected release-tag ` +
+      comparison > 0,
+      `candidate ${candidateVersion} must follow protected release-tag ` +
         `version ${version}`,
     );
-    if (comparison === 0) currentTagCount += 1;
   }
   assert.equal(
     currentTagCount,
     1,
     `expected exactly one protected release tag for ${candidateVersion}`,
   );
+  return "tagged";
 }
 
 export async function checkPluginReleaseOrder({
+  requireCurrentTag = true,
   root = repository,
   spawn = spawnSync,
 } = {}) {
@@ -67,10 +86,11 @@ export async function checkPluginReleaseOrder({
   const publishedVersions = readPublishedVersions({ packageName, spawn });
   const taggedVersions = readReleaseTagVersions({ root, spawn });
 
-  assertPluginReleaseOrder({
+  const releaseState = assertPluginReleaseOrder({
     candidateVersion: compatibility.version,
     catalogVersions,
     publishedVersions,
+    requireCurrentTag,
     taggedVersions,
   });
 
@@ -79,8 +99,76 @@ export async function checkPluginReleaseOrder({
     catalogVersions,
     packageName,
     publishedVersions,
+    releaseState,
+    requireCurrentTag,
     taggedVersions,
   };
+}
+
+function assertProspectiveReleaseOrder({
+  candidateVersion,
+  catalogVersions,
+  publishedVersions,
+  taggedVersions,
+}) {
+  const authoritativeVersions = [
+    ...catalogVersions,
+    ...publishedVersions,
+    ...taggedVersions,
+  ];
+  for (const version of authoritativeVersions) {
+    const comparison = compareSemanticVersions(candidateVersion, version);
+    assert(
+      comparison >= 0,
+      `candidate ${candidateVersion} must not precede authoritative ` +
+        `version ${version}`,
+    );
+    assert(
+      comparison !== 0 || version === candidateVersion,
+      `candidate ${candidateVersion} conflicts with equal-precedence ` +
+        `authoritative version ${version}`,
+    );
+  }
+
+  const catalogCurrent = catalogVersions.includes(candidateVersion);
+  const publishedCurrent = publishedVersions.includes(candidateVersion);
+  const currentTagCount = taggedVersions.filter(
+    (version) => version === candidateVersion,
+  ).length;
+  assert(
+    currentTagCount <= 1,
+    `expected at most one protected release tag for ${candidateVersion}`,
+  );
+  assert(
+    !catalogCurrent || publishedCurrent,
+    `catalog candidate ${candidateVersion} must already be published`,
+  );
+  assert(
+    !publishedCurrent || currentTagCount === 1,
+    `published candidate ${candidateVersion} must have one exact protected tag`,
+  );
+
+  if (currentTagCount === 0) {
+    assertCandidateIsNewerThan(
+      candidateVersion,
+      [...catalogVersions, ...publishedVersions, ...taggedVersions],
+      "authoritative",
+    );
+    return "prospective";
+  }
+  if (catalogCurrent) return "catalog";
+  if (publishedCurrent) return "published";
+  return "tagged";
+}
+
+function assertCandidateIsNewerThan(candidateVersion, versions, label) {
+  for (const version of versions) {
+    assert(
+      compareSemanticVersions(candidateVersion, version) > 0,
+      `candidate ${candidateVersion} must be newer than authoritative ` +
+        `${label} version ${version}`,
+    );
+  }
 }
 
 function readPublishedVersions({ packageName, spawn }) {
@@ -127,8 +215,9 @@ function readReleaseTagVersions({ root, spawn }) {
     });
 }
 
-function assertStringArray(value, label) {
-  assert(Array.isArray(value) && value.length > 0, `${label} must be nonempty`);
+function assertStringArray(value, label, { allowEmpty = false } = {}) {
+  assert(Array.isArray(value), `${label} must be an array`);
+  assert(allowEmpty || value.length > 0, `${label} must be nonempty`);
   for (const item of value) {
     assert(
       isSemanticVersion(item),
@@ -154,11 +243,29 @@ if (
   process.argv[1] &&
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 ) {
-  const result = await checkPluginReleaseOrder();
-  process.stdout.write(
-    `${result.packageName}@${result.candidateVersion} is newer than ` +
-      `${result.publishedVersions.length} published, ` +
-      `${result.taggedVersions.length - 1} prior tagged, and ` +
-      `${result.catalogVersions.length} catalog version(s).\n`,
+  const commandArguments = process.argv.slice(2);
+  assert(
+    commandArguments.length === 0 ||
+      (commandArguments.length === 1 &&
+        commandArguments[0] === "--prospective"),
+    "usage: check-plugin-release-order.mjs [--prospective]",
   );
+  const result = await checkPluginReleaseOrder({
+    requireCurrentTag: commandArguments.length === 0,
+  });
+  const identity = `${result.packageName}@${result.candidateVersion}`;
+  if (result.requireCurrentTag || result.releaseState === "prospective") {
+    process.stdout.write(
+      `${identity} is newer than ${result.publishedVersions.length} ` +
+        `published, ` +
+        `${result.taggedVersions.length - (result.requireCurrentTag ? 1 : 0)} ` +
+        `prior tagged, and ${result.catalogVersions.length} catalog ` +
+        `version(s).\n`,
+    );
+  } else {
+    process.stdout.write(
+      `${identity} already has a coherent ${result.releaseState} identity; ` +
+        `the prospective pre-tag assertion does not apply.\n`,
+    );
+  }
 }
