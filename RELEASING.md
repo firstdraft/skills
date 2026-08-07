@@ -86,8 +86,9 @@ Before tagging, that command requires the candidate to follow every observed ide
 `claude-v*` tag is valid. After the exact current tag exists, the same CI command reconciles coherent tagged,
 published, and catalog states instead of repeating a pre-tag assertion. It still rejects any newer identity,
 published version without the exact protected tag, or catalog version without the matching published package. This
-keeps the required post-publication catalog-promotion change buildable without weakening the tag-triggered
-publication gate.
+check also requires the working `release/compatibility.json` bytes, including the tarball digest, to match that
+immutable protected tag. These rules keep the required post-publication catalog-promotion change buildable without
+weakening the tag-triggered publication gate.
 
 The workflow fails closed unless the tag is protected and its commit is on `main`.
 Record the current `next` and `latest` package identities read-only before the mutation; the workflow may advance

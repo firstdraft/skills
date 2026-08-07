@@ -75,10 +75,11 @@ export async function checkPluginReleaseOrder({
   root = repository,
   spawn = spawnSync,
 } = {}) {
-  const [compatibility, marketplace] = await Promise.all([
-    readJson(path.join(root, "release", "compatibility.json")),
+  const [compatibilitySource, marketplace] = await Promise.all([
+    readFile(path.join(root, "release", "compatibility.json"), "utf8"),
     readJson(path.join(root, ".claude-plugin", "marketplace.json")),
   ]);
+  const compatibility = JSON.parse(compatibilitySource);
   const packageName = compatibility.plugin_source.package;
   const catalogVersions = marketplace.plugins
     .filter(({ source }) => source?.package === packageName)
@@ -93,6 +94,19 @@ export async function checkPluginReleaseOrder({
     requireCurrentTag,
     taggedVersions,
   });
+  if (!requireCurrentTag && releaseState !== "prospective") {
+    const taggedCompatibilitySource = readTaggedCompatibilitySource({
+      candidateVersion: compatibility.version,
+      root,
+      spawn,
+    });
+    assert.equal(
+      compatibilitySource,
+      taggedCompatibilitySource,
+      `release compatibility for consumed ${compatibility.version} must ` +
+        "match its exact protected tag",
+    );
+  }
 
   return {
     candidateVersion: compatibility.version,
@@ -103,6 +117,23 @@ export async function checkPluginReleaseOrder({
     requireCurrentTag,
     taggedVersions,
   };
+}
+
+function readTaggedCompatibilitySource({ candidateVersion, root, spawn }) {
+  const result = spawn(
+    "git",
+    [
+      "show",
+      `refs/release-check/tags/${releaseTagPrefix}${candidateVersion}:` +
+        "release/compatibility.json",
+    ],
+    { cwd: root, encoding: "utf8" },
+  );
+  assertCommandSucceeded(
+    result,
+    `could not read protected release compatibility for ${candidateVersion}`,
+  );
+  return result.stdout;
 }
 
 function assertProspectiveReleaseOrder({

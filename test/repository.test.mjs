@@ -854,6 +854,12 @@ test("CI checks the exact modular CLI contract", async () => {
     workflow,
     /name: Rehearse release ordering\s+if: matrix\.node == '24\.18\.0'[\s\S]*?\+refs\/tags\/claude-v\*:refs\/release-check\/tags\/claude-v\*[\s\S]*?node script\/check-plugin-release-order\.mjs --prospective/,
   );
+  assert.deepEqual(
+    workflow.match(
+      /^          node script\/check-plugin-release-order\.mjs --prospective$/gm,
+    ),
+    ["          node script/check-plugin-release-order.mjs --prospective"],
+  );
   assert.equal(
     publishWorkflow.match(
       /node script\/check-cli-registry-package\.mjs --cli-root tmp\/firstdraft-cli/g,
@@ -862,6 +868,14 @@ test("CI checks the exact modular CLI contract", async () => {
   );
   const publishVerification = workflowJobSource(publishWorkflow, "verify");
   const publishApproval = workflowJobSource(publishWorkflow, "publish");
+  for (const job of [publishVerification, publishApproval]) {
+    assert.deepEqual(
+      job.match(
+        /^      - run: node script\/check-plugin-release-order\.mjs.*$/gm,
+      ),
+      ["      - run: node script/check-plugin-release-order.mjs"],
+    );
+  }
   const jobsSource = publishWorkflow.slice(
     publishWorkflow.indexOf("\njobs:\n") + "\njobs:\n".length,
   );

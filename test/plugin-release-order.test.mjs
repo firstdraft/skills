@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
@@ -125,6 +126,25 @@ test("prospective release order rejects incoherent current identities", () => {
       }),
     /catalog candidate 0\.1\.0 must already be published/,
   );
+  assert.throws(
+    () =>
+      assertPluginReleaseOrder({
+        ...candidate,
+        publishedVersions: ["0.1.0-alpha.3", "0.2.0"],
+        requireCurrentTag: false,
+      }),
+    /must not precede authoritative version 0\.2\.0/,
+  );
+  assert.throws(
+    () =>
+      assertPluginReleaseOrder({
+        ...candidate,
+        publishedVersions: ["0.1.0-alpha.3"],
+        requireCurrentTag: false,
+        taggedVersions: ["0.1.0-alpha.3", "0.1.0+build.1"],
+      }),
+    /conflicts with equal-precedence authoritative version/,
+  );
 });
 
 test("release-order reconciliation reads npm, fetched tags, and the catalog", async () => {
@@ -157,4 +177,75 @@ test("release-order reconciliation reads npm, fetched tags, and the catalog", as
     "--format=%(refname:strip=3)",
     "refs/release-check/tags/claude-v*",
   ]);
+});
+
+test("consumed release order binds compatibility bytes to the protected tag", async () => {
+  const root = fileURLToPath(new URL("../", import.meta.url));
+  const compatibilitySource = await readFile(
+    new URL("../release/compatibility.json", import.meta.url),
+    "utf8",
+  );
+
+  function spawnWithTaggedCompatibility(
+    taggedCompatibilitySource,
+    invocations = [],
+  ) {
+    return (command, arguments_) => {
+      invocations.push([command, arguments_]);
+      if (command !== "git") {
+        return {
+          status: 0,
+          stderr: "",
+          stdout: JSON.stringify([...candidate.publishedVersions, "0.1.0"]),
+        };
+      }
+      if (arguments_[0] === "show") {
+        return { status: 0, stderr: "", stdout: taggedCompatibilitySource };
+      }
+      return {
+        status: 0,
+        stderr: "",
+        stdout: "claude-v0.1.0-alpha.3\nclaude-v0.1.0\n",
+      };
+    };
+  }
+
+  const matchingInvocations = [];
+  const result = await checkPluginReleaseOrder({
+    requireCurrentTag: false,
+    root,
+    spawn: spawnWithTaggedCompatibility(
+      compatibilitySource,
+      matchingInvocations,
+    ),
+  });
+  assert.equal(result.releaseState, "published");
+  assert.deepEqual(
+    matchingInvocations
+      .filter(([command, arguments_]) =>
+        command === "git" && arguments_[0] === "show",
+      )
+      .map(([, arguments_]) => arguments_),
+    [
+      [
+        "show",
+        "refs/release-check/tags/claude-v0.1.0:" +
+          "release/compatibility.json",
+      ],
+    ],
+  );
+
+  await assert.rejects(
+    checkPluginReleaseOrder({
+      requireCurrentTag: false,
+      root,
+      spawn: spawnWithTaggedCompatibility(
+        compatibilitySource.replace(
+          /"tarball_sha256": "[0-9a-f]{64}"/,
+          `"tarball_sha256": "${"0".repeat(64)}"`,
+        ),
+      ),
+    }),
+    /must match its exact protected tag/,
+  );
 });
