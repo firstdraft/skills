@@ -21,6 +21,7 @@ import {
   renderManifestValidationEvidence,
   renderStatePresenceNames,
 } from "../script/claude-plugin-observation.mjs";
+import { safeGithubReasonCodes } from "../script/cli-contract/config.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const skillsDirectory = path.join(repository, "skills");
@@ -77,8 +78,12 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
+  "2a1e4a95b2a89cd7890ca001eb72c97376c7e018";
 const cliContractRuntimeDigest =
+  "1728b2a3dda5eef4e6455875dd964587ca24d39eb229d61f0f08a83d95a08dea";
+const previousCliContractBaseline =
+  "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
+const previousCliContractRuntimeDigest =
   "0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad";
 const historicalCliContractBaseline =
   "f55edffc9e88924f9a4c95f41c4d0bc9b72422f8";
@@ -106,7 +111,7 @@ const freshModelPublicationTree =
   "5815d094e204f8b3928ff5b5467ef85e2551d109";
 const freshModelPublicationCommit =
   "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead";
-const preparedCliPackage = "@firstdraft.com/cli@0.1.0-alpha.2";
+const preparedCliPackage = "@firstdraft.com/cli@0.1.0-alpha.3";
 const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
 const foundationIosCoreArchiveDigest =
@@ -205,6 +210,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     currentCompilerServiceBaseline,
     compilationEvidenceCliBaseline,
     cliContractBaseline,
+    previousCliContractBaseline,
     productJourneySmokeBaseline,
     foundationIosCoreRevision,
     freshAgentEvidenceBaseline,
@@ -232,6 +238,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     assert(source.includes(currentFoundationPlanAnalyzerRelease));
     assert(source.includes(currentFoundationPlanCompilerRelease));
   }
+  assert(foundationPlanReference.includes(previousCliContractRuntimeDigest));
 
   const workflow = (
     await readFile(path.join(repository, ".github", "workflows", "ci.yml"), "utf8")
@@ -253,6 +260,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       currentCompilerServiceBaseline,
       compilationEvidenceCliBaseline,
       cliContractBaseline,
+      previousCliContractBaseline,
       historicalCliContractBaseline,
       compilationProvenanceServiceBaseline,
       productJourneySmokeBaseline,
@@ -636,8 +644,8 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.1.0-alpha.3",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.1.0-alpha.4");
-  assert.equal(installableManifest.version, "0.1.0-alpha.4");
+  assert.equal(packageTemplate.version, "0.1.0-alpha.5");
+  assert.equal(installableManifest.version, "0.1.0-alpha.5");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, [
     "./skills/create-full-stack-app",
@@ -865,6 +873,18 @@ test("CI checks the exact modular CLI contract", async () => {
   assert(contractConfig.includes(cliContractBaseline));
   assert(contractConfig.includes(cliContractRuntimeDigest));
   assert.match(contractConfig, /src\/commands\/compilation\.js/);
+  assert.match(contractConfig, /src\/plan-compile-progress\.js/);
+  const configuredReasonAllowlist = contractConfig.match(
+    /safeGithubReasonCodes = Object\.freeze\(\[([\s\S]*?)\]\);/,
+  );
+  assert(configuredReasonAllowlist, "missing shared safe GitHub reason codes");
+  assert.deepEqual(
+    [...configuredReasonAllowlist[1].matchAll(/"(github\.[a-z._]+)"/g)].map(
+      ([, reason]) => reason,
+    ),
+    safeGithubReasonCodes,
+  );
+  assert.match(contractCheck, /api_contract: \[">= 0\.2\.0", "< 0\.3\.0"\]/);
   for (const module of [
     "compilations",
     "local-commands",
@@ -937,6 +957,8 @@ test("CI checks the exact modular CLI contract", async () => {
       "analysis_wait_timed_out",
       "request_outcome_unknown",
       "malformed-json-diagnostics.json",
+      "First Draft: Application compiled.",
+      "https://github.com/octocat/movie-catalog",
     ],
     "plan-status": [
       "project_not_pushed",
@@ -952,6 +974,20 @@ test("CI checks the exact modular CLI contract", async () => {
       "publication_cancelled",
       "publication_wait_timed_out",
       "publication_status_unavailable",
+      "publication_start_rejected",
+      "publication-server-outcome-unknown",
+      "publication-missing-progress",
+      "publication-null-progress",
+      "publication-incomplete-progress",
+      "progress-retry-time-without-count",
+      "progress-noncanonical-retry-time",
+      "failed-publication-with-running-compilation",
+      "cancelled-publication-with-queued-compilation",
+      "assertPublicationRequestSequence",
+      "progressMessages",
+      "safeGithubReasonCodes",
+      "operator recovery required",
+      "2026-08-07T16:15:00.000000Z",
       "private: false",
       'type: "Organization"',
     ],
@@ -2247,7 +2283,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /dated field report records the server, CLI, runtime,\s+Skill,\s+analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
   );
   const skillEvidence = skillSource.match(
-    /This Skill and its bundled CLI are publicly available experimental prereleases\.([\s\S]*?)## Load the relevant references/,
+    /This workflow is experimental and targets the coordinated plugin alpha\.5, CLI alpha\.3, and service-contract 0\.2\s+contract\.[\s\S]*?bundled bytes do not establish whether that exact combination is currently available from the\s+public catalog; verify availability independently before advising an installation change\.([\s\S]*?)## Load the relevant references/,
   );
   const foundationPlanEvidence = foundationPlanReference.match(
     /## Current evidence boundary([\s\S]*?)The bundled schema was copied/,
@@ -2260,6 +2296,10 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.match(
     skillEvidence[1],
     /narrow\s+experiment, not arbitrary application generation[\s\S]*?ordinary single-target\s+References[\s\S]*?conditional text length[\s\S]*?public and\s+unauthenticated in generated source[\s\S]*?Do not omit or weaken them[\s\S]*?Unsupported shapes fail the complete\s+candidate closed/,
+  );
+  assert.match(
+    skillSource,
+    /Recommend a marketplace install, reinstall, or\s+update only after independently verifying that the catalog serves this exact plugin alpha\.5 and CLI alpha\.3 pair,[\s\S]*?Otherwise report that no verified public repair is known/,
   );
   assert.match(
     foundationPlanEvidence[1],
@@ -2704,6 +2744,20 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  const skill = await readFile(
+    path.join(repository, "skills", "create-full-stack-app", "SKILL.md"),
+    "utf8",
+  );
+  const recovery = await readFile(
+    path.join(
+      repository,
+      "skills",
+      "create-full-stack-app",
+      "references",
+      "diagnostics-and-recovery.md",
+    ),
+    "utf8",
+  );
   const evaluation = (id) => {
     const value = cases.find((candidate) => candidate.id === id);
     assert(value, `missing CLI workflow eval: ${id}`);
@@ -2754,6 +2808,124 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     readme,
     /does not establish a live GitHub or\s+staging Publication, generated-application execution, representative user operation, deployment, or production\s+readiness[\s\S]*?one pinned fresh Claude Code operation[\s\S]*?not a\s+published or representative-user journey/,
   );
+  assert.match(
+    readme,
+    /controlled local harness establishes the candidate\s+product-Compile and progress shape only against a strict fake GitHub remote/,
+  );
+  assert.match(
+    skill,
+    /Treat\s+Compilation and GitHub Publication as separate retained stages[\s\S]*?`compilation\.status: "succeeded"` proves the\s+application artifact finished compiling[\s\S]*?does not prove that\s+a repository exists or that source was published/,
+  );
+  assert.match(
+    skill,
+    /Relay meaningful `First Draft: ` progress lines[\s\S]*?Report the exact scheduled time[\s\S]*?`automatic retries paused; operator recovery required` means\s+the retained singleton is parked[\s\S]*?If no\s+reason is displayed, say that no safe reason is available/,
+  );
+  assert.match(
+    skill,
+    /bounded ten minutes[\s\S]*?Four minutes by itself is still within that\s+window[\s\S]*?timeout ends only that invocation's wait and does not cancel retained work/,
+  );
+  assert.match(
+    skill,
+    /while `plan compile` is polling a Publication[\s\S]*?never launch a concurrent\s+Compile[\s\S]*?after that invocation exits[\s\S]*?conditional singleton replay[\s\S]*?There is no separate public Publication status command/,
+  );
+  assert.match(
+    skill,
+    /`invalid_publication_status` is a protocol mismatch[\s\S]*?unchanged replay cannot repair[\s\S]*?reconcile the coordinated CLI\/service versions first/,
+  );
+  assert.match(
+    skill,
+    /Successful `plan compile` standard output contains only the repository URL[\s\S]*?does not expose a Compilation ID[\s\S]*?Do not invent an ID/,
+  );
+  assert.match(
+    recovery,
+    /reserves standard output for one validated private GitHub repository URL on success[\s\S]*?Do not call a nonterminal GitHub phase "still compiling"/,
+  );
+  assert.match(
+    recovery,
+    /end standard error with exactly one JSON object[\s\S]*?Remove only one leading contiguous block of complete lines[\s\S]*?exact `First Draft: ` prefix[\s\S]*?any other prefix or suffix,[\s\S]*?interleaved output fail closed/,
+  );
+  for (const field of ["phase", "retry_at", "retry_count", "reason_code"]) {
+    assert(recovery.includes(`| \`${field}\` |`));
+  }
+  for (const phase of [
+    "compiling",
+    "preparing_repository",
+    "github_preflight",
+    "creating_repository",
+    "preparing_repository_reconciliation",
+    "reconciling_repository",
+    "preparing_artifact",
+    "publishing_artifact",
+    "preparing_publication_reconciliation",
+    "reconciling_publication",
+    "completed",
+    "failed",
+    "cancelled",
+  ]) {
+    assert(recovery.includes(`\`${phase}\``), `missing Publication phase ${phase}`);
+  }
+  const reasonAllowlist = recovery.match(
+    /The reason-code allowlist is ([\s\S]*?)\.\n\nA non-null `retry_at`/,
+  );
+  assert(reasonAllowlist, "missing safe Publication reason allowlist");
+  assert.deepEqual(
+    [...reasonAllowlist[1].matchAll(/`(github\.[a-z._]+)`/g)].map(
+      ([, reason]) => reason,
+    ),
+    safeGithubReasonCodes,
+  );
+  for (const message of [
+    "Analyzing Foundation Plan...",
+    "Foundation Plan analysis valid.",
+    "Compiling application...",
+    "Application compiled.",
+    "Application compilation failed.",
+    "Application compilation cancelled.",
+    "Preparing private GitHub repository...",
+    "Checking GitHub access...",
+    "Checking GitHub access (reason: CODE; retry count: N; next retry: TIMESTAMP).",
+    "Checking GitHub access (reason: CODE; retry count: N; automatic retries paused; operator recovery required).",
+    "Creating private GitHub repository...",
+    "Preparing to verify GitHub repository creation...",
+    "Verifying GitHub repository creation...",
+    "Preparing compiled application...",
+    "Publishing compiled application to GitHub...",
+    "Preparing to verify GitHub publication...",
+    "Verifying GitHub publication...",
+    "GitHub publication complete.",
+    "GitHub publication failed.",
+    "GitHub publication cancelled.",
+  ]) {
+    assert(recovery.includes(`\`${message}\``), `missing progress message ${message}`);
+  }
+  assert.match(
+    recovery,
+    /emits only state-changing lines, suppresses consecutive duplicate text, and prefixes every line with\s+`First Draft: `/,
+  );
+  assert.match(
+    recovery,
+    /HTTP status\s+by itself does not prove that an account lacks provisioning or that an endpoint does not exist[\s\S]*?not a\s+basis for a support recommendation/,
+  );
+  assert.match(
+    recovery,
+    /`invalid_publication_status` also leaves the singleton result unverified[\s\S]*?retrying unchanged cannot repair a\s+protocol mismatch[\s\S]*?reconcile compatible CLI\/service versions/,
+  );
+  assert.match(
+    recovery,
+    /`publication_start_rejected` is a validated non-timeout 4xx result and establishes only that Publication success was\s+not verified[\s\S]*?does not establish whether this request reached the service's start boundary,[\s\S]*?left retained or remote work,[\s\S]*?rejection alone authorizes no replay, concurrent Compile, or direct mutation[\s\S]*?A 408 or 5xx response to the start\s+request is not this family[\s\S]*?outcome as unknown/,
+  );
+  assert.match(
+    recovery,
+    /`publication_failed` and `publication_cancelled` are terminal[\s\S]*?inspect\s+`current\.compilation\.status` before reporting the failed stage[\s\S]*?failed or cancelled Compilation means GitHub work\s+was not reached[\s\S]*?When Compilation succeeded,[\s\S]*?remote processing may have left a repository or commit/,
+  );
+  assert.match(
+    recovery,
+    /`github\.preflight_unclassified` says only that a retained legacy retry had no classified\s+reason[\s\S]*?`github\.preflight_unavailable\.\*` fallback identifies the coarse pre-claim stage[\s\S]*?does not expose the exception or establish a provider cause/,
+  );
+  assert.match(
+    recovery,
+    /failed or cancelled Compilation\s+means GitHub Publication work was not reached[\s\S]*?failed or cancelled Publication paired with a succeeded Compilation\s+is a later GitHub delivery outcome/,
+  );
 
   const schemaRepair = evaluation("repair-local-schema-diagnostic");
   hasExpectation(schemaRepair, "instancePath", "application.key");
@@ -2790,7 +2962,8 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(movie, "not public plan publish or plan compile --output");
   hasExpectation(movie, "firstdraft plan compile for this prepared journey");
   hasExpectation(movie, "pushes the exact whole file", "accepted graph generation");
-  hasExpectation(movie, "private GitHub repository URL");
+  hasExpectation(movie, "progress as nonterminal observational output");
+  hasExpectation(movie, "stdout", "validated private GitHub repository URL");
   hasExpectation(movie, "separate plan push and plan status as optional");
   assert.deepEqual(movie.artifacts, [
     {
@@ -2806,6 +2979,107 @@ test("product Compile and retained Compilation evals match the CLI contract", as
       stage_as: ".firstdraft/state.json",
     },
   ]);
+
+  const terminalStage = evaluation("compile-distinguishes-terminal-stage");
+  hasExpectation(
+    terminalStage,
+    "Application compilation failed",
+    "GitHub Publication work was not reached",
+    "does not warn about repository or commit effects",
+  );
+  hasExpectation(
+    terminalStage,
+    "application compiled",
+    "GitHub publication failed later",
+    "remote repository or commit effects may remain",
+  );
+  hasExpectation(terminalStage, "Branches on compilation.status");
+
+  const retryProgress = evaluation(
+    "compile-reports-publication-retry-progress",
+  );
+  hasExpectation(
+    retryProgress,
+    "Compilation is complete",
+    "GitHub Publication remains pending",
+    "github_preflight",
+  );
+  hasExpectation(
+    retryProgress,
+    "four minutes",
+    "bounded ten-minute Publication wait",
+    "not evidence of a stall",
+  );
+  hasExpectation(
+    retryProgress,
+    "retry_count 2",
+    "github.oauth_unavailable",
+    "exact absolute retry_at timestamp",
+  );
+  hasExpectation(retryProgress, "Does not launch a concurrent plan compile", "singleton");
+  hasExpectation(
+    retryProgress,
+    "Does not recommend changing origins, reinstalling, or contacting support",
+  );
+
+  const parkedProgress = evaluation("compile-reports-parked-publication");
+  hasExpectation(parkedProgress, "Compilation succeeded", "Publication is parked");
+  hasExpectation(
+    parkedProgress,
+    "retry_count 7",
+    "github.preflight_unavailable",
+  );
+  hasExpectation(parkedProgress, "operator attention", "without guessing");
+  hasExpectation(parkedProgress, "Does not launch a concurrent plan compile");
+  hasExpectation(parkedProgress, "conditional singleton replay");
+
+  const fallbackProgress = evaluation(
+    "compile-reports-unclassified-publication-fallback",
+  );
+  hasExpectation(
+    fallbackProgress,
+    "github.preflight_unavailable.repository_client",
+    "parked retry state",
+  );
+  hasExpectation(
+    fallbackProgress,
+    "coarse pre-claim repository-client-stage fallback",
+    "not the raw exception",
+    "not proof that GitHub rejected repository creation",
+  );
+  hasExpectation(fallbackProgress, "Does not start a concurrent Compile");
+
+  const rejected404 = evaluation(
+    "compile-404-does-not-identify-publication-cause",
+  );
+  hasExpectation(
+    rejected404,
+    "Branches on publication_start_rejected",
+    "validated non-timeout 4xx rejection",
+    "408 or 5xx start outcome",
+    "request_outcome_unknown reconciliation",
+  );
+  hasExpectation(
+    rejected404,
+    "Publication success was not verified",
+    "does not claim whether this request or an earlier one left retained",
+  );
+  hasExpectation(
+    rejected404,
+    "Does not treat HTTP 404",
+    "unprovisioned account",
+    "missing per-account endpoint",
+  );
+  hasExpectation(
+    rejected404,
+    "Does not recommend changing origins, reinstalling, contacting support",
+    "no stable structured recovery action",
+  );
+  hasExpectation(
+    rejected404,
+    "stops for a named structured recovery action or coordinated route/service repair",
+    "does not replay or start another Compile solely from this envelope",
+  );
 
   const semantic = evaluation("compile-semantic-diagnostics");
   hasExpectation(semantic, "Branches on plan_not_valid", "semantic diagnostics");
@@ -2841,10 +3115,16 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     "phase publication",
     "repository creation may have succeeded",
   );
-  hasExpectation(ambiguousPublication, "reconcile", "retained Head provenance");
+  hasExpectation(
+    ambiguousPublication,
+    "same zero-flag firstdraft plan compile",
+    "unchanged Plan bytes",
+    "conditional PUT",
+  );
 
   const success = evaluation("report-successful-product-compile");
   hasExpectation(success, "private repository URL");
+  hasExpectation(success, "without inventing Project", "final stdout did not expose");
   hasExpectation(success, "successful product Compile and GitHub Publication");
   hasExpectation(success, "not local artifact materialization or deployment");
 
@@ -2966,7 +3246,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   assert(recoverySection, "SKILL.md: missing recovery section");
   assert.match(
     recoverySection[1],
-    /Branch on its stable `error` and structured\s+fields, not the human-readable `detail`/,
+    /Branch on\s+its stable `error` and structured fields,\s+not the human-readable `detail`/,
   );
   assert.match(
     recoverySection[1],
@@ -2985,7 +3265,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   }
   assert.match(
     recoveryReference,
-    /Branch on its stable `error` and\s+structured fields rather than the human-readable `detail`/,
+    /Branch on the object's stable `error` and structured fields rather than the\s+human-readable `detail`/,
   );
   assert.match(
     recoveryReference,
@@ -2993,7 +3273,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   );
   assert.match(
     recoveryReference,
-    /Unknown, absent, malformed, mixed, or additional output is not a trusted recovery envelope/,
+    /Unknown, absent, malformed, or additional output after removing only recognized complete `First Draft: ` lines is\s+not a trusted recovery envelope/,
   );
   assert.doesNotMatch(
     recoveryReference,

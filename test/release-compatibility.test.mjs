@@ -24,14 +24,14 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.1.0-alpha.4",
+    version: "0.1.0-alpha.5",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "d662b86f33dd75c7a22e89e092c51497b0df9e14958a369d7ac96b85088ac3bd",
+        "62449f123a6056e9df996b7d3ebd6386c5b8d8399dbedb8a7c361b191e6be39b",
     },
     requires: {
-      api_contract: [">= 0.1.0", "< 0.2.0"],
+      api_contract: [">= 0.2.0", "< 0.3.0"],
       cli: [`= ${cliPackageVersion}`],
       foundation_plan_formats: [foundationPlanFormat],
     },
@@ -62,7 +62,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCandidateDrift = structuredClone(documents);
-  withCandidateDrift.packageTemplate.version = "0.1.0-alpha.5";
+  withCandidateDrift.packageTemplate.version = "0.1.0-alpha.6";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCandidateDrift),
     /Expected values to be strictly equal/,
@@ -80,6 +80,13 @@ test("release compatibility rejects shape and manifest drift", async () => {
   assert.throws(
     () => assertSkillsReleaseCompatibility(withShortDigest),
     /full lowercase SHA-256/,
+  );
+
+  const withSentinelDigest = structuredClone(documents);
+  withSentinelDigest.compatibility.plugin_source.tarball_sha256 = "0".repeat(64);
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withSentinelDigest),
+    /must record the assembled candidate digest/,
   );
 
   const withCheckoutIdentityDrift = structuredClone(documents);
@@ -239,7 +246,27 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /reconcile its registry identity read-only/,
+    /service API contract `>= 0\.2\.0` and `< 0\.3\.0`[\s\S]*?coordinated maintenance-window release[\s\S]*?not\s+independently deployable/,
+  );
+  assert.match(
+    releasing,
+    /service API contract 0\.2 responses are incompatible with the alpha\.2 CLI bundled in\s+public plugin alpha\.3[\s\S]*?Catalog promotion alone does\s+not update an existing installation/,
+  );
+  assert.match(
+    releasing,
+    /This source does not approve that interruption[\s\S]*?human must explicitly approve and announce the brief maintenance window/,
+  );
+  assert.match(
+    releasing,
+    /Only inside the separately approved and announced maintenance window[\s\S]*?deploys the exact service\s+candidate to staging/,
+  );
+  assert.match(
+    releasing,
+    /Notify known existing alpha\.3 installations that catalog promotion does not update them[\s\S]*?separately\s+verified Claude Code update procedure/,
+  );
+  assert.match(
+    releasing,
+    /reconcile both identities read-only/,
   );
   assert.match(
     releasing,

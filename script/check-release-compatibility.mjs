@@ -51,6 +51,11 @@ export function assertSkillsReleaseCompatibility({
     /^[0-9a-f]{64}$/,
     "plugin source identity must use a full lowercase SHA-256",
   );
+  assert.notEqual(
+    compatibility.plugin_source.tarball_sha256,
+    "0".repeat(64),
+    "plugin source identity must record the assembled candidate digest",
+  );
 
   assertExactKeys(
     compatibility.requires,
@@ -67,7 +72,7 @@ export function assertSkillsReleaseCompatibility({
     assertComparator(requirement);
   }
   assert.deepEqual(compatibility.requires, {
-    api_contract: [">= 0.1.0", "< 0.2.0"],
+    api_contract: [">= 0.2.0", "< 0.3.0"],
     cli: [`= ${cliPackageVersion}`],
     foundation_plan_formats: [foundationPlanFormat],
   });

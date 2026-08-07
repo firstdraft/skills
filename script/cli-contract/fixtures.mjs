@@ -92,6 +92,12 @@ export function publicationProjection(
     publication: {
       id: publicationId,
       status: "succeeded",
+      progress: {
+        phase: "completed",
+        retry_at: null,
+        retry_count: 0,
+        reason_code: null,
+      },
       repository: {
         id: 987654321,
         private: true,
@@ -118,6 +124,7 @@ export function publicationLifecycleProjection(
     projectChanges = {},
     compilationChanges = {},
     publicationChanges = {},
+    progressChanges = {},
     repositoryChanges = {},
   } = {},
 ) {
@@ -160,6 +167,17 @@ export function publicationLifecycleProjection(
         code: status,
       }
     : null;
+  const progressPhase = {
+    compiling: "compiling",
+    provisioning_repository: "github_preflight",
+    repository_unknown: "preparing_repository_reconciliation",
+    publishing: "publishing_artifact",
+    publication_unknown: "preparing_publication_reconciliation",
+    succeeded: "completed",
+    repository_conflict: "failed",
+    failed: "failed",
+    cancelled: "cancelled",
+  }[status];
 
   return {
     project: {
@@ -189,6 +207,13 @@ export function publicationLifecycleProjection(
     publication: {
       id: publicationId,
       status,
+      progress: {
+        phase: progressPhase,
+        retry_at: null,
+        retry_count: 0,
+        reason_code: null,
+        ...progressChanges,
+      },
       repository,
       failure,
       created_at: "2026-08-04T12:00:00.000Z",

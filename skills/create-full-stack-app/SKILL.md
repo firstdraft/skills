@@ -11,8 +11,10 @@ as good as the agent and user can currently make it, the CLI can submit the exac
 whole-graph analysis, and request the prepared Compile contract whose successful Publication is intended to create
 one private GitHub repository. Live GitHub publication remains outside the current evidence boundary.
 
-This Skill and its bundled CLI are publicly available experimental prereleases. The current Compiler is a narrow
-experiment, not arbitrary application generation. It admits ten scalar Field kinds; ordinary single-target
+This workflow is experimental and targets the coordinated plugin alpha.5, CLI alpha.3, and service-contract 0.2
+contract. These bundled bytes do not establish whether that exact combination is currently available from the
+public catalog; verify availability independently before advising an installation change. The current Compiler is a
+narrow experiment, not arbitrary application generation. It admits ten scalar Field kinds; ordinary single-target
 References; direct referenced-side inverses and one narrow indirect collection; a bounded Validation subset including
 conditional text length; exact public web index, create/update, show-projection, return-destination, and destroy
 Scaffold shapes; optional semantic icons; and an iPhone project limited to index/navigation beneath `ios/`. Richer
@@ -66,8 +68,10 @@ Require these public commands:
 
 There is no public `plan publish`, `plan subject-id`, or `plan compile --output` contract. A marketplace installation
 of this Skill supplies its exact compatible CLI dependency. Do not install, download, or upgrade another CLI
-automatically. If a required command is missing or reports a different version, report a plugin installation defect
-and ask the user to reinstall or update the plugin rather than approximating it with direct HTTP.
+automatically. If a required command is missing or reports a different version, report the exact installation
+mismatch and stop rather than approximating it with direct HTTP. Recommend a marketplace install, reinstall, or
+update only after independently verifying that the catalog serves this exact plugin alpha.5 and CLI alpha.3 pair,
+and use only a separately verified marketplace procedure. Otherwise report that no verified public repair is known.
 
 `.firstdraft/state.json` is private CLI-owned concurrency state. Do not print, paste, commit, or treat it as
 agent-authored Plan content. For an installed plugin, let the user configure the API token through the plugin's
@@ -184,16 +188,48 @@ current Plan even when unchanged, waits specifically for analysis matching that 
 and stops with structured diagnostics unless that graph is `valid`. Invalid JSON, schema errors, semantic
 diagnostics, analyzer failure, or supersession do not create a Publication.
 
-Immediately before the Publication mutation, the CLI rechecks both the accepted ETag and exact local bytes. Success
-is one JSON object containing the retained `project`, `compilation`, and `publication`, including the private
-GitHub repository URL. Do not infer success from progress or from analysis alone.
+Immediately before the Publication mutation, the CLI rechecks both the accepted ETag and exact local bytes. Treat
+Compilation and GitHub Publication as separate retained stages. `compilation.status: "succeeded"` proves the
+application artifact finished compiling even while `publication.status` remains nonterminal. It does not prove that
+a repository exists or that source was published. Only a terminal successful Publication and the CLI's validated
+private repository URL prove GitHub Publication; progress and valid analysis do not.
+
+Relay meaningful `First Draft: ` progress lines while the command waits. The CLI derives them only from validated
+`publication.progress` fields: `phase`, `retry_at`, `retry_count`, and `reason_code`. Report the exact scheduled time
+rather than calling the whole operation stuck or "still compiling." `Application compiled.` means Compilation is
+done, while later GitHub lines describe Publication. `automatic retries paused; operator recovery required` means
+the retained singleton is parked. A displayed reason is evidence only of its named coarse category, not a specific
+bad token, missing account provisioning, absent endpoint, incorrect setting, or permanent provider failure. If no
+reason is displayed, say that no safe reason is available. Never infer a cause from elapsed time, HTTP status,
+phase, or human-readable detail, and do not recommend changing origins, reinstalling, or contacting support without
+a stable structured recovery reason that actually calls for that action. `github.preflight_unclassified` is only a
+legacy fallback, while `github.preflight_unavailable.*` identifies only a coarse pre-claim stage; neither reveals a
+lower-level exception or provider cause.
+
+The CLI follows the retained Publication for a bounded ten minutes. Four minutes by itself is still within that
+window and is not evidence that Compilation or Publication is stuck; report the last validated stage and any exact
+retry schedule instead. A timeout ends only that invocation's wait and does not cancel retained work.
+While `retry_at` is scheduled, let the current invocation follow that automatic retry rather than starting another.
+When the singleton is parked, do not loop Compile mechanically; report the safe reason and the need for operator
+recovery without inventing the recovery action.
+
+Terminal progress also respects that boundary. `Application compilation failed.` or
+`Application compilation cancelled.` means Compilation never completed and GitHub Publication work was not reached.
+Only after `compilation.status: "succeeded"` can `GitHub publication failed.` or
+`GitHub publication cancelled.` describe a later delivery outcome.
 
 Aim for one well-prepared successful Compile because this release retains one Publication singleton per Project
-and cannot repoint it to a later Head. This is pragmatic guidance, not a prohibition:
+and cannot repoint it to a later Head:
 
 - a Compile that stops at invalid analysis has not published and can follow further edits or dialogue;
-- repeating the command after a successful or ambiguous Publication safely asks the server for the same singleton;
-  and
+- while `plan compile` is polling a Publication, keep following that retained work and never launch a concurrent
+  Compile or another start request for the Project;
+- after that invocation exits on a Publication outcome-unknown, unavailable status, timeout, or interruption, wait
+  and rerun the same zero-flag `firstdraft plan compile` with exact unchanged Plan bytes. This
+  conditional singleton replay resumes or reconciles the retained Publication; it does not create another
+  Compilation, repository, or push. There is no separate public Publication status command;
+- `invalid_publication_status` is a protocol mismatch that unchanged replay cannot repair. Preserve the Plan bytes
+  and local state, reconcile the coordinated CLI/service versions first, and do not start a competing mutation;
 - compiling a materially later Head into another repository requires a fresh Project because no Project-fork
   operation exists yet.
 
@@ -201,7 +237,10 @@ and cannot repoint it to a later Head. This is pragmatic guidance, not a prohibi
 
 ## Inspect or download the retained Compilation
 
-The successful Compile projection supplies the Compilation ID. Read its lifecycle without starting work:
+Successful `plan compile` standard output contains only the repository URL; it does not expose a Compilation ID.
+Use the retained commands only when the user supplied an exact ID or a validated structured failure projection
+actually exposed one. Do not invent an ID or recover one from private state or unvalidated output. Read its lifecycle
+without starting work:
 
 ```sh
 firstdraft compilation status <compilation-id>
@@ -225,8 +264,12 @@ it.
 
 ## Recover from failures
 
-Handled leaf-command failures write one JSON object to standard error. Branch on its stable `error` and structured
-fields, not the human-readable `detail`. Use the recovery reference for the exact error families.
+Handled leaf-command failures end standard error with one JSON object. The exact `First Draft: ` progress lines may
+precede it. Remove only one leading contiguous block of complete recognized lines whose text after that exact prefix
+matches the stable message table in the recovery reference. Then require the remainder to be exactly one JSON object.
+An unrecognized prefixed line, a progress line after the envelope, or any interleaved output fails closed. Branch on
+its stable `error` and structured fields, not the human-readable `detail`. Use the recovery reference for the exact
+error families.
 
 The important boundaries are:
 
@@ -236,12 +279,24 @@ The important boundaries are:
   speculative source correction;
 - `request_outcome_unknown` with `phase: "push"` means an accepted Head may exist without recoverable local
   state, so stop rather than repeating the mutation;
-- `request_outcome_unknown` with `phase: "publication"` concerns the singleton Publication; rerunning
-  `plan compile` safely reconciles or replays that singleton;
-- `publication_status_unavailable`, `invalid_publication_status`, and `publication_wait_timed_out` leave the
-  singleton outcome unknown, so do not label it failed, succeeded, or published;
-- `publication_failed` and `publication_cancelled` are terminal for the retained singleton. Remote effects may
-  remain, and producing a different repository or later Head requires a fresh Project;
+- `request_outcome_unknown` with `phase: "publication"` means the singleton may already exist. Do not infer whether
+  repository creation ran or start a concurrent command. After this invocation exits, wait and replay the same
+  zero-flag Compile with unchanged Plan bytes;
+- `publication_status_unavailable` and `publication_wait_timed_out` leave the retained singleton possibly running
+  or parked. Report its last validated progress when present, but do not label
+  it failed, succeeded, or published. Do not run concurrent Compile commands; after the invocation exits, wait and
+  replay the same zero-flag Compile with unchanged Plan bytes to resume the singleton;
+- `invalid_publication_status` also leaves the singleton's result unverified, but unchanged replay will not repair
+  the protocol mismatch. Preserve state and reconcile compatible CLI/service candidates before replay;
+- `publication_start_rejected` is a validated non-timeout 4xx rejection and proves only that Publication success was
+  not verified. Preserve the exact Plan and private state, report only its structured code, and do not infer whether
+  this request or an earlier one left retained or remote work. The envelope alone authorizes no replay, concurrent
+  Compile, or direct mutation; resolve its stable structured cause or coordinated route/service defect before a
+  separately supported retry. A 408 or 5xx start response instead follows `request_outcome_unknown` reconciliation;
+- `publication_failed` and `publication_cancelled` are terminal for the retained singleton. Inspect
+  `current.compilation.status` before naming the stage. A failed or cancelled Compilation never reached GitHub; only
+  a succeeded Compilation followed by terminal Publication can leave GitHub repository or commit effects. Producing
+  a different repository or later Head requires a fresh Project;
 - deleting or altering a repository as recovery requires a separate user request and its exact verified identity;
 - `local_state_not_saved` includes private `recovery_state` that must remain local;
 - a persistent `status_unavailable` is a read-only failure: retry it a bounded number of times, then inspect only
@@ -249,8 +304,10 @@ The important boundaries are:
 - status, provenance, artifact, and materialization errors do not justify bypassing validation or direct HTTP; and
 - `invalid_output_path` occurs before network access, so the user can choose another absent destination.
 
-Unknown or mixed output is not a trusted recovery contract. Preserve local files and avoid guessing at server
-state. Never expose token values, private state, raw artifact bytes, unvalidated response bodies, or secrets.
+Output containing anything besides recognized `First Draft: ` progress lines and the one expected result is not a
+trusted recovery contract. Preserve local files and avoid guessing at server state. An HTTP status alone does not
+identify account provisioning or an absent endpoint. Never expose token values, private state, raw artifact bytes,
+unvalidated response bodies, or secrets.
 
 ## Hand off the result
 
@@ -260,7 +317,9 @@ Report:
   import, or whole-graph analysis;
 - material product choices, delegated decisions, deferred questions, warnings, and capability gaps;
 - the last validated analyzer release and graph version;
-- after Compile success, the private repository URL and retained Project, Compilation, and Publication identities;
+- when observed, the distinct Compilation and Publication statuses plus safe progress phase, retry time, retry
+  count, and reason code;
+- after Compile success, the validated private repository URL and any retained identities the CLI actually exposed;
 - after download, the chosen local path, file count, and manifest digest; and
 - any recovery blocker or external prerequisite.
 

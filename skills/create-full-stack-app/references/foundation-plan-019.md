@@ -72,16 +72,18 @@ not release or execution evidence.
 
 The bounded local Compilation evidence used reviewed CLI revision
 `121272cd592055354d09a4fe90e55c3ca002770c`, with JavaScript-source runtime digest
-`205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. The current contract fixtures and check use
-reviewed successor revision `e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, with independently reproduced
-JavaScript-source runtime digest `0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`, as
-contract provenance rather than release or execution evidence. That successor exposes `generate uuid`, `generate
+`205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. Prior contract checks used reviewed
+successor revision `e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, with JavaScript-source runtime digest
+`0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`. The current fixtures and check use reviewed
+progress-contract revision `2a1e4a95b2a89cd7890ca001eb72c97376c7e018`, with JavaScript-source runtime digest
+`1728b2a3dda5eef4e6455875dd964587ca24d39eb229d61f0f08a83d95a08dea`, as contract provenance rather than release
+or execution evidence. The current revision exposes `generate uuid`, `generate
 application-key`, `plan init`, `plan push`, `plan status`, zero-flag `plan compile`, `compilation status`, and
 `compilation download`. It deliberately has no public `plan subject-id`, `plan publish`, or local-start
-`plan compile --output` contract. The reviewed checkout declares `@firstdraft.com/cli@0.1.0-alpha.2`; its packed file
-inventory, contents, and relevant modes match the published package even though npm's raw gzip containers need not
-be byte-identical. Check commands rather than inferring compatibility from the version number. Package publication
-does not prove authentication, staging compatibility, or a complete user journey.
+`plan compile --output` contract. The coordinated checkout declares the experimental
+`@firstdraft.com/cli@0.1.0-alpha.3` prerelease. Check commands rather than inferring compatibility from the version
+number. Candidate qualification or package publication does not prove authentication, staging compatibility, or a
+complete user journey.
 
 Service revision `6002be2685542fedf515879f940b97ad73b1a469` names analyzer release
 `foundation-plan-rails/application-2026-08-05-conditional-length` and Compiler release

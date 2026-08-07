@@ -14,12 +14,15 @@ import {
   cliPackageName,
   cliPackageVersion,
   projectId,
+  safeGithubReasonCodes,
   storedApiUrl,
 } from "./config.mjs";
 
 export const cleanEnvironment = Object.fromEntries(
   Object.entries(process.env).filter(([name]) => !name.startsWith("FIRSTDRAFT_")),
 );
+
+const safeGithubReasonCodeSet = new Set(safeGithubReasonCodes);
 
 export function cliRuntimeDigest(root) {
   const paths = runtimeJavaScriptFiles(path.join(root, "src"))
@@ -190,13 +193,70 @@ export function assertErrorEnvelope(
 ) {
   assert.equal(execution.status, status);
   assert.equal(execution.stdout, "");
-  assert.match(execution.stderr, /\n$/);
-  const envelope = JSON.parse(execution.stderr);
+  const { messages, result } = splitProgressOutput(execution.stderr);
+  assert.equal(messages.every(isSafeProgressMessage), true);
+  assert.match(result, /\n$/);
+  const envelope = JSON.parse(result);
   assert.equal(envelope.error, error);
   assert.equal(typeof envelope.detail, "string");
   assertPrivateValuesAbsent(execution, privateValues);
   assert.doesNotMatch(execution.stderr, /(?:EEXIST|errno|syscall|mkdir)/i);
   return envelope;
+}
+
+export function progressMessages(execution) {
+  const { messages, result } = splitProgressOutput(execution.stderr);
+  assert.equal(messages.every(isSafeProgressMessage), true);
+  assert.equal(result, "\n");
+  return messages;
+}
+
+function splitProgressOutput(stderr) {
+  assert.match(stderr, /\n$/);
+  const lines = stderr.slice(0, -1).split("\n");
+  const messages = [];
+  while (
+    lines[0]?.startsWith("First Draft: ") &&
+    isSafeProgressMessage(lines[0])
+  ) {
+    const [line] = lines.splice(0, 1);
+    messages.push(line);
+  }
+  return { messages, result: `${lines.join("\n")}\n` };
+}
+
+function isSafeProgressMessage(line) {
+  const message = line.slice("First Draft: ".length);
+  if (
+    [
+      "Analyzing Foundation Plan...",
+      "Foundation Plan analysis valid.",
+      "Compiling application...",
+      "Application compiled.",
+      "Application compilation failed.",
+      "Application compilation cancelled.",
+      "Preparing private GitHub repository...",
+      "Checking GitHub access...",
+      "Creating private GitHub repository...",
+      "Preparing to verify GitHub repository creation...",
+      "Verifying GitHub repository creation...",
+      "Preparing compiled application...",
+      "Publishing compiled application to GitHub...",
+      "Preparing to verify GitHub publication...",
+      "Verifying GitHub publication...",
+      "GitHub publication complete.",
+      "GitHub publication failed.",
+      "GitHub publication cancelled.",
+    ].includes(message)
+  ) {
+    return true;
+  }
+
+  const match =
+    /^Checking GitHub access \(reason: ([a-z._]+); retry count: ([1-7]); (?:next retry: (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z)|(automatic retries paused; operator recovery required))\)\.$/.exec(
+      message,
+    );
+  return match !== null && safeGithubReasonCodeSet.has(match[1]);
 }
 
 export function assertPrivateValuesAbsent(execution, privateValues) {
