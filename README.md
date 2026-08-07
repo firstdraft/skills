@@ -99,11 +99,16 @@ mobile generator.
 
 The required Publication progress object breaks the existing API-contract 0.1 line. Plugin 0.1.0 and CLI 0.1.0
 require service API contract `>= 0.2.0` and `< 0.3.0`. Publishing the CLI under `next` does not activate that service
-contract or upgrade an installed plugin; service 0.2 activation and plugin 0.1.0 publication/promotion remain a
-coordinated maintenance-window rollout and are not independently deployable. Activating service contract 0.2 on
+contract or upgrade an installed plugin; plugin publication, service activation, and catalog promotion remain one
+coordinated rollout whose service-activation phase occupies the maintenance window. Activating service contract 0.2 on
 shared staging makes the alpha.2 CLI bundled in public plugin alpha.3 incompatible, and catalog promotion does not
 upgrade existing installations. No interruption is approved here. A human must explicitly approve and announce the
 window, affected-user notice, ordered rollout, rollback point, and completion checks before staging activation.
+The serialized rollout publishes and reconciles plugin 0.1.0 under `next` first while `latest`, the public alpha.3
+catalog, and shared staging remain unchanged. Only then does the operator open the maintenance window, move staging
+web and worker to the exact API 0.2 revision, promote the catalog, and use a fresh public install to close the
+window. Before both service roles activate API 0.2, an exact-`next` plugin 0.1.0 install is an operator-only package
+check: Plan, Compile, and every First Draft API call through it are incompatible and unsupported.
 
 Beginning with ordinary 0.1.0, pre-1.0 component versions use a minor bump for a breaking compatibility-line
 change and a patch bump for an otherwise backward-compatible change. Versions are never aliased. The npm `next`

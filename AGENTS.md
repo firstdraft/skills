@@ -15,7 +15,9 @@
   backward-compatible change. Current candidates use ordinary `0.MINOR.PATCH` versions; do not add compatibility
   aliases or treat an npm dist-tag as version semantics.
 - Keep deployment, package publication, marketplace promotion, and replay mutations serialized through one
-  operator. Reconcile an ambiguous publication or push outcome read-only before retrying.
+  operator. For a breaking service transition, publish and reconcile the compatible plugin under `next` before
+  opening the maintenance window; leave `latest` and the public catalog unchanged until the exact web and worker
+  revisions are active. Reconcile an ambiguous publication or push outcome read-only before retrying.
 - Before pushing a `claude-v*` publication tag, verify its protection ruleset, the `npm` environment's required
   reviewers, the deliberately enabled `NPM_RELEASE_ENABLED` gate, and monotonic version order against npm,
   protected release tags, and the marketplace catalog.
