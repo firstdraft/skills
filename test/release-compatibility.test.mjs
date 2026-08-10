@@ -179,6 +179,9 @@ test("release operator and agent instructions track the candidate", async () => 
     agents,
     readme,
     directPackageEvidence,
+    pluginReleaseEvidence,
+    directPackageReleaseEvidence,
+    discoverySmokeEvidence,
   ] = await Promise.all([
     readJson("release/compatibility.json"),
     readJson(".claude-plugin/marketplace.json"),
@@ -186,6 +189,9 @@ test("release operator and agent instructions track the candidate", async () => 
     readText("AGENTS.md"),
     readText("README.md"),
     readText("evidence/2026-08-07-direct-package-alpha3-check.md"),
+    readText("evidence/2026-08-09-claude-plugin-0.1.0-release.md"),
+    readText("evidence/2026-08-09-direct-package-0.1.0-check.md"),
+    readText("evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md"),
   ]);
   const catalogPlugin = marketplace.plugins.find(
     ({ name }) => name === "firstdraft",
@@ -200,16 +206,102 @@ test("release operator and agent instructions track the candidate", async () => 
     ),
   );
   assert(releasing.includes(compatibility.plugin_source.package));
-  assert.equal(catalogPlugin.version, "0.1.0-alpha.3");
+  assert(
+    compareSemanticVersions(compatibility.version, catalogPlugin.version) >= 0,
+    "the marketplace catalog must not lead the release candidate",
+  );
+  assert.equal(catalogPlugin.version, "0.1.0");
   assert.match(
     releasing,
-    /marketplace catalog\s+deliberately remains pinned to alpha\.3/,
+    /release version is\s+`0\.1\.0`,\s+and the marketplace package source names that exact version/,
   );
   assert.match(
     releasing,
-    /Alpha\.4 and alpha\.5 were assembled as\s+source\s+candidates and abandoned before catalog promotion/,
+    /Alpha\.4\s+and alpha\.5 were assembled as source candidates and abandoned before catalog promotion/,
   );
   assert.match(releasing, /separate marketplace-promotion change/);
+  assert.match(
+    releasing,
+    /package must be published under `next` before that catalog pointer merges[\s\S]*?read-only publication observation[\s\S]*?exact protected[\s\S]*?tag, package digest, provenance presence,[\s\S]*?`next` names 0\.1\.0 while `latest` remains alpha\.3[\s\S]*?staging Movie Catalog discovery smoke[\s\S]*?pre-catalog\s+promotion gate/,
+  );
+  assert.match(
+    readme,
+    /catalog manifest in this source names ordinary plugin 0\.1\.0[\s\S]*?source[\s\S]*?bytes and dated package observation do not establish deployment compatibility, a merge to public `main`, or a[\s\S]*?successful fresh public install/,
+  );
+  assert.match(
+    pluginReleaseEvidence,
+    /source commit `b3e53a240aaf79a776538e9b1410689d8a4e79ee`[\s\S]*?tag object is `ddbc7456647a62bf2dc13b2b897cadbf4e486344`[\s\S]*?publication run[\s\S]*?`31321014564`[\s\S]*?tarball SHA-256 `02fad6cd2207f3d2ab7598f0aa67825520ebc5b807294e0c241774ee3ac6a89d`[\s\S]*?triggering ref is a protected tag[\s\S]*?one\s+verified registry signature and one verified attestation[\s\S]*?`next` dist-tag named `0\.1\.0`[\s\S]*?`latest` remained `0\.1\.0-alpha\.3`[\s\S]*?public Claude marketplace[\s\S]*?`0\.1\.0-alpha\.3`/,
+  );
+  assert.match(
+    pluginReleaseEvidence,
+    /This establishes only the package, tag, workflow, provenance-presence, digest, and dist-tag identities[\s\S]*?did\s+not install the package through Claude Code[\s\S]*?call staging[\s\S]*?qualify Movie Catalog[\s\S]*?verify the two-command public installation path/,
+  );
+  assert.match(
+    directPackageReleaseEvidence,
+    /Node\s+v24\.18\.0[\s\S]*?npm 11\.16\.0[\s\S]*?Claude Code 2\.1\.224[\s\S]*?one added package/,
+  );
+  assert.match(
+    directPackageReleaseEvidence,
+    /@firstdraft\.com\/claude-code@0\.1\.0[\s\S]*?firstdraft@0\.1\.0[\s\S]*?skills\/create-full-stack-app\/SKILL\.md[\s\S]*?claude plugin validate --strict <plugin-root>[\s\S]*?session-scoped `firstdraft@inline`[\s\S]*?bundled `firstdraft --version` returned exact `0\.1\.0` with empty stderr/,
+  );
+  assert.match(
+    directPackageReleaseEvidence,
+    /one verified registry signature and one verified attestation[\s\S]*?did\s+not authenticate or call a model[\s\S]*?configure or call First Draft[\s\S]*?exercise staging[\s\S]*?GitHub Publication[\s\S]*?change the public marketplace catalog[\s\S]*?two-command marketplace installation path/,
+  );
+  assert.match(
+    discoverySmokeEvidence,
+    /Status: passed the bounded discovery-promotion gate[\s\S]*?does not claim a completed v14 qualification/,
+  );
+  assert.match(
+    discoverySmokeEvidence,
+    /4007fc5ef0734e2fc3e3e59714919025bd73d621[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?02fad6cd2207f3d2ab7598f0aa67825520ebc5b807294e0c241774ee3ac6a89d[\s\S]*?d37d8b6775a0b97ce10bd651485bd308fed1dda2/,
+  );
+  assert.match(
+    discoverySmokeEvidence,
+    /Claude Code 2\.1\.222[\s\S]*?1,572-byte Foundation Plan[\s\S]*?831f5d960416c7c3f01f0a75b417f5d4330abf68062527b52ce8528f0b7ef37a[\s\S]*?exactly one AnalysisRun[\s\S]*?one Compilation[\s\S]*?one Publication[\s\S]*?job-d9smqin10e5c73a6m72g[\s\S]*?github\.name_conflict[\s\S]*?created the next repository[\s\S]*?published the artifact/,
+  );
+  assert.match(
+    discoverySmokeEvidence,
+    /No GitHub PAT was created or used[\s\S]*?independent clone, ref, commit, tree, blob, mode, size, or byte-for-byte artifact comparison[\s\S]*?generated-repository credential-category scan[\s\S]*?singleton replay[\s\S]*?full v14 qualification/,
+  );
+  assert.match(
+    discoverySmokeEvidence,
+    /did not begin with a template fork or Codespace[\s\S]*?did not install plugin 0\.1\.0 through the public[\s\S]*?marketplace catalog[\s\S]*?immediate\s+post-promotion check/,
+  );
+  assert(!discoverySmokeEvidence.includes(repository));
+  assert(!discoverySmokeEvidence.includes("demostudent27"));
+  assert.doesNotMatch(
+    discoverySmokeEvidence,
+    /(?:\/Users\/|\/home\/|[A-Za-z]:\\)/,
+  );
+  assert.doesNotMatch(
+    discoverySmokeEvidence,
+    /\.firstdraft\/state\.json/,
+  );
+  assert.doesNotMatch(
+    discoverySmokeEvidence,
+    /(?:authorization|bearer|api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|BEGIN [A-Z ]+PRIVATE KEY)/i,
+  );
+  assert.match(
+    readme,
+    /staging Movie Catalog discovery smoke[\s\S]*?PAT-less observation satisfies[\s\S]*?narrower discovery-promotion gate[\s\S]*?does not claim independent[\s\S]*?repository-byte verification, replay, a full v14 qualification/,
+  );
+  assert.match(
+    releasing,
+    /staging Movie Catalog discovery smoke[\s\S]*?plugin 0\.1\.0[\s\S]*?human explicitly selected[\s\S]*?bounded PAT-less smoke as the pre-catalog[\s\S]*?does\s+not constitute full v14 qualification/,
+  );
+  assert.match(
+    agents,
+    /change to\s+`\.claude-plugin\/marketplace\.json` is the exception[\s\S]*?merging it changes the public catalog[\s\S]*?package,[\s\S]*?service,[\s\S]*?qualification gates/,
+  );
+  assert.match(
+    agents,
+    /exact promotion head's Node 24\.18\.0 CI job[\s\S]*?release-order rehearsal[\s\S]*?repository settings do not enforce it as a required check[\s\S]*?Do not use an\s+administrative merge to bypass that gate/,
+  );
+  assert.match(
+    agents,
+    /For plugin 0\.1\.0 only[\s\S]*?human-selected PAT-less discovery smoke[\s\S]*?stricter qualification boundaries[\s\S]*?Do not silently substitute either boundary/,
+  );
   assert(releasing.includes("claude-v$package_version"));
   assert.match(
     releasing,
@@ -241,11 +333,11 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /do not deploy it while plugin 0\.1\.0 remains only an unpublished candidate/,
+    /do not\s+deploy it while plugin 0\.1\.0 remains only an unpublished candidate/,
   );
   assert.match(
     releasing,
-    /Notify known existing alpha\.3 installations that catalog promotion does\s+not update them[\s\S]*?separately\s+verified Claude Code update procedure/,
+    /Notify known existing alpha\.3 installations that catalog promotion does\s+not\s+update them[\s\S]*?separately\s+verified Claude Code update procedure/,
   );
   assert.match(
     releasing,
@@ -327,10 +419,12 @@ test("release operator and agent instructions track the candidate", async () => 
     directPackageEvidence,
     /does not establish unpublished\s+plugin 0\.1\.0[\s\S]*?move an npm dist-tag[\s\S]*?register or change a marketplace[\s\S]*?call a model[\s\S]*?call staging[\s\S]*?mutate a First Draft service/,
   );
-  assert.doesNotMatch(
-    directPackageEvidence,
-    /\/(?:private\/)?tmp\/firstdraft-package-first\.[A-Za-z0-9]+/,
-  );
+  for (const source of [directPackageEvidence, directPackageReleaseEvidence]) {
+    assert.doesNotMatch(
+      source,
+      /\/(?:private\/)?tmp\/firstdraft-package-first(?:-[0-9]{8})?\.[A-Za-z0-9]+/,
+    );
+  }
   assert.doesNotMatch(
     releasing,
     /plugin cannot be published before service activation/i,
@@ -344,10 +438,17 @@ test("release operator and agent instructions track the candidate", async () => 
     "The public catalog and npm `latest` still name alpha.3 at this point",
     "5. Deploy the exact API 0.2 service revision to the staging web role",
     "deploy the same exact revision to the staging worker role",
-    "the same isolated direct-`next` plugin 0.1.0 installation from step 3",
-    "6. After both roles and the bounded qualification are verified, merge the separate marketplace-promotion change",
-    "7. In fresh isolated Claude state, run the exact public installation",
-    "End the maintenance window only after that public path succeeds",
+    "selected 0.1.0 Movie Catalog discovery smoke",
+    "separate direct-`next` no-service check from step 3",
+    "A GitHub PAT, independent clone or byte verification, generated-repository credential scan, and singleton replay",
+    "6. After both roles and the selected 0.1.0 discovery smoke are verified, merge the separate marketplace-promotion change",
+    "7. After the catalog change reaches public `main`, first run the exact public installation in fresh isolated Claude state outside a Drawing Board",
+    "Then pin the exact merged Skills SHA in the updated Drawing Board",
+    "use that template to create a repository and a fresh Codespace",
+    "run `claude`",
+    "make a plain-English application request",
+    "expected fresh private GitHub repository",
+    "End the maintenance window only after both the isolated public install and that template path succeed",
   ]);
   assert.match(
     releasing,
@@ -355,15 +456,7 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     readme,
-    /publishes and reconciles plugin 0\.1\.0 under `next` first[\s\S]*?open the maintenance window[\s\S]*?staging\s+web and worker[\s\S]*?promote the catalog[\s\S]*?fresh public install/,
-  );
-  assert.match(
-    readme,
-    /exact-`next` plugin 0\.1\.0 install is an operator-only package[\s\S]*?Plan, Compile, and every First Draft API call through it are incompatible and unsupported/,
-  );
-  assert.match(
-    readme,
-    /one\s+coordinated rollout whose service-activation phase occupies the maintenance window/,
+    /staging web and worker both reported[\s\S]*?4007fc5ef0734e2fc3e3e59714919025bd73d621[\s\S]*?selected gate for promoting new catalog installs[\s\S]*?public plugin alpha\.3 bundles CLI alpha\.2 and defaults to shared staging[\s\S]*?API 0\.2 activation interrupts[\s\S]*?existing alpha\.3 installations until each receives the compatible 0\.1\.0 plugin[\s\S]*?fresh public template-and-Codespace discovery[\s\S]*?immediate post-promotion[\s\S]*?observation/,
   );
   assert.match(
     releasing,
@@ -371,11 +464,23 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /If service activation or the bounded qualification in step 5 fails[\s\S]*?restore the exact\s+API 0\.1 rollback revision[\s\S]*?Leave npm `latest` and\s+the public catalog at alpha\.3[\s\S]*?plugin 0\.1\.0 identity under `next` remains immutable[\s\S]*?new SemVer/,
+    /Require the exact promotion head's Node 24\.18\.0 CI job[\s\S]*?release-order rehearsal[\s\S]*?repository settings do not enforce it as a required check[\s\S]*?do not bypass[\s\S]*?administrative merge/,
   );
   assert.match(
     releasing,
-    /Corrections to an existing npm, protected-tag, or catalog release identity[\s\S]*?forward-only and use a new SemVer[\s\S]*?unpublished and unpromoted candidate may instead be revised/,
+    /selected 0\.1\.0 Movie Catalog discovery smoke[\s\S]*?Claude-authored exact Plan[\s\S]*?valid analysis[\s\S]*?successful\s+Compilation on the Standard worker[\s\S]*?successful OAuth\/App-backed publication[\s\S]*?A GitHub PAT,[\s\S]*?independent clone or byte verification[\s\S]*?singleton replay[\s\S]*?not part of this user-selected discovery gate[\s\S]*?must\s+not claim a full v14 qualification/,
+  );
+  assert.match(
+    releasing,
+    /If service activation or the selected discovery smoke in step 5 fails[\s\S]*?restore the exact\s+API 0\.1 rollback revision[\s\S]*?Leave npm `latest` and\s+the public catalog at alpha\.3[\s\S]*?plugin 0\.1\.0 identity under `next` remains immutable[\s\S]*?new SemVer/,
+  );
+  assert.match(
+    releasing,
+    /If the fresh public path in step 7 fails after catalog promotion[\s\S]*?restore both service roles[\s\S]*?repoint the catalog to the already-published `0\.1\.0-alpha\.3` package[\s\S]*?one reviewable source change[\s\S]*?\.claude-plugin\/marketplace\.json[\s\S]*?test\/repository\.test\.mjs[\s\S]*?test\/release-compatibility\.test\.mjs[\s\S]*?README\.md[\s\S]*?RELEASING\.md[\s\S]*?catalog change does not downgrade existing installations[\s\S]*?each known installation\s+moved to 0\.1\.0[\s\S]*?return to a supported alpha\.3 installation[\s\S]*?authorized operator must record and accept its continuing outage[\s\S]*?Selecting a prior immutable catalog package is not reusing that SemVer for different bytes/,
+  );
+  assert.match(
+    releasing,
+    /Publishing changed bytes for an existing npm, protected-tag, or catalog\s+release identity is forbidden[\s\S]*?new SemVer[\s\S]*?Repointing the catalog to a prior immutable package for\s+rollback is allowed[\s\S]*?unpublished and unpromoted candidate may instead be revised/,
   );
 
   assert.match(
@@ -401,8 +506,8 @@ function assertTextOrder(source, fragments) {
   let previousIndex = -1;
   for (const fragment of fragments) {
     const normalizedFragment = fragment.replace(/\s+/g, " ");
-    const index = normalizedSource.indexOf(normalizedFragment);
-    assert.ok(index > previousIndex, `missing or out-of-order release step: ${fragment}`);
+    const index = normalizedSource.indexOf(normalizedFragment, previousIndex + 1);
+    assert.ok(index >= 0, `missing or out-of-order release step: ${fragment}`);
     previousIndex = index;
   }
 }

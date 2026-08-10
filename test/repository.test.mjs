@@ -73,6 +73,8 @@ const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
 const currentCompilerServiceBaseline =
   "6002be2685542fedf515879f940b97ad73b1a469";
+const discoverySmokeServiceBaseline =
+  "4007fc5ef0734e2fc3e3e59714919025bd73d621";
 const compilationEvidenceCliBaseline =
   "121272cd592055354d09a4fe90e55c3ca002770c";
 const compilationEvidenceCliRuntimeDigest =
@@ -190,6 +192,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     freshAgentSkillBaseline,
     freshAgentSkillBaseline.slice(0, 7),
     currentCompilerServiceBaseline,
+    discoverySmokeServiceBaseline,
   ]);
 
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
@@ -258,6 +261,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     [
       foundationPlanServerBaseline,
       currentCompilerServiceBaseline,
+      discoverySmokeServiceBaseline,
       compilationEvidenceCliBaseline,
       cliContractBaseline,
       previousCliContractBaseline,
@@ -638,11 +642,11 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.equal(marketplace.name, claudeMarketplaceName);
   assert.equal(marketplace.plugins.length, 1);
   assert.equal(marketplace.plugins[0].name, claudePluginName);
-  assert.equal(marketplace.plugins[0].version, "0.1.0-alpha.3");
+  assert.equal(marketplace.plugins[0].version, "0.1.0");
   assert.deepEqual(marketplace.plugins[0].source, {
     source: "npm",
     package: "@firstdraft.com/claude-code",
-    version: "0.1.0-alpha.3",
+    version: "0.1.0",
     registry: "https://registry.npmjs.org/",
   });
   assert.equal(packageTemplate.version, "0.1.0");

@@ -2,8 +2,10 @@
 
 ## Release coordination
 
-- Treat a merge to `main` as integration, not release authorization. After merging, report the exact merged SHA and
-  ask whether to coordinate a candidate across `firstdraft`, `cli`, and `skills` and promote it.
+- Treat a merge to `main` as integration, not release authorization. A change to
+  `.claude-plugin/marketplace.json` is the exception: merging it changes the public catalog, so require the package,
+  service, and qualification gates in [`RELEASING.md`](RELEASING.md) first. After any other merge, report the exact
+  merged SHA and ask whether to coordinate a candidate across `firstdraft`, `cli`, and `skills` and promote it.
 - SemVer compatibility establishes candidate eligibility only. Record the exact SHA of every repository and the
   packed Claude plugin SHA-256, then follow [`RELEASING.md`](RELEASING.md).
 - Do not publish npm packages, deploy First Draft, or release the plugin without explicit user approval. If the user
@@ -21,5 +23,11 @@
 - Before pushing a `claude-v*` publication tag, verify its protection ruleset, the `npm` environment's required
   reviewers, the deliberately enabled `NPM_RELEASE_ENABLED` gate, and monotonic version order against npm,
   protected release tags, and the marketplace catalog.
+- Before merging a marketplace-catalog change, require the exact promotion head's Node 24.18.0 CI job, including its
+  release-order rehearsal, to pass even when repository settings do not enforce it as a required check. Do not use an
+  administrative merge to bypass that gate.
+- For plugin 0.1.0 only, `RELEASING.md` records the human-selected PAT-less discovery smoke that gates catalog
+  promotion and the stricter qualification boundaries it does not prove. Do not silently substitute either boundary
+  for the other.
 - The installable Claude package is assembled from the canonical Skill during packing. Do not commit a second
   editable copy under `packages/`.
