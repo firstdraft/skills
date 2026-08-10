@@ -69,16 +69,29 @@ iPad support. Accounts and authentication, notifications and push, deployment, A
 Scaffold shapes, and gap-aware partial Compilation remain outside this boundary. Unsupported shapes fail the
 complete candidate closed.
 
-The Claude plugin `@firstdraft.com/claude-code@0.1.0-alpha.3` and its bundled CLI
-`@firstdraft.com/cli@0.1.0-alpha.2` are public experimental prereleases. The coordinated
+A dated public-install observation records Claude plugin `@firstdraft.com/claude-code@0.1.0-alpha.3` and its bundled
+CLI `@firstdraft.com/cli@0.1.0-alpha.2` as public experimental prereleases. A separate dated
+[`@firstdraft.com/claude-code@0.1.0` publication observation](evidence/2026-08-09-claude-plugin-0.1.0-release.md)
+binds its protected tag, successful publication workflow, registry identity, provenance presence, and exact
+tarball SHA-256. It records plugin 0.1.0 under npm `next`, with npm `latest` and the public catalog still on alpha.3.
+A dated [direct-package observation](evidence/2026-08-09-direct-package-0.1.0-check.md) separately records exact
+plugin 0.1.0 installation, strict validation, inline discovery, and bundled CLI 0.1.0 invocation without calling
+First Draft. The coordinated
 [`@firstdraft.com/cli@0.1.0` release](evidence/2026-08-07-cli-0.1.0-release.md) is separately published under `next`;
 `latest` remains alpha.2. A dated
 [isolated public-install observation](evidence/2026-08-06-public-claude-code-plugin-install.md) confirms Claude Code
 2.1.223 could register the GitHub marketplace, install alpha.3 from npm, discover its one Skill, and run its bundled
 alpha.2 CLI. Plugin alpha.4 and alpha.5 were assembled as source candidates and abandoned before catalog promotion;
-their source changes did not publish packages. Current registry state remains a release-time read-only check. This
-source prepares ordinary plugin 0.1.0 with the coordinated published CLI 0.1.0. The public catalog still serves
-alpha.3, and plugin publication and catalog promotion remain separate approval-gated actions. The 0.1.0 CLI's
+their source changes did not publish packages. Current registry state remains a release-time read-only check. The
+catalog manifest in this source names ordinary plugin 0.1.0 with the coordinated published CLI 0.1.0. The source
+bytes and dated package observation do not establish deployment compatibility, a merge to public `main`, or a
+successful fresh public install. The dated
+[staging Movie Catalog discovery smoke](evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md) binds the exact
+compatible service, Skills, CLI, and package identities to one valid AnalysisRun, successful Compilation, and
+OAuth/App-backed Publication to a fresh private repository. For plugin 0.1.0, that PAT-less observation satisfies
+the narrower discovery-promotion gate selected for this catalog change. It does not claim independent
+repository-byte verification, replay, a full v14 qualification, or the post-promotion template-and-Codespace path.
+The 0.1.0 CLI's
 zero-flag `plan compile` command pushes the exact current Plan, waits for analysis of that accepted graph generation,
 and invokes the internal GitHub Publication lifecycle only for a valid unchanged candidate. Public `plan publish`
 and local-start `plan compile --output` are not commands; retained successful artifacts are materialized with
@@ -92,23 +105,22 @@ After an invocation exits on an unknown outcome, unavailable status, timeout, or
 the same zero-flag command with unchanged Plan bytes conditionally resumes the retained singleton; there is no
 separate public Publication status command. An invalid projection is instead a protocol mismatch that requires
 coordinated CLI/service version reconciliation before replay. The controlled local harness establishes the candidate
-product-Compile and progress shape only against a strict fake GitHub remote; the public-install observation did not
-authenticate a model session or exercise staging. No live endpoint, staging run, or real GitHub mutation establishes this full
-journey. There is no Plan GET or pull operation, complete semantic analyzer, deployment workflow, or general web or
-mobile generator.
+product-Compile and progress shape only against a strict fake GitHub remote; the discovery smoke separately
+establishes one live create-and-push result, but it did not use a public catalog installation, template fork, or
+Codespace. No evidence cited here establishes the complete public discovery journey or a full v14 qualification.
+There is no Plan GET or pull operation, complete semantic analyzer, deployment workflow, or general web or mobile
+generator.
 
 The required Publication progress object breaks the existing API-contract 0.1 line. Plugin 0.1.0 and CLI 0.1.0
-require service API contract `>= 0.2.0` and `< 0.3.0`. Publishing the CLI under `next` does not activate that service
-contract or upgrade an installed plugin; plugin publication, service activation, and catalog promotion remain one
-coordinated rollout whose service-activation phase occupies the maintenance window. Activating service contract 0.2 on
-shared staging makes the alpha.2 CLI bundled in public plugin alpha.3 incompatible, and catalog promotion does not
-upgrade existing installations. No interruption is approved here. A human must explicitly approve and announce the
-window, affected-user notice, ordered rollout, rollback point, and completion checks before staging activation.
-The serialized rollout publishes and reconciles plugin 0.1.0 under `next` first while `latest`, the public alpha.3
-catalog, and shared staging remain unchanged. Only then does the operator open the maintenance window, move staging
-web and worker to the exact API 0.2 revision, promote the catalog, and use a fresh public install to close the
-window. Before both service roles activate API 0.2, an exact-`next` plugin 0.1.0 install is an operator-only package
-check: Plan, Compile, and every First Draft API call through it are incompatible and unsupported.
+require service API contract `>= 0.2.0` and `< 0.3.0`. Publishing the CLI under `next` did not activate that service
+contract or upgrade an installed plugin. At the discovery-smoke observation, staging web and worker both reported
+exact API 0.2 service revision `4007fc5ef0734e2fc3e3e59714919025bd73d621`, while the public catalog still named
+alpha.3. The successful smoke establishes the selected gate for promoting new catalog installs to compatible plugin
+0.1.0. Because public plugin alpha.3 bundles CLI alpha.2 and defaults to shared staging, API 0.2 activation interrupts
+existing alpha.3 installations until each receives the compatible 0.1.0 plugin. Catalog promotion does not update
+existing installations. A fresh public template-and-Codespace discovery remains the immediate post-promotion
+observation, and affected existing alpha.3 installations still require a separately verified update or an explicitly
+accepted follow-up.
 
 Beginning with ordinary 0.1.0, pre-1.0 component versions use a minor bump for a breaking compatibility-line
 change and a patch bump for an otherwise backward-compatible change. Versions are never aliased. The npm `next`
@@ -134,8 +146,8 @@ with:
 gh skill preview firstdraft/skills create-full-stack-app
 ```
 
-Do not install this Skill for ordinary use yet. Public experimental distribution exists, but an authenticated
-public-install-to-staging journey has not established the prepared capability boundary.
+Do not present this Skill as ordinary-use-ready yet. Catalog promotion enables a bounded public discovery, but an
+authenticated template-and-Codespace journey has not established the prepared capability boundary.
 
 ### Claude Code plugin preview
 
@@ -146,11 +158,13 @@ adapter and the CLI package contents packed from the exact reviewed revision nam
 `@firstdraft.com/cli@0.1.0` contract. Installing the plugin therefore supplies both the Skill and its
 compatible CLI without requiring Claude Code to install transitive npm dependencies.
 
-The marketplace catalog uses Claude Code's documented `npm` plugin source and remains pinned to the published
-`@firstdraft.com/claude-code@0.1.0-alpha.3`. The package template, installable manifest, and compatibility record in
-this source prepare ordinary 0.1.0 without promoting it. A separate post-publication catalog change may point fresh
-installs to 0.1.0 only after its exact registry identity has been reconciled. The installable manifest asks Claude
-Code for the staging API URL and a sensitive API token. Claude stores sensitive configuration in secure storage and exports
+The marketplace catalog uses Claude Code's documented `npm` plugin source and names exact
+`@firstdraft.com/claude-code@0.1.0`. The package's registry identity, matching staging web and worker revision, and
+the user-selected Movie Catalog discovery-promotion gate are reconciled in the dated smoke above. That observation
+supports this catalog change but does not prove that the two public installation commands resolve 0.1.0 or that the
+template-and-Codespace journey succeeds. The installable manifest asks Claude Code
+for the staging API URL and a sensitive API token. Claude stores
+sensitive configuration in secure storage and exports
 plugin options only to plugin subprocesses. The adapter maps those options to the CLI's environment without printing
 them. Users should create the token in First Draft's browser UI and enter it in Claude's configuration prompt, never
 paste it into an agent conversation or command line. Installed-plugin configuration is authoritative: when it
@@ -187,9 +201,13 @@ claude plugin marketplace add firstdraft/skills
 claude plugin install firstdraft@firstdraft-skills
 ```
 
-Those exact commands succeeded for alpha.3 on 2026-08-06. They will not establish this 0.1.0 candidate until its
-exact tarball is published and the catalog change is promoted. The isolated lane was not logged in, so it did not
-prove model-backed Skill invocation, token onboarding, staging compatibility, or the product journey. The historical
+Those exact commands succeeded for alpha.3 on 2026-08-06. The exact 0.1.0 tarball is published under npm `next`, but
+success through these public catalog commands remains an observation to record after this catalog change reaches
+public `main`. After that isolated install check, use the updated Drawing Board template to create a repository and
+fresh Codespace, launch `claude`, make a plain-English application request, and confirm the expected fresh private
+repository. The earlier isolated lane was not
+logged in, so it did not prove model-backed Skill invocation, token onboarding, staging compatibility, or the
+product journey. The historical
 2026-08-04 source-only install report remains evidence for its recorded revision. A dated
 [vendored-CLI smoke](evidence/2026-08-05-claude-plugin-vendored-cli-smoke.md) records the local npm-source assembly,
 the rejected transitive-dependency design, and successful bare-command discovery. See
