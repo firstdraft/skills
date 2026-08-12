@@ -1684,7 +1684,12 @@ test("validator routing preserves validation boundaries", async () => {
   assert.match(withoutValidator.prompt, /no JSON Schema 2020-12 validator is available/);
   assert.match(withoutValidator.prompt, /Do not install or implement one/);
   assertExpectation(withoutValidator, "without opening the complete bundled schema");
-  assertExpectation(withoutValidator, "generate uuid --count 11 exactly once");
+  assertExpectation(
+    withoutValidator,
+    "generate uuid --count 11",
+    "Skill resolver",
+    "exactly once",
+  );
   assertExpectation(
     withoutValidator,
     "movie.rating",
@@ -1887,7 +1892,9 @@ test("revision evals stage existing Plan identity and private state", async () =
   );
   assert(
     mintingEvaluation.expectations.some((expectation) =>
-      expectation.includes("generate uuid exactly once"),
+      ["generate uuid", "Skill resolver", "exactly once"].every((fragment) =>
+        expectation.includes(fragment),
+      ),
     ),
   );
   assert(
@@ -1900,7 +1907,9 @@ test("revision evals stage existing Plan identity and private state", async () =
   );
   assert(
     enumEvaluation.expectations.some((expectation) =>
-      expectation.includes("generate uuid --count 4 exactly once"),
+      ["generate uuid --count 4", "Skill resolver", "exactly once"].every(
+        (fragment) => expectation.includes(fragment),
+      ),
     ),
     "enum eval must mint exactly one Field and three value IDs",
   );
@@ -1972,7 +1981,9 @@ test("subject identity evals use the public UUID generator", async () => {
   assert.match(field.prompt, /installed firstdraft CLI includes generate uuid/);
   assert(
     field.expectations.some((expectation) =>
-      expectation.includes("firstdraft generate uuid exactly once"),
+      ["generate uuid", "Skill resolver", "exactly once"].every((fragment) =>
+        expectation.includes(fragment),
+      ),
     ),
   );
   assert.match(
@@ -1981,7 +1992,9 @@ test("subject identity evals use the public UUID generator", async () => {
   );
   assert(
     enumeration.expectations.some((expectation) =>
-      expectation.includes("firstdraft generate uuid --count 4 exactly once"),
+      ["generate uuid --count 4", "Skill resolver", "exactly once"].every(
+        (fragment) => expectation.includes(fragment),
+      ),
     ),
   );
   for (const evaluation of [field, enumeration]) {
@@ -2372,7 +2385,9 @@ test("local capability check is shell-portable and uses the project wrapper", as
     ([, body]) => body,
   );
   const firstDraftBlocks = shellBlocks.filter((body) =>
-    /firstdraft_cli (?:generate|plan|compilation)/.test(body),
+    /(?:^|\s)(?:\.\/bin\/)?firstdraft(?:_cli)? (?:generate|plan|compilation)\b/m.test(
+      body,
+    ),
   );
   assert(firstDraftBlocks.length > 0);
   for (const body of firstDraftBlocks) {
@@ -2392,7 +2407,7 @@ test("local capability check is shell-portable and uses the project wrapper", as
     );
     assert.doesNotMatch(
       source,
-      /`firstdraft (?:generate|plan|compilation)\b/,
+      /\bfirstdraft (?:generate|plan|compilation)\b/,
       `${relativePath}: operational CLI prose must preserve the Skill resolver`,
     );
   }
@@ -3208,13 +3223,13 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   assert.equal(schemaDiagnostics.errors[0].instancePath, "/application/key");
 
   const malformed = evaluation("compile-invalid-candidate-is-safe");
-  hasExpectation(malformed, "zero-flag firstdraft plan compile");
+  hasExpectation(malformed, "zero-flag plan compile", "Skill resolver");
   hasExpectation(malformed, "invalid analysis prevents", "Publication phase");
   hasExpectation(malformed, "early Compile attempt as harmful");
 
   const movie = evaluation("compile-prepared-movie-catalog");
   hasExpectation(movie, "not public plan publish or plan compile --output");
-  hasExpectation(movie, "firstdraft plan compile for this prepared journey");
+  hasExpectation(movie, "plan compile", "Skill resolver", "prepared journey");
   hasExpectation(movie, "pushes the exact whole file", "accepted graph generation");
   hasExpectation(movie, "progress as nonterminal observational output");
   hasExpectation(movie, "stdout", "validated private GitHub repository URL");
@@ -3371,7 +3386,8 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   hasExpectation(
     ambiguousPublication,
-    "same zero-flag firstdraft plan compile",
+    "same zero-flag plan compile",
+    "Skill resolver",
     "unchanged Plan bytes",
     "conditional PUT",
   );
@@ -3383,16 +3399,16 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(success, "not local artifact materialization or deployment");
 
   const terminal = evaluation("compilation-status-terminal-failure");
-  hasExpectation(terminal, "firstdraft compilation status", "exact UUID");
+  hasExpectation(terminal, "compilation status", "Skill resolver", "exact UUID");
   hasExpectation(terminal, "failed", "exit status zero");
   hasExpectation(terminal, "standalone status command", "plan compile");
 
   const wait = evaluation("compilation-wait-success");
-  hasExpectation(wait, "firstdraft compilation status", "--wait");
+  hasExpectation(wait, "compilation status", "--wait", "Skill resolver");
   hasExpectation(wait, "queued, running, then succeeded");
 
   const download = evaluation("compilation-download-success");
-  hasExpectation(download, "firstdraft compilation download", "--output");
+  hasExpectation(download, "compilation download", "Skill resolver", "--output");
   hasExpectation(
     download,
     "artifact Head digest against the retained Compilation",
