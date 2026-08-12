@@ -74,10 +74,11 @@ complete candidate closed.
 
 A dated public-install observation records Claude plugin `@firstdraft.com/claude-code@0.1.0-alpha.3` and its bundled
 CLI `@firstdraft.com/cli@0.1.0-alpha.2` as public experimental prereleases. The coordinated ordinary releases now
-exist under protected tags and npm `next`: plugin `@firstdraft.com/claude-code@0.1.0` at `claude-v0.1.0`, and CLI
-`@firstdraft.com/cli@0.1.0` at `v0.1.0`. The public catalog at catalog-promotion revision
-`e0212cad0a89a8b0e38678e371389085f6ddc254` selects plugin 0.1.0. npm `latest` remains alpha.3 for the plugin and
-alpha.2 for the CLI; current registry and catalog state remain release-time read-only checks. A separate dated
+exist under protected tags and npm `next`: plugins `@firstdraft.com/claude-code@0.1.0` and `0.1.1` at
+`claude-v0.1.0` and `claude-v0.1.1`, and CLI `@firstdraft.com/cli@0.1.0` at `v0.1.0`. The historical public catalog at
+catalog-promotion revision `e0212cad0a89a8b0e38678e371389085f6ddc254` selected plugin 0.1.0. This marketplace
+promotion change selects exact published plugin 0.1.1. npm `latest` remains alpha.3 for the plugin and alpha.2 for
+the CLI; current registry and catalog state remain release-time read-only checks. A separate dated
 [`@firstdraft.com/claude-code@0.1.0` publication observation](evidence/2026-08-09-claude-plugin-0.1.0-release.md)
 binds its protected tag, successful publication workflow, registry identity, provenance presence, and exact
 tarball SHA-256. It records the pre-promotion point when plugin 0.1.0 was under npm `next`, with npm `latest` and the
@@ -85,19 +86,26 @@ public catalog still on alpha.3.
 A dated [direct-package observation](evidence/2026-08-09-direct-package-0.1.0-check.md) separately records exact
 plugin 0.1.0 installation, strict validation, inline discovery, and bundled CLI 0.1.0 invocation without calling
 First Draft. The coordinated
+[`@firstdraft.com/claude-code@0.1.1` publication observation](evidence/2026-08-12-claude-plugin-0.1.1-release.md)
+and [direct-package check](evidence/2026-08-12-direct-package-0.1.1-check.md) bind the corrected package's protected
+tag, immutable digest and provenance, strict validation, inline discovery, bundled CLI 0.1.0, and wrapper preference.
+The coordinated
 [`@firstdraft.com/cli@0.1.0` release](evidence/2026-08-07-cli-0.1.0-release.md) is separately published under `next`;
 `latest` remains alpha.2. A dated
 [isolated public-install observation](evidence/2026-08-06-public-claude-code-plugin-install.md) confirms Claude Code
 2.1.223 could register the GitHub marketplace, install alpha.3 from npm, discover its one Skill, and run its bundled
 alpha.2 CLI. Plugin alpha.4 and alpha.5 were assembled as source candidates and abandoned before catalog promotion;
-their source changes did not publish packages. The catalog manifest now names ordinary plugin 0.1.0 with the
-coordinated published CLI 0.1.0. The package publication records and catalog source do not by themselves establish a
-successful fresh public install. The dated
+their source changes did not publish packages. The 0.1.0 catalog promotion paired ordinary plugin 0.1.0 with the
+coordinated published CLI 0.1.0; this patch promotion keeps that CLI and selects plugin 0.1.1. The package publication
+records and catalog source do not by themselves establish a successful fresh public install. The dated
 [staging Movie Catalog discovery smoke](evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md) binds the exact
 compatible service, Skills, CLI, and package identities to one valid AnalysisRun, successful Compilation, and
 OAuth/App-backed Publication to a fresh private repository. For plugin 0.1.0, that PAT-less observation satisfies
-the narrower discovery-promotion gate selected for this catalog change. It does not claim independent
+the narrower discovery-promotion gate selected for its catalog change. It does not claim independent
 repository-byte verification, replay, a full v14 qualification, or the post-promotion template-and-Codespace path.
+That live smoke remains a 0.1.0 gate. Plugin 0.1.1 retains CLI 0.1.0 and service API 0.2 compatibility and requires no
+service mutation, so its catalog promotion requires no new pre-merge live smoke; its gates are the exact 0.1.1
+direct-package check and exact promotion-head Node 24.18.0 CI. Neither proves the post-merge public installation.
 The successful Compilation ran in the separately billed Standard Render Compilation One-Off. The persistent Standard
 Solid Queue worker ran Publication coordination and all three recorded Publication attempts; these are distinct
 execution paths.
@@ -110,15 +118,14 @@ path, and ambiguously calls the CLI used by the old harness "reviewed" without i
 `f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, version `0.1.0-alpha.2`. The later bounded OAuth/App-backed live
 create-and-push observation and independent exact harness identity do not alter those published bytes. The four
 Publication/Publish negatives do not disable `firstdraft plan compile`; they understate evidence established after
-package publication. Treat all five as explicitly accepted documentation limitations of plugin 0.1.0. The current
-unpublished 0.1.1 candidate corrects the four Publication/Publish negatives in canonical source but retains
+package publication. Treat all five as explicitly accepted documentation limitations of plugin 0.1.0. Published
+plugin 0.1.1 corrects the four Publication/Publish negatives in canonical source but retains
 `foundation-plan-019.md`'s ambiguous "packed reviewed CLI" attribution. Treat that attribution as an acknowledged
-current-candidate limitation. Correcting it would change package bytes and therefore must update the recorded
-deterministic digest and be separately qualified. The candidate also makes its CLI startup check portable across
-`sh` and `zsh` and consistently prefers a repository-owned wrapper. It remains unpromoted source until its exact
-package bytes are separately authorized, published, and selected by the catalog. The remaining attribution
-limitation and the patch do not close the fresh public-install, authenticated template-and-Codespace, or full v14
-qualification gaps.
+published-package limitation. Correcting it would change immutable package bytes and therefore requires a new
+SemVer, recorded deterministic digest, and separate qualification. Plugin 0.1.1 also makes its CLI startup check
+portable across `sh` and `zsh` and consistently prefers a repository-owned wrapper. This promotion change selects
+those exact package bytes. The remaining attribution limitation and the patch do not close the fresh public-install,
+authenticated template-and-Codespace, or full v14 qualification gaps.
 The 0.1.0 CLI's
 zero-flag `plan compile` command pushes the exact current Plan, waits for analysis of that accepted graph generation,
 and invokes the internal GitHub Publication lifecycle only for a valid unchanged candidate. Public `plan publish`
@@ -193,13 +200,14 @@ adapter and the CLI package contents packed from the exact reviewed revision nam
 compatible CLI without requiring Claude Code to install transitive npm dependencies.
 
 The marketplace catalog uses Claude Code's documented `npm` plugin source and names exact
-`@firstdraft.com/claude-code@0.1.0`. The package's registry identity, matching staging web and worker revision, and
+`@firstdraft.com/claude-code@0.1.1`. The compatible package's registry identity and direct-package qualification are
+recorded in the dated 0.1.1 observations above. The earlier package's matching staging web and worker revision and
 the user-selected Movie Catalog discovery-promotion gate are reconciled in the dated smoke above. That observation
 supported the catalog promotion. Published plugin 0.1.0 asks Claude Code for the staging API URL and a sensitive API
 token, but that user configuration is not delivered to an executable merely because the plugin's `bin/` directory is
 on a Bash tool's `PATH`. Reloading the plugin or restarting Claude therefore does not bridge that boundary.
 
-The current unpublished 0.1.1 candidate removes the unused prompt and makes the bundled adapter a transparent
+Published plugin 0.1.1 removes the unused prompt and makes the bundled adapter a transparent
 launcher for the ambient `FIRSTDRAFT_API_URL` and `FIRSTDRAFT_API_TOKEN` contract. A Drawing Board supplies those
 credentials to Claude and Codex through its repository wrapper and ignored `.env`; other workspaces must configure
 the variables outside the agent conversation. Never place a token directly in chat or a command line. A future
@@ -235,9 +243,9 @@ claude plugin marketplace add firstdraft/skills
 claude plugin install firstdraft@firstdraft-skills
 ```
 
-Those exact commands succeeded for alpha.3 on 2026-08-06. The exact 0.1.0 tarball is published under npm `next`, and
-public `main` now selects it, but success through these public catalog commands remains unobserved. This unpublished
-0.1.1 candidate does not change that evidence boundary. The historical
+Those exact commands succeeded for alpha.3 on 2026-08-06. Exact plugin 0.1.1 is published under npm `next`, and this
+promotion change selects it, but success for 0.1.1 through these public catalog commands remains unobserved. The
+historical
 2026-08-04 source-only install report remains evidence for its recorded revision. A dated
 [vendored-CLI smoke](evidence/2026-08-05-claude-plugin-vendored-cli-smoke.md) records the local npm-source assembly,
 the rejected transitive-dependency design, and successful bare-command discovery. See
