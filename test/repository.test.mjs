@@ -75,6 +75,10 @@ const currentCompilerServiceBaseline =
   "6002be2685542fedf515879f940b97ad73b1a469";
 const discoverySmokeServiceBaseline =
   "4007fc5ef0734e2fc3e3e59714919025bd73d621";
+const catalogPromotionBaseline =
+  "e0212cad0a89a8b0e38678e371389085f6ddc254";
+const pluginReleaseBaseline =
+  "b3e53a240aaf79a776538e9b1410689d8a4e79ee";
 const compilationEvidenceCliBaseline =
   "121272cd592055354d09a4fe90e55c3ca002770c";
 const compilationEvidenceCliRuntimeDigest =
@@ -193,6 +197,9 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     freshAgentSkillBaseline.slice(0, 7),
     currentCompilerServiceBaseline,
     discoverySmokeServiceBaseline,
+    historicalCliContractBaseline,
+    catalogPromotionBaseline,
+    pluginReleaseBaseline,
   ]);
 
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
@@ -278,6 +285,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       foundationIosCoreRevision,
       freshAgentEvidenceBaseline,
       freshAgentSkillBaseline,
+      catalogPromotionBaseline,
+      pluginReleaseBaseline,
     ],
   );
   for (const relativePath of [
@@ -298,6 +307,33 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       [],
     );
   }
+});
+
+test("immutable plugin teaching surface records the accepted lag", async () => {
+  const [readme, releasing] = await Promise.all([
+    readFile(path.join(repository, "README.md"), "utf8"),
+    readFile(path.join(repository, "RELEASING.md"), "utf8"),
+  ]);
+  const publishedSkill = gitBlobAtRevision(
+    pluginReleaseBaseline,
+    "skills/create-full-stack-app/SKILL.md",
+  ).toString("utf8");
+  const publishedModelingGuide = gitBlobAtRevision(
+    pluginReleaseBaseline,
+    "skills/create-full-stack-app/references/modeling-guide.md",
+  ).toString("utf8");
+
+  for (const source of [publishedSkill, publishedModelingGuide]) {
+    assert.match(source, /live [Pp]ublication remains unproved/);
+  }
+  assert.match(
+    readme,
+    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` and modeling guide[\s\S]*?live Publication remains unproved[\s\S]*?does not disable `firstdraft plan[\s\S]*?compile`[\s\S]*?explicitly accepted[\s\S]*?documentation limitation[\s\S]*?future plugin version[\s\S]*?installed teaching surface[\s\S]*?fully current[\s\S]*?full v14 qualification gaps/,
+  );
+  assert.match(
+    releasing,
+    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` and[\s\S]*?modeling guide[\s\S]*?live Publication remains unproved[\s\S]*?does not disable[\s\S]*?`firstdraft plan compile`[\s\S]*?explicitly accepted 0\.1\.0 documentation limitation[\s\S]*?fully current[\s\S]*?future plugin version[\s\S]*?full v14 gaps remain separate/,
+  );
 });
 
 test("fresh Claude Code evidence is exact and bounded", async () => {
@@ -2948,7 +2984,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     readme,
-    /controlled local harness establishes the candidate\s+product-Compile and progress shape only against a strict fake GitHub remote/,
+    /controlled local harness at service revision[\s\S]*?8ebfc2ed82a610e63f47eb985c23ab7e634fe94e[\s\S]*?historical[\s\S]*?f55edffc9e88924f9a4c95f41c4d0bc9b72422f8[\s\S]*?CLI alpha\.2 product-Compile and strict-fake Publication behavior[\s\S]*?predates and does not establish the API 0\.2 always-present Publication progress object[\s\S]*?exact 0\.1\.0 CLI contract[\s\S]*?current progress projections and recovery behavior[\s\S]*?dated discovery smoke[\s\S]*?CLI 0\.1\.0 and API 0\.2 identities/,
   );
   assert.match(
     skill,
