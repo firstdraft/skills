@@ -11,29 +11,31 @@ exception: merging it changes the public catalog and requires the ordered gates 
 This source's current published patch version is `0.1.1`. It corrects the installed evidence boundary,
 makes the Skill's CLI startup check portable across shells, consistently prefers a repository-owned wrapper, and
 removes plugin configuration that Claude Code cannot deliver to a model-invoked Bash executable. It keeps CLI 0.1.0
-and service API 0.2 compatibility. Exact plugin 0.1.1 is published under npm `next`, and the public catalog promotion
-merged at exact catalog-promotion revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, naming that immutable version.
-The merged marketplace change promotes new public catalog installs; it did not publish new package bytes or move npm
-`latest`. A separate dated post-merge observation proves only the fresh two-command installation path for exact
-plugin 0.1.1.
+and service API 0.2 compatibility. Exact plugin 0.1.1 is published and selected by both npm `next` and `latest`. The
+public catalog promotion merged at exact catalog-promotion revision
+`ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, naming that immutable version. The marketplace merge itself published
+no package bytes and moved no npm dist-tag; the later stable-tag promotion was a separate explicitly approved
+registry mutation. Separate dated observations prove the fresh two-command installation path and reconcile the
+stable registry state for exact plugin 0.1.1.
 
 The installable `firstdraft@firstdraft-skills` plugin is the public npm package
 `@firstdraft.com/claude-code`. A dated public-install observation records published version `0.1.0-alpha.3`. Alpha.4
 and alpha.5 were assembled as source candidates and abandoned before catalog promotion; their source changes did not
-publish packages. The coordinated ordinary releases now exist under protected tags and npm `next`: plugin
-`@firstdraft.com/claude-code@0.1.0` at `claude-v0.1.0`, plugin `@firstdraft.com/claude-code@0.1.1` at
-`claude-v0.1.1`, and CLI `@firstdraft.com/cli@0.1.0` at `v0.1.0`. The historical public catalog at
+publish packages. Those prerelease identities and observations remain immutable history. The coordinated ordinary
+releases exist under protected tags: plugin `@firstdraft.com/claude-code@0.1.0` at `claude-v0.1.0`, plugin
+`@firstdraft.com/claude-code@0.1.1` at `claude-v0.1.1`, and CLI `@firstdraft.com/cli@0.1.0` at `v0.1.0`. npm `next`
+and `latest` both select plugin 0.1.1; npm `next` and `latest` both select CLI 0.1.0. The historical public catalog at
 catalog-promotion revision `e0212cad0a89a8b0e38678e371389085f6ddc254` selected plugin 0.1.0. The public catalog
 promotion merged at exact catalog-promotion revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, selecting
-plugin 0.1.1. npm `latest` remains alpha.3 for the plugin and alpha.2 for the CLI; current registry and catalog state
-remain a release-time read-only check. A dated
+plugin 0.1.1. Current registry and catalog state remain a release-time read-only check. A dated
 [read-only publication observation](evidence/2026-08-09-claude-plugin-0.1.0-release.md) reconciles the exact protected
 tag, package digest, provenance presence, and registry dist-tags at the pre-promotion point: `next` named 0.1.0 while
 `latest` and the public catalog still named alpha.3.
 A separate [direct-package observation](evidence/2026-08-09-direct-package-0.1.0-check.md) records exact plugin 0.1.0
 installation, strict validation, inline discovery, and bundled CLI 0.1.0 invocation without calling First Draft.
 A dated [0.1.1 publication observation](evidence/2026-08-12-claude-plugin-0.1.1-release.md) binds the new protected
-tag, successful workflow, public package digest and provenance, and unchanged `latest` dist-tag. Its separate
+tag, successful workflow, public package digest and provenance, and the unchanged `latest` dist-tag at that
+publication-time boundary. Its separate
 [direct-package observation](evidence/2026-08-12-direct-package-0.1.1-check.md) records exact 0.1.1 installation,
 strict validation, inline discovery, bundled CLI 0.1.0, and wrapper preference without credentials or a service call.
 A separate [public-install observation](evidence/2026-08-12-public-claude-code-plugin-0.1.1-install.md) records the
@@ -41,6 +43,9 @@ two public marketplace commands leaving their fetched clone clean at exact catal
 `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`; the catalog selection and installed package manifest naming exact npm
 package `@firstdraft.com/claude-code@0.1.1`; the canonical Skill file and declaration; the inline `installPath`
 realpath equality; and bundled CLI 0.1.0 from fresh unauthenticated state.
+A dated [stable-tag promotion observation](evidence/2026-08-12-stable-npm-promotion.md) separately reconciles npm
+`next` and `latest` to plugin 0.1.1 and CLI 0.1.0, with the public catalog selecting exact plugin 0.1.1. It changes
+none of the earlier observations' time-bounded claims.
 The dated [staging Movie Catalog discovery smoke](evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
 binds the exact staging web and worker revision, compatible package constituents, and one live OAuth/App-backed
 create-and-push result. For plugin 0.1.0, a human explicitly selected that bounded PAT-less smoke as the pre-catalog
@@ -55,9 +60,9 @@ published `@firstdraft.com/cli@0.1.0`, and the repository license. Colleagues th
 compatible CLI together through Claude Code rather than managing a separate global CLI or relying on transitive
 installation. The published alpha.3 package bundles CLI alpha.2; which bytes an existing installation currently
 activates, including any Claude Code auto-refresh or update behavior, requires direct observation.
-A [dated release observation](evidence/2026-08-07-cli-0.1.0-release.md) records CLI 0.1.0 under `next` while `latest`
-remains alpha.2. The immutable publication evidence, rather than the current source tree alone, establishes the
-package and protected-tag identities.
+A [dated release observation](evidence/2026-08-07-cli-0.1.0-release.md) records that CLI 0.1.0 was under `next` while
+`latest` remained alpha.2 at its publication-time boundary. The immutable publication evidence, rather than the
+current source tree alone, establishes the package and protected-tag identities.
 
 The immutable plugin 0.1.0 package was assembled from Skills revision
 `b3e53a240aaf79a776538e9b1410689d8a4e79ee` before the bounded live discovery smoke. Its packaged `SKILL.md` retains
@@ -105,8 +110,13 @@ never authorizes deployment or publication.
 Beginning with 0.1.0, current and future pre-1.0 candidates use ordinary `0.MINOR.PATCH` versions. Increment the
 minor component for a breaking compatibility-line change and the patch component for an otherwise
 backward-compatible change. Do not add compatibility aliases: one exact version continues to identify one exact
-package. The npm `next` dist-tag remains an independent approval-gated distribution channel so this rollout does not
-move `latest`; it has no SemVer meaning and does not turn an ordinary version into a prerelease.
+package. npm `next` is the independent approval-gated package-publication and qualification channel; it has no
+SemVer meaning and does not turn an ordinary version into a prerelease. After the required release-specific
+qualification passes, moving `latest` is a separate explicitly approved mutation. For a non-catalog package, define
+and record that qualification before the move; catalog selection is not its gate. Do not call a stable
+catalog-distributed plugin release complete until the exact package is selected by the public catalog and read-only
+reconciliation shows both `next` and `latest` selecting that same version. Preserve the earlier dist-tag observations
+as historical evidence rather than rewriting them when a later promotion changes current state.
 
 ## Current 0.1.1 patch flow
 
@@ -124,6 +134,14 @@ move `latest`; it has no SemVer meaning and does not turn an ordinary version in
    Node 24.18.0 CI passed, and merged at exact catalog-promotion revision
    `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`. A separately authorized fresh isolated two-command marketplace
    install then passed and was recorded separately; it was not a circular pre-merge gate.
+7. After the exact 0.1.1 package, catalog, and public-install checks described above, a human explicitly authorized
+   stable-tag promotion. CLI 0.1.0's release evidence included its exact-version install and registry verification;
+   it was also the exact bundled CLI exercised by the plugin checks and bounded staging smoke. One operator moved
+   only npm dist-tags, then read-only reconciliation confirmed plugin 0.1.1 and CLI 0.1.0 under both `next` and
+   `latest`, with the public catalog still selecting exact plugin 0.1.1. No package bytes were republished. Those
+   preceding package, catalog, public-install, and CLI checks were the required release-specific qualification for
+   these stable defaults; the dist-tag move and reconciliation were the mutation and completion check, not the gate.
+   The release-specific qualification did not claim or require full v14.
 
 For later releases, never make a post-merge public-install observation a pre-merge gate for enabling the catalog
 promotion that must precede it. Pre-merge gates qualify the exact package and promotion head; the public install is a
@@ -178,8 +196,13 @@ immutable protected tag. These rules keep the required post-publication catalog-
 weakening the tag-triggered publication gate.
 
 The workflow fails closed unless the tag is protected and its commit is on `main`.
-Record the current `next` and `latest` package identities read-only before the mutation; the workflow may advance
-`next`, but `latest` must remain at its pre-publication identity unless a later action is separately approved.
+Record the current `next` and `latest` package identities read-only before the mutation; the publication workflow may
+advance `next`, but it must leave `latest` at its pre-publication identity. After the exact package passes its
+required release-specific qualification and the public catalog selects it, a later separately approved action may
+move `latest`. This manual registry mutation is outside the reviewer-gated tag publication workflow, so explicit
+approval and single-operator serialization are its authorization boundary. Reconcile the package, both dist-tags,
+and exact catalog source read-only before calling the stable plugin release complete. A post-publication `latest`
+promotion never authorizes new package bytes, a service deployment, or a catalog edit.
 The workflow also requires the candidate to follow every version observed in the npm registry and exact-version
 catalog, and requires its one current protected tag to follow all prior protected `claude-v*` tags. Local candidate
 checks deliberately do not treat deleted branch history as a release ledger. Any malformed `claude-v*` tag fails
@@ -460,13 +483,16 @@ If the later authorized authenticated path in step 7 fails, follow that current 
 failure requires a catalog mutation. If an authorized recovery includes a catalog repoint, make one reviewable source
 change that updates `.claude-plugin/marketplace.json`, its exact catalog
 assertions in `test/repository.test.mjs` and `test/release-compatibility.test.mjs`, and the catalog-state prose and
-assertions in `README.md` and `RELEASING.md`. Do not assume a catalog change updated existing installations; reconcile
-each known installation's active version and endpoint resolution. Before ending the recovery window, move each
-verified-affected installation to the exact supported version through a separately verified Claude Code procedure, or
-explicitly accept its continuing outage as an affected-user follow-up. No ordering can make clients compatible during
-every instant of a two-system rollback, so keep new operator-controlled operations in that qualification lane stopped
-until both sides agree. Selecting a prior immutable catalog package is not reusing that SemVer for different bytes; the
-forward-only correction rule applies when publishing changed bytes.
+assertions in `README.md` and `RELEASING.md`. The recovery approval must separately name the exact immutable package
+for npm `next` and `latest`; before closing recovery, one operator must apply that approved dist-tag disposition and
+reconcile both tags with the exact catalog source read-only. Do not assume a catalog or dist-tag change updated
+existing installations; reconcile each known installation's active version and endpoint resolution. Before ending
+the recovery window, move each verified-affected installation to the exact supported version through a separately
+verified Claude Code procedure, or explicitly accept its continuing outage as an affected-user follow-up. No
+ordering can make clients compatible during every instant of a two-system rollback, so keep new operator-controlled
+operations in that qualification lane stopped until the catalog, dist-tags, service roles, and supported clients
+agree. Selecting a prior immutable catalog package is not reusing that SemVer for different bytes; the forward-only
+correction rule applies when publishing changed bytes.
 
 If any external mutation has an ambiguous result, stop and inspect the registry, Git ref, or deployment read-only.
 Do not retry until its identity is known. Publishing changed bytes for an existing npm, protected-tag, or catalog
