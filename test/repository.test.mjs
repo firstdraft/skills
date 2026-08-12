@@ -77,6 +77,8 @@ const discoverySmokeServiceBaseline =
   "4007fc5ef0734e2fc3e3e59714919025bd73d621";
 const catalogPromotionBaseline =
   "e0212cad0a89a8b0e38678e371389085f6ddc254";
+const pluginPatchCatalogPromotionBaseline =
+  "ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1";
 const pluginReleaseBaseline =
   "b3e53a240aaf79a776538e9b1410689d8a4e79ee";
 const compilationEvidenceCliBaseline =
@@ -199,6 +201,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     discoverySmokeServiceBaseline,
     historicalCliContractBaseline,
     catalogPromotionBaseline,
+    pluginPatchCatalogPromotionBaseline,
     pluginReleaseBaseline,
   ]);
 
@@ -287,6 +290,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       freshAgentEvidenceBaseline,
       freshAgentSkillBaseline,
       catalogPromotionBaseline,
+      pluginPatchCatalogPromotionBaseline,
       pluginReleaseBaseline,
     ],
   );

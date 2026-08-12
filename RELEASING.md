@@ -11,9 +11,11 @@ exception: merging it changes the public catalog and requires the ordered gates 
 This source's current published patch version is `0.1.1`. It corrects the installed evidence boundary,
 makes the Skill's CLI startup check portable across shells, consistently prefers a repository-owned wrapper, and
 removes plugin configuration that Claude Code cannot deliver to a model-invoked Bash executable. It keeps CLI 0.1.0
-and service API 0.2 compatibility. Exact plugin 0.1.1 is published under npm `next`, and the marketplace source in
-this promotion change names that immutable version. Merging the marketplace change promotes new public catalog
-installs; it does not publish new package bytes, move npm `latest`, or prove the post-merge installation path.
+and service API 0.2 compatibility. Exact plugin 0.1.1 is published under npm `next`, and the public catalog promotion
+merged at exact catalog-promotion revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, naming that immutable version.
+The merged marketplace change promotes new public catalog installs; it did not publish new package bytes or move npm
+`latest`. A separate dated post-merge observation proves only the fresh two-command installation path for exact
+plugin 0.1.1.
 
 The installable `firstdraft@firstdraft-skills` plugin is the public npm package
 `@firstdraft.com/claude-code`. A dated public-install observation records published version `0.1.0-alpha.3`. Alpha.4
@@ -21,9 +23,10 @@ and alpha.5 were assembled as source candidates and abandoned before catalog pro
 publish packages. The coordinated ordinary releases now exist under protected tags and npm `next`: plugin
 `@firstdraft.com/claude-code@0.1.0` at `claude-v0.1.0`, plugin `@firstdraft.com/claude-code@0.1.1` at
 `claude-v0.1.1`, and CLI `@firstdraft.com/cli@0.1.0` at `v0.1.0`. The historical public catalog at
-catalog-promotion revision `e0212cad0a89a8b0e38678e371389085f6ddc254` selected plugin 0.1.0. npm `latest` remains
-alpha.3 for the plugin and alpha.2 for the CLI; current registry and catalog state remain a release-time read-only
-check. The marketplace package source in this promotion change names exact published version 0.1.1. A dated
+catalog-promotion revision `e0212cad0a89a8b0e38678e371389085f6ddc254` selected plugin 0.1.0. The public catalog
+promotion merged at exact catalog-promotion revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, selecting
+plugin 0.1.1. npm `latest` remains alpha.3 for the plugin and alpha.2 for the CLI; current registry and catalog state
+remain a release-time read-only check. A dated
 [read-only publication observation](evidence/2026-08-09-claude-plugin-0.1.0-release.md) reconciles the exact protected
 tag, package digest, provenance presence, and registry dist-tags at the pre-promotion point: `next` named 0.1.0 while
 `latest` and the public catalog still named alpha.3.
@@ -33,6 +36,11 @@ A dated [0.1.1 publication observation](evidence/2026-08-12-claude-plugin-0.1.1-
 tag, successful workflow, public package digest and provenance, and unchanged `latest` dist-tag. Its separate
 [direct-package observation](evidence/2026-08-12-direct-package-0.1.1-check.md) records exact 0.1.1 installation,
 strict validation, inline discovery, bundled CLI 0.1.0, and wrapper preference without credentials or a service call.
+A separate [public-install observation](evidence/2026-08-12-public-claude-code-plugin-0.1.1-install.md) records the
+two public marketplace commands leaving their fetched clone clean at exact catalog-promotion revision
+`ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`; the catalog selection and installed package manifest naming exact npm
+package `@firstdraft.com/claude-code@0.1.1`; the canonical Skill file and declaration; the inline `installPath`
+realpath equality; and bundled CLI 0.1.0 from fresh unauthenticated state.
 The dated [staging Movie Catalog discovery smoke](evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
 binds the exact staging web and worker revision, compatible package constituents, and one live OAuth/App-backed
 create-and-push result. For plugin 0.1.0, a human explicitly selected that bounded PAT-less smoke as the pre-catalog
@@ -63,8 +71,9 @@ Treat all five as explicitly accepted 0.1.0 documentation limitations, not a rea
 identity. Published plugin 0.1.1 corrects the four Publication/Publish negatives in canonical source but retains
 `foundation-plan-019.md`'s ambiguous "packed reviewed CLI" attribution. Treat that attribution as an acknowledged
 published-package limitation. Correcting it would change immutable package bytes and therefore requires a new
-SemVer, recorded deterministic digest, and separate qualification. The patch does not by itself close the fresh
-public-install, authenticated template-and-Codespace, or full v14 gaps.
+SemVer, recorded deterministic digest, and separate qualification. The patch did not by itself close the fresh
+public-install gap; the separate isolated observation now does so only for exact plugin 0.1.1. Existing-install
+update, authenticated template-and-Codespace, and full v14 gaps remain.
 
 The always-present Publication progress object is a breaking compatibility-line change: plugin 0.1.0 and CLI 0.1.0
 require service API contract `>= 0.2.0` and `< 0.3.0`. Their coordinated rollout published the packages first, then
@@ -111,9 +120,14 @@ move `latest`; it has no SemVer meaning and does not turn an ordinary version in
 4. A human explicitly authorized the protected `claude-v0.1.1` tag and npm publication.
 5. The protected tag and npm publication completed under `next`; the exact package digest and provenance reconciled,
    and the isolated direct-package check passed. This compatible patch required no service deploy.
-6. This separate marketplace change moves exact package selection from 0.1.0 to published 0.1.1. Merge only after
-   its exact-head Node 24.18.0 CI passes. Then run the two-command public marketplace install from the merged catalog
-   and record that separately; do not make the post-merge observation a circular pre-merge gate.
+6. The separate marketplace change moved exact package selection from 0.1.0 to published 0.1.1 after its exact-head
+   Node 24.18.0 CI passed, and merged at exact catalog-promotion revision
+   `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`. A separately authorized fresh isolated two-command marketplace
+   install then passed and was recorded separately; it was not a circular pre-merge gate.
+
+For later releases, never make a post-merge public-install observation a pre-merge gate for enabling the catalog
+promotion that must precede it. Pre-merge gates qualify the exact package and promotion head; the public install is a
+separate observation of the exact merged catalog.
 
 ## Completed 0.1.0 candidate flow
 
@@ -127,7 +141,8 @@ candidate, repeat these gates with fresh exact identities, current compatibility
    adapter ran the exact CLI version.
 3. They validated the staged 0.1.0 plugin with the real Claude Code CLI in isolated state without advancing the
    public catalog, including Skill discovery, sensitive configuration handling, and CLI invocation. The dated
-   public-install observation still proves the prior alpha.3 package and bundled alpha.2 CLI only.
+   2026-08-06 alpha.3 public-install observation proves the prior alpha.3 package and bundled alpha.2 CLI only; no
+   public install of plugin 0.1.0 was observed.
 4. They completed the read-only cross-repository evaluation and prepared the exact service revision, rollout checks,
    Movie Catalog smoke input, rollback point, and three-repository identity record before changing shared staging.
    The historical fail-closed rule was: do not deploy it while plugin 0.1.0 remains only an unpublished candidate. A
@@ -360,54 +375,72 @@ evidence.
    A GitHub PAT, independent clone or byte verification, generated-repository credential scan, and singleton replay
    are not part of this user-selected discovery gate. Their absence must be explicit in the dated record, which must
    not claim a full v14 qualification. The smoke also does not claim it installed or executed the public npm package;
-   the template, Codespace, and public-catalog path remains outstanding below. The compatible 0.1.0 constituents
+   the template, Codespace, and public-catalog path was outstanding at that observation. The later 0.1.1
+   public-install observation closes only the two-command distribution check; the template and Codespace remain
+   outstanding below. The compatible 0.1.0 constituents
    became supported for API operations only after both roles reported the API 0.2 revision. The service runbook
    governed migration compatibility, rollback, revision checks, and retained evidence; a web-only or worker-only
    activation was not completion.
 5. After both roles and the selected 0.1.0 discovery smoke were verified, the marketplace-promotion change was merged
    at exact catalog-promotion revision `e0212cad0a89a8b0e38678e371389085f6ddc254`. At that historical revision,
-   `claude plugin marketplace add firstdraft/skills` resolved a catalog that selected exact plugin 0.1.0; the current
-   promotion change instead selects exact published plugin 0.1.1. The exact 0.1.0 promotion head's Node 24.18.0 CI
-   job, including its release-order rehearsal, passed without an administrative bypass. The durable rule remains:
+   `claude plugin marketplace add firstdraft/skills` resolved a catalog that selected exact plugin 0.1.0. The later
+   public catalog promotion merged at exact catalog-promotion revision
+   `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, selecting exact published plugin 0.1.1. The exact 0.1.0 promotion
+   head's Node 24.18.0 CI job, including its release-order rehearsal, passed without an administrative bypass. The
+   durable rule remains:
    require the exact promotion-head job and never use an administrative bypass.
    Do not assume catalog promotion updated an existing installation. The retained record proves neither Claude Code
    auto-refresh/update behavior nor whether any installed alpha.3 copy resolved its declared option default to shared
    staging/API 0.2. It also does not prove that a verified-affected installation was notified, updated through a
    separately verified Claude Code procedure, or explicitly accepted as a continuing affected-user outage.
 
-### Post-merge 0.1.1 public-install qualification
+### Completed post-merge 0.1.1 public-install observation
 
-6. After the 0.1.1 catalog promotion merges to public `main`, the remaining observation starts with the exact public
-   installation in fresh isolated Claude state outside a Drawing Board. Before running the commands or beginning the
-   template-and-Codespace product journey, obtain fresh explicit authorization for exactly one serialized
-   qualification invocation. That approval must name the Claude Code marketplace-registration, plugin-install/cache,
-   and secure-storage token effects; the template-derived GitHub repository and Codespace; the retained First Draft
-   Project, AnalysisRun, Compilation, Publication, and queue effects; the separately billed Standard Render
-   Compilation One-Off; and GitHub App/OAuth destination-repository creation and push effects. Merely reading this
-   step authorizes no marketplace registration, plugin installation, template repository, Codespace, token
-   onboarding, Compile, Publication, destination-repository mutation, retry, or cleanup. After that approval, run:
+6. After the public catalog promotion merged at exact catalog-promotion revision
+   `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, one fresh isolated unauthenticated Claude state outside a Drawing Board
+   ran:
 
    ```sh
    claude plugin marketplace add firstdraft/skills
    claude plugin install firstdraft@firstdraft-skills
    ```
 
-   Confirm that the catalog resolves exact plugin 0.1.1, the `create-full-stack-app` Skill is discoverable, and the
-   bundled CLI reports exact version 0.1.0.
+   After both commands, the fetched marketplace clone remained clean at that exact HEAD; catalog-selection JSON named
+   npm package `@firstdraft.com/claude-code@0.1.1`; and the installed package manifest named that exact package and
+   version. The installed plugin contained the canonical `skills/create-full-stack-app/SKILL.md` file and declared it
+   in its manifest. Its inline loader reported `firstdraft@inline` 0.1.1 with an `installPath` realpath equal to the
+   installed plugin root, and the bundled CLI reported exact version 0.1.0 with empty stderr. The dated
+   [public-install observation](evidence/2026-08-12-public-claude-code-plugin-0.1.1-install.md) records strict
+   validation, isolated state, and the absence of model, First Draft, and GitHub mutations. This closes only the fresh
+   two-command installation path for exact selected plugin 0.1.1. It does not prove update or auto-refresh behavior
+   for an existing installation.
+
+### Outstanding authenticated product journey
+
+7. The authenticated template-and-Codespace product journey remains outstanding. Before beginning it, obtain fresh
+   explicit authorization for exactly one serialized qualification invocation. That approval must name the Claude
+   Code marketplace-registration, plugin-install/cache, and secure-storage token effects; the template-derived GitHub
+   repository and Codespace; the retained First Draft Project, AnalysisRun, Compilation, Publication, and queue
+   effects; the separately billed Standard Render Compilation One-Off; and GitHub App/OAuth destination-repository
+   creation and push effects. Merely reading this step authorizes no marketplace registration, plugin installation,
+   template repository, Codespace, token onboarding, Compile, Publication, destination-repository mutation, retry, or
+   cleanup.
+
    Pin the exact merged Skills SHA in the updated Drawing Board, use that template to create a repository and a fresh
-   Codespace, and run `claude`. Complete staging token onboarding without exposing the token in chat or logs,
-   make a plain-English application request, and verify that the bundled CLI 0.1.0 and API 0.2 Publication progress
-   contract produce the expected fresh private GitHub repository. This path does not yet cover a pull request back to
-   the template repository. Record the isolated public install and template-path results explicitly; catalog
-   promotion and the earlier direct-`next` no-API check do not prove either result. The full v14 qualification remains
-   a separate, stricter boundary.
+   Codespace, and run `claude`. Complete staging token onboarding without exposing the token in chat or logs, make a
+   plain-English application request, and verify that the bundled CLI 0.1.0 and API 0.2 Publication progress contract
+   produce the expected fresh private GitHub repository. This path does not yet cover a pull request back to the
+   template repository. Record the template-path result explicitly; the completed public install, catalog promotion,
+   and earlier direct-`next` no-API check do not prove it. The full v14 qualification remains a separate, stricter
+   boundary.
 
 The selected live discovery smoke remains a 0.1.0 gate. Plugin 0.1.1 keeps the same CLI 0.1.0 and service API 0.2
 compatibility line and requires no service mutation, so this catalog promotion does not require a new pre-merge live
 smoke. Its pre-merge qualification gates are the exact
 [0.1.1 public-package direct-install check](evidence/2026-08-12-direct-package-0.1.1-check.md) and the exact promotion
-head's Node 24.18.0 CI, including release-order reconciliation. Neither gate proves the post-merge two-command public
-installation path.
+head's Node 24.18.0 CI, including release-order reconciliation. Neither pre-merge gate proves the post-merge
+two-command public installation path; the separate dated observation now proves that path for exact plugin 0.1.1
+only. It does not replace any authenticated product-journey or full-v14 gate.
 
 The pre-promotion rollback recipe retained for the historical API-activation phase was to restore the then-exact API
 0.1 rollback revision on both service roles and leave the catalog at alpha.3. That dated recipe is historical and
@@ -423,8 +456,9 @@ read-only, obtain fresh explicit authorization naming the exact rollback revisio
 mutation, and retain completion evidence before declaring the window closed. Do not presume that API 0.1 or plugin
 alpha.3 is the current rollback target.
 
-If the outstanding public path in step 6 fails, follow that current rollback rule. If an authorized recovery includes
-a catalog repoint, make one reviewable source change that updates `.claude-plugin/marketplace.json`, its exact catalog
+If the later authorized authenticated path in step 7 fails, follow that current rollback rule; do not infer that the
+failure requires a catalog mutation. If an authorized recovery includes a catalog repoint, make one reviewable source
+change that updates `.claude-plugin/marketplace.json`, its exact catalog
 assertions in `test/repository.test.mjs` and `test/release-compatibility.test.mjs`, and the catalog-state prose and
 assertions in `README.md` and `RELEASING.md`. Do not assume a catalog change updated existing installations; reconcile
 each known installation's active version and endpoint resolution. Before ending the recovery window, move each
@@ -463,4 +497,5 @@ For the next candidate, stage its exact bytes and validate them with the then-cu
 isolated Claude configuration for install tests; do not alter a colleague's real Claude state during qualification.
 A local validation, packed install, registry publication, or catalog source change never proves the two-command
 public installation path. Only a separately recorded post-merge installation through the merged public catalog
-proves that path for the exact selected version.
+proves that path for the exact selected version. The dated 2026-08-12 public-install observation does so only for
+exact plugin 0.1.1 at catalog revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`.

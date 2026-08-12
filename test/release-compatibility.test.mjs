@@ -183,6 +183,7 @@ test("release operator and agent instructions track the candidate", async () => 
     directPackageReleaseEvidence,
     pluginPatchReleaseEvidence,
     directPackagePatchEvidence,
+    publicPatchInstallEvidence,
     discoverySmokeEvidence,
   ] = await Promise.all([
     readJson("release/compatibility.json"),
@@ -195,6 +196,9 @@ test("release operator and agent instructions track the candidate", async () => 
     readText("evidence/2026-08-09-direct-package-0.1.0-check.md"),
     readText("evidence/2026-08-12-claude-plugin-0.1.1-release.md"),
     readText("evidence/2026-08-12-direct-package-0.1.1-check.md"),
+    readText(
+      "evidence/2026-08-12-public-claude-code-plugin-0.1.1-install.md",
+    ),
     readText("evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md"),
   ]);
   const catalogPlugin = marketplace.plugins.find(
@@ -217,7 +221,7 @@ test("release operator and agent instructions track the candidate", async () => 
   assert.equal(catalogPlugin.version, "0.1.1");
   assert.match(
     releasing,
-    /current published patch version is `0\.1\.1`[\s\S]*?published under npm `next`[\s\S]*?marketplace source[\s\S]*?names that immutable version[\s\S]*?does not[\s\S]*?prove the post-merge installation path/,
+    /current published patch version is `0\.1\.1`[\s\S]*?published under npm `next`[\s\S]*?public catalog promotion[\s\S]*?merged at exact catalog-promotion revision[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?naming that immutable version[\s\S]*?separate dated post-merge observation proves only the fresh two-command installation path/,
   );
   assert.match(
     releasing,
@@ -225,11 +229,15 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
+    /2026-08-06 alpha\.3 public-install observation proves the prior alpha\.3 package and bundled alpha\.2 CLI only; no[\s\S]*?public install of plugin 0\.1\.0 was observed/,
+  );
+  assert.match(
+    releasing,
     /marketplace-promotion change was merged[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254/,
   );
   assert.match(
     releasing,
-    /ordinary releases now exist under protected tags and npm `next`[\s\S]*?claude-v0\.1\.0[\s\S]*?claude-v0\.1\.1[\s\S]*?v0\.1\.0[\s\S]*?historical public catalog at[\s\S]*?catalog-promotion revision[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?`latest` remains[\s\S]*?alpha\.3 for the plugin[\s\S]*?marketplace[\s\S]*?names exact published version 0\.1\.1/,
+    /ordinary releases now exist under protected tags and npm `next`[\s\S]*?claude-v0\.1\.0[\s\S]*?claude-v0\.1\.1[\s\S]*?v0\.1\.0[\s\S]*?historical public catalog at[\s\S]*?catalog-promotion revision[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?public catalog[\s\S]*?promotion merged at exact catalog-promotion revision[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?selecting[\s\S]*?plugin 0\.1\.1[\s\S]*?`latest` remains[\s\S]*?alpha\.3 for the plugin/,
   );
   assertTextOrder(releasing, [
     "## Current 0.1.1 patch flow",
@@ -238,13 +246,16 @@ test("release operator and agent instructions track the candidate", async () => 
     "3. Skills source integrated at `263326a47a502b56af7780093988c6b860b2d5d2`",
     "4. A human explicitly authorized",
     "5. The protected tag and npm publication completed under `next`",
-    "6. This separate marketplace change moves exact package selection from 0.1.0 to published 0.1.1",
-    "do not make the post-merge observation a circular pre-merge gate",
+    "6. The separate marketplace change moved exact package selection from 0.1.0 to published 0.1.1",
+    "ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1",
+    "it was not a circular pre-merge gate",
+    "For later releases, never make a post-merge public-install observation a pre-merge gate for enabling the catalog promotion that must precede it",
+    "the public install is a separate observation of the exact merged catalog",
     "## Completed 0.1.0 candidate flow",
   ]);
   assert.match(
     readme,
-    /ordinary releases now[\s\S]*?protected tags and npm `next`[\s\S]*?claude-v0\.1\.1[\s\S]*?historical public catalog at[\s\S]*?catalog-promotion revision[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?promotion[\s\S]*?change selects exact published plugin 0\.1\.1[\s\S]*?Published[\s\S]*?plugin 0\.1\.1 corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?change immutable package bytes[\s\S]*?new[\s\S]*?SemVer[\s\S]*?recorded deterministic digest[\s\S]*?separate qualification/,
+    /ordinary releases now[\s\S]*?protected tags and npm `next`[\s\S]*?claude-v0\.1\.1[\s\S]*?historical public catalog at[\s\S]*?catalog-promotion revision[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?public catalog[\s\S]*?promotion merged at exact catalog-promotion revision[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?selecting[\s\S]*?exact published plugin 0\.1\.1[\s\S]*?Published[\s\S]*?plugin 0\.1\.1 corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?change immutable package bytes[\s\S]*?new[\s\S]*?SemVer[\s\S]*?recorded deterministic digest[\s\S]*?separate qualification/,
   );
   assert.match(
     pluginReleaseEvidence,
@@ -292,7 +303,39 @@ test("release operator and agent instructions track the candidate", async () => 
     directPackagePatchEvidence,
     /set no First Draft credentials and made no First Draft service call[\s\S]*?did not authenticate or call a model[\s\S]*?GitHub Publication[\s\S]*?change the\s+public marketplace catalog[\s\S]*?two-command public marketplace installation path/,
   );
-  for (const source of [pluginPatchReleaseEvidence, directPackagePatchEvidence]) {
+  assert.match(
+    publicPatchInstallEvidence,
+    /Claude Code 2\.1\.228[\s\S]*?claude plugin marketplace add firstdraft\/skills[\s\S]*?claude plugin install firstdraft@firstdraft-skills[\s\S]*?Node v24\.18\.0[\s\S]*?npm 11\.16\.0[\s\S]*?Git 2\.54\.0[\s\S]*?fresh isolated home, Claude configuration,[\s\S]*?plugin cache, XDG, and npm state[\s\S]*?exited 1[\s\S]*?`loggedIn=false`[\s\S]*?`authMethod=none`[\s\S]*?HTTPS GitHub source[\s\S]*?After both commands[\s\S]*?marketplace clone's HEAD was exact catalog-promotion revision[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?working tree remained clean/,
+  );
+  assert.match(
+    publicPatchInstallEvidence,
+    /catalog-selection JSON named npm source `@firstdraft\.com\/claude-code@0\.1\.1`[\s\S]*?enabled user-scope plugin `firstdraft@firstdraft-skills` at exact version `0\.1\.1`[\s\S]*?installed package manifest named `@firstdraft\.com\/claude-code` at exact version `0\.1\.1`[\s\S]*?strict validation passed for both the fetched marketplace and installed plugin[\s\S]*?skills\/create-full-stack-app\/SKILL\.md[\s\S]*?\.\/skills\/create-full-stack-app[\s\S]*?enabled session-scope plugin `firstdraft@inline` at exact version `0\.1\.1`[\s\S]*?`installPath` realpath equaled the installed plugin root's realpath[\s\S]*?no `userConfig`[\s\S]*?exact `0\.1\.0` to stdout[\s\S]*?nothing to stderr/,
+  );
+  assert.match(
+    publicPatchInstallEvidence,
+    /no First Draft credential or state files[\s\S]*?did not authenticate or[\s\S]*?call a model[\s\S]*?configure a First Draft token[\s\S]*?call a First Draft service[\s\S]*?author or push a Plan[\s\S]*?AnalysisRun[\s\S]*?Compilation[\s\S]*?Publication[\s\S]*?mutate GitHub[\s\S]*?fork a template[\s\S]*?create a Codespace[\s\S]*?closes only the fresh public two-command marketplace installation path for exact plugin 0\.1\.1[\s\S]*?does not establish[\s\S]*?existing-install update or auto-refresh behavior[\s\S]*?authenticated installed-Skill journey[\s\S]*?full v14 qualification/,
+  );
+  assert.doesNotMatch(
+    publicPatchInstallEvidence,
+    /(?:discover|enumerat)(?:ed|ion)?[^\n]*Skill/i,
+  );
+  assert.match(
+    readme,
+    /0\.1\.1 public-install observation[\s\S]*?install enabled user-scope plugin 0\.1\.1[\s\S]*?strictly validate the[\s\S]*?marketplace and plugin[\s\S]*?verify the canonical Skill file[\s\S]*?manifest declaration[\s\S]*?run bundled CLI 0\.1\.0 from fresh unauthenticated state/,
+  );
+  assert.doesNotMatch(
+    readme,
+    /(?:discover|enumerat)\w*[^\n]*canonical Skill/i,
+  );
+  assert.match(
+    releasing,
+    /public-install observation[\s\S]*?fetched clone clean at exact catalog-promotion revision[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?catalog selection and installed package manifest naming exact npm[\s\S]*?@firstdraft\.com\/claude-code@0\.1\.1[\s\S]*?canonical Skill file and declaration[\s\S]*?inline `installPath`[\s\S]*?realpath equality/,
+  );
+  for (const source of [
+    pluginPatchReleaseEvidence,
+    directPackagePatchEvidence,
+    publicPatchInstallEvidence,
+  ]) {
     assert(!source.includes(repository));
     assert.doesNotMatch(source, /(?:\/Users\/|\/home\/|[A-Za-z]:\\)/);
     assert.doesNotMatch(source, /\/(?:private\/)?tmp\//);
@@ -338,7 +381,7 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     readme,
-    /staging Movie Catalog discovery smoke[\s\S]*?For plugin 0\.1\.0,[\s\S]*?PAT-less observation satisfies[\s\S]*?narrower discovery-promotion gate[\s\S]*?does not claim independent[\s\S]*?repository-byte verification, replay, a full v14 qualification[\s\S]*?live smoke remains a 0\.1\.0 gate[\s\S]*?Plugin 0\.1\.1 retains CLI 0\.1\.0 and service API 0\.2[\s\S]*?requires no[\s\S]*?service mutation[\s\S]*?requires no new pre-merge live smoke[\s\S]*?exact 0\.1\.1[\s\S]*?direct-package check[\s\S]*?exact promotion-head Node 24\.18\.0 CI[\s\S]*?Neither proves the post-merge public installation/,
+    /That live smoke remains a 0\.1\.0 gate[\s\S]*?Plugin 0\.1\.1 retains CLI 0\.1\.0 and service API 0\.2 compatibility[\s\S]*?requires no[\s\S]*?service mutation[\s\S]*?requires no new pre-merge live smoke[\s\S]*?exact 0\.1\.1[\s\S]*?direct-package check[\s\S]*?exact promotion-head Node 24\.18\.0 CI[\s\S]*?Neither pre-merge gate proves the post-merge public[\s\S]*?installation[\s\S]*?separate isolated observation now establishes that path for exact plugin 0\.1\.1 only/,
   );
   assert.match(
     releasing,
@@ -498,9 +541,19 @@ test("release operator and agent instructions track the candidate", async () => 
     "A GitHub PAT, independent clone or byte verification, generated-repository credential scan, and singleton replay",
     "5. After both roles and the selected 0.1.0 discovery smoke were verified, the marketplace-promotion change was merged",
     "At that historical revision",
-    "the current promotion change instead selects exact published plugin 0.1.1",
-    "### Post-merge 0.1.1 public-install qualification",
-    "6. After the 0.1.1 catalog promotion merges to public `main`",
+    "The later public catalog promotion merged at exact catalog-promotion revision",
+    "selecting exact published plugin 0.1.1",
+    "### Completed post-merge 0.1.1 public-install observation",
+    "6. After the public catalog promotion merged at exact catalog-promotion revision",
+    "claude plugin marketplace add firstdraft/skills",
+    "claude plugin install firstdraft@firstdraft-skills",
+    "catalog-selection JSON named npm package `@firstdraft.com/claude-code@0.1.1`",
+    "installed package manifest named that exact package and version",
+    "canonical `skills/create-full-stack-app/SKILL.md` file",
+    "`installPath` realpath equal to the installed plugin root",
+    "This closes only the fresh two-command installation path for exact selected plugin 0.1.1",
+    "### Outstanding authenticated product journey",
+    "7. The authenticated template-and-Codespace product journey remains outstanding",
     "obtain fresh explicit authorization for exactly one serialized qualification invocation",
     "Merely reading this step authorizes no marketplace registration, plugin installation, template repository, Codespace, token onboarding, Compile, Publication, destination-repository mutation, retry, or cleanup",
     "Pin the exact merged Skills SHA in the updated Drawing Board",
@@ -514,7 +567,8 @@ test("release operator and agent instructions track the candidate", async () => 
     "does not require a new pre-merge live smoke",
     "0.1.1 public-package direct-install check",
     "exact promotion head's Node 24.18.0 CI",
-    "Neither gate proves the post-merge",
+    "Neither pre-merge gate proves the post-merge",
+    "separate dated observation now proves that path for exact plugin 0.1.1 only",
   ]);
   assert.match(
     releasing,
@@ -522,11 +576,11 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     readme,
-    /staging web and worker both reported[\s\S]*?4007fc5ef0734e2fc3e3e59714919025bd73d621[\s\S]*?selected gate for promoting new catalog installs[\s\S]*?Public plugin alpha\.3 bundles CLI alpha\.2 and declares shared staging as its default endpoint[\s\S]*?only an[\s\S]*?installation that resolves that declared default to shared staging\/API 0\.2 is incompatible[\s\S]*?option-default injection[\s\S]*?auto-refresh or update behavior[\s\S]*?remain unproved[\s\S]*?fresh public\s+marketplace install and authenticated installed-Skill template-and-Codespace[\s\S]*?remain outstanding/,
+    /staging web and worker both reported[\s\S]*?4007fc5ef0734e2fc3e3e59714919025bd73d621[\s\S]*?selected gate for promoting new catalog installs[\s\S]*?Public plugin alpha\.3 bundles CLI alpha\.2 and declares shared staging as its default endpoint[\s\S]*?only an[\s\S]*?installation that resolves that declared default to shared staging\/API 0\.2 is incompatible[\s\S]*?option-default injection[\s\S]*?auto-refresh or update behavior[\s\S]*?remain unproved[\s\S]*?fresh public[\s\S]*?marketplace install of exact plugin 0\.1\.1 is now observed[\s\S]*?existing-install update behavior and authenticated[\s\S]*?template-and-Codespace discovery remain outstanding/,
   );
   assert.match(
     readme,
-    /Those exact commands succeeded for alpha\.3 on 2026-08-06[\s\S]*?Exact plugin 0\.1\.1 is published under npm `next`[\s\S]*?promotion change selects it[\s\S]*?success for 0\.1\.1 through these public catalog commands remains unobserved/,
+    /On 2026-08-06, those versionless commands resolved the then-current catalog and installed plugin alpha\.3 with bundled[\s\S]*?CLI alpha\.2[\s\S]*?On 2026-08-12, a distinct observation ran the same versionless commands against exact catalog-promotion[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?installed exact plugin 0\.1\.1 with bundled CLI 0\.1\.0[\s\S]*?fresh unauthenticated state[\s\S]*?proves neither an existing-install update nor an authenticated First[\s\S]*?Draft journey/,
   );
   assert.doesNotMatch(
     readme,
@@ -538,19 +592,19 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /exact 0\.1\.0 promotion head's Node 24\.18\.0 CI[\s\S]*?release-order rehearsal,[\s\S]*?passed without an administrative[\s\S]*?bypass[\s\S]*?durable rule remains:[\s\S]*?require the exact promotion-head job and never use an administrative bypass/,
+    /exact 0\.1\.0 promotion\s+head's Node 24\.18\.0 CI[\s\S]*?release-order rehearsal,[\s\S]*?passed without an administrative[\s\S]*?bypass[\s\S]*?durable rule remains:[\s\S]*?require the exact promotion-head job and never use an administrative bypass/,
   );
   assert.match(
     releasing,
-    /At that historical revision,[\s\S]*?resolved a catalog that selected exact plugin 0\.1\.0[\s\S]*?current[\s\S]*?promotion change instead selects exact published plugin 0\.1\.1/,
+    /At that historical revision,[\s\S]*?resolved a catalog that selected exact plugin 0\.1\.0[\s\S]*?later[\s\S]*?public catalog promotion merged at exact catalog-promotion revision[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?selecting exact published plugin 0\.1\.1/,
   );
   assert.match(
     releasing,
-    /Post-merge 0\.1\.1 public-install qualification[\s\S]*?catalog resolves exact plugin 0\.1\.1[\s\S]*?`create-full-stack-app` Skill is discoverable[\s\S]*?bundled CLI reports exact version 0\.1\.0/,
+    /Completed post-merge 0\.1\.1 public-install observation[\s\S]*?fetched marketplace clone remained clean at that exact HEAD[\s\S]*?catalog-selection JSON named[\s\S]*?@firstdraft\.com\/claude-code@0\.1\.1[\s\S]*?installed package manifest named that exact package and[\s\S]*?version[\s\S]*?canonical `skills\/create-full-stack-app\/SKILL\.md` file and declared it[\s\S]*?`installPath` realpath equal to the[\s\S]*?installed plugin root[\s\S]*?bundled CLI reported exact version 0\.1\.0 with empty stderr[\s\S]*?Outstanding authenticated product journey/,
   );
   assert.match(
     releasing,
-    /selected live discovery smoke remains a 0\.1\.0 gate[\s\S]*?same CLI 0\.1\.0 and service API 0\.2[\s\S]*?requires no service mutation[\s\S]*?does not require a new pre-merge live[\s\S]*?smoke[\s\S]*?0\.1\.1 public-package direct-install check[\s\S]*?exact[\s\S]*?Node 24\.18\.0 CI[\s\S]*?Neither gate proves the post-merge[\s\S]*?two-command public[\s\S]*?installation path/,
+    /selected live discovery smoke remains a 0\.1\.0 gate[\s\S]*?same CLI 0\.1\.0 and service API 0\.2[\s\S]*?requires no service mutation[\s\S]*?does not require a new pre-merge live[\s\S]*?smoke[\s\S]*?0\.1\.1 public-package direct-install check[\s\S]*?exact[\s\S]*?Node 24\.18\.0 CI[\s\S]*?Neither pre-merge gate proves the post-merge[\s\S]*?two-command public installation path[\s\S]*?separate dated observation now proves that path for exact plugin 0\.1\.1[\s\S]*?does not replace any authenticated product-journey or full-v14 gate/,
   );
   assert.match(
     releasing,
@@ -566,7 +620,7 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /For any later qualification after this rollout[\s\S]*?explicit approval for its own lane-scoped window[\s\S]*?notice, start, affected-user disposition, rollback, and completion criteria[\s\S]*?stop all other and new operator-controlled Compile and Publication invocations in the qualification lane[\s\S]*?Permit only[\s\S]*?single separately authorized qualification invocation[\s\S]*?serialized from start through retained outcome[\s\S]*?Public-plugin traffic to shared staging may continue as unattributed capacity activity[\s\S]*?current service runbook's drift and stop rules[\s\S]*?exact web, worker, queue, catalog, and installation state[\s\S]*?read-only[\s\S]*?fresh explicit authorization naming the exact rollback revisions and catalog action[\s\S]*?completion evidence before declaring the window closed[\s\S]*?Do not presume that API 0\.1 or plugin[\s\S]*?alpha\.3 is the current rollback target[\s\S]*?outstanding public path in step 6 fails[\s\S]*?catalog repoint[\s\S]*?one reviewable source change[\s\S]*?\.claude-plugin\/marketplace\.json[\s\S]*?test\/repository\.test\.mjs[\s\S]*?test\/release-compatibility\.test\.mjs[\s\S]*?README\.md[\s\S]*?RELEASING\.md[\s\S]*?active version and endpoint resolution[\s\S]*?verified-affected installation[\s\S]*?explicitly accept its continuing outage[\s\S]*?Selecting a prior immutable catalog package is not reusing that SemVer for different bytes/,
+    /For any later qualification after this rollout[\s\S]*?explicit approval for its own lane-scoped window[\s\S]*?notice, start, affected-user disposition, rollback, and completion criteria[\s\S]*?stop all other and new operator-controlled Compile and Publication invocations in the qualification lane[\s\S]*?Permit only[\s\S]*?single separately authorized qualification invocation[\s\S]*?serialized from start through retained outcome[\s\S]*?Public-plugin traffic to shared staging may continue as unattributed capacity activity[\s\S]*?current service runbook's drift and stop rules[\s\S]*?exact web, worker, queue, catalog, and installation state[\s\S]*?read-only[\s\S]*?fresh explicit authorization naming the exact rollback revisions and catalog action[\s\S]*?completion evidence before declaring the window closed[\s\S]*?Do not presume that API 0\.1 or plugin[\s\S]*?alpha\.3 is the current rollback target[\s\S]*?later authorized authenticated path in step 7 fails[\s\S]*?do not infer that the[\s\S]*?failure requires a catalog mutation[\s\S]*?catalog repoint[\s\S]*?one reviewable source[\s\S]*?change[\s\S]*?\.claude-plugin\/marketplace\.json[\s\S]*?test\/repository\.test\.mjs[\s\S]*?test\/release-compatibility\.test\.mjs[\s\S]*?README\.md[\s\S]*?RELEASING\.md[\s\S]*?active version and endpoint resolution[\s\S]*?verified-affected installation[\s\S]*?explicitly accept its continuing outage[\s\S]*?Selecting a prior immutable catalog package is not reusing that SemVer for different bytes/,
   );
   assert.doesNotMatch(
     releasing,
