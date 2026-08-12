@@ -49,6 +49,11 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
   materialization smoke at service revision `6002be2685542fedf515879f940b97ad73b1a469` migrates, schema-loads, boots,
   and exercises its generated applications locally. Neither establishes live GitHub, staging, deployment, or
   representative-user operation.
+- A dated
+  [staging discovery smoke](https://github.com/firstdraft/skills/blob/e0212cad0a89a8b0e38678e371389085f6ddc254/evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
+  separately records one OAuth/App-backed live Publication to a fresh private repository at exact compatible
+  service, CLI, Skills, and package identities. It does not establish independent repository-byte verification,
+  singleton replay, a full v14 qualification, arbitrary application support, deployment, or this candidate's bytes.
 - A
   [dated field report](https://github.com/firstdraft/firstdraft/blob/16b056a6f55eb92cb6e5a6e02abd58e84b47abd5/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md)
   records one staff-prepared local observation using a fresh Claude Code Opus/high session, the exact
@@ -62,8 +67,8 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
 - The field observation is not a reproducible agent evaluation, authenticated operation, representative-user
   evidence, a published release, physical-device or iPad proof, deployment, or production evidence. Neither it nor
   the controlled smoke widens the admitted graph or proves cancellation.
-- There is no Plan GET or pull operation, complete semantic analyzer, proven live Publish path, arbitrary
-  application generation, deployment workflow, or support for the rest of the Foundation Plan.
+- There is no Plan GET or pull operation, complete semantic analyzer, arbitrary application generation, deployment
+  workflow, or support for the rest of the Foundation Plan.
 
 The bundled schema was copied from `docs/architecture/design/foundation-plan.schema.json` at landed server
 activation revision `35ad070beb36c66dc6480f36b33767caaed160a9` and has SHA-256
@@ -129,7 +134,8 @@ Ordinary replacement must retain the Project's target and target-profile pin.
 - Subject UUIDs share one cross-kind namespace within a Project. The same UUID may appear in a different Project.
 - Keep the UUID when a subject is renamed or coherently moved without changing kind. Update every affected typed
   path in the same complete candidate.
-- Mint a new UUID locally with `firstdraft generate uuid` for a genuinely new or replacement concept, then write
+- Mint a new UUID locally by running `generate uuid` through the Skill resolver for a genuinely new or replacement
+  concept, then write
   it into the complete Plan before push. Subject UUIDs are client-authored input at this boundary: the server
   validates and preserves them; it does not assign a missing identity or replace a submitted one. Never reuse UUIDs
   from examples in a real Plan.
@@ -228,8 +234,9 @@ For every supported type, the importer retains schema-valid combinations of `sub
 `redact_from_logs`.
 
 An `enum` Field additionally requires `settings.values`, a nonempty array in stable order. Each value
-has its own `subject_uuid`, owner-local `key`, and human-facing `name`; mint an ID for each new value with
-`firstdraft generate uuid`, or use `firstdraft generate uuid --count <n>` for several values. Set the optional
+has its own `subject_uuid`, owner-local `key`, and human-facing `name`; mint an ID for each new value by running
+`generate uuid` through the Skill resolver, or use `generate uuid --count <n>` through that resolver for several
+values. Set the optional
 `settings.ordinal` to `true` only when the order carries semantic rank. Omit it when the order is presentational
 because omission and `false` are equivalent. Preserve a value's
 UUID through renames, reordering, and coherent moves between enum Fields. An enum literal default contains the

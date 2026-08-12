@@ -9,9 +9,10 @@ Help the user turn a product idea into one coherent Foundation Plan candidate, u
 incremental local edits. First Draft diagnostics can inform that conversation at any point. When the candidate is
 as good as the agent and user can currently make it, the CLI can submit the exact current snapshot, require valid
 whole-graph analysis, and request the prepared Compile contract whose successful Publication is intended to create
-one private GitHub repository. Live GitHub publication remains outside the current evidence boundary.
+one private GitHub repository. One dated staging discovery observed that OAuth/App-backed create-and-push path at
+exact prior identities; it does not prove arbitrary applications, this plugin candidate, or a current invocation.
 
-This workflow is experimental and targets the coordinated plugin 0.1.0, CLI 0.1.0, and service-contract 0.2
+This workflow is experimental and targets the coordinated plugin 0.1.1, CLI 0.1.0, and service-contract 0.2
 contract. These bundled bytes do not establish whether that exact combination is currently available from the
 public catalog; verify availability independently before advising an installation change. The current Compiler is a
 narrow experiment, not arbitrary application generation. It admits ten scalar Field kinds; ordinary single-target
@@ -43,24 +44,25 @@ evidence boundary.
 
 ## Verify the local capability
 
-Work from the root of the project the Plan describes. Run:
+Work from the root of the project the Plan describes. Prefer an executable project wrapper at
+`./bin/firstdraft`; otherwise use the installed `firstdraft`. Run this block literally. Do not collapse multiword
+CLI invocations into scalar shell variables: shells differ in word splitting and may pass the whole line as one
+unknown command.
 
 ```sh
-firstdraft --version
-firstdraft generate --help
-firstdraft generate uuid --help
-firstdraft generate application-key --help
-firstdraft plan --help
-firstdraft plan init --help
-firstdraft plan push --help
-firstdraft plan status --help
-firstdraft plan compile --help
-firstdraft compilation --help
-firstdraft compilation status --help
-firstdraft compilation download --help
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+if [ -x ./bin/firstdraft ]; then command -v ./bin/firstdraft; else command -v firstdraft; fi
+firstdraft_cli --version
+firstdraft_cli --help
 ```
 
-Require these public commands:
+Require the command to resolve, the version probe to succeed with one exact `0.1.0` output line and no other output,
+and top-level help that lists `generate`, `plan`, and `compilation`. Existing cross-repository contract tests own the
+exhaustive leaf-command matrix, including separate stdout and stderr assertions; startup should not rediscover it
+through a synthesized shell loop. Every later executable block defines the same resolver because agent shell calls
+do not share functions or variables.
+
+The compatible CLI supplies these public commands:
 
 - `generate uuid` and `generate application-key`;
 - `plan init`, `plan push`, `plan status`, and zero-flag `plan compile`; and
@@ -68,16 +70,20 @@ Require these public commands:
 
 There is no public `plan publish`, `plan subject-id`, or `plan compile --output` contract. A marketplace installation
 of this Skill supplies its exact compatible CLI dependency. Do not install, download, or upgrade another CLI
-automatically. If a required command is missing or reports a different version, report the exact installation
-mismatch and stop rather than approximating it with direct HTTP. Recommend a marketplace install, reinstall, or
-update only after independently verifying that the catalog serves this exact plugin 0.1.0 and CLI 0.1.0 pair,
+automatically. If the command does not resolve, required top-level help is missing, or the version differs, report
+the resolved path and observed output and stop rather than approximating it with direct HTTP. Recommend a marketplace
+install, reinstall, or update only after independently verifying that the catalog serves this exact plugin 0.1.1 and
+CLI 0.1.0 pair,
 and use only a separately verified marketplace procedure. Otherwise report that no verified public repair is known.
 
 `.firstdraft/state.json` is private CLI-owned concurrency state. Do not print, paste, commit, or treat it as
-agent-authored Plan content. For an installed plugin, let the user configure the API token through the plugin's
-sensitive configuration prompt; it is authoritative and an ambient `FIRSTDRAFT_API_TOKEN` is deliberately ignored
-when plugin configuration supplies the API URL. `FIRSTDRAFT_API_TOKEN` remains available to a standalone CLI. Never
-ask the user to paste a token or place it on a command line.
+agent-authored Plan content. Credentialed CLI commands read `FIRSTDRAFT_API_TOKEN` and any initial
+`FIRSTDRAFT_API_URL` override from the ambient environment; Claude Code does not pass plugin user configuration to
+an executable merely because its `bin/` directory is on the Bash tool's `PATH`. If the project supplies a
+`firstdraft` wrapper, follow that workspace's documented credential bootstrap. In a First Draft Drawing Board, that
+wrapper owns the ignored `.env` contract for Claude and Codex; never read, print, bypass, or commit that file.
+Otherwise, let the user configure the ambient variables outside the conversation. Never ask the user to paste a
+token into chat or place it directly on a command line.
 
 ## Initialize or resume the local Plan
 
@@ -85,13 +91,20 @@ If `.firstdraft/` does not exist, establish or propose the application name. Let
 the user cares about a specific key:
 
 ```sh
-firstdraft plan init --name "<name>"
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli plan init --name "<name>"
 ```
 
-The command also accepts `--application-key <key>` alone or both options together. Use
-`firstdraft generate application-key --name "<name>"` to preview the deterministic derived key. If initialization
-fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/` directory rather
-than deleting or reinitializing over it.
+The command also accepts `--application-key <key>` alone or both options together. To preview the deterministic
+derived key, run:
+
+```sh
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli generate application-key --name "<name>"
+```
+
+If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
+directory rather than deleting or reinitializing over it.
 
 If `.firstdraft/` already exists, confirm with project-relative metadata that `foundation-plan.json` and
 `state.json` are regular and readable. Read `.firstdraft/foundation-plan.json`; inspect private state only for a
@@ -114,7 +127,8 @@ gaps, unless the user asks about feasibility in that opening request. Do not tur
 requirement. When support later becomes relevant, state the current Scaffold boundary precisely: it admits the
 smallest public index and the exact create/update, show-projection, return-destination, and destroy extensions named
 above, with every generated route public and unauthenticated. Successful Publication is intended to create a private
-GitHub repository, but live publication remains unproved and Compile does not deploy the application.
+GitHub repository. A dated staging discovery observed one such live Publication at exact prior identities; every
+new invocation still requires its own validated terminal success. Compile does not deploy the application.
 
 Edit `.firstdraft/foundation-plan.json` throughout the interview. There is no requirement to resolve every
 material choice before writing locally. Aim to keep one complete document representing the current candidate, but
@@ -124,8 +138,9 @@ diagnostics.
 For each genuinely new independently mutable subject, generate a fresh UUIDv7:
 
 ```sh
-firstdraft generate uuid
-firstdraft generate uuid --count <n>
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli generate uuid
+firstdraft_cli generate uuid --count <n>
 ```
 
 Write the generated IDs into `subject_uuid`. Preserve an existing subject's UUID through renames and coherent
@@ -139,9 +154,16 @@ capability-friendly candidate beside it.
 
 ## Submit snapshots and use diagnostics
 
-Run `firstdraft plan push` whenever diagnostics would help. The CLI always submits the current whole file as exact
-bytes. It is fine to submit incomplete, invalid, unchanged, or frequently revised snapshots; the agent decides when
-feedback is useful. There is no separate permission, batching, or changed-byte prerequisite.
+Run this whenever diagnostics would help:
+
+```sh
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli plan push
+```
+
+The CLI always submits the current whole file as exact bytes. It is fine to submit incomplete, invalid, unchanged,
+or frequently revised snapshots; the agent decides when feedback is useful. There is no separate permission,
+batching, or changed-byte prerequisite.
 
 On success, retain the returned `project.graph_version` and `foundation_plan.source_sha256` as the identity of that
 accepted snapshot. The standalone status command reads the service's current analysis rather than accepting an
@@ -150,7 +172,8 @@ expected graph-version argument.
 After a successful push, use:
 
 ```sh
-firstdraft plan status --wait
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli plan status --wait
 ```
 
 Compare both returned graph versions with the successful push. If status is for a lower graph version, repeat this
@@ -180,7 +203,8 @@ When the candidate expresses one coherent first-release slice and the remaining 
 or nonblocking, run:
 
 ```sh
-firstdraft plan compile
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli plan compile
 ```
 
 Invoking this command is the request to Compile; do not add another confirmation ceremony. It pushes the exact
@@ -225,7 +249,7 @@ and cannot repoint it to a later Head:
 - while `plan compile` is polling a Publication, keep following that retained work and never launch a concurrent
   Compile or another start request for the Project;
 - after that invocation exits on a Publication outcome-unknown, unavailable status, timeout, or interruption, wait
-  and rerun the same zero-flag `firstdraft plan compile` with exact unchanged Plan bytes. This
+  and rerun the same zero-flag `plan compile` through the resolver with exact unchanged Plan bytes. This
   conditional singleton replay resumes or reconciles the retained Publication; it does not create another
   Compilation, repository, or push. There is no separate public Publication status command;
 - `invalid_publication_status` is a protocol mismatch that unchanged replay cannot repair. Preserve the Plan bytes
@@ -243,8 +267,9 @@ actually exposed one. Do not invent an ID or recover one from private state or u
 without starting work:
 
 ```sh
-firstdraft compilation status <compilation-id>
-firstdraft compilation status <compilation-id> --wait
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli compilation status <compilation-id>
+firstdraft_cli compilation status <compilation-id> --wait
 ```
 
 Without `--wait`, status performs one metadata-only read. With it, the CLI polls the same retained Compilation for
@@ -254,7 +279,8 @@ up to ten minutes. `failed` and `cancelled` are successfully read terminal state
 When local source is useful, choose an absent destination beneath an existing real directory:
 
 ```sh
-firstdraft compilation download <compilation-id> --output <absent-path>
+firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli compilation download <compilation-id> --output <absent-path>
 ```
 
 Download performs one status read, requires `succeeded`, retrieves one artifact, verifies retained-Head and

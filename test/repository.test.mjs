@@ -225,6 +225,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     foundationIosCoreRevision,
     freshAgentEvidenceBaseline,
     freshAgentSkillBaseline,
+    catalogPromotionBaseline,
   ]);
   const skillSource = await readFile(
     path.join(skillDirectory, "SKILL.md"),
@@ -309,10 +310,20 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   }
 });
 
-test("immutable plugin teaching surface records the accepted lag", async () => {
-  const [readme, releasing] = await Promise.all([
+test("immutable plugin teaching lag is corrected by the patch candidate", async () => {
+  const [readme, releasing, candidateSkill, candidateModelingGuide] = await Promise.all([
     readFile(path.join(repository, "README.md"), "utf8"),
     readFile(path.join(repository, "RELEASING.md"), "utf8"),
+    readFile(path.join(skillsDirectory, portableSkillName, "SKILL.md"), "utf8"),
+    readFile(
+      path.join(
+        skillsDirectory,
+        portableSkillName,
+        "references",
+        "modeling-guide.md",
+      ),
+      "utf8",
+    ),
   ]);
   const publishedSkill = gitBlobAtRevision(
     pluginReleaseBaseline,
@@ -326,13 +337,17 @@ test("immutable plugin teaching surface records the accepted lag", async () => {
   for (const source of [publishedSkill, publishedModelingGuide]) {
     assert.match(source, /live [Pp]ublication remains unproved/);
   }
+  for (const source of [candidateSkill, candidateModelingGuide]) {
+    assert.doesNotMatch(source, /live [Pp]ublication remains unproved/);
+    assert.match(source, /dated staging discovery/);
+  }
   assert.match(
     readme,
-    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` and modeling guide[\s\S]*?live Publication remains unproved[\s\S]*?does not disable `firstdraft plan[\s\S]*?compile`[\s\S]*?explicitly accepted[\s\S]*?documentation limitation[\s\S]*?future plugin version[\s\S]*?installed teaching surface[\s\S]*?fully current[\s\S]*?full v14 qualification gaps/,
+    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` and modeling guide[\s\S]*?live Publication remains unproved[\s\S]*?does not disable `firstdraft plan[\s\S]*?compile`[\s\S]*?explicitly accepted[\s\S]*?documentation limitation[\s\S]*?current unpublished 0\.1\.1 candidate corrects that teaching surface[\s\S]*?full v14 qualification gap/,
   );
   assert.match(
     releasing,
-    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` and[\s\S]*?modeling guide[\s\S]*?live Publication remains unproved[\s\S]*?does not disable[\s\S]*?`firstdraft plan compile`[\s\S]*?explicitly accepted 0\.1\.0 documentation limitation[\s\S]*?fully current[\s\S]*?future plugin version[\s\S]*?full v14 gaps remain separate/,
+    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` and[\s\S]*?modeling guide[\s\S]*?live Publication remains unproved[\s\S]*?does not disable[\s\S]*?`firstdraft plan compile`[\s\S]*?explicitly accepted 0\.1\.0 documentation limitation[\s\S]*?current 0\.1\.1 candidate makes that correction[\s\S]*?full v14 gap/,
   );
 });
 
@@ -685,13 +700,13 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.1.0",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.1.0");
-  assert.equal(installableManifest.version, "0.1.0");
+  assert.equal(packageTemplate.version, "0.1.1");
+  assert.equal(installableManifest.version, "0.1.1");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, [
     "./skills/create-full-stack-app",
   ]);
-  assert.equal(installableManifest.userConfig.api_token.sensitive, true);
+  assert.equal(installableManifest.userConfig, undefined);
 
   const repositoryFiles = trackedFiles();
   const checkoutComponents = repositoryFiles
@@ -754,6 +769,14 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.match(
     packageReadme,
     /plugin-root `bin\/` directory are added to the Bash tool's `PATH`/,
+  );
+  assert.match(
+    packageReadme,
+    /user configuration is not delivered to an executable merely because the plugin's `bin\/` directory is\s+on a Bash tool's `PATH`/,
+  );
+  assert.match(
+    packageReadme,
+    /ambient `FIRSTDRAFT_API_URL` and `FIRSTDRAFT_API_TOKEN` contract[\s\S]*?issue #27/,
   );
   assert.match(
     packageReadme,
@@ -2318,6 +2341,63 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
 });
 
+test("local capability check is shell-portable and uses the project wrapper", async () => {
+  const skillSource = await readFile(
+    path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
+    "utf8",
+  );
+  const capabilitySection = skillSource.match(
+    /## Verify the local capability([\s\S]*?)## Initialize or resume the local Plan/,
+  );
+  assert(capabilitySection, "SKILL.md: missing local capability section");
+
+  assert.match(
+    capabilitySection[1],
+    /firstdraft_cli\(\) \{ if \[ -x \.\/bin\/firstdraft \]; then \.\/bin\/firstdraft "\$@"; else firstdraft "\$@"; fi; \}\nif \[ -x \.\/bin\/firstdraft \]; then command -v \.\/bin\/firstdraft; else command -v firstdraft; fi\nfirstdraft_cli --version\nfirstdraft_cli --help/,
+  );
+  assert.match(
+    capabilitySection[1],
+    /version probe to succeed with one exact `0\.1\.0` output line and no other output[\s\S]*?top-level help that lists `generate`, `plan`, and `compilation`[\s\S]*?separate stdout and stderr assertions/,
+  );
+  assert.match(
+    capabilitySection[1],
+    /Do not collapse multiword\s+CLI invocations into scalar shell variables[\s\S]*?cross-repository contract tests own the\s+exhaustive leaf-command matrix/,
+  );
+  assert.doesNotMatch(
+    capabilitySection[1],
+    /firstdraft (?:generate|plan|compilation)(?: [^\n]+)? --help/,
+  );
+
+  const shellBlocks = [...skillSource.matchAll(/```sh\n([\s\S]*?)```/g)].map(
+    ([, body]) => body,
+  );
+  const firstDraftBlocks = shellBlocks.filter((body) =>
+    /firstdraft_cli (?:generate|plan|compilation)/.test(body),
+  );
+  assert(firstDraftBlocks.length > 0);
+  for (const body of firstDraftBlocks) {
+    assert.match(
+      body,
+      /^firstdraft_cli\(\) \{ if \[ -x \.\/bin\/firstdraft \]; then \.\/bin\/firstdraft "\$@"; else firstdraft "\$@"; fi; \}/,
+    );
+    assert.doesNotMatch(body, /^firstdraft (?:generate|plan|compilation)/m);
+  }
+
+  for (const relativePath of canonicalClaudePluginSkillFiles.filter((file) =>
+    file.endsWith(".md"),
+  )) {
+    const source = await readFile(
+      path.join(skillsDirectory, "create-full-stack-app", relativePath),
+      "utf8",
+    );
+    assert.doesNotMatch(
+      source,
+      /`firstdraft (?:generate|plan|compilation)\b/,
+      `${relativePath}: operational CLI prose must preserve the Skill resolver`,
+    );
+  }
+});
+
 test("analysis status guidance follows the pinned CLI contract", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
   const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
@@ -2340,15 +2420,15 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert(pushSection, "SKILL.md: missing snapshot submission section");
   assert.match(
     skillSource,
-    /Require these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and zero-flag `plan compile`/,
+    /The compatible CLI supplies these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and zero-flag `plan compile`/,
   );
   assert.match(
     pushSection[1],
-    /Run `firstdraft plan push` whenever diagnostics would help[\s\S]*?incomplete, invalid, unchanged, or frequently revised snapshots[\s\S]*?no separate permission, batching, or changed-byte prerequisite/,
+    /firstdraft_cli plan push[\s\S]*?incomplete, invalid, unchanged,[\s\S]*?or frequently revised snapshots[\s\S]*?no separate permission,[\s\S]*?batching, or changed-byte prerequisite/,
   );
   assert.match(
     pushSection[1],
-    /On success, retain[\s\S]*?firstdraft plan status --wait/,
+    /On success, retain[\s\S]*?firstdraft_cli plan status --wait/,
   );
   assert.match(
     pushSection[1],
@@ -2457,7 +2537,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /dated field report records the server, CLI, runtime,\s+Skill,\s+analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
   );
   const skillEvidence = skillSource.match(
-    /This workflow is experimental and targets the coordinated plugin 0\.1\.0, CLI 0\.1\.0, and service-contract 0\.2\s+contract\.[\s\S]*?bundled bytes do not establish whether that exact combination is currently available from the\s+public catalog; verify availability independently before advising an installation change\.([\s\S]*?)## Load the relevant references/,
+    /This workflow is experimental and targets the coordinated plugin 0\.1\.1, CLI 0\.1\.0, and service-contract 0\.2\s+contract\.[\s\S]*?bundled bytes do not establish whether that exact combination is currently available from the\s+public catalog; verify availability independently before advising an installation change\.([\s\S]*?)## Load the relevant references/,
   );
   const foundationPlanEvidence = foundationPlanReference.match(
     /## Current evidence boundary([\s\S]*?)The bundled schema was copied/,
@@ -2473,7 +2553,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     skillSource,
-    /Recommend a marketplace install, reinstall, or\s+update only after independently verifying that the catalog serves this exact plugin 0\.1\.0 and CLI 0\.1\.0 pair,[\s\S]*?Otherwise report that no verified public repair is known/,
+    /Recommend a marketplace\s+install, reinstall, or update only after independently verifying that the catalog serves this exact plugin 0\.1\.1 and\s+CLI 0\.1\.0 pair,[\s\S]*?Otherwise report that no verified public repair is known/,
   );
   assert.match(
     foundationPlanEvidence[1],
@@ -3545,7 +3625,7 @@ test("initialization recovery consumes the prepared CLI error envelope", async (
   assert(initializationReference, "diagnostics reference: missing initialization boundary");
   assert.match(
     initializationSection[1],
-    /If initialization\s+fails, follow the stable error in the recovery reference[\s\S]*?Preserve any partial `\.firstdraft\/` directory/,
+    /If initialization\s+fails,\s+follow the stable error in the recovery reference[\s\S]*?Preserve any partial `\.firstdraft\/`\s+directory/,
   );
   assert.match(
     initializationSection[1],

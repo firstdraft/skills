@@ -102,9 +102,11 @@ The immutable plugin 0.1.0 package was built from Skills revision
 conservative statement that live Publication remains unproved. The later bounded OAuth/App-backed live
 create-and-push observation does not alter those published bytes. That wording does not disable `firstdraft plan
 compile`; it understates evidence established after package publication. Treat it as an explicitly accepted
-documentation limitation of plugin 0.1.0. A future plugin version must correct the packaged wording and pass current
-release qualification before the installed teaching surface is called fully current. This limitation does not close
-the fresh public-install, authenticated template-and-Codespace, or full v14 qualification gaps.
+documentation limitation of plugin 0.1.0. The current unpublished 0.1.1 candidate corrects that teaching surface,
+makes its CLI startup check portable across `sh` and `zsh`, and consistently prefers a repository-owned wrapper.
+It remains unpromoted source until its exact package bytes are separately authorized, published, and selected by the
+catalog. This limitation and patch do not close the fresh public-install, authenticated template-and-Codespace, or
+full v14 qualification gaps.
 The 0.1.0 CLI's
 zero-flag `plan compile` command pushes the exact current Plan, waits for analysis of that accepted graph generation,
 and invokes the internal GitHub Publication lifecycle only for a valid unchanged candidate. Public `plan publish`
@@ -179,15 +181,15 @@ compatible CLI without requiring Claude Code to install transitive npm dependenc
 The marketplace catalog uses Claude Code's documented `npm` plugin source and names exact
 `@firstdraft.com/claude-code@0.1.0`. The package's registry identity, matching staging web and worker revision, and
 the user-selected Movie Catalog discovery-promotion gate are reconciled in the dated smoke above. That observation
-supported the catalog promotion but does not prove that the two public installation commands resolve 0.1.0 or that the
-template-and-Codespace journey succeeds. The installable manifest asks Claude Code
-for the staging API URL and a sensitive API token. Claude stores
-sensitive configuration in secure storage and exports
-plugin options only to plugin subprocesses. The adapter maps those options to the CLI's environment without printing
-them. Users should create the token in First Draft's browser UI and enter it in Claude's configuration prompt, never
-paste it into an agent conversation or command line. Installed-plugin configuration is authoritative: when it
-supplies the API URL, the adapter deliberately ignores any ambient `FIRSTDRAFT_API_TOKEN` so a credential cannot
-cross API origins. The environment variable remains a standalone-CLI configuration path.
+supported the catalog promotion. Published plugin 0.1.0 asks Claude Code for the staging API URL and a sensitive API
+token, but that user configuration is not delivered to an executable merely because the plugin's `bin/` directory is
+on a Bash tool's `PATH`. Reloading the plugin or restarting Claude therefore does not bridge that boundary.
+
+The current unpublished 0.1.1 candidate removes the unused prompt and makes the bundled adapter a transparent
+launcher for the ambient `FIRSTDRAFT_API_URL` and `FIRSTDRAFT_API_TOKEN` contract. A Drawing Board supplies those
+credentials to Claude and Codex through its repository wrapper and ignored `.env`; other workspaces must configure
+the variables outside the agent conversation. Never place a token directly in chat or a command line. A future
+Claude-native secure bridge remains tracked in [issue #27](https://github.com/firstdraft/skills/issues/27).
 
 The root `firstdraft` manifest remains a checkout-local development path and uses the non-release version `0.0.0`.
 From a checkout, validate the marketplace and checkout manifests without installing either one:
@@ -201,10 +203,10 @@ The official [marketplace documentation](https://code.claude.com/docs/en/plugin-
 documents npm plugin sources and notes that installed plugins are copied into Claude Code's cache. The official
 [plugin reference](https://code.claude.com/docs/en/plugins-reference#file-locations-reference) documents that
 executables in a plugin-root `bin/` directory are added to the Bash tool's `PATH`. Its
-[user-configuration section](https://code.claude.com/docs/en/plugins-reference#user-configuration) documents
-sensitive `userConfig` values and their `CLAUDE_PLUGIN_OPTION_*` subprocess environment variables. These claims
-were rechecked on 2026-08-05. Public installation of the prior alpha.3 plugin with its alpha.2 CLI was observed in
-isolated Claude Code 2.1.223 state on 2026-08-06.
+[user-configuration section](https://code.claude.com/docs/en/plugins-reference#user-configuration) limits sensitive
+configuration delivery to plugin-associated subprocesses such as hooks and configured MCP or LSP servers; it does
+not make every executable discovered through Bash a credentialed plugin subprocess. Public installation of the prior
+alpha.3 plugin with its alpha.2 CLI was observed in isolated Claude Code 2.1.223 state on 2026-08-06.
 
 For checkout-local development, start one Claude Code session without registering a marketplace:
 
@@ -220,12 +222,8 @@ claude plugin install firstdraft@firstdraft-skills
 ```
 
 Those exact commands succeeded for alpha.3 on 2026-08-06. The exact 0.1.0 tarball is published under npm `next`, and
-public `main` now selects it, but success through these public catalog commands remains unobserved. The next check is
-an isolated public 0.1.0 install. After that, use the updated Drawing Board template to create a repository and
-fresh Codespace, launch `claude`, make a plain-English application request, and confirm the expected fresh private
-repository. The earlier isolated lane was not
-logged in, so it did not prove model-backed Skill invocation, token onboarding, staging compatibility, or the
-product journey. The historical
+public `main` now selects it, but success through these public catalog commands remains unobserved. This unpublished
+0.1.1 candidate does not change that evidence boundary. The historical
 2026-08-04 source-only install report remains evidence for its recorded revision. A dated
 [vendored-CLI smoke](evidence/2026-08-05-claude-plugin-vendored-cli-smoke.md) records the local npm-source assembly,
 the rejected transitive-dependency design, and successful bare-command discovery. See

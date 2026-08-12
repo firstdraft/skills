@@ -5,9 +5,9 @@ in a real Project.
 
 ## Empty starter
 
-`firstdraft plan init` creates this valid starting point from `--name`, `--application-key`, or both. Name-only
-initialization derives the key; key-only initialization derives the display name. Use
-`firstdraft generate application-key --name "Oscar Party"` to preview the deterministic derived key. This is the
+Running `plan init` through the Skill resolver creates this valid starting point from `--name`, `--application-key`,
+or both. Name-only initialization derives the key; key-only initialization derives the display name. Run
+`generate application-key --name "Oscar Party"` through that resolver to preview the deterministic derived key. This is the
 smallest subset accepted by the reviewed conditional PUT.
 
 ```json

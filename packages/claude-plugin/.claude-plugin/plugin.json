@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "firstdraft",
   "displayName": "First Draft",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Author a Foundation Plan with your user and compile a bounded Rails and iPhone application",
   "author": {
     "name": "First Draft",
@@ -18,21 +18,5 @@
   ],
   "skills": [
     "./skills/create-full-stack-app"
-  ],
-  "userConfig": {
-    "api_url": {
-      "type": "string",
-      "title": "First Draft API URL",
-      "description": "The First Draft service used for Plan analysis and Compilation",
-      "required": true,
-      "default": "https://staging.firstdraft.com"
-    },
-    "api_token": {
-      "type": "string",
-      "title": "First Draft API token",
-      "description": "A token created in First Draft after signing in",
-      "sensitive": true,
-      "required": true
-    }
-  }
+  ]
 }
