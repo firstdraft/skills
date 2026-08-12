@@ -5,9 +5,10 @@ Portable Agent Skills for working with [First Draft](https://github.com/firstdra
 This repository is experimental. The current `rails-sketch/2026-08` path has bounded local execution evidence.
 First Draft's committed
 [controlled product-journey harness](https://github.com/firstdraft/firstdraft/blob/8ebfc2ed82a610e63f47eb985c23ab7e634fe94e/script/compilation_http_cli_smoke)
-reproducibly drives the pinned successor CLI through loopback Rails and real Solid Queue to exact-byte push, valid
-analysis, one product Compile, one successful Publication against a strict fake GitHub remote, retained Compilation
-status, and historical download after the local Plan changes. Its final two local runs each produced one Project,
+reproducibly drives exact historical reviewed CLI revision `f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, version
+`0.1.0-alpha.2`, through loopback Rails and real Solid Queue to exact-byte push, valid analysis, one product Compile,
+one successful Publication against a strict fake GitHub remote, retained Compilation status, and historical download
+after the local Plan changes. Its final two local runs each produced one Project,
 one Compilation, one Publication, an exact two-attempt fake-GitHub ledger for repository creation followed by
 artifact publication, and a 194-file, 542,894-byte artifact with
 distinct submitted-Head and canonical-Plan digests and matching authored order in the emitted web and iPhone
@@ -74,8 +75,8 @@ complete candidate closed.
 A dated public-install observation records Claude plugin `@firstdraft.com/claude-code@0.1.0-alpha.3` and its bundled
 CLI `@firstdraft.com/cli@0.1.0-alpha.2` as public experimental prereleases. The coordinated ordinary releases now
 exist under protected tags and npm `next`: plugin `@firstdraft.com/claude-code@0.1.0` at `claude-v0.1.0`, and CLI
-`@firstdraft.com/cli@0.1.0` at `v0.1.0`. The public catalog at this exact `main` revision,
-`e0212cad0a89a8b0e38678e371389085f6ddc254`, selects plugin 0.1.0. npm `latest` remains alpha.3 for the plugin and
+`@firstdraft.com/cli@0.1.0` at `v0.1.0`. The public catalog at catalog-promotion revision
+`e0212cad0a89a8b0e38678e371389085f6ddc254` selects plugin 0.1.0. npm `latest` remains alpha.3 for the plugin and
 alpha.2 for the CLI; current registry and catalog state remain release-time read-only checks. A separate dated
 [`@firstdraft.com/claude-code@0.1.0` publication observation](evidence/2026-08-09-claude-plugin-0.1.0-release.md)
 binds its protected tag, successful publication workflow, registry identity, provenance presence, and exact
@@ -97,16 +98,27 @@ compatible service, Skills, CLI, and package identities to one valid AnalysisRun
 OAuth/App-backed Publication to a fresh private repository. For plugin 0.1.0, that PAT-less observation satisfies
 the narrower discovery-promotion gate selected for this catalog change. It does not claim independent
 repository-byte verification, replay, a full v14 qualification, or the post-promotion template-and-Codespace path.
+The successful Compilation ran in the separately billed Standard Render Compilation One-Off. The persistent Standard
+Solid Queue worker ran Publication coordination and all three recorded Publication attempts; these are distinct
+execution paths.
 The immutable plugin 0.1.0 package was built from Skills revision
-`b3e53a240aaf79a776538e9b1410689d8a4e79ee`. Its packaged `SKILL.md` and modeling guide retain the pre-smoke,
-conservative statement that live Publication remains unproved. The later bounded OAuth/App-backed live
-create-and-push observation does not alter those published bytes. That wording does not disable `firstdraft plan
-compile`; it understates evidence established after package publication. Treat it as an explicitly accepted
-documentation limitation of plugin 0.1.0. The current unpublished 0.1.1 candidate corrects that teaching surface,
-makes its CLI startup check portable across `sh` and `zsh`, and consistently prefers a repository-owned wrapper.
-It remains unpromoted source until its exact package bytes are separately authorized, published, and selected by the
-catalog. This limitation and patch do not close the fresh public-install, authenticated template-and-Codespace, or
-full v14 qualification gaps.
+`b3e53a240aaf79a776538e9b1410689d8a4e79ee`. Its packaged `SKILL.md` retains two pre-smoke negatives: the introduction
+says live GitHub publication remains outside the evidence boundary, and its later Scaffold guidance says live
+publication remains unproved. The packaged modeling guide repeats the live-Publication negative. Packaged
+`references/foundation-plan-019.md` separately retains the composite negative that there is no proven live Publish
+path, and ambiguously calls the CLI used by the old harness "reviewed" without identifying it as exact revision
+`f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, version `0.1.0-alpha.2`. The later bounded OAuth/App-backed live
+create-and-push observation and independent exact harness identity do not alter those published bytes. The four
+Publication/Publish negatives do not disable `firstdraft plan compile`; they understate evidence established after
+package publication. Treat all five as explicitly accepted documentation limitations of plugin 0.1.0. The current
+unpublished 0.1.1 candidate corrects the four Publication/Publish negatives in canonical source but retains
+`foundation-plan-019.md`'s ambiguous "packed reviewed CLI" attribution. Treat that attribution as an acknowledged
+current-candidate limitation. Correcting it would change package bytes and therefore must update the recorded
+deterministic digest and be separately qualified. The candidate also makes its CLI startup check portable across
+`sh` and `zsh` and consistently prefers a repository-owned wrapper. It remains unpromoted source until its exact
+package bytes are separately authorized, published, and selected by the catalog. The remaining attribution
+limitation and the patch do not close the fresh public-install, authenticated template-and-Codespace, or full v14
+qualification gaps.
 The 0.1.0 CLI's
 zero-flag `plan compile` command pushes the exact current Plan, waits for analysis of that accepted graph generation,
 and invokes the internal GitHub Publication lifecycle only for a valid unchanged candidate. Public `plan publish`
@@ -136,11 +148,13 @@ require service API contract `>= 0.2.0` and `< 0.3.0`. Publishing the CLI under 
 contract or upgrade an installed plugin. At the discovery-smoke observation, staging web and worker both reported
 exact API 0.2 service revision `4007fc5ef0734e2fc3e3e59714919025bd73d621`, while the public catalog still named
 alpha.3. The successful smoke establishes the selected gate for promoting new catalog installs to compatible plugin
-0.1.0. Because public plugin alpha.3 bundles CLI alpha.2 and defaults to shared staging, API 0.2 activation interrupts
-existing alpha.3 installations until each receives the compatible 0.1.0 plugin. Catalog promotion does not update
-existing installations. A fresh public marketplace install and authenticated installed-Skill template-and-Codespace
-discovery remain outstanding post-promotion observations, and affected existing alpha.3 installations still require
-a separately verified update or an explicitly accepted follow-up.
+0.1.0. Public plugin alpha.3 bundles CLI alpha.2 and declares shared staging as its default endpoint, but only an
+existing alpha.3 installation that resolves that declared default to shared staging/API 0.2 is incompatible at this
+protocol boundary. Actual option-default injection and Claude Code auto-refresh or update behavior for an installed
+alpha.3 copy remain unproved; do not generalize affected status to every installed alpha.3 copy. A fresh public
+marketplace install and authenticated installed-Skill template-and-Codespace discovery remain outstanding
+post-promotion observations. Any alpha.3 installation verified as affected still requires a separately verified
+update or an explicitly accepted follow-up.
 
 Beginning with ordinary 0.1.0, pre-1.0 component versions use a minor bump for a breaking compatibility-line
 change and a patch bump for an otherwise backward-compatible change. Versions are never aliased. The npm `next`

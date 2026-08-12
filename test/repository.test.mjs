@@ -310,20 +310,36 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   }
 });
 
-test("immutable plugin teaching lag is corrected by the patch candidate", async () => {
-  const [readme, releasing, candidateSkill, candidateModelingGuide] = await Promise.all([
+test("immutable plugin teaching lag distinguishes fixed and retained claims", async () => {
+  const candidateSkillPath = path.join(
+    skillsDirectory,
+    portableSkillName,
+    "SKILL.md",
+  );
+  const candidateModelingGuidePath = path.join(
+    skillsDirectory,
+    portableSkillName,
+    "references",
+    "modeling-guide.md",
+  );
+  const candidateFoundationPlanReferencePath = path.join(
+    skillsDirectory,
+    portableSkillName,
+    "references",
+    "foundation-plan-019.md",
+  );
+  const [
+    readme,
+    releasing,
+    candidateSkill,
+    candidateModelingGuide,
+    candidateFoundationPlanReference,
+  ] = await Promise.all([
     readFile(path.join(repository, "README.md"), "utf8"),
     readFile(path.join(repository, "RELEASING.md"), "utf8"),
-    readFile(path.join(skillsDirectory, portableSkillName, "SKILL.md"), "utf8"),
-    readFile(
-      path.join(
-        skillsDirectory,
-        portableSkillName,
-        "references",
-        "modeling-guide.md",
-      ),
-      "utf8",
-    ),
+    readFile(candidateSkillPath, "utf8"),
+    readFile(candidateModelingGuidePath, "utf8"),
+    readFile(candidateFoundationPlanReferencePath, "utf8"),
   ]);
   const publishedSkill = gitBlobAtRevision(
     pluginReleaseBaseline,
@@ -332,6 +348,10 @@ test("immutable plugin teaching lag is corrected by the patch candidate", async 
   const publishedModelingGuide = gitBlobAtRevision(
     pluginReleaseBaseline,
     "skills/create-full-stack-app/references/modeling-guide.md",
+  ).toString("utf8");
+  const publishedFoundationPlanReference = gitBlobAtRevision(
+    pluginReleaseBaseline,
+    "skills/create-full-stack-app/references/foundation-plan-019.md",
   ).toString("utf8");
 
   for (const source of [publishedSkill, publishedModelingGuide]) {
@@ -342,12 +362,26 @@ test("immutable plugin teaching lag is corrected by the patch candidate", async 
     assert.match(source, /dated staging discovery/);
   }
   assert.match(
+    publishedFoundationPlanReference,
+    /no Plan GET or pull operation[\s\S]*?proven live Publish path/,
+  );
+  assert.match(
+    publishedFoundationPlanReference,
+    /controlled product-journey smoke[\s\S]*?8ebfc2ed82a610e63f47eb985c23ab7e634fe94e[\s\S]*?packed reviewed[\s\S]*?CLI/,
+  );
+  assert.doesNotMatch(candidateFoundationPlanReference, /proven live Publish path/);
+  assert.match(
+    candidateFoundationPlanReference,
+    /controlled product-journey smoke[\s\S]*?8ebfc2ed82a610e63f47eb985c23ab7e634fe94e[\s\S]*?packed reviewed\s+CLI/,
+  );
+  assert(!candidateFoundationPlanReference.includes(historicalCliContractBaseline));
+  assert.match(
     readme,
-    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` and modeling guide[\s\S]*?live Publication remains unproved[\s\S]*?does not disable `firstdraft plan[\s\S]*?compile`[\s\S]*?explicitly accepted[\s\S]*?documentation limitation[\s\S]*?current unpublished 0\.1\.1 candidate corrects that teaching surface[\s\S]*?full v14 qualification gap/,
+    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` retains two pre-smoke negatives[\s\S]*?live GitHub publication remains outside the evidence boundary[\s\S]*?later Scaffold guidance[\s\S]*?publication remains unproved[\s\S]*?packaged modeling guide repeats the live-Publication negative[\s\S]*?`references\/foundation-plan-019\.md`[\s\S]*?no proven live Publish[\s\S]*?path[\s\S]*?old harness "reviewed"[\s\S]*?exact revision[\s\S]*?f55edffc9e88924f9a4c95f41c4d0bc9b72422f8[\s\S]*?`0\.1\.0-alpha\.2`[\s\S]*?four[\s\S]*?Publication\/Publish negatives do not disable `firstdraft plan compile`[\s\S]*?Treat all five[\s\S]*?current[\s\S]*?unpublished 0\.1\.1 candidate corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?acknowledged[\s\S]*?current-candidate limitation[\s\S]*?change package bytes[\s\S]*?recorded[\s\S]*?deterministic digest[\s\S]*?separately qualified[\s\S]*?full v14[\s\S]*?qualification gaps/,
   );
   assert.match(
     releasing,
-    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` and[\s\S]*?modeling guide[\s\S]*?live Publication remains unproved[\s\S]*?does not disable[\s\S]*?`firstdraft plan compile`[\s\S]*?explicitly accepted 0\.1\.0 documentation limitation[\s\S]*?current 0\.1\.1 candidate makes that correction[\s\S]*?full v14 gap/,
+    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` retains[\s\S]*?two pre-smoke negatives[\s\S]*?live GitHub publication outside the evidence boundary[\s\S]*?later[\s\S]*?Scaffold guidance says live publication remains unproved[\s\S]*?packaged modeling guide repeats the live-Publication[\s\S]*?negative[\s\S]*?`references\/foundation-plan-019\.md`[\s\S]*?no proven live Publish path[\s\S]*?old harness "reviewed"[\s\S]*?exact revision[\s\S]*?f55edffc9e88924f9a4c95f41c4d0bc9b72422f8[\s\S]*?`0\.1\.0-alpha\.2`[\s\S]*?four Publication\/Publish negatives do not[\s\S]*?disable `firstdraft plan compile`[\s\S]*?Treat all five[\s\S]*?current 0\.1\.1 candidate corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?acknowledged[\s\S]*?current-candidate limitation[\s\S]*?change package bytes[\s\S]*?recorded[\s\S]*?deterministic digest[\s\S]*?separately qualified[\s\S]*?full v14 gaps/,
   );
 });
 
@@ -2524,7 +2558,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert(readme.includes(foundationIosCoreArchiveDigest));
   assert.match(
     readme,
-    /committed[\s\S]*?controlled product-journey harness[\s\S]*?exact-byte push[\s\S]*?one product Compile[\s\S]*?one successful Publication against a strict fake GitHub remote[\s\S]*?historical download after the local Plan changes/,
+    /committed[\s\S]*?controlled product-journey harness[\s\S]*?exact-byte push[\s\S]*?one product Compile[\s\S]*?one successful Publication against a strict fake GitHub remote[\s\S]*?historical download\s+after the local Plan changes/,
   );
   assert.match(
     readme,
@@ -2572,7 +2606,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     foundationPlanEvidence[1],
-    /controlled product-journey smoke[\s\S]*?produced its recorded runs at service revision[\s\S]*?loopback Rails and real Solid Queue[\s\S]*?194-file two-Entity\s+materialization[\s\S]*?strict fake[\s\S]*?later\s+materialization smoke at service revision/,
+    /controlled product-journey smoke[\s\S]*?produced its recorded runs at service revision[\s\S]*?loopback\s+Rails and real Solid Queue[\s\S]*?194-file two-Entity\s+materialization[\s\S]*?strict fake[\s\S]*?later\s+materialization smoke at service revision/,
   );
   assert(
     foundationPlanEvidence[1].includes(
