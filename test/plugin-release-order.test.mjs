@@ -149,7 +149,7 @@ test("prospective release order rejects incoherent current identities", () => {
   );
 });
 
-test("prospective reconciliation reads npm, fetched tags, and the catalog", async () => {
+test("catalog reconciliation reads npm, fetched tags, and the catalog", async () => {
   const invocations = [];
   const compatibilitySource = await readFile(
     new URL("../release/compatibility.json", import.meta.url),
@@ -167,26 +167,34 @@ test("prospective reconciliation reads npm, fetched tags, and the catalog", asyn
         return {
           status: 0,
           stderr: "",
-          stdout: "claude-v0.1.0-alpha.3\nclaude-v0.1.0\n",
+          stdout: "claude-v0.1.0-alpha.3\nclaude-v0.1.0\nclaude-v0.1.1\n",
         };
       }
       return {
         status: 0,
         stderr: "",
-        stdout: JSON.stringify([...candidate.publishedVersions, "0.1.0"]),
+        stdout: JSON.stringify([
+          ...candidate.publishedVersions,
+          "0.1.0",
+          "0.1.1",
+        ]),
       };
     },
   });
 
   assert.equal(result.candidateVersion, "0.1.1");
-  assert.deepEqual(result.catalogVersions, ["0.1.0"]);
-  assert.deepEqual(result.taggedVersions, ["0.1.0-alpha.3", "0.1.0"]);
-  assert.equal(result.releaseState, "prospective");
-  assert.equal(invocations.length, 2);
+  assert.deepEqual(result.catalogVersions, ["0.1.1"]);
+  assert.deepEqual(result.taggedVersions, ["0.1.0-alpha.3", "0.1.0", "0.1.1"]);
+  assert.equal(result.releaseState, "catalog");
+  assert.equal(invocations.length, 3);
   assert.deepEqual(invocations[1][1], [
     "for-each-ref",
     "--format=%(refname:strip=3)",
     "refs/release-check/tags/claude-v*",
+  ]);
+  assert.deepEqual(invocations[2][1], [
+    "show",
+    "refs/release-check/tags/claude-v0.1.1:release/compatibility.json",
   ]);
 });
 

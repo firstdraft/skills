@@ -377,11 +377,11 @@ test("immutable plugin teaching lag distinguishes fixed and retained claims", as
   assert(!candidateFoundationPlanReference.includes(historicalCliContractBaseline));
   assert.match(
     readme,
-    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` retains two pre-smoke negatives[\s\S]*?live GitHub publication remains outside the evidence boundary[\s\S]*?later Scaffold guidance[\s\S]*?publication remains unproved[\s\S]*?packaged modeling guide repeats the live-Publication negative[\s\S]*?`references\/foundation-plan-019\.md`[\s\S]*?no proven live Publish[\s\S]*?path[\s\S]*?old harness "reviewed"[\s\S]*?exact revision[\s\S]*?f55edffc9e88924f9a4c95f41c4d0bc9b72422f8[\s\S]*?`0\.1\.0-alpha\.2`[\s\S]*?four[\s\S]*?Publication\/Publish negatives do not disable `firstdraft plan compile`[\s\S]*?Treat all five[\s\S]*?current[\s\S]*?unpublished 0\.1\.1 candidate corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?acknowledged[\s\S]*?current-candidate limitation[\s\S]*?change package bytes[\s\S]*?recorded[\s\S]*?deterministic digest[\s\S]*?separately qualified[\s\S]*?full v14[\s\S]*?qualification gaps/,
+    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` retains two pre-smoke negatives[\s\S]*?live GitHub publication remains outside the evidence boundary[\s\S]*?later Scaffold guidance[\s\S]*?publication remains unproved[\s\S]*?packaged modeling guide repeats the live-Publication negative[\s\S]*?`references\/foundation-plan-019\.md`[\s\S]*?no proven live Publish[\s\S]*?path[\s\S]*?old harness "reviewed"[\s\S]*?exact revision[\s\S]*?f55edffc9e88924f9a4c95f41c4d0bc9b72422f8[\s\S]*?`0\.1\.0-alpha\.2`[\s\S]*?four[\s\S]*?Publication\/Publish negatives do not disable `firstdraft plan compile`[\s\S]*?Treat all five[\s\S]*?Published[\s\S]*?plugin 0\.1\.1 corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?acknowledged[\s\S]*?published-package limitation[\s\S]*?change immutable package bytes[\s\S]*?new[\s\S]*?SemVer[\s\S]*?recorded deterministic digest[\s\S]*?separate qualification[\s\S]*?full v14 qualification gaps/,
   );
   assert.match(
     releasing,
-    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` retains[\s\S]*?two pre-smoke negatives[\s\S]*?live GitHub publication outside the evidence boundary[\s\S]*?later[\s\S]*?Scaffold guidance says live publication remains unproved[\s\S]*?packaged modeling guide repeats the live-Publication[\s\S]*?negative[\s\S]*?`references\/foundation-plan-019\.md`[\s\S]*?no proven live Publish path[\s\S]*?old harness "reviewed"[\s\S]*?exact revision[\s\S]*?f55edffc9e88924f9a4c95f41c4d0bc9b72422f8[\s\S]*?`0\.1\.0-alpha\.2`[\s\S]*?four Publication\/Publish negatives do not[\s\S]*?disable `firstdraft plan compile`[\s\S]*?Treat all five[\s\S]*?current 0\.1\.1 candidate corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?acknowledged[\s\S]*?current-candidate limitation[\s\S]*?change package bytes[\s\S]*?recorded[\s\S]*?deterministic digest[\s\S]*?separately qualified[\s\S]*?full v14 gaps/,
+    /immutable plugin 0\.1\.0 package[\s\S]*?b3e53a240aaf79a776538e9b1410689d8a4e79ee[\s\S]*?packaged `SKILL\.md` retains[\s\S]*?two pre-smoke negatives[\s\S]*?live GitHub publication outside the evidence boundary[\s\S]*?later[\s\S]*?Scaffold guidance says live publication remains unproved[\s\S]*?packaged modeling guide repeats the live-Publication[\s\S]*?negative[\s\S]*?`references\/foundation-plan-019\.md`[\s\S]*?no proven live Publish path[\s\S]*?old harness "reviewed"[\s\S]*?exact revision[\s\S]*?f55edffc9e88924f9a4c95f41c4d0bc9b72422f8[\s\S]*?`0\.1\.0-alpha\.2`[\s\S]*?four Publication\/Publish negatives do not[\s\S]*?disable `firstdraft plan compile`[\s\S]*?Treat all five[\s\S]*?Published plugin 0\.1\.1 corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?acknowledged[\s\S]*?published-package limitation[\s\S]*?change immutable package bytes[\s\S]*?new[\s\S]*?SemVer[\s\S]*?recorded deterministic digest[\s\S]*?separate qualification[\s\S]*?full v14 gaps/,
   );
 });
 
@@ -727,11 +727,11 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.equal(marketplace.name, claudeMarketplaceName);
   assert.equal(marketplace.plugins.length, 1);
   assert.equal(marketplace.plugins[0].name, claudePluginName);
-  assert.equal(marketplace.plugins[0].version, "0.1.0");
+  assert.equal(marketplace.plugins[0].version, "0.1.1");
   assert.deepEqual(marketplace.plugins[0].source, {
     source: "npm",
     package: "@firstdraft.com/claude-code",
-    version: "0.1.0",
+    version: "0.1.1",
     registry: "https://registry.npmjs.org/",
   });
   assert.equal(packageTemplate.version, "0.1.1");

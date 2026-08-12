@@ -55,7 +55,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withMarketplaceDrift = structuredClone(documents);
-  withMarketplaceDrift.marketplace.plugins[0].version = "0.1.1";
+  withMarketplaceDrift.marketplace.plugins[0].version = "0.1.0";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withMarketplaceDrift),
     /marketplace plugin version must match the marketplace package source/,
@@ -181,6 +181,8 @@ test("release operator and agent instructions track the candidate", async () => 
     directPackageEvidence,
     pluginReleaseEvidence,
     directPackageReleaseEvidence,
+    pluginPatchReleaseEvidence,
+    directPackagePatchEvidence,
     discoverySmokeEvidence,
   ] = await Promise.all([
     readJson("release/compatibility.json"),
@@ -191,6 +193,8 @@ test("release operator and agent instructions track the candidate", async () => 
     readText("evidence/2026-08-07-direct-package-alpha3-check.md"),
     readText("evidence/2026-08-09-claude-plugin-0.1.0-release.md"),
     readText("evidence/2026-08-09-direct-package-0.1.0-check.md"),
+    readText("evidence/2026-08-12-claude-plugin-0.1.1-release.md"),
+    readText("evidence/2026-08-12-direct-package-0.1.1-check.md"),
     readText("evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md"),
   ]);
   const catalogPlugin = marketplace.plugins.find(
@@ -210,10 +214,10 @@ test("release operator and agent instructions track the candidate", async () => 
     compareSemanticVersions(compatibility.version, catalogPlugin.version) >= 0,
     "the marketplace catalog must not lead the release candidate",
   );
-  assert.equal(catalogPlugin.version, "0.1.0");
+  assert.equal(catalogPlugin.version, "0.1.1");
   assert.match(
     releasing,
-    /current unpublished patch candidate version is `0\.1\.1`[\s\S]*?public catalog remains on immutable plugin 0\.1\.0/,
+    /current published patch version is `0\.1\.1`[\s\S]*?published under npm `next`[\s\S]*?marketplace source[\s\S]*?names that immutable version[\s\S]*?does not[\s\S]*?prove the post-merge installation path/,
   );
   assert.match(
     releasing,
@@ -225,22 +229,22 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /ordinary releases now exist under protected tags and npm `next`[\s\S]*?claude-v0\.1\.0[\s\S]*?v0\.1\.0[\s\S]*?public[\s\S]*?catalog at catalog-promotion revision[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selects plugin 0\.1\.0[\s\S]*?`latest` remains alpha\.3 for the plugin and alpha\.2 for the CLI/,
+    /ordinary releases now exist under protected tags and npm `next`[\s\S]*?claude-v0\.1\.0[\s\S]*?claude-v0\.1\.1[\s\S]*?v0\.1\.0[\s\S]*?historical public catalog at[\s\S]*?catalog-promotion revision[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?`latest` remains[\s\S]*?alpha\.3 for the plugin[\s\S]*?marketplace[\s\S]*?names exact published version 0\.1\.1/,
   );
   assertTextOrder(releasing, [
     "## Current 0.1.1 patch flow",
-    "1. Resolve clean, non-shallow checkouts",
-    "2. Run the complete repository check and exact CLI contract",
-    "3. After source integration, pin the exact merged Skills SHA in Drawing Board",
-    "4. A human explicitly decides whether to authorize",
-    "5. After authorization, publish 0.1.1 under `next`",
-    "6. Prepare a separate marketplace change from 0.1.0 to published 0.1.1",
+    "1. Clean, non-shallow checkouts resolved exact Skills",
+    "2. The complete repository and CLI-contract checks passed",
+    "3. Skills source integrated at `263326a47a502b56af7780093988c6b860b2d5d2`",
+    "4. A human explicitly authorized",
+    "5. The protected tag and npm publication completed under `next`",
+    "6. This separate marketplace change moves exact package selection from 0.1.0 to published 0.1.1",
     "do not make the post-merge observation a circular pre-merge gate",
     "## Completed 0.1.0 candidate flow",
   ]);
   assert.match(
     readme,
-    /ordinary releases now[\s\S]*?protected tags and npm `next`[\s\S]*?public catalog at catalog-promotion revision[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selects plugin 0\.1\.0[\s\S]*?current[\s\S]*?unpublished 0\.1\.1 candidate corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?change package bytes[\s\S]*?recorded[\s\S]*?deterministic digest[\s\S]*?separately qualified/,
+    /ordinary releases now[\s\S]*?protected tags and npm `next`[\s\S]*?claude-v0\.1\.1[\s\S]*?historical public catalog at[\s\S]*?catalog-promotion revision[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?promotion[\s\S]*?change selects exact published plugin 0\.1\.1[\s\S]*?Published[\s\S]*?plugin 0\.1\.1 corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?change immutable package bytes[\s\S]*?new[\s\S]*?SemVer[\s\S]*?recorded deterministic digest[\s\S]*?separate qualification/,
   );
   assert.match(
     pluginReleaseEvidence,
@@ -262,6 +266,42 @@ test("release operator and agent instructions track the candidate", async () => 
     directPackageReleaseEvidence,
     /one verified registry signature and one verified attestation[\s\S]*?did\s+not authenticate or call a model[\s\S]*?configure or call First Draft[\s\S]*?exercise staging[\s\S]*?GitHub Publication[\s\S]*?change the public marketplace catalog[\s\S]*?two-command marketplace installation path/,
   );
+  for (const exactIdentity of [
+    "263326a47a502b56af7780093988c6b860b2d5d2",
+    "91b16537373ee567a2741783ce692cd9b2daadd3",
+    "31631531058",
+    "sha512-imSYruwBnSgCTttXzBjHIpPQaBV7lo9T1JlthBDrngzYUM/rDw8n68lpTOFrdBxnrn2ZTzlwYk9kHc6YpbE8xw==",
+    "520772f0b1acba6ae015198ba8fd36f38bbf3f85",
+    "800e9ebd63843c7c680810979c35ade37de31d5e203e89a75a09f80d3399d656",
+  ]) {
+    assert(pluginPatchReleaseEvidence.includes(exactIdentity));
+  }
+  assert.match(
+    pluginPatchReleaseEvidence,
+    /registry package contains 33 files[\s\S]*?one verified registry[\s\S]*?signature and one verified attestation[\s\S]*?npm `next` names `0\.1\.1`[\s\S]*?`latest` remains `0\.1\.0-alpha\.3`[\s\S]*?pre-promotion observation[\s\S]*?selected plugin 0\.1\.0/,
+  );
+  assert.match(
+    pluginPatchReleaseEvidence,
+    /establishes only the package, tag, successful workflow, digest, provenance-presence, file count, and dist-tag[\s\S]*?did not install through the public marketplace commands[\s\S]*?configure[\s\S]*?First Draft[\s\S]*?GitHub Publication[\s\S]*?move[\s\S]*?`latest`[\s\S]*?merge the catalog promotion/,
+  );
+  assert.match(
+    directPackagePatchEvidence,
+    /@firstdraft\.com\/claude-code@0\.1\.1[\s\S]*?Node[\s\S]*?v24\.18\.0[\s\S]*?npm 11\.16\.0[\s\S]*?Claude Code 2\.1\.228[\s\S]*?firstdraft@0\.1\.1[\s\S]*?skills\/create-full-stack-app\/SKILL\.md[\s\S]*?claude plugin validate --strict <plugin-root>[\s\S]*?firstdraft@inline[\s\S]*?no `userConfig` prompt[\s\S]*?exact version `0\.1\.0`[\s\S]*?top-level `--help`[\s\S]*?both `sh` and `zsh`[\s\S]*?repository-owned `bin\/firstdraft` wrapper/,
+  );
+  assert.match(
+    directPackagePatchEvidence,
+    /set no First Draft credentials and made no First Draft service call[\s\S]*?did not authenticate or call a model[\s\S]*?GitHub Publication[\s\S]*?change the\s+public marketplace catalog[\s\S]*?two-command public marketplace installation path/,
+  );
+  for (const source of [pluginPatchReleaseEvidence, directPackagePatchEvidence]) {
+    assert(!source.includes(repository));
+    assert.doesNotMatch(source, /(?:\/Users\/|\/home\/|[A-Za-z]:\\)/);
+    assert.doesNotMatch(source, /\/(?:private\/)?tmp\//);
+    assert.doesNotMatch(source, /\.firstdraft\/state\.json/);
+    assert.doesNotMatch(
+      source,
+      /(?:authorization|bearer|api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|BEGIN [A-Z ]+PRIVATE KEY)/i,
+    );
+  }
   assert.match(
     discoverySmokeEvidence,
     /Status: passed the bounded discovery-promotion gate[\s\S]*?does not claim a completed v14 qualification/,
@@ -298,7 +338,7 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     readme,
-    /staging Movie Catalog discovery smoke[\s\S]*?PAT-less observation satisfies[\s\S]*?narrower discovery-promotion gate[\s\S]*?does not claim independent[\s\S]*?repository-byte verification, replay, a full v14 qualification/,
+    /staging Movie Catalog discovery smoke[\s\S]*?For plugin 0\.1\.0,[\s\S]*?PAT-less observation satisfies[\s\S]*?narrower discovery-promotion gate[\s\S]*?does not claim independent[\s\S]*?repository-byte verification, replay, a full v14 qualification[\s\S]*?live smoke remains a 0\.1\.0 gate[\s\S]*?Plugin 0\.1\.1 retains CLI 0\.1\.0 and service API 0\.2[\s\S]*?requires no[\s\S]*?service mutation[\s\S]*?requires no new pre-merge live smoke[\s\S]*?exact 0\.1\.1[\s\S]*?direct-package check[\s\S]*?exact promotion-head Node 24\.18\.0 CI[\s\S]*?Neither proves the post-merge public installation/,
   );
   assert.match(
     releasing,
@@ -457,7 +497,10 @@ test("release operator and agent instructions track the candidate", async () => 
     "persistent Standard Solid Queue worker ran Publication coordination and all three recorded Publication attempts",
     "A GitHub PAT, independent clone or byte verification, generated-repository credential scan, and singleton replay",
     "5. After both roles and the selected 0.1.0 discovery smoke were verified, the marketplace-promotion change was merged",
-    "6. Public `main` now contains the catalog promotion",
+    "At that historical revision",
+    "the current promotion change instead selects exact published plugin 0.1.1",
+    "### Post-merge 0.1.1 public-install qualification",
+    "6. After the 0.1.1 catalog promotion merges to public `main`",
     "obtain fresh explicit authorization for exactly one serialized qualification invocation",
     "Merely reading this step authorizes no marketplace registration, plugin installation, template repository, Codespace, token onboarding, Compile, Publication, destination-repository mutation, retry, or cleanup",
     "Pin the exact merged Skills SHA in the updated Drawing Board",
@@ -466,6 +509,12 @@ test("release operator and agent instructions track the candidate", async () => 
     "make a plain-English application request",
     "expected fresh private GitHub repository",
     "The full v14 qualification remains a separate, stricter boundary",
+    "The selected live discovery smoke remains a 0.1.0 gate",
+    "same CLI 0.1.0 and service API 0.2 compatibility line",
+    "does not require a new pre-merge live smoke",
+    "0.1.1 public-package direct-install check",
+    "exact promotion head's Node 24.18.0 CI",
+    "Neither gate proves the post-merge",
   ]);
   assert.match(
     releasing,
@@ -477,7 +526,7 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     readme,
-    /Those exact commands succeeded for alpha\.3 on 2026-08-06[\s\S]*?public `main` now selects it, but success through these public catalog commands remains unobserved[\s\S]*?0\.1\.1 candidate does not change that evidence boundary/,
+    /Those exact commands succeeded for alpha\.3 on 2026-08-06[\s\S]*?Exact plugin 0\.1\.1 is published under npm `next`[\s\S]*?promotion change selects it[\s\S]*?success for 0\.1\.1 through these public catalog commands remains unobserved/,
   );
   assert.doesNotMatch(
     readme,
@@ -489,7 +538,23 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /exact promotion head's Node 24\.18\.0 CI job,[\s\S]*?release-order rehearsal,[\s\S]*?passed without an administrative[\s\S]*?bypass[\s\S]*?durable rule remains: require that exact promotion-head job and never use an administrative bypass/,
+    /exact 0\.1\.0 promotion head's Node 24\.18\.0 CI[\s\S]*?release-order rehearsal,[\s\S]*?passed without an administrative[\s\S]*?bypass[\s\S]*?durable rule remains:[\s\S]*?require the exact promotion-head job and never use an administrative bypass/,
+  );
+  assert.match(
+    releasing,
+    /At that historical revision,[\s\S]*?resolved a catalog that selected exact plugin 0\.1\.0[\s\S]*?current[\s\S]*?promotion change instead selects exact published plugin 0\.1\.1/,
+  );
+  assert.match(
+    releasing,
+    /Post-merge 0\.1\.1 public-install qualification[\s\S]*?catalog resolves exact plugin 0\.1\.1[\s\S]*?`create-full-stack-app` Skill is discoverable[\s\S]*?bundled CLI reports exact version 0\.1\.0/,
+  );
+  assert.match(
+    releasing,
+    /selected live discovery smoke remains a 0\.1\.0 gate[\s\S]*?same CLI 0\.1\.0 and service API 0\.2[\s\S]*?requires no service mutation[\s\S]*?does not require a new pre-merge live[\s\S]*?smoke[\s\S]*?0\.1\.1 public-package direct-install check[\s\S]*?exact[\s\S]*?Node 24\.18\.0 CI[\s\S]*?Neither gate proves the post-merge[\s\S]*?two-command public[\s\S]*?installation path/,
+  );
+  assert.match(
+    releasing,
+    /For the next candidate,[\s\S]*?then-current supported Claude Code CLI[\s\S]*?local validation, packed install, registry publication, or catalog source change never proves the two-command[\s\S]*?Only a separately recorded post-merge installation through the merged public catalog[\s\S]*?proves that path for the exact selected version/,
   );
   assert.match(
     releasing,
