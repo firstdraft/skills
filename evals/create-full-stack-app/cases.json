@@ -125,7 +125,7 @@
       "prompt": "The installed firstdraft CLI includes generate uuid. Add a required integer movie.runtime_minutes Field to the staged Plan for local review. Do not push it.",
       "expectations": [
         "Checks that generate uuid is available before editing the Plan.",
-        "Runs firstdraft generate uuid exactly once for the one new Field and uses the returned UUID.",
+        "Runs generate uuid through the Skill resolver exactly once for the one new Field and uses the returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
         "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
         "Does not run plan init or plan push."
@@ -149,7 +149,7 @@
       "prompt": "The installed firstdraft CLI includes generate uuid. Add a required movie.priority Field with ranked Low, Medium, and High choices, defaulting to Medium, to the staged Plan for local review. Do not push it.",
       "expectations": [
         "Checks that generate uuid is available before editing the Plan.",
-        "Runs firstdraft generate uuid --count 4 exactly once for the one new Field and its three new values, and uses every returned UUID.",
+        "Runs generate uuid --count 4 through the Skill resolver exactly once for the one new Field and its three new values, and uses every returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
         "Authors an enum Field with settings.values in low, medium, high order and settings.ordinal set to true.",
         "Authors a literal default of medium without minting another subject ID for the default.",
@@ -552,7 +552,7 @@
       "prompt": "Use First Draft to create and send a Foundation Plan for Scalar Showcase, application key scalar_showcase. Model one Movie Entity with one Field of each currently importable scalar type, using a required short_text title as its Primary Descriptor and a decimal rating defaulting to 7.5. The compatible firstdraft CLI is installed, but no JSON Schema 2020-12 validator is available. Do not install or implement one.",
       "expectations": [
         "Uses Foundation Plan 0.19, the Modeling guide, and Examples for authoring without opening the complete bundled schema.",
-        "Runs plan init with the provided application key and name, then runs firstdraft generate uuid --count 11 exactly once for one Entity and ten Fields.",
+        "Runs plan init with the provided application key and name, then runs generate uuid --count 11 through the Skill resolver exactly once for one Entity and ten Fields.",
         "Authors one Movie Entity with exactly one Field of each supported scalar type and a required movie.title Field Primary Descriptor.",
         "Authors movie.rating as a decimal with literal default value \"7.5\" as a canonical string, never the JSON number 7.5.",
         "Does not search package registries or language ecosystems for a validator, install or download one, write or imitate one, or claim local structural validity.",
@@ -856,7 +856,7 @@
       "should_trigger": true,
       "prompt": "Try to Compile the staged malformed Foundation Plan now so we can use First Draft's diagnostics.",
       "expectations": [
-        "Runs the zero-flag firstdraft plan compile product command and lets it submit the exact current file even though local JSON parsing would fail.",
+        "Runs the zero-flag plan compile product subcommand through the Skill resolver and lets it submit the exact current file even though local JSON parsing would fail.",
         "Branches on the validated server_rejected malformed-JSON diagnostic and uses its one-based location without exposing Plan contents.",
         "Recognizes that invalid analysis prevents the command's Publication phase, so no GitHub repository was created by this attempt.",
         "Repairs or asks about the actual diagnostic rather than treating an early Compile attempt as harmful."
@@ -879,7 +879,7 @@
       "prompt": "Use First Draft to Compile the staged Movie Catalog app. Its public web index, private GitHub repository, and selected iPhone client are intentional.",
       "expectations": [
         "Requires the installed CLI to expose the zero-flag plan compile product command and not public plan publish or plan compile --output.",
-        "Runs firstdraft plan compile for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
+        "Runs plan compile through the Skill resolver for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
         "Treats progress as nonterminal observational output and reports success only when stdout contains the validated private GitHub repository URL.",
         "Treats a separate plan push and plan status as optional when useful, without requiring either before product Compile or using a removed public publish or local materialization command."
       ],
@@ -1030,7 +1030,7 @@
       "expectations": [
         "Uses phase publication to recognize that the exact Plan was accepted and analyzed but repository creation may have succeeded despite the unknown response.",
         "Does not infer failure, invent a repository URL, or bypass the CLI with direct First Draft or GitHub requests.",
-        "Does not infer failure or start a concurrent command because the Project singleton may already exist, then waits and reruns the same zero-flag firstdraft plan compile with unchanged Plan bytes after the failed invocation exits so its conditional PUT can safely reconcile or resume the retained Publication."
+        "Does not infer failure or start a concurrent command because the Project singleton may already exist, then waits and reruns the same zero-flag plan compile through the Skill resolver with unchanged Plan bytes after the failed invocation exits so its conditional PUT can safely reconcile or resume the retained Publication."
       ]
     },
     {
@@ -1048,7 +1048,7 @@
       "should_trigger": true,
       "prompt": "Inspect retained Compilation 01900000-0000-7000-8000-000000000902. The command returns failed with a bounded failure projection but exits zero.",
       "expectations": [
-        "Runs firstdraft compilation status with the exact UUID and treats failed as a valid terminal resource projection despite exit status zero.",
+        "Runs compilation status through the Skill resolver with the exact UUID and treats failed as a valid terminal resource projection despite exit status zero.",
         "Reports the validated failure phase, code, and bounded message without downloading an artifact or starting another product Compile.",
         "Does not confuse the standalone status command with plan compile."
       ]
@@ -1058,7 +1058,7 @@
       "should_trigger": true,
       "prompt": "Wait for retained Compilation 01900000-0000-7000-8000-000000000902 to finish, then summarize its terminal projection.",
       "expectations": [
-        "Runs firstdraft compilation status 01900000-0000-7000-8000-000000000902 --wait and lets the CLI perform bounded sequential polling.",
+        "Runs compilation status 01900000-0000-7000-8000-000000000902 --wait through the Skill resolver and lets the CLI perform bounded sequential polling.",
         "Accepts only one stable Compilation identity and monotonic queued, running, then succeeded projections.",
         "Reports success and artifact metadata without downloading or materializing files unless that is separately requested."
       ]
@@ -1068,7 +1068,7 @@
       "should_trigger": true,
       "prompt": "Download retained successful Compilation 01900000-0000-7000-8000-000000000902 into the absent ./generated-movies directory.",
       "expectations": [
-        "Confirms the destination is absent, then runs firstdraft compilation download with the exact UUID and --output ./generated-movies.",
+        "Confirms the destination is absent, then runs compilation download through the Skill resolver with the exact UUID and --output ./generated-movies.",
         "Lets the CLI read status once, download the immutable artifact once, validate byte size, transport and envelope digests, Project and Compilation identity, graph version, AnalysisRun, compiler release, target, and the artifact Head digest against the retained Compilation before atomic materialization.",
         "Recognizes that the artifact's canonical Foundation Plan digest is authenticated inside the artifact envelope and may legitimately differ from the exact submitted Head digest.",
         "Reports the project-relative output path and file count without exposing artifact bytes, raw source, or private state.",
