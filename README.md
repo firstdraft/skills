@@ -73,13 +73,15 @@ Scaffold shapes, and gap-aware partial Compilation remain outside this boundary.
 complete candidate closed.
 
 A dated public-install observation records Claude plugin `@firstdraft.com/claude-code@0.1.0-alpha.3` and its bundled
-CLI `@firstdraft.com/cli@0.1.0-alpha.2` as public experimental prereleases. The coordinated ordinary releases now
-exist under protected tags and npm `next`: plugins `@firstdraft.com/claude-code@0.1.0` and `0.1.1` at
-`claude-v0.1.0` and `claude-v0.1.1`, and CLI `@firstdraft.com/cli@0.1.0` at `v0.1.0`. The historical public catalog at
-catalog-promotion revision `e0212cad0a89a8b0e38678e371389085f6ddc254` selected plugin 0.1.0. The public catalog
-promotion merged at exact catalog-promotion revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, selecting
-exact published plugin 0.1.1. npm `latest` remains alpha.3 for the plugin and alpha.2 for the CLI; current registry and
-catalog state remain release-time read-only checks. A separate dated
+CLI `@firstdraft.com/cli@0.1.0-alpha.2` as public experimental prereleases. Those immutable packages and their dated
+evidence remain historical release identities. The coordinated ordinary releases exist under protected tags:
+plugins `@firstdraft.com/claude-code@0.1.0` and `0.1.1` at `claude-v0.1.0` and `claude-v0.1.1`, and CLI
+`@firstdraft.com/cli@0.1.0` at `v0.1.0`. npm `next` and `latest` both select plugin 0.1.1; npm `next` and `latest` both
+select CLI 0.1.0. The historical public catalog at catalog-promotion revision
+`e0212cad0a89a8b0e38678e371389085f6ddc254` selected plugin 0.1.0. The public catalog promotion merged at exact
+catalog-promotion revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, selecting exact published plugin 0.1.1. A
+dated [stable-tag promotion observation](evidence/2026-08-12-stable-npm-promotion.md) reconciles that current registry
+and catalog state without rewriting the earlier observations. A separate dated
 [`@firstdraft.com/claude-code@0.1.0` publication observation](evidence/2026-08-09-claude-plugin-0.1.0-release.md)
 binds its protected tag, successful publication workflow, registry identity, provenance presence, and exact
 tarball SHA-256. It records the pre-promotion point when plugin 0.1.0 was under npm `next`, with npm `latest` and the
@@ -91,8 +93,8 @@ First Draft. The coordinated
 and [direct-package check](evidence/2026-08-12-direct-package-0.1.1-check.md) bind the corrected package's protected
 tag, immutable digest and provenance, strict validation, inline discovery, bundled CLI 0.1.0, and wrapper preference.
 The coordinated
-[`@firstdraft.com/cli@0.1.0` release](evidence/2026-08-07-cli-0.1.0-release.md) is separately published under `next`;
-`latest` remains alpha.2. A dated
+[`@firstdraft.com/cli@0.1.0` release](evidence/2026-08-07-cli-0.1.0-release.md) records its publication-time state under
+`next`, before the later stable-tag promotion. A dated
 [isolated public-install observation](evidence/2026-08-06-public-claude-code-plugin-install.md) confirms Claude Code
 2.1.223 could register the GitHub marketplace, install alpha.3 from npm, discover its one Skill, and run its bundled
 alpha.2 CLI. A separate dated
@@ -175,9 +177,11 @@ installed-Skill template-and-Codespace discovery remain outstanding. Any alpha.3
 still requires a separately verified update or an explicitly accepted follow-up.
 
 Beginning with ordinary 0.1.0, pre-1.0 component versions use a minor bump for a breaking compatibility-line
-change and a patch bump for an otherwise backward-compatible change. Versions are never aliased. The npm `next`
-dist-tag remains an approval-gated distribution channel that keeps this rollout from moving `latest`; it has no
-SemVer meaning and does not make 0.1.0 a prerelease.
+change and a patch bump for an otherwise backward-compatible change. Versions are never aliased. npm `next` is the
+approval-gated package-publication and qualification channel; it has no SemVer meaning and does not make an ordinary
+version a prerelease. After the required release-specific qualification, moving `latest` is a separate explicitly
+approved mutation. A stable catalog-distributed plugin release is not complete until the public catalog selects the
+exact qualified package and read-only reconciliation shows both `next` and `latest` selecting that same version.
 
 ## Skills
 
