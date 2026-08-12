@@ -164,6 +164,16 @@ const supportedFieldProperties = [
   "encrypted_at_rest",
   "redact_from_logs",
 ];
+const fieldCapabilityProperties = [
+  "required",
+  "default",
+  "notes",
+  "immutable",
+  "comparison",
+  "normalizations",
+  "encrypted_at_rest",
+  "redact_from_logs",
+];
 const supportedReferenceProperties = [
   "subject_uuid",
   "key",
@@ -738,8 +748,8 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.1.1",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.1.1");
-  assert.equal(installableManifest.version, "0.1.1");
+  assert.equal(packageTemplate.version, "0.1.2");
+  assert.equal(installableManifest.version, "0.1.2");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, [
     "./skills/create-full-stack-app",
@@ -1372,7 +1382,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     "utf8",
   );
   const documentedTypeSection = foundationPlanReference.match(
-    /A Field may use these types:\n\n([\s\S]*?)\n\nFor every supported type/,
+    /A Field may use these types:\n\n([\s\S]*?)\n\nThat is the conditional import list/,
   );
   assert(
     documentedTypeSection,
@@ -1385,18 +1395,74 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     supportedFieldTypes,
   );
 
-  const documentedPropertySection = foundationPlanReference.match(
-    /For every supported type, the importer retains schema-valid combinations of ([\s\S]*?)\.\n\nAn `enum` Field/,
+  const fieldCapabilitySection = foundationPlanReference.match(
+    /### Field capability matrix\n\n([\s\S]*?)\n\nPreserve intentional values/,
   );
   assert(
-    documentedPropertySection,
-    "foundation-plan-019.md: missing retained Field property list",
+    fieldCapabilitySection,
+    "foundation-plan-019.md: missing Field capability matrix",
+  );
+  assert.match(
+    fieldCapabilitySection[1],
+    /\| Property \| Schema \| Conditional PUT \| Current Compiler for the ten scalar kinds \|/,
+  );
+  const documentedCapabilityRows = [
+    ...fieldCapabilitySection[1].matchAll(/^\| `([^`]+)` \|.*$/gm),
+  ];
+  const documentedCapabilityProperties = documentedCapabilityRows.map(
+    (match) => match[1],
+  );
+  const capabilityRowsByProperty = new Map(
+    documentedCapabilityRows.map((match) => [match[1], match[0]]),
+  );
+  assert.deepEqual(documentedCapabilityProperties, fieldCapabilityProperties);
+  const documentedCoreProperties = foundationPlanReference.match(
+    /Every imported Field uses ([^;]+); the table covers/,
+  );
+  assert(
+    documentedCoreProperties,
+    "foundation-plan-019.md: missing retained Field core properties",
   );
   assert.deepEqual(
-    [...documentedPropertySection[1].matchAll(/`([^`]+)`/g)].map(
-      (match) => match[1],
-    ),
+    [
+      ...[...documentedCoreProperties[1].matchAll(/`([^`]+)`/g)].map(
+        (match) => match[1],
+      ),
+      ...documentedCapabilityProperties,
+    ],
     supportedFieldProperties,
+  );
+  assert.match(
+    fieldCapabilitySection[1],
+    /\| `required` \| Mandatory Boolean; write `true` or `false` \| Retained \| Both values admitted\.[^\n]*`NOT NULL`[^\n]*model validation\. \|/,
+  );
+  assert.match(
+    fieldCapabilitySection[1],
+    /\| `default` \|[^\n]*\| Retained structurally \| Any authored default blocks Compilation\. \|/,
+  );
+  assert.match(
+    fieldCapabilitySection[1],
+    /\| `notes` \| Optional nonempty string on Fields only \| Retained \|[^\n]*emits no application behavior\. \|/,
+  );
+  for (const property of [
+    "immutable",
+    "encrypted_at_rest",
+    "redact_from_logs",
+  ]) {
+    assert.match(
+      capabilityRowsByProperty.get(property),
+      /\| Retained \| Omitted or `false` admitted; `true` blocks Compilation\. \|/,
+    );
+  }
+  for (const property of ["comparison", "normalizations"]) {
+    assert.match(
+      capabilityRowsByProperty.get(property),
+      /\| Retained \| Any authored [^|]+ blocks Compilation\. \|/,
+    );
+  }
+  assert.doesNotMatch(
+    fieldCapabilitySection[1],
+    /(?:literal )?defaults? (?:can |do )?compile(?: normally)?/i,
   );
 
   const documentedEnumSection = foundationPlanReference.match(
@@ -1451,6 +1517,22 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     foundationPlanReference,
     /retention is structural, not default analysis[\s\S]*?does not prove literal compatibility[\s\S]*?Compiler lowering/,
   );
+  assert.match(
+    foundationPlanReference,
+    /`required` is not an optional scalar setting\. Every Field and Reference must state `required: true` or\s+`required: false`; omission is structurally invalid/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /schema also permits Entity `orderings` and `implicit_order_column`, but the current conditional PUT imports\s+neither[\s\S]*?Generated public indexes currently use `Model\.order\(:id\)`/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /`attachment` and `image` are schema-valid\s+Field types, but this PUT rejects them at the Field's `type` pointer and they cannot reach the current Compiler/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Keys are naming inputs, not strings the Compiler sanitizes[\s\S]*?`case` derives\s+`Case`, while `thread` derives `Thread` and collides with Ruby's existing constant[\s\S]*?human-facing `name`/,
+  );
   const documentedReferenceSection = foundationPlanReference.match(
     /A Reference retains schema-valid combinations of\s+([\s\S]*?)\. Its ordered target Entity keys/,
   );
@@ -1470,7 +1552,27 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /Compiler admits only an ordinary Reference with one target, omitted or false `one_to_one` and `immutable`[\s\S]*?post-table foreign key[\s\S]*?supports self-References and migration-order cycles/,
+    /Compiler admits only an ordinary Reference with one target, Boolean `one_to_one`, omitted or false\s+`immutable`[\s\S]*?`one_to_one: true` makes that index unique[\s\S]*?current Scaffold forms cannot accept that Reference as an input[\s\S]*?supports self-References and migration-order cycles/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /`notes` belongs only to a Field[\s\S]*?Reference objects are closed and have no `notes` property[\s\S]*?schema error rather than an importer or Compiler capability diagnostic/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /An authored direct Association is admitted[\s\S]*?An authored indirect collection\s+is admitted[\s\S]*?both underlying References must\s+be one-to-one-false[\s\S]*?per-Association shape rules, not per-Entity or\s+per-Plan quotas/,
+  );
+  assert.doesNotMatch(
+    foundationPlanReference,
+    /(?:One authored (?:direct|indirect) Association|one narrow indirect (?:Association|collection))/i,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Inputs are owner-local `short_text` Fields or forward Associations over admitted ordinary References\s+with `one_to_one: false`; optional and required References may both be inputs/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /Entity can use this mutation Scaffold only when every required Field is `short_text`[\s\S]*?required `long_text`, Boolean, date, or other scalar Field\s+still compiles without that Scaffold; if mutation routes are authored, it makes the complete candidate fail target\s+analysis rather than silently removing routes[\s\S]*?destroy extension below depends on\s+the complete mutation-and-show shape and inherits the same restriction/,
   );
   assert.match(
     foundationPlanReference,
@@ -1527,7 +1629,20 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     modelingGuide,
-    /smallest current Scaffold subset has `resource_routes: \["index"\]` and a public index[\s\S]*?exact extension adds\s+public create and update[\s\S]*?second inserts\s+public show[\s\S]*?final variant appends public destroy/,
+    /Compiler admits ordinary single-target References with Boolean `one_to_one`[\s\S]*?referenced-side `has_one` when\s+`one_to_one` is true and `has_many` otherwise[\s\S]*?both underlying References have\s+`one_to_one: false`[\s\S]*?per-Association shape rules, not a quota[\s\S]*?one-to-one Reference may compile as storage, but current Scaffold forms cannot accept it as an input/,
+  );
+  assert.doesNotMatch(modelingGuide, /one distinct indirect collection/);
+  assert.match(
+    modelingGuide,
+    /smallest current Scaffold subset has `resource_routes: \["index"\]` and a public index[\s\S]*?exact extension adds\s+public create and update[\s\S]*?second extension inserts public show[\s\S]*?final variant\s+appends public destroy/i,
+  );
+  assert.match(
+    modelingGuide,
+    /Optional and required References may both be inputs; every required\s+Field and Reference must appear in `create\.inputs`[\s\S]*?conditional-presence Validation can fit when\s+its optional ordinary Reference has `one_to_one: false` and its forward Association appears in both input lists/,
+  );
+  assert.doesNotMatch(
+    modelingGuide,
+    /Association inputs admit only\s+required References/,
   );
   assert.match(
     modelingGuide,
@@ -1597,9 +1712,40 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     supportedScalarFieldTypes.filter((type) => type !== "short_text"),
   );
 
-  const ordinalPlan = (await markdownJsonDocuments(
+  const documentedExamplePlans = await markdownJsonDocuments(
     path.join(referencesDirectory, "examples.md"),
-  )).find((document) => document?.application?.key === "ranked_tasks");
+  );
+  const scalarPlan = documentedExamplePlans.find(
+    (document) => document?.application?.key === "tasks",
+  );
+  assert(scalarPlan, "examples.md: missing scalar Field Plan");
+  assert.deepEqual(
+    scalarPlan.application.entities[0].fields.map(({ key, type, required }) => ({
+      key,
+      type,
+      required,
+    })),
+    [
+      { key: "title", type: "short_text", required: true },
+      { key: "details", type: "long_text", required: false },
+    ],
+  );
+  assert.match(
+    examples,
+    /`required` is mandatory even\s+when the value is `false`; omitting it from the optional Details Field would be structurally invalid/,
+  );
+  assert.match(
+    examples,
+    /narrow indirect collection shape\. This is not a per-Plan quota[\s\S]*?both underlying References must have\s+`one_to_one: false`/,
+  );
+  assert.match(
+    examples,
+    /conditional-presence Validation can also fit this form when its optional ordinary Reference has\s+`one_to_one: false` and the Reference's forward Association appears in both input lists/,
+  );
+
+  const ordinalPlan = documentedExamplePlans.find(
+    (document) => document?.application?.key === "ranked_tasks",
+  );
   assert(ordinalPlan, "examples.md: missing ordinal enum Plan");
   const ordinalEntity = ordinalPlan.application.entities[0];
   const ordinalField = ordinalEntity.fields.find(({ type }) => type === "enum");
@@ -2590,7 +2736,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /dated field report records the server, CLI, runtime,\s+Skill,\s+analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
   );
   const skillEvidence = skillSource.match(
-    /This workflow is experimental and targets the coordinated plugin 0\.1\.1, CLI 0\.1\.0, and service-contract 0\.2\s+contract\.[\s\S]*?bundled bytes do not establish whether that exact combination is currently available from the\s+public catalog; verify availability independently before advising an installation change\.([\s\S]*?)## Load the relevant references/,
+    /This workflow is experimental and targets the coordinated plugin 0\.1\.2, CLI 0\.1\.0, and service-contract 0\.2\s+contract\.[\s\S]*?bundled bytes do not establish whether that exact combination is currently available from the\s+public catalog; verify availability independently before advising an installation change\.([\s\S]*?)## Load the relevant references/,
   );
   const foundationPlanEvidence = foundationPlanReference.match(
     /## Current evidence boundary([\s\S]*?)The bundled schema was copied/,
@@ -2606,7 +2752,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     skillSource,
-    /Recommend a marketplace\s+install, reinstall, or update only after independently verifying that the catalog serves this exact plugin 0\.1\.1 and\s+CLI 0\.1\.0 pair,[\s\S]*?Otherwise report that no verified public repair is known/,
+    /Recommend a marketplace\s+install, reinstall, or update only after independently verifying that the catalog serves this exact plugin 0\.1\.2 and\s+CLI 0\.1\.0 pair,[\s\S]*?Otherwise report that no verified public repair is known/,
   );
   assert.match(
     foundationPlanEvidence[1],
@@ -3802,8 +3948,9 @@ async function checkSkill(skillName) {
 
   assert(frontmatter, `${skillName}: missing frontmatter`);
   const metadata = parseRestrictedFrontmatter(frontmatter[1]);
-  assert.deepEqual(Object.keys(metadata).sort(), ["description", "name"]);
+  assert.deepEqual(Object.keys(metadata).sort(), ["description", "license", "name"]);
   assert.equal(metadata.name, skillName);
+  assert.equal(metadata.license, "MIT");
   assert.match(metadata.name, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
   assert(metadata.name.length <= 64);
   assert(metadata.description.length > 0);
@@ -3868,9 +4015,9 @@ async function checkSkill(skillName) {
 
 function parseRestrictedFrontmatter(source) {
   const lines = source.split("\n");
-  assert.equal(lines.length, 2, "frontmatter must contain exactly two lines");
+  assert.equal(lines.length, 3, "frontmatter must contain exactly three lines");
 
-  const entries = ["name", "description"].map((key, index) => {
+  const entries = ["name", "description", "license"].map((key, index) => {
     const prefix = `${key}: `;
     assert(lines[index].startsWith(prefix), `expected ${key} frontmatter`);
     const rawValue = lines[index].slice(prefix.length);

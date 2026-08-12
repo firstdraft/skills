@@ -1,6 +1,6 @@
 {
   "name": "@firstdraft.com/claude-code",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "First Draft Foundation Plan authoring for Claude Code",
   "license": "MIT",
   "type": "module",

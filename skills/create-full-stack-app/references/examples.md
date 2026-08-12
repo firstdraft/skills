@@ -208,14 +208,14 @@ update inputs, and return destinations are coupled exactly as shown.
 Omit `show.projection` for descriptor-only detail. Without destroy, omit its route and definition. The base
 create/update shape omits show and returns both mutations to the same Entity's public index. Standalone show,
 Association or nested projections, cross-Entity returns, and other destroy destinations remain unsupported.
-A Reference-owned conditional-presence Validation can compile outside this form, but cannot fit these inputs:
-Association inputs currently admit only required References, while conditional presence applies to an optional
-Reference.
+A Reference-owned conditional-presence Validation can also fit this form when its optional ordinary Reference has
+`one_to_one: false` and the Reference's forward Association appears in both input lists.
 
-## One Entity and scalar Field
+## One Entity with required and optional scalar Fields
 
 This complete document is structurally valid v0.19 and accepted by the reviewed bounded importer. That does not
-prove complete semantic analysis, target support, Compilation, or generated output.
+prove complete semantic analysis, target support, Compilation, or generated output. `required` is mandatory even
+when the value is `false`; omitting it from the optional Details Field would be structurally invalid.
 
 ```json
 {
@@ -244,6 +244,13 @@ prove complete semantic analysis, target support, Compilation, or generated outp
             "name": "Title",
             "type": "short_text",
             "required": true
+          },
+          {
+            "subject_uuid": "019fac46-941f-75a3-aca3-1f30d9c838a0",
+            "key": "details",
+            "name": "Details",
+            "type": "long_text",
+            "required": false
           }
         ]
       }
@@ -252,7 +259,7 @@ prove complete semantic analysis, target support, Compilation, or generated outp
 }
 ```
 
-The Entity and Field have independent UUIDs. The `primary_descriptor` uses a typed readable path rather than a
+The Entity and Fields have independent UUIDs. The `primary_descriptor` uses a typed readable path rather than a
 UUID. The reviewed importer also accepts `boolean`, `date`, `datetime`, `decimal`, `integer`, `language_code`,
 `long_text`, `time_zone`, and `url` Fields when they use only the supported schema-valid scalar properties.
 
@@ -413,9 +420,10 @@ Association. The forward `task.project` Association is derived and therefore omi
 
 Changing the deletion behavior is a product decision. Do not choose it silently from target convention.
 
-The current Compiler also admits one narrow indirect collection. For example, if `Task` additionally owns an
-admitted ordinary `team` Reference to `Team`—whose mechanically derived forward `task.team` Association is omitted
-from the Plan—and `Project` owns the admitted `project.tasks` inverse above, Project may author:
+The current Compiler also admits a narrow indirect collection shape. This is not a per-Plan quota. For example, if
+`Task` additionally owns an admitted ordinary `team` Reference to `Team` with `one_to_one: false`—whose mechanically
+derived forward `task.team` Association is omitted from the Plan—and `Project` owns the admitted `project.tasks`
+inverse above, Project may author:
 
 ```jsonc
 {
@@ -428,5 +436,6 @@ from the Plan—and `Project` owns the admitted `project.tasks` inverse above, P
 }
 ```
 
-The generated collection is distinct. The `through` step must be an admitted referenced-side inverse and `source`
-must be an admitted mechanically derived forward Association. Other indirect paths remain unsupported.
+The generated collection is distinct. The `through` step must be an admitted referenced-side `has_many` inverse,
+and `source` must be an admitted mechanically derived forward Association; both underlying References must have
+`one_to_one: false`. Other indirect paths remain unsupported.

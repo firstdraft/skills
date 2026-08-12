@@ -17,6 +17,14 @@ import {
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
+const markdownSection = (source, heading) => {
+  const marker = `## ${heading}\n`;
+  const start = source.indexOf(marker);
+  assert.notEqual(start, -1, `missing Markdown section: ${heading}`);
+  const next = source.indexOf("\n## ", start + marker.length);
+  return source.slice(start + marker.length, next === -1 ? undefined : next);
+};
+
 test("candidate protocol defines interview coverage and complete-candidate readiness", async () => {
   const protocol = await readFile(candidateInterviewProtocolPath, "utf8");
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
@@ -43,6 +51,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
     "Interview from product meaning",
     "Ambiguity matrix",
     "Know when one complete candidate is possible",
+    "Read back and approve before Compile",
   ]) {
     assert.match(protocol, new RegExp(`^## ${heading}$`, "m"));
   }
@@ -70,6 +79,25 @@ test("candidate protocol defines interview coverage and complete-candidate readi
   assert.match(protocol, /ambiguity matrix guides the dialogue; it is not a one-message questionnaire/);
   assert.match(protocol, /criteria\s+describe readiness for a complete candidate; they do not prohibit earlier local edits or diagnostic submissions/);
   assert.doesNotMatch(protocol, /authorization gate|no-push-unchanged|batch(?:ing)? mandate/i);
+
+  const readBack = markdownSection(
+    protocol,
+    "Read back and approve before Compile",
+  ).replace(/\s+/g, " ");
+  for (const expected of [
+    "organized Entity by Entity",
+    "correct or explicitly approve that exact model",
+    "repeat the read-back for the changed candidate",
+    "without a second command-level confirmation",
+    "Do not weaken product meaning",
+    "known to be invalid",
+    "invalid analysis cannot enter Publication",
+  ]) {
+    assert(
+      readBack.includes(expected),
+      `candidate protocol read-back missing: ${expected}`,
+    );
+  }
 });
 
 test("home-inventory corpus case probes consequential ambiguity without invented answers", async () => {
@@ -150,6 +178,163 @@ test("packaged interview guidance keeps the opening turn focused on one product 
   );
 });
 
+test(
+  "packaged workflow requires one exact semantic approval before a publish-capable Compile",
+  async () => {
+    const skill = await readFile(
+      path.join(repository, "skills", "create-full-stack-app", "SKILL.md"),
+      "utf8",
+    );
+    const modelingGuide = await readFile(
+      path.join(
+        repository,
+        "skills",
+        "create-full-stack-app",
+        "references",
+        "modeling-guide.md",
+      ),
+      "utf8",
+    );
+
+    assert.match(
+      skill,
+      /targets the coordinated plugin 0\.1\.2, CLI 0\.1\.0, and service-contract 0\.2/,
+    );
+    assert.match(
+      skill,
+      /catalog serves this exact plugin 0\.1\.2 and\s+CLI 0\.1\.0 pair/,
+    );
+
+    const approvalHeading = "Read back and approve the candidate before Compile";
+    const compileHeading = "Request the Compile journey";
+    assert(
+      skill.indexOf(`## ${approvalHeading}`) <
+        skill.indexOf(`## ${compileHeading}`),
+    );
+
+    const approval = markdownSection(skill, approvalHeading).replace(
+      /\s+/g,
+      " ",
+    );
+    assert.doesNotMatch(
+      approval,
+      /plan compile (?:without|before) (?:the )?semantic approval/i,
+    );
+    for (const expected of [
+      "reread the exact current `.firstdraft/foundation-plan.json`",
+      "organized Entity by Entity",
+      "correct or explicitly approve that exact candidate",
+      "repeat the read-back for the changed candidate",
+      "do not ask for a second command-level confirmation",
+      "Do not delete, loosen, flatten, relabel, or substitute intended product meaning",
+      "explicitly requested diagnostic-only Compile",
+      "already known to be invalid",
+      "Invalid analysis cannot enter Publication",
+    ]) {
+      assert(
+        approval.includes(expected),
+        `Skill approval gate missing: ${expected}`,
+      );
+    }
+
+    const compile = markdownSection(skill, compileHeading).replace(/\s+/g, " ");
+    assert(
+      compile.includes(
+        "After the exact candidate's semantic read-back is approved",
+      ),
+    );
+    assert(compile.includes("do not add a second confirmation ceremony"));
+
+    const modeling = markdownSection(
+      modelingGuide,
+      "Prepare the pre-Compile semantic read-back",
+    ).replace(/\s+/g, " ");
+    for (const expected of [
+      "what one record of each Entity represents and its Primary Descriptor",
+      "every Field's type and required or optional status",
+      "every Reference's owner, targets, requiredness, deletion behavior, multiplicity",
+      "requested surfaces, projections, returns, and access",
+      "delegated decisions, exclusions, and deferred",
+      "correct or explicitly approve that exact model",
+      "repeat the read-back for the changed candidate",
+      "Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning",
+    ]) {
+      assert(
+        modeling.includes(expected),
+        `modeling read-back missing: ${expected}`,
+      );
+    }
+  },
+);
+
+test("pre-Compile evals separate approval, diagnostics, and execution", async () => {
+  const cases = await loadEvaluationCases();
+  const readBack = evaluationCaseById(cases, "precompile-semantic-read-back");
+  assert.equal(readBack.should_trigger, true);
+  assert.deepEqual(
+    stagedInputs(readBack).map(({ path: artifactPath, stage_as: stageAs }) => ({
+      path: artifactPath,
+      stageAs,
+    })),
+    [
+      {
+        path: "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+        stageAs: ".firstdraft/foundation-plan.json",
+      },
+      {
+        path: "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+        stageAs: ".firstdraft/state.json",
+      },
+    ],
+  );
+  assert(expectationIncludes(readBack, "semantic read-back", "Movie Entity"));
+  assert(
+    expectationIncludes(
+      readBack,
+      "correct or explicitly approve",
+      "does not run plan compile",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      readBack,
+      "does not delete, loosen, flatten, relabel, or substitute",
+    ),
+  );
+
+  const diagnostic = evaluationCaseById(
+    cases,
+    "compile-invalid-candidate-is-safe",
+  );
+  assert(
+    expectationIncludes(
+      diagnostic,
+      "known-invalid diagnostic exception",
+      "invalid analysis cannot enter Publication",
+    ),
+  );
+
+  const compile = evaluationCaseById(cases, "compile-prepared-movie-catalog");
+  assert.match(
+    compile.prompt,
+    /^I approve the exact pre-Compile semantic read-back/,
+  );
+  assert(
+    expectationIncludes(
+      compile,
+      "unambiguous approval",
+      "does not ask for a second confirmation",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      compile,
+      "stop and repeat the semantic read-back",
+      "no longer matched",
+    ),
+  );
+});
+
 test("evaluation harness exposes the representative Movie Catalog fixture", async () => {
   assert.equal(
     path.relative(repository, movieCatalogFixturePath),
@@ -166,12 +351,51 @@ test("evaluation harness exposes the representative Movie Catalog fixture", asyn
     {
       key: fixture.application.key,
       name: fixture.application.name,
-      entityKeys: fixture.application.entities.map(({ key }) => key),
+      domain: fixture.application.domain,
+      native: fixture.application.native,
+      delivery: fixture.application.delivery,
+      entities: fixture.application.entities.map((entity) => ({
+        key: entity.key,
+        name: entity.name,
+        icon: entity.icon,
+        primaryDescriptor: entity.primary_descriptor,
+        fields: entity.fields.map(({ key, name, type, required }) => ({
+          key,
+          name,
+          type,
+          required,
+        })),
+        references: entity.references || [],
+        scaffold: entity.scaffold,
+      })),
     },
     {
       key: "movie_catalog",
       name: "Movie Catalog",
-      entityKeys: ["movie"],
+      domain: "movies.example.com",
+      native: { ios: {} },
+      delivery: {},
+      entities: [
+        {
+          key: "movie",
+          name: "Movie",
+          icon: "film",
+          primaryDescriptor: { field: "movie.title" },
+          fields: [
+            {
+              key: "title",
+              name: "Title",
+              type: "short_text",
+              required: true,
+            },
+          ],
+          references: [],
+          scaffold: {
+            resource_routes: ["index"],
+            index: { authorization: "public" },
+          },
+        },
+      ],
     },
   );
 });

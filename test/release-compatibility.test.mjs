@@ -24,11 +24,11 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.1.1",
+    version: "0.1.2",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "800e9ebd63843c7c680810979c35ade37de31d5e203e89a75a09f80d3399d656",
+        "8b4c0543ccb6ff056183792ba143083d4f83107cbe7860249405763071571725",
     },
     requires: {
       api_contract: [">= 0.2.0", "< 0.3.0"],
@@ -62,7 +62,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCandidateDrift = structuredClone(documents);
-  withCandidateDrift.packageTemplate.version = "0.1.2";
+  withCandidateDrift.packageTemplate.version = "0.1.3";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCandidateDrift),
     /Expected values to be strictly equal/,
@@ -127,7 +127,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCheckoutReleaseVersion = structuredClone(documents);
-  withCheckoutReleaseVersion.checkoutManifest.version = "0.1.1";
+  withCheckoutReleaseVersion.checkoutManifest.version = "0.1.2";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCheckoutReleaseVersion),
     /must not reuse the installable plugin release version/,

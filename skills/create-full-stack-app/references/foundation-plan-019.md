@@ -21,8 +21,8 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
   compilability.
 - The reviewed conditional PUT imports empty drafts; Application domain, appearance, and native-client selections;
   and a bounded subset of Entities, ten scalar Field kinds, enum Fields with ordered values, schema-valid tagged
-  Field and Reference defaults, ordinary References and their forward Associations, direct referenced-side
-  inverses, one narrow indirect Association, representative owner-local Validations, Predicates with exact
+  Field and Reference defaults, ordinary References and their forward Associations, bounded direct referenced-side
+  inverses and indirect Association shapes, representative owner-local Validations, Predicates with exact
   Expression JSON, Field or system-Field Primary Descriptors, and the bounded public Scaffold envelope below.
 - The application analyzer and Compiler admit scalar Entities, ordinary References, the admitted inverse and
   indirect Association shapes, the first Validation subset, exact public Scaffold shapes, optional semantic Entity
@@ -142,6 +142,11 @@ Ordinary replacement must retain the Project's target and target-profile pin.
 - Typed links use readable scoped paths such as `movie.title`, `rating.movie`, and `movie.ratings`; they do not use
   UUIDs.
 
+Keys are naming inputs, not strings the Compiler sanitizes. The Rails profile derives constants, methods, tables,
+and routes with its pinned inflector, then rejects reserved or generated collisions. For example, `case` derives
+`Case`, while `thread` derives `Thread` and collides with Ruby's existing constant. Keep the product's wording in
+the human-facing `name` even when a target-safe `key` must differ; never assume the Compiler will rename it.
+
 Enum values, state-machine states and transitions, and data records are examples of identity-bearing nested
 subjects. Defaults, link-keyed assignments, ordered terms, settings, and singleton configuration inherit identity
 from their owner. A Field default has no `subject_uuid`; adding, changing, or clearing one preserves the Field's
@@ -174,6 +179,8 @@ App Schema artifact.
 - Use `null` only where the schema gives it a semantic meaning, not as structural filler.
 - For an optional scalar setting with a declared default, omission and that explicit value mean the same thing;
   examples normally omit default-valued settings.
+- `required` is not an optional scalar setting. Every Field and Reference must state `required: true` or
+  `required: false`; omission is structurally invalid.
 - Omitting a Field's `default` means it has no authored default. `{"kind":"literal","value":null}` is instead an
   authored literal-null default.
 
@@ -200,6 +207,11 @@ The prepared Compilation emits admitted web public indexes and, when selected, a
 `references`, `associations`, `predicates`, and the bounded `scaffold` described below, plus one required
 `primary_descriptor`. Fields, References, and Entities may own schema-valid `validations`; only the exact Compiler
 subset below can pass current target admission.
+
+The schema also permits Entity `orderings` and `implicit_order_column`, but the current conditional PUT imports
+neither. Authored ordering storage and implicit-order analysis elsewhere in First Draft do not widen this endpoint
+or the Compiler. Generated public indexes currently use `Model.order(:id)`; do not author either property in this
+workflow or promise that an Ordering will change list order.
 
 The smallest accepted Application remains:
 
@@ -229,9 +241,29 @@ yet supported. A Field may use these types:
 - `time_zone`
 - `url`
 
-For every supported type, the importer retains schema-valid combinations of `subject_uuid`, `key`, `name`, `type`,
-`required`, `default`, `notes`, `immutable`, `comparison`, `normalizations`, `encrypted_at_rest`, and
-`redact_from_logs`.
+That is the conditional import list, not the complete schema vocabulary. `attachment` and `image` are schema-valid
+Field types, but this PUT rejects them at the Field's `type` pointer and they cannot reach the current Compiler.
+Active Storage and image-delivery prose describes target direction, not emitted support.
+
+### Field capability matrix
+
+Read the layers from left to right. Schema validity does not imply conditional import, and successful import does
+not imply Compilation. Every imported Field uses `subject_uuid`, `key`, `name`, and `type`; the table covers the
+remaining supported cross-cutting properties.
+
+| Property | Schema | Conditional PUT | Current Compiler for the ten scalar kinds |
+| --- | --- | --- | --- |
+| `required` | Mandatory Boolean; write `true` or `false` | Retained | Both values admitted. `true` emits database `NOT NULL` plus a model validation. |
+| `default` | Closed tagged Value where the Field variant permits it | Retained structurally | Any authored default blocks Compilation. |
+| `notes` | Optional nonempty string on Fields only | Retained | Admitted as review context and round-tripped in the Plan snapshot; emits no application behavior. |
+| `immutable` | Optional Boolean; omission means `false` | Retained | Omitted or `false` admitted; `true` blocks Compilation. |
+| `comparison` | `case_insensitive` on `short_text` only | Retained | Any authored comparison blocks Compilation. |
+| `normalizations` | Ordered pipeline on text or URL Fields, with URL restrictions | Retained | Any authored pipeline blocks Compilation. |
+| `encrypted_at_rest` | Optional Boolean; omission means `false` | Retained | Omitted or `false` admitted; `true` blocks Compilation. |
+| `redact_from_logs` | Optional Boolean; omission means `false` | Retained | Omitted or `false` admitted; `true` blocks Compilation. |
+
+Preserve intentional values that the Compiler cannot emit. Report the exact output gap instead of deleting a
+default, security property, or other product meaning to obtain `valid`.
 
 An `enum` Field additionally requires `settings.values`, a nonempty array in stable order. Each value
 has its own `subject_uuid`, owner-local `key`, and human-facing `name`; mint an ID for each new value by running
@@ -270,18 +302,25 @@ A Reference retains schema-valid combinations of
 `default`, `immutable`, and `realization`. Its ordered target Entity keys are resolved during import, and the
 Project graph mechanically maintains its same-key forward Association.
 
-The Compiler admits only an ordinary Reference with one target, omitted or false `one_to_one` and `immutable`, no
-default or realization, and one of the three deletion outcomes: `restrict`, `nullify_reference`, or
-`delete_referencing_record`. It emits the same-key forward traversal, UUID foreign-key storage, nullability, an
-index, and a post-table foreign key. That post-table migration supports self-References and migration-order cycles.
-The database foreign key, not generated Association `dependent` behavior, owns target deletion.
+`notes` belongs only to a Field. Reference objects are closed and have no `notes` property, so adding one to a
+Reference is a schema error rather than an importer or Compiler capability diagnostic.
 
-One authored direct Association is admitted when it is unqualified, on the referenced side of an admitted
-Reference, and that Reference is not one-to-one. One authored indirect collection is admitted when its `through`
-step is such an inverse and its `source` step is an admitted mechanically derived forward Association. The Compiler
-emits the indirect collection with distinct traversal. Referencing-side aliases, other indirect paths, predicates,
-cardinality bounds, polymorphism, exclusive arcs, one-to-one, immutable or defaulted References, and broader
-Association shapes fail closed.
+The Compiler admits only an ordinary Reference with one target, Boolean `one_to_one`, omitted or false
+`immutable`, no default or realization, and one of the three deletion outcomes: `restrict`, `nullify_reference`, or
+`delete_referencing_record`. It emits the same-key forward traversal, UUID foreign-key storage, matching
+nullability, an index, and a post-table foreign key. `one_to_one: true` makes that index unique and adds logical
+Association uniqueness, but current Scaffold forms cannot accept that Reference as an input. The post-table
+migration supports self-References and migration-order cycles. The database foreign key, not generated Association
+`dependent` behavior, owns target deletion.
+
+An authored direct Association is admitted when it is unqualified and on the referenced side of an admitted
+Reference. It emits `has_one` for a one-to-one Reference and `has_many` otherwise. An authored indirect collection
+is admitted when its `through` step is an admitted `has_many` inverse and its `source` step is the mechanically
+derived forward Association of another admitted Reference with `one_to_one: false`; both underlying References must
+be one-to-one-false. The Compiler emits distinct traversal. These are per-Association shape rules, not per-Entity or
+per-Plan quotas. Author each reverse or indirect traversal the product needs. Referencing-side aliases, other
+indirect paths, predicates, cardinality bounds, polymorphism, exclusive arcs, immutable or defaulted References, and
+broader Association shapes fail closed.
 
 The first Rails Validation subset admits:
 
@@ -310,11 +349,17 @@ confirming that unauthenticated record exposure is intentional.
 
 One exact create/update extension requires ordered `index`, `new`, `create`, `edit`, and `update` routes; public
 `index`, `create`, and `update`; nonempty create and update inputs; and a return from each mutation to that Entity's
-public index. Inputs are owner-local `short_text` Fields or forward Associations over admitted required References.
-Every required Field and Reference must be a create input. An admitted conditional-presence Validation owner must
-be present in both input lists. A Reference input's target needs an admitted scalar Primary Descriptor. Because
-Association inputs admit only required References, a conditional-presence Validation on an optional Reference
-cannot fit this current Scaffold form subset even though that Validation can compile outside the form.
+public index. Inputs are owner-local `short_text` Fields or forward Associations over admitted ordinary References
+with `one_to_one: false`; optional and required References may both be inputs. Every required Field and Reference
+must be a create input. An admitted conditional-presence Validation owner must be present in both input lists. A
+Reference input's target needs an admitted scalar Primary Descriptor.
+
+Therefore, an Entity can use this mutation Scaffold only when every required Field is `short_text` and every
+required Reference has the admitted editable shape. A required `long_text`, Boolean, date, or other scalar Field
+still compiles without that Scaffold; if mutation routes are authored, it makes the complete candidate fail target
+analysis rather than silently removing routes. Preserve the honest requiredness and requested access, and report
+the current form gap instead of changing either merely to obtain `valid`. The destroy extension below depends on
+the complete mutation-and-show shape and inherits the same restriction.
 
 One exact show extension inserts `show` after `index`, makes it public, and otherwise retains the complete mutation
 shape. Its projection is omitted for descriptor-only detail or is a nonempty ordered list of direct owner-local

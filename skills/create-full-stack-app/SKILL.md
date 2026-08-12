@@ -1,6 +1,7 @@
 ---
 name: "create-full-stack-app"
 description: "Experimental and in development: Interviews a user, incrementally authors and revises complete First Draft Foundation Plan snapshots, submits exact Plan bytes for diagnostics, and can request the current narrow Rails web-and-iPhone Compile journey through its bundled CLI. It preserves product meaning, subject identity, private CLI state, and retained artifact provenance. Arbitrary applications, automatic deployment, Android, iPad, Accounts, notifications, and broader web or native clients are not available; preserve unsupported user intent rather than omitting it."
+license: "MIT"
 ---
 
 # Create a Full-Stack App with First Draft
@@ -12,11 +13,11 @@ whole-graph analysis, and request the prepared Compile contract whose successful
 one private GitHub repository. One dated staging discovery observed that OAuth/App-backed create-and-push path at
 exact prior identities; it does not prove arbitrary applications, this plugin candidate, or a current invocation.
 
-This workflow is experimental and targets the coordinated plugin 0.1.1, CLI 0.1.0, and service-contract 0.2
+This workflow is experimental and targets the coordinated plugin 0.1.2, CLI 0.1.0, and service-contract 0.2
 contract. These bundled bytes do not establish whether that exact combination is currently available from the
 public catalog; verify availability independently before advising an installation change. The current Compiler is a
 narrow experiment, not arbitrary application generation. It admits ten scalar Field kinds; ordinary single-target
-References; direct referenced-side inverses and one narrow indirect collection; a bounded Validation subset including
+References; direct referenced-side inverses and the narrow indirect collection shape; a bounded Validation subset including
 conditional text length; exact public web index, create/update, show-projection, return-destination, and destroy
 Scaffold shapes; optional semantic icons; and an iPhone project limited to index/navigation beneath `ios/`. Richer
 web routes do not become native detail or mutation screens. Every admitted web Scaffold route is public and
@@ -72,7 +73,7 @@ There is no public `plan publish`, `plan subject-id`, or `plan compile --output`
 of this Skill supplies its exact compatible CLI dependency. Do not install, download, or upgrade another CLI
 automatically. If the command does not resolve, required top-level help is missing, or the version differs, report
 the resolved path and observed output and stop rather than approximating it with direct HTTP. Recommend a marketplace
-install, reinstall, or update only after independently verifying that the catalog serves this exact plugin 0.1.1 and
+install, reinstall, or update only after independently verifying that the catalog serves this exact plugin 0.1.2 and
 CLI 0.1.0 pair,
 and use only a separately verified marketplace procedure. Otherwise report that no verified public repair is known.
 
@@ -197,20 +198,40 @@ partially compiled.
 `plan compile` performs its own exact-byte push and analysis wait, so a separate push is optional when the
 candidate is already ready.
 
+## Read back and approve the candidate before Compile
+
+Before the first `plan compile` that could reach valid analysis and therefore Compilation and Publication, reread
+the exact current `.firstdraft/foundation-plan.json`. Present the modeling guide's compact semantic read-back,
+organized Entity by Entity, and ask the user to correct or explicitly approve that exact candidate. Approval of one
+consequence, such as public access, iPhone output, or private repository Publication, is not approval of the complete
+semantic model.
+
+If the Plan changes after the read-back, make the requested edit and repeat the read-back for the changed candidate.
+An unambiguous approval of the just-presented exact read-back is sufficient; after that approval, do not ask for a
+second command-level confirmation.
+
+Do not delete, loosen, flatten, relabel, or substitute intended product meaning merely to make import or analysis
+green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a
+product-scope decision. Otherwise preserve the meaning, stop before Compile, and report the capability gap.
+
+This gate does not block an explicitly requested diagnostic-only Compile of an exact snapshot already known to be
+invalid from its bytes or matching diagnostics. Invalid analysis cannot enter Publication, so that attempt may
+precede semantic approval. Do not treat an unsupported assumption as proof that a candidate cannot publish.
+
 ## Request the Compile journey
 
-When the candidate expresses one coherent first-release slice and the remaining unknowns are explicitly deferred
-or nonblocking, run:
+After the exact candidate's semantic read-back is approved, when it expresses one coherent first-release slice and
+the remaining unknowns are explicitly deferred or nonblocking, run:
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
 firstdraft_cli plan compile
 ```
 
-Invoking this command is the request to Compile; do not add another confirmation ceremony. It pushes the exact
-current Plan even when unchanged, waits specifically for analysis matching that accepted push's graph version,
-and stops with structured diagnostics unless that graph is `valid`. Invalid JSON, schema errors, semantic
-diagnostics, analyzer failure, or supersession do not create a Publication.
+Invoking this command is the Compile request; do not add a second confirmation ceremony after the approved
+read-back. It pushes the exact current Plan even when unchanged, waits specifically for analysis matching that
+accepted push's graph version, and stops with structured diagnostics unless that graph is `valid`. Invalid JSON,
+schema errors, semantic diagnostics, analyzer failure, or supersession do not create a Publication.
 
 Immediately before the Publication mutation, the CLI rechecks both the accepted ETag and exact local bytes. Treat
 Compilation and GitHub Publication as separate retained stages. `compilation.status: "succeeded"` proves the
