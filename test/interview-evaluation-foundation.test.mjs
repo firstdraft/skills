@@ -142,7 +142,7 @@ test("packaged interview guidance keeps the opening turn focused on one product 
   assert.match(skill, /every generated route public and unauthenticated/);
   assert.match(
     skill,
-    /Successful Publication is intended to create a private\s+GitHub repository, but live publication remains unproved and Compile does not deploy/,
+    /Successful Publication is intended to create a private\s+GitHub repository[\s\S]*?dated staging discovery observed one such live Publication[\s\S]*?new invocation still requires its own validated terminal success[\s\S]*?Compile does not deploy/,
   );
   assert.match(
     modelingGuide,

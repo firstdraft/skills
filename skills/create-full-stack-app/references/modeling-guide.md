@@ -32,8 +32,9 @@ For an underspecified opening request, ask only about intended product meaning a
 wait for the user's answer before discussing target support or capability gaps unless feasibility was itself part
 of the request. Do not promote a common use case into an assumption. When target support later matters, ask for
 desired access before describing the current public Scaffold boundary. Successful Publication is intended to create
-source in a private repository, but live publication remains unproved. Compile does not deploy the application or
-itself make records public. Keep one candidate Plan: do not maintain a parallel flattened or capability-friendly
+source in a private repository. One dated staging discovery observed that live path at exact prior identities, but a
+new invocation is published only after its own validated terminal success. Compile does not deploy the application
+or itself make records public. Keep one candidate Plan: do not maintain a parallel flattened or capability-friendly
 shape merely so one version can Compile.
 
 Track consequential choices as:

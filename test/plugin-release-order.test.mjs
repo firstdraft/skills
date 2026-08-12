@@ -149,7 +149,7 @@ test("prospective release order rejects incoherent current identities", () => {
   );
 });
 
-test("catalog reconciliation reads npm, fetched tags, and the catalog", async () => {
+test("prospective reconciliation reads npm, fetched tags, and the catalog", async () => {
   const invocations = [];
   const compatibilitySource = await readFile(
     new URL("../release/compatibility.json", import.meta.url),
@@ -178,11 +178,11 @@ test("catalog reconciliation reads npm, fetched tags, and the catalog", async ()
     },
   });
 
-  assert.equal(result.candidateVersion, "0.1.0");
+  assert.equal(result.candidateVersion, "0.1.1");
   assert.deepEqual(result.catalogVersions, ["0.1.0"]);
   assert.deepEqual(result.taggedVersions, ["0.1.0-alpha.3", "0.1.0"]);
-  assert.equal(result.releaseState, "catalog");
-  assert.equal(invocations.length, 3);
+  assert.equal(result.releaseState, "prospective");
+  assert.equal(invocations.length, 2);
   assert.deepEqual(invocations[1][1], [
     "for-each-ref",
     "--format=%(refname:strip=3)",
@@ -240,11 +240,32 @@ test("default publish reconciliation rejects an already-promoted catalog", async
   );
 });
 
-test("consumed release order binds compatibility bytes to the protected tag", async () => {
-  const root = fileURLToPath(new URL("../", import.meta.url));
+test("consumed release order binds compatibility bytes to the protected tag", async (t) => {
+  const root = await mkdtemp(path.join(tmpdir(), "firstdraft-consumed-release-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
   const compatibilitySource = await readFile(
     new URL("../release/compatibility.json", import.meta.url),
     "utf8",
+  );
+  const currentCompatibility = JSON.parse(compatibilitySource);
+  const marketplace = JSON.parse(
+    await readFile(
+      new URL("../.claude-plugin/marketplace.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const plugin = marketplace.plugins.find(({ name }) => name === "firstdraft");
+  plugin.version = currentCompatibility.version;
+  plugin.source.version = currentCompatibility.version;
+  await mkdir(path.join(root, "release"));
+  await mkdir(path.join(root, ".claude-plugin"));
+  await writeFile(
+    path.join(root, "release", "compatibility.json"),
+    compatibilitySource,
+  );
+  await writeFile(
+    path.join(root, ".claude-plugin", "marketplace.json"),
+    `${JSON.stringify(marketplace, null, 2)}\n`,
   );
 
   function spawnWithTaggedCompatibility(
@@ -257,7 +278,11 @@ test("consumed release order binds compatibility bytes to the protected tag", as
         return {
           status: 0,
           stderr: "",
-          stdout: JSON.stringify([...candidate.publishedVersions, "0.1.0"]),
+          stdout: JSON.stringify([
+            ...candidate.publishedVersions,
+            "0.1.0",
+            currentCompatibility.version,
+          ]),
         };
       }
       if (arguments_[0] === "show") {
@@ -266,7 +291,9 @@ test("consumed release order binds compatibility bytes to the protected tag", as
       return {
         status: 0,
         stderr: "",
-        stdout: "claude-v0.1.0-alpha.3\nclaude-v0.1.0\n",
+        stdout:
+          "claude-v0.1.0-alpha.3\nclaude-v0.1.0\n" +
+          `claude-v${currentCompatibility.version}\n`,
       };
     };
   }
@@ -290,7 +317,7 @@ test("consumed release order binds compatibility bytes to the protected tag", as
     [
       [
         "show",
-        "refs/release-check/tags/claude-v0.1.0:" +
+        `refs/release-check/tags/claude-v${currentCompatibility.version}:` +
           "release/compatibility.json",
       ],
     ],

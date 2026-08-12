@@ -24,11 +24,11 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.1.0",
+    version: "0.1.1",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "02fad6cd2207f3d2ab7598f0aa67825520ebc5b807294e0c241774ee3ac6a89d",
+        "800e9ebd63843c7c680810979c35ade37de31d5e203e89a75a09f80d3399d656",
     },
     requires: {
       api_contract: [">= 0.2.0", "< 0.3.0"],
@@ -62,7 +62,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCandidateDrift = structuredClone(documents);
-  withCandidateDrift.packageTemplate.version = "0.1.1";
+  withCandidateDrift.packageTemplate.version = "0.1.2";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCandidateDrift),
     /Expected values to be strictly equal/,
@@ -127,7 +127,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCheckoutReleaseVersion = structuredClone(documents);
-  withCheckoutReleaseVersion.checkoutManifest.version = "0.1.0";
+  withCheckoutReleaseVersion.checkoutManifest.version = "0.1.1";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCheckoutReleaseVersion),
     /must not reuse the installable plugin release version/,
@@ -213,7 +213,7 @@ test("release operator and agent instructions track the candidate", async () => 
   assert.equal(catalogPlugin.version, "0.1.0");
   assert.match(
     releasing,
-    /release version is\s+`0\.1\.0`,\s+and the marketplace package source names that exact\s+version/,
+    /current unpublished patch candidate version is `0\.1\.1`[\s\S]*?public catalog remains on immutable plugin 0\.1\.0/,
   );
   assert.match(
     releasing,
@@ -227,9 +227,20 @@ test("release operator and agent instructions track the candidate", async () => 
     releasing,
     /ordinary releases now exist under protected tags and npm `next`[\s\S]*?claude-v0\.1\.0[\s\S]*?v0\.1\.0[\s\S]*?public[\s\S]*?catalog at this exact `main` revision,[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selects plugin 0\.1\.0[\s\S]*?`latest` remains alpha\.3 for the plugin and alpha\.2 for the CLI/,
   );
+  assertTextOrder(releasing, [
+    "## Current 0.1.1 patch flow",
+    "1. Resolve clean, non-shallow checkouts",
+    "2. Run the complete repository check and exact CLI contract",
+    "3. After source integration, pin the exact merged Skills SHA in Drawing Board",
+    "4. A human explicitly decides whether to authorize",
+    "5. After authorization, publish 0.1.1 under `next`",
+    "6. Prepare a separate marketplace change from 0.1.0 to published 0.1.1",
+    "do not make the post-merge observation a circular pre-merge gate",
+    "## Completed 0.1.0 candidate flow",
+  ]);
   assert.match(
     readme,
-    /ordinary releases now[\s\S]*?protected tags and npm `next`[\s\S]*?public catalog at this exact `main` revision,[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selects plugin 0\.1\.0[\s\S]*?package publication records and catalog source do not by themselves establish a[\s\S]*?successful fresh public install/,
+    /ordinary releases now[\s\S]*?protected tags and npm `next`[\s\S]*?public catalog at this exact `main` revision,[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selects plugin 0\.1\.0[\s\S]*?current unpublished 0\.1\.1 candidate corrects that teaching surface/,
   );
   assert.match(
     pluginReleaseEvidence,
@@ -462,6 +473,14 @@ test("release operator and agent instructions track the candidate", async () => 
   assert.match(
     readme,
     /staging web and worker both reported[\s\S]*?4007fc5ef0734e2fc3e3e59714919025bd73d621[\s\S]*?selected gate for promoting new catalog installs[\s\S]*?public plugin alpha\.3 bundles CLI alpha\.2 and defaults to shared staging[\s\S]*?API 0\.2 activation interrupts[\s\S]*?existing alpha\.3 installations until each receives the compatible 0\.1\.0 plugin[\s\S]*?fresh public marketplace install and authenticated installed-Skill template-and-Codespace[\s\S]*?remain outstanding post-promotion observations/,
+  );
+  assert.match(
+    readme,
+    /Those exact commands succeeded for alpha\.3 on 2026-08-06[\s\S]*?public `main` now selects it, but success through these public catalog commands remains unobserved[\s\S]*?0\.1\.1 candidate does not change that evidence boundary/,
+  );
+  assert.doesNotMatch(
+    readme,
+    /exact plugin 0\.1\.0 with bundled CLI 0\.1\.0 in a fresh unauthenticated check/,
   );
   assert.match(
     releasing,

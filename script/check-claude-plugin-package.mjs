@@ -43,12 +43,14 @@ assert.equal(packageTemplate.version, compatibility.version);
 assert.equal(pluginManifest.name, "firstdraft");
 assert.equal(pluginManifest.version, compatibility.version);
 assert.equal(packageTemplate.dependencies, undefined);
-assert.equal(pluginManifest.userConfig.api_url.sensitive, undefined);
-assert.equal(
-  pluginManifest.userConfig.api_url.default,
-  "https://staging.firstdraft.com",
+assert.equal(pluginManifest.userConfig, undefined);
+assert.doesNotMatch(
+  readFileSync(
+    path.join(repository, "packages", "claude-plugin", "bin", "firstdraft.js"),
+    "utf8",
+  ),
+  /CLAUDE_PLUGIN_OPTION_/,
 );
-assert.equal(pluginManifest.userConfig.api_token.sensitive, true);
 
 const temporaryDirectory = mkdtempSync(
   path.join(tmpdir(), "firstdraft-claude-plugin-check-"),
@@ -59,6 +61,8 @@ for (const name of [
   "FIRSTDRAFT_API_TOKEN",
   "CLAUDE_PLUGIN_OPTION_api_url",
   "CLAUDE_PLUGIN_OPTION_api_token",
+  "CLAUDE_PLUGIN_OPTION_API_URL",
+  "CLAUDE_PLUGIN_OPTION_API_TOKEN",
 ]) {
   delete cleanEnvironment[name];
 }
@@ -125,75 +129,54 @@ try {
     ["probe"],
     fakeInstallation,
     {
-      ...process.env,
-      CLAUDE_PLUGIN_OPTION_api_url: "https://staging.firstdraft.com",
-      CLAUDE_PLUGIN_OPTION_api_token: canaryToken,
-      FIRSTDRAFT_API_URL: "https://wrong.example.com",
-      FIRSTDRAFT_API_TOKEN: `fd_${"b".repeat(43)}`,
+      ...cleanEnvironment,
+      CLAUDE_PLUGIN_OPTION_API_URL: "https://wrong.example.com",
+      CLAUDE_PLUGIN_OPTION_API_TOKEN: `fd_${"b".repeat(43)}`,
+      FIRSTDRAFT_API_URL: "https://staging.firstdraft.com",
+      FIRSTDRAFT_API_TOKEN: canaryToken,
     },
   );
   assert.deepEqual(JSON.parse(execution.stdout), {
     apiToken: canaryToken,
     apiUrl: "https://staging.firstdraft.com",
     arguments: ["probe"],
-    pluginApiTokenPresent: false,
-    pluginApiUrlPresent: false,
+    lowercasePluginApiTokenPresent: false,
+    lowercasePluginApiUrlPresent: false,
+    uppercasePluginApiTokenPresent: true,
+    uppercasePluginApiUrlPresent: true,
   });
   assert.equal(execution.stderr, "");
 
-  for (const pluginEnvironment of [
-    {CLAUDE_PLUGIN_OPTION_api_token: canaryToken},
-  ]) {
-    const incomplete = spawnSync(
-      pluginExecutable(fakeInstallation),
-      ["probe"],
-      {
-        cwd: fakeInstallation,
-        encoding: "utf8",
-        env: {
-          ...process.env,
-          ...pluginEnvironment,
-          FIRSTDRAFT_API_URL: "https://ambient.example.com",
-          FIRSTDRAFT_API_TOKEN: `fd_${"b".repeat(43)}`,
-        },
-      },
-    );
-    assert.equal(incomplete.status, 2);
-    assert.equal(incomplete.stdout, "");
-    assert.equal(
-      incomplete.stderr,
-      '{"error":"plugin_configuration_incomplete","detail":"Configure the First Draft API URL in Claude Code."}\n',
-    );
-    assert.doesNotMatch(incomplete.stderr, /fd_[A-Za-z0-9_-]+/);
-  }
-
-  const urlOnly = run(
+  const pluginOptionsOnly = run(
     pluginExecutable(fakeInstallation),
     ["probe"],
     fakeInstallation,
     {
-      ...process.env,
-      CLAUDE_PLUGIN_OPTION_api_url: "https://staging.firstdraft.com",
-      FIRSTDRAFT_API_TOKEN: `fd_${"b".repeat(43)}`,
+      ...cleanEnvironment,
+      CLAUDE_PLUGIN_OPTION_API_URL: "https://staging.firstdraft.com",
+      CLAUDE_PLUGIN_OPTION_API_TOKEN: canaryToken,
     },
   );
-  assert.deepEqual(JSON.parse(urlOnly.stdout), {
-    apiUrl: "https://staging.firstdraft.com",
+  assert.deepEqual(JSON.parse(pluginOptionsOnly.stdout), {
     arguments: ["probe"],
-    pluginApiTokenPresent: false,
-    pluginApiUrlPresent: false,
+    lowercasePluginApiTokenPresent: false,
+    lowercasePluginApiUrlPresent: false,
+    uppercasePluginApiTokenPresent: true,
+    uppercasePluginApiUrlPresent: true,
   });
 
-  const linkedExecution = run(
-    path.join(fakeInstallation, "node_modules", ".bin", "firstdraft"),
+  const cleanPluginExecution = run(
+    pluginExecutable(fakeInstallation),
     ["probe"],
     fakeInstallation,
     cleanEnvironment,
   );
-  assert.deepEqual(JSON.parse(linkedExecution.stdout), {
+  assert.deepEqual(JSON.parse(cleanPluginExecution.stdout), {
     arguments: ["probe"],
-    pluginApiTokenPresent: false,
-    pluginApiUrlPresent: false,
+    lowercasePluginApiTokenPresent: false,
+    lowercasePluginApiUrlPresent: false,
+    uppercasePluginApiTokenPresent: false,
+    uppercasePluginApiUrlPresent: false,
   });
 
   if (cliRoot) {
@@ -238,8 +221,10 @@ process.stdout.write(JSON.stringify({
   apiToken: process.env.FIRSTDRAFT_API_TOKEN,
   apiUrl: process.env.FIRSTDRAFT_API_URL,
   arguments: process.argv.slice(2),
-  pluginApiTokenPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_api_token"),
-  pluginApiUrlPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_api_url"),
+  lowercasePluginApiTokenPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_api_token"),
+  lowercasePluginApiUrlPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_api_url"),
+  uppercasePluginApiTokenPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_API_TOKEN"),
+  uppercasePluginApiUrlPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_API_URL"),
 }) + "\\n");
 `,
   );

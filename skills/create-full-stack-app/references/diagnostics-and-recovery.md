@@ -161,7 +161,7 @@ Publication mutation; a later invocation submits the current bytes as a new cand
 The first accepted Publication request establishes this release's Project singleton, whether it later succeeds,
 parks, or ends in another terminal state. While one `plan compile` invocation polls it, do not launch a concurrent
 Compile or another start request. If that invocation exits on an outcome-unknown, unavailable status, timeout, or
-interruption, wait and rerun the same zero-flag `firstdraft plan compile` with exact unchanged
+interruption, wait and rerun the same zero-flag `plan compile` through the Skill resolver with exact unchanged
 Plan bytes. Its conditional singleton PUT resumes or reconciles the retained Publication without creating another
 Compilation, repository, or push. There is no separate public Publication status command. The singleton cannot be
 repointed to a later Head. `invalid_publication_status` is different: unchanged replay cannot repair its protocol
@@ -204,7 +204,6 @@ tree.
 | Commands | `error` | Recovery meaning |
 | --- | --- | --- |
 | Any leaf command | `invalid_arguments` | Syntax failed before the requested action. Read that command's help. |
-| Plugin adapter | `plugin_configuration_incomplete` | Configure the missing API URL through Claude Code's plugin configuration prompt. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `authentication_required` | Configure the token outside the conversation. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
@@ -250,7 +249,8 @@ so preserve the local files and stop rather than repeating that mutation or manu
 endpoint is a Project singleton, and the CLI already attempted one read-only reconciliation. The singleton may
 already exist even though the response is unknown. Do not start a concurrent Compile, preserve the retained Head
 boundary, and do not infer whether repository creation ran. After the current invocation exits, wait and rerun the
-same zero-flag `firstdraft plan compile` with unchanged Plan bytes to reconcile or resume that singleton.
+same zero-flag `plan compile` through the Skill resolver with unchanged Plan bytes to reconcile or resume that
+singleton.
 
 `publication_status_unavailable` and `publication_wait_timed_out` leave the retained
 singleton possibly running, scheduled for retry, parked, or otherwise unknown. Report only the last validated
