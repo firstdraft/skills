@@ -11,11 +11,15 @@ exception: merging it changes the public catalog and requires the ordered gates 
 The installable `firstdraft@firstdraft-skills` plugin is the public npm package
 `@firstdraft.com/claude-code`. A dated public-install observation records published version `0.1.0-alpha.3`. Alpha.4
 and alpha.5 were assembled as source candidates and abandoned before catalog promotion; their source changes did not
-publish packages. Current registry state remains a release-time read-only check. This source supersedes those
-candidates. Its release version is `0.1.0`, and the marketplace package source names that exact version. The 0.1.0
-package must be published under `next` before that catalog pointer merges. A dated
+publish packages. The coordinated ordinary releases now exist under protected tags and npm `next`: plugin
+`@firstdraft.com/claude-code@0.1.0` at `claude-v0.1.0`, and CLI `@firstdraft.com/cli@0.1.0` at `v0.1.0`. The public
+catalog at this exact `main` revision, `e0212cad0a89a8b0e38678e371389085f6ddc254`, selects plugin 0.1.0. npm
+`latest` remains alpha.3 for the plugin and alpha.2 for the CLI; current registry and catalog state remain a
+release-time read-only check. The release version is `0.1.0`, and the marketplace package source names that exact
+version. A dated
 [read-only publication observation](evidence/2026-08-09-claude-plugin-0.1.0-release.md) reconciles the exact protected
-tag, package digest, provenance presence, and registry dist-tags: `next` names 0.1.0 while `latest` remains alpha.3.
+tag, package digest, provenance presence, and registry dist-tags at the pre-promotion point: `next` named 0.1.0 while
+`latest` and the public catalog still named alpha.3.
 A separate [direct-package observation](evidence/2026-08-09-direct-package-0.1.0-check.md) records exact plugin 0.1.0
 installation, strict validation, inline discovery, and bundled CLI 0.1.0 invocation without calling First Draft.
 The dated [staging Movie Catalog discovery smoke](evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
@@ -32,21 +36,33 @@ published `@firstdraft.com/cli@0.1.0`, and the repository license. Colleagues th
 compatible CLI together through Claude Code rather than managing a separate global CLI or relying on transitive
 installation. Existing alpha.3 installations continue to bundle the published CLI alpha.2 until explicitly updated.
 A [dated release observation](evidence/2026-08-07-cli-0.1.0-release.md) records CLI 0.1.0 under `next` while `latest`
-remains alpha.2; this source change cannot establish plugin publication or move either dist-tag.
+remains alpha.2. The immutable publication evidence, rather than the current source tree alone, establishes the
+package and protected-tag identities.
+
+The immutable plugin 0.1.0 package was assembled from Skills revision
+`b3e53a240aaf79a776538e9b1410689d8a4e79ee` before the bounded live discovery smoke. Its packaged `SKILL.md` and
+modeling guide therefore still say live Publication remains unproved. That conservative prose does not disable
+`firstdraft plan compile`; it understates evidence established after the package bytes became immutable. This is an
+explicitly accepted 0.1.0 documentation limitation, not a reason to rewrite the published identity. Before calling
+the installed teaching surface fully current, publish a future plugin version with corrected wording and qualify its
+exact new bytes. The fresh public-install, authenticated template-and-Codespace, and full v14 gaps remain separate.
 
 The always-present Publication progress object is a breaking compatibility-line change: plugin 0.1.0 and CLI 0.1.0
-require service API contract `>= 0.2.0` and `< 0.3.0`. They are one coordinated rollout whose service-activation
-phase occupies a maintenance window. Compatible package bytes may be published first, but they are unsupported for
-First Draft operations against the public `0.1.x` API contract.
+require service API contract `>= 0.2.0` and `< 0.3.0`. Their coordinated rollout published the packages first, then
+activated API 0.2 on staging web and worker and completed the bounded discovery smoke before promoting the catalog.
+Those activation and promotion steps have occurred; they are not pending instructions. The enduring rule is that a
+breaking compatibility line is one coordinated rollout whose service-activation phase occupies a maintenance
+window. Compatible package bytes may be published first, but they are unsupported for First Draft operations
+against the earlier public API contract.
 
 The inverse is also breaking: service API contract 0.2 responses are incompatible with the alpha.2 CLI bundled in
-public plugin alpha.3. Because that plugin defaults to shared staging, activating service 0.2 interrupts existing
-alpha.3 installations until each installation receives the compatible 0.1.0 plugin. Catalog promotion alone does
-not update an existing installation. This source does not approve that interruption. Before any release mutation, a
-human must explicitly approve the package-first rollout and the later brief maintenance window, identify the
-affected users, have the exact service, CLI, and plugin candidates ready, and record rollback and end-of-window
-criteria. Publishing and reconciling the plugin happens before the maintenance window starts; shared staging does
-not change until those compatible package bytes are available.
+public plugin alpha.3. Existing alpha.3 installations therefore remain incompatible with shared staging until each
+receives the compatible 0.1.0 plugin. Catalog promotion alone does not update an existing installation. Use only a
+separately verified Claude Code update procedure, and retain any explicitly accepted affected-user follow-up. For a
+future breaking transition, this source does not approve that interruption: a human must explicitly approve the
+package-first rollout and the later brief maintenance window, identify affected users, have the exact service, CLI,
+and plugin candidates ready, and record rollback and end-of-window criteria. Publish and reconcile compatible
+package bytes before changing shared staging.
 
 [`release/compatibility.json`](release/compatibility.json) records the plugin package name, exact packed tarball
 SHA-256, compatible service API range, exact CLI version, and Foundation Plan format. Before publication, an
@@ -64,29 +80,30 @@ move `latest`; it has no SemVer meaning and does not turn an ordinary version in
 
 ## Candidate flow
 
-1. Resolve clean, non-shallow checkouts at exact SHAs for all three repositories and fetch the main and tag history
-   required by their ancestry gates. Run each repository's checks and the cross-repository compatibility gates.
-2. Pack the exact CLI release and Claude plugin candidate. Verify the plugin tarball SHA-256 against
-   `release/compatibility.json`, install both tarballs into an isolated temporary npm project, and confirm the
-   plugin-local `firstdraft` adapter runs the exact CLI version.
-3. Validate the staged plugin with the real Claude Code CLI. Exercise an ephemeral marketplace or the assembled
-   0.1.0 plugin in isolated Claude state without advancing the public catalog. Confirm Skill discovery, sensitive
-   configuration handling, and CLI invocation. This is prepublication evidence for 0.1.0. A separate catalog change
-   may be prepared, but it must remain unmerged until publication, deployment, and the explicitly selected promotion
-   gate are observed. The dated public-install observation proves the prior alpha.3 package and bundled alpha.2 CLI
-   only.
-4. Complete the read-only cross-repository evaluator and prepare the exact service revision, rollout checks, Movie
-   Catalog smoke input, rollback point, and three-repository identity record without changing shared staging. The
-   breaking API 0.2 deploy and its live discovery smoke belong to the serialized promotion sequence below; do not
-   deploy it while plugin 0.1.0 remains only an unpublished candidate. A stricter v14 qualification may be prepared
-   separately, but it is not silently substituted for the selected 0.1.0 promotion gate.
-5. A human decides whether to authorize the exact package-first sequence below. The protected tag, npm publication,
-   maintenance start, service deployment, catalog promotion, and fresh public verification remain distinct
-   approval-gated mutations or checks. Publishing and catalog promotion require new, explicit authorization.
+The numbered 0.1.0 preparation below is completed historical context, not an instruction to replay it. For a future
+candidate, repeat these gates with fresh exact identities, current compatibility evidence, and new authorization.
+
+1. Operators resolved clean, non-shallow checkouts at exact SHAs for all three repositories, fetched the required
+   main and tag history, and ran each repository's checks and the cross-repository compatibility gates.
+2. They packed the exact CLI release and Claude plugin candidate, verified the plugin tarball SHA-256 against
+   `release/compatibility.json`, installed both tarballs in isolation, and confirmed the plugin-local `firstdraft`
+   adapter ran the exact CLI version.
+3. They validated the staged 0.1.0 plugin with the real Claude Code CLI in isolated state without advancing the
+   public catalog, including Skill discovery, sensitive configuration handling, and CLI invocation. The dated
+   public-install observation still proves the prior alpha.3 package and bundled alpha.2 CLI only.
+4. They completed the read-only cross-repository evaluation and prepared the exact service revision, rollout checks,
+   Movie Catalog smoke input, rollback point, and three-repository identity record before changing shared staging.
+   The historical fail-closed rule was: do not deploy it while plugin 0.1.0 remains only an unpublished candidate. A
+   stricter v14 qualification remained separate and was not silently substituted for the selected 0.1.0 promotion
+   gate.
+5. A human separately authorized the protected tag, npm publication, maintenance start, service deployment, catalog
+   promotion, and bounded verification. Publishing and catalog promotion require new, explicit authorization for a
+   future release.
 
 ## Publication order
 
-After approval, one operator performs these mutations serially:
+For a future release, after explicit approval, one operator performs its mutations serially. The release-order,
+ambiguity, and immutable-identity rules below remain actionable with that future release's exact identities.
 
 Before pushing a release tag, verify that a GitHub ruleset protects `claude-v*` tags from deletion and unauthorized
 updates, the `npm` environment requires the intended human reviewer, and its `NPM_RELEASE_ENABLED` variable is
@@ -115,24 +132,31 @@ The workflow also requires the candidate to follow every version observed in the
 catalog, and requires its one current protected tag to follow all prior protected `claude-v*` tags. Local candidate
 checks deliberately do not treat deleted branch history as a release ledger. Any malformed `claude-v*` tag fails
 closed and requires explicit ruleset-governed recovery; do not ignore a protected release identity.
-The same approval must name the package publication, later maintenance start and user notice, ordered service and
-catalog mutations below, rollback decision point, and verification that ends the maintenance window. Package
-publication does not itself start the public-client outage. Do not treat this source change as that approval.
+The same approval must name the package publication, later maintenance start and user notice, the release's ordered
+service and catalog mutations, rollback decision point, and end-of-window verification. Package publication does
+not itself start the public-client outage. Do not treat a source change as that approval.
 
-1. Reconcile the already-published CLI 0.1.0 registry package against its exact qualified source and confirm `next`
-   still names 0.1.0 without moving `latest`. Do not republish the CLI.
-2. Push the protected Skills publication tag and let the approval-gated workflow publish the already-qualified
-   `@firstdraft.com/claude-code@0.1.0` tarball with npm provenance under `next`. Reconcile the exact version,
-   integrity, provenance, and recorded tarball digest. Confirm npm `latest` and the public marketplace catalog still
-   name alpha.3. If tagging or publication fails or remains ambiguous, stop before opening the maintenance window;
-   shared staging is still unchanged.
-3. In isolated Claude state, perform the operator-only direct-`next` package check. It must resolve exact plugin
-   0.1.0, discover its Skill, and invoke its bundled CLI 0.1.0 without calling First Draft. Until staging web and
-   worker both activate API 0.2, this exact-`next` install is incompatible and unsupported for Plan, Compile, or any
-   other First Draft API operation. Do not offer it as a user workaround or treat it as the public installation
+### Completed 0.1.0 rollout
+
+Steps 1–6 below occurred from 2026-08-07 through 2026-08-10 and are retained as historical context. They must not be
+replayed: CLI and plugin 0.1.0 are already published under `next`, staging API 0.2 activation and the selected bounded
+discovery smoke already occurred, and public `main` at `e0212cad0a89a8b0e38678e371389085f6ddc254` already selects
+plugin 0.1.0.
+
+1. The operator reconciled the already-published CLI 0.1.0 registry package against its exact qualified source,
+   confirmed `next` named 0.1.0 without moving `latest`, and did not republish the CLI.
+2. The operator pushed the protected Skills publication tag, and the approval-gated workflow published the
+   qualified `@firstdraft.com/claude-code@0.1.0` tarball with npm provenance under `next`. Reconciliation bound the
+   exact version, integrity, provenance, and recorded tarball digest. At this pre-promotion point, npm `latest` and
+   the public marketplace catalog still named alpha.3.
+3. In isolated Claude state, the operator performed the direct-`next` package check. It resolved exact plugin 0.1.0,
+   discovered its Skill, and invoked its bundled CLI 0.1.0 without calling First Draft. At that point, before staging
+   web and worker activated API 0.2, the exact-`next` install was incompatible and unsupported for Plan, Compile, or
+   any other First Draft API operation. It was not offered as a user workaround or treated as the public installation
    path.
 
-   Run this strict no-service check after npm reconciliation:
+   The historical instruction was: Run this strict no-service check after npm reconciliation. The exact check is
+   retained below as evidence context, not as a step to repeat for 0.1.0:
 
    ```sh
    (
@@ -278,37 +302,39 @@ publication does not itself start the public-client outage. Do not treat this so
    records the same hardened procedure succeeding against public alpha.3 and its bundled CLI alpha.2. The separate
    [0.1.0 direct-package observation](evidence/2026-08-09-direct-package-0.1.0-check.md) records the required exact
    package check after publication without calling First Draft.
-4. After package reconciliation and the isolated no-API check pass, start the announced maintenance window, notify
-   affected users, and stop new Compile and Publication invocations. The public catalog and npm `latest` still name
-   alpha.3 at this point.
-5. Deploy the exact API 0.2 service revision to the staging web role and wait for it to report that revision. Then
-   deploy the same exact revision to the staging worker role and wait for it to report that revision. Only after
-   both roles agree may the operator run the selected 0.1.0 Movie Catalog discovery smoke. Bind the result to the
-   separate direct-`next` no-service check from step 3 through the exact package identity, Skills and CLI revisions,
-   and reproduced tarball digest. The smoke must record a Claude-authored exact Plan, valid analysis, successful
-   Compilation on the Standard worker, and successful OAuth/App-backed publication to a fresh private personal
-   repository. Record the repository result through the product response, database ledger, bounded provider job and
-   log evidence, and a signed-in browser observation.
+4. After package reconciliation and the isolated no-API check passed, the operator started the announced maintenance
+   window, notified affected users, and stopped new Compile and Publication invocations. The public catalog and npm
+   `latest` still named alpha.3 at this point.
+5. The exact API 0.2 service revision was deployed first to the staging web role and then to the staging worker role;
+   both reported that revision before the operator ran the selected 0.1.0 Movie Catalog discovery smoke. The result
+   was bound to the separate direct-`next` no-service check from step 3 through the exact package identity, Skills and
+   CLI revisions, and reproduced tarball digest. The gate required a Claude-authored exact Plan, valid analysis,
+   successful Compilation on the Standard worker, and successful OAuth/App-backed publication to a fresh private
+   personal repository. The dated record retains the product response, database ledger, bounded provider job and log
+   evidence, and signed-in browser observation.
 
    A GitHub PAT, independent clone or byte verification, generated-repository credential scan, and singleton replay
    are not part of this user-selected discovery gate. Their absence must be explicit in the dated record, which must
    not claim a full v14 qualification. The smoke also does not claim it installed or executed the public npm package;
-   the template, Codespace, and public-catalog path remains step 7. The compatible 0.1.0 constituents become supported
-   for API operations only after both roles report the API 0.2 revision. Follow the service runbook for migration
-   compatibility, rollback, revision checks, and retained evidence; a web-only or worker-only activation is not
+   the template, Codespace, and public-catalog path remains step 7. The compatible 0.1.0 constituents became supported
+   for API operations only after both roles reported the API 0.2 revision. The service runbook governed migration
+   compatibility, rollback, revision checks, and retained evidence; a web-only or worker-only activation was not
    completion.
-6. After both roles and the selected 0.1.0 discovery smoke are verified, merge the separate marketplace-promotion change so
-   `claude plugin marketplace add firstdraft/skills` resolves exact plugin 0.1.0. Never point the public catalog at
-   an unpublished or unverified package. Require the exact promotion head's Node 24.18.0 CI job, including its
-   release-order rehearsal, to pass even if repository settings do not enforce it as a required check; do not bypass
-   it with an administrative merge. Notify known existing alpha.3 installations that catalog promotion does not
-   update them; use only the separately verified Claude Code update procedure to move each one to 0.1.0, and do not
-   invent a command during the window. An installation remains incompatible with shared staging until its update
-   succeeds. The fresh public path in step 7 remains required. Before ending the window, each known existing
+6. After both roles and the selected 0.1.0 discovery smoke were verified, the marketplace-promotion change was merged
+   at exact public `main` revision `e0212cad0a89a8b0e38678e371389085f6ddc254`, so
+   `claude plugin marketplace add firstdraft/skills` now resolves a catalog that selects exact plugin 0.1.0. The
+   exact promotion head's Node 24.18.0 CI job, including its release-order rehearsal, passed without an administrative
+   bypass. The durable rule remains: require that exact promotion-head job and never use an administrative bypass.
+   Catalog promotion does not update existing installations. Notify known existing alpha.3 installations and use only
+   a separately verified Claude Code update procedure to move each one to 0.1.0; do not invent a command.
+   An installation remains incompatible with shared staging until its update succeeds. Each known existing
    installation must either reach 0.1.0 or an authorized operator must explicitly record and accept its continuing
    outage as an affected-user follow-up.
-7. After the catalog change reaches public `main`, first run the exact public installation in fresh isolated Claude
-   state outside a Drawing Board:
+
+### Outstanding 0.1.0 verification
+
+7. Public `main` now contains the catalog promotion. Run the exact public installation in fresh isolated Claude state
+   outside a Drawing Board:
 
    ```sh
    claude plugin marketplace add firstdraft/skills
@@ -320,27 +346,30 @@ publication does not itself start the public-client outage. Do not treat this so
    fresh Codespace, and run `claude`. Complete staging token onboarding without exposing the token in chat or logs,
    make a plain-English application request, and verify that the bundled CLI 0.1.0 and API 0.2 Publication progress
    contract produce the expected fresh private GitHub repository. This path does not yet cover a pull request back to
-   the template repository. End the maintenance window only after both the isolated public install and that template
-   path succeed and the recorded completion criteria are met. Catalog promotion alone and the earlier direct-`next`
-   no-API check cannot end the window.
+   the template repository. Record the isolated public install and template-path results explicitly; catalog
+   promotion and the earlier direct-`next` no-API check do not prove either result. The full v14 qualification remains
+   a separate, stricter boundary.
 
-If service activation or the selected discovery smoke in step 5 fails, follow the service runbook to restore the exact
-API 0.1 rollback revision to every changed role and verify that web and worker both report it. Leave npm `latest` and
-the public catalog at alpha.3, and end the maintenance window only after the recorded rollback criteria pass. The
-already-published plugin 0.1.0 identity under `next` remains immutable; a plugin-side correction uses a new SemVer.
+The pre-promotion rollback rule for historical steps 4–5 was to restore the then-exact API 0.1 rollback revision on
+both service roles, leave the catalog at alpha.3, and verify the recorded completion criteria. Those failure
+conditions did not occur. That dated recipe is historical and non-actionable: it must not be applied to issue #363
+or current staging.
 
-If the fresh public path in step 7 fails after catalog promotion, keep the maintenance window open and stop new
-Compile and Publication invocations. Reconcile the catalog merge and installation result read-only before another
-mutation. If recovery requires the API 0.1 service, restore both service roles to the exact rollback revision and
-repoint the catalog to the already-published `0.1.0-alpha.3` package, then verify both roles and a fresh alpha.3
-install before ending the window. No ordering can make clients compatible during every instant of that two-system
-rollback, so keep new operations stopped until both sides agree. Repointing is one reviewable source change that
-updates `.claude-plugin/marketplace.json`, its exact catalog assertions in `test/repository.test.mjs` and
-`test/release-compatibility.test.mjs`, and the catalog-state prose and assertions in `README.md` and `RELEASING.md`.
-The catalog change does not downgrade existing installations. Before ending the window, each known installation
-moved to 0.1.0 during this rollout must return to a supported alpha.3 installation through a separately verified
-Claude Code procedure, or an authorized operator must record and accept its continuing outage as an affected-user
-follow-up. Selecting a prior immutable catalog package is not reusing that SemVer for different bytes; the
+For issue #363 and any current qualification, stop only new operator-controlled Compile and Publication invocations
+in the qualification lane. Public-plugin traffic to shared staging may continue as unattributed capacity activity and
+remains subject to the current service runbook's drift and stop rules. Reconcile the exact web, worker, queue, catalog,
+and installation state read-only, then obtain fresh explicit authorization naming the exact rollback revisions,
+catalog action, affected users, and completion criteria before any mutation. Do not presume that API 0.1 or plugin
+alpha.3 is the current rollback target.
+
+If the outstanding public path in step 7 fails, follow that current rollback rule. If an authorized recovery includes
+a catalog repoint, make one reviewable source change that updates `.claude-plugin/marketplace.json`, its exact catalog
+assertions in `test/repository.test.mjs` and `test/release-compatibility.test.mjs`, and the catalog-state prose and
+assertions in `README.md` and `RELEASING.md`. A catalog change does not update existing installations. Before ending
+the recovery window, move each known installation to the exact supported version through a separately verified
+Claude Code procedure, or explicitly accept its continuing outage as an affected-user follow-up. No ordering can
+make clients compatible during every instant of a two-system rollback, so keep new operations stopped until both
+sides agree. Selecting a prior immutable catalog package is not reusing that SemVer for different bytes; the
 forward-only correction rule applies when publishing changed bytes.
 
 If any external mutation has an ambiguous result, stop and inspect the registry, Git ref, or deployment read-only.
@@ -368,7 +397,7 @@ npm run check
 node script/check-claude-plugin-package.mjs --cli-root /path/to/exact/cli
 ```
 
-Stage the package and validate it with the current supported Claude Code CLI. Use isolated Claude configuration for
-install tests; do not alter a colleague's real Claude state during qualification. A local validation or packed
-install does not prove 0.1.0 through the two public commands until that exact npm package and the GitHub marketplace
-catalog are reachable externally.
+Stage a future package and validate it with the current supported Claude Code CLI. Use isolated Claude configuration
+for install tests; do not alter a colleague's real Claude state during qualification. For 0.1.0, the exact npm package
+and public catalog are reachable, but a local validation or packed install does not prove the still-unobserved fresh
+public marketplace installation.

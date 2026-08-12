@@ -213,20 +213,23 @@ test("release operator and agent instructions track the candidate", async () => 
   assert.equal(catalogPlugin.version, "0.1.0");
   assert.match(
     releasing,
-    /release version is\s+`0\.1\.0`,\s+and the marketplace package source names that exact version/,
+    /release version is\s+`0\.1\.0`,\s+and the marketplace package source names that exact\s+version/,
   );
   assert.match(
     releasing,
     /Alpha\.4\s+and alpha\.5 were assembled as source candidates and abandoned before catalog promotion/,
   );
-  assert.match(releasing, /separate marketplace-promotion change/);
   assert.match(
     releasing,
-    /package must be published under `next` before that catalog pointer merges[\s\S]*?read-only publication observation[\s\S]*?exact protected[\s\S]*?tag, package digest, provenance presence,[\s\S]*?`next` names 0\.1\.0 while `latest` remains alpha\.3[\s\S]*?staging Movie Catalog discovery smoke[\s\S]*?pre-catalog\s+promotion gate/,
+    /marketplace-promotion change was merged[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254/,
+  );
+  assert.match(
+    releasing,
+    /ordinary releases now exist under protected tags and npm `next`[\s\S]*?claude-v0\.1\.0[\s\S]*?v0\.1\.0[\s\S]*?public[\s\S]*?catalog at this exact `main` revision,[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selects plugin 0\.1\.0[\s\S]*?`latest` remains alpha\.3 for the plugin and alpha\.2 for the CLI/,
   );
   assert.match(
     readme,
-    /catalog manifest in this source names ordinary plugin 0\.1\.0[\s\S]*?source[\s\S]*?bytes and dated package observation do not establish deployment compatibility, a merge to public `main`, or a[\s\S]*?successful fresh public install/,
+    /ordinary releases now[\s\S]*?protected tags and npm `next`[\s\S]*?public catalog at this exact `main` revision,[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selects plugin 0\.1\.0[\s\S]*?package publication records and catalog source do not by themselves establish a[\s\S]*?successful fresh public install/,
   );
   assert.match(
     pluginReleaseEvidence,
@@ -321,7 +324,7 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /service API contract `>= 0\.2\.0` and `< 0\.3\.0`[\s\S]*?one coordinated rollout whose service-activation\s+phase occupies a maintenance window[\s\S]*?package bytes may be published first[\s\S]*?unsupported for\s+First Draft operations against the public `0\.1\.x` API contract/,
+    /service API contract `>= 0\.2\.0` and `< 0\.3\.0`[\s\S]*?activation and promotion steps have occurred; they are not pending instructions[\s\S]*?one coordinated rollout whose service-activation\s+phase occupies a maintenance[\s\S]*?window[\s\S]*?package bytes may be published first[\s\S]*?unsupported for First Draft operations[\s\S]*?against the earlier public API contract/,
   );
   assert.match(
     releasing,
@@ -329,7 +332,7 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /This source does not approve that interruption[\s\S]*?human must explicitly approve the package-first rollout and the later brief maintenance window/,
+    /For a[\s\S]*?future breaking transition, this source does not approve that interruption[\s\S]*?human must explicitly approve the[\s\S]*?package-first rollout and the later brief maintenance window/,
   );
   assert.match(
     releasing,
@@ -337,7 +340,7 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /Notify known existing alpha\.3 installations that catalog promotion does\s+not\s+update them[\s\S]*?separately\s+verified Claude Code update procedure/,
+    /Catalog promotion does not update existing installations[\s\S]*?Notify known existing alpha\.3 installations[\s\S]*?separately verified Claude Code update procedure/,
   );
   assert.match(
     releasing,
@@ -345,10 +348,10 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /exact-`next` install is incompatible and unsupported for Plan, Compile, or any[\s\S]*?other First Draft API operation/,
+    /before staging[\s\S]*?activated API 0\.2,[\s\S]*?exact-`next` install was incompatible and unsupported for Plan, Compile, or[\s\S]*?any other First Draft API operation/,
   );
   const directPackageCheck = releasing.match(
-    /Run this strict no-service check after npm reconciliation:[\s\S]*?```sh\n([\s\S]*?)\n   ```/,
+    /historical instruction was: Run this strict no-service check after npm reconciliation[\s\S]*?```sh\n([\s\S]*?)\n   ```/,
   )?.[1];
   assert(directPackageCheck, "missing direct-next no-service package check");
   assert.match(
@@ -430,41 +433,43 @@ test("release operator and agent instructions track the candidate", async () => 
     /plugin cannot be published before service activation/i,
   );
   assertTextOrder(releasing, [
-    "1. Reconcile the already-published CLI 0.1.0 registry package",
-    "2. Push the protected Skills publication tag",
-    "3. In isolated Claude state, perform the operator-only direct-`next` package check",
-    "4. After package reconciliation and the isolated no-API check pass, start the announced maintenance window",
-    "stop new Compile and Publication invocations",
-    "The public catalog and npm `latest` still name alpha.3 at this point",
-    "5. Deploy the exact API 0.2 service revision to the staging web role",
-    "deploy the same exact revision to the staging worker role",
+    "Steps 1–6 below occurred from 2026-08-07 through 2026-08-10",
+    "They must not be replayed",
+    "1. The operator reconciled the already-published CLI 0.1.0 registry package",
+    "2. The operator pushed the protected Skills publication tag",
+    "3. In isolated Claude state, the operator performed the direct-`next` package check",
+    "4. After package reconciliation and the isolated no-API check passed, the operator started the announced maintenance window",
+    "stopped new Compile and Publication invocations",
+    "The public catalog and npm `latest` still named alpha.3 at this point",
+    "5. The exact API 0.2 service revision was deployed first to the staging web role",
+    "then to the staging worker role",
     "selected 0.1.0 Movie Catalog discovery smoke",
     "separate direct-`next` no-service check from step 3",
     "A GitHub PAT, independent clone or byte verification, generated-repository credential scan, and singleton replay",
-    "6. After both roles and the selected 0.1.0 discovery smoke are verified, merge the separate marketplace-promotion change",
-    "7. After the catalog change reaches public `main`, first run the exact public installation in fresh isolated Claude state outside a Drawing Board",
+    "6. After both roles and the selected 0.1.0 discovery smoke were verified, the marketplace-promotion change was merged",
+    "7. Public `main` now contains the catalog promotion. Run the exact public installation in fresh isolated Claude state outside a Drawing Board",
     "Then pin the exact merged Skills SHA in the updated Drawing Board",
     "use that template to create a repository and a fresh Codespace",
     "run `claude`",
     "make a plain-English application request",
     "expected fresh private GitHub repository",
-    "End the maintenance window only after both the isolated public install and that template path succeed",
+    "The full v14 qualification remains a separate, stricter boundary",
   ]);
   assert.match(
     releasing,
-    /publish[\s\S]*?under `next`[\s\S]*?npm `latest` and the public marketplace catalog still[\s\S]*?name alpha\.3/,
+    /workflow published the[\s\S]*?qualified `@firstdraft\.com\/claude-code@0\.1\.0` tarball with npm provenance under `next`[\s\S]*?pre-promotion point, npm `latest` and[\s\S]*?the public marketplace catalog still named alpha\.3/,
   );
   assert.match(
     readme,
-    /staging web and worker both reported[\s\S]*?4007fc5ef0734e2fc3e3e59714919025bd73d621[\s\S]*?selected gate for promoting new catalog installs[\s\S]*?public plugin alpha\.3 bundles CLI alpha\.2 and defaults to shared staging[\s\S]*?API 0\.2 activation interrupts[\s\S]*?existing alpha\.3 installations until each receives the compatible 0\.1\.0 plugin[\s\S]*?fresh public template-and-Codespace discovery[\s\S]*?immediate post-promotion[\s\S]*?observation/,
+    /staging web and worker both reported[\s\S]*?4007fc5ef0734e2fc3e3e59714919025bd73d621[\s\S]*?selected gate for promoting new catalog installs[\s\S]*?public plugin alpha\.3 bundles CLI alpha\.2 and defaults to shared staging[\s\S]*?API 0\.2 activation interrupts[\s\S]*?existing alpha\.3 installations until each receives the compatible 0\.1\.0 plugin[\s\S]*?fresh public marketplace install and authenticated installed-Skill template-and-Codespace[\s\S]*?remain outstanding post-promotion observations/,
   );
   assert.match(
     releasing,
-    /An installation remains incompatible with shared staging until its update\s+succeeds[\s\S]*?Before ending the window, each known existing\s+installation must either reach 0\.1\.0 or an authorized operator must explicitly record and accept its continuing\s+outage as an affected-user follow-up/,
+    /An installation remains incompatible with shared staging until its update succeeds[\s\S]*?Each known existing[\s\S]*?installation must either reach 0\.1\.0 or an authorized operator must explicitly record and accept its continuing[\s\S]*?outage as an affected-user follow-up/,
   );
   assert.match(
     releasing,
-    /Require the exact promotion head's Node 24\.18\.0 CI job[\s\S]*?release-order rehearsal[\s\S]*?repository settings do not enforce it as a required check[\s\S]*?do not bypass[\s\S]*?administrative merge/,
+    /exact promotion head's Node 24\.18\.0 CI job,[\s\S]*?release-order rehearsal,[\s\S]*?passed without an administrative[\s\S]*?bypass[\s\S]*?durable rule remains: require that exact promotion-head job and never use an administrative bypass/,
   );
   assert.match(
     releasing,
@@ -472,11 +477,11 @@ test("release operator and agent instructions track the candidate", async () => 
   );
   assert.match(
     releasing,
-    /If service activation or the selected discovery smoke in step 5 fails[\s\S]*?restore the exact\s+API 0\.1 rollback revision[\s\S]*?Leave npm `latest` and\s+the public catalog at alpha\.3[\s\S]*?plugin 0\.1\.0 identity under `next` remains immutable[\s\S]*?new SemVer/,
+    /pre-promotion rollback rule for historical steps 4–5 was to restore the then-exact API 0\.1 rollback revision[\s\S]*?leave the catalog at alpha\.3[\s\S]*?failure[\s\S]*?conditions did not occur[\s\S]*?dated recipe is historical and non-actionable[\s\S]*?must not be applied to issue #363[\s\S]*?or current staging/,
   );
   assert.match(
     releasing,
-    /If the fresh public path in step 7 fails after catalog promotion[\s\S]*?restore both service roles[\s\S]*?repoint the catalog to the already-published `0\.1\.0-alpha\.3` package[\s\S]*?one reviewable source change[\s\S]*?\.claude-plugin\/marketplace\.json[\s\S]*?test\/repository\.test\.mjs[\s\S]*?test\/release-compatibility\.test\.mjs[\s\S]*?README\.md[\s\S]*?RELEASING\.md[\s\S]*?catalog change does not downgrade existing installations[\s\S]*?each known installation\s+moved to 0\.1\.0[\s\S]*?return to a supported alpha\.3 installation[\s\S]*?authorized operator must record and accept its continuing outage[\s\S]*?Selecting a prior immutable catalog package is not reusing that SemVer for different bytes/,
+    /For issue #363 and any current qualification[\s\S]*?stop only new operator-controlled Compile and Publication invocations[\s\S]*?qualification lane[\s\S]*?Public-plugin traffic to shared staging may continue as unattributed capacity activity[\s\S]*?current service runbook's drift and stop rules[\s\S]*?exact web, worker, queue, catalog,[\s\S]*?and installation state read-only[\s\S]*?fresh explicit authorization naming the exact rollback revisions,[\s\S]*?catalog action, affected users, and completion criteria[\s\S]*?Do not presume that API 0\.1 or plugin[\s\S]*?alpha\.3 is the current rollback target[\s\S]*?outstanding public path in step 7 fails[\s\S]*?catalog repoint[\s\S]*?one reviewable source change[\s\S]*?\.claude-plugin\/marketplace\.json[\s\S]*?test\/repository\.test\.mjs[\s\S]*?test\/release-compatibility\.test\.mjs[\s\S]*?README\.md[\s\S]*?RELEASING\.md[\s\S]*?catalog change does not update existing installations[\s\S]*?exact supported version[\s\S]*?explicitly accept its continuing outage[\s\S]*?Selecting a prior immutable catalog package is not reusing that SemVer for different bytes/,
   );
   assert.match(
     releasing,
