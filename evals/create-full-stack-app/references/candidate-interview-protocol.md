@@ -8,7 +8,7 @@ The interview turns an underspecified product request into explicit product mean
 answers. It is not a gate on local work: the agent may edit a local Plan incrementally and may submit the current
 whole-file snapshot for diagnostics whenever that is useful. An incomplete or invalid submission may return
 descriptive diagnostics. Compilation still consumes one complete candidate snapshot that whole-graph analysis has
-accepted.
+accepted, after the user has approved its semantic read-back.
 
 ## Keep a decision ledger
 
@@ -41,11 +41,12 @@ access, or requested clients. The ambiguity matrix guides the dialogue; it is no
 6. **Resolve client consequences.** Establish requested web and native clients, domain handling, native capture or
    offline needs, delivery channels, notifications, and external prerequisites. A native client does not imply push
    notifications, and absent Account requirements do not imply public access.
-7. **Read back the candidate.** Summarize Entities, Fields, References, surfaces, access, native and delivery choices,
-   explicit exclusions, delegated decisions, open choices, and known capability gaps.
+7. **Read back and obtain approval.** Summarize Entities, Fields, References, surfaces, access, native and delivery
+   choices, explicit exclusions, delegated decisions, open choices, and known capability gaps. Ask the user to
+   correct or explicitly approve that exact semantic model before Compile.
 
 Capture intended product meaning before comparing it with current target support. A capability gap is not permission
-to silently narrow the user's intent.
+to silently delete, loosen, flatten, relabel, or substitute the user's intent merely to obtain `valid` analysis.
 
 ## Ambiguity matrix
 
@@ -89,3 +90,22 @@ The agent has enough information to assemble and read back one complete candidat
 "Use your judgment" can delegate a choice. The resulting decision still belongs in the read-back. These criteria
 describe readiness for a complete candidate; they do not prohibit earlier local edits or diagnostic submissions,
 and deferred questions can be revisited after diagnostics or further dialogue.
+
+## Read back and approve before Compile
+
+Before the first Compile that could reach Publication, reread the exact staged Plan and present a compact semantic
+summary organized Entity by Entity. Include record meaning and Primary Descriptors; Field types and requiredness;
+Reference ownership, targets, deletion, and meaningful traversals; requested surfaces and access; requested clients,
+domain, and delivery; delegated choices, exclusions, deferred questions, and capability gaps.
+
+Ask the user to correct or explicitly approve that exact model. If the Plan changes afterward, repeat the read-back
+for the changed candidate. Once the unchanged candidate is approved, run the requested Compile without a second
+command-level confirmation.
+
+Do not weaken product meaning to pass the current capability boundary. The user may explicitly move a feature out of
+this release after seeing the consequence; record that product-scope decision. Otherwise preserve the meaning, stop
+before Compile, and report the gap.
+
+An explicitly requested diagnostic-only Compile of an exact snapshot already known to be invalid from its bytes or
+matching diagnostics may precede approval because invalid analysis cannot enter Publication. Do not extend this
+exception to a candidate that is merely assumed to be unsupported.

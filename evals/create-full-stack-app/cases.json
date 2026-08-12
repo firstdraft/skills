@@ -852,11 +852,36 @@
       ]
     },
     {
+      "id": "precompile-semantic-read-back",
+      "should_trigger": true,
+      "prompt": "Prepare the staged Movie Catalog for Compilation. Reread the exact Plan and present its complete semantic model for my approval. Keep this review local, do not run any First Draft command, and do not Compile yet.",
+      "expectations": [
+        "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
+        "Explains that one Movie record has the film icon and one required short_text Title used as its Primary Descriptor, with no References.",
+        "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, that delivery is empty, and that successful Publication creates a private GitHub repository.",
+        "Asks the user to correct or explicitly approve the complete semantic model, keeps the review local, and does not run plan compile or start Publication.",
+        "Preserves the exact staged Plan and does not delete, loosen, flatten, relabel, or substitute product meaning merely to fit current capabilities."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
       "id": "compile-invalid-candidate-is-safe",
       "should_trigger": true,
       "prompt": "Try to Compile the staged malformed Foundation Plan now so we can use First Draft's diagnostics.",
       "expectations": [
         "Runs the zero-flag plan compile product subcommand through the Skill resolver and lets it submit the exact current file even though local JSON parsing would fail.",
+        "Uses the narrow known-invalid diagnostic exception instead of requiring semantic approval, because the exact staged bytes are malformed and invalid analysis cannot enter Publication.",
         "Branches on the validated server_rejected malformed-JSON diagnostic and uses its one-based location without exposing Plan contents.",
         "Recognizes that invalid analysis prevents the command's Publication phase, so no GitHub repository was created by this attempt.",
         "Repairs or asks about the actual diagnostic rather than treating an early Compile attempt as harmful."
@@ -876,12 +901,14 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "Use First Draft to Compile the staged Movie Catalog app. Its public web index, private GitHub repository, and selected iPhone client are intentional.",
+      "prompt": "I approve the exact pre-Compile semantic read-back for the unchanged staged Movie Catalog: movie_catalog has one Movie Entity with the film icon; each Movie has one required short_text Title used as its Primary Descriptor, no References, and only a public read-only index; the selected iPhone client uses that index for navigation under movies.example.com; delivery is empty; successful Publication creates a private GitHub repository. Compile that exact candidate now.",
       "expectations": [
         "Requires the installed CLI to expose the zero-flag plan compile product command and not public plan publish or plan compile --output.",
+        "Treats the prompt as unambiguous approval of the complete semantic model, rereads the exact local Plan, verifies that it matches the approved read-back, and does not ask for a second confirmation or repeat the unchanged read-back.",
         "Runs plan compile through the Skill resolver for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
         "Treats progress as nonterminal observational output and reports success only when stdout contains the validated private GitHub repository URL.",
-        "Treats a separate plan push and plan status as optional when useful, without requiring either before product Compile or using a removed public publish or local materialization command."
+        "Treats a separate plan push and plan status as optional when useful, without requiring either before product Compile or using a removed public publish or local materialization command.",
+        "Would stop and repeat the semantic read-back instead of compiling if the local Plan no longer matched the approved candidate."
       ],
       "artifacts": [
         {

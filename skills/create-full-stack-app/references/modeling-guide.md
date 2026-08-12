@@ -110,12 +110,14 @@ Do not author the Reference's same-key forward Association. Add a referenced-sid
 needs a meaningful reverse traversal. Add an indirect Association only when the composed traversal itself has a
 stable product name or behavior.
 
-The current Compiler admits ordinary single-target References with omitted or false `one_to_one` and `immutable`,
-and their derived forward traversals. It also admits a direct unqualified referenced-side collection when
-`one_to_one` is false, plus one distinct indirect collection whose `through` step is such an inverse and whose
-`source` step is an admitted forward traversal. Aliases, broader indirect paths, predicates, cardinality bounds,
-polymorphism, exclusive arcs, one-to-one, immutable or defaulted References, and other relationship shapes fail
-closed. Preserve broader product meaning and report the capability gap.
+The current Compiler admits ordinary single-target References with Boolean `one_to_one`, omitted or false
+`immutable`, and their derived forward traversals. It admits an unqualified referenced-side `has_one` when
+`one_to_one` is true and `has_many` otherwise. An indirect collection may compose an admitted `has_many` inverse
+with the forward traversal of another admitted Reference only when both underlying References have
+`one_to_one: false`. These are per-Association shape rules, not a quota. Aliases, broader indirect paths, predicates,
+cardinality bounds, polymorphism, exclusive arcs, immutable or defaulted References, and other relationship shapes
+fail closed. A one-to-one Reference may compile as storage, but current Scaffold forms cannot accept it as an input.
+Preserve broader product meaning and report the capability gap.
 
 ## Add behavior deliberately
 
@@ -129,17 +131,16 @@ Do not add a realization choice when the target profile has only one supported l
 Capabilities or prerequisites as authored lists.
 
 The smallest current Scaffold subset has `resource_routes: ["index"]` and a public index. One exact extension adds
-public create and update with short-text or required-Reference inputs and same-Entity index returns. A second inserts
-public show into that complete mutation shape, optionally projects ordered direct owner-local scalar Fields, and may
-return successful mutations to the mutation record's show page. A final variant appends public destroy and returns
-only to the same-Entity index. Read the Foundation Plan reference for the exact coupled shapes. Standalone show,
-Association or nested projections, non-public authorization, broader inputs or return paths, and other route
-combinations fail closed. Do not silently narrow a broader requested Scaffold merely to make it compilable.
-
-The Validation and form subsets overlap only where their rules agree. In particular, a Reference-owned conditional
-presence Validation can compile, but it cannot fit the current mutation form subset: Association inputs admit only
-required References, while conditional presence is meaningful on an optional Reference. Preserve the requested
-rule and report that combined-shape gap.
+public create and update with short-text Field inputs or forward-Association inputs over admitted ordinary
+References, plus same-Entity index returns. Optional and required References may both be inputs; every required
+Field and Reference must appear in `create.inputs`. A Reference-owned conditional-presence Validation can fit when
+its optional ordinary Reference has `one_to_one: false` and its forward Association appears in both input lists.
+A second extension inserts public show into that complete mutation shape, optionally projects ordered direct
+owner-local scalar Fields, and may return successful mutations to the mutation record's show page. A final variant
+appends public destroy and returns only to the same-Entity index. Read the Foundation Plan reference for the exact
+coupled shapes. Standalone show, Association or nested projections, non-public authorization, broader inputs or
+return paths, and other route combinations fail closed. Do not silently narrow a broader requested Scaffold merely
+to make it compilable.
 
 Select `native.ios` only when the user wants the bounded owned iPhone project. It requires at least one admitted
 public-index Scaffold for navigation. Application `domain` is admitted by analysis only with selected iOS; selected
@@ -161,16 +162,25 @@ diagnostic reveals an ambiguous product decision, ask the user rather than optim
 In particular, do not remove or weaken modeled content solely because the importer reports
 `foundation_plan.import.unsupported_capability`. Preserve the local Plan and report the exact server gap.
 
-## Prepare user review
+## Prepare the pre-Compile semantic read-back
 
-Summarize choices that materially affect the generated Foundation, including:
+Immediately before the first Compile that could reach Publication, reread the exact local Plan and present a compact
+semantic read-back organized Entity by Entity. Include:
 
-- Entity boundaries and primary descriptors;
-- required, immutable, or derived values;
-- relationship deletion and multiplicity;
-- authentication and authorization;
-- requested native or delivery features;
-- target realization choices; and
-- warnings or unsupported target behavior.
+- what one record of each Entity represents and its Primary Descriptor;
+- every Field's type and required or optional status, plus material defaults, rules, mutability, normalization, or
+  protection;
+- every Reference's owner, targets, requiredness, deletion behavior, multiplicity, and meaningful inverse or
+  indirect traversal;
+- requested surfaces, projections, returns, and access;
+- application scope, requested clients, domain and delivery choices, delegated decisions, exclusions, and deferred
+  questions; and
+- warnings and capability gaps that keep intended product meaning separate from current target support.
 
-Separate verified diagnostics from modeling assumptions and from unimplemented First Draft capabilities.
+Ask the user to correct or explicitly approve that exact model. If the Plan changes afterward, repeat the read-back
+for the changed candidate. Separate verified diagnostics from modeling assumptions and from unimplemented First
+Draft capabilities.
+
+Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning to make import or analysis
+green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a
+product-scope decision. Otherwise preserve the meaning, stop before Compile, and report the capability gap.

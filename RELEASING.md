@@ -8,6 +8,11 @@ exception: merging it changes the public catalog and requires the ordered gates 
 
 ## Release identity
 
+The current source-candidate version is `0.1.2`. It is unpublished and unpromoted; its packed SHA-256 is
+`8b4c0543ccb6ff056183792ba143083d4f83107cbe7860249405763071571725`. The exact integration commit will complete
+the candidate identity after validation. The public marketplace and npm `next` and `latest` continue to select
+immutable plugin 0.1.1 until a separate release and promotion are explicitly authorized.
+
 This source's current published patch version is `0.1.1`. It corrects the installed evidence boundary,
 makes the Skill's CLI startup check portable across shells, consistently prefers a repository-owned wrapper, and
 removes plugin configuration that Claude Code cannot deliver to a model-invoked Bash executable. It keeps CLI 0.1.0
