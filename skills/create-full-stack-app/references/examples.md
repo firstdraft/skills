@@ -3,6 +3,16 @@
 These examples teach `sketch/0.19` structure. UUIDs are fixed documentation data. Never reuse them for new subjects
 in a real Project.
 
+## Contents
+
+- [Empty starter](#empty-starter)
+- [Bounded web and iPhone application](#bounded-web-and-iphone-application)
+- [Conditional text length](#conditional-text-length)
+- [Public mutation, show projection, returns, and destroy](#public-mutation-show-projection-returns-and-destroy)
+- [One Entity with required and optional scalar Fields](#one-entity-with-required-and-optional-scalar-fields)
+- [Ordinal enum Field](#ordinal-enum-field)
+- [Stored and reverse relationship](#stored-and-reverse-relationship)
+
 ## Empty starter
 
 Running `plan init` through the Skill resolver creates this valid starting point from `--name`, `--application-key`,

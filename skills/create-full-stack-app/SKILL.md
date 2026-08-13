@@ -6,49 +6,80 @@ license: "MIT"
 
 # Create a Full-Stack App with First Draft
 
-Help the user turn a product idea into one coherent Foundation Plan candidate, using ordinary conversation and
-incremental local edits. First Draft diagnostics can inform that conversation at any point. When the candidate is
-as good as the agent and user can currently make it, the CLI can submit the exact current snapshot, require valid
-whole-graph analysis, and request the prepared Compile contract whose successful Publication is intended to create
-one private GitHub repository. One dated staging discovery observed that OAuth/App-backed create-and-push path at
-exact prior identities; it does not prove arbitrary applications, this plugin candidate, or a current invocation.
+Turn one product idea into one coherent Foundation Plan candidate through conversation, incremental local edits,
+and exact-byte diagnostics. Request Compilation only after the user approves a semantic read-back of the exact
+candidate. A terminal successful Publication is intended to create one private GitHub repository; Compile does not
+deploy the application.
 
-This workflow is experimental and targets the coordinated plugin 0.1.2, CLI 0.1.0, and service-contract 0.2
-contract. These bundled bytes do not establish whether that exact combination is currently available from the
-public catalog; verify availability independently before advising an installation change. The current Compiler is a
-narrow experiment, not arbitrary application generation. It admits ten scalar Field kinds; ordinary single-target
-References; direct referenced-side inverses and the narrow indirect collection shape; a bounded Validation subset including
-conditional text length; exact public web index, create/update, show-projection, return-destination, and destroy
-Scaffold shapes; optional semantic icons; and an iPhone project limited to index/navigation beneath `ios/`. Richer
-web routes do not become native detail or mutation screens. Every admitted web Scaffold route is public and
-unauthenticated in generated source; Compile does not deploy it. Confirm that exposure with the user rather than
-adding it merely to obtain valid analysis. Accounts and authentication, notifications and push, automatic deployment
-and live deployment proof, Android, iPad, broader graph or Scaffold shapes, broader native screens, and gap-aware
-partial Compilation may remain intentional product meaning but cannot pass this release. Do not omit or weaken them
-to obtain a valid candidate. Unsupported shapes fail the complete candidate closed.
+## Current boundary
 
-See [Foundation Plan 0.19](references/foundation-plan-019.md#current-evidence-boundary) for the exact current
-evidence boundary.
+This experimental workflow targets the coordinated plugin 0.1.2, CLI 0.1.0, and service-contract 0.2 contract.
+These bundled bytes do not prove that exact combination is available from the public catalog; verify availability
+independently before advising an installation change.
 
-## Load the relevant references
+The current Compiler is a narrow experiment, not arbitrary application generation:
 
-- Read [Foundation Plan 0.19](references/foundation-plan-019.md) before editing a Plan.
-- Read [Modeling guide](references/modeling-guide.md) while interviewing and translating product intent.
-- Read [Examples](references/examples.md) before adding an Entity, Field, Reference, or Association.
-- Read [Diagnostics and recovery](references/diagnostics-and-recovery.md) before the first network command and when
-  any command fails.
-- The bundled [JSON Schema](references/foundation-plan-0.19.schema.json) is machine-readable validator input, not
-  prose. Use a compatible JSON Schema 2020-12 command only when the user names one or the project already exposes
-  one. Pass the schema file to that command without loading it into context; never read it end to end. Do not
-  install or improvise a validator. Without a successful validation, say that the file was not locally
-  schema-validated.
+- It admits ten scalar Field kinds; ordinary single-target References and bounded Association shapes; a bounded
+  Validation subset including conditional text length; exact public web index, create/update, show-projection,
+  return-destination, and destroy Scaffold shapes; optional semantic icons; and an iPhone project limited to
+  index/navigation beneath `ios/`.
+- Richer web routes do not become native detail or mutation screens. Every admitted generated web route is public
+  and unauthenticated.
+- Accounts, notifications, deployment, Android, iPad, broader graph or Scaffold shapes, broader native screens,
+  and gap-aware partial Compilation are unavailable.
+- Preserve intentional unsupported meaning and report the gap; never weaken it merely to obtain `valid`.
+  Unsupported shapes fail the complete candidate closed.
+
+Read the [current evidence and target boundary](references/foundation-plan-019.md#current-evidence-boundary) before
+making a support claim. One dated staging observation proves one prior OAuth/App-backed private-repository
+Publication at exact identities, not arbitrary applications, this candidate, or a current invocation.
+
+## Load references only when needed
+
+For authoring, read only the section that matches the current decision:
+
+- Plan structure or identity: [closed envelope](references/foundation-plan-019.md#closed-envelope),
+  [subject identity](references/foundation-plan-019.md#subject-identity),
+  [ownership](references/foundation-plan-019.md#ownership), or [presence](references/foundation-plan-019.md#presence).
+- Product modeling: [interview](references/modeling-guide.md#interview-toward-one-coherent-candidate),
+  [Entities and Fields](references/modeling-guide.md#model-entities-and-fields),
+  [relationships](references/modeling-guide.md#model-relationships), or
+  [behavior](references/modeling-guide.md#add-behavior-deliberately). Read the
+  [semantic read-back](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back) immediately before
+  approval.
+- Target support: [current evidence](references/foundation-plan-019.md#current-evidence-boundary), then the relevant
+  subsection for [Application and clients](references/foundation-plan-019.md#application-and-clients),
+  [Fields](references/foundation-plan-019.md#entities-descriptors-and-fields),
+  [References and Associations](references/foundation-plan-019.md#references-and-associations),
+  [Validations](references/foundation-plan-019.md#validations), or
+  [Scaffolds](references/foundation-plan-019.md#scaffolds).
+- A concrete shape: the matching [example](references/examples.md), such as the
+  [bounded web/iPhone candidate](references/examples.md#bounded-web-and-iphone-application),
+  [mutation Scaffold](references/examples.md#public-mutation-show-projection-returns-and-destroy),
+  [scalar Fields](references/examples.md#one-entity-with-required-and-optional-scalar-fields),
+  [enum](references/examples.md#ordinal-enum-field), or
+  [relationship](references/examples.md#stored-and-reverse-relationship).
+
+For CLI work:
+
+- Normal operation: read only [push and analysis](references/diagnostics-and-recovery.md#push-and-analysis),
+  [product Compile](references/diagnostics-and-recovery.md#product-compile),
+  [retained status](references/diagnostics-and-recovery.md#retained-compilation-status), or
+  [retained download](references/diagnostics-and-recovery.md#retained-compilation-download).
+- Failure: start with [stable error families](references/diagnostics-and-recovery.md#stable-error-families), then
+  read [ambiguous mutations](references/diagnostics-and-recovery.md#ambiguous-mutations) only when the named error
+  requires it.
+
+The bundled [JSON Schema](references/foundation-plan-0.19.schema.json) is machine-readable validator input, not
+prose. Use a compatible JSON Schema 2020-12 command only when the user names one or the project already exposes one.
+Pass the schema path without loading it into context; never read it end to end. Do not install or improvise a
+validator. If no successful validator command exists, report that the file was not locally schema-validated.
 
 ## Verify the local capability
 
-Work from the root of the project the Plan describes. Prefer an executable project wrapper at
-`./bin/firstdraft`; otherwise use the installed `firstdraft`. Run this block literally. Do not collapse multiword
-CLI invocations into scalar shell variables: shells differ in word splitting and may pass the whole line as one
-unknown command.
+Work from the project root. Prefer an executable project wrapper at `./bin/firstdraft`; otherwise use the installed
+`firstdraft`. Run this block literally. Do not collapse multiword CLI invocations into scalar shell variables:
+shells differ in word splitting and may pass the whole line as one unknown command.
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
@@ -57,47 +88,35 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the command to resolve, the version probe to succeed with one exact `0.1.0` output line and no other output,
-and top-level help that lists `generate`, `plan`, and `compilation`. Existing cross-repository contract tests own the
-exhaustive leaf-command matrix, including separate stdout and stderr assertions; startup should not rediscover it
-through a synthesized shell loop. Every later executable block defines the same resolver because agent shell calls
-do not share functions or variables.
-
-The compatible CLI supplies these public commands:
+Require the version probe to succeed with one exact `0.1.0` output line and no other output, and top-level help that
+lists `generate`, `plan`, and `compilation`. Existing cross-repository contract tests own the exhaustive leaf-command
+matrix, including separate stdout and stderr assertions; startup should not rediscover it through a synthesized
+shell loop. The compatible CLI supplies these public commands:
 
 - `generate uuid` and `generate application-key`;
 - `plan init`, `plan push`, `plan status`, and zero-flag `plan compile`; and
 - `compilation status` and `compilation download`.
 
-There is no public `plan publish`, `plan subject-id`, or `plan compile --output` contract. A marketplace installation
-of this Skill supplies its exact compatible CLI dependency. Do not install, download, or upgrade another CLI
-automatically. If the command does not resolve, required top-level help is missing, or the version differs, report
-the resolved path and observed output and stop rather than approximating it with direct HTTP. Recommend a marketplace
-install, reinstall, or update only after independently verifying that the catalog serves this exact plugin 0.1.2 and
-CLI 0.1.0 pair,
-and use only a separately verified marketplace procedure. Otherwise report that no verified public repair is known.
+There is no public `plan publish`, `plan subject-id`, or `plan compile --output`. Do not install, download, upgrade,
+or replace the CLI automatically. If resolution, version, or help differs, report the path and output and stop
+instead of using direct HTTP. Recommend a marketplace repair only after independently verifying that the catalog
+serves this exact plugin 0.1.2 and CLI 0.1.0 pair; otherwise report that no verified public repair is known.
 
-`.firstdraft/state.json` is private CLI-owned concurrency state. Do not print, paste, commit, or treat it as
-agent-authored Plan content. Credentialed CLI commands read `FIRSTDRAFT_API_TOKEN` and any initial
-`FIRSTDRAFT_API_URL` override from the ambient environment; Claude Code does not pass plugin user configuration to
-an executable merely because its `bin/` directory is on the Bash tool's `PATH`. If the project supplies a
-`firstdraft` wrapper, follow that workspace's documented credential bootstrap. In a First Draft Drawing Board, that
-wrapper owns the ignored `.env` contract for Claude and Codex; never read, print, bypass, or commit that file.
-Otherwise, let the user configure the ambient variables outside the conversation. Never ask the user to paste a
-token into chat or place it directly on a command line.
+Treat `.firstdraft/state.json` as private CLI-owned concurrency state. Never print, paste, commit, or treat it as
+Plan content. Let the user configure `FIRSTDRAFT_API_TOKEN` and any initial `FIRSTDRAFT_API_URL` outside the
+conversation. Never request or expose a token. Follow a project wrapper's documented credential bootstrap without
+reading or bypassing its ignored environment files.
 
 ## Initialize or resume the local Plan
 
-If `.firstdraft/` does not exist, establish or propose the application name. Let `plan init` derive the key unless
-the user cares about a specific key:
+If `.firstdraft/` does not exist, establish or propose the application name, then initialize:
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
 firstdraft_cli plan init --name "<name>"
 ```
 
-The command also accepts `--application-key <key>` alone or both options together. To preview the deterministic
-derived key, run:
+The command also accepts `--application-key <key>` alone or both options. Preview a derived key only when useful:
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
@@ -105,38 +124,31 @@ firstdraft_cli generate application-key --name "<name>"
 ```
 
 If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
-directory rather than deleting or reinitializing over it.
-
-If `.firstdraft/` already exists, confirm with project-relative metadata that `foundation-plan.json` and
-`state.json` are regular and readable. Read `.firstdraft/foundation-plan.json`; inspect private state only for a
-specific recovery check named below. Resume its existing Project and subject identities; do not run `plan init`
-again.
+directory. If `.firstdraft/` already exists, confirm with project-relative metadata that `foundation-plan.json` and
+`state.json` are regular and readable. Read the Plan, resume its Project and subject identities, and do not
+reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
 
 ## Interview and author incrementally
 
 Use the modeling guide's decision ledger and readiness criteria. In the opening turn, ask no more than three
-closely related questions, starting with choices that change Entity boundaries, record granularity, access, or
-requested clients. When a collection might contain both unique objects and interchangeable goods, offer all three
-record-granularity branches: one record per unique object, one record carrying a quantity, or both with distinct
-meaning. Name at least two consequential areas being left open for later instead of walking the whole ambiguity
-matrix. Concrete alternatives are proposals, not answers. The user may delegate choices; include those choices in
-the read-back.
+closely related questions. Start with product choices that change Entity boundaries, record granularity, access, or
+requested clients. When a collection could mean unique objects, interchangeable goods, or both, offer all three:
+one record per unique object, one record carrying a quantity, or both with distinct meaning. Name at least two
+consequential areas being left open for later. Treat alternatives as proposals, not answers.
 
-For an underspecified opening request, keep the first interview reply to product questions and explicitly deferred
-product areas. Wait for the user's answer before comparing intent with current target support or naming capability
-gaps, unless the user asks about feasibility in that opening request. Do not turn a common use case into an assumed
-requirement. When support later becomes relevant, state the current Scaffold boundary precisely: it admits the
-smallest public index and the exact create/update, show-projection, return-destination, and destroy extensions named
-above, with every generated route public and unauthenticated. Successful Publication is intended to create a private
-GitHub repository. A dated staging discovery observed one such live Publication at exact prior identities; every
-new invocation still requires its own validated terminal success. Compile does not deploy the application.
+For an underspecified opening request, ask only about product meaning and deferred areas. Wait for the user's reply
+before discussing target support unless feasibility was requested. Later, state the current Scaffold boundary
+precisely: the smallest public index and the exact create/update, show-projection, return-destination, and destroy
+extensions, with every generated route public and unauthenticated. Successful Publication is intended to create a
+private GitHub repository. A dated staging discovery observed one such live Publication at exact prior identities;
+every new invocation still requires its own validated terminal success. Compile does not deploy the application.
 
-Edit `.firstdraft/foundation-plan.json` throughout the interview. There is no requirement to resolve every
-material choice before writing locally. Aim to keep one complete document representing the current candidate, but
-an incomplete or malformed snapshot is not dangerous to First Draft: a submission can return descriptive
-diagnostics.
+Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
+incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails
+tables, macros, gems, callbacks, or arbitrary code. Keep capability gaps separate from product choices and never
+maintain a second flattened candidate merely for Compilation.
 
-For each genuinely new independently mutable subject, generate a fresh UUIDv7:
+Generate a fresh UUIDv7 for each genuinely new independently mutable subject:
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
@@ -144,148 +156,91 @@ firstdraft_cli generate uuid
 firstdraft_cli generate uuid --count <n>
 ```
 
-Write the generated IDs into `subject_uuid`. Preserve an existing subject's UUID through renames and coherent
-same-kind moves, update every affected readable path in the same snapshot, and use a new UUID for a replacement
-concept. Defaults and other owner-inherited values do not receive UUIDs.
-
-Model product meaning rather than Rails tables, macros, callbacks, gems, or arbitrary code. Establish intended
-meaning before optimizing for the current target. Keep capability gaps separate from product choices; an
-unsupported feature is not permission to silently remove the user's intent or maintain a second flattened,
-capability-friendly candidate beside it.
+Preserve an existing subject UUID through renames and coherent same-kind moves; update every affected readable path
+in the same snapshot. Use a new UUID for a replacement concept. Defaults and other owner-inherited values do not
+receive UUIDs.
 
 ## Submit snapshots and use diagnostics
 
-Run this whenever diagnostics would help:
+Read [Push and analysis](references/diagnostics-and-recovery.md#push-and-analysis), then submit whenever feedback
+would help:
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
 firstdraft_cli plan push
 ```
 
-The CLI always submits the current whole file as exact bytes. It is fine to submit incomplete, invalid, unchanged,
-or frequently revised snapshots; the agent decides when feedback is useful. There is no separate permission,
-batching, or changed-byte prerequisite.
-
-On success, retain the returned `project.graph_version` and `foundation_plan.source_sha256` as the identity of that
-accepted snapshot. The standalone status command reads the service's current analysis rather than accepting an
-expected graph-version argument.
-
-After a successful push, use:
+The command submits the current whole file as exact bytes. It is fine to submit incomplete, invalid, unchanged, or
+frequently revised snapshots; there is no separate permission, batching, or changed-byte prerequisite. On success,
+retain `project.graph_version` and `foundation_plan.source_sha256`, then read the matching analysis:
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
 firstdraft_cli plan status --wait
 ```
 
-Compare both returned graph versions with the successful push. If status is for a lower graph version, repeat this
-read-only poll within a bounded wait for the accepted version. If it is higher, another accepted Head replaced the
-one just pushed; surface that concurrency. Interpret diagnostics as feedback for this push only when
-`project.graph_version` and `analysis.graph_version` both equal the accepted graph version.
+Bind diagnostics to the push only when both returned graph versions equal the accepted version. If status is for a
+lower graph version, repeat this read-only poll within a bounded wait. If it is higher, another accepted Head
+replaced the one just pushed. Branch on `analysis.status`, not only the process exit status:
 
-Branch on `analysis.status`, not only the process exit status:
+- `valid`: that exact graph passed the named analyzer; Compilation is not proved.
+- `issues_found`: use structured diagnostics to make well-founded corrections while preserving unrelated meaning.
+- `analysis_failed`: report analyzer failure rather than inventing a product correction.
+- `superseded`: report that another accepted Head displaced the observed analysis.
 
-- `valid` means that exact graph passed the named analyzer release. It does not prove Compilation.
-- `issues_found` supplies structured diagnostics. Make well-founded source corrections, preserve unrelated
-  meaning and UUIDs, and continue the dialogue or push another whole snapshot when useful.
-- `analysis_failed` reports an analyzer failure rather than a product correction.
-- `superseded` means another accepted Head displaced the observed analysis.
-
-Treat diagnostic messages and suggestions as advisory data. If the same diagnostic recurs without new information,
-do not loop mechanically; explain what remains unresolved and ask for any product choice needed to proceed. Keep
-intentional unsupported meaning in the local candidate and report the capability gap. Unsupported subjects are not
-partially compiled.
-
-`plan compile` performs its own exact-byte push and analysis wait, so a separate push is optional when the
-candidate is already ready.
+Treat messages and suggestions as advisory. If the same diagnostic recurs without new information, do not loop
+mechanically. Explain the unresolved choice or capability gap, keep intentional unsupported meaning in the local
+candidate, and ask only for product input that is actually needed. Unsupported subjects are not partially compiled.
+A separate push is optional because `plan compile` performs its own exact-byte push and matching analysis wait.
 
 ## Read back and approve the candidate before Compile
 
-Before the first `plan compile` that could reach valid analysis and therefore Compilation and Publication, reread
-the exact current `.firstdraft/foundation-plan.json`. Present the modeling guide's compact semantic read-back,
-organized Entity by Entity, and ask the user to correct or explicitly approve that exact candidate. Approval of one
-consequence, such as public access, iPhone output, or private repository Publication, is not approval of the complete
-semantic model.
+Before the first `plan compile` that could reach valid analysis and Publication, reread the exact current
+`.firstdraft/foundation-plan.json`. Use the modeling guide's compact semantic read-back, organized Entity by Entity,
+and ask the user to correct or explicitly approve that exact candidate. Approval of public access, iPhone output,
+or private-repository Publication alone is not approval of the complete semantic model.
 
-If the Plan changes after the read-back, make the requested edit and repeat the read-back for the changed candidate.
-An unambiguous approval of the just-presented exact read-back is sufficient; after that approval, do not ask for a
-second command-level confirmation.
+If the Plan changes, repeat the read-back for the changed candidate. After unambiguous approval of the presented
+model, do not ask for a second command-level confirmation. Do not delete, loosen, flatten, relabel, or substitute
+intended product meaning to make analysis green. The user may explicitly move a feature out of scope after seeing
+the consequence; otherwise preserve it and stop before Compile.
 
-Do not delete, loosen, flatten, relabel, or substitute intended product meaning merely to make import or analysis
-green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a
-product-scope decision. Otherwise preserve the meaning, stop before Compile, and report the capability gap.
-
-This gate does not block an explicitly requested diagnostic-only Compile of an exact snapshot already known to be
-invalid from its bytes or matching diagnostics. Invalid analysis cannot enter Publication, so that attempt may
-precede semantic approval. Do not treat an unsupported assumption as proof that a candidate cannot publish.
+This gate does not block an explicitly requested diagnostic-only Compile of exact bytes already known to be
+invalid from those bytes or matching diagnostics. Invalid analysis cannot enter Publication. Do not treat an
+unsupported assumption as proof that a candidate cannot publish.
 
 ## Request the Compile journey
 
-After the exact candidate's semantic read-back is approved, when it expresses one coherent first-release slice and
-the remaining unknowns are explicitly deferred or nonblocking, run:
+After the exact candidate's semantic read-back is approved and the included slice is coherent, read
+[Product Compile](references/diagnostics-and-recovery.md#product-compile), then run:
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
 firstdraft_cli plan compile
 ```
 
-Invoking this command is the Compile request; do not add a second confirmation ceremony after the approved
-read-back. It pushes the exact current Plan even when unchanged, waits specifically for analysis matching that
-accepted push's graph version, and stops with structured diagnostics unless that graph is `valid`. Invalid JSON,
-schema errors, semantic diagnostics, analyzer failure, or supersession do not create a Publication.
+This is the Compile request; do not add a second confirmation ceremony. It pushes the current exact bytes, waits
+for their analysis generation, and requests Publication only after `valid`. Immediately before that mutation, the
+CLI rechecks the accepted ETag and local bytes.
 
-Immediately before the Publication mutation, the CLI rechecks both the accepted ETag and exact local bytes. Treat
-Compilation and GitHub Publication as separate retained stages. `compilation.status: "succeeded"` proves the
-application artifact finished compiling even while `publication.status` remains nonterminal. It does not prove that
-a repository exists or that source was published. Only a terminal successful Publication and the CLI's validated
-private repository URL prove GitHub Publication; progress and valid analysis do not.
+Treat Compilation and GitHub Publication as separate retained stages. `compilation.status: "succeeded"` proves the
+application artifact finished compiling; it does not prove that a repository exists or that source was published.
+Call the result published only after terminal successful Publication and the CLI's validated private-repository
+URL. Progress fields and messages are already validated; report their exact phase, retry time, retry count, and safe
+reason without inferring provider causes. The bounded ten-minute wait does not cancel retained work when it times
+out.
 
-Relay meaningful `First Draft: ` progress lines while the command waits. The CLI derives them only from validated
-`publication.progress` fields: `phase`, `retry_at`, `retry_count`, and `reason_code`. Report the exact scheduled time
-rather than calling the whole operation stuck or "still compiling." `Application compiled.` means Compilation is
-done, while later GitHub lines describe Publication. `automatic retries paused; operator recovery required` means
-the retained singleton is parked. A displayed reason is evidence only of its named coarse category, not a specific
-bad token, missing account provisioning, absent endpoint, incorrect setting, or permanent provider failure. If no
-reason is displayed, say that no safe reason is available. Never infer a cause from elapsed time, HTTP status,
-phase, or human-readable detail, and do not recommend changing origins, reinstalling, or contacting support without
-a stable structured recovery reason that actually calls for that action. `github.preflight_unclassified` is only a
-legacy fallback, while `github.preflight_unavailable.*` identifies only a coarse pre-claim stage; neither reveals a
-lower-level exception or provider cause.
-
-The CLI follows the retained Publication for a bounded ten minutes. Four minutes by itself is still within that
-window and is not evidence that Compilation or Publication is stuck; report the last validated stage and any exact
-retry schedule instead. A timeout ends only that invocation's wait and does not cancel retained work.
-While `retry_at` is scheduled, let the current invocation follow that automatic retry rather than starting another.
-When the singleton is parked, do not loop Compile mechanically; report the safe reason and the need for operator
-recovery without inventing the recovery action.
-
-Terminal progress also respects that boundary. `Application compilation failed.` or
-`Application compilation cancelled.` means Compilation never completed and GitHub Publication work was not reached.
-Only after `compilation.status: "succeeded"` can `GitHub publication failed.` or
-`GitHub publication cancelled.` describe a later delivery outcome.
-
-Aim for one well-prepared successful Compile because this release retains one Publication singleton per Project
-and cannot repoint it to a later Head:
-
-- a Compile that stops at invalid analysis has not published and can follow further edits or dialogue;
-- while `plan compile` is polling a Publication, keep following that retained work and never launch a concurrent
-  Compile or another start request for the Project;
-- after that invocation exits on a Publication outcome-unknown, unavailable status, timeout, or interruption, wait
-  and rerun the same zero-flag `plan compile` through the resolver with exact unchanged Plan bytes. This
-  conditional singleton replay resumes or reconciles the retained Publication; it does not create another
-  Compilation, repository, or push. There is no separate public Publication status command;
-- `invalid_publication_status` is a protocol mismatch that unchanged replay cannot repair. Preserve the Plan bytes
-  and local state, reconcile the coordinated CLI/service versions first, and do not start a competing mutation;
-- compiling a materially later Head into another repository requires a fresh Project because no Project-fork
-  operation exists yet.
-
-`plan compile` owns the product mutation; retained Compilation status and download commands only read its work.
+This release retains one Publication singleton per Project. Never start a concurrent Compile. After an invocation
+exits on an outcome-unknown, unavailable status, timeout, or interruption, wait and replay the same zero-flag
+command with unchanged Plan bytes to resume or reconcile that singleton. Do not replay
+`invalid_publication_status`; reconcile the coordinated CLI/service contract first. A later Head or different
+repository requires a fresh Project.
 
 ## Inspect or download the retained Compilation
 
-Successful `plan compile` standard output contains only the repository URL; it does not expose a Compilation ID.
-Use the retained commands only when the user supplied an exact ID or a validated structured failure projection
-actually exposed one. Do not invent an ID or recover one from private state or unvalidated output. Read its lifecycle
-without starting work:
+Successful `plan compile` prints only the repository URL and no Compilation ID. Use retained commands only with an
+exact ID supplied by the user or a validated structured projection; never recover one from private state or
+unvalidated output.
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
@@ -293,83 +248,55 @@ firstdraft_cli compilation status <compilation-id>
 firstdraft_cli compilation status <compilation-id> --wait
 ```
 
-Without `--wait`, status performs one metadata-only read. With it, the CLI polls the same retained Compilation for
-up to ten minutes. `failed` and `cancelled` are successfully read terminal states; branch on
-`compilation.status`.
+Status is read-only. Without `--wait` it reads once; with it, it follows the same retained Compilation for up to
+ten minutes. Branch on `compilation.status`; `failed` and `cancelled` are successfully read terminal states.
 
-When local source is useful, choose an absent destination beneath an existing real directory:
+For local source, choose an absent destination beneath an existing real directory, then read
+[Retained Compilation download](references/diagnostics-and-recovery.md#retained-compilation-download):
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
 firstdraft_cli compilation download <compilation-id> --output <absent-path>
 ```
 
-Download performs one status read, requires `succeeded`, retrieves one artifact, verifies retained-Head and
-Foundation Plan provenance, transport bytes, manifest, paths, file digests, and modes, then atomically installs the
-tree. It never starts or polls a Compilation. Preserve an existing destination rather than deleting or overwriting
-it.
+Download reads one succeeded Compilation, verifies retained provenance, transport, manifest, paths, modes, and file
+digests, then installs atomically. It never starts or polls work. Preserve an existing destination.
 
 ## Recover from failures
 
-Handled leaf-command failures end standard error with one JSON object. The exact `First Draft: ` progress lines may
-precede it. Remove only one leading contiguous block of complete recognized lines whose text after that exact prefix
-matches the stable message table in the recovery reference. Then require the remainder to be exactly one JSON object.
-An unrecognized prefixed line, a progress line after the envelope, or any interleaved output fails closed. Branch on
-its stable `error` and structured fields, not the human-readable `detail`. Use the recovery reference for the exact
-error families.
+Read the matching [stable error family](references/diagnostics-and-recovery.md#stable-error-families) before acting.
+Handled leaf-command failures end standard error with one JSON object; `plan compile` may precede it with one
+leading contiguous block of recognized `First Draft: ` progress lines. After removing only that block, require
+exactly one JSON object. Any unrecognized, additional, or interleaved output fails closed.
 
-The important boundaries are:
+Branch on its stable `error` and structured fields, not the human-readable `detail`, elapsed time, or HTTP status.
+In particular:
 
-- a diagnostic `422 server_rejected`, or `plan_not_valid` whose `current.analysis.status` is `issues_found`, is
-  feedback about the submitted snapshot and may lead to edits, dialogue, another push, or another Compile attempt;
-- `plan_not_valid` with `analysis_failed` or `superseded` is an analyzer or concurrency outcome, not evidence for a
-  speculative source correction;
-- `request_outcome_unknown` with `phase: "push"` means an accepted Head may exist without recoverable local
-  state, so stop rather than repeating the mutation;
-- `request_outcome_unknown` with `phase: "publication"` means the singleton may already exist. Do not infer whether
-  repository creation ran or start a concurrent command. After this invocation exits, wait and replay the same
-  zero-flag Compile with unchanged Plan bytes;
-- `publication_status_unavailable` and `publication_wait_timed_out` leave the retained singleton possibly running
-  or parked. Report its last validated progress when present, but do not label
-  it failed, succeeded, or published. Do not run concurrent Compile commands; after the invocation exits, wait and
-  replay the same zero-flag Compile with unchanged Plan bytes to resume the singleton;
-- `invalid_publication_status` also leaves the singleton's result unverified, but unchanged replay will not repair
-  the protocol mismatch. Preserve state and reconcile compatible CLI/service candidates before replay;
-- `publication_start_rejected` is a validated non-timeout 4xx rejection and proves only that Publication success was
-  not verified. Preserve the exact Plan and private state, report only its structured code, and do not infer whether
-  this request or an earlier one left retained or remote work. The envelope alone authorizes no replay, concurrent
-  Compile, or direct mutation; resolve its stable structured cause or coordinated route/service defect before a
-  separately supported retry. A 408 or 5xx start response instead follows `request_outcome_unknown` reconciliation;
-- `publication_failed` and `publication_cancelled` are terminal for the retained singleton. Inspect
-  `current.compilation.status` before naming the stage. A failed or cancelled Compilation never reached GitHub; only
-  a succeeded Compilation followed by terminal Publication can leave GitHub repository or commit effects. Producing
-  a different repository or later Head requires a fresh Project;
-- deleting or altering a repository as recovery requires a separate user request and its exact verified identity;
-- `local_state_not_saved` includes private `recovery_state` that must remain local;
-- a persistent `status_unavailable` is a read-only failure: retry it a bounded number of times, then inspect only
-  the locally pinned `api_url` without exposing the rest of private state;
-- status, provenance, artifact, and materialization errors do not justify bypassing validation or direct HTTP; and
-- `invalid_output_path` occurs before network access, so the user can choose another absent destination.
+- treat a diagnostic `422 server_rejected`, or `plan_not_valid` whose status is `issues_found`, as feedback about
+  the submitted snapshot that may lead to edits, dialogue, another push, or another Compile attempt;
+- stop after an outcome-unknown push because an accepted Head may exist without recoverable local state;
+- preserve exact bytes and avoid concurrent work for ambiguous Publication outcomes, following only the documented
+  unchanged-byte singleton replay;
+- treat `invalid_publication_status` as a contract mismatch that replay cannot repair;
+- distinguish a failed Compilation from a later failed Publication by validated statuses;
+- keep `local_state_not_saved.recovery_state` private; and
+- correct `invalid_output_path` without network access, but never bypass provenance or artifact validation.
 
-Output containing anything besides recognized `First Draft: ` progress lines and the one expected result is not a
-trusted recovery contract. Preserve local files and avoid guessing at server state. An HTTP status alone does not
-identify account provisioning or an absent endpoint. Never expose token values, private state, raw artifact bytes,
-unvalidated response bodies, or secrets.
+Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
+repository requires a separate user request and an exact verified identity.
 
 ## Hand off the result
 
 Report:
 
-- the local Plan path and the latest boundary actually demonstrated: JSON parsing, local schema validation, server
-  import, or whole-graph analysis;
-- material product choices, delegated decisions, deferred questions, warnings, and capability gaps;
-- the last validated analyzer release and graph version;
-- when observed, the distinct Compilation and Publication statuses plus safe progress phase, retry time, retry
-  count, and reason code;
-- after Compile success, the validated private repository URL and any retained identities the CLI actually exposed;
-- after download, the chosen local path, file count, and manifest digest; and
+- the Plan path and the latest boundary actually demonstrated: JSON parsing, local schema validation, server import,
+  or whole-graph analysis;
+- material choices, delegated decisions, exclusions, open questions, warnings, and capability gaps;
+- the analyzer release and graph version actually observed;
+- distinct Compilation and Publication statuses plus validated progress fields when available;
+- the private repository URL only after terminal Publication success;
+- a downloaded path, file count, and manifest digest only after verified materialization; and
 - any recovery blocker or external prerequisite.
 
-Call the GitHub result published only after the validated success projection. Call a local tree generated only
-after retained download succeeds. Neither result is deployed, production-ready, or evidence of capabilities beyond
-the admitted narrow slice.
+Do not call source published before the validated Publication projection, or local source generated before retained
+download succeeds. Neither result is deployed, production-ready, or proof beyond the admitted narrow slice.

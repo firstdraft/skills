@@ -1,5 +1,15 @@
 # Modeling guide
 
+## Contents
+
+- [Start from product meaning](#start-from-product-meaning)
+- [Interview toward one coherent candidate](#interview-toward-one-coherent-candidate)
+- [Model Entities and Fields](#model-entities-and-fields)
+- [Model relationships](#model-relationships)
+- [Add behavior deliberately](#add-behavior-deliberately)
+- [Preserve intent during diagnostics](#preserve-intent-during-diagnostics)
+- [Prepare the pre-Compile semantic read-back](#prepare-the-pre-compile-semantic-read-back)
+
 ## Start from product meaning
 
 Identify the durable nouns, stored facts, relationships, rules, and user-visible workflows in the product. Do not
