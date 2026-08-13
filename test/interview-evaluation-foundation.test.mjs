@@ -27,7 +27,10 @@ const markdownSection = (source, heading) => {
 
 test("candidate protocol defines interview coverage and complete-candidate readiness", async () => {
   const protocol = await readFile(candidateInterviewProtocolPath, "utf8");
-  const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  const readme = await readFile(
+    path.join(repository, "evals", "README.md"),
+    "utf8",
+  );
 
   assert.match(readme, /references\/candidate-interview-protocol\.md/);
   assert.match(readme, /interview-home-inventory-consequential-ambiguity/);
