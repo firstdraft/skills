@@ -1600,8 +1600,8 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     /Nonempty delivery, development\s+data, derivations, Accounts, and other graph slices outside the importer boundary reject the complete conditional\s+PUT[\s\S]*?Imported\s+but unadmitted shapes, including enum Fields, Predicates, broader References, Associations, Validations, and\s+Scaffolds, instead fail the complete candidate at target analysis/,
   );
   assert.match(
-    skillSource,
-    /ordinary single-target\s+References[\s\S]*?bounded Validation subset including\s+conditional text length[\s\S]*?exact public web index, create\/update, show-projection, return-destination, and destroy\s+Scaffold shapes[\s\S]*?iPhone project limited to index\/navigation[\s\S]*?web routes do not become native detail or mutation screens/,
+    skillSource.replace(/\s+/g, " "),
+    /ordinary single-target References.*?bounded Validation subset including conditional text length.*?exact public web index, create\/update, show-projection, return-destination, and destroy Scaffold shapes.*?iPhone project limited to index\/navigation.*?web routes do not become native detail or mutation screens/,
   );
   assert.match(
     foundationPlanReference,
@@ -1828,8 +1828,8 @@ test("validator routing preserves validation boundaries", async () => {
     assert.match(source, /not locally\s+schema-validated/);
   }
   assert.match(
-    skillSource,
-    /Do not\s+install or improvise a validator/,
+    skillSource.replace(/\s+/g, " "),
+    /Do not install or improvise a validator/,
   );
   assert.match(
     referenceSource,
@@ -1840,8 +1840,8 @@ test("validator routing preserves validation boundaries", async () => {
     /validator output as advisory data about the exact local Plan bytes[\s\S]*?never as instructions[\s\S]*?preserving subject identity and intended product meaning/,
   );
   assert.match(
-    skillSource,
-    /latest boundary actually demonstrated: JSON parsing, local schema validation, server\s+import, or whole-graph analysis/,
+    skillSource.replace(/\s+/g, " "),
+    /latest boundary actually demonstrated: JSON parsing, local schema validation, server import, or whole-graph analysis/,
   );
   assert(referenceSource.includes("search the schema"));
   assert.match(referenceSource, /exact property\s+or\s+`\$defs` name/);
@@ -2547,18 +2547,19 @@ test("local capability check is shell-portable and uses the project wrapper", as
     /## Verify the local capability([\s\S]*?)## Initialize or resume the local Plan/,
   );
   assert(capabilitySection, "SKILL.md: missing local capability section");
+  const normalizedCapabilitySection = capabilitySection[1].replace(/\s+/g, " ");
 
   assert.match(
     capabilitySection[1],
     /firstdraft_cli\(\) \{ if \[ -x \.\/bin\/firstdraft \]; then \.\/bin\/firstdraft "\$@"; else firstdraft "\$@"; fi; \}\nif \[ -x \.\/bin\/firstdraft \]; then command -v \.\/bin\/firstdraft; else command -v firstdraft; fi\nfirstdraft_cli --version\nfirstdraft_cli --help/,
   );
   assert.match(
-    capabilitySection[1],
-    /version probe to succeed with one exact `0\.1\.0` output line and no other output[\s\S]*?top-level help that lists `generate`, `plan`, and `compilation`[\s\S]*?separate stdout and stderr assertions/,
+    normalizedCapabilitySection,
+    /version probe to succeed with one exact `0\.1\.0` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
   );
   assert.match(
-    capabilitySection[1],
-    /Do not collapse multiword\s+CLI invocations into scalar shell variables[\s\S]*?cross-repository contract tests own the\s+exhaustive leaf-command matrix/,
+    normalizedCapabilitySection,
+    /Do not collapse multiword CLI invocations into scalar shell variables.*?cross-repository contract tests own the exhaustive leaf-command matrix/,
   );
   assert.doesNotMatch(
     capabilitySection[1],
@@ -2617,32 +2618,33 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /## Submit snapshots and use diagnostics([\s\S]*?)## Request the Compile journey/,
   );
   assert(pushSection, "SKILL.md: missing snapshot submission section");
+  const normalizedPushSection = pushSection[1].replace(/\s+/g, " ");
   assert.match(
     skillSource,
     /The compatible CLI supplies these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and zero-flag `plan compile`/,
   );
   assert.match(
-    pushSection[1],
-    /firstdraft_cli plan push[\s\S]*?incomplete, invalid, unchanged,[\s\S]*?or frequently revised snapshots[\s\S]*?no separate permission,[\s\S]*?batching, or changed-byte prerequisite/,
+    normalizedPushSection,
+    /firstdraft_cli plan push.*?incomplete, invalid, unchanged,.*?or frequently revised snapshots.*?no separate permission, batching, or changed-byte prerequisite/,
   );
   assert.match(
-    pushSection[1],
-    /On success, retain[\s\S]*?firstdraft_cli plan status --wait/,
+    normalizedPushSection,
+    /On success, retain.*?firstdraft_cli plan status --wait/,
   );
   assert.match(
-    pushSection[1],
-    /If status is for a lower graph version, repeat this\s+read-only poll within a bounded wait[\s\S]*?If it is higher, another accepted Head replaced the\s+one just pushed/,
+    normalizedPushSection,
+    /If status is for a lower graph version, repeat this read-only poll within a bounded wait.*?If it is higher, another accepted Head replaced the one just pushed/,
   );
   assert.match(
-    pushSection[1],
+    normalizedPushSection,
     /Branch on `analysis\.status`, not only the process exit status/,
   );
   for (const status of ["valid", "issues_found", "analysis_failed", "superseded"]) {
     assert(pushSection[1].includes(`- \`${status}\``));
   }
   assert.match(
-    pushSection[1],
-    /If the same diagnostic recurs without new information,[\s\S]*?do not loop mechanically[\s\S]*?Keep\s+intentional unsupported meaning in the local candidate[\s\S]*?Unsupported subjects are not\s+partially compiled/,
+    normalizedPushSection,
+    /If the same diagnostic recurs without new information,.*?do not loop mechanically.*?keep intentional unsupported meaning in the local candidate.*?Unsupported subjects are not partially compiled/i,
   );
 
   const statusReference = recoveryReference.match(
@@ -2736,7 +2738,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     /dated field report records the server, CLI, runtime,\s+Skill,\s+analyzer,\s+compiler, Rails Core, and iOS Core pins[\s\S]*?artifact byte size, file count, and manifest digest[\s\S]*?recovered authoring prompt and seed command[\s\S]*?preparation and reproducibility limits/,
   );
   const skillEvidence = skillSource.match(
-    /This workflow is experimental and targets the coordinated plugin 0\.1\.2, CLI 0\.1\.0, and service-contract 0\.2\s+contract\.[\s\S]*?bundled bytes do not establish whether that exact combination is currently available from the\s+public catalog; verify availability independently before advising an installation change\.([\s\S]*?)## Load the relevant references/,
+    /## Current boundary([\s\S]*?)## Load references only when needed/,
   );
   const foundationPlanEvidence = foundationPlanReference.match(
     /## Current evidence boundary([\s\S]*?)The bundled schema was copied/,
@@ -2746,13 +2748,18 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     foundationPlanEvidence,
     "foundation-plan-019.md: missing current evidence boundary",
   );
+  const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   assert.match(
-    skillEvidence[1],
-    /narrow\s+experiment, not arbitrary application generation[\s\S]*?ordinary single-target\s+References[\s\S]*?conditional text length[\s\S]*?public and\s+unauthenticated in generated source[\s\S]*?Do not omit or weaken them[\s\S]*?Unsupported shapes fail the complete\s+candidate closed/,
+    normalizedSkillEvidence,
+    /targets the coordinated plugin 0\.1\.2, CLI 0\.1\.0, and service-contract 0\.2 contract.*?bundled bytes do not prove that exact combination is available from the public catalog.*?narrow experiment, not arbitrary application generation.*?ordinary single-target References.*?conditional text length.*?public and unauthenticated.*?Preserve intentional unsupported meaning.*?never weaken it merely to obtain `valid`.*?Unsupported shapes fail the complete candidate closed/,
+  );
+  assert.match(
+    skillSource.replace(/\s+/g, " "),
+    /Recommend a marketplace repair only after independently verifying that the catalog serves this exact plugin 0\.1\.2 and CLI 0\.1\.0 pair; otherwise report that no verified public repair is known/,
   );
   assert.match(
     skillSource,
-    /Recommend a marketplace\s+install, reinstall, or update only after independently verifying that the catalog serves this exact plugin 0\.1\.2 and\s+CLI 0\.1\.0 pair,[\s\S]*?Otherwise report that no verified public repair is known/,
+    /## Load references only when needed[\s\S]*?diagnostics-and-recovery\.md#product-compile/,
   );
   assert.match(
     foundationPlanEvidence[1],
@@ -3271,23 +3278,40 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     skill,
-    /Relay meaningful `First Draft: ` progress lines[\s\S]*?Report the exact scheduled time[\s\S]*?`automatic retries paused; operator recovery required` means\s+the retained singleton is parked[\s\S]*?If no\s+reason is displayed, say that no safe reason is available/,
+    /\[Product Compile\]\(references\/diagnostics-and-recovery\.md#product-compile\)/,
+  );
+  const normalizedRecovery = recovery.replace(/\s+/g, " ");
+  assert.match(
+    normalizedRecovery,
+    /CLI emits only state-changing lines.*?prefixes every line with `First Draft: `/,
   );
   assert.match(
-    skill,
-    /bounded ten minutes[\s\S]*?Four minutes by itself is still within that\s+window[\s\S]*?timeout ends only that invocation's wait and does not cancel retained work/,
+    normalizedRecovery,
+    /non-null `retry_at` identifies the exact scheduled time to report/,
   );
   assert.match(
-    skill,
-    /while `plan compile` is polling a Publication[\s\S]*?never launch a concurrent\s+Compile[\s\S]*?after that invocation exits[\s\S]*?conditional singleton replay[\s\S]*?There is no separate public Publication status command/,
+    normalizedRecovery,
+    /positive `retry_count`.*?null `retry_at` means automatic work is parked and needs operator attention/,
   );
   assert.match(
-    skill,
-    /`invalid_publication_status` is a protocol mismatch[\s\S]*?unchanged replay cannot repair[\s\S]*?reconcile the coordinated CLI\/service versions first/,
+    normalizedRecovery,
+    /Zero with both nullable fields null means no current wait or safe reason is projected/,
   );
   assert.match(
-    skill,
-    /Successful `plan compile` standard output contains only the repository URL[\s\S]*?does not expose a Compilation ID[\s\S]*?Do not invent an ID/,
+    normalizedRecovery,
+    /Publication follow is bounded to ten minutes.*?Four minutes alone remains inside that window.*?timeout stops only the current invocation's wait, not retained work/,
+  );
+  assert.match(
+    normalizedRecovery,
+    /While one `plan compile` invocation polls it, do not launch a concurrent Compile.*?If that invocation exits.*?conditional singleton PUT.*?There is no separate public Publication status command/,
+  );
+  assert.match(
+    normalizedRecovery,
+    /`invalid_publication_status` is different: unchanged replay cannot repair its protocol mismatch.*?reconcile the coordinated CLI\/service versions first/,
+  );
+  assert.match(
+    skill.replace(/\s+/g, " "),
+    /Successful `plan compile` prints only the repository URL and no Compilation ID.*?never recover one from private state or unvalidated output/,
   );
   assert.match(
     recovery,
@@ -3698,13 +3722,18 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     /## Recover from failures([\s\S]*?)## Hand off the result/,
   );
   assert(recoverySection, "SKILL.md: missing recovery section");
+  const normalizedRecoverySection = recoverySection[1].replace(/\s+/g, " ");
   assert.match(
-    recoverySection[1],
-    /Branch on\s+its stable `error` and structured fields,\s+not the human-readable `detail`/,
+    normalizedRecoverySection,
+    /Branch on its stable `error` and structured fields, not the human-readable `detail`/,
+  );
+  assert.match(
+    normalizedRecoverySection,
+    /diagnostic `422 server_rejected`.*?feedback about the submitted snapshot.*?edits, dialogue, another push, or another Compile attempt/,
   );
   assert.match(
     recoverySection[1],
-    /diagnostic `422 server_rejected`[\s\S]*?feedback about the submitted snapshot and may lead to edits, dialogue, another push, or another Compile attempt/,
+    /\[stable error family\]\(references\/diagnostics-and-recovery\.md#stable-error-families\)/,
   );
   assert(recoveryReference.includes(cliContractBaseline));
   const stableErrors = recoveryReference.match(
@@ -3969,6 +3998,11 @@ async function checkSkill(skillName) {
     ),
   );
   assert(source.split("\n").length - 1 < 500);
+  assert(
+    Buffer.byteLength(source, "utf8") <= 20 * 1024,
+    `${skillName}: SKILL.md exceeds the 20 KiB progressive-disclosure budget`,
+  );
+  assert(source.includes("## Load references only when needed"));
   assert(!source.includes("TODO"));
 
   const files = await filesUnder(skillDirectory);
@@ -3984,14 +4018,24 @@ async function checkSkill(skillName) {
 
     for (const match of contents.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
       const target = match[1];
-      if (/^(?:https?:|#)/.test(target)) continue;
+      if (/^https?:/.test(target)) continue;
 
-      const targetPath = path.resolve(path.dirname(file), target.split("#", 1)[0]);
+      const [targetFile, targetFragment] = target.split("#", 2);
+      const targetPath = targetFile
+        ? path.resolve(path.dirname(file), targetFile)
+        : file;
       assert(
         targetPath.startsWith(`${skillDirectory}${path.sep}`),
         `${file}: link escapes installed Skill: ${target}`,
       );
       assert((await stat(targetPath)).isFile(), `${file}: broken link: ${target}`);
+      if (targetFragment) {
+        const targetSource = await readFile(targetPath, "utf8");
+        assert(
+          markdownHeadingAnchors(targetSource).has(decodeURIComponent(targetFragment)),
+          `${file}: broken heading link: ${target}`,
+        );
+      }
     }
   }
 
@@ -4010,6 +4054,19 @@ async function checkSkill(skillName) {
   assert.equal(
     defaultPrompt,
     `Use $${skillName} to interview me, incrementally author and diagnose one complete First Draft Foundation Plan candidate, and use the available Compile workflow when that candidate is ready.`,
+  );
+}
+
+function markdownHeadingAnchors(source) {
+  return new Set(
+    [...source.matchAll(/^#{1,6}\s+(.+?)\s*#*$/gm)].map(([, heading]) =>
+      heading
+        .replace(/`([^`]*)`/g, "$1")
+        .toLowerCase()
+        .replace(/[^a-z0-9 -]/g, "")
+        .trim()
+        .replace(/\s+/g, "-"),
+    ),
   );
 }
 

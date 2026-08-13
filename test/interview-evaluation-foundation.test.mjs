@@ -152,25 +152,26 @@ test("packaged interview guidance keeps the opening turn focused on one product 
     ),
     "utf8",
   );
+  const normalizedSkill = skill.replace(/\s+/g, " ");
 
-  assert.match(skill, /opening turn, ask no more than three\s+closely related questions/);
+  assert.match(normalizedSkill, /opening turn, ask no more than three closely related questions/);
   assert.match(
-    skill,
-    /one record per unique object, one record carrying a quantity, or both with distinct\s+meaning/,
+    normalizedSkill,
+    /one record per unique object, one record carrying a quantity, or both with distinct meaning/,
   );
-  assert.match(skill, /Name at least two consequential areas being left open for later/);
+  assert.match(normalizedSkill, /Name at least two consequential areas being left open for later/);
   assert.match(
     modelingGuide,
     /For an underspecified opening request, ask only about intended product meaning and name deferred product areas;\s+wait for the user's answer before discussing target support or capability gaps/,
   );
   assert.match(
-    skill,
+    normalizedSkill,
     /smallest public index and the exact create\/update, show-projection, return-destination, and destroy extensions/,
   );
-  assert.match(skill, /every generated route public and unauthenticated/);
+  assert.match(normalizedSkill, /every generated route public and unauthenticated/);
   assert.match(
-    skill,
-    /Successful Publication is intended to create a private\s+GitHub repository[\s\S]*?dated staging discovery observed one such live Publication[\s\S]*?new invocation still requires its own validated terminal success[\s\S]*?Compile does not deploy/,
+    normalizedSkill,
+    /Successful Publication is intended to create a private GitHub repository.*?dated staging discovery observed one such live Publication.*?new invocation still requires its own validated terminal success.*?Compile does not deploy/,
   );
   assert.match(
     modelingGuide,
@@ -195,14 +196,15 @@ test(
       ),
       "utf8",
     );
+    const normalizedSkill = skill.replace(/\s+/g, " ");
 
     assert.match(
-      skill,
+      normalizedSkill,
       /targets the coordinated plugin 0\.1\.2, CLI 0\.1\.0, and service-contract 0\.2/,
     );
     assert.match(
-      skill,
-      /catalog serves this exact plugin 0\.1\.2 and\s+CLI 0\.1\.0 pair/,
+      normalizedSkill,
+      /catalog serves this exact plugin 0\.1\.2 and CLI 0\.1\.0 pair/,
     );
 
     const approvalHeading = "Read back and approve the candidate before Compile";

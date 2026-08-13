@@ -16,6 +16,18 @@ establishes compatibility. Candidate
 qualification or package publication does not prove service authentication, staging compatibility, or a complete
 user journey.
 
+## Contents
+
+- [Local state and credentials](#local-state-and-credentials)
+- [Push and analysis](#push-and-analysis)
+- [Product Compile](#product-compile)
+- [Retained Compilation status](#retained-compilation-status)
+- [Retained Compilation download](#retained-compilation-download)
+- [Stable error families](#stable-error-families)
+- [Ambiguous mutations](#ambiguous-mutations)
+- [Diagnostic shape](#diagnostic-shape)
+- [Concurrent replacement](#concurrent-replacement)
+
 ## Local state and credentials
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,

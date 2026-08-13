@@ -14,6 +14,24 @@ references do not answer a concrete structural question, search the schema for t
 and inspect only that definition. Use server diagnostics for the exact bytes submitted by `plan push` or
 `plan compile`.
 
+## Contents
+
+- [Current evidence boundary](#current-evidence-boundary)
+- [Closed envelope](#closed-envelope)
+- [Subject identity](#subject-identity)
+- [Ownership](#ownership)
+- [Presence](#presence)
+- [Current conditional PUT boundary](#current-conditional-put-boundary)
+  - [Application and clients](#application-and-clients)
+  - [Entities, descriptors, and Fields](#entities-descriptors-and-fields)
+  - [Enums](#enums)
+  - [Defaults](#defaults)
+  - [References and Associations](#references-and-associations)
+  - [Validations](#validations)
+  - [Predicates](#predicates)
+  - [Scaffolds](#scaffolds)
+  - [Unsupported shapes](#unsupported-shapes)
+
 ## Current evidence boundary
 
 - The v0.19 corpus passes the First Draft JSON Schema and strict loader.
@@ -186,6 +204,8 @@ App Schema artifact.
 
 ## Current conditional PUT boundary
 
+### Application and clients
+
 The reviewed importer accepts the required Application properties `key`, `name`, `native`, `delivery`, and
 `entities`, plus optional `domain` and `appearance`. `domain`, `appearance`, and `native` are retained as editable
 graph state; a nonempty `delivery` remains outside this import boundary.
@@ -224,6 +244,8 @@ The smallest accepted Application remains:
   "entities": []
 }
 ```
+
+### Entities, descriptors, and Fields
 
 A Primary Descriptor may select a required Field owned by that Entity or a schema-supported system Field. The
 whole-graph analyzer rejects an optional Field selected as a Primary Descriptor. Association descriptors are not
@@ -265,6 +287,8 @@ remaining supported cross-cutting properties.
 Preserve intentional values that the Compiler cannot emit. Report the exact output gap instead of deleting a
 default, security property, or other product meaning to obtain `valid`.
 
+### Enums
+
 An `enum` Field additionally requires `settings.values`, a nonempty array in stable order. Each value
 has its own `subject_uuid`, owner-local `key`, and human-facing `name`; mint an ID for each new value by running
 `generate uuid` through the Skill resolver, or use `generate uuid --count <n>` through that resolver for several
@@ -277,6 +301,8 @@ while preserving the value's UUID.
 
 Enum Fields are retained for editing, but they cannot pass the current Compilation analysis gate. Preserve the enum
 and report that boundary rather than weakening it to a scalar.
+
+### Defaults
 
 A Field `default` is one closed tagged Value. Its tag is `literal`, `environment`, `environment_path`, or
 `reference_record`. A literal wraps its JSON value under `value`; an environment names `current_account`,
@@ -295,6 +321,8 @@ representation, while the exact submitted bytes remain in the Project Head.
 This retention is structural, not default analysis. It does not prove literal compatibility with the Field,
 enum membership, readable-locator resolution, nullability, normalization behavior, or Compiler lowering. Preserve
 the intended default when reporting any later semantic gap.
+
+### References and Associations
 
 An Entity may also own supported References, Associations, and Predicates.
 A Reference retains schema-valid combinations of
@@ -322,6 +350,8 @@ per-Plan quotas. Author each reverse or indirect traversal the product needs. Re
 indirect paths, predicates, cardinality bounds, polymorphism, exclusive arcs, immutable or defaulted References, and
 broader Association shapes fail closed.
 
+### Validations
+
 The first Rails Validation subset admits:
 
 - unconditional ordered integer-literal comparisons on stored integer Fields, using `greater_than`,
@@ -337,10 +367,14 @@ ordinary Rails presence, except Boolean Fields use inclusion in `[true, false]`.
 Entity-owned rules, noninteger comparison owners, equality or linked operands, non-text presence or absence,
 nonordinary References, `format`, `exclusion`, `uniqueness`, and other condition shapes fail closed.
 
+### Predicates
+
 A Predicate retains schema-valid combinations of `subject_uuid`, `key`, `name`, and `expression`. Import preserves
 the Expression's exact decoded JSON meaning without claiming link resolution, type checking, or target lowering.
 Importability does not imply that the current bounded whole-graph analyzer or Compiler accepts a Project containing
 enum Fields or Predicates.
+
+### Scaffolds
 
 The smallest admitted Scaffold requests exactly the public `index` resource route and gives its index definition
 `public` authorization. Its Entity name and optional semantic icon feed shared web and iPhone navigation when
@@ -370,6 +404,8 @@ projections, duplicates, cross-Entity Fields, and a standalone public index plus
 One exact destroy variant appends `destroy` to the complete show-bearing shape, gives destroy public authorization,
 and returns only to the same Entity's selected public index. Other destroy destinations are unsupported. No current
 Scaffold emits a native detail or mutation surface.
+
+### Unsupported shapes
 
 Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other
 settings shape is structurally invalid rather than an importer capability gap. Nonempty delivery, development
