@@ -1,5 +1,15 @@
 # Agent Instructions — First Draft Skills
 
+## Read first
+
+| Task | Route |
+|---|---|
+| Skill behavior or packaged references | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md), then only its routed reference section |
+| Release work | [`RELEASING.md`](RELEASING.md) and [`release/compatibility.json`](release/compatibility.json) |
+| Evidence or prior rollout facts | [`evidence/README.md`](evidence/README.md), then one dated record |
+| Behavioral evals | [`evals/README.md`](evals/README.md), then one case and its declared artifacts |
+| Repository documentation roles | [`docs/README.md`](docs/README.md) |
+
 ## Release coordination
 
 - Treat a merge to `main` as integration, not release authorization. A change to

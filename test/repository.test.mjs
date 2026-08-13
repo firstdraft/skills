@@ -193,8 +193,117 @@ const supportedPredicateProperties = [
   "expression",
 ];
 
-test("revision pins remain exhaustive across coordination surfaces", async () => {
+test("documentation roles are routed and retrieval-sized", async () => {
+  const documentationMap = await readFile(
+    path.join(repository, "docs", "README.md"),
+    "utf8",
+  );
   const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  const releasing = await readFile(
+    path.join(repository, "RELEASING.md"),
+    "utf8",
+  );
+  const evidenceIndex = await readFile(
+    path.join(repository, "evidence", "README.md"),
+    "utf8",
+  );
+  const evalIndex = await readFile(
+    path.join(repository, "evals", "README.md"),
+    "utf8",
+  );
+
+  assert(
+    Buffer.byteLength(readme) < 12_000,
+    "root README must remain an entry page",
+  );
+  assert(
+    Buffer.byteLength(releasing) < 20_000,
+    "current release runbook must not absorb completed chronology",
+  );
+  assert.match(
+    readme,
+    /## Current state[\s\S]*?## Install and preview[\s\S]*?## Documentation/,
+  );
+  assert.match(
+    readme,
+    /docs\/README\.md[\s\S]*?evidence\/README\.md[\s\S]*?evals\/README\.md/,
+  );
+  assert.match(
+    documentationMap,
+    /## Authority by question[\s\S]*?## Routes by task[\s\S]*?## Documentation roles/,
+  );
+  assert.match(
+    documentationMap,
+    /Current operator procedure[\s\S]*?No completed chronology or historical shell transcripts/,
+  );
+  assert.match(
+    releasing,
+    /evidence\/release-history\.md[\s\S]*?do not replay that history as a runbook/,
+  );
+  assert.doesNotMatch(releasing, /^## (?:Current 0\.1\.1|Completed)/m);
+  assert.doesNotMatch(releasing, /firstdraft-package-first\.XXXXXX/);
+
+  const evidenceFiles = (await readdir(path.join(repository, "evidence"), {
+    withFileTypes: true,
+  }))
+    .filter((entry) => entry.isFile() && entry.name !== "README.md")
+    .map((entry) => entry.name)
+    .sort();
+  for (const file of evidenceFiles) {
+    assert(
+      evidenceIndex.includes(`(${file})`),
+      `evidence index is missing evidence/${file}`,
+    );
+  }
+
+  const cases = JSON.parse(
+    await readFile(
+      path.join(repository, "evals", "create-full-stack-app", "cases.json"),
+      "utf8",
+    ),
+  ).cases;
+  for (const { id } of cases) {
+    assert(evalIndex.includes(`\`${id}\``), `eval index is missing ${id}`);
+  }
+  assert.equal(
+    cases.filter(({ should_trigger: shouldTrigger }) => !shouldTrigger).length,
+    2,
+  );
+
+  const currentDocumentation = [
+    ...trackedFiles().filter((file) => file.endsWith(".md")),
+    path.join(repository, "docs", "README.md"),
+    path.join(repository, "evals", "README.md"),
+    path.join(repository, "evidence", "README.md"),
+    path.join(repository, "evidence", "release-history.md"),
+    path.join(repository, "evidence", "repository-history.md"),
+  ];
+  for (const file of new Set(currentDocumentation)) {
+    const source = await readFile(file, "utf8");
+    for (const match of source.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+      const rawTarget = match[1].trim();
+      if (/^(?:https?:|mailto:|#)/.test(rawTarget)) continue;
+
+      const target = rawTarget
+        .replace(/^<|>$/g, "")
+        .split("#", 1)[0]
+        .split("?", 1)[0];
+      if (!target) continue;
+
+      const targetPath = path.resolve(path.dirname(file), decodeURI(target));
+      await assert.doesNotReject(
+        stat(targetPath),
+        `${path.relative(repository, file)} has a missing route to ${rawTarget}`,
+      );
+    }
+  }
+});
+
+test("revision pins remain exhaustive across coordination surfaces", async () => {
+  const readme = await readFile(
+    path.join(repository, "evidence", "repository-history.md"),
+    "utf8",
+  );
   assertRevisionTokens(readme, [
     foundationPlanServerBaseline,
     compilationEvidenceCliBaseline,
@@ -349,8 +458,14 @@ test("immutable plugin teaching lag distinguishes fixed and retained claims", as
     candidateModelingGuide,
     candidateFoundationPlanReference,
   ] = await Promise.all([
-    readFile(path.join(repository, "README.md"), "utf8"),
-    readFile(path.join(repository, "RELEASING.md"), "utf8"),
+    readFile(
+      path.join(repository, "evidence", "repository-history.md"),
+      "utf8",
+    ),
+    readFile(
+      path.join(repository, "evidence", "release-history.md"),
+      "utf8",
+    ),
     readFile(candidateSkillPath, "utf8"),
     readFile(candidateModelingGuidePath, "utf8"),
     readFile(candidateFoundationPlanReferencePath, "utf8"),
@@ -816,15 +931,15 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   );
   assert.match(
     packageReadme,
-    /plugin-root `bin\/` directory are added to the Bash tool's `PATH`/,
+    /Executables in a plugin-root `bin\/` directory are added to the Bash\s+tool's `PATH` by Claude Code/,
   );
   assert.match(
     packageReadme,
-    /user configuration is not delivered to an executable merely because the plugin's `bin\/` directory is\s+on a Bash tool's `PATH`/,
+    /user configuration is not delivered to an executable merely because the plugin's `bin\/` directory is\s+on\s+a Bash tool's `PATH`/,
   );
   assert.match(
     packageReadme,
-    /ambient `FIRSTDRAFT_API_URL` and `FIRSTDRAFT_API_TOKEN` contract[\s\S]*?issue #27/,
+    /ambient `FIRSTDRAFT_API_URL` and\s+`FIRSTDRAFT_API_TOKEN` contract[\s\S]*?issue #27/,
   );
   assert.match(
     packageReadme,
@@ -2364,7 +2479,10 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
         expectation.includes("lets plan init derive the application key"),
     ),
   );
-  const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  const readme = await readFile(
+    path.join(repository, "evidence", "repository-history.md"),
+    "utf8",
+  );
   assert(readme.includes(cliContractBaseline));
   assert(
     readme.includes(
@@ -2610,7 +2728,10 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     path.join(skillDirectory, "references", "foundation-plan-019.md"),
     "utf8",
   );
-  const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  const readme = await readFile(
+    path.join(repository, "evidence", "repository-history.md"),
+    "utf8",
+  );
   const cases = JSON.parse(
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
@@ -3203,7 +3324,10 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   const cases = JSON.parse(
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
-  const readme = await readFile(path.join(repository, "README.md"), "utf8");
+  const readme = await readFile(
+    path.join(repository, "evidence", "repository-history.md"),
+    "utf8",
+  );
   const skill = await readFile(
     path.join(repository, "skills", "create-full-stack-app", "SKILL.md"),
     "utf8",

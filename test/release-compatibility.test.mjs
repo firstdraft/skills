@@ -38,6 +38,113 @@ test("release compatibility matches the installable plugin manifest", async () =
   });
 });
 
+test("current release docs route through structured identities", async () => {
+  const [compatibility, marketplace, readme, releasing, releaseHistory] =
+    await Promise.all([
+      readJson("release/compatibility.json"),
+      readJson(".claude-plugin/marketplace.json"),
+      readText("README.md"),
+      readText("RELEASING.md"),
+      readText("evidence/release-history.md"),
+    ]);
+  const publicPlugin = marketplace.plugins.find(
+    ({ name }) => name === "firstdraft",
+  );
+
+  for (const source of [readme, releasing]) {
+    assert(
+      source.includes(`Plugin \`${compatibility.version}\``) ||
+        source.includes(
+          `@firstdraft.com/claude-code@${compatibility.version}`,
+        ),
+    );
+    assert(source.includes(compatibility.plugin_source.tarball_sha256));
+    assert.match(source, /unpublished and unpromoted/i);
+  }
+  assert(readme.includes(`Plugin \`${publicPlugin.version}\``));
+  assert(
+    releasing.includes(
+      `@firstdraft.com/claude-code@${publicPlugin.version}`,
+    ),
+  );
+  assert(readme.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
+  assert.match(releasing, /release\/compatibility\.json.*owns candidate/s);
+  assert.match(releasing, /marketplace manifest owns public catalog selection/);
+  assert.match(
+    releasing,
+    /Registry, tag, environment, service, and hosted-CI state must be checked live/,
+  );
+  assert.match(
+    releasing,
+    /## Outstanding authenticated journey[\s\S]*?fresh explicit authorization for[\s\S]*?exactly one serialized qualification invocation[\s\S]*?Claude Code marketplace registration[\s\S]*?plugin install\/cache effects[\s\S]*?secure-storage token onboarding[\s\S]*?template-derived GitHub repository[\s\S]*?Codespace[\s\S]*?retained First Draft Project, AnalysisRun, Compilation, Publication, and queue effects[\s\S]*?separately[\s\S]*?billed Compilation[\s\S]*?GitHub App or OAuth destination-repository creation and push effects[\s\S]*?allowed retry and[\s\S]*?cleanup boundaries/,
+  );
+  assert.match(
+    releasing,
+    /Run no second invocation under that approval[\s\S]*?failure or ambiguous outcome authorizes neither a retry nor cleanup[\s\S]*?retained state read-only[\s\S]*?fresh authorization[\s\S]*?cleanup approval must name the exact repositories, Codespaces, or retained First Draft records/,
+  );
+  assert.doesNotMatch(releasing, /^## (?:Current 0\.1\.1|Completed)/m);
+  assert.doesNotMatch(releasing, /firstdraft-package-first\.XXXXXX/);
+  assert.match(
+    releaseHistory,
+    /archived on 2026-08-13[\s\S]*?snapshot is point-in-time evidence, not current authority/,
+  );
+  assert.doesNotMatch(releaseHistory, /current source-candidate version/);
+});
+
+test("dated release-state observation retains its recorded facts", async () => {
+  const observation = await readJson(
+    "evidence/2026-08-13-release-state.json",
+  );
+
+  assert.deepEqual(observation, {
+    format: "firstdraft.skills-release-state-observation/1",
+    observed_on: "2026-08-13",
+    source_candidate: {
+      version: "0.1.2",
+      integration_commit_at_observation:
+        "f4855c5bf0d44800690a64dc9d874106e5d9e2ab",
+      tarball_sha256:
+        "e89a14b7a28ec5b6384038cec106f31c7496f076344726b02b3a674b344755f5",
+      published_to_npm: false,
+      protected_tag: null,
+      selected_by_catalog: false,
+    },
+    public_plugin: {
+      package: "@firstdraft.com/claude-code",
+      version: "0.1.1",
+      source_commit: "263326a47a502b56af7780093988c6b860b2d5d2",
+      protected_tag: "claude-v0.1.1",
+      catalog_promotion_commit:
+        "ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1",
+      npm_next: "0.1.1",
+      npm_latest: "0.1.1",
+    },
+    public_cli: {
+      package: "@firstdraft.com/cli",
+      version: "0.1.0",
+      source_commit: "d37d8b6775a0b97ce10bd651485bd308fed1dda2",
+      protected_tag: "v0.1.0",
+      npm_next: "0.1.0",
+      npm_latest: "0.1.0",
+    },
+    compatibility: {
+      api_contract: [">= 0.2.0", "< 0.3.0"],
+      foundation_plan_formats: [
+        "firstdraft.foundation-plan.sketch/0.19",
+      ],
+    },
+    outstanding: [
+      "Exact-byte fresh-agent semantic-approval qualification for candidate 0.1.2",
+      "Protected tag and npm publication of candidate 0.1.2 under next",
+      "Public catalog promotion and post-merge two-command installation for candidate 0.1.2",
+      "Separate npm latest promotion for candidate 0.1.2",
+      "Existing-install update or auto-refresh behavior",
+      "Authenticated template-and-Codespace journey",
+      "Full v14 qualification",
+    ],
+  });
+});
+
 test("release compatibility rejects shape and manifest drift", async () => {
   const documents = await releaseDocuments();
   const withExtraKey = structuredClone(documents);
@@ -171,10 +278,8 @@ test("semantic-version precedence orders ordinary and historical versions", () =
   assert.equal(compareSemanticVersions("0.1.0+one", "0.1.0+two"), 0);
 });
 
-test("release operator and agent instructions track the candidate", async () => {
+test("archived release chronology retains exact observed facts", async () => {
   const [
-    compatibility,
-    marketplace,
     releasing,
     agents,
     readme,
@@ -187,11 +292,9 @@ test("release operator and agent instructions track the candidate", async () => 
     stablePromotionEvidence,
     discoverySmokeEvidence,
   ] = await Promise.all([
-    readJson("release/compatibility.json"),
-    readJson(".claude-plugin/marketplace.json"),
-    readText("RELEASING.md"),
+    readText("evidence/release-history.md"),
     readText("AGENTS.md"),
-    readText("README.md"),
+    readText("evidence/repository-history.md"),
     readText("evidence/2026-08-07-direct-package-alpha3-check.md"),
     readText("evidence/2026-08-09-claude-plugin-0.1.0-release.md"),
     readText("evidence/2026-08-09-direct-package-0.1.0-check.md"),
@@ -203,27 +306,9 @@ test("release operator and agent instructions track the candidate", async () => 
     readText("evidence/2026-08-12-stable-npm-promotion.md"),
     readText("evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md"),
   ]);
-  const catalogPlugin = marketplace.plugins.find(
-    ({ name }) => name === "firstdraft",
-  );
-
   assert.match(
     releasing,
-    new RegExp(
-      "version\\s+is `" +
-        compatibility.version.replaceAll(".", "\\.") +
-        "`",
-    ),
-  );
-  assert(releasing.includes(compatibility.plugin_source.package));
-  assert(
-    compareSemanticVersions(compatibility.version, catalogPlugin.version) >= 0,
-    "the marketplace catalog must not lead the release candidate",
-  );
-  assert.equal(catalogPlugin.version, "0.1.1");
-  assert.match(
-    releasing,
-    /current published patch version is `0\.1\.1`[\s\S]*?selected by both npm `next` and `latest`[\s\S]*?public catalog promotion[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?naming that immutable version[\s\S]*?marketplace merge itself published[\s\S]*?no package bytes and moved no npm dist-tag[\s\S]*?later stable-tag promotion was a separate explicitly approved[\s\S]*?registry mutation/,
+    /Plugin 0\.1\.1 corrected[\s\S]*?selected by both npm `next` and `latest`[\s\S]*?public catalog promotion[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?naming that immutable version[\s\S]*?marketplace merge itself published[\s\S]*?no package bytes and moved no npm dist-tag[\s\S]*?later stable-tag promotion was a separate explicitly approved[\s\S]*?registry mutation/,
   );
   assert.match(
     releasing,
@@ -242,7 +327,7 @@ test("release operator and agent instructions track the candidate", async () => 
     /ordinary[\s\S]*?releases exist under protected tags[\s\S]*?claude-v0\.1\.0[\s\S]*?claude-v0\.1\.1[\s\S]*?v0\.1\.0[\s\S]*?npm `next`[\s\S]*?`latest` both select plugin 0\.1\.1[\s\S]*?npm `next` and `latest` both select CLI 0\.1\.0[\s\S]*?historical public catalog at[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?public catalog[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?selecting[\s\S]*?plugin 0\.1\.1/,
   );
   assertTextOrder(releasing, [
-    "## Current 0.1.1 patch flow",
+    "## Completed 0.1.1 patch flow",
     "1. Clean, non-shallow checkouts resolved exact Skills",
     "2. The complete repository and CLI-contract checks passed",
     "3. Skills source integrated at `263326a47a502b56af7780093988c6b860b2d5d2`",

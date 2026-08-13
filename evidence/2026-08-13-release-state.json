@@ -1,0 +1,47 @@
+{
+  "format": "firstdraft.skills-release-state-observation/1",
+  "observed_on": "2026-08-13",
+  "source_candidate": {
+    "version": "0.1.2",
+    "integration_commit_at_observation": "f4855c5bf0d44800690a64dc9d874106e5d9e2ab",
+    "tarball_sha256": "e89a14b7a28ec5b6384038cec106f31c7496f076344726b02b3a674b344755f5",
+    "published_to_npm": false,
+    "protected_tag": null,
+    "selected_by_catalog": false
+  },
+  "public_plugin": {
+    "package": "@firstdraft.com/claude-code",
+    "version": "0.1.1",
+    "source_commit": "263326a47a502b56af7780093988c6b860b2d5d2",
+    "protected_tag": "claude-v0.1.1",
+    "catalog_promotion_commit": "ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1",
+    "npm_next": "0.1.1",
+    "npm_latest": "0.1.1"
+  },
+  "public_cli": {
+    "package": "@firstdraft.com/cli",
+    "version": "0.1.0",
+    "source_commit": "d37d8b6775a0b97ce10bd651485bd308fed1dda2",
+    "protected_tag": "v0.1.0",
+    "npm_next": "0.1.0",
+    "npm_latest": "0.1.0"
+  },
+  "compatibility": {
+    "api_contract": [
+      ">= 0.2.0",
+      "< 0.3.0"
+    ],
+    "foundation_plan_formats": [
+      "firstdraft.foundation-plan.sketch/0.19"
+    ]
+  },
+  "outstanding": [
+    "Exact-byte fresh-agent semantic-approval qualification for candidate 0.1.2",
+    "Protected tag and npm publication of candidate 0.1.2 under next",
+    "Public catalog promotion and post-merge two-command installation for candidate 0.1.2",
+    "Separate npm latest promotion for candidate 0.1.2",
+    "Existing-install update or auto-refresh behavior",
+    "Authenticated template-and-Codespace journey",
+    "Full v14 qualification"
+  ]
+}
