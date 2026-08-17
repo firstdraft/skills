@@ -91,6 +91,41 @@ test("current release docs route through structured identities", async () => {
   assert.doesNotMatch(releaseHistory, /current source-candidate version/);
 });
 
+test("approval-flow docs define the phase boundary and audit contract", async () => {
+  const [releasing, evalIndex] = await Promise.all([
+    readText("RELEASING.md"),
+    readText("evals/README.md"),
+  ]);
+  const candidatePreparation = markdownSection(
+    releasing,
+    "1. Prepare one exact candidate",
+  );
+  const semanticApproval = markdownSection(
+    evalIndex,
+    "Semantic approval and product Compile",
+  );
+
+  for (const section of [candidatePreparation, semanticApproval]) {
+    const normalized = section.replace(/\s+/g, " ");
+    assert.match(
+      normalized,
+      /phase one.*?Local read-only commands or tools may be used solely for that inspection; the boundary is their effects and capabilities, not a generic command or tool name\.(?: The agent must not invoke First Draft or any other API, write files or state, use network access, run Compile, or enter Publication\.| Phase one forbids First Draft or any other API invocation, file or state writes, network access, Compile, and Publication\.)/i,
+    );
+  }
+  assert.match(
+    candidatePreparation.replace(/\s+/g, " "),
+    /Phase two.*?Only after explicit approval.*?rereads the exact unchanged Plan.*?zero-flag Compile/,
+  );
+  assert.match(
+    semanticApproval.replace(/\s+/g, " "),
+    /Only after explicit approval may phase two.*?reread the exact unchanged Plan bytes.*?zero-flag Compile journey.*?only exception to the one-case-per-fresh-context rule.*?same continuing agent, session, and context.*?proves approval continuity.*?do not reset or start a fresh context between phases.*?`create-full-stack-app\/cases\.json` remains the harness-neutral behavioral contract.*?does not grant capabilities or configure a sandbox or transport.*?runner owns and records enforcement.*?Before cleanup, the runner must durably retain a sanitized phase-one audit containing the phase; tool and capability classification for each attempted operation; outcome; resulting effects; the sanitized assistant response and its SHA-256; pre- and post-phase workspace-tree SHA-256; and the wrapper-invocation ledger.*?explicitly empty ledger when no wrapper runs.*?Omit credentials and private state contents/,
+  );
+  assert.doesNotMatch(
+    semanticApproval,
+    /executes\s+no\s+commands?/i,
+  );
+});
+
 test("dated release-state observation retains its recorded facts", async () => {
   const observation = await readJson(
     "evidence/2026-08-13-release-state.json",
@@ -776,6 +811,14 @@ function assertTextOrder(source, fragments) {
     assert.ok(index >= 0, `missing or out-of-order release step: ${fragment}`);
     previousIndex = index;
   }
+}
+
+function markdownSection(source, heading) {
+  const marker = `## ${heading}\n`;
+  const start = source.indexOf(marker);
+  assert.notEqual(start, -1, `missing Markdown section: ${heading}`);
+  const next = source.indexOf("\n## ", start + marker.length);
+  return source.slice(start + marker.length, next === -1 ? undefined : next);
 }
 
 async function releaseDocuments() {

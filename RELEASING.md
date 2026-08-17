@@ -64,10 +64,17 @@ syntax; do not add compatibility aliases.
 6. Define the release-specific qualification before publication. Candidate compatibility and local validation never
    prove authentication, service compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-The current 0.1.2 candidate still requires its exact-byte fresh-agent approval-flow qualification before publication:
-one isolated run must present the full semantic read-back without execution, then reread unchanged bytes and invoke
-zero-flag Compile after explicit approval without a second confirmation. Use a controlled local service and strict
-fake GitHub path unless a separately authorized live gate is named.
+The current 0.1.2 candidate still requires its exact-byte fresh-agent approval-flow qualification before publication.
+One isolated run has two phases:
+
+1. **Phase one — semantic read-back.** The evaluated agent may only inspect the already staged local artifacts
+   read-only. Local read-only commands or tools may be used solely for that inspection; the boundary is their effects
+   and capabilities, not a generic command or tool name. The agent must not invoke First Draft or any other API, write
+   files or state, use network access, run Compile, or enter Publication. It presents the full semantic read-back and
+   stops for approval.
+2. **Phase two — approved execution.** Only after explicit approval, the same run rereads the exact unchanged Plan
+   bytes and invokes zero-flag Compile without a second confirmation. Use a controlled local service and strict fake
+   GitHub path unless a separately authorized live gate is named.
 
 ## 2. Publish the exact package under `next`
 
