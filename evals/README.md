@@ -4,9 +4,9 @@
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
 
-Run one case in a fresh agent context and record the agent, model, Skill revision, commands, resulting file changes,
-and external effects. Replace synthetic state only for a specifically prepared server-backed run. Never print or
-commit private `.firstdraft/state.json` contents.
+Except for the two-phase release qualification described below, run one case in a fresh agent context and record the
+agent, model, Skill revision, commands, resulting file changes, and external effects. Replace synthetic state only
+for a specifically prepared server-backed run. Never print or commit private `.firstdraft/state.json` contents.
 
 ## Initialization, interview, and authoring
 
@@ -78,10 +78,27 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-`precompile-semantic-read-back` executes no command. `compile-prepared-movie-catalog` supplies explicit approval of
-the matching unchanged semantic model and expects the zero-flag Compile journey without a second confirmation. A
-live run requires separately authorized, freshly initialized private state; use a controlled fake transport unless
-the live repository effects are explicitly in scope.
+For the two-phase release qualification, `precompile-semantic-read-back` is phase one. It gives the evaluated agent
+only read-only local inspection of the already staged artifacts. Local read-only commands or tools may be used solely
+for that inspection; the boundary is their effects and capabilities, not a generic command or tool name. Phase one
+forbids First Draft or any other API invocation, file or state writes, network access, Compile, and Publication.
+
+Only after explicit approval may phase two grant the controlled capabilities needed to reread the exact unchanged
+Plan bytes and run the approved zero-flag Compile journey. `compile-prepared-movie-catalog` supplies that approval
+without requiring a second confirmation. A live run requires separately authorized, freshly initialized private
+state; use a controlled fake transport unless the live repository effects are explicitly in scope.
+
+This qualification is the only exception to the one-case-per-fresh-context rule. Run
+`precompile-semantic-read-back` and `compile-prepared-movie-catalog` in the same continuing agent, session, and context
+so the observation proves approval continuity; do not reset or start a fresh context between phases.
+
+`create-full-stack-app/cases.json` remains the harness-neutral behavioral contract. It declares prompts,
+expectations, and artifact roles; it does not grant capabilities or configure a sandbox or transport. The evaluation
+runner owns and records enforcement of the phase boundary above. Before cleanup, the runner must durably retain a
+sanitized phase-one audit containing the phase; tool and capability classification for each attempted operation;
+outcome; resulting effects; the sanitized assistant response and its SHA-256; pre- and post-phase workspace-tree
+SHA-256; and the wrapper-invocation ledger. Record an explicitly empty ledger when no wrapper runs. Omit credentials
+and private state contents.
 
 ## Retained Compilation
 
