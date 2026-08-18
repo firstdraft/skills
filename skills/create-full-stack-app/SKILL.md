@@ -196,9 +196,10 @@ A separate push is optional because `plan compile` performs its own exact-byte p
 ## Read back and approve the candidate before Compile
 
 Before the first `plan compile` that could reach valid analysis and Publication, reread the exact current
-`.firstdraft/foundation-plan.json`. Use the modeling guide's compact semantic read-back, organized Entity by Entity,
-and ask the user to correct or explicitly approve that exact candidate. Approval of public access, iPhone output,
-or private-repository Publication alone is not approval of the complete semantic model.
+`.firstdraft/foundation-plan.json`. Complete every item in the modeling guide's canonical pre-Compile read-back
+checklist, organized Entity by Entity, and ask the user to correct or explicitly approve that exact candidate.
+Approval of public access, iPhone output, or private-repository Publication alone is not approval of the complete
+semantic model.
 
 If the Plan changes, repeat the read-back for the changed candidate. After unambiguous approval of the presented
 model, do not ask for a second command-level confirmation. Do not delete, loosen, flatten, relabel, or substitute

@@ -153,10 +153,12 @@ Ordinary replacement must retain the Project's target and target-profile pin.
 - Keep the UUID when a subject is renamed or coherently moved without changing kind. Update every affected typed
   path in the same complete candidate.
 - Mint a new UUID locally by running `generate uuid` through the Skill resolver for a genuinely new or replacement
-  concept, then write
-  it into the complete Plan before push. Subject UUIDs are client-authored input at this boundary: the server
-  validates and preserves them; it does not assign a missing identity or replace a submitted one. Never reuse UUIDs
-  from examples in a real Plan.
+  concept, then write it into the complete Plan before push. Do not choose a UUID copied from an example for that new
+  or replacement subject. Subject UUIDs are client-authored input at this boundary: the server validates and
+  preserves them; it does not assign a missing identity or replace a submitted one.
+- When reviewing or resuming an exact staged Plan, preserve its submitted subject UUIDs. An example-like value alone
+  is not a reason to remint it; change that identity only for a user-confirmed replacement or a demonstrated identity
+  diagnostic.
 - Typed links use readable scoped paths such as `movie.title`, `rating.movie`, and `movie.ratings`; they do not use
   UUIDs.
 

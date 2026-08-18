@@ -38,6 +38,7 @@ The source/public split observed at the start of this documentation change is ca
 | [`2026-08-04-home-inventory-opening-response.txt`](2026-08-04-home-inventory-opening-response.txt) | Exact retained opening response used for regrading |
 | [`2026-08-04-movie-catalog-model-rehearsal.json`](2026-08-04-movie-catalog-model-rehearsal.json) | Machine-readable identities and result for the local Movie Catalog rehearsal |
 | [`2026-08-10-staging-movie-catalog-discovery-smoke.md`](2026-08-10-staging-movie-catalog-discovery-smoke.md) | One bounded live staging Compilation and OAuth/App-backed Publication |
+| [`2026-08-17-claude-plugin-0.1.2-approval-flow-failure.md`](2026-08-17-claude-plugin-0.1.2-approval-flow-failure.md) | Exact earlier 0.1.2 phase-one failure and no-effect boundary |
 
 ## Historical narratives
 

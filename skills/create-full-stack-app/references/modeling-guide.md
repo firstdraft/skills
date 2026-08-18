@@ -174,22 +174,36 @@ In particular, do not remove or weaken modeled content solely because the import
 
 ## Prepare the pre-Compile semantic read-back
 
-Immediately before the first Compile that could reach Publication, reread the exact local Plan and present a compact
-semantic read-back organized Entity by Entity. Include:
+Immediately before the first Compile that could reach Publication, reread the exact local Plan and present the six
+parts below in order. Say `none` when a category is empty; omission is not a complete read-back.
 
-- what one record of each Entity represents and its Primary Descriptor;
-- every Field's type and required or optional status, plus material defaults, rules, mutability, normalization, or
-  protection;
-- every Reference's owner, targets, requiredness, deletion behavior, multiplicity, and meaningful inverse or
-  indirect traversal;
-- requested surfaces, projections, returns, and access;
-- application scope, requested clients, domain and delivery choices, delegated decisions, exclusions, and deferred
-  questions; and
-- warnings and capability gaps that keep intended product meaning separate from current target support.
+### Canonical pre-Compile read-back checklist
 
-Ask the user to correct or explicitly approve that exact model. If the Plan changes afterward, repeat the read-back
-for the changed candidate. Separate verified diagnostics from modeling assumptions and from unimplemented First
-Draft capabilities.
+1. **Verification boundary:** identify the exact staged local Plan and distinguish local parsing, schema validation,
+   server import, and analysis actually observed. From the continuing conversation and your own tool actions, report
+   whether any First Draft command, Compile, or Publication started during this read-back; when none did, state that
+   boundary explicitly. If the action history cannot be established, say so and stop rather than inventing it.
+2. **Application scope and clients:** state the application identity, target and profile, included product slice,
+   requested clients, domain, appearance, delivery and notification choices, delegated decisions, exclusions, and
+   deferred questions.
+3. **Entity-by-Entity meaning:** for every Entity, state what one record represents and its Primary Descriptor, plus
+   its semantic icon and authored implicit order column; every Field's type, requiredness, material default, rule,
+   mutability, normalization, protection, and derivation; Enum values and ordinal order; Money currency; every
+   Reference's owner, targets, requiredness, deletion behavior, mutability, multiplicity, and realization; every
+   authored Association, Predicate, Validation, Ordering, Counter, Position, State Machine, Tree, or default; and
+   reference or development Data records, their stable identities, and assignments. Say which families are absent.
+4. **Surfaces and access:** state requested Scaffolds, routes, projections, returns, mutation inputs, Accounts,
+   Policies, and authorization.
+5. **Warnings and capability gaps:** separate product meaning and unresolved choices from verified diagnostics,
+   target support, and unimplemented First Draft capabilities.
+6. **Execution consequence and approval:** state that Compile does not deploy. A terminal successful Publication is
+   intended to create one private GitHub repository; only that invocation's validated terminal success proves it.
+   Ask the user to correct or explicitly approve the complete exact model.
+
+The read-back reviews the staged candidate; it is not a last-minute authoring pass. Preserve existing subject
+identity and present concerns as warnings. Do not require a candidate edit without a user correction, a confirmed
+product decision, or a demonstrated diagnostic. If the Plan changes afterward, repeat the complete read-back for the
+changed candidate.
 
 Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning to make import or analysis
 green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a

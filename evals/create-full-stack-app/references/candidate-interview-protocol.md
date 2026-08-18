@@ -93,14 +93,33 @@ and deferred questions can be revisited after diagnostics or further dialogue.
 
 ## Read back and approve before Compile
 
-Before the first Compile that could reach Publication, reread the exact staged Plan and present a compact semantic
-summary organized Entity by Entity. Include record meaning and Primary Descriptors; Field types and requiredness;
-Reference ownership, targets, deletion, and meaningful traversals; requested surfaces and access; requested clients,
-domain, and delivery; delegated choices, exclusions, deferred questions, and capability gaps.
+Before the first Compile that could reach Publication, reread the exact staged Plan and present these six parts in
+order. Say `none` when a category is empty.
 
-Ask the user to correct or explicitly approve that exact model. If the Plan changes afterward, repeat the read-back
-for the changed candidate. Once the unchanged candidate is approved, run the requested Compile without a second
-command-level confirmation.
+1. **Verification boundary:** identify the exact staged Plan; distinguish observed parsing, schema validation, server
+   import, and analysis; and report any First Draft command, Compile, or Publication action from the continuing
+   conversation and your own tool actions. When none occurred, state that boundary explicitly; if the action history
+   cannot be established, say so and stop rather than inventing it.
+2. **Application scope and clients:** state application identity, target/profile, product slice, requested clients,
+   domain, appearance, delivery and notification choices, delegated decisions, exclusions, and deferred questions.
+3. **Entity-by-Entity meaning:** state each Entity's record meaning, semantic icon, Primary Descriptor, and authored
+   implicit order column; every Field's type, requiredness, material default, rule, mutability, normalization,
+   protection, and derivation; Enum values and ordinal order; Money currency; every Reference's owner, targets,
+   requiredness, deletion, mutability, multiplicity, and realization; authored Associations, Predicates, Validations,
+   Orderings, Counters, Positions, State Machines, Trees, and defaults; and reference or development Data records,
+   their stable identities, and assignments. Say which families are absent.
+4. **Surfaces and access:** state requested Scaffolds, routes, projections, returns, mutation inputs, Accounts,
+   Policies, and authorization.
+5. **Warnings and capability gaps:** separate product meaning and unresolved choices from verified diagnostics,
+   target support, and unimplemented First Draft capabilities.
+6. **Execution consequence and approval:** state that Compile does not deploy, that a terminal successful Publication
+   is intended to create one private GitHub repository, and that only that invocation's validated terminal success
+   proves it. Ask the user to correct or explicitly approve the complete exact model.
+
+The read-back reviews the staged candidate rather than reopening authoring. Preserve its existing subject UUIDs;
+do not require an edit without a user correction, a confirmed product decision, or a demonstrated diagnostic. If
+the Plan changes afterward, repeat the complete read-back for the changed candidate. Once the unchanged candidate
+is approved, run the requested Compile without a second command-level confirmation.
 
 Do not weaken product meaning to pass the current capability boundary. The user may explicitly move a feature out of
 this release after seeing the consequence; record that product-scope decision. Otherwise preserve the meaning, stop

@@ -2276,6 +2276,49 @@ test("subject identity evals use the public UUID generator", async () => {
   const enumeration = cases.find(
     ({ id }) => id === "add-ordinal-enum-with-minted-ids",
   );
+  const examples = await readFile(
+    path.join(
+      skillsDirectory,
+      "create-full-stack-app",
+      "references",
+      "examples.md",
+    ),
+    "utf8",
+  );
+  const foundationPlan = await readFile(
+    path.join(
+      skillsDirectory,
+      "create-full-stack-app",
+      "references",
+      "foundation-plan-019.md",
+    ),
+    "utf8",
+  );
+
+  assert.match(
+    examples,
+    /Never choose them when authoring\s+new subjects in a real Project/,
+  );
+  assert.match(
+    examples,
+    /Once an exact staged or resumed candidate already contains subject UUIDs, preserve\s+them during read-back and diagnostics/,
+  );
+  assert.match(
+    foundationPlan,
+    /Do not choose a UUID copied from an example for that new\s+or replacement subject/,
+  );
+  assert.match(
+    foundationPlan,
+    /When reviewing or resuming an exact staged Plan, preserve its submitted subject UUIDs/,
+  );
+  assert.match(
+    foundationPlan,
+    /An example-like value alone\s+is not a reason to remint it/,
+  );
+  assert.doesNotMatch(
+    foundationPlan,
+    /Never reuse UUIDs\s+from examples in a real Plan/,
+  );
 
   assert.match(field.prompt, /installed firstdraft CLI includes generate uuid/);
   assert(

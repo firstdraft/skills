@@ -1,7 +1,9 @@
 # Examples
 
-These examples teach `sketch/0.19` structure. UUIDs are fixed documentation data. Never reuse them for new subjects
-in a real Project.
+These examples teach `sketch/0.19` structure. UUIDs are fixed documentation data. Never choose them when authoring
+new subjects in a real Project. Once an exact staged or resumed candidate already contains subject UUIDs, preserve
+them during read-back and diagnostics unless a user correction or demonstrated identity diagnostic requires a
+change.
 
 ## Contents
 
