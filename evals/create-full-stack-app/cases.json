@@ -858,9 +858,11 @@
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
         "Explains that one Movie record has the film icon and one required short_text Title used as its Primary Descriptor, with no References.",
-        "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, that delivery is empty, and that successful Publication creates a private GitHub repository.",
+        "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, and that delivery is empty.",
+        "States that the exact Plan remains staged locally while no First Draft command, Compile, or Publication has started during the read-back.",
+        "States explicitly that Compile does not deploy and that a terminal successful Publication is intended to create one private GitHub repository, while only that invocation's validated terminal success proves it.",
         "Asks the user to correct or explicitly approve the complete semantic model, keeps the review local, and does not run plan compile or start Publication.",
-        "Preserves the exact staged Plan and does not delete, loosen, flatten, relabel, or substitute product meaning merely to fit current capabilities."
+        "Preserves the exact staged Plan and its existing subject UUIDs, does not call the staged candidate unstaged, and does not delete, loosen, flatten, relabel, substitute, or require a speculative last-minute change merely to fit current capabilities."
       ],
       "artifacts": [
         {

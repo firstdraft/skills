@@ -86,18 +86,42 @@ test("candidate protocol defines interview coverage and complete-candidate readi
   const readBack = markdownSection(
     protocol,
     "Read back and approve before Compile",
-  ).replace(/\s+/g, " ");
+  );
+  assert.deepEqual(
+    [...readBack.matchAll(/^\d+\. \*\*(.+?):\*\*/gm)].map(([, label]) => label),
+    [
+      "Verification boundary",
+      "Application scope and clients",
+      "Entity-by-Entity meaning",
+      "Surfaces and access",
+      "Warnings and capability gaps",
+      "Execution consequence and approval",
+    ],
+  );
+  const normalizedReadBack = readBack.replace(/\s+/g, " ");
   for (const expected of [
-    "organized Entity by Entity",
-    "correct or explicitly approve that exact model",
-    "repeat the read-back for the changed candidate",
+    "continuing conversation and your own tool actions",
+    "stop rather than inventing it",
+    "semantic icon",
+    "implicit order column",
+    "Enum values and ordinal order",
+    "Money currency",
+    "Associations, Predicates, Validations, Orderings, Counters, Positions, State Machines, Trees",
+    "reference or development Data records, their stable identities, and assignments",
+    "Scaffolds, routes, projections, returns, mutation inputs, Accounts",
+    "Compile does not deploy",
+    "one private GitHub repository",
+    "validated terminal success",
+    "Preserve its existing subject UUIDs",
+    "correct or explicitly approve the complete exact model",
+    "repeat the complete read-back for the changed candidate",
     "without a second command-level confirmation",
     "Do not weaken product meaning",
     "known to be invalid",
     "invalid analysis cannot enter Publication",
   ]) {
     assert(
-      readBack.includes(expected),
+      normalizedReadBack.includes(expected),
       `candidate protocol read-back missing: ${expected}`,
     );
   }
@@ -254,14 +278,46 @@ test(
       modelingGuide,
       "Prepare the pre-Compile semantic read-back",
     ).replace(/\s+/g, " ");
+    const checklist = markdownSection(
+      modelingGuide,
+      "Prepare the pre-Compile semantic read-back",
+    );
+    assert.deepEqual(
+      [...checklist.matchAll(/^\d+\. \*\*(.+?):\*\*/gm)].map(
+        ([, label]) => label,
+      ),
+      [
+        "Verification boundary",
+        "Application scope and clients",
+        "Entity-by-Entity meaning",
+        "Surfaces and access",
+        "Warnings and capability gaps",
+        "Execution consequence and approval",
+      ],
+    );
     for (const expected of [
-      "what one record of each Entity represents and its Primary Descriptor",
-      "every Field's type and required or optional status",
-      "every Reference's owner, targets, requiredness, deletion behavior, multiplicity",
-      "requested surfaces, projections, returns, and access",
+      "exact staged local Plan",
+      "continuing conversation and your own tool actions",
+      "when none did, state that boundary explicitly",
+      "stop rather than inventing it",
+      "what one record represents and its Primary Descriptor",
+      "semantic icon",
+      "implicit order column",
+      "every Field's type, requiredness",
+      "Enum values and ordinal order",
+      "Money currency",
+      "every Reference's owner, targets, requiredness, deletion behavior, mutability, multiplicity",
+      "Association, Predicate, Validation, Ordering, Counter, Position, State Machine, Tree",
+      "reference or development Data records, their stable identities, and assignments",
+      "requested Scaffolds, routes, projections, returns, mutation inputs, Accounts",
       "delegated decisions, exclusions, and deferred",
-      "correct or explicitly approve that exact model",
-      "repeat the read-back for the changed candidate",
+      "Compile does not deploy",
+      "terminal successful Publication is intended to create one private GitHub repository",
+      "only that invocation's validated terminal success proves it",
+      "correct or explicitly approve the complete exact model",
+      "not a last-minute authoring pass",
+      "Preserve existing subject identity",
+      "repeat the complete read-back for the changed candidate",
       "Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning",
     ]) {
       assert(
@@ -296,6 +352,22 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert(
     expectationIncludes(
       readBack,
+      "exact Plan remains staged locally",
+      "no First Draft command, Compile, or Publication",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      readBack,
+      "Compile does not deploy",
+      "terminal successful Publication",
+      "one private GitHub repository",
+      "validated terminal success",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      readBack,
       "correct or explicitly approve",
       "does not run plan compile",
     ),
@@ -303,8 +375,16 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert(
     expectationIncludes(
       readBack,
-      "does not delete, loosen, flatten, relabel, or substitute",
+      "existing subject UUIDs",
+      "does not call the staged candidate unstaged",
+      "speculative last-minute change",
     ),
+  );
+  assert.equal(
+    readBack.expectations.filter((expectation) =>
+      expectation.includes("terminal successful Publication"),
+    ).length,
+    1,
   );
 
   const diagnostic = evaluationCaseById(
