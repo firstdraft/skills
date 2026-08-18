@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.1.2` |
-| Candidate packed SHA-256 | `074e9cd2b88cf86e1b0c3e737c94ab03c8b1328df0d299818d09dd919f50aed2` |
+| Candidate packed SHA-256 | `ef59d49a20e3704adfcfd3b7e9a345b2f3b1c4ebe4b106315932dba7400b9121` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.1.1` / `0.1.1` |
@@ -70,8 +70,10 @@ One isolated run has two phases:
 1. **Phase one — semantic read-back.** The evaluated agent may only inspect the already staged local artifacts
    read-only. Local read-only commands or tools may be used solely for that inspection; the boundary is their effects
    and capabilities, not a generic command or tool name. The agent must not invoke First Draft or any other API, write
-   files or state, use network access, run Compile, or enter Publication. It presents the full semantic read-back and
-   stops for approval.
+   files or state, use network access, run Compile, or enter Publication. Its account of every attempted tool or
+   command action and whether it succeeded, failed, or was permission-denied must match the retained ledger and
+   successful results, separately from First Draft, Compile, and Publication effects. It presents the full semantic
+   read-back and stops for approval.
 2. **Phase two — approved execution.** Only after explicit approval, the same run rereads the exact unchanged Plan
    bytes and invokes zero-flag Compile without a second confirmation. Use a controlled local service and strict fake
    GitHub path unless a separately authorized live gate is named.

@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "074e9cd2b88cf86e1b0c3e737c94ab03c8b1328df0d299818d09dd919f50aed2",
+        "ef59d49a20e3704adfcfd3b7e9a345b2f3b1c4ebe4b106315932dba7400b9121",
     },
     requires: {
       api_contract: [">= 0.2.0", "< 0.3.0"],
@@ -119,6 +119,14 @@ test("approval-flow docs define the phase boundary and audit contract", async ()
   assert.match(
     semanticApproval.replace(/\s+/g, " "),
     /Only after explicit approval may phase two.*?reread the exact unchanged Plan bytes.*?zero-flag Compile journey.*?only exception to the one-case-per-fresh-context rule.*?same continuing agent, session, and context.*?proves approval continuity.*?do not reset or start a fresh context between phases.*?`create-full-stack-app\/cases\.json` remains the harness-neutral behavioral contract.*?does not grant capabilities or configure a sandbox or transport.*?runner owns and records enforcement.*?Before cleanup, the runner must durably retain a sanitized phase-one audit containing the phase; tool and capability classification for each attempted operation; outcome; resulting effects; the sanitized assistant response and its SHA-256; pre- and post-phase workspace-tree SHA-256; and the wrapper-invocation ledger.*?explicitly empty ledger when no wrapper runs.*?Omit credentials and private state contents/,
+  );
+  assert.match(
+    semanticApproval.replace(/\s+/g, " "),
+    /Fail qualification when the response's account of its own actions disagrees with the retained tool and command ledger or successful tool results.*?report every attempted action.*?distinguish succeeded, failed, and permission-denied outcomes.*?denied or failed shell attempt as an attempted command.*?directory listing, file read, parse, or other observation only when a successful result supports it.*?local inspection outcomes separately from First Draft, Compile, and Publication effects/,
+  );
+  assert.match(
+    candidatePreparation.replace(/\s+/g, " "),
+    /account of every attempted tool or command action and whether it succeeded, failed, or was permission-denied must match the retained ledger and successful results, separately from First Draft, Compile, and Publication effects/,
   );
   assert.doesNotMatch(
     semanticApproval,

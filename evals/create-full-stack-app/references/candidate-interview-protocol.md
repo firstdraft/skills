@@ -96,10 +96,13 @@ and deferred questions can be revisited after diagnostics or further dialogue.
 Before the first Compile that could reach Publication, reread the exact staged Plan and present these six parts in
 order. Say `none` when a category is empty.
 
-1. **Verification boundary:** identify the exact staged Plan; distinguish observed parsing, schema validation, server
-   import, and analysis; and report any First Draft command, Compile, or Publication action from the continuing
-   conversation and your own tool actions. When none occurred, state that boundary explicitly; if the action history
-   cannot be established, say so and stop rather than inventing it.
+1. **Verification boundary:** identify the exact staged Plan and distinguish observed parsing, schema validation,
+   server import, and analysis. From the continuing conversation and your own tool results, report every attempted
+   tool or command action and classify its outcome as succeeded, failed, or permission-denied. A denied or failed
+   shell attempt is still an attempted command: never say no commands ran after one was attempted, and claim a
+   directory listing, file read, parse, or other observation only when a successful tool result supports it.
+   Separately state the resulting First Draft command, Compile, and Publication effects; when none occurred, say so
+   explicitly. If the action history cannot be established, say so and stop rather than inventing it.
 2. **Application scope and clients:** state application identity, target/profile, product slice, requested clients,
    domain, appearance, delivery and notification choices, delegated decisions, exclusions, and deferred questions.
 3. **Entity-by-Entity meaning:** state each Entity's record meaning, semantic icon, Primary Descriptor, and authored
