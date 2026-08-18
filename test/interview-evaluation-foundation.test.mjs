@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
@@ -90,7 +91,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
   assert.deepEqual(
     [...readBack.matchAll(/^\d+\. \*\*(.+?):\*\*/gm)].map(([, label]) => label),
     [
-      "Verification boundary",
+      "Candidate identity",
       "Application scope and clients",
       "Entity-by-Entity meaning",
       "Surfaces and access",
@@ -99,14 +100,13 @@ test("candidate protocol defines interview coverage and complete-candidate readi
     ],
   );
   const normalizedReadBack = readBack.replace(/\s+/g, " ");
+  assert.doesNotMatch(
+    normalizedReadBack,
+    /every attempted tool|permission-denied|effect ledger|no-network|no-write/i,
+  );
   for (const expected of [
-    "continuing conversation and your own tool results",
-    "report every attempted tool or command action and classify its outcome as succeeded, failed, or permission-denied",
-    "denied or failed shell attempt is still an attempted command",
-    "never say no commands ran after one was attempted",
-    "claim a directory listing, file read, parse, or other observation only when a successful tool result supports it",
-    "Separately state the resulting First Draft command, Compile, and Publication effects; when none occurred, say so explicitly",
-    "stop rather than inventing it",
+    "exact staged Plan by project-relative path and SHA-256",
+    "without implying a stronger boundary",
     "semantic icon",
     "implicit order column",
     "Enum values and ordinal order",
@@ -120,6 +120,8 @@ test("candidate protocol defines interview coverage and complete-candidate readi
     "Preserve its existing subject UUIDs",
     "correct or explicitly approve the complete exact model",
     "repeat the complete read-back for the changed candidate",
+    "same continuing conversation",
+    "run one zero-flag Compile",
     "without a second command-level confirmation",
     "Do not weaken product meaning",
     "known to be invalid",
@@ -259,7 +261,7 @@ test(
       "organized Entity by Entity",
       "correct or explicitly approve that exact candidate",
       "repeat the read-back for the changed candidate",
-      "do not ask for a second command-level confirmation",
+      "Do not ask for a second command-level confirmation",
       "Do not delete, loosen, flatten, relabel, or substitute intended product meaning",
       "explicitly requested diagnostic-only Compile",
       "already known to be invalid",
@@ -283,6 +285,10 @@ test(
       modelingGuide,
       "Prepare the pre-Compile semantic read-back",
     ).replace(/\s+/g, " ");
+    assert.doesNotMatch(
+      modeling,
+      /every attempted tool|permission-denied|effect ledger|no-network|no-write/i,
+    );
     const checklist = markdownSection(
       modelingGuide,
       "Prepare the pre-Compile semantic read-back",
@@ -292,7 +298,7 @@ test(
         ([, label]) => label,
       ),
       [
-        "Verification boundary",
+        "Candidate identity",
         "Application scope and clients",
         "Entity-by-Entity meaning",
         "Surfaces and access",
@@ -301,14 +307,8 @@ test(
       ],
     );
     for (const expected of [
-      "exact staged local Plan",
-      "continuing conversation and your own tool results",
-      "report every attempted tool or command action and classify its outcome as succeeded, failed, or permission-denied",
-      "denied or failed shell attempt is still an attempted command",
-      "never say no commands ran after one was attempted",
-      "claim a directory listing, file read, parse, or other observation only when a successful tool result supports it",
-      "Separately state the resulting First Draft command, Compile, and Publication effects; when none occurred, say so explicitly",
-      "stop rather than inventing it",
+      "exact staged local Plan by project-relative path and SHA-256",
+      "without implying a stronger boundary",
       "what one record represents and its Primary Descriptor",
       "semantic icon",
       "implicit order column",
@@ -361,24 +361,9 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert(
     expectationIncludes(
       readBack,
-      "every attempted tool or command action",
-      "outcome as succeeded, failed, or permission-denied",
-      "denied or failed shell attempt",
-    ),
-  );
-  assert(
-    expectationIncludes(
-      readBack,
-      "directory listing, file read, parse",
-      "successful tool result",
-      "separate from First Draft, Compile, and Publication effects",
-    ),
-  );
-  assert(
-    expectationIncludes(
-      readBack,
-      "exact Plan remains staged locally",
-      "no First Draft command, Compile, or Publication",
+      "exact staged Plan",
+      "SHA-256",
+      "unchanged bytes",
     ),
   );
   assert(
@@ -394,7 +379,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       readBack,
       "correct or explicitly approve",
-      "does not run plan compile",
+      "does not run plan compile before that approval",
     ),
   );
   assert(
@@ -429,11 +414,36 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     compile.prompt,
     /^I approve the exact pre-Compile semantic read-back/,
   );
+  const movieCatalogSha256 = createHash("sha256")
+    .update(await readFile(movieCatalogFixturePath))
+    .digest("hex");
+  assert(
+    compile.prompt.includes(`SHA-256 ${movieCatalogSha256}`),
+    "approval prompt must bind to the exact staged fixture bytes",
+  );
+  assert.doesNotMatch(
+    JSON.stringify([readBack, compile]),
+    /every attempted tool|permission-denied|effect ledger|no-network|no-write/i,
+  );
   assert(
     expectationIncludes(
       compile,
       "unambiguous approval",
       "does not ask for a second confirmation",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      compile,
+      "same continuing session",
+      "SHA-256 and semantic model are unchanged",
+    ),
+  );
+  assert(expectationIncludes(compile, "exactly one zero-flag plan compile"));
+  assert(
+    expectationIncludes(
+      compile,
+      "distinct terminal Compilation and Publication outcomes",
     ),
   );
   assert(

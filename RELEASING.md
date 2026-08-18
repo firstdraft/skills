@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.1.2` |
-| Candidate packed SHA-256 | `ef59d49a20e3704adfcfd3b7e9a345b2f3b1c4ebe4b106315932dba7400b9121` |
+| Candidate packed SHA-256 | `901d5baaebea0244a40b620d039acd4a8efbe8d657a142439c6fe3908a1465f8` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.1.1` / `0.1.1` |
@@ -64,19 +64,27 @@ syntax; do not add compatibility aliases.
 6. Define the release-specific qualification before publication. Candidate compatibility and local validation never
    prove authentication, service compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-The current 0.1.2 candidate still requires its exact-byte fresh-agent approval-flow qualification before publication.
-One isolated run has two phases:
+The current 0.1.2 candidate still requires one human-observed, two-turn approval smoke before publication. Use the
+paired `precompile-semantic-read-back` and `compile-prepared-movie-catalog` cases in the same fresh continuing agent
+session:
 
-1. **Phase one — semantic read-back.** The evaluated agent may only inspect the already staged local artifacts
-   read-only. Local read-only commands or tools may be used solely for that inspection; the boundary is their effects
-   and capabilities, not a generic command or tool name. The agent must not invoke First Draft or any other API, write
-   files or state, use network access, run Compile, or enter Publication. Its account of every attempted tool or
-   command action and whether it succeeded, failed, or was permission-denied must match the retained ledger and
-   successful results, separately from First Draft, Compile, and Publication effects. It presents the full semantic
-   read-back and stops for approval.
-2. **Phase two — approved execution.** Only after explicit approval, the same run rereads the exact unchanged Plan
-   bytes and invokes zero-flag Compile without a second confirmation. Use a controlled local service and strict fake
-   GitHub path unless a separately authorized live gate is named.
+1. Record the exact Skills commit, package version and tarball SHA-256, compatible CLI and service identities, and
+   staged Plan SHA-256. Use a controlled local service and strict fake GitHub path unless a separately authorized
+   live gate is named.
+2. In the first turn, the agent presents the complete semantic read-back of that exact Plan, including that Compile
+   does not deploy and successful Publication creates one private GitHub repository, then stops for approval. The
+   observer confirms that the Compile wrapper count is zero before approval.
+3. Give explicit approval of the presented semantic model and Plan SHA-256. In the same continuing session, the
+   agent rereads the unchanged Plan, invokes exactly one zero-flag Compile without another confirmation, and reports
+   the validated terminal Compilation and Publication outcome. The observer confirms that the Compile wrapper count
+   is exactly one after the turn.
+
+Retain the two-turn transcript, explicit approval, identities and digests above, pre-approval Compile count zero,
+post-approval Compile count exactly one, and the final Compilation and Publication outcome. This smoke does not
+require an exhaustive tool or effect ledger, shell-command classification, workspace snapshots, or proof of generic
+no-network, no-write, or environmental inactivity. Pass only on unchanged Plan bytes, a complete approved read-back,
+exactly one post-approval Compile invocation, and terminal successful Compilation and Publication. On failure or an
+ambiguous outcome, retain the observed boundary and stop; reconcile safely before any separately authorized retry.
 
 ## 2. Publish the exact package under `next`
 

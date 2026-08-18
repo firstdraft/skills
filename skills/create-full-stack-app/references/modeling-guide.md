@@ -179,13 +179,9 @@ parts below in order. Say `none` when a category is empty; omission is not a com
 
 ### Canonical pre-Compile read-back checklist
 
-1. **Verification boundary:** identify the exact staged local Plan and distinguish local parsing, schema validation,
-   server import, and analysis actually observed. From the continuing conversation and your own tool results, report
-   every attempted tool or command action and classify its outcome as succeeded, failed, or permission-denied. A
-   denied or failed shell attempt is still an attempted command: never say no commands ran after one was attempted,
-   and claim a directory listing, file read, parse, or other observation only when a successful tool result supports
-   it. Separately state the resulting First Draft command, Compile, and Publication effects; when none occurred, say
-   so explicitly. If the action history cannot be established, say so and stop rather than inventing it.
+1. **Candidate identity:** identify the exact staged local Plan by project-relative path and SHA-256. Distinguish
+   local parsing, schema validation, server import, and analysis actually observed without implying a stronger
+   boundary.
 2. **Application scope and clients:** state the application identity, target and profile, included product slice,
    requested clients, domain, appearance, delivery and notification choices, delegated decisions, exclusions, and
    deferred questions.

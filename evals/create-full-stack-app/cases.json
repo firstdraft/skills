@@ -854,16 +854,14 @@
     {
       "id": "precompile-semantic-read-back",
       "should_trigger": true,
-      "prompt": "Prepare the staged Movie Catalog for Compilation. Reread the exact Plan and present its complete semantic model for my approval. Keep this review local, do not run any First Draft command, and do not Compile yet.",
+      "prompt": "Prepare the staged Movie Catalog for Compilation. Reread the exact Plan, identify its SHA-256, and present its complete semantic model for my approval. Do not Compile until I approve it.",
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
         "Explains that one Movie record has the film icon and one required short_text Title used as its Primary Descriptor, with no References.",
         "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, and that delivery is empty.",
-        "Reports every attempted tool or command action in the continuing read-back context and classifies its outcome as succeeded, failed, or permission-denied; treats a denied or failed shell attempt as an attempted command instead of claiming that no commands ran.",
-        "Claims a directory listing, file read, parse, or other local observation only when a successful tool result supports it, and keeps those inspection outcomes separate from First Draft, Compile, and Publication effects.",
-        "States that the exact Plan remains staged locally while no First Draft command, Compile, or Publication has started during the read-back.",
+        "Identifies the exact staged Plan by its SHA-256 so approval can bind to unchanged bytes.",
         "States explicitly that Compile does not deploy and that a terminal successful Publication is intended to create one private GitHub repository, while only that invocation's validated terminal success proves it.",
-        "Asks the user to correct or explicitly approve the complete semantic model, keeps the review local, and does not run plan compile or start Publication.",
+        "Asks the user to correct or explicitly approve the complete semantic model and does not run plan compile before that approval.",
         "Preserves the exact staged Plan and its existing subject UUIDs, does not call the staged candidate unstaged, and does not delete, loosen, flatten, relabel, substitute, or require a speculative last-minute change merely to fit current capabilities."
       ],
       "artifacts": [
@@ -905,12 +903,12 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back for the unchanged staged Movie Catalog: movie_catalog has one Movie Entity with the film icon; each Movie has one required short_text Title used as its Primary Descriptor, no References, and only a public read-only index; the selected iPhone client uses that index for navigation under movies.example.com; delivery is empty; successful Publication creates a private GitHub repository. Compile that exact candidate now.",
+      "prompt": "I approve the exact pre-Compile semantic read-back for the unchanged staged Movie Catalog with SHA-256 d8ecce5f4029058bae0c72e235bb671eeb8b065aba2d2800c15dd4bea269ecd4: movie_catalog has one Movie Entity with the film icon; each Movie has one required short_text Title used as its Primary Descriptor, no References, and only a public read-only index; the selected iPhone client uses that index for navigation under movies.example.com; delivery is empty; successful Publication creates a private GitHub repository. Compile that exact candidate now.",
       "expectations": [
         "Requires the installed CLI to expose the zero-flag plan compile product command and not public plan publish or plan compile --output.",
-        "Treats the prompt as unambiguous approval of the complete semantic model, rereads the exact local Plan, verifies that it matches the approved read-back, and does not ask for a second confirmation or repeat the unchanged read-back.",
-        "Runs plan compile through the Skill resolver for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
-        "Treats progress as nonterminal observational output and reports success only when stdout contains the validated private GitHub repository URL.",
+        "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model, rereads the exact local Plan, verifies its SHA-256 and semantic model are unchanged, and does not ask for a second confirmation or repeat the unchanged read-back.",
+        "Runs exactly one zero-flag plan compile through the Skill resolver for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
+        "Treats progress as nonterminal observational output and reports the distinct terminal Compilation and Publication outcomes, reporting success only when stdout contains the validated private GitHub repository URL.",
         "Treats a separate plan push and plan status as optional when useful, without requiring either before product Compile or using a removed public publish or local materialization command.",
         "Would stop and repeat the semantic read-back instead of compiling if the local Plan no longer matched the approved candidate."
       ],

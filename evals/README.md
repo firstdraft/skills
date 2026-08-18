@@ -78,33 +78,27 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-For the two-phase release qualification, `precompile-semantic-read-back` is phase one. It gives the evaluated agent
-only read-only local inspection of the already staged artifacts. Local read-only commands or tools may be used solely
-for that inspection; the boundary is their effects and capabilities, not a generic command or tool name. Phase one
-forbids First Draft or any other API invocation, file or state writes, network access, Compile, and Publication.
+For the human-observed 0.1.2 release smoke, run `precompile-semantic-read-back` and
+`compile-prepared-movie-catalog` as two user turns in the same fresh continuing agent session. Before the first turn,
+record the exact candidate and package identity, compatible CLI and service identities, staged Plan SHA-256, and a
+zero Compile-wrapper count. The first response must present the complete semantic model, identify the execution
+consequences, and stop for explicit approval.
 
-Only after explicit approval may phase two grant the controlled capabilities needed to reread the exact unchanged
-Plan bytes and run the approved zero-flag Compile journey. `compile-prepared-movie-catalog` supplies that approval
-without requiring a second confirmation. A live run requires separately authorized, freshly initialized private
-state; use a controlled fake transport unless the live repository effects are explicitly in scope.
+The second prompt approves that semantic model and Plan SHA-256. The same session must reread unchanged Plan bytes,
+invoke exactly one zero-flag Compile without another confirmation, and report the validated terminal Compilation and
+Publication outcome. A live run requires separately authorized, freshly initialized private state; otherwise use a
+controlled local service and strict fake GitHub transport.
 
-This qualification is the only exception to the one-case-per-fresh-context rule. Run
-`precompile-semantic-read-back` and `compile-prepared-movie-catalog` in the same continuing agent, session, and context
-so the observation proves approval continuity; do not reset or start a fresh context between phases.
+Retain the two-turn transcript, explicit approval, exact candidate/package identities and digests, Plan SHA-256,
+pre-approval Compile count zero, post-approval Compile count exactly one, and final Compilation and Publication
+outcome. A human observer grades the semantic read-back and approval continuity. Do not require an exhaustive tool or
+effect ledger, shell-command classification, workspace snapshots, or proof of generic no-network, no-write, or
+environmental inactivity. On failure or an ambiguous outcome, record what happened and stop rather than automatically
+retrying.
 
 `create-full-stack-app/cases.json` remains the harness-neutral behavioral contract. It declares prompts,
-expectations, and artifact roles; it does not grant capabilities or configure a sandbox or transport. The evaluation
-runner owns and records enforcement of the phase boundary above. Before cleanup, the runner must durably retain a
-sanitized phase-one audit containing the phase; tool and capability classification for each attempted operation;
-outcome; resulting effects; the sanitized assistant response and its SHA-256; pre- and post-phase workspace-tree
-SHA-256; and the wrapper-invocation ledger. Record an explicitly empty ledger when no wrapper runs. Omit credentials
-and private state contents.
-
-Fail qualification when the response's account of its own actions disagrees with the retained tool and command
-ledger or successful tool results. It must report every attempted action and distinguish succeeded, failed, and
-permission-denied outcomes; count a denied or failed shell attempt as an attempted command; and claim a directory
-listing, file read, parse, or other observation only when a successful result supports it. Compare those local
-inspection outcomes separately from First Draft, Compile, and Publication effects.
+expectations, and artifact roles; it does not grant capabilities or configure a sandbox or transport. Omit
+credentials and private state contents from retained evidence.
 
 ## Retained Compilation
 
