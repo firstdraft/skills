@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "ef59d49a20e3704adfcfd3b7e9a345b2f3b1c4ebe4b106315932dba7400b9121",
+        "901d5baaebea0244a40b620d039acd4a8efbe8d657a142439c6fe3908a1465f8",
     },
     requires: {
       api_contract: [">= 0.2.0", "< 0.3.0"],
@@ -91,7 +91,7 @@ test("current release docs route through structured identities", async () => {
   assert.doesNotMatch(releaseHistory, /current source-candidate version/);
 });
 
-test("approval-flow docs define the phase boundary and audit contract", async () => {
+test("approval-flow docs define the lightweight human-observed smoke", async () => {
   const [releasing, evalIndex] = await Promise.all([
     readText("RELEASING.md"),
     readText("evals/README.md"),
@@ -105,33 +105,51 @@ test("approval-flow docs define the phase boundary and audit contract", async ()
     "Semantic approval and product Compile",
   );
 
-  for (const section of [candidatePreparation, semanticApproval]) {
-    const normalized = section.replace(/\s+/g, " ");
-    assert.match(
-      normalized,
-      /phase one.*?Local read-only commands or tools may be used solely for that inspection; the boundary is their effects and capabilities, not a generic command or tool name\.(?: The agent must not invoke First Draft or any other API, write files or state, use network access, run Compile, or enter Publication\.| Phase one forbids First Draft or any other API invocation, file or state writes, network access, Compile, and Publication\.)/i,
-    );
+  const candidate = candidatePreparation.replace(/\s+/g, " ");
+  const evaluation = semanticApproval.replace(/\s+/g, " ");
+
+  for (const source of [candidate, evaluation]) {
+    for (const expected of [
+      "human-observed",
+      "two-turn",
+      "Plan SHA-256",
+      "pre-approval Compile count zero",
+      "post-approval Compile count exactly one",
+      "Compilation and Publication outcome",
+    ]) {
+      assert(
+        source.includes(expected) ||
+          source.toLowerCase().includes(expected.toLowerCase()),
+        `approval smoke missing: ${expected}`,
+      );
+    }
   }
+
   assert.match(
-    candidatePreparation.replace(/\s+/g, " "),
-    /Phase two.*?Only after explicit approval.*?rereads the exact unchanged Plan.*?zero-flag Compile/,
-  );
-  assert.match(
-    semanticApproval.replace(/\s+/g, " "),
-    /Only after explicit approval may phase two.*?reread the exact unchanged Plan bytes.*?zero-flag Compile journey.*?only exception to the one-case-per-fresh-context rule.*?same continuing agent, session, and context.*?proves approval continuity.*?do not reset or start a fresh context between phases.*?`create-full-stack-app\/cases\.json` remains the harness-neutral behavioral contract.*?does not grant capabilities or configure a sandbox or transport.*?runner owns and records enforcement.*?Before cleanup, the runner must durably retain a sanitized phase-one audit containing the phase; tool and capability classification for each attempted operation; outcome; resulting effects; the sanitized assistant response and its SHA-256; pre- and post-phase workspace-tree SHA-256; and the wrapper-invocation ledger.*?explicitly empty ledger when no wrapper runs.*?Omit credentials and private state contents/,
+    candidate,
+    /same fresh continuing agent session.*?complete semantic read-back.*?Compile does not deploy.*?one private GitHub repository.*?stops for approval.*?same continuing session.*?exactly one zero-flag Compile without another confirmation/,
   );
   assert.match(
-    semanticApproval.replace(/\s+/g, " "),
-    /Fail qualification when the response's account of its own actions disagrees with the retained tool and command ledger or successful tool results.*?report every attempted action.*?distinguish succeeded, failed, and permission-denied outcomes.*?denied or failed shell attempt as an attempted command.*?directory listing, file read, parse, or other observation only when a successful result supports it.*?local inspection outcomes separately from First Draft, Compile, and Publication effects/,
+    evaluation,
+    /two user turns.*?first response must present the complete semantic model.*?stop for explicit approval.*?second prompt approves that semantic model and Plan SHA-256.*?reread unchanged Plan bytes.*?exactly one zero-flag Compile without another confirmation/,
   );
   assert.match(
-    candidatePreparation.replace(/\s+/g, " "),
-    /account of every attempted tool or command action and whether it succeeded, failed, or was permission-denied must match the retained ledger and successful results, separately from First Draft, Compile, and Publication effects/,
+    candidate,
+    /exact Skills commit, package version and tarball SHA-256.*?compatible CLI and service identities.*?two-turn transcript.*?explicit approval.*?pre-approval Compile count zero.*?post-approval Compile count exactly one.*?final Compilation and Publication outcome/,
   );
-  assert.doesNotMatch(
-    semanticApproval,
-    /executes\s+no\s+commands?/i,
+  assert.match(
+    evaluation,
+    /two-turn transcript.*?explicit approval.*?exact candidate\/package identities and digests.*?Plan SHA-256.*?pre-approval Compile count zero.*?post-approval Compile count exactly one.*?final Compilation and Publication outcome/,
   );
+  for (const source of [candidate, evaluation]) {
+    assert.match(
+      source,
+      /Do(?:es)? not require an exhaustive tool or effect ledger, shell-command classification, workspace snapshots, or proof of generic no-network, no-write, or environmental inactivity/i,
+    );
+    assert.doesNotMatch(source, /tool and capability classification/);
+    assert.doesNotMatch(source, /permission-denied/);
+    assert.doesNotMatch(source, /workspace-tree SHA-256/);
+  }
 });
 
 test("dated release-state observation retains its recorded facts", async () => {

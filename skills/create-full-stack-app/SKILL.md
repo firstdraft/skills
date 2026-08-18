@@ -201,10 +201,12 @@ checklist, organized Entity by Entity, and ask the user to correct or explicitly
 Approval of public access, iPhone output, or private-repository Publication alone is not approval of the complete
 semantic model.
 
-If the Plan changes, repeat the read-back for the changed candidate. After unambiguous approval of the presented
-model, do not ask for a second command-level confirmation. Do not delete, loosen, flatten, relabel, or substitute
-intended product meaning to make analysis green. The user may explicitly move a feature out of scope after seeing
-the consequence; otherwise preserve it and stop before Compile.
+If the Plan changes, repeat the read-back for the changed candidate. In the same continuing conversation, after
+unambiguous approval of the unchanged presented model, reread the Plan, confirm its SHA-256 is unchanged, and make
+the initial request with exactly one zero-flag Compile invocation. Do not ask for a second command-level
+confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
+green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it and
+stop before Compile.
 
 This gate does not block an explicitly requested diagnostic-only Compile of exact bytes already known to be
 invalid from those bytes or matching diagnostics. Invalid analysis cannot enter Publication. Do not treat an
