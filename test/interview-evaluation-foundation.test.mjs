@@ -100,7 +100,12 @@ test("candidate protocol defines interview coverage and complete-candidate readi
   );
   const normalizedReadBack = readBack.replace(/\s+/g, " ");
   for (const expected of [
-    "continuing conversation and your own tool actions",
+    "continuing conversation and your own tool results",
+    "report every attempted tool or command action and classify its outcome as succeeded, failed, or permission-denied",
+    "denied or failed shell attempt is still an attempted command",
+    "never say no commands ran after one was attempted",
+    "claim a directory listing, file read, parse, or other observation only when a successful tool result supports it",
+    "Separately state the resulting First Draft command, Compile, and Publication effects; when none occurred, say so explicitly",
     "stop rather than inventing it",
     "semantic icon",
     "implicit order column",
@@ -297,8 +302,12 @@ test(
     );
     for (const expected of [
       "exact staged local Plan",
-      "continuing conversation and your own tool actions",
-      "when none did, state that boundary explicitly",
+      "continuing conversation and your own tool results",
+      "report every attempted tool or command action and classify its outcome as succeeded, failed, or permission-denied",
+      "denied or failed shell attempt is still an attempted command",
+      "never say no commands ran after one was attempted",
+      "claim a directory listing, file read, parse, or other observation only when a successful tool result supports it",
+      "Separately state the resulting First Draft command, Compile, and Publication effects; when none occurred, say so explicitly",
       "stop rather than inventing it",
       "what one record represents and its Primary Descriptor",
       "semantic icon",
@@ -349,6 +358,22 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     ],
   );
   assert(expectationIncludes(readBack, "semantic read-back", "Movie Entity"));
+  assert(
+    expectationIncludes(
+      readBack,
+      "every attempted tool or command action",
+      "outcome as succeeded, failed, or permission-denied",
+      "denied or failed shell attempt",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      readBack,
+      "directory listing, file read, parse",
+      "successful tool result",
+      "separate from First Draft, Compile, and Publication effects",
+    ),
+  );
   assert(
     expectationIncludes(
       readBack,
