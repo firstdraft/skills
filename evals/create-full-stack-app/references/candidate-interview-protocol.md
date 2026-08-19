@@ -41,9 +41,9 @@ access, or requested clients. The ambiguity matrix guides the dialogue; it is no
 6. **Resolve client consequences.** Establish requested web and native clients, domain handling, native capture or
    offline needs, delivery channels, notifications, and external prerequisites. A native client does not imply push
    notifications, and absent Account requirements do not imply public access.
-7. **Read back and obtain approval.** Summarize Entities, Fields, References, surfaces, access, native and delivery
-   choices, explicit exclusions, delegated decisions, open choices, and known capability gaps. Ask the user to
-   correct or explicitly approve that exact semantic model before Compile.
+7. **Read back and obtain approval.** Summarize Entities and their material Fields, relationships, rules, behavior,
+   and data; surfaces, access, native and delivery choices; explicit exclusions, delegated decisions, open choices,
+   and known capability gaps. Ask the user to correct or explicitly approve that exact semantic model before Compile.
 
 Capture intended product meaning before comparing it with current target support. A capability gap is not permission
 to silently delete, loosen, flatten, relabel, or substitute the user's intent merely to obtain `valid` analysis.
@@ -93,32 +93,18 @@ and deferred questions can be revisited after diagnostics or further dialogue.
 
 ## Read back and approve before Compile
 
-Before the first Compile that could reach Publication, reread the exact staged Plan and present these six parts in
-order. Say `none` when a category is empty.
-
-1. **Candidate identity:** identify the exact staged Plan by project-relative path and SHA-256. Distinguish local
-   parsing, schema validation, server import, and analysis actually observed without implying a stronger boundary.
-2. **Application scope and clients:** state application identity, target/profile, product slice, requested clients,
-   domain, appearance, delivery and notification choices, delegated decisions, exclusions, and deferred questions.
-3. **Entity-by-Entity meaning:** state each Entity's record meaning, semantic icon, Primary Descriptor, and authored
-   implicit order column; every Field's type, requiredness, material default, rule, mutability, normalization,
-   protection, and derivation; Enum values and ordinal order; Money currency; every Reference's owner, targets,
-   requiredness, deletion, mutability, multiplicity, and realization; authored Associations, Predicates, Validations,
-   Orderings, Counters, Positions, State Machines, Trees, and defaults; and reference or development Data records,
-   their stable identities, and assignments. Say which families are absent.
-4. **Surfaces and access:** state requested Scaffolds, routes, projections, returns, mutation inputs, Accounts,
-   Policies, and authorization.
-5. **Warnings and capability gaps:** separate product meaning and unresolved choices from verified diagnostics,
-   target support, and unimplemented First Draft capabilities.
-6. **Execution consequence and approval:** state that Compile does not deploy, that a terminal successful Publication
-   is intended to create one private GitHub repository, and that only that invocation's validated terminal success
-   proves it. Ask the user to correct or explicitly approve the complete exact model.
+Before the first Compile that could reach Publication, reread the exact staged Plan and give a compact plain-language
+semantic summary. Cover the Plan path and SHA-256; application scope; Entities and their material Fields,
+relationships, rules, behavior, and data; surfaces, access, and clients; material assumptions, exclusions, and
+capability gaps; and the execution consequence that Compile does not deploy while terminal successful Publication
+is intended to create one private GitHub repository. Use whatever order is clearest. Do not enumerate absent subject
+families or immaterial empty categories. Ask the user to correct or explicitly approve the exact model.
 
 The read-back reviews the staged candidate rather than reopening authoring. Preserve its existing subject UUIDs;
 do not require an edit without a user correction, a confirmed product decision, or a demonstrated diagnostic. If
-the Plan changes afterward, repeat the complete read-back for the changed candidate. In the same continuing
-conversation, once the unchanged candidate is approved, run one zero-flag Compile without a second command-level
-confirmation.
+the Plan bytes change afterward, show the new SHA-256 and semantic delta for approval. In the same continuing
+conversation, once the unchanged candidate is approved, hash-check it and run one zero-flag Compile without a second
+command-level confirmation.
 
 Do not weaken product meaning to pass the current capability boundary. The user may explicitly move a feature out of
 this release after seeing the consequence; record that product-scope decision. Otherwise preserve the meaning, stop

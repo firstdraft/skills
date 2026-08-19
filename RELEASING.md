@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.1.2` |
-| Candidate packed SHA-256 | `901d5baaebea0244a40b620d039acd4a8efbe8d657a142439c6fe3908a1465f8` |
+| Candidate packed SHA-256 | `24be4d4ea73d0d21aeed6248b72a775b4aba89c30180ccc6a69af13907b8b9ec` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.1.1` / `0.1.1` |
@@ -28,11 +28,16 @@ Registry, tag, environment, service, and hosted-CI state must be checked live im
 - A merge to `main` integrates source. It does not authorize an npm publication, protected tag, catalog change,
   dist-tag move, First Draft deployment, live Compile, GitHub repository creation, or Codespace.
 - A marketplace-manifest merge changes the public catalog. Its exact package and promotion-head gates must already
-  be complete, and the merge requires separate authorization.
+  be complete, and that public mutation must be explicitly approved.
 - Publishing under npm `next`, promoting the catalog, moving npm `latest`, activating a service compatibility line,
-  and running a live qualification are separate mutations. Approval for one does not imply another.
+  and running a live qualification are distinct mutations, but one explicit approval may cover any named sequence
+  of them. Before the first mutation, the operator resolves and reports the exact immutable identities; the user
+  need not recite SHAs or digests. Completing an approved step does not add an unnamed later step.
 - Keep all release and recovery mutations serialized through one operator. Reconcile an ambiguous mutation
-  read-only before retrying.
+  read-only and do not repeat it. The current product-journey exception is the CLI's documented unchanged-byte,
+  same-Project Publication-singleton replay after the prior invocation exits with a Publication-phase outcome
+  unknown or status timeout; that conditional replay is itself the reconciliation path. It never applies to an
+  ambiguous Plan push.
 - Never reuse a published npm version, protected release tag, or marketplace SemVer for different bytes. An
   unpublished and unpromoted candidate may be revised at a new exact commit and digest. Changed bytes after any
   release identity exists require a new version.
@@ -61,16 +66,17 @@ syntax; do not add compatibility aliases.
 5. Require hosted CI at the exact candidate head. The Node 24.18.0 job must include the prospective release-order
    rehearsal. If any registry, tag, catalog, or candidate identity changes afterward, repeat the relevant read-only
    checks at the exact candidate.
-6. Define the release-specific qualification before publication. Candidate compatibility and local validation never
-   prove authentication, service compatibility, a fresh public install, a successful Compile, or GitHub Publication.
+6. Define the release-specific qualification before publication. Bind it to the packed digest and compatible CLI
+   and service identities. Candidate compatibility and local validation never prove authentication, service
+   compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
 The current 0.1.2 candidate still requires one human-observed, two-turn approval smoke before publication. Use the
 paired `precompile-semantic-read-back` and `compile-prepared-movie-catalog` cases in the same fresh continuing agent
 session:
 
 1. Record the exact Skills commit, package version and tarball SHA-256, compatible CLI and service identities, and
-   staged Plan SHA-256. Use a controlled local service and strict fake GitHub path unless a separately authorized
-   live gate is named.
+   staged Plan SHA-256. Use a controlled local service and strict fake GitHub path unless the approved scope names a
+   live gate.
 2. In the first turn, the agent presents the complete semantic read-back of that exact Plan, including that Compile
    does not deploy and successful Publication creates one private GitHub repository, then stops for approval. The
    observer confirms that the Compile wrapper count is zero before approval.
@@ -83,13 +89,20 @@ Retain the two-turn transcript, explicit approval, identities and digests above,
 post-approval Compile count exactly one, and the final Compilation and Publication outcome. This smoke does not
 require an exhaustive tool or effect ledger, shell-command classification, workspace snapshots, or proof of generic
 no-network, no-write, or environmental inactivity. Pass only on unchanged Plan bytes, a complete approved read-back,
-exactly one post-approval Compile invocation, and terminal successful Compilation and Publication. On failure or an
-ambiguous outcome, retain the observed boundary and stop; reconcile safely before any separately authorized retry.
+exactly one post-approval Compile invocation, and terminal successful Compilation and Publication. A controlled
+setup, harness, or local failure that occurs before any Compile invocation and before any external mutation may be
+corrected and the same smoke rerun within the already approved scope. A known successful external effect is not a
+setup failure and does not make a whole-smoke rerun safe. After an ambiguous external outcome, retain the observed
+boundary and use read-only reconciliation where available. For a documented Publication-phase unknown or status
+timeout after the singleton exists, wait for the prior invocation to exit and use only the unchanged-byte,
+same-singleton replay described above, which never applies to an ambiguous Plan push; otherwise do not repeat the
+mutation.
 
 ## 2. Publish the exact package under `next`
 
-This step requires explicit authorization naming the exact candidate commit, package version, tarball digest,
-protected tag creation, and npm publication.
+This step requires explicit authorization for protected tag creation and npm publication, either on its own or as
+part of a named release sequence. The operator resolves and reports the exact candidate commit, package version,
+and tarball digest before mutation; the user does not need to recite them.
 
 Immediately before tagging:
 
@@ -126,9 +139,14 @@ authentication, First Draft transport, Compilation, GitHub Publication, or a gen
 Complete the release-specific product qualification defined in step 1. A compatible patch may require no service
 mutation; a breaking compatibility transition follows the additional service rules below.
 
+Qualification remains bound to the packed digest and compatible CLI and service identities. If a later final-head
+commit changes only non-packaged documentation, tests, or workflows, require final-head hosted CI and reproduction
+of the same packed digest; do not repeat the product smoke solely because of that commit.
+
 ## 4. Promote the public catalog
 
-This is a separate reviewable source change and requires separate merge authorization.
+This is a separate reviewable source change and requires explicit merge authorization, which may already be part of
+the approved named release sequence.
 
 1. Update `.claude-plugin/marketplace.json` to the exact published package.
 2. Update current structured compatibility and catalog assertions plus current-state documentation; do not rewrite
@@ -147,9 +165,10 @@ before claiming update or auto-refresh behavior.
 
 ## 5. Promote `latest`
 
-Moving npm `latest` is a separate explicitly approved registry mutation after the exact package passes its
-release-specific qualification and the public catalog selects it. One operator changes only the intended dist-tag,
-then reconciles package integrity, `next`, `latest`, and the catalog read-only.
+Moving npm `latest` is an explicitly approved registry mutation after the exact package passes its release-specific
+qualification and the public catalog selects it. That approval may already be part of the named release sequence.
+One operator changes only the intended dist-tag, then reconciles package integrity, `next`, `latest`, and the catalog
+read-only.
 
 Do not call a stable catalog-distributed release complete until the public catalog and both npm `next` and `latest`
 select the same exact qualified plugin version. The dist-tag move never authorizes new package bytes, service
@@ -158,8 +177,9 @@ deployment, catalog editing, or another live qualification.
 ## Breaking service transitions
 
 For a breaking API line, obtain explicit authorization for the package-first rollout and for a later lane-scoped
-maintenance window. The approval must name affected users, exact package and service candidates, notice, start,
-rollback, and completion criteria.
+maintenance window. The maintenance-window approval may include named rollback actions. The operator resolves and
+reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
+and completion criteria.
 
 Publish and reconcile compatible package bytes under `next` before changing shared service roles. Leave `latest` and
 the public catalog unchanged until the exact web and worker revisions are active and the selected qualification
@@ -170,13 +190,18 @@ Reconcile web, worker, queue, package, catalog, and supported-client state at ev
 worker-only activation is not completion. Public traffic may continue as unattributed capacity activity under the
 service runbook's stop rules; do not infer its identity or outcome.
 
-No historical rollback target is automatically current. Before any recovery mutation, obtain fresh authorization
-naming exact service revisions, immutable package, catalog action, and `next`/`latest` disposition.
+No historical rollback target is automatically current. Revalidate the exact rollback identities before mutation.
+Use rollback actions already named by the maintenance-window approval; obtain new authorization only for a recovery
+mutation beyond that scope.
 
 ## Recovery and ambiguous outcomes
 
 - Stop after an ambiguous tag push, npm publication, dist-tag move, catalog merge, deployment, or provider mutation.
-  Reconcile the exact external state read-only before retrying.
+  Reconcile the exact external state read-only and do not repeat the mutation.
+- A `plan compile` invocation that reached the retained Publication singleton is the documented exception: after the
+  prior invocation exits with a Publication-phase outcome unknown, status unavailable, or wait timeout, the same
+  zero-flag command with exact unchanged Plan bytes conditionally resumes or reconciles that singleton. It is not a
+  second Publication request and does not authorize an ambiguous Plan-push retry.
 - A catalog rollback may select a prior immutable package. It must not publish changed bytes under an existing
   version.
 - A recovery that repoints the catalog must update its coupled structured assertions and current-state docs in one
@@ -184,21 +209,21 @@ naming exact service revisions, immutable package, catalog action, and `next`/`l
   the recovery window.
 - Do not assume a catalog or dist-tag change updated an existing installation. Move a verified-affected installation
   with a separately verified procedure or record an explicitly accepted follow-up.
-- Package publication, catalog promotion, deployment, live Compile, repository deletion, and cleanup each retain
-  their own authorization boundaries.
+- Package publication, catalog promotion, deployment, live Compile, repository deletion, and cleanup must be
+  explicitly included in the approved scope. One approval may include several named actions; one completed action
+  never adds another.
 
 ## Outstanding authenticated journey
 
-The template-and-Codespace journey remains unproved. Before attempting it, obtain fresh explicit authorization for
-exactly one serialized qualification invocation. That approval must name the Claude Code marketplace registration
-and plugin install/cache effects; secure-storage token onboarding; the template-derived GitHub repository and
-Codespace; retained First Draft Project, AnalysisRun, Compilation, Publication, and queue effects; the separately
-billed Compilation; GitHub App or OAuth destination-repository creation and push effects; and the allowed retry and
-cleanup boundaries.
+The template-and-Codespace journey remains unproved. Before attempting it, obtain explicit approval for one
+serialized qualification journey and name its material external effects: plugin installation, token onboarding,
+repository and Codespace creation, billed Compilation, and GitHub Publication. The operator resolves and reports
+the exact candidate identities before mutation; the user need not recite them.
 
-Run no second invocation under that approval. A failure or ambiguous outcome authorizes neither a retry nor cleanup:
-reconcile the retained state read-only, then obtain fresh authorization for any effect outside the approved boundary.
-Any cleanup approval must name the exact repositories, Codespaces, or retained First Draft records it may remove.
+A setup failure before external mutation may be corrected and retried within that scope. After an ambiguous
+external outcome, reconcile retained and provider state read-only before resuming. Obtain new authorization only to
+expand the approved effects or targets. Destructive cleanup must identify its exact repositories, Codespaces, or
+retained First Draft records unless those exact targets were already included in the approval.
 
 Merely reading this section authorizes none of those effects. A successful public install or earlier staging smoke
 does not prove the authenticated template path or full qualification.

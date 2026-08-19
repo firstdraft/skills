@@ -32,20 +32,16 @@ smallest structured meaning that preserves the user's product intent.
 
 Treat the interview as an incremental design conversation, not a questionnaire that must finish before local work
 begins. Ask no more than three closely related questions in the opening turn. Prioritize answers that change the
-graph, access model, or requested clients, then explicitly reserve at least two other consequential areas for later
-dialogue. Offer concrete alternatives when they help, but label them as proposals rather than treating them as
-answers.
+graph, access model, or requested clients. Offer concrete alternatives when they help, but label them as proposals
+rather than treating them as answers.
 
 When modeling a collection, distinguish one uniquely identified object, a quantity of interchangeable goods, and a
 mixed product that needs both meanings. Do not collapse that branch into only individual-versus-group wording.
 For an underspecified opening request, ask only about intended product meaning and name deferred product areas;
 wait for the user's answer before discussing target support or capability gaps unless feasibility was itself part
 of the request. Do not promote a common use case into an assumption. When target support later matters, ask for
-desired access before describing the current public Scaffold boundary. Successful Publication is intended to create
-source in a private repository. One dated staging discovery observed that live path at exact prior identities, but a
-new invocation is published only after its own validated terminal success. Compile does not deploy the application
-or itself make records public. Keep one candidate Plan: do not maintain a parallel flattened or capability-friendly
-shape merely so one version can Compile.
+desired access before describing the current public Scaffold boundary. Keep one candidate Plan: do not maintain a
+parallel flattened or capability-friendly shape merely so one version can Compile.
 
 Track consequential choices as:
 
@@ -174,35 +170,18 @@ In particular, do not remove or weaken modeled content solely because the import
 
 ## Prepare the pre-Compile semantic read-back
 
-Immediately before the first Compile that could reach Publication, reread the exact local Plan and present the six
-parts below in order. Say `none` when a category is empty; omission is not a complete read-back.
-
-### Canonical pre-Compile read-back checklist
-
-1. **Candidate identity:** identify the exact staged local Plan by project-relative path and SHA-256. Distinguish
-   local parsing, schema validation, server import, and analysis actually observed without implying a stronger
-   boundary.
-2. **Application scope and clients:** state the application identity, target and profile, included product slice,
-   requested clients, domain, appearance, delivery and notification choices, delegated decisions, exclusions, and
-   deferred questions.
-3. **Entity-by-Entity meaning:** for every Entity, state what one record represents and its Primary Descriptor, plus
-   its semantic icon and authored implicit order column; every Field's type, requiredness, material default, rule,
-   mutability, normalization, protection, and derivation; Enum values and ordinal order; Money currency; every
-   Reference's owner, targets, requiredness, deletion behavior, mutability, multiplicity, and realization; every
-   authored Association, Predicate, Validation, Ordering, Counter, Position, State Machine, Tree, or default; and
-   reference or development Data records, their stable identities, and assignments. Say which families are absent.
-4. **Surfaces and access:** state requested Scaffolds, routes, projections, returns, mutation inputs, Accounts,
-   Policies, and authorization.
-5. **Warnings and capability gaps:** separate product meaning and unresolved choices from verified diagnostics,
-   target support, and unimplemented First Draft capabilities.
-6. **Execution consequence and approval:** state that Compile does not deploy. A terminal successful Publication is
-   intended to create one private GitHub repository; only that invocation's validated terminal success proves it.
-   Ask the user to correct or explicitly approve the complete exact model.
+Immediately before the first Compile that could reach Publication, reread the exact local Plan and give a compact
+plain-language semantic summary. Cover the project-relative Plan path and SHA-256; the application scope; Entities
+and their material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; material
+assumptions, exclusions, and capability gaps; and the execution consequence that Compile does not deploy while
+terminal successful Publication is intended to create one private GitHub repository. Use the order that best
+communicates this candidate. Do not enumerate absent subject families or recite immaterial defaults and empty
+categories. Ask the user to correct or explicitly approve the exact model.
 
 The read-back reviews the staged candidate; it is not a last-minute authoring pass. Preserve existing subject
 identity and present concerns as warnings. Do not require a candidate edit without a user correction, a confirmed
-product decision, or a demonstrated diagnostic. If the Plan changes afterward, repeat the complete read-back for the
-changed candidate.
+product decision, or a demonstrated diagnostic. If the Plan bytes change afterward, present the new SHA-256 and the
+semantic delta, then obtain approval of that changed candidate.
 
 Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning to make import or analysis
 green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a

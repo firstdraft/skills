@@ -36,7 +36,8 @@ agent-authored Plan content. Inspect only its `api_url` when a persistent read-o
 the pinned origin.
 
 Let the user configure `FIRSTDRAFT_API_TOKEN` outside the conversation. Do not request its value, print it, place
-it on a command line, or persist it in project files.
+it on a command line, or persist it in project files. When the user confirms authentication is configured, resume
+the already requested operation without asking for fresh authorization.
 
 `plan init` has two handled failures:
 
@@ -82,6 +83,10 @@ blocker rather than looping mechanically.
 `status_unavailable` is a read-only failure. Retry that GET a bounded number of times; if it persists, inspect the
 private state's pinned `api_url` locally without printing the rest of the file. `invalid_server_response` instead
 means the CLI and service contract must be reconciled.
+
+After `wait_timed_out`, `analysis_changed`, or a validated `superseded` result, a bounded read-only `plan status`
+follow-up may report the Project's current state. This follow-up is report-only: do not treat a replacement analysis
+as the submitted candidate, and do not edit, push, or Compile the replacement.
 
 ## Product Compile
 
@@ -168,17 +173,20 @@ projections paired with a queued or running Compilation instead of rendering an 
 `issues_found`, continue the product conversation, edit, push, or invoke Compile again when useful. Treat
 `analysis_failed` as an analyzer failure and `superseded` as a concurrency outcome rather than making a speculative
 source correction. `local_plan_changed` means the bytes changed after acceptance or analysis and before the
-Publication mutation; a later invocation submits the current bytes as a new candidate.
+Publication mutation. If the current bytes are intended, present their new SHA-256 and semantic delta, obtain
+approval of that changed candidate, and only then invoke zero-flag `plan compile` for its own analysis.
 
 The first accepted Publication request establishes this release's Project singleton, whether it later succeeds,
 parks, or ends in another terminal state. While one `plan compile` invocation polls it, do not launch a concurrent
-Compile or another start request. If that invocation exits on an outcome-unknown, unavailable status, timeout, or
-interruption, wait and rerun the same zero-flag `plan compile` through the Skill resolver with exact unchanged
-Plan bytes. Its conditional singleton PUT resumes or reconciles the retained Publication without creating another
-Compilation, repository, or push. There is no separate public Publication status command. The singleton cannot be
-repointed to a later Head. `invalid_publication_status` is different: unchanged replay cannot repair its protocol
-mismatch. Preserve the exact Plan bytes and private state, reconcile the coordinated CLI/service versions first,
-and do not start a competing or direct mutation.
+Compile or another start request. If an invocation that reached that retained Publication exits with a
+Publication-phase outcome unknown, status unavailable, wait timeout, or interruption, wait for it to exit and rerun
+the same zero-flag `plan compile` through the Skill resolver with exact unchanged Plan bytes. Its conditional
+singleton PUT is the documented reconciliation path and resumes or reconciles the retained Publication without
+creating another Compilation, repository, or push. This exception does not apply to an outcome-unknown Plan push or
+Compile `phase: "push"`, which must stop because there is no Plan GET. There is no separate public Publication
+status command. The singleton cannot be repointed to a later Head. `invalid_publication_status` is different:
+unchanged replay cannot repair its protocol mismatch. Preserve the exact Plan bytes and private state, reconcile the
+coordinated CLI/service versions first, and do not start a competing or direct mutation.
 
 ## Retained Compilation status
 

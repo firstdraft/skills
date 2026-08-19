@@ -86,15 +86,23 @@ consequences, and stop for explicit approval.
 
 The second prompt approves that semantic model and Plan SHA-256. The same session must reread unchanged Plan bytes,
 invoke exactly one zero-flag Compile without another confirmation, and report the validated terminal Compilation and
-Publication outcome. A live run requires separately authorized, freshly initialized private state; otherwise use a
-controlled local service and strict fake GitHub transport.
+Publication outcome. A live run requires approval that includes that journey and freshly initialized private state;
+otherwise use a controlled local service and strict fake GitHub transport.
 
 Retain the two-turn transcript, explicit approval, exact candidate/package identities and digests, Plan SHA-256,
 pre-approval Compile count zero, post-approval Compile count exactly one, and final Compilation and Publication
 outcome. A human observer grades the semantic read-back and approval continuity. Do not require an exhaustive tool or
 effect ledger, shell-command classification, workspace snapshots, or proof of generic no-network, no-write, or
-environmental inactivity. On failure or an ambiguous outcome, record what happened and stop rather than automatically
-retrying.
+environmental inactivity. A controlled setup, harness, or local failure before any Compile invocation and before any
+external mutation may be corrected and the same smoke rerun within its approved scope. A known successful external
+effect is not retry-safe for the whole smoke. After an ambiguous external result, record what happened and reconcile
+read-only where possible rather than repeating the mutation. The exception is the documented unchanged-byte,
+same-singleton `plan compile` replay after the prior invocation exits with a Publication-phase unknown or status
+timeout; that conditional replay is itself reconciliation and never applies to an ambiguous Plan push.
+
+Authentication pauses an already requested operation; once the user confirms credentials are configured, resume it
+without another authorization prompt. After analysis timeout, change, or supersession, bounded read-only status
+follow-up is report-only; never edit, push, or Compile the replacement.
 
 `create-full-stack-app/cases.json` remains the harness-neutral behavioral contract. It declares prompts,
 expectations, and artifact roles; it does not grant capabilities or configure a sandbox or transport. Omit

@@ -488,8 +488,9 @@ test("immutable plugin teaching lag distinguishes fixed and retained claims", as
   }
   for (const source of [candidateSkill, candidateModelingGuide]) {
     assert.doesNotMatch(source, /live [Pp]ublication remains unproved/);
-    assert.match(source, /dated staging discovery/);
   }
+  assert.match(candidateSkill, /dated staging observation/);
+  assert.doesNotMatch(candidateModelingGuide, /dated staging (?:discovery|observation)/);
   assert.match(
     publishedFoundationPlanReference,
     /no Plan GET or pull operation[\s\S]*?proven live Publish path/,
@@ -1939,16 +1940,20 @@ test("validator routing preserves validation boundaries", async () => {
 
   for (const source of [skillSource, referenceSource]) {
     assert(source.includes("machine-readable"));
-    assert.match(source, /never read it\s+end to end/i);
-    assert.match(source, /not locally\s+schema-validated/);
+    assert.match(source, /never read\s+it\s+end to end/i);
+    assert.match(source, /local schema validation\s+was not performed/);
   }
   assert.match(
     skillSource.replace(/\s+/g, " "),
-    /Do not install or improvise a validator/,
+    /Do not install dependencies or add validation\/build plumbing solely for this workflow/,
+  );
+  assert.match(
+    skillSource.replace(/\s+/g, " "),
+    /named by the user, exposed by the project, or found through a straightforward check of existing local commands/,
   );
   assert.match(
     referenceSource,
-    /declared library or dependency is not\s+by itself an exposed\s+command/i,
+    /declared library\s+or dependency is not\s+by itself an exposed\s+command/i,
   );
   assert.match(
     referenceSource,
@@ -2022,7 +2027,8 @@ test("validator routing preserves validation boundaries", async () => {
   assertExpectation(
     namedValidator,
     "If the named command is absent",
-    "not locally schema-validated",
+    "straightforward check",
+    "does not search registries",
   );
   assertExpectation(namedValidator, "Does not run plan push");
   assertExpectation(namedValidator, "without claiming server acceptance");
@@ -2039,6 +2045,7 @@ test("validator routing preserves validation boundaries", async () => {
   assert.match(libraryOnly.prompt, /declares a JSON Schema library/);
   assert.match(libraryOnly.prompt, /neither I nor the project names a validation command/);
   assertExpectation(libraryOnly, "not exposing a validator command");
+  assertExpectation(libraryOnly, "straightforward PATH check");
   assertExpectation(libraryOnly, "Does not use npx", "install");
   assertExpectation(libraryOnly, "not locally schema-validated");
   assert.deepEqual(
@@ -2726,6 +2733,10 @@ test("local capability check is shell-portable and uses the project wrapper", as
     capabilitySection[1],
     /firstdraft (?:generate|plan|compilation)(?: [^\n]+)? --help/,
   );
+  assert.match(
+    normalizedCapabilitySection,
+    /stop CLI and remote operations instead of using direct HTTP[\s\S]*?Continue interviewing, reviewing, or editing the local Plan/,
+  );
 
   const shellBlocks = [...skillSource.matchAll(/```sh\n([\s\S]*?)```/g)].map(
     ([, body]) => body,
@@ -3351,12 +3362,17 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     );
     assert(
       evaluation.expectations.some((expectation) =>
-        expectation.includes("current projection as reportable context"),
+        expectation.includes("bounded read-only plan status follow-up"),
       ),
     );
     assert(
       evaluation.expectations.some((expectation) =>
-        expectation.includes("Stops"),
+        expectation.includes("only to report"),
+      ),
+    );
+    assert(
+      evaluation.expectations.some((expectation) =>
+        expectation.includes("run plan compile"),
       ),
     );
   }
@@ -3470,7 +3486,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     normalizedRecovery,
-    /While one `plan compile` invocation polls it, do not launch a concurrent Compile.*?If that invocation exits.*?conditional singleton PUT.*?There is no separate public Publication status command/,
+    /While one `plan compile` invocation polls it, do not launch a concurrent Compile.*?invocation that reached that retained Publication exits.*?Publication-phase outcome unknown, status unavailable, wait timeout.*?wait for it to exit.*?conditional singleton PUT is the documented reconciliation path.*?exception does not apply to an outcome-unknown Plan push.*?no Plan GET.*?There is no separate public Publication status command/,
   );
   assert.match(
     normalizedRecovery,
@@ -3743,12 +3759,21 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   const staleBytes = evaluation("compile-stale-plan-bytes");
   hasExpectation(staleBytes, "Branches on local_plan_changed");
   hasExpectation(staleBytes, "stopped before Publication");
-  hasExpectation(staleBytes, "reruns the whole zero-flag product Compile");
+  hasExpectation(
+    staleBytes,
+    "new SHA-256 and semantic delta",
+    "obtains approval of that changed candidate",
+    "before invoking zero-flag plan compile",
+  );
 
   const ambiguousPush = evaluation("compile-ambiguous-push-outcome");
   assert.match(ambiguousPush.prompt, /phase push/);
   hasExpectation(ambiguousPush, "phase push", "before analysis or Publication");
-  hasExpectation(ambiguousPush, "conditional-write reconciliation");
+  hasExpectation(
+    ambiguousPush,
+    "stops without another CLI invocation",
+    "no Plan GET or reconciliation command",
+  );
 
   const ambiguousPublication = evaluation(
     "compile-ambiguous-publication-outcome",
@@ -3958,6 +3983,20 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     recoveryReference,
     /Let the user configure `FIRSTDRAFT_API_TOKEN` outside the conversation[\s\S]*?Do not request its value, print it, place\s+it on a command line, or persist it in project files/,
   );
+  assert.match(
+    recoveryReference,
+    /user confirms authentication is configured[\s\S]*?resume[\s\S]*?already requested operation without asking for fresh authorization/,
+  );
+  const authenticationEvaluation = cases.find(
+    ({ id }) => id === "authentication-required-stop",
+  );
+  assert(
+    hasExpectation(
+      authenticationEvaluation,
+      "resumes the already requested plan push",
+      "without asking for fresh authorization",
+    ),
+  );
 
   const staleWriterEvaluation = cases.find(
     ({ id }) => id === "stale-writer-conflict",
@@ -3978,6 +4017,13 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   assert.match(ambiguousEvaluation.prompt, /"error":"request_outcome_unknown"/);
   assert(
     hasExpectation(ambiguousEvaluation, "Branches on request_outcome_unknown"),
+  );
+  assert(
+    hasExpectation(
+      ambiguousEvaluation,
+      "stops without repeating plan push",
+      "no Plan GET or reconciliation command",
+    ),
   );
 
   const localStateEvaluation = cases.find(

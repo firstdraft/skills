@@ -90,14 +90,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
   );
   assert.deepEqual(
     [...readBack.matchAll(/^\d+\. \*\*(.+?):\*\*/gm)].map(([, label]) => label),
-    [
-      "Candidate identity",
-      "Application scope and clients",
-      "Entity-by-Entity meaning",
-      "Surfaces and access",
-      "Warnings and capability gaps",
-      "Execution consequence and approval",
-    ],
+    [],
   );
   const normalizedReadBack = readBack.replace(/\s+/g, " ");
   assert.doesNotMatch(
@@ -105,22 +98,20 @@ test("candidate protocol defines interview coverage and complete-candidate readi
     /every attempted tool|permission-denied|effect ledger|no-network|no-write/i,
   );
   for (const expected of [
-    "exact staged Plan by project-relative path and SHA-256",
-    "without implying a stronger boundary",
-    "semantic icon",
-    "implicit order column",
-    "Enum values and ordinal order",
-    "Money currency",
-    "Associations, Predicates, Validations, Orderings, Counters, Positions, State Machines, Trees",
-    "reference or development Data records, their stable identities, and assignments",
-    "Scaffolds, routes, projections, returns, mutation inputs, Accounts",
+    "Plan path and SHA-256",
+    "application scope",
+    "Entities and their material Fields, relationships, rules, behavior, and data",
+    "surfaces, access, and clients",
+    "material assumptions, exclusions, and capability gaps",
     "Compile does not deploy",
-    "one private GitHub repository",
-    "validated terminal success",
+    "terminal successful Publication is intended to create one private GitHub repository",
+    "Use whatever order is clearest",
+    "Do not enumerate absent subject families",
     "Preserve its existing subject UUIDs",
-    "correct or explicitly approve the complete exact model",
-    "repeat the complete read-back for the changed candidate",
+    "correct or explicitly approve the exact model",
+    "new SHA-256 and semantic delta",
     "same continuing conversation",
+    "hash-check it",
     "run one zero-flag Compile",
     "without a second command-level confirmation",
     "Do not weaken product meaning",
@@ -160,7 +151,7 @@ test("home-inventory corpus case probes consequential ambiguity without invented
     ["candidate interview protocol", "proposals rather than answers"],
     ["uniquely identified object", "interchangeable goods"],
     ["small coherent batch", "entire ambiguity matrix"],
-    ["at least two consequential areas", "open for later dialogue"],
+    ["unanswered areas", "arbitrary minimum count"],
     ["interview evaluation local", "does not run plan push"],
     ["complete candidate Foundation Plan", "consequential opening questions"],
   ]) {
@@ -193,7 +184,7 @@ test("packaged interview guidance keeps the opening turn focused on one product 
     normalizedSkill,
     /one record per unique object, one record carrying a quantity, or both with distinct meaning/,
   );
-  assert.match(normalizedSkill, /Name at least two consequential areas being left open for later/);
+  assert.doesNotMatch(normalizedSkill, /Name at least two consequential areas/);
   assert.match(
     modelingGuide,
     /For an underspecified opening request, ask only about intended product meaning and name deferred product areas;\s+wait for the user's answer before discussing target support or capability gaps/,
@@ -203,13 +194,12 @@ test("packaged interview guidance keeps the opening turn focused on one product 
     /smallest public index and the exact create\/update, show-projection, return-destination, and destroy extensions/,
   );
   assert.match(normalizedSkill, /every generated route public and unauthenticated/);
-  assert.match(
-    normalizedSkill,
-    /Successful Publication is intended to create a private GitHub repository.*?dated staging discovery observed one such live Publication.*?new invocation still requires its own validated terminal success.*?Compile does not deploy/,
-  );
+  const interview = markdownSection(skill, "Interview and author incrementally");
+  assert.doesNotMatch(interview, /successful Publication|dated staging discovery/i);
+  assert.match(interview, /explicitly requires private or\s+authenticated access[\s\S]*?stop before Compile/);
   assert.match(
     modelingGuide,
-    /Keep one candidate Plan: do not maintain a parallel flattened or capability-friendly\s+shape/,
+    /Keep one candidate Plan: do not maintain a\s+parallel flattened or capability-friendly shape/,
   );
 });
 
@@ -240,6 +230,10 @@ test(
       normalizedSkill,
       /catalog serves this exact plugin 0\.1\.2 and CLI 0\.1\.0 pair/,
     );
+    assert.match(
+      normalizedSkill,
+      /A bounded read-only status follow-up may report the current Project state\. It is report-only and must never edit, push, or Compile the replacement\./,
+    );
 
     const approvalHeading = "Read back and approve the candidate before Compile";
     const compileHeading = "Request the Compile journey";
@@ -258,9 +252,14 @@ test(
     );
     for (const expected of [
       "reread the exact current `.firstdraft/foundation-plan.json`",
-      "organized Entity by Entity",
+      "compact plain-language semantic summary",
+      "Plan path and SHA-256",
+      "Entities and their material Fields, relationships, rules, behavior, and data",
+      "surfaces, access, and clients",
+      "material assumptions, exclusions, and capability gaps",
+      "Do not enumerate absent subject families",
       "correct or explicitly approve that exact candidate",
-      "repeat the read-back for the changed candidate",
+      "new SHA-256 and the semantic delta",
       "Do not ask for a second command-level confirmation",
       "Do not delete, loosen, flatten, relabel, or substitute intended product meaning",
       "explicitly requested diagnostic-only Compile",
@@ -289,44 +288,28 @@ test(
       modeling,
       /every attempted tool|permission-denied|effect ledger|no-network|no-write/i,
     );
-    const checklist = markdownSection(
-      modelingGuide,
-      "Prepare the pre-Compile semantic read-back",
-    );
+    const checklist = markdownSection(modelingGuide, "Prepare the pre-Compile semantic read-back");
     assert.deepEqual(
       [...checklist.matchAll(/^\d+\. \*\*(.+?):\*\*/gm)].map(
         ([, label]) => label,
       ),
-      [
-        "Candidate identity",
-        "Application scope and clients",
-        "Entity-by-Entity meaning",
-        "Surfaces and access",
-        "Warnings and capability gaps",
-        "Execution consequence and approval",
-      ],
+      [],
     );
     for (const expected of [
-      "exact staged local Plan by project-relative path and SHA-256",
-      "without implying a stronger boundary",
-      "what one record represents and its Primary Descriptor",
-      "semantic icon",
-      "implicit order column",
-      "every Field's type, requiredness",
-      "Enum values and ordinal order",
-      "Money currency",
-      "every Reference's owner, targets, requiredness, deletion behavior, mutability, multiplicity",
-      "Association, Predicate, Validation, Ordering, Counter, Position, State Machine, Tree",
-      "reference or development Data records, their stable identities, and assignments",
-      "requested Scaffolds, routes, projections, returns, mutation inputs, Accounts",
-      "delegated decisions, exclusions, and deferred",
+      "compact plain-language semantic summary",
+      "project-relative Plan path and SHA-256",
+      "application scope",
+      "Entities and their material Fields, relationships, rules, behavior, and data",
+      "surfaces, access, and clients",
+      "material assumptions, exclusions, and capability gaps",
       "Compile does not deploy",
       "terminal successful Publication is intended to create one private GitHub repository",
-      "only that invocation's validated terminal success proves it",
-      "correct or explicitly approve the complete exact model",
+      "Use the order that best communicates this candidate",
+      "Do not enumerate absent subject families",
+      "correct or explicitly approve the exact model",
       "not a last-minute authoring pass",
       "Preserve existing subject identity",
-      "repeat the complete read-back for the changed candidate",
+      "new SHA-256 and the semantic delta",
       "Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning",
     ]) {
       assert(
@@ -358,6 +341,13 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     ],
   );
   assert(expectationIncludes(readBack, "semantic read-back", "Movie Entity"));
+  assert(
+    expectationIncludes(
+      readBack,
+      "material Fields, relationships, rules, behavior, and data",
+      "without enumerating absent",
+    ),
+  );
   assert(
     expectationIncludes(
       readBack,
@@ -449,7 +439,8 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert(
     expectationIncludes(
       compile,
-      "stop and repeat the semantic read-back",
+      "new SHA-256 and semantic delta",
+      "obtain approval of the changed candidate",
       "no longer matched",
     ),
   );
