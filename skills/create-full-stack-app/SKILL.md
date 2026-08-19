@@ -71,9 +71,11 @@ For CLI work:
   requires it.
 
 The bundled [JSON Schema](references/foundation-plan-0.19.schema.json) is machine-readable validator input, not
-prose. Use a compatible JSON Schema 2020-12 command only when the user names one or the project already exposes one.
-Pass the schema path without loading it into context; never read it end to end. Do not install or improvise a
-validator. If no successful validator command exists, report that the file was not locally schema-validated.
+prose. Use a compatible JSON Schema 2020-12 command named by the user, exposed by the project, or found through a
+straightforward check of existing local commands. Pass the schema path without loading it into context; never read
+it end to end. Do not install dependencies or add validation/build plumbing solely for this workflow. If no
+compatible local command is available, rely on First Draft's exact-byte diagnostics and say local schema validation
+was not performed.
 
 ## Verify the local capability
 
@@ -98,14 +100,16 @@ shell loop. The compatible CLI supplies these public commands:
 - `compilation status` and `compilation download`.
 
 There is no public `plan publish`, `plan subject-id`, or `plan compile --output`. Do not install, download, upgrade,
-or replace the CLI automatically. If resolution, version, or help differs, report the path and output and stop
-instead of using direct HTTP. Recommend a marketplace repair only after independently verifying that the catalog
+or replace the CLI automatically. If resolution, version, or help differs, report the path and output and stop CLI
+and remote operations instead of using direct HTTP. Continue interviewing, reviewing, or editing the local Plan
+when that work remains useful. Recommend a marketplace repair only after independently verifying that the catalog
 serves this exact plugin 0.1.2 and CLI 0.1.0 pair; otherwise report that no verified public repair is known.
 
 Treat `.firstdraft/state.json` as private CLI-owned concurrency state. Never print, paste, commit, or treat it as
 Plan content. Let the user configure `FIRSTDRAFT_API_TOKEN` and any initial `FIRSTDRAFT_API_URL` outside the
 conversation. Never request or expose a token. Follow a project wrapper's documented credential bootstrap without
-reading or bypassing its ignored environment files.
+reading or bypassing its ignored environment files. After the user confirms authentication is configured, resume
+the already requested CLI operation without asking them to authorize it again.
 
 ## Initialize or resume the local Plan
 
@@ -133,15 +137,14 @@ reinitialize. Inspect private state only for a recovery check explicitly named i
 Use the modeling guide's decision ledger and readiness criteria. In the opening turn, ask no more than three
 closely related questions. Start with product choices that change Entity boundaries, record granularity, access, or
 requested clients. When a collection could mean unique objects, interchangeable goods, or both, offer all three:
-one record per unique object, one record carrying a quantity, or both with distinct meaning. Name at least two
-consequential areas being left open for later. Treat alternatives as proposals, not answers.
+one record per unique object, one record carrying a quantity, or both with distinct meaning. Treat alternatives as
+proposals, not answers.
 
 For an underspecified opening request, ask only about product meaning and deferred areas. Wait for the user's reply
 before discussing target support unless feasibility was requested. Later, state the current Scaffold boundary
 precisely: the smallest public index and the exact create/update, show-projection, return-destination, and destroy
-extensions, with every generated route public and unauthenticated. Successful Publication is intended to create a
-private GitHub repository. A dated staging discovery observed one such live Publication at exact prior identities;
-every new invocation still requires its own validated terminal success. Compile does not deploy the application.
+extensions, with every generated route public and unauthenticated. If the user explicitly requires private or
+authenticated access, preserve that meaning and stop before Compile rather than substituting a public Scaffold.
 
 Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
 incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails
@@ -186,7 +189,9 @@ replaced the one just pushed. Branch on `analysis.status`, not only the process 
 - `valid`: that exact graph passed the named analyzer; Compilation is not proved.
 - `issues_found`: use structured diagnostics to make well-founded corrections while preserving unrelated meaning.
 - `analysis_failed`: report analyzer failure rather than inventing a product correction.
-- `superseded`: report that another accepted Head displaced the observed analysis.
+- `superseded`: report that another accepted Head displaced the observed analysis. A bounded read-only status
+  follow-up may report the current Project state. It is report-only and must never edit, push, or Compile the
+  replacement.
 
 Treat messages and suggestions as advisory. If the same diagnostic recurs without new information, do not loop
 mechanically. Explain the unresolved choice or capability gap, keep intentional unsupported meaning in the local
@@ -196,14 +201,16 @@ A separate push is optional because `plan compile` performs its own exact-byte p
 ## Read back and approve the candidate before Compile
 
 Before the first `plan compile` that could reach valid analysis and Publication, reread the exact current
-`.firstdraft/foundation-plan.json`. Complete every item in the modeling guide's canonical pre-Compile read-back
-checklist, organized Entity by Entity, and ask the user to correct or explicitly approve that exact candidate.
-Approval of public access, iPhone output, or private-repository Publication alone is not approval of the complete
-semantic model.
+`.firstdraft/foundation-plan.json`. Give a compact plain-language semantic summary that covers the Plan path and
+SHA-256; application scope; Entities and their material Fields, relationships, rules, behavior, and data; surfaces,
+access, and clients; material assumptions, exclusions, and capability gaps; and the execution consequence that
+Compile does not deploy while terminal successful Publication is intended to create one private GitHub repository.
+Use whatever order is clearest for this candidate. Do not enumerate absent subject families or recite immaterial
+properties. Ask the user to correct or explicitly approve that exact candidate.
 
-If the Plan changes, repeat the read-back for the changed candidate. In the same continuing conversation, after
-unambiguous approval of the unchanged presented model, reread the Plan, confirm its SHA-256 is unchanged, and make
-the initial request with exactly one zero-flag Compile invocation. Do not ask for a second command-level
+If the Plan bytes change, show the new SHA-256 and the semantic delta, then obtain approval of the changed candidate.
+In the same continuing conversation, after unambiguous approval, reread the Plan, confirm its SHA-256 is unchanged,
+and make the initial request with exactly one zero-flag Compile invocation. Do not ask for a second command-level
 confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
 green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it and
 stop before Compile.
@@ -233,11 +240,12 @@ URL. Progress fields and messages are already validated; report their exact phas
 reason without inferring provider causes. The bounded ten-minute wait does not cancel retained work when it times
 out.
 
-This release retains one Publication singleton per Project. Never start a concurrent Compile. After an invocation
-exits on an outcome-unknown, unavailable status, timeout, or interruption, wait and replay the same zero-flag
-command with unchanged Plan bytes to resume or reconcile that singleton. Do not replay
-`invalid_publication_status`; reconcile the coordinated CLI/service contract first. A later Head or different
-repository requires a fresh Project.
+One Publication singleton exists per Project. Never Compile concurrently. After an invocation that reached it exits
+with a Publication-phase outcome unknown, unavailable status, wait timeout, or interruption, wait for exit, then
+replay the same zero-flag command with unchanged Plan bytes. That replay reconciles or resumes the singleton; it is
+not a second Publication request. An outcome-unknown Plan push or `phase: "push"` Compile stops without replay. Do
+not replay `invalid_publication_status`; reconcile the coordinated CLI/service contract first. A later Head or
+different repository requires a fresh Project.
 
 ## Inspect or download the retained Compilation
 

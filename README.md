@@ -11,7 +11,7 @@ fails the complete candidate closed.
 
 | Surface | Selected identity |
 |---|---|
-| Source candidate | Plugin `0.1.2`; packed SHA-256 `901d5baaebea0244a40b620d039acd4a8efbe8d657a142439c6fe3908a1465f8` |
+| Source candidate | Plugin `0.1.2`; packed SHA-256 `24be4d4ea73d0d21aeed6248b72a775b4aba89c30180ccc6a69af13907b8b9ec` |
 | Public marketplace | Plugin `0.1.1` |
 | npm `next` and `latest` | Plugin `0.1.1` |
 | Bundled CLI | `@firstdraft.com/cli@0.1.0` |

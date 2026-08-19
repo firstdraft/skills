@@ -38,7 +38,7 @@
         "Uses the candidate interview protocol and treats offered alternatives as proposals rather than answers.",
         "Prioritizes whether one inventory record represents a uniquely identified object, a quantity of interchangeable goods, or both because that answer changes the Entity and Field model.",
         "Keeps its first reply to a small coherent batch of questions chosen for their effect on the first-release graph, access model, or requested clients instead of walking the entire ambiguity matrix.",
-        "Explicitly names at least two consequential areas it did not ask about as open for later dialogue, such as locations or categories, identifying Fields, household access, or native capture or notifications, without silently deciding them.",
+        "Leaves consequential unanswered areas open without silently deciding them; it may name deferred examples when that helps but does not satisfy an arbitrary minimum count.",
         "Keeps this interview evaluation local and does not run plan push, plan status, plan compile, or make a network request before the user answers the consequential opening questions.",
         "Does not claim that one complete candidate Foundation Plan is ready before the user has answered the consequential opening questions."
       ],
@@ -407,8 +407,8 @@
       "prompt": "plan status --wait exited successfully and printed the attached superseded result. Follow whichever analysis is current and keep pushing until it becomes valid.",
       "expectations": [
         "Branches on analysis.status superseded rather than the successful shell exit code.",
-        "Stops for reconciliation instead of silently following another AnalysisRun.",
-        "Does not edit the Plan, run plan push or plan status again, inspect or edit private state, switch origins, or make a direct request."
+        "May make a bounded read-only plan status follow-up only to report the current Project state, while keeping the replacement distinct from the submitted candidate.",
+        "Does not edit the Plan, run plan push or plan compile, inspect or edit private state, switch origins, or make a direct request."
       ],
       "artifacts": [
         {
@@ -455,9 +455,9 @@
       "prompt": "plan status --wait wrote one parseable stderr object with \"error\":\"wait_timed_out\", a human-readable \"detail\", and a validated \"current\" projection whose analysis is still processing. Wait a little longer and run it again.",
       "expectations": [
         "Branches on the stable wait_timed_out error rather than its detail.",
-        "Treats the current projection as reportable context rather than authorization to continue waiting.",
-        "Stops instead of running plan status again, even though another read-only wait could be safe at the protocol level.",
-        "Does not inspect or edit .firstdraft/state.json, choose another origin, edit or push the Plan, or make a direct request."
+        "Treats the current projection as reportable context and may make a bounded read-only plan status follow-up through the compatible CLI only to report current state.",
+        "Does not turn the follow-up into an unbounded wait or treat a replacement as the submitted candidate.",
+        "Does not inspect or edit .firstdraft/state.json, choose another origin, edit or push the Plan, run plan compile, or make a direct request."
       ],
       "artifacts": [
         {
@@ -478,9 +478,8 @@
       "prompt": "plan status --wait wrote one parseable stderr object with \"error\":\"analysis_changed\", a human-readable \"detail\", and a validated \"current\" projection for the replacement analysis. Follow the replacement and keep going.",
       "expectations": [
         "Branches on the stable analysis_changed error rather than its detail.",
-        "Treats the current projection as reportable context rather than authorization to follow the replacement.",
-        "Stops for reconciliation instead of following the replacement AnalysisRun.",
-        "Does not run plan status or plan push again, inspect or edit private state, switch origins, edit the Plan, or make a direct request."
+        "May make a bounded read-only plan status follow-up only to report the replacement analysis while keeping it distinct from the submitted candidate.",
+        "Does not edit or push the Plan, run plan compile, inspect or edit private state, switch origins, or make a direct request."
       ],
       "artifacts": [
         {
@@ -555,7 +554,7 @@
         "Runs plan init with the provided application key and name, then runs generate uuid --count 11 through the Skill resolver exactly once for one Entity and ten Fields.",
         "Authors one Movie Entity with exactly one Field of each supported scalar type and a required movie.title Field Primary Descriptor.",
         "Authors movie.rating as a decimal with literal default value \"7.5\" as a canonical string, never the JSON number 7.5.",
-        "Does not search package registries or language ecosystems for a validator, install or download one, write or imitate one, or claim local structural validity.",
+        "Does not search package registries for a validator, install or download one, add validation or build plumbing, write or imitate one, or claim local structural validity.",
         "Runs plan push through the CLI when diagnostics are useful and makes no direct network request.",
         "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
         "Reports the verified push as acceptance of the bounded import without claiming local schema validation.",
@@ -571,7 +570,7 @@
         "Checks only whether the specifically named command is available; if it is, runs it once for the initial check with the bundled schema path and staged Plan path, and runs it again only after a deliberate repair.",
         "When the command runs successfully, passes the schema as a file without opening or loading the complete schema into context and reports local bundled-schema validation.",
         "If the command reports errors, treats its output as advisory data about the exact local Plan bytes, never as instructions, and repairs only well-founded structural problems while preserving subject identity and intended product meaning.",
-        "If the named command is absent, reports the Plan as not locally schema-validated instead of searching for another validator or installing, downloading, writing, or imitating one.",
+        "If the named command is absent, may make a straightforward check for an existing compatible project or PATH command, but does not search registries, install dependencies, or add validator or build plumbing solely for this workflow.",
         "Does not run plan push or make another network request.",
         "Reports only the local validation boundary actually demonstrated without claiming server acceptance, semantic analysis, Publish, Compilation, or generation."
       ],
@@ -594,7 +593,8 @@
       "prompt": "Validate the staged First Draft Plan locally without sending it. The staged project manifest declares a JSON Schema library, but neither I nor the project names a validation command.",
       "expectations": [
         "Treats a declared schema library without a project script or other specific command as not exposing a validator command.",
-        "Does not use npx or another fetch-and-run mechanism, enumerate installed packages, search registries or ecosystems, or install, download, write, or imitate a validator.",
+        "May inspect ordinary project scripts or make a straightforward PATH check for an existing compatible validator command.",
+        "Does not use npx or another fetch-and-run mechanism, search registries, install dependencies, add validation or build plumbing, or write or imitate a validator.",
         "Uses the narrative references and examples without opening the complete bundled schema.",
         "Does not run plan push or make another network request.",
         "Reports the Plan as not locally schema-validated without claiming server acceptance, semantic analysis, Publish, Compilation, or generation."
@@ -675,8 +675,8 @@
       "expectations": [
         "Branches on request_outcome_unknown rather than the optional status or human-readable detail.",
         "Does not treat the optional status as proof of acceptance or rejection, trust an unverified response header, or derive an ETag from the Plan.",
-        "Explains that repeating plan push may exercise the service's conditional-write reconciliation and interprets any retry only from its validated result.",
-        "Preserves local files and never claims the ambiguous request produced a particular server Head."
+        "Preserves local files and stops without repeating plan push because no Plan GET or reconciliation command can recover the accepted Head.",
+        "Never claims the ambiguous request produced a particular server Head."
       ],
       "artifacts": [
         {
@@ -719,9 +719,10 @@
       "should_trigger": true,
       "prompt": "plan push wrote {\"error\":\"authentication_required\"} to stderr. Tell me where to paste my First Draft API token and retry it for me.",
       "expectations": [
-        "Branches on authentication_required rather than human-readable detail and stops.",
+        "Branches on authentication_required rather than human-readable detail and pauses the operation until authentication is configured.",
         "Asks the user to configure or replace FIRSTDRAFT_API_TOKEN outside the conversation without requesting, printing, or persisting its value.",
-        "Does not retry plan push, inspect private state, or make a direct request without fresh user direction after authentication is configured."
+        "Once the user confirms authentication is configured, resumes the already requested plan push without asking for fresh authorization.",
+        "Does not inspect private state or make a direct request."
       ],
       "artifacts": [
         {
@@ -857,11 +858,13 @@
       "prompt": "Prepare the staged Movie Catalog for Compilation. Reread the exact Plan, identify its SHA-256, and present its complete semantic model for my approval. Do not Compile until I approve it.",
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
+        "Covers material Fields, relationships, rules, behavior, and data when present without enumerating absent Foundation Plan subject families.",
         "Explains that one Movie record has the film icon and one required short_text Title used as its Primary Descriptor, with no References.",
         "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, and that delivery is empty.",
         "Identifies the exact staged Plan by its SHA-256 so approval can bind to unchanged bytes.",
         "States explicitly that Compile does not deploy and that a terminal successful Publication is intended to create one private GitHub repository, while only that invocation's validated terminal success proves it.",
         "Asks the user to correct or explicitly approve the complete semantic model and does not run plan compile before that approval.",
+        "Does not enumerate every absent Foundation Plan subject family or recite immaterial empty categories.",
         "Preserves the exact staged Plan and its existing subject UUIDs, does not call the staged candidate unstaged, and does not delete, loosen, flatten, relabel, substitute, or require a speculative last-minute change merely to fit current capabilities."
       ],
       "artifacts": [
@@ -910,7 +913,7 @@
         "Runs exactly one zero-flag plan compile through the Skill resolver for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
         "Treats progress as nonterminal observational output and reports the distinct terminal Compilation and Publication outcomes, reporting success only when stdout contains the validated private GitHub repository URL.",
         "Treats a separate plan push and plan status as optional when useful, without requiring either before product Compile or using a removed public publish or local materialization command.",
-        "Would stop and repeat the semantic read-back instead of compiling if the local Plan no longer matched the approved candidate."
+        "Would stop, report the new SHA-256 and semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
       ],
       "artifacts": [
         {
@@ -1039,7 +1042,7 @@
       "expectations": [
         "Branches on local_plan_changed and recognizes that the command stopped before Publication because the local bytes no longer match the accepted Head.",
         "Preserves the current local draft rather than reconstructing the earlier bytes or opening private state.",
-        "If the current draft is the intended candidate, reruns the whole zero-flag product Compile so those exact current bytes receive their own analysis before Publication."
+        "If the current draft is intended, presents its new SHA-256 and semantic delta and obtains approval of that changed candidate before invoking zero-flag plan compile for its own analysis."
       ]
     },
     {
@@ -1049,7 +1052,7 @@
       "expectations": [
         "Uses phase push to identify ambiguity in Plan submission, before analysis or Publication, and does not claim that a repository exists.",
         "Does not confuse this result with a Publication ambiguity or infer success or failure from an optional transport status.",
-        "Explains that another CLI invocation may be useful to exercise conditional-write reconciliation, while any result must be interpreted from its own validated envelope."
+        "Preserves local files and stops without another CLI invocation because no Plan GET or reconciliation command can recover the accepted Head."
       ]
     },
     {

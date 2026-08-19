@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "901d5baaebea0244a40b620d039acd4a8efbe8d657a142439c6fe3908a1465f8",
+        "24be4d4ea73d0d21aeed6248b72a775b4aba89c30180ccc6a69af13907b8b9ec",
     },
     requires: {
       api_contract: [">= 0.2.0", "< 0.3.0"],
@@ -76,11 +76,35 @@ test("current release docs route through structured identities", async () => {
   );
   assert.match(
     releasing,
-    /## Outstanding authenticated journey[\s\S]*?fresh explicit authorization for[\s\S]*?exactly one serialized qualification invocation[\s\S]*?Claude Code marketplace registration[\s\S]*?plugin install\/cache effects[\s\S]*?secure-storage token onboarding[\s\S]*?template-derived GitHub repository[\s\S]*?Codespace[\s\S]*?retained First Draft Project, AnalysisRun, Compilation, Publication, and queue effects[\s\S]*?separately[\s\S]*?billed Compilation[\s\S]*?GitHub App or OAuth destination-repository creation and push effects[\s\S]*?allowed retry and[\s\S]*?cleanup boundaries/,
+    /## Outstanding authenticated journey[\s\S]*?explicit approval for one[\s\S]*?serialized qualification journey[\s\S]*?plugin installation[\s\S]*?token onboarding[\s\S]*?repository and Codespace creation[\s\S]*?billed Compilation[\s\S]*?GitHub Publication[\s\S]*?operator resolves and reports[\s\S]*?exact candidate identities[\s\S]*?user need not recite/,
   );
   assert.match(
     releasing,
-    /Run no second invocation under that approval[\s\S]*?failure or ambiguous outcome authorizes neither a retry nor cleanup[\s\S]*?retained state read-only[\s\S]*?fresh authorization[\s\S]*?cleanup approval must name the exact repositories, Codespaces, or retained First Draft records/,
+    /setup failure before external mutation may be corrected and retried within that scope[\s\S]*?ambiguous[\s\S]*?reconcile retained and provider state read-only before resuming[\s\S]*?new authorization only to[\s\S]*?expand the approved effects or targets[\s\S]*?Destructive cleanup must identify its exact repositories, Codespaces, or[\s\S]*?retained First Draft records unless those exact targets were already included in the approval/i,
+  );
+  assert.match(
+    releasing,
+    /one explicit approval may cover any named sequence[\s\S]*?operator resolves and reports the exact immutable identities[\s\S]*?user[\s\S]*?need not recite SHAs or digests[\s\S]*?Completing an approved step does not add an unnamed later step/,
+  );
+  assert.match(
+    releasing,
+    /Bind it to the packed digest and compatible CLI[\s\S]*?and service identities/,
+  );
+  assert.match(
+    releasing,
+    /setup, harness, or local failure[\s\S]*?before any Compile invocation[\s\S]*?before any external mutation[\s\S]*?same smoke rerun within[\s\S]*?already approved scope[\s\S]*?known successful external effect[\s\S]*?does not make a whole-smoke rerun safe/i,
+  );
+  assert.match(
+    releasing,
+    /ambiguous mutation[\s\S]*?read-only and do not repeat it[\s\S]*?documented unchanged-byte[\s\S]*?Publication-singleton replay[\s\S]*?prior invocation exits[\s\S]*?reconciliation path[\s\S]*?never applies to an[\s\S]*?ambiguous Plan push/i,
+  );
+  assert.match(
+    releasing,
+    /final-head[\s\S]*?changes only non-packaged documentation, tests, or workflows[\s\S]*?final-head hosted CI[\s\S]*?reproduction[\s\S]*?same packed digest[\s\S]*?do not repeat the product smoke/,
+  );
+  assert.match(
+    releasing,
+    /maintenance-window approval may include named rollback actions[\s\S]*?Use rollback actions already named[\s\S]*?obtain new authorization only for a recovery[\s\S]*?beyond that scope/,
   );
   assert.doesNotMatch(releasing, /^## (?:Current 0\.1\.1|Completed)/m);
   assert.doesNotMatch(releasing, /firstdraft-package-first\.XXXXXX/);
@@ -149,6 +173,22 @@ test("approval-flow docs define the lightweight human-observed smoke", async () 
     assert.doesNotMatch(source, /tool and capability classification/);
     assert.doesNotMatch(source, /permission-denied/);
     assert.doesNotMatch(source, /workspace-tree SHA-256/);
+    assert.match(
+      source,
+      /setup, harness, or local failure.*?before any Compile invocation.*?before any external mutation.*?same smoke rerun.*?known successful external effect.*?not.*?(?:retry-safe|whole-smoke rerun safe)/i,
+    );
+    assert.match(
+      source,
+      /Publication-phase.*?(?:unknown|outcome unknown).*?status timeout/i,
+    );
+    assert.match(
+      source,
+      /unchanged-byte.*?same-singleton.*?replay/i,
+    );
+    assert.match(
+      source,
+      /never applies to an ambiguous Plan push/i,
+    );
   }
 });
 
@@ -816,11 +856,19 @@ test("archived release chronology retains exact observed facts", async () => {
   );
   assert.match(
     agents,
-    /Reconcile an ambiguous publication or push outcome read-only[\s\S]*?before retrying/,
+    /Reconcile an ambiguous mutation read-only and do not repeat it[\s\S]*?only current exception[\s\S]*?unchanged-byte, same-singleton `plan compile` replay[\s\S]*?prior[\s\S]*?invocation exits[\s\S]*?never applies to an ambiguous Plan push/,
   );
   assert.match(
     agents,
     /Do not publish npm packages, move npm dist-tags,[\s\S]*?without explicit user[\s\S]*?approval/,
+  );
+  assert.match(
+    agents,
+    /current request already authorizes candidate coordination or a named promotion sequence[\s\S]*?continue within that scope; otherwise ask/,
+  );
+  assert.match(
+    agents,
+    /One approval may cover a named release sequence[\s\S]*?Resolve and report its[\s\S]*?immutable identities before mutation[\s\S]*?do not require the user to recite them[\s\S]*?Completing one approved step does[\s\S]*?not expand the remaining scope/,
   );
   assert.match(
     agents,
