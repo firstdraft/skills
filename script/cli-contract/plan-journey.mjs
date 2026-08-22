@@ -27,9 +27,41 @@ export async function verifyPlanJourney(context) {
   const moviePlan = readFileSync(context.moviePlanPath);
   await verifyHappyCompile(context, moviePlan);
   await verifyStaleAnalysisGeneration(context, moviePlan);
+  await verifySameGenerationDifferentHead(context, moviePlan);
   await verifyStaleLocalBytes(context, moviePlan);
   await verifyAmbiguousPhases(context, moviePlan);
   await verifyDiagnosticsStopPublication(context, moviePlan);
+}
+
+async function verifySameGenerationDifferentHead(context, planSource) {
+  const cwd = await initializedProject(context, "compile-replaced-head", {
+    planSource,
+  });
+  const replacementHeadSourceSha256 = "f".repeat(64);
+  const calls = [];
+  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+    fetchFunction: sequenceFetch(
+      [
+        acceptedPlanResponse(planSource),
+        jsonResponse(
+          analysisProjection("valid", {
+            headSourceSha256: replacementHeadSourceSha256,
+          }),
+        ),
+      ],
+      calls,
+    ),
+  });
+
+  const envelope = assertErrorEnvelope(result, "analysis_changed");
+  assert.equal(
+    envelope.current.analysis.head_source_sha256,
+    replacementHeadSourceSha256,
+  );
+  assert.deepEqual(
+    calls.map(({ init }) => init?.method),
+    ["PUT", "GET"],
+  );
 }
 
 async function verifyHappyCompile(context, planSource) {

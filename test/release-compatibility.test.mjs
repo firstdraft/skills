@@ -24,14 +24,14 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.1.2",
+    version: "0.2.0",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "24be4d4ea73d0d21aeed6248b72a775b4aba89c30180ccc6a69af13907b8b9ec",
+        "c3e87bb450630f04da9c6f724045784a4396f0e41222bab9f6ac5297273b0313",
     },
     requires: {
-      api_contract: [">= 0.2.0", "< 0.3.0"],
+      api_contract: [">= 0.3.0", "< 0.4.0"],
       cli: [`= ${cliPackageVersion}`],
       foundation_plan_formats: [foundationPlanFormat],
     },
@@ -155,7 +155,7 @@ test("approval-flow docs define the lightweight human-observed smoke", async () 
   );
   assert.match(
     evaluation,
-    /two user turns.*?first response must present the complete semantic model.*?stop for explicit approval.*?second prompt approves that semantic model and Plan SHA-256.*?reread unchanged Plan bytes.*?exactly one zero-flag Compile without another confirmation/,
+    /two user turns.*?first response must present the complete semantic model.*?one Appearance target-gap record.*?stop for explicit approval.*?valid candidate with a nonempty GapSet.*?second prompt approves that semantic model, reviewed support result, and Plan SHA-256 without echoing the GapSet digest or records.*?reread unchanged Plan bytes.*?exactly one zero-flag Compile without another confirmation/,
   );
   assert.match(
     candidate,
@@ -270,7 +270,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCandidateDrift = structuredClone(documents);
-  withCandidateDrift.packageTemplate.version = "0.1.3";
+  withCandidateDrift.packageTemplate.version = "0.2.1";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCandidateDrift),
     /Expected values to be strictly equal/,
@@ -335,7 +335,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCheckoutReleaseVersion = structuredClone(documents);
-  withCheckoutReleaseVersion.checkoutManifest.version = "0.1.2";
+  withCheckoutReleaseVersion.checkoutManifest.version = "0.2.0";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCheckoutReleaseVersion),
     /must not reuse the installable plugin release version/,

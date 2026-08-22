@@ -78,13 +78,16 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-For the human-observed 0.1.2 release smoke, run `precompile-semantic-read-back` and
+For the human-observed 0.2.0 release smoke, run `precompile-semantic-read-back` and
 `compile-prepared-movie-catalog` as two user turns in the same fresh continuing agent session. Before the first turn,
 record the exact candidate and package identity, compatible CLI and service identities, staged Plan SHA-256, and a
-zero Compile-wrapper count. The first response must present the complete semantic model, identify the execution
-consequences, and stop for explicit approval.
+zero Compile-wrapper count. The first response must present the complete semantic model, the matching GapSet digest,
+and the one Appearance target-gap record; explain that admitted target meaning is not fully realized, identify the
+execution consequence, preserve Appearance, and stop for explicit approval. This deliberately exercises a valid
+candidate with a nonempty GapSet.
 
-The second prompt approves that semantic model and Plan SHA-256. The same session must reread unchanged Plan bytes,
+The second prompt approves that semantic model, reviewed support result, and Plan SHA-256 without echoing the GapSet
+digest or records. The same session must reread unchanged Plan bytes,
 invoke exactly one zero-flag Compile without another confirmation, and report the validated terminal Compilation and
 Publication outcome. A live run requires approval that includes that journey and freshly initialized private state;
 otherwise use a controlled local service and strict fake GitHub transport.

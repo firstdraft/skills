@@ -42,8 +42,11 @@ access, or requested clients. The ambiguity matrix guides the dialogue; it is no
    offline needs, delivery channels, notifications, and external prerequisites. A native client does not imply push
    notifications, and absent Account requirements do not imply public access.
 7. **Read back and obtain approval.** Summarize Entities and their material Fields, relationships, rules, behavior,
-   and data; surfaces, access, native and delivery choices; explicit exclusions, delegated decisions, open choices,
-   and known capability gaps. Ask the user to correct or explicitly approve that exact semantic model before Compile.
+   and data; surfaces, access, native and delivery choices; explicit exclusions, delegated decisions, and open
+   choices. For a matching valid analysis, show the GapSet digest and every ordered record, distinguishing service
+   meaning skipped before semantic analysis from admitted meaning not fully realized by the target. Ask the user to
+   correct or explicitly approve that exact semantic model and reviewed support delta before Compile; do not require
+   a digest echo or another gap-specific acknowledgment.
 
 Capture intended product meaning before comparing it with current target support. A capability gap is not permission
 to silently delete, loosen, flatten, relabel, or substitute the user's intent merely to obtain `valid` analysis.
@@ -96,19 +99,22 @@ and deferred questions can be revisited after diagnostics or further dialogue.
 Before the first Compile that could reach Publication, reread the exact staged Plan and give a compact plain-language
 semantic summary. Cover the Plan path and SHA-256; application scope; Entities and their material Fields,
 relationships, rules, behavior, and data; surfaces, access, and clients; material assumptions, exclusions, and
-capability gaps; and the execution consequence that Compile does not deploy while terminal successful Publication
-is intended to create one private GitHub repository. Use whatever order is clearest. Do not enumerate absent subject
-families or immaterial empty categories. Ask the user to correct or explicitly approve the exact model.
+capability gaps; and the matching valid AnalysisRun's GapSet digest and every ordered record. Explain that service
+gaps were skipped before semantic analysis, target gaps were not fully realized, and `valid` applies only to the
+admitted graph. State that Compile does not deploy while terminal successful Publication is intended to create one
+private GitHub repository. Use whatever order is clearest. Do not enumerate absent subject families or immaterial
+empty categories. Ask the user to correct or explicitly approve the exact model and reviewed gaps without requiring
+a digest echo or gap-specific field.
 
 The read-back reviews the staged candidate rather than reopening authoring. Preserve its existing subject UUIDs;
 do not require an edit without a user correction, a confirmed product decision, or a demonstrated diagnostic. If
 the Plan bytes change afterward, show the new SHA-256 and semantic delta for approval. In the same continuing
 conversation, once the unchanged candidate is approved, hash-check it and run one zero-flag Compile without a second
-command-level confirmation.
+command-level confirmation or gap-specific argument.
 
 Do not weaken product meaning to pass the current capability boundary. The user may explicitly move a feature out of
-this release after seeing the consequence; record that product-scope decision. Otherwise preserve the meaning, stop
-before Compile, and report the gap.
+this release after seeing the consequence; record that product-scope decision. Otherwise preserve the meaning. A
+reviewed valid analysis with gaps can proceed through the existing Compile action after approval without a Plan edit.
 
 An explicitly requested diagnostic-only Compile of an exact snapshot already known to be invalid from its bytes or
 matching diagnostics may precede approval because invalid analysis cannot enter Publication. Do not extend this

@@ -13,7 +13,7 @@ deploy the application.
 
 ## Current boundary
 
-This experimental workflow targets the coordinated plugin 0.1.2, CLI 0.1.0, and service-contract 0.2 contract.
+This experimental workflow targets the coordinated plugin 0.2.0, CLI 0.2.0, and service-contract 0.3 contract.
 These bundled bytes do not prove that exact combination is available from the public catalog; verify availability
 independently before advising an installation change.
 
@@ -25,10 +25,10 @@ The current Compiler is a narrow experiment, not arbitrary application generatio
   index/navigation beneath `ios/`.
 - Richer web routes do not become native detail or mutation screens. Every admitted generated web route is public
   and unauthenticated.
-- Accounts, notifications, deployment, Android, iPad, broader graph or Scaffold shapes, broader native screens,
-  and gap-aware partial Compilation are unavailable.
-- Preserve intentional unsupported meaning and report the gap; never weaken it merely to obtain `valid`.
-  Unsupported shapes fail the complete candidate closed.
+- Accounts, notifications, deployment, Android, iPad, broader graph or Scaffold shapes, and broader native screens
+  remain unavailable or incomplete.
+- Preserve unsupported meaning and report every reviewed gap; never weaken it to obtain `valid`. A valid run may
+  have gaps, and its artifact retains the submitted Plan and GapSet.
 
 Read the [current evidence and target boundary](references/foundation-plan-019.md#current-evidence-boundary) before
 making a support claim. One dated staging observation proves one prior OAuth/App-backed private-repository
@@ -90,7 +90,7 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.1.0` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.2.0` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Existing cross-repository contract tests own the exhaustive leaf-command
 matrix, including separate stdout and stderr assertions; startup should not rediscover it through a synthesized
 shell loop. The compatible CLI supplies these public commands:
@@ -99,11 +99,9 @@ shell loop. The compatible CLI supplies these public commands:
 - `plan init`, `plan push`, `plan status`, and zero-flag `plan compile`; and
 - `compilation status` and `compilation download`.
 
-There is no public `plan publish`, `plan subject-id`, or `plan compile --output`. Do not install, download, upgrade,
-or replace the CLI automatically. If resolution, version, or help differs, report the path and output and stop CLI
-and remote operations instead of using direct HTTP. Continue interviewing, reviewing, or editing the local Plan
-when that work remains useful. Recommend a marketplace repair only after independently verifying that the catalog
-serves this exact plugin 0.1.2 and CLI 0.1.0 pair; otherwise report that no verified public repair is known.
+There is no public `plan publish`, `plan subject-id`, or `plan compile --output`. Never replace the CLI automatically.
+If its path, version, or help differs, report it and stop remote work instead of using HTTP directly; local Plan work
+may continue. Recommend repair only after verifying the catalog serves plugin 0.2.0 with CLI 0.2.0.
 
 Treat `.firstdraft/state.json` as private CLI-owned concurrency state. Never print, paste, commit, or treat it as
 Plan content. Let the user configure `FIRSTDRAFT_API_TOKEN` and any initial `FIRSTDRAFT_API_URL` outside the
@@ -144,7 +142,8 @@ For an underspecified opening request, ask only about product meaning and deferr
 before discussing target support unless feasibility was requested. Later, state the current Scaffold boundary
 precisely: the smallest public index and the exact create/update, show-projection, return-destination, and destroy
 extensions, with every generated route public and unauthenticated. If the user explicitly requires private or
-authenticated access, preserve that meaning and stop before Compile rather than substituting a public Scaffold.
+authenticated access, preserve that meaning and include its exact support consequence in review rather than
+silently substituting a public requirement.
 
 Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
 incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails
@@ -182,42 +181,45 @@ firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else 
 firstdraft_cli plan status --wait
 ```
 
-Bind diagnostics to the push only when both returned graph versions equal the accepted version. If status is for a
-lower graph version, repeat this read-only poll within a bounded wait. If it is higher, another accepted Head
-replaced the one just pushed. Branch on `analysis.status`, not only the process exit status:
+Bind status only when both graph versions and `analysis.head_source_sha256` match the accepted result's version and
+`foundation_plan.source_sha256`. Poll lower versions read-only within a bounded wait; a higher version or SHA
+mismatch is a replacement. Branch on `analysis.status`, not only the process exit status:
 
-- `valid`: that exact graph passed the named analyzer; Compilation is not proved.
+- `valid`: the admitted graph passed the analyzer; Compilation is not proved. Require and inspect the complete
+  `analysis.gap_set` and `analysis.gap_set_sha256`, including an empty `gaps` array. Service gaps were skipped before
+  semantic analysis, so `valid` does not validate them; target gaps were analyzed but not fully realized.
 - `issues_found`: use structured diagnostics to make well-founded corrections while preserving unrelated meaning.
 - `analysis_failed`: report analyzer failure rather than inventing a product correction.
 - `superseded`: report that another accepted Head displaced the observed analysis. A bounded read-only status
   follow-up may report the current Project state. It is report-only and must never edit, push, or Compile the
   replacement.
 
-Treat messages and suggestions as advisory. If the same diagnostic recurs without new information, do not loop
-mechanically. Explain the unresolved choice or capability gap, keep intentional unsupported meaning in the local
-candidate, and ask only for product input that is actually needed. Unsupported subjects are not partially compiled.
-A separate push is optional because `plan compile` performs its own exact-byte push and matching analysis wait.
+Treat messages and suggestions as advisory. Do not loop a repeated diagnostic without new information; preserve
+intent and ask only for needed product input. Before approval, push the final exact candidate and read its matching
+valid status so the complete GapSet can be reviewed. `plan compile` later repeats that exact push.
 
 ## Read back and approve the candidate before Compile
 
 Before the first `plan compile` that could reach valid analysis and Publication, reread the exact current
-`.firstdraft/foundation-plan.json`. Give a compact plain-language semantic summary that covers the Plan path and
-SHA-256; application scope; Entities and their material Fields, relationships, rules, behavior, and data; surfaces,
-access, and clients; material assumptions, exclusions, and capability gaps; and the execution consequence that
-Compile does not deploy while terminal successful Publication is intended to create one private GitHub repository.
-Use whatever order is clearest for this candidate. Do not enumerate absent subject families or recite immaterial
-properties. Ask the user to correct or explicitly approve that exact candidate.
+`.firstdraft/foundation-plan.json`. Give a compact semantic summary covering its path and SHA-256; application scope;
+Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
+and exclusions. Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Explain that service
+gaps were skipped before semantic analysis, target gaps were not fully realized, and `valid` applies only to the
+admitted graph. State that Compile does not deploy and successful Publication is intended to create one private
+GitHub repository. Do not enumerate absent subject families or immaterial properties. Ask the user to correct or
+explicitly approve the candidate and reviewed gaps; require no digest echo or gap-acknowledgment field.
 
 If the Plan bytes change, show the new SHA-256 and the semantic delta, then obtain approval of the changed candidate.
 In the same continuing conversation, after unambiguous approval, reread the Plan, confirm its SHA-256 is unchanged,
 and make the initial request with exactly one zero-flag Compile invocation. Do not ask for a second command-level
 confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
-green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it and
-stop before Compile.
+green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it.
+After approval of the unchanged candidate and GapSet, use the supplied zero-flag Compile action without more
+ceremony.
 
 This gate does not block an explicitly requested diagnostic-only Compile of exact bytes already known to be
-invalid from those bytes or matching diagnostics. Invalid analysis cannot enter Publication. Do not treat an
-unsupported assumption as proof that a candidate cannot publish.
+invalid from those bytes or matching diagnostics. Invalid analysis cannot enter Publication. Valid analysis with
+gaps can; do not require removal of the corresponding Plan fields.
 
 ## Request the Compile journey
 
@@ -229,16 +231,13 @@ firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else 
 firstdraft_cli plan compile
 ```
 
-This is the Compile request; do not add a second confirmation ceremony. It pushes the current exact bytes, waits
-for their analysis generation, and requests Publication only after `valid`. Immediately before that mutation, the
-CLI rechecks the accepted ETag and local bytes.
+This is the Compile request; do not add a second confirmation ceremony or any gap-specific flag or field. It pushes
+the current exact bytes, waits for their analysis generation, and requests Publication only after `valid`.
+Immediately before that mutation, the CLI rechecks the accepted ETag and local bytes.
 
-Treat Compilation and GitHub Publication as separate retained stages. `compilation.status: "succeeded"` proves the
-application artifact finished compiling; it does not prove that a repository exists or that source was published.
-Call the result published only after terminal successful Publication and the CLI's validated private-repository
-URL. Progress fields and messages are already validated; report their exact phase, retry time, retry count, and safe
-reason without inferring provider causes. The bounded ten-minute wait does not cancel retained work when it times
-out.
+Treat Compilation and Publication as separate retained stages. Compilation success does not prove publication.
+Call it published only after terminal Publication success and a validated private-repository URL. Report validated
+progress without inferring provider causes; a wait timeout does not cancel retained work.
 
 One Publication singleton exists per Project. Never Compile concurrently. After an invocation that reached it exits
 with a Publication-phase outcome unknown, unavailable status, wait timeout, or interruption, wait for exit, then
@@ -303,7 +302,7 @@ Report:
 - the Plan path and the latest boundary actually demonstrated: JSON parsing, local schema validation, server import,
   or whole-graph analysis;
 - material choices, delegated decisions, exclusions, open questions, warnings, and capability gaps;
-- the analyzer release and graph version actually observed;
+- the observed analyzer release, graph version, and Head SHA, plus the complete valid GapSet and its digest;
 - distinct Compilation and Publication statuses plus validated progress fields when available;
 - the private repository URL only after terminal Publication success;
 - a downloaded path, file count, and manifest digest only after verified materialization; and

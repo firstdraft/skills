@@ -127,7 +127,7 @@
         },
         "domain": {
           "title": "Application domain",
-          "description": "The owner's domain. Platform identifiers, linked domains, and a default sending address derive from it. Omission yields a placeholder identifier disclosed as an external prerequisite.",
+          "description": "The owner's domain. Platform identifiers, linked domains, and a default sending address derive from it. When omitted, the current selected-iOS lowering uses visibly non-production placeholder identities.",
           "type": "string",
           "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$",
           "examples": [

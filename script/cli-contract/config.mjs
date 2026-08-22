@@ -1,8 +1,8 @@
-export const cliRevision = "d37d8b6775a0b97ce10bd651485bd308fed1dda2";
+export const cliRevision = "5ac300f1a2e7262c56473de270a0bd140f169c25";
 export const cliRuntimeSha256 =
-  "019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72";
+  "5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.1.0";
+export const cliPackageVersion = "0.2.0";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
@@ -37,9 +37,9 @@ export const apiToken = "canary-private-api-token";
 export const foundationPlanFormat =
   "firstdraft.foundation-plan.sketch/0.19";
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-08-05-conditional-length";
+  "foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-08-05-conditional-length";
+  "foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-08",
@@ -50,7 +50,13 @@ export const artifactMediaType =
 export const packedFileAllowlist = [
   "LICENSE",
   "README.md",
+  "RELEASING.md",
+  "SECURITY.md",
   "bin/firstdraft.js",
+  "docs/README.md",
+  "docs/commands.md",
+  "docs/errors.md",
+  "docs/release-history.md",
   "package.json",
   "src/api-authentication.js",
   "src/api-response.js",

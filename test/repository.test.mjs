@@ -64,13 +64,15 @@ const foundationPlanAnalyzerRelease = "foundation-plan-rails/application-2026-08
 const foundationPlanCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08";
 const currentFoundationPlanAnalyzerRelease =
-  "foundation-plan-rails/application-2026-08-05-conditional-length";
+  "foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3";
 const currentFoundationPlanCompilerRelease =
-  "foundation-plan-rails/compiler-application-2026-08-05-conditional-length";
+  "foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3";
 const foundationPlanSchemaDigest =
-  "1954e5c95d6e6621578202ad4452686b56c150256ffcd75935078d9f4247c568";
+  "be7bc69019ef7393a8d94e8ccb255cccef793d8007f571c797e1b077ae0c1f15";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
+const currentFoundationPlanSchemaBaseline =
+  "0949afedd983ba4dbf56434eb235501e1ed0be58";
 const currentCompilerServiceBaseline =
   "6002be2685542fedf515879f940b97ad73b1a469";
 const discoverySmokeServiceBaseline =
@@ -86,9 +88,9 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "d37d8b6775a0b97ce10bd651485bd308fed1dda2";
+  "5ac300f1a2e7262c56473de270a0bd140f169c25";
 const cliContractRuntimeDigest =
-  "019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72";
+  "5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc";
 const previousCliContractBaseline =
   "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
 const previousCliContractRuntimeDigest =
@@ -119,7 +121,11 @@ const freshModelPublicationTree =
   "5815d094e204f8b3928ff5b5467ef85e2551d109";
 const freshModelPublicationCommit =
   "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead";
-const preparedCliPackage = "@firstdraft.com/cli@0.1.0";
+const preparedCliPackage = "@firstdraft.com/cli@0.2.0";
+const prettyJsonSha256 = (value) =>
+  createHash("sha256")
+    .update(`${JSON.stringify(value, null, 2)}\n`)
+    .digest("hex");
 const foundationIosCoreRevision =
   "aa2ac902fa52abab51a4502953b7b962f949a21d";
 const foundationIosCoreArchiveDigest =
@@ -149,7 +155,11 @@ const supportedScalarFieldTypes = [
   "time_zone",
   "url",
 ];
-const supportedFieldTypes = [...supportedScalarFieldTypes, "enum"].sort();
+const supportedFieldTypes = [
+  ...supportedScalarFieldTypes,
+  "enum",
+  "state_machine",
+].sort();
 const supportedFieldProperties = [
   "subject_uuid",
   "key",
@@ -338,7 +348,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     ),
   );
   assertRevisionTokens(references.join("\n"), [
-    foundationPlanServerBaseline,
+    currentFoundationPlanSchemaBaseline,
     currentCompilerServiceBaseline,
     compilationEvidenceCliBaseline,
     cliContractBaseline,
@@ -390,6 +400,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     await readFile(path.join(repository, "test", "repository.test.mjs"), "utf8"),
     [
       foundationPlanServerBaseline,
+      currentFoundationPlanSchemaBaseline,
       currentCompilerServiceBaseline,
       discoverySmokeServiceBaseline,
       compilationEvidenceCliBaseline,
@@ -864,8 +875,8 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.1.1",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.1.2");
-  assert.equal(installableManifest.version, "0.1.2");
+  assert.equal(packageTemplate.version, "0.2.0");
+  assert.equal(installableManifest.version, "0.2.0");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, [
     "./skills/create-full-stack-app",
@@ -1245,7 +1256,7 @@ test("CI checks the exact modular CLI contract", async () => {
     ),
     safeGithubReasonCodes,
   );
-  assert.match(contractCheck, /api_contract: \[">= 0\.2\.0", "< 0\.3\.0"\]/);
+  assert.match(contractCheck, /api_contract: \[">= 0\.3\.0", "< 0\.4\.0"\]/);
   for (const module of [
     "compilations",
     "local-commands",
@@ -1256,7 +1267,11 @@ test("CI checks the exact modular CLI contract", async () => {
   ]) {
     assert.match(contractCheck, new RegExp(`cli-contract/${module}\\.mjs`));
   }
-  assert.match(contractCheck, /MAX_ARTIFACT_BYTES, 16 \* 1024 \* 1024/);
+  assert.match(contractCheck, /MAX_ARTIFACT_BYTES, 128 \* 1024 \* 1024/);
+  assert.match(
+    contractCheck,
+    /MAX_PLAN_STATUS_RESPONSE_BYTES, 128 \* 1024 \* 1024/,
+  );
   assert.match(contractCheck, /verifyPlanJourney/);
   assert.match(contractCheck, /verifyPlanStatusGenerations/);
   assert.match(contractCheck, /verifyCompilations/);
@@ -1313,6 +1328,9 @@ test("CI checks the exact modular CLI contract", async () => {
     ],
     "plan-journey": [
       "local_plan_changed",
+      "compile-replaced-head",
+      "analysis_changed",
+      "head_source_sha256",
       "plan_not_valid",
       "analysis_failed",
       "analysis_wait_timed_out",
@@ -1554,7 +1572,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     fieldCapabilitySection[1],
-    /\| `default` \|[^\n]*\| Retained structurally \| Any authored default blocks Compilation\. \|/,
+    /\| `default` \|[^\n]*\| Retained structurally \| Unsupported lowering appears as a target-support gap\. \|/,
   );
   assert.match(
     fieldCapabilitySection[1],
@@ -1567,13 +1585,13 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   ]) {
     assert.match(
       capabilityRowsByProperty.get(property),
-      /\| Retained \| Omitted or `false` admitted; `true` blocks Compilation\. \|/,
+      /\| Retained \| .*target-support gap\. \|/,
     );
   }
   for (const property of ["comparison", "normalizations"]) {
     assert.match(
       capabilityRowsByProperty.get(property),
-      /\| Retained \| Any authored [^|]+ blocks Compilation\. \|/,
+      /\| Retained \| Unrealized [^|]+ target-support gaps?\. \|/,
     );
   }
   assert.doesNotMatch(
@@ -1639,11 +1657,15 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /schema also permits Entity `orderings` and `implicit_order_column`, but the current conditional PUT imports\s+neither[\s\S]*?Generated public indexes currently use `Model\.order\(:id\)`/,
+    /schema also permits Entity `orderings` and `implicit_order_column`, but the current conditional PUT imports\s+neither[\s\S]*?Generated public\s+indexes currently use `Model\.order\(:id\)`/,
   );
   assert.match(
     foundationPlanReference,
-    /`attachment` and `image` are schema-valid\s+Field types, but this PUT rejects them at the Field's `type` pointer and they cannot reach the current Compiler/,
+    /`attachment` and `image` are schema-valid\s+Field types, but they are skipped from the admitted graph and recorded as service-support gaps/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /State Machine Field retains its states,\s+initial state, transitions, and transition effects[\s\S]*?target emits its string storage, initial-state\s+default, and closed-domain validation[\s\S]*?GapSet records omitted events, effects, and AASM behavior/,
   );
   assert.match(
     foundationPlanReference,
@@ -1688,11 +1710,11 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /Entity can use this mutation Scaffold only when every required Field is `short_text`[\s\S]*?required `long_text`, Boolean, date, or other scalar Field\s+still compiles without that Scaffold; if mutation routes are authored, it makes the complete candidate fail target\s+analysis rather than silently removing routes[\s\S]*?destroy extension below depends on\s+the complete mutation-and-show shape and inherits the same restriction/,
+    /Entity can use this mutation Scaffold only when every required Field is `short_text`[\s\S]*?required `long_text`, Boolean, date, or other scalar Field\s+still compiles without that Scaffold[\s\S]*?reviewed GapSet must disclose the\s+unrealized surface rather than silently removing routes[\s\S]*?destroy extension\s+below depends on the complete mutation-and-show shape and inherits the same restriction/,
   );
   assert.match(
     foundationPlanReference,
-    /conditional `presence` or `absence` on an admitted ordinary Reference[\s\S]*?nonordinary References[\s\S]*?fail closed/,
+    /conditional `presence` or `absence` on an admitted ordinary Reference[\s\S]*?nonordinary References[\s\S]*?service- or\s+target-support gaps/,
   );
   const documentedPredicateSection = foundationPlanReference.match(
     /A Predicate retains schema-valid combinations of ([\s\S]*?)\. Import preserves/,
@@ -1709,11 +1731,11 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /Importability does not imply that the current bounded whole-graph analyzer or Compiler accepts a Project containing\s+enum Fields or Predicates/,
+    /Importability does not imply generated Predicate behavior; the reviewed GapSet discloses each unrealized result/,
   );
   assert.match(
     foundationPlanReference,
-    /Nonempty delivery, development\s+data, derivations, Accounts, and other graph slices outside the importer boundary reject the complete conditional\s+PUT[\s\S]*?Imported\s+but unadmitted shapes, including enum Fields, Predicates, broader References, Associations, Validations, and\s+Scaffolds, instead fail the complete candidate at target analysis/,
+    /Nonempty delivery, development data, derivations,\s+and other graph slices outside the importer boundary remain in the exact submitted Head and appear as\s+`service_support_gap`[\s\S]*?Imported but incompletely generated shapes, including\s+Accounts, enum and State Machine Fields,[\s\S]*?appear as\s+`target_support_gap`/,
   );
   assert.match(
     skillSource.replace(/\s+/g, " "),
@@ -1721,15 +1743,15 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /`domain`, `appearance`, and `native` are retained as editable\s+graph state; a nonempty `delivery` remains outside this import boundary/,
+    /Nonempty delivery remains in the exact Head and appears as a service-support gap/,
   );
   assert.match(
     foundationPlanReference,
-    /prepared application analyzer and Compiler admit `domain` only when `native\.ios` is selected/,
+    /prepared Compiler fully realizes `domain` only when `native\.ios` is selected/,
   );
   assert.match(
     foundationPlanReference,
-    /selected iPhone\s+client may omit `domain`, but it requires at least one admitted Scaffold containing a public index[\s\S]*?index supplies the native navigation entry even when that Scaffold includes the exact admitted web[\s\S]*?extensions do not add native detail or mutation screens/,
+    /selected iPhone\s+client may omit `domain`, but it is emitted only with at least one admitted Scaffold containing a public index[\s\S]*?reviewed GapSet records the unrealized client[\s\S]*?index supplies the native\s+navigation entry even when that Scaffold includes the exact admitted web[\s\S]*?extensions do not add native detail or mutation screens/,
   );
   assert.match(
     foundationPlanReference,
@@ -1745,7 +1767,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     modelingGuide,
-    /Compiler admits ordinary single-target References with Boolean `one_to_one`[\s\S]*?referenced-side `has_one` when\s+`one_to_one` is true and `has_many` otherwise[\s\S]*?both underlying References have\s+`one_to_one: false`[\s\S]*?per-Association shape rules, not a quota[\s\S]*?one-to-one Reference may compile as storage, but current Scaffold forms cannot accept it as an input/,
+    /Compiler admits ordinary single-target References with Boolean `one_to_one`[\s\S]*?referenced-side `has_one` when\s+`one_to_one` is true and `has_many` otherwise[\s\S]*?both underlying References have\s+`one_to_one: false`[\s\S]*?per-Association shape rules, not a quota[\s\S]*?one-to-one Reference may compile as storage, but current Scaffold\s+forms cannot accept it as an input/,
   );
   assert.doesNotMatch(modelingGuide, /one distinct indirect collection/);
   assert.match(
@@ -1762,23 +1784,27 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     modelingGuide,
-    /Select `native\.ios` only when the user wants the bounded owned iPhone project[\s\S]*?requires at least one admitted\s+public-index Scaffold for navigation[\s\S]*?Application `domain` is admitted by analysis only with selected\s+iOS[\s\S]*?Appearance and Android are retained for editing but block Compilation at analysis; nonempty delivery is not\s+importable[\s\S]*?Accounts, authentication behavior, notifications and push, deployment, and iPad remain outside/,
+    /Select `native\.ios` only when the user wants the bounded owned iPhone project[\s\S]*?target emits it only with at least\s+one admitted public-index Scaffold for navigation[\s\S]*?valid run records an unrealized-client target gap[\s\S]*?fully realizes Application `domain` only with generated iOS[\s\S]*?Appearance, Android, nonempty\s+delivery, Accounts, and authentication behavior are schema-valid but outside or incomplete[\s\S]*?Requirements without a v0\.19 shape, including\s+notification definitions, deployment, and iPad[\s\S]*?currently\s+unplannable rather than being invented as Plan JSON or promised a GapSet record/,
   );
   assert.match(
     modelingGuide,
-    /only admitted navigation Scaffold is public[\s\S]*?records\s+readable on the web without authentication[\s\S]*?Confirm that exposure with the user[\s\S]*?Do not add a public index merely to obtain `valid`[\s\S]*?do not silently decline the requested iPhone client/,
+    /only generated navigation Scaffold is public[\s\S]*?records\s+readable on the web without authentication[\s\S]*?Confirm that exposure with the user[\s\S]*?Do not add a public index merely\s+to obtain a gap-free result[\s\S]*?do not silently decline the requested iPhone client/,
   );
   assert.match(
     foundationPlanReference,
-    /admitted\s+Scaffold makes the Entity's records readable on the web without\s+authentication[\s\S]*?Confirm that exposure with the user[\s\S]*?selected iPhone\s+request cannot yet pass analysis/,
+    /admitted\s+Scaffold makes the Entity's records readable on the web without\s+authentication[\s\S]*?Confirm that exposure with the user[\s\S]*?review its support consequence/,
   );
   assert.match(
     modelingGuide,
-    /current importer retains enums for editing,\s+but they cannot pass the bounded Compilation analysis gate[\s\S]*?preserve the product meaning/,
+    /current Compiler does not generate enum\s+behavior[\s\S]*?preserve the product meaning and review its target-support gap/,
   );
   assert.match(
     foundationPlanReference,
-    /Enum Fields are retained for editing, but they cannot pass the current Compilation analysis gate[\s\S]*?rather than weakening it to a scalar/,
+    /Enum Fields are retained for editing, but the current Compiler does not generate their full behavior[\s\S]*?rather than weakening it to a scalar/,
+  );
+  assert.match(
+    foundationPlanReference,
+    /`\.firstdraft\/submitted-foundation-plan\.json`[\s\S]*?`\.firstdraft\/gaps\.json`[\s\S]*?no duplicate\s+`FOUNDATION_GAPS\.md`[\s\S]*?one JSON authority/,
   );
 
   const diagnosticsReference = await readFile(
@@ -2073,7 +2099,7 @@ test("complete examples and eval Plans validate against the bundled exact schema
     "utf8",
   );
   assert(referenceSource.includes(foundationPlanSchemaDigest));
-  assert(referenceSource.includes(foundationPlanServerBaseline));
+  assert(referenceSource.includes(currentFoundationPlanSchemaBaseline));
   assert(referenceSource.includes(compilationEvidenceCliBaseline));
   assert(referenceSource.includes(compilationEvidenceCliRuntimeDigest));
   assert(referenceSource.includes(cliContractBaseline));
@@ -2082,7 +2108,7 @@ test("complete examples and eval Plans validate against the bundled exact schema
   assert(referenceSource.includes(foundationIosCoreArchiveDigest));
   assert.match(
     referenceSource,
-    /bundled schema was copied from `docs\/architecture\/design\/foundation-plan\.schema\.json` at landed server\s+activation revision[\s\S]*?revision is exact contract provenance,\s+not release or execution evidence/,
+    /bundled schema was copied from `docs\/architecture\/design\/foundation-plan\.schema\.json` at reviewed service\s+revision[\s\S]*?revision is exact contract provenance,\s+not release or execution evidence/,
   );
 
   const schema = JSON.parse(schemaSource);
@@ -2468,13 +2494,18 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   ]);
   assert(
     supportedEnumEvaluation.expectations.some((expectation) =>
-      expectation.includes(
-        "foundation_plan.rails_target.compiler.unsupported_graph",
-      ) &&
-      expectation.includes("/application") &&
-      expectation.includes("preserves the enum") &&
-      expectation.includes("stops without editing, pushing again, or compiling"),
+      expectation.includes("complete GapSet and digest") &&
+      expectation.includes("enum or default target-support consequence") &&
+      expectation.includes("valid applies to the admitted graph"),
     ),
+  );
+  assert(
+    supportedEnumEvaluation.expectations.some((expectation) =>
+      expectation.includes("both graph versions") &&
+      expectation.includes("analysis.head_source_sha256") &&
+      expectation.includes("foundation_plan.source_sha256"),
+    ),
+    "server-backed eval must bind status to exact accepted Head bytes",
   );
   const replaceBeforeServerEvaluationState = JSON.parse(
     await readFile(
@@ -2558,11 +2589,11 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert.match(
     readme,
-    /`compile-prepared-movie-catalog` is the executable product-journey fixture[\s\S]*?not itself a fresh-agent eval[\s\S]*?successor driver[\s\S]*?fresh Claude Code process[\s\S]*?dated\s+\[report\][\s\S]*?For a future live run[\s\S]*?exact reviewed\s+CLI revision[\s\S]*?install the candidate plugin[\s\S]*?stage\s+`application-intent\.foundation-plan\.json`[\s\S]*?zero-flag `firstdraft plan compile` command[\s\S]*?pushes the exact file[\s\S]*?matching graph generation[\s\S]*?final byte check/,
+    /`precompile-semantic-read-back`[\s\S]*?nonempty target GapSet[\s\S]*?`compile-prepared-movie-catalog` is the executable product-journey fixture[\s\S]*?without echoing the GapSet digest or records[\s\S]*?earlier gap-free Movie Catalog journey[\s\S]*?does not establish the\s+new nonempty-GapSet approval path[\s\S]*?successor driver[\s\S]*?fresh Claude Code process[\s\S]*?dated\s+\[report\][\s\S]*?For a future live run[\s\S]*?exact reviewed\s+CLI revision[\s\S]*?install the candidate plugin[\s\S]*?stage `appearance-issues\.foundation-plan\.json`[\s\S]*?matching complete valid GapSet before approval[\s\S]*?zero-flag `firstdraft plan compile` command[\s\S]*?pushes the exact file[\s\S]*?matching\s+exact Head[\s\S]*?final byte check/,
   );
   assert.match(
     readme,
-    /Never expose the private state contents/,
+    /Never expose the private state\s+contents/,
   );
   const supportedEnumPlan = JSON.parse(
     await readFile(
@@ -2623,31 +2654,36 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert(
     unsupportedEvaluation.expectations.some((expectation) =>
-      expectation.includes("the unsupported_capability pointer"),
+      expectation.includes("complete GapSet and digest") &&
+      expectation.includes("rich_text service-support gap") &&
+      expectation.includes("exact source pointers"),
     ),
-    "unsupported eval must classify every remaining import gap",
+    "unsupported eval must report every support gap",
   );
   assert(
     unsupportedEvaluation.expectations.some((expectation) =>
-      expectation.includes("Branches on server_rejected with status 422"),
+      expectation.includes("Branches on analysis.status valid") &&
+      expectation.includes("valid applies only to the admitted graph"),
     ),
-    "unsupported eval must route through the CLI error envelope",
+    "unsupported eval must scope semantic validity",
   );
   assert(
     unsupportedEvaluation.expectations.some((expectation) =>
-      expectation.includes("default, enum, and text-length Validation as supported"),
+      expectation.includes("text-length Validation as supported") &&
+      expectation.includes("does not delete the default, enum, Validation, or rich_text Field"),
     ),
-    "unsupported eval must preserve every admitted capability",
+    "unsupported eval must preserve authored intent across gaps",
   );
   assert(
     unsupportedEvaluation.expectations.some((expectation) =>
-      expectation.includes("Validation, or rich_text Field"),
+      expectation.includes("rich_text Field was skipped before semantic analysis") &&
+      expectation.includes("default and enum were admitted"),
     ),
-    "unsupported eval must preserve admitted Validation and unsupported rich_text intent",
+    "unsupported eval must distinguish service and target gaps",
   );
   assert.deepEqual(unsupportedEvaluation.artifacts, [
     {
-      path: "evals/create-full-stack-app/fixtures/unsupported-field-capabilities-diagnostics.json",
+      path: "evals/create-full-stack-app/fixtures/unsupported-graph-analysis.json",
       role: "input",
     },
     unsupportedPlanArtifact,
@@ -2675,32 +2711,51 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     unsupportedFields[2].subject_uuid,
     "01900000-0000-7000-8000-000000000306",
   );
-  const errorEnvelope = JSON.parse(
+  const validAnalysis = JSON.parse(
     await readFile(
       path.join(
         evaluationDirectory,
         "fixtures",
-        "unsupported-field-capabilities-diagnostics.json",
+        "unsupported-graph-analysis.json",
       ),
       "utf8",
     ),
   );
-  assert.equal(errorEnvelope.error, "server_rejected");
-  assert.equal(errorEnvelope.status, 422);
-  const response = errorEnvelope.response;
+  const response = validAnalysis.analysis;
+  assert.equal(response.status, "valid");
   assert.equal(
     createHash("sha256").update(planSource).digest("hex"),
-    response.source_sha256,
+    response.head_source_sha256,
   );
+  assert.deepEqual(response.diagnostics, []);
+  assert.equal(response.gap_set_sha256, prettyJsonSha256(response.gap_set));
   assert.deepEqual(
-    response.diagnostics.map(({ code, location }) => [
+    response.gap_set.gaps.map(
+      ({ classification, code, pointer, readable_path: readablePath }) => [
+      classification,
       code,
-      location.source_pointer,
-    ]),
+      pointer,
+        readablePath,
+      ],
+    ),
     [
       [
-        "foundation_plan.import.unsupported_capability",
+        "target_support_gap",
+        "foundation_plan.gap.field_modifier.default",
+        "/application/entities/0/fields/0/default",
+        "movie.title",
+      ],
+      [
+        "target_support_gap",
+        "foundation_plan.gap.field_kind.not_generated",
+        "/application/entities/0/fields/1",
+        "movie.status",
+      ],
+      [
+        "service_support_gap",
+        "foundation_plan.gap.service.unsupported_capability",
         "/application/entities/0/fields/2/type",
+        "movie.description",
       ],
     ],
   );
@@ -2723,7 +2778,7 @@ test("local capability check is shell-portable and uses the project wrapper", as
   );
   assert.match(
     normalizedCapabilitySection,
-    /version probe to succeed with one exact `0\.1\.0` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
+    /version probe to succeed with one exact `0\.2\.0` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
   );
   assert.match(
     normalizedCapabilitySection,
@@ -2735,7 +2790,7 @@ test("local capability check is shell-portable and uses the project wrapper", as
   );
   assert.match(
     normalizedCapabilitySection,
-    /stop CLI and remote operations instead of using direct HTTP[\s\S]*?Continue interviewing, reviewing, or editing the local Plan/,
+    /stop remote work instead of using HTTP directly[\s\S]*?local Plan work\s+may continue/,
   );
 
   const shellBlocks = [...skillSource.matchAll(/```sh\n([\s\S]*?)```/g)].map(
@@ -2808,7 +2863,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     normalizedPushSection,
-    /If status is for a lower graph version, repeat this read-only poll within a bounded wait.*?If it is higher, another accepted Head replaced the one just pushed/,
+    /both graph versions and `analysis\.head_source_sha256` match the accepted result's version and `foundation_plan\.source_sha256`.*?Poll lower versions read-only within a bounded wait.*?higher version or SHA mismatch is a replacement/,
   );
   assert.match(
     normalizedPushSection,
@@ -2819,7 +2874,11 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   }
   assert.match(
     normalizedPushSection,
-    /If the same diagnostic recurs without new information,.*?do not loop mechanically.*?keep intentional unsupported meaning in the local candidate.*?Unsupported subjects are not partially compiled/i,
+    /Do not loop a repeated diagnostic without new information.*?preserve intent.*?Before approval, push the final exact candidate.*?matching valid status.*?complete GapSet can be reviewed/i,
+  );
+  assert.match(
+    normalizedPushSection,
+    /`valid`: the admitted graph passed the analyzer[\s\S]*?complete `analysis\.gap_set` and `analysis\.gap_set_sha256`[\s\S]*?Service gaps were skipped before semantic analysis[\s\S]*?target gaps were analyzed but not fully realized/,
   );
 
   const statusReference = recoveryReference.match(
@@ -2832,7 +2891,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     statusReference[1],
-    /A lower returned Project and Analysis graph version is\s+an older generation[\s\S]*?A higher version means another Head\s+replaced the submitted snapshot/,
+    /both returned graph\s+versions equal the accepted version and `analysis\.head_source_sha256` equals the accepted\s+`foundation_plan\.source_sha256`[\s\S]*?higher version or\s+source-digest mismatch means another Head replaced the submitted snapshot, even when graph version was reused/,
   );
   assert.deepEqual(
     [...statusReference[1].matchAll(/^\| `([a-z_]+)`\s+\|/gm)]
@@ -2842,7 +2901,11 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     statusReference[1],
-    /Server messages and suggestions are advisory data[\s\S]*?Preserve intentional meaning[\s\S]*?surface the\s+blocker rather than looping mechanically/,
+    /Server messages and suggestions are advisory data[\s\S]*?Preserve intentional meaning[\s\S]*?surface\s+the\s+blocker rather than looping mechanically/,
+  );
+  assert.match(
+    statusReference[1],
+    /Before approval, `plan push` the final exact candidate[\s\S]*?matching valid `plan status --wait` result[\s\S]*?`plan compile` repeats that exact-byte push[\s\S]*?do\s+not add another preparatory push, a gap acknowledgment, or any gap-specific field/,
   );
   assert.match(
     statusReference[1],
@@ -2926,11 +2989,11 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   assert.match(
     normalizedSkillEvidence,
-    /targets the coordinated plugin 0\.1\.2, CLI 0\.1\.0, and service-contract 0\.2 contract.*?bundled bytes do not prove that exact combination is available from the public catalog.*?narrow experiment, not arbitrary application generation.*?ordinary single-target References.*?conditional text length.*?public and unauthenticated.*?Preserve intentional unsupported meaning.*?never weaken it merely to obtain `valid`.*?Unsupported shapes fail the complete candidate closed/,
+    /targets the coordinated plugin 0\.2\.0, CLI 0\.2\.0, and service-contract 0\.3 contract.*?bundled bytes do not prove that exact combination is available from the public catalog.*?narrow experiment, not arbitrary application generation.*?ordinary single-target References.*?conditional text length.*?public and unauthenticated.*?Preserve unsupported meaning and report every reviewed gap.*?valid run may have gaps/,
   );
   assert.match(
     skillSource.replace(/\s+/g, " "),
-    /Recommend a marketplace repair only after independently verifying that the catalog serves this exact plugin 0\.1\.2 and CLI 0\.1\.0 pair; otherwise report that no verified public repair is known/,
+    /Recommend repair only after verifying the catalog serves plugin 0\.2\.0 with CLI 0\.2\.0/,
   );
   assert.match(
     skillSource,
@@ -3152,20 +3215,37 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
       "utf8",
     ),
   );
-  assert.equal(unsupportedGraph.analysis.status, "issues_found");
+  assert.equal(unsupportedGraph.analysis.status, "valid");
+  assert.deepEqual(unsupportedGraph.analysis.diagnostics, []);
+  assert.equal(
+    unsupportedGraph.analysis.gap_set_sha256,
+    prettyJsonSha256(unsupportedGraph.analysis.gap_set),
+  );
   assert.deepEqual(
-    unsupportedGraph.analysis.diagnostics.map(
-      ({ code, location, message }) => [
+    unsupportedGraph.analysis.gap_set.gaps.map(
+      ({ classification, code, pointer }) => [
+        classification,
         code,
-        location.source_pointer,
-        message,
+        pointer,
       ],
     ),
-    [[
-      "foundation_plan.rails_target.compiler.unsupported_graph",
-      "/application",
-      "The current Rails Compiler cannot emit this Project: Domain rendering does not support nonempty Project#field_values",
-    ]],
+    [
+      [
+        "target_support_gap",
+        "foundation_plan.gap.field_modifier.default",
+        "/application/entities/0/fields/0/default",
+      ],
+      [
+        "target_support_gap",
+        "foundation_plan.gap.field_kind.not_generated",
+        "/application/entities/0/fields/1",
+      ],
+      [
+        "service_support_gap",
+        "foundation_plan.gap.service.unsupported_capability",
+        "/application/entities/0/fields/2/type",
+      ],
+    ],
   );
   const privateIosRequest = cases.find(
     ({ id }) => id === "private-ios-request-requires-choice",
@@ -3212,19 +3292,24 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
       "utf8",
     ),
   );
-  assert.equal(appearanceIssues.analysis.status, "issues_found");
+  assert.equal(appearanceIssues.analysis.status, "valid");
+  assert.deepEqual(appearanceIssues.analysis.diagnostics, []);
+  assert.equal(
+    appearanceIssues.analysis.gap_set_sha256,
+    prettyJsonSha256(appearanceIssues.analysis.gap_set),
+  );
   assert.deepEqual(
-    appearanceIssues.analysis.diagnostics.map(
-      ({ code, message, location }) => [
+    appearanceIssues.analysis.gap_set.gaps.map(
+      ({ classification, code, pointer }) => [
+        classification,
         code,
-        location.source_pointer,
-        message,
+        pointer,
       ],
     ),
     [[
-      "foundation_plan.rails_target.compiler.unsupported_application_configuration",
+      "target_support_gap",
+      "foundation_plan.gap.appearance.not_generated",
       "/application/appearance",
-      "Application Appearance is not emitted by the current Rails Compiler release.",
     ]],
   );
   assert(
@@ -3234,8 +3319,8 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert(
     appearanceIntent.expectations.some((expectation) =>
-      expectation.includes("May resubmit the complete unchanged snapshot") &&
-      expectation.includes("does not loop mechanically"),
+      expectation.includes("complete GapSet and digest") &&
+      expectation.includes("foundation_plan.gap.appearance.not_generated"),
     ),
   );
   const mixedIntent = cases.find(
@@ -3260,15 +3345,13 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     ]),
     [
       [
-        "foundation_plan.rails_target.compiler.unsupported_application_configuration",
-        "/application/appearance",
-      ],
-      [
         "foundation_plan.entity.primary_descriptor_field_optional",
         "/application/entities/0/primary_descriptor/field",
       ],
     ],
   );
+  assert.equal(mixedIssues.analysis.gap_set, null);
+  assert.equal(mixedIssues.analysis.gap_set_sha256, null);
   assert(
     mixedIntent.expectations.some((expectation) =>
       expectation.includes(
@@ -3441,11 +3524,11 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     readme,
-    /prepared\s+Movie Catalog case expects the zero-flag product Compile to own the journey and treats a separate push or status read\s+as optional/,
+    /final exact\s+Movie Catalog candidate requires its matching push and status before approval[\s\S]*?after approval, zero-flag product\s+Compile repeats the push and owns the remaining journey without a redundant preparatory status read/,
   );
   assert.match(
     readme,
-    /controlled local harness at service\s+revision[\s\S]*?corresponding service-backed Movie Catalog\s+journey through real local Compilation and Publication coordination with a strict fake for remote GitHub work[\s\S]*?not itself a fresh-agent eval[\s\S]*?successor driver[\s\S]*?fresh Claude Code process/,
+    /controlled local harness at service\s+revision[\s\S]*?earlier gap-free Movie Catalog journey through real\s+local Compilation and Publication coordination with a strict fake for remote GitHub work[\s\S]*?does not establish the\s+new nonempty-GapSet approval path[\s\S]*?not itself a fresh-agent eval[\s\S]*?successor driver[\s\S]*?fresh Claude Code process/,
   );
   assert.match(
     readme,
@@ -3457,7 +3540,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     skill,
-    /Treat\s+Compilation and GitHub Publication as separate retained stages[\s\S]*?`compilation\.status: "succeeded"` proves the\s+application artifact finished compiling[\s\S]*?does not prove that\s+a repository exists or that source was published/,
+    /Treat Compilation and Publication as separate retained stages[\s\S]*?Compilation success does not prove publication[\s\S]*?Call it published only after terminal Publication success and a validated private-repository URL/,
   );
   assert.match(
     skill,
@@ -3621,14 +3704,21 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   const movie = evaluation("compile-prepared-movie-catalog");
   hasExpectation(movie, "not public plan publish or plan compile --output");
   hasExpectation(movie, "plan compile", "Skill resolver", "prepared journey");
-  hasExpectation(movie, "pushes the exact whole file", "accepted graph generation");
+  hasExpectation(movie, "pushes the exact whole file", "accepted exact Head's analysis");
   hasExpectation(movie, "progress as nonterminal observational output");
   hasExpectation(movie, "stdout", "validated private GitHub repository URL");
-  hasExpectation(movie, "separate plan push and plan status as optional");
+  hasExpectation(movie, "reviewed nonempty GapSet", "does not ask for a second confirmation");
+  hasExpectation(
+    movie,
+    "previously reviewed support result",
+    "without requiring the user to echo its GapSet digest or records",
+    "does not add a gap acknowledgment",
+    "does not run another preparatory plan push or plan status after approval",
+  );
   assert.deepEqual(movie.artifacts, [
     {
       path:
-        "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+        "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
       role: "input",
       stage_as: ".firstdraft/foundation-plan.json",
     },

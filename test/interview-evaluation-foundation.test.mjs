@@ -103,17 +103,24 @@ test("candidate protocol defines interview coverage and complete-candidate readi
     "Entities and their material Fields, relationships, rules, behavior, and data",
     "surfaces, access, and clients",
     "material assumptions, exclusions, and capability gaps",
+    "matching valid AnalysisRun's GapSet digest and every ordered record",
+    "service gaps were skipped before semantic analysis",
+    "target gaps were not fully realized",
+    "`valid` applies only to the admitted graph",
     "Compile does not deploy",
     "terminal successful Publication is intended to create one private GitHub repository",
     "Use whatever order is clearest",
     "Do not enumerate absent subject families",
     "Preserve its existing subject UUIDs",
     "correct or explicitly approve the exact model",
+    "without requiring a digest echo or gap-specific field",
     "new SHA-256 and semantic delta",
     "same continuing conversation",
     "hash-check it",
     "run one zero-flag Compile",
     "without a second command-level confirmation",
+    "reviewed valid analysis with gaps can proceed through the existing Compile action",
+    "without a Plan edit",
     "Do not weaken product meaning",
     "known to be invalid",
     "invalid analysis cannot enter Publication",
@@ -123,6 +130,10 @@ test("candidate protocol defines interview coverage and complete-candidate readi
       `candidate protocol read-back missing: ${expected}`,
     );
   }
+  assert.doesNotMatch(
+    normalizedReadBack,
+    /preserve the meaning, stop before Compile, and report the gap/i,
+  );
 });
 
 test("home-inventory corpus case probes consequential ambiguity without invented answers", async () => {
@@ -196,7 +207,10 @@ test("packaged interview guidance keeps the opening turn focused on one product 
   assert.match(normalizedSkill, /every generated route public and unauthenticated/);
   const interview = markdownSection(skill, "Interview and author incrementally");
   assert.doesNotMatch(interview, /successful Publication|dated staging discovery/i);
-  assert.match(interview, /explicitly requires private or\s+authenticated access[\s\S]*?stop before Compile/);
+  assert.match(
+    interview,
+    /explicitly requires private or\s+authenticated access[\s\S]*?preserve that meaning[\s\S]*?exact support consequence in review[\s\S]*?rather than\s+silently substituting a public requirement/,
+  );
   assert.match(
     modelingGuide,
     /Keep one candidate Plan: do not maintain a\s+parallel flattened or capability-friendly shape/,
@@ -224,11 +238,11 @@ test(
 
     assert.match(
       normalizedSkill,
-      /targets the coordinated plugin 0\.1\.2, CLI 0\.1\.0, and service-contract 0\.2/,
+      /targets the coordinated plugin 0\.2\.0, CLI 0\.2\.0, and service-contract 0\.3/,
     );
     assert.match(
       normalizedSkill,
-      /catalog serves this exact plugin 0\.1\.2 and CLI 0\.1\.0 pair/,
+      /catalog serves plugin 0\.2\.0 with CLI 0\.2\.0/,
     );
     assert.match(
       normalizedSkill,
@@ -252,19 +266,27 @@ test(
     );
     for (const expected of [
       "reread the exact current `.firstdraft/foundation-plan.json`",
-      "compact plain-language semantic summary",
-      "Plan path and SHA-256",
-      "Entities and their material Fields, relationships, rules, behavior, and data",
+      "compact semantic summary",
+      "path and SHA-256",
+      "Entities and material Fields, relationships, rules, behavior, and data",
       "surfaces, access, and clients",
-      "material assumptions, exclusions, and capability gaps",
+      "assumptions; and exclusions",
+      "matching valid run's `gap_set_sha256`",
+      "every ordered GapSet record",
+      "service gaps were skipped before semantic analysis",
+      "target gaps were not fully realized",
+      "`valid` applies only to the admitted graph",
       "Do not enumerate absent subject families",
-      "correct or explicitly approve that exact candidate",
+      "correct or explicitly approve the candidate and reviewed gaps",
+      "require no digest echo or gap-acknowledgment field",
       "new SHA-256 and the semantic delta",
       "Do not ask for a second command-level confirmation",
       "Do not delete, loosen, flatten, relabel, or substitute intended product meaning",
       "explicitly requested diagnostic-only Compile",
       "already known to be invalid",
       "Invalid analysis cannot enter Publication",
+      "Valid analysis with gaps can",
+      "do not require removal of the corresponding Plan fields",
     ]) {
       assert(
         approval.includes(expected),
@@ -279,6 +301,7 @@ test(
       ),
     );
     assert(compile.includes("do not add a second confirmation ceremony"));
+    assert(compile.includes("or any gap-specific flag or field"));
 
     const modeling = markdownSection(
       modelingGuide,
@@ -301,12 +324,17 @@ test(
       "application scope",
       "Entities and their material Fields, relationships, rules, behavior, and data",
       "surfaces, access, and clients",
-      "material assumptions, exclusions, and capability gaps",
+      "material assumptions and exclusions",
+      "matching valid AnalysisRun's GapSet digest",
+      "every ordered record",
+      "service-support gaps were skipped before semantic analysis",
+      "target-support gaps were not fully realized",
       "Compile does not deploy",
       "terminal successful Publication is intended to create one private GitHub repository",
       "Use the order that best communicates this candidate",
       "Do not enumerate absent subject families",
-      "correct or explicitly approve the exact model",
+      "correct or explicitly approve the exact model and reviewed support delta",
+      "without requiring a digest echo or gap-specific field",
       "not a last-minute authoring pass",
       "Preserve existing subject identity",
       "new SHA-256 and the semantic delta",
@@ -331,7 +359,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     })),
     [
       {
-        path: "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+        path: "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
         stageAs: ".firstdraft/foundation-plan.json",
       },
       {
@@ -354,6 +382,34 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
       "exact staged Plan",
       "SHA-256",
       "unchanged bytes",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      readBack,
+      "project and analysis graph versions agree",
+      "analysis.head_source_sha256",
+      "GapSet source.sha256",
+      "staged Plan SHA-256",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      readBack,
+      "complete one-record GapSet",
+      "foundation_plan.gap.appearance.not_generated",
+      "kind appearance",
+      "status not_generated",
+      "/application/appearance",
+      "readable_path application.appearance",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      readBack,
+      "valid applies to the admitted graph",
+      "Appearance target gap",
+      "does not require weakening the Plan",
     ),
   );
   assert(
@@ -433,6 +489,22 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert(
     expectationIncludes(
       compile,
+      "reviewed nonempty GapSet",
+      "does not ask for a second confirmation",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      compile,
+      "previously reviewed support result",
+      "without requiring the user to echo its GapSet digest or records",
+      "does not add a gap acknowledgment",
+      "does not run another preparatory plan push or plan status after approval",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      compile,
       "distinct terminal Compilation and Publication outcomes",
     ),
   );
@@ -453,7 +525,7 @@ test("evaluation harness exposes the representative Movie Catalog fixture", asyn
       "evals",
       "create-full-stack-app",
       "fixtures",
-      "application-intent.foundation-plan.json",
+      "appearance-issues.foundation-plan.json",
     ),
   );
   const fixture = await readEvaluationJson(movieCatalogFixturePath);
@@ -463,6 +535,7 @@ test("evaluation harness exposes the representative Movie Catalog fixture", asyn
       key: fixture.application.key,
       name: fixture.application.name,
       domain: fixture.application.domain,
+      appearance: fixture.application.appearance,
       native: fixture.application.native,
       delivery: fixture.application.delivery,
       entities: fixture.application.entities.map((entity) => ({
@@ -484,6 +557,7 @@ test("evaluation harness exposes the representative Movie Catalog fixture", asyn
       key: "movie_catalog",
       name: "Movie Catalog",
       domain: "movies.example.com",
+      appearance: { theme: "auto", tint_color: "#4F46E5" },
       native: { ios: {} },
       delivery: {},
       entities: [

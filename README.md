@@ -4,18 +4,19 @@ Portable Agent Skills for [First Draft](https://github.com/firstdraft/firstdraft
 the current bounded Rails-and-iPhone Compilation workflow.
 
 This repository is experimental. It does not offer arbitrary application generation, deployment, Android, iPad,
-Accounts, notifications, or broader web and native clients. Unsupported product meaning must remain explicit and
-fails the complete candidate closed.
+Accounts, notifications, or broader web and native clients. Unsupported product meaning must remain explicit. A
+valid review can carry a complete GapSet describing meaning skipped by the service or not realized by the selected
+target.
 
 ## Current state
 
 | Surface | Selected identity |
 |---|---|
-| Source candidate | Plugin `0.1.2`; packed SHA-256 `24be4d4ea73d0d21aeed6248b72a775b4aba89c30180ccc6a69af13907b8b9ec` |
+| Source candidate | Plugin `0.2.0`; packed SHA-256 `c3e87bb450630f04da9c6f724045784a4396f0e41222bab9f6ac5297273b0313` |
 | Public marketplace | Plugin `0.1.1` |
 | npm `next` and `latest` | Plugin `0.1.1` |
-| Bundled CLI | `@firstdraft.com/cli@0.1.0` |
-| Compatible service API | `>= 0.2.0`, `< 0.3.0` |
+| Bundled CLI | `@firstdraft.com/cli@0.2.0` |
+| Compatible service API | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan | `firstdraft.foundation-plan.sketch/0.19` |
 
 The source candidate is unpublished and unpromoted. Public installation still selects immutable plugin `0.1.1`.
@@ -76,7 +77,7 @@ remain outside those installable directories.
 
 Packing copies the canonical `skills/create-full-stack-app` directory into a temporary plugin tree; no second
 editable Skill copy is committed under `packages/`. The assembled plugin also includes a small `firstdraft` adapter
-and the exact packed files from CLI `0.1.0`. Executables in a plugin-root `bin/` directory are added to the Bash
+and the exact packed files from CLI `0.2.0`. Executables in a plugin-root `bin/` directory are added to the Bash
 tool's `PATH` by Claude Code.
 
 Sensitive user configuration is not delivered to an executable merely because the plugin's `bin/` directory is on
