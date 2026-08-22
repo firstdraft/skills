@@ -94,16 +94,17 @@ gate, not proof that output exists.
 }
 ```
 
-The selected native output is iPhone-only. Do not describe it as Android or iPad support. A selected iPhone client
-requires at least one admitted public-index Scaffold; a domain without selected iOS is also blocked. Web-only plans
-may use the same exact Scaffold with `native: {}` and no domain. The admitted Scaffold makes Movie records readable
+The selected native output is iPhone-only. Do not describe it as Android or iPad support. The target emits a selected
+iPhone client only with at least one admitted public-index Scaffold; without one, a valid analysis records an
+unrealized-client target gap. A domain without generated iOS is likewise admitted but recorded as ungenerated.
+Web-only plans may use the same exact Scaffold with `native: {}` and no domain. The admitted Scaffold makes Movie records readable
 on the web without authentication. Confirm that exposure with the user before adding it; do not add it merely to
 satisfy the iPhone navigation requirement or silently discard private or broader access intent.
 
-Adding `appearance` to this candidate remains structurally valid and importable, but the prepared analyzer returns
-`foundation_plan.rails_target.compiler.unsupported_application_configuration` at `/application/appearance`.
-Preserve an intentional Appearance request and report the capability gap rather than deleting it merely to obtain
-`valid`.
+Adding `appearance` to this candidate remains structurally valid and importable. A matching valid AnalysisRun
+records `foundation_plan.gap.appearance.not_generated` at `/application/appearance` as a target-support gap.
+Preserve an intentional Appearance request and report the complete reviewed GapSet rather than deleting it merely
+to obtain a gap-free result.
 
 ## Conditional text length
 

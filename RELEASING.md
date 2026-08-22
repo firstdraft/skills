@@ -8,14 +8,14 @@ This is the current policy and operator sequence for coordinated work across `fi
 
 | Surface | Current identity |
 |---|---|
-| Source candidate | `@firstdraft.com/claude-code@0.1.2` |
-| Candidate packed SHA-256 | `24be4d4ea73d0d21aeed6248b72a775b4aba89c30180ccc6a69af13907b8b9ec` |
+| Source candidate | `@firstdraft.com/claude-code@0.2.0` |
+| Candidate packed SHA-256 | `c3e87bb450630f04da9c6f724045784a4396f0e41222bab9f6ac5297273b0313` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.1.1` / `0.1.1` |
-| Compatible CLI | `@firstdraft.com/cli@0.1.0` |
+| Compatible CLI | `@firstdraft.com/cli@0.2.0` |
 | CLI npm `next` / `latest` | `0.1.0` / `0.1.0` |
-| Service API contract | `>= 0.2.0`, `< 0.3.0` |
+| Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
 The source candidate is unpublished and unpromoted. Its exact integration commit must be resolved from the final
@@ -70,20 +70,22 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-The current 0.1.2 candidate still requires one human-observed, two-turn approval smoke before publication. Use the
+The current 0.2.0 candidate still requires one human-observed, two-turn approval smoke before publication. Use the
 paired `precompile-semantic-read-back` and `compile-prepared-movie-catalog` cases in the same fresh continuing agent
 session:
 
 1. Record the exact Skills commit, package version and tarball SHA-256, compatible CLI and service identities, and
    staged Plan SHA-256. Use a controlled local service and strict fake GitHub path unless the approved scope names a
    live gate.
-2. In the first turn, the agent presents the complete semantic read-back of that exact Plan, including that Compile
-   does not deploy and successful Publication creates one private GitHub repository, then stops for approval. The
-   observer confirms that the Compile wrapper count is zero before approval.
-3. Give explicit approval of the presented semantic model and Plan SHA-256. In the same continuing session, the
-   agent rereads the unchanged Plan, invokes exactly one zero-flag Compile without another confirmation, and reports
-   the validated terminal Compilation and Publication outcome. The observer confirms that the Compile wrapper count
-   is exactly one after the turn.
+2. In the first turn, the agent presents the complete semantic read-back of that exact Plan and the matching valid
+   AnalysisRun's one Appearance target-gap record with its digest. It explains that the admitted Appearance meaning
+   is not fully realized, Compile does not deploy, and successful Publication creates one private GitHub repository.
+   It then stops for approval. The observer confirms that the Compile wrapper count is zero before approval.
+3. Give explicit approval of the presented semantic model, reviewed support result, and Plan SHA-256 without
+   requiring the user to echo the GapSet digest or records. In the same continuing session, the agent rereads the
+   unchanged Plan, invokes exactly one zero-flag Compile without another confirmation or gap-specific field, and
+   reports the validated terminal Compilation and Publication outcome. The observer confirms that the Compile
+   wrapper count is exactly one after the turn.
 
 Retain the two-turn transcript, explicit approval, identities and digests above, pre-approval Compile count zero,
 post-approval Compile count exactly one, and the final Compilation and Publication outcome. This smoke does not
@@ -103,6 +105,11 @@ mutation.
 This step requires explicit authorization for protected tag creation and npm publication, either on its own or as
 part of a named release sequence. The operator resolves and reports the exact candidate commit, package version,
 and tarball digest before mutation; the user does not need to recite them.
+
+Plugin 0.2.0 vendors and requires exact public `@firstdraft.com/cli@0.2.0`. Publish and reconcile that CLI under npm
+`next` before tagging this plugin; the plugin registry-package gate must resolve those exact public bytes. Then
+publish and reconcile plugin 0.2.0 under `next`. Both package steps precede any API 0.3 service activation, while
+plugin and CLI `latest` and the public catalog remain unchanged until their separately approved promotions.
 
 Immediately before tagging:
 
@@ -181,10 +188,11 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-Publish and reconcile compatible package bytes under `next` before changing shared service roles. Leave `latest` and
-the public catalog unchanged until the exact web and worker revisions are active and the selected qualification
-passes. During the approved window, stop other operator-controlled Compile and Publication invocations in that lane
-and serialize the one qualification invocation through its retained outcome.
+For the current API 0.3 transition, publish and reconcile CLI 0.2.0 under `next`, then plugin 0.2.0 under `next`,
+before changing shared service roles. Leave both `latest` tags and the public catalog unchanged until the exact web
+and worker revisions are active and the selected qualification passes. During the approved window, stop other
+operator-controlled Compile and Publication invocations in that lane and serialize the one qualification invocation
+through its retained outcome.
 
 Reconcile web, worker, queue, package, catalog, and supported-client state at every boundary. A web-only or
 worker-only activation is not completion. Public traffic may continue as unattributed capacity activity under the

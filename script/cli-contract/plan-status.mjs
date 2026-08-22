@@ -109,15 +109,42 @@ export async function verifyPlanStatusGenerations(context) {
           analysisProjection("valid", {
             graphVersion: 3,
             identifier: staleAnalysisId,
+            gaps: [
+              {
+                classification: "service_support_gap",
+                code: "foundation_plan.gap.service.unsupported_capability",
+                kind: "import_skip",
+                status: "skipped_at_import",
+                pointer: "/application/delivery",
+                reason:
+                  "This First Draft release cannot yet import this Foundation Plan capability.",
+                consequence:
+                  "This Plan path is omitted from the admitted Project graph and generated application.",
+              },
+            ],
           }),
         ),
       ]),
     },
   );
   assert.equal(replacement.status, 0);
-  assert(
-    JSON.parse(replacement.stdout).project.graph_version >
-      acceptedGraphVersion,
+  const replacementProjection = JSON.parse(replacement.stdout);
+  assert(replacementProjection.project.graph_version > acceptedGraphVersion);
+  assert.equal(
+    replacementProjection.analysis.gap_set.gaps.length,
+    1,
+  );
+  assert.equal(
+    replacementProjection.analysis.gap_set.gaps[0].pointer,
+    "/application/delivery",
+  );
+  assert.equal(
+    replacementProjection.analysis.gap_set_sha256,
+    sha256(
+      Buffer.from(
+        `${JSON.stringify(replacementProjection.analysis.gap_set, null, 2)}\n`,
+      ),
+    ),
   );
 }
 
@@ -232,6 +259,12 @@ async function verifyAnalysisFixtures(context) {
     );
     const response = structuredClone(fixture);
     response.project.id = projectId;
+    if (response.analysis.gap_set) {
+      response.analysis.gap_set.project.id = projectId;
+      response.analysis.gap_set_sha256 = sha256(
+        Buffer.from(`${JSON.stringify(response.analysis.gap_set, null, 2)}\n`),
+      );
+    }
     const result = await invokeRunner(
       context.runCli,
       ["plan", "status", "--wait"],

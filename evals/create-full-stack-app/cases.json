@@ -181,8 +181,8 @@
         "Does not run plan init, reinitialize over the staged directory, or reconstruct state.",
         "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
         "Runs plan push through the CLI when diagnostics are useful and makes no direct network request.",
-        "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
-        "On the current analyzer's foundation_plan.rails_target.compiler.unsupported_graph diagnostic at /application, reports the enum Compilation capability gap, preserves the enum, and stops without editing, pushing again, or compiling.",
+        "After a verified push, runs plan status --wait and binds the result only when both graph versions and analysis.head_source_sha256 match the accepted project.graph_version and foundation_plan.source_sha256 before branching on analysis.status.",
+        "If analysis is valid, reports the complete GapSet and digest, including every enum or default target-support consequence, while explaining that valid applies to the admitted graph and does not prove generated output.",
         "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring an analysis result.",
         "Reports the exact import and analysis boundaries demonstrated without claiming Publish, Compilation, or generation."
       ],
@@ -235,7 +235,8 @@
       "should_trigger": true,
       "prompt": "The staged Plan's domain, selected iPhone client, Movie icon and Field, and public-index Scaffold are intentional. A successful plan push was followed by plan status --wait, which printed the attached valid analysis. Review the result, but do not compile it.",
       "expectations": [
-        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-08-05-conditional-length, graph version 1, and the absence of diagnostics.",
+        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3, graph version 1, and the absence of diagnostics.",
+        "Reports the complete empty firstdraft.foundation-gaps/2 object and gap_set_sha256 1312e3e4484a4306503b5934197231b55b554186bec838224ffabac3289a9708 rather than omitting the reviewed support result.",
         "Preserves the complete staged Plan unchanged, including its domain, native.ios request, semantic icon, required title Field, and exact public-index Scaffold.",
         "Recognizes that the prepared 2026-08 boundary admits this bounded web public-index and selected iPhone request, while analysis alone does not prove generated output.",
         "Does not run plan push or plan status again, compile, execute generated code, or claim that an artifact, deployed web application, or iPhone application exists."
@@ -262,7 +263,7 @@
       "should_trigger": true,
       "prompt": "Update the staged Movies Plan to request an iPhone client and index, show, create, update, and delete screens, but Movie records must remain private to signed-in staff. Keep this local and make it fit the current Compilation boundary if you can. Do not push it.",
       "expectations": [
-        "Recognizes that the selected-iPhone boundary requires at least one admitted public-index navigation entry, that generated iPhone output remains index-only, and that the exact web create, update, show, and destroy shapes are admitted but public.",
+        "Recognizes that the target emits a selected iPhone client only with at least one admitted public-index navigation entry, that otherwise the request remains valid but unrealized, that generated iPhone output remains index-only, and that the exact web create, update, show, and destroy shapes are admitted but public.",
         "Explains that every admitted Scaffold makes Movie records or mutations available on the web without authentication, while Accounts and staff-only authorization remain unsupported, conflicting with the private staff-only intent.",
         "Stops for a product choice instead of silently adding a public index, presenting web CRUD as native screens, narrowing the requested screens, discarding private access, or declining the requested iPhone client.",
         "Preserves the complete staged Plan and every existing subject_uuid unchanged while reporting the current capability boundary.",
@@ -284,13 +285,12 @@
     {
       "id": "preserve-unsupported-appearance-intent",
       "should_trigger": true,
-      "prompt": "The staged Plan's Appearance, domain, selected iPhone client, and public-index Scaffold are intentional. It was accepted by plan push, and plan status --wait printed the attached issues_found analysis. Fix the issue and keep pushing until valid.",
+      "prompt": "The staged Plan's Appearance, domain, selected iPhone client, and public-index Scaffold are intentional. It was accepted by plan push, and plan status --wait printed the attached valid analysis. Review every support gap, but do not compile it.",
       "expectations": [
-        "Branches on analysis.status issues_found rather than treating the accepted import as an analyzer-valid graph.",
-        "Classifies foundation_plan.rails_target.compiler.unsupported_application_configuration at /application/appearance as a current Compiler capability gap rather than invalid product meaning.",
+        "Branches on analysis.status valid while explaining that valid applies to the admitted graph and Compilation is not proved.",
+        "Reports the complete GapSet and digest 9afac31c5a3f83b66542b5a683ad0a73c009bec747b9fa39049bc2c43665da98, including the target_support_gap foundation_plan.gap.appearance.not_generated record at /application/appearance and its reason and consequence.",
         "Preserves the complete Appearance request and every otherwise admitted Application and Entity member without editing, removing, or weakening them.",
-        "Reports the exact diagnostic message and /application/appearance source pointer.",
-        "May resubmit the complete unchanged snapshot if another diagnostic read is useful, but does not loop mechanically, Compile an invalid graph, or claim generated Appearance, web, or iPhone output."
+        "Does not run plan push or plan status again, compile, or claim generated Appearance, web, or iPhone output."
       ],
       "artifacts": [
         {
@@ -315,10 +315,10 @@
       "prompt": "The staged Plan's Appearance and every other product choice are intentional. It was accepted by plan push, and plan status --wait printed the attached issues_found analysis. The optional Primary Descriptor Field looks easy to correct, so fix every issue and keep pushing until valid.",
       "expectations": [
         "Branches on analysis.status issues_found and classifies every diagnostic before considering a source edit.",
-        "Recognizes foundation_plan.rails_target.compiler.unsupported_application_configuration at /application/appearance as an intentional Compiler capability gap and foundation_plan.entity.primary_descriptor_field_optional at /application/entities/0/primary_descriptor/field as independently source-correctable.",
+        "Recognizes foundation_plan.entity.primary_descriptor_field_optional at /application/entities/0/primary_descriptor/field as source-correctable while preserving intentional Appearance for a later reviewed GapSet.",
         "Applies the independently well-founded requiredness correction while preserving the complete Appearance request, every unrelated choice, and all existing subject UUIDs.",
-        "Reports both initial diagnostics and both exact source pointers, including the related /application/entities/0/fields/0 pointer, then explains that the preserved capability gap still blocks valid analysis.",
-        "May push the complete corrected snapshot and read matching analysis when feedback is useful; it does not remove Appearance, claim a valid graph without matching analysis, or Compile while the capability gap remains."
+        "Reports the initial diagnostic and exact source pointer, including the related /application/entities/0/fields/0 pointer, and explains that a non-valid run has no purported complete GapSet.",
+        "May push the complete corrected snapshot and read matching analysis when feedback is useful; it does not remove Appearance, claim a valid graph without matching analysis, or Compile before reviewing any resulting complete GapSet."
       ],
       "artifacts": [
         {
@@ -620,17 +620,18 @@
     {
       "id": "unsupported-field-capabilities",
       "should_trigger": true,
-      "prompt": "plan push wrote the attached server_rejected error envelope with status 422 to stderr for my staged Plan. Fix it and keep pushing until it passes.",
+      "prompt": "A successful plan push was followed by plan status --wait, which printed the attached valid analysis for my staged Plan. Review every gap, but do not compile it.",
       "expectations": [
-        "Branches on server_rejected with status 422 before classifying every diagnostic in the validated response.",
-        "Classifies the unsupported_capability pointer as the current rich_text import gap rather than invalid product meaning.",
-        "Recognizes the default, enum, and text-length Validation as supported, and does not delete the default, Validation, or rich_text Field merely to force a successful response.",
+        "Branches on analysis.status valid and explains that valid applies only to the admitted graph.",
+        "Reports the complete GapSet and digest, including the title default and enum target-support gaps and the rich_text service-support gap at their exact source pointers.",
+        "Explains that the rich_text Field was skipped before semantic analysis, while the title default and enum were admitted but are not fully realized by the target.",
+        "Recognizes the text-length Validation as supported and does not delete the default, enum, Validation, or rich_text Field merely to obtain a gap-free result.",
         "Preserves the complete local Plan and every existing subject_uuid.",
-        "Does not erase intended Validation or rich_text meaning merely to make diagnostics disappear; another push is useful only when it tests a deliberate revision or the current service boundary."
+        "Does not run plan push or plan status again, compile, or claim the skipped and unrealized behavior was generated."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/unsupported-field-capabilities-diagnostics.json",
+          "path": "evals/create-full-stack-app/fixtures/unsupported-graph-analysis.json",
           "role": "input"
         },
         {
@@ -855,13 +856,17 @@
     {
       "id": "precompile-semantic-read-back",
       "should_trigger": true,
-      "prompt": "Prepare the staged Movie Catalog for Compilation. Reread the exact Plan, identify its SHA-256, and present its complete semantic model for my approval. Do not Compile until I approve it.",
+      "prompt": "Prepare the staged Movie Catalog for Compilation. Reread the exact Plan and attached matching valid analysis, identify the Plan and GapSet digests, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
         "Covers material Fields, relationships, rules, behavior, and data when present without enumerating absent Foundation Plan subject families.",
         "Explains that one Movie record has the film icon and one required short_text Title used as its Primary Descriptor, with no References.",
         "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, and that delivery is empty.",
+        "Explains that Appearance requests the auto theme and #4F46E5 tint color and preserves that intentional product meaning even though this release does not generate Appearance configuration.",
         "Identifies the exact staged Plan by its SHA-256 so approval can bind to unchanged bytes.",
+        "Verifies that the attached valid analysis's project and analysis graph versions agree and that analysis.head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before treating it as the matching reviewed result.",
+        "Reports the complete one-record GapSet and digest 9afac31c5a3f83b66542b5a683ad0a73c009bec747b9fa39049bc2c43665da98, including classification target_support_gap, code foundation_plan.gap.appearance.not_generated, kind appearance, status not_generated, pointer /application/appearance, readable_path application.appearance, reason, and consequence.",
+        "Explains that valid applies to the admitted graph, that the Appearance target gap was admitted and analyzed but is not fully realized, and that the gap does not require weakening the Plan before Compile.",
         "States explicitly that Compile does not deploy and that a terminal successful Publication is intended to create one private GitHub repository, while only that invocation's validated terminal success proves it.",
         "Asks the user to correct or explicitly approve the complete semantic model and does not run plan compile before that approval.",
         "Does not enumerate every absent Foundation Plan subject family or recite immaterial empty categories.",
@@ -869,7 +874,11 @@
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+          "path": "evals/create-full-stack-app/fixtures/appearance-issues-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
           "role": "input",
           "stage_as": ".firstdraft/foundation-plan.json"
         },
@@ -906,18 +915,18 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back for the unchanged staged Movie Catalog with SHA-256 d8ecce5f4029058bae0c72e235bb671eeb8b065aba2d2800c15dd4bea269ecd4: movie_catalog has one Movie Entity with the film icon; each Movie has one required short_text Title used as its Primary Descriptor, no References, and only a public read-only index; the selected iPhone client uses that index for navigation under movies.example.com; delivery is empty; successful Publication creates a private GitHub repository. Compile that exact candidate now.",
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f. Preserve its intentional Appearance request and Compile that exact candidate now.",
       "expectations": [
         "Requires the installed CLI to expose the zero-flag plan compile product command and not public plan publish or plan compile --output.",
-        "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model, rereads the exact local Plan, verifies its SHA-256 and semantic model are unchanged, and does not ask for a second confirmation or repeat the unchanged read-back.",
-        "Runs exactly one zero-flag plan compile through the Skill resolver for this prepared journey; the command pushes the exact whole file, waits for the accepted graph generation's analysis, and invokes Publication only after valid analysis and an unchanged local file.",
+        "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, rereads the exact local Plan, verifies its SHA-256 and semantic model are unchanged, and does not ask for a second confirmation or repeat the unchanged read-back.",
+        "Runs exactly one zero-flag plan compile through the Skill resolver for this prepared journey; the command pushes the exact whole file, waits for the accepted exact Head's analysis, and invokes Publication after valid analysis with the preserved Appearance target gap and an unchanged local file.",
         "Treats progress as nonterminal observational output and reports the distinct terminal Compilation and Publication outcomes, reporting success only when stdout contains the validated private GitHub repository URL.",
-        "Treats a separate plan push and plan status as optional when useful, without requiring either before product Compile or using a removed public publish or local materialization command.",
+        "Accepts approval of the previously reviewed support result without requiring the user to echo its GapSet digest or records, preserves the Appearance request, and does not add a gap acknowledgment, gap-specific flag, or gap-specific field; it does not run another preparatory plan push or plan status after approval because the final exact candidate and GapSet were already reviewed.",
         "Would stop, report the new SHA-256 and semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
       ],
       "artifacts": [
         {
-          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+          "path": "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
           "role": "input",
           "stage_as": ".firstdraft/foundation-plan.json"
         },

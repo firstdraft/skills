@@ -18,7 +18,7 @@ export const candidateInterviewProtocolPath = path.join(
 export const movieCatalogFixturePath = path.join(
   evaluationDirectory,
   "fixtures",
-  "application-intent.foundation-plan.json",
+  "appearance-issues.foundation-plan.json",
 );
 
 export const loadEvaluationDocument = async () =>

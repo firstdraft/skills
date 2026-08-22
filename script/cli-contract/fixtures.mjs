@@ -35,15 +35,28 @@ export function acceptedPlanResponse(planSource, graphVersion = 1) {
 
 export function analysisProjection(
   status,
-  { graphVersion = 1, identifier = analysisId } = {},
+  {
+    graphVersion = 1,
+    identifier = analysisId,
+    headSourceSha256 =
+      "d8ecce5f4029058bae0c72e235bb671eeb8b065aba2d2800c15dd4bea269ecd4",
+    gaps = [],
+  } = {},
 ) {
   const terminal = status !== "processing";
+  const gapSet =
+    status === "valid"
+      ? gapSetDocument({ graphVersion, headSourceSha256, gaps })
+      : null;
   return {
     project: { id: projectId, graph_version: graphVersion },
     analysis: {
       id: identifier,
       graph_version: graphVersion,
+      head_source_sha256: headSourceSha256,
       analyzer_release: analyzerRelease,
+      compiler_release: compilerRelease,
+      target: compilationTarget,
       status,
       diagnostics:
         status === "issues_found"
@@ -59,9 +72,29 @@ export function analysisProjection(
               },
             ]
           : [],
+      gap_set: gapSet,
+      gap_set_sha256: gapSet
+        ? sha256(Buffer.from(`${JSON.stringify(gapSet, null, 2)}\n`))
+        : null,
       started_at: terminal ? startedAt : null,
       completed_at: terminal ? completedAt : null,
     },
+  };
+}
+
+export function gapSetDocument({
+  graphVersion = 1,
+  headSourceSha256,
+  gaps = [],
+} = {}) {
+  return {
+    format: "firstdraft.foundation-gaps/2",
+    source: { sha256: headSourceSha256 },
+    project: { id: projectId, graph_version: graphVersion },
+    analysis: { release: analyzerRelease },
+    compiler_release: compilerRelease,
+    target: compilationTarget,
+    gaps,
   };
 }
 

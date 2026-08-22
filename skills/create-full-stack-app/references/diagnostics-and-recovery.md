@@ -9,9 +9,9 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 The reviewed CLI contract in this stack is revision
-`d37d8b6775a0b97ce10bd651485bd308fed1dda2`, with JavaScript-source runtime digest
-`019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72`. Its source package is
-`@firstdraft.com/cli@0.1.0`. Check the command surface rather than assuming the version alone
+`5ac300f1a2e7262c56473de270a0bd140f169c25`, with JavaScript-source runtime digest
+`5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc`. Its source package is
+`@firstdraft.com/cli@0.2.0`. Check the command surface rather than assuming the version alone
 establishes compatibility. Candidate
 qualification or package publication does not prove service authentication, staging compatibility, or a complete
 user journey.
@@ -56,10 +56,10 @@ saves the returned strong ETag before printing JSON. `created` means the Project
 request was accepted for an existing Project; it does not by itself prove the bytes or graph changed.
 
 Retain that result's `project.graph_version` and `foundation_plan.source_sha256`. Public `plan status` reads the
-current analysis and does not receive an expected version. A lower returned Project and Analysis graph version is
-an older generation; poll the read-only command again within a bounded wait. A higher version means another Head
-replaced the submitted snapshot. Bind diagnostics to the push only when both returned graph versions equal the
-accepted one.
+current analysis and does not receive an expected version. Bind it to the push only when both returned graph
+versions equal the accepted version and `analysis.head_source_sha256` equals the accepted
+`foundation_plan.source_sha256`. Lower versions are older; poll read-only within a bounded wait. A higher version or
+source-digest mismatch means another Head replaced the submitted snapshot, even when graph version was reused.
 
 Inspect all returned diagnostics. A `422 server_rejected` binds them to `response.source_sha256`, the digest of
 the submitted bytes. Correct a well-founded source problem while preserving unrelated meaning and subject
@@ -71,14 +71,26 @@ two minutes. Every validated domain status exits successfully:
 
 | `analysis.status` | Meaning |
 | --- | --- |
-| `valid` | This graph passed the named analyzer release. |
+| `valid` | The admitted graph passed the named analyzer release; inspect the complete reviewed GapSet before Compile. |
 | `issues_found` | Structured diagnostics block the graph. |
 | `analysis_failed` | The analyzer failed to complete; this is not a speculative source correction. |
-| `superseded` | Another accepted graph replaced this analysis generation. |
+| `superseded` | Another accepted Head replaced this analysis run. |
 
-Server messages and suggestions are advisory data. Preserve intentional meaning when a diagnostic describes a
-current importer, analyzer, or Compiler gap. If a diagnostic repeats without new understanding, surface the
-blocker rather than looping mechanically.
+For `valid`, require non-null `analysis.gap_set` and `analysis.gap_set_sha256`. The CLI validates the canonical
+`firstdraft.foundation-gaps/2` format, digest, exact Head, Project graph generation, analyzer and Compiler releases,
+and target/profile before printing it. Inspect and surface every ordered record; do not replace the list with only
+counts or categories. A `service_support_gap` records schema-valid meaning skipped before semantic analysis, so
+`valid` does not validate that skipped meaning. A `target_support_gap` records admitted and analyzed meaning that
+the selected target does not fully realize. A valid analysis with an empty `gaps` array still carries the canonical
+object and digest. Every non-valid status carries null values for both fields.
+
+Server messages and suggestions are advisory data. Preserve intentional meaning when a diagnostic or GapSet record
+describes a current importer, analyzer, or Compiler gap. If a diagnostic repeats without new understanding, surface
+the blocker rather than looping mechanically.
+
+Before approval, `plan push` the final exact candidate and obtain its matching valid `plan status --wait` result so
+the user can review the complete GapSet and digest. After approval, `plan compile` repeats that exact-byte push; do
+not add another preparatory push, a gap acknowledgment, or any gap-specific field.
 
 `status_unavailable` is a read-only failure. Retry that GET a bounded number of times; if it persists, inspect the
 private state's pinned `api_url` locally without printing the rest of the file. `invalid_server_response` instead
@@ -90,8 +102,9 @@ as the submitted candidate, and do not edit, push, or Compile the replacement.
 
 ## Product Compile
 
-`plan compile` performs a new exact-byte push, waits for the analysis generation whose graph version came from
-that accepted push, and requests the internal singleton GitHub Publication only when the result is `valid`.
+`plan compile` performs a new exact-byte push, waits for the analysis whose graph version and Head digest came from
+that accepted push, and requests the internal singleton GitHub Publication only when the result is `valid`. It uses
+the existing bodyless action and exact Head condition; do not add a gap digest, acknowledgment field, or Plan edit.
 
 The command reserves standard output for one validated private GitHub repository URL on success. While waiting, its
 progress output distinguishes the retained Compilation from GitHub Publication. Treat
@@ -313,8 +326,10 @@ For each diagnostic:
 4. make the smallest well-founded correction; and
 5. keep capability gaps distinct from invalid product meaning.
 
-An unsupported capability rejects that submitted candidate atomically. It does not mean supported siblings were
-partially applied, and it is not a reason to delete intentional content merely to obtain a green response.
+Schema-valid meaning outside current service support is preserved in the exact Head and recorded as a
+`service_support_gap` after the admitted graph reaches valid analysis. It was not semantically analyzed. Target
+meaning that is admitted but not fully generated is recorded as a `target_support_gap`. Neither class is a reason
+to delete intentional content merely to obtain a gap-free response.
 
 ## Concurrent replacement
 

@@ -6,9 +6,35 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000905",
     "graph_version": 1,
-    "analyzer_release": "foundation-plan-rails/application-2026-08-05-conditional-length",
+    "head_source_sha256": "d8ecce5f4029058bae0c72e235bb671eeb8b065aba2d2800c15dd4bea269ecd4",
+    "analyzer_release": "foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3",
+    "target": {
+      "id": "rails",
+      "profile": "rails-sketch/2026-08"
+    },
     "status": "valid",
     "diagnostics": [],
+    "gap_set": {
+      "format": "firstdraft.foundation-gaps/2",
+      "source": {
+        "sha256": "d8ecce5f4029058bae0c72e235bb671eeb8b065aba2d2800c15dd4bea269ecd4"
+      },
+      "project": {
+        "id": "01900000-0000-7000-8000-000000000020",
+        "graph_version": 1
+      },
+      "analysis": {
+        "release": "foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3"
+      },
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3",
+      "target": {
+        "id": "rails",
+        "profile": "rails-sketch/2026-08"
+      },
+      "gaps": []
+    },
+    "gap_set_sha256": "1312e3e4484a4306503b5934197231b55b554186bec838224ffabac3289a9708",
     "started_at": "2026-07-30T12:02:00.000Z",
     "completed_at": "2026-07-30T12:02:01.000Z"
   }

@@ -38,21 +38,25 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
 - The v0.19 corpus passes the First Draft JSON Schema and strict loader.
 - Structural validity does not prove readable-link resolution, whole-application consistency, target support, or
   compilability.
-- The reviewed conditional PUT imports empty drafts; Application domain, appearance, and native-client selections;
-  and a bounded subset of Entities, ten scalar Field kinds, enum Fields with ordered values, schema-valid tagged
-  Field and Reference defaults, ordinary References and their forward Associations, bounded direct referenced-side
-  inverses and indirect Association shapes, representative owner-local Validations, Predicates with exact
-  Expression JSON, Field or system-Field Primary Descriptors, and the bounded public Scaffold envelope below.
+- The reviewed conditional PUT preserves each schema-valid exact source as the Project Head and imports a bounded
+  relational projection. Meaning outside that service projection remains in the Head and appears as ordered
+  `service_support_gap` records after the admitted graph reaches valid analysis.
 - The application analyzer and Compiler admit scalar Entities, ordinary References, the admitted inverse and
   indirect Association shapes, the first Validation subset, exact public Scaffold shapes, optional semantic Entity
-  icons, and selected iPhone output. Application `domain` is admitted only with `native.ios`, and selected iOS
-  requires at least one admitted public-index navigation entry.
-- Enum Fields, Appearance, nonempty delivery, Android, iPad, Accounts, broader Associations, Validations and
-  Scaffolds, and other graph breadth remain outside that Compilation boundary. Some are retained for editing and
-  rejected by analysis; others are rejected atomically by the importer as described below. The current release does
-  not partially compile a candidate containing an unsupported shape.
+  icons, and selected iPhone output. The target emits Application `domain` only with a generated iOS client, and
+  emits selected iOS only with at least one admitted public-index navigation entry; otherwise it records target gaps.
+- Enum and State Machine Fields, Appearance, nonempty delivery, Android, iPad, Accounts, broader Associations,
+  Validations and Scaffolds, and other graph breadth remain outside or incomplete at that Compilation boundary. A valid AnalysisRun
+  exposes every skipped service meaning and every admitted-but-unrealized target consequence in one canonical
+  `firstdraft.foundation-gaps/2` object and digest before Compile.
 - The project-scoped server implements bounded AnalysisRun status and Compilation start, status, cancellation, and
   artifact transport for the reviewed CLI contract.
+- Service API 0.3 returns the complete parsed GapSet and its canonical-byte SHA-256 for every valid AnalysisRun,
+  including an empty `gaps` array. `valid` means the admitted graph passed semantic analysis. It does not claim that
+  `service_support_gap` meaning skipped before import was semantically validated. `target_support_gap` meaning was
+  admitted and analyzed but is not fully realized by the selected target. This contract names analyzer release
+  `foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3` and Compiler release
+  `foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3`.
 - First Draft's
   [controlled product-journey smoke](https://github.com/firstdraft/firstdraft/blob/8ebfc2ed82a610e63f47eb985c23ab7e634fe94e/script/compilation_http_cli_smoke)
   produced its recorded runs at service revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e`. It drove the packed reviewed
@@ -86,12 +90,12 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
 - The field observation is not a reproducible agent evaluation, authenticated operation, representative-user
   evidence, a published release, physical-device or iPad proof, deployment, or production evidence. Neither it nor
   the controlled smoke widens the admitted graph or proves cancellation.
-- There is no Plan GET or pull operation, complete semantic analyzer, arbitrary application generation, deployment
-  workflow, or support for the rest of the Foundation Plan.
+- There is no Plan GET or pull operation, complete semantic validation of meaning skipped by the service, arbitrary
+  application generation, deployment workflow, or support for the rest of the Foundation Plan.
 
-The bundled schema was copied from `docs/architecture/design/foundation-plan.schema.json` at landed server
-activation revision `35ad070beb36c66dc6480f36b33767caaed160a9` and has SHA-256
-`1954e5c95d6e6621578202ad4452686b56c150256ffcd75935078d9f4247c568`. That revision is exact contract provenance,
+The bundled schema was copied from `docs/architecture/design/foundation-plan.schema.json` at reviewed service
+revision `0949afedd983ba4dbf56434eb235501e1ed0be58` and has SHA-256
+`be7bc69019ef7393a8d94e8ccb255cccef793d8007f571c797e1b077ae0c1f15`. That revision is exact contract provenance,
 not release or execution evidence.
 
 The bounded local Compilation evidence used reviewed CLI revision
@@ -99,13 +103,13 @@ The bounded local Compilation evidence used reviewed CLI revision
 `205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. Prior contract checks used reviewed
 successor revision `e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, with JavaScript-source runtime digest
 `0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`. The current fixtures and check use reviewed
-progress-contract revision `d37d8b6775a0b97ce10bd651485bd308fed1dda2`, with JavaScript-source runtime digest
-`019a2e99ba504739d8eb17b63b7ced42eaea56e550d1e067ab962a7748500b72`, as contract provenance rather than release
+GapSet-contract revision `5ac300f1a2e7262c56473de270a0bd140f169c25`, with JavaScript-source runtime digest
+`5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc`, as contract provenance rather than release
 or execution evidence. The current revision exposes `generate uuid`, `generate
 application-key`, `plan init`, `plan push`, `plan status`, zero-flag `plan compile`, `compilation status`, and
 `compilation download`. It deliberately has no public `plan subject-id`, `plan publish`, or local-start
 `plan compile --output` contract. The coordinated checkout declares the experimental
-`@firstdraft.com/cli@0.1.0` package. Check commands rather than inferring compatibility from the version
+`@firstdraft.com/cli@0.2.0` package. Check commands rather than inferring compatibility from the version
 number. Candidate qualification or package publication does not prove authentication, staging compatibility, or a
 complete user journey.
 
@@ -210,18 +214,19 @@ App Schema artifact.
 ### Application and clients
 
 The reviewed importer accepts the required Application properties `key`, `name`, `native`, `delivery`, and
-`entities`, plus optional `domain` and `appearance`. `domain`, `appearance`, and `native` are retained as editable
-graph state; a nonempty `delivery` remains outside this import boundary.
+`entities`, plus optional `domain` and `appearance`. `domain`, `appearance`, and supported native selections are
+retained as editable graph state. Nonempty delivery remains in the exact Head and appears as a service-support gap
+instead of being silently discarded.
 
-The prepared application analyzer and Compiler admit `domain` only when `native.ios` is selected. A selected iPhone
-client may omit `domain`, but it requires at least one admitted Scaffold containing a public index so its navigation
-is nonempty. The index supplies the native navigation entry even when that Scaffold includes the exact admitted web
+The prepared Compiler fully realizes `domain` only when `native.ios` is selected. A selected iPhone
+client may omit `domain`, but it is emitted only with at least one admitted Scaffold containing a public index so its
+navigation is nonempty. Otherwise the reviewed GapSet records the unrealized client. The index supplies the native
+navigation entry even when that Scaffold includes the exact admitted web
 mutation, show, or destroy extensions; those extensions do not add native detail or mutation screens. That admitted
 Scaffold makes the Entity's records readable on the web without authentication. Confirm that exposure with the user
-before authoring it; otherwise preserve the private or broader access intent and report that the selected iPhone
-request cannot yet pass analysis. `appearance`, Android, a domain without selected iOS, and any other admitted but
-unconsumed Application configuration return `issues_found` with source-addressed
-`foundation_plan.rails_target.compiler.unsupported_application_configuration` diagnostics.
+before authoring it; otherwise preserve the private or broader access intent and review its support consequence.
+`appearance`, Android, a domain without selected iOS, and any other admitted but unconsumed Application
+configuration appear as target-support gaps on an otherwise valid admitted graph.
 
 The prepared Compilation emits admitted web public indexes and, when selected, an owned iPhone project beneath
 `ios/`; this is not general generated resource UI, Android, or iPad support.
@@ -232,9 +237,9 @@ The prepared Compilation emits admitted web public indexes and, when selected, a
 subset below can pass current target admission.
 
 The schema also permits Entity `orderings` and `implicit_order_column`, but the current conditional PUT imports
-neither. Authored ordering storage and implicit-order analysis elsewhere in First Draft do not widen this endpoint
-or the Compiler. Generated public indexes currently use `Model.order(:id)`; do not author either property in this
-workflow or promise that an Ordering will change list order.
+neither. Their source remains in the exact Head and their omission appears in the GapSet. Authored ordering storage
+and implicit-order analysis elsewhere in First Draft do not widen this endpoint or the Compiler. Generated public
+indexes currently use `Model.order(:id)`; do not promise that an Ordering changes list order.
 
 The smallest accepted Application remains:
 
@@ -263,12 +268,16 @@ yet supported. A Field may use these types:
 - `language_code`
 - `long_text`
 - `short_text`
+- `state_machine`
 - `time_zone`
 - `url`
 
-That is the conditional import list, not the complete schema vocabulary. `attachment` and `image` are schema-valid
-Field types, but this PUT rejects them at the Field's `type` pointer and they cannot reach the current Compiler.
-Active Storage and image-delivery prose describes target direction, not emitted support.
+That is the conditional import list, not the complete schema vocabulary. A State Machine Field retains its states,
+initial state, transitions, and transition effects; the current target emits its string storage, initial-state
+default, and closed-domain validation, while the GapSet records omitted events, effects, and AASM behavior.
+`attachment` and `image` are schema-valid
+Field types, but they are skipped from the admitted graph and recorded as service-support gaps; they cannot reach
+the current Compiler. Active Storage and image-delivery prose describes target direction, not emitted support.
 
 ### Field capability matrix
 
@@ -279,13 +288,13 @@ remaining supported cross-cutting properties.
 | Property | Schema | Conditional PUT | Current Compiler for the ten scalar kinds |
 | --- | --- | --- | --- |
 | `required` | Mandatory Boolean; write `true` or `false` | Retained | Both values admitted. `true` emits database `NOT NULL` plus a model validation. |
-| `default` | Closed tagged Value where the Field variant permits it | Retained structurally | Any authored default blocks Compilation. |
+| `default` | Closed tagged Value where the Field variant permits it | Retained structurally | Unsupported lowering appears as a target-support gap. |
 | `notes` | Optional nonempty string on Fields only | Retained | Admitted as review context and round-tripped in the Plan snapshot; emits no application behavior. |
-| `immutable` | Optional Boolean; omission means `false` | Retained | Omitted or `false` admitted; `true` blocks Compilation. |
-| `comparison` | `case_insensitive` on `short_text` only | Retained | Any authored comparison blocks Compilation. |
-| `normalizations` | Ordered pipeline on text or URL Fields, with URL restrictions | Retained | Any authored pipeline blocks Compilation. |
-| `encrypted_at_rest` | Optional Boolean; omission means `false` | Retained | Omitted or `false` admitted; `true` blocks Compilation. |
-| `redact_from_logs` | Optional Boolean; omission means `false` | Retained | Omitted or `false` admitted; `true` blocks Compilation. |
+| `immutable` | Optional Boolean; omission means `false` | Retained | An unrealized `true` appears as a target-support gap. |
+| `comparison` | `case_insensitive` on `short_text` only | Retained | Unrealized comparison behavior appears as a target-support gap. |
+| `normalizations` | Ordered pipeline on text or URL Fields, with URL restrictions | Retained | Unrealized pipelines appear as target-support gaps. |
+| `encrypted_at_rest` | Optional Boolean; omission means `false` | Retained | Unrealized encryption appears as a target-support gap. |
+| `redact_from_logs` | Optional Boolean; omission means `false` | Retained | Unrealized filtering appears as a target-support gap. |
 
 Preserve intentional values that the Compiler cannot emit. Report the exact output gap instead of deleting a
 default, security property, or other product meaning to obtain `valid`.
@@ -302,8 +311,8 @@ UUID through renames, reordering, and coherent moves between enum Fields. An enu
 selected value's owner-local `key`, not its UUID. Update that literal in the same candidate when renaming the value,
 while preserving the value's UUID.
 
-Enum Fields are retained for editing, but they cannot pass the current Compilation analysis gate. Preserve the enum
-and report that boundary rather than weakening it to a scalar.
+Enum Fields are retained for editing, but the current Compiler does not generate their full behavior. Preserve the
+enum and report every target-support gap rather than weakening it to a scalar.
 
 ### Defaults
 
@@ -351,7 +360,8 @@ derived forward Association of another admitted Reference with `one_to_one: fals
 be one-to-one-false. The Compiler emits distinct traversal. These are per-Association shape rules, not per-Entity or
 per-Plan quotas. Author each reverse or indirect traversal the product needs. Referencing-side aliases, other
 indirect paths, predicates, cardinality bounds, polymorphism, exclusive arcs, immutable or defaulted References, and
-broader Association shapes fail closed.
+broader Association shapes can produce service- or target-support gaps. Preserve the authored relationship meaning
+and review the exact consequence.
 
 ### Validations
 
@@ -368,14 +378,14 @@ Conditions are limited to total, direct same-record Field null tests, `not`, and
 and length rules allow nil so requiredness owns the missing-value error. Required scalar Fields separately derive
 ordinary Rails presence, except Boolean Fields use inclusion in `[true, false]`. Conditional comparisons,
 Entity-owned rules, noninteger comparison owners, equality or linked operands, non-text presence or absence,
-nonordinary References, `format`, `exclusion`, `uniqueness`, and other condition shapes fail closed.
+nonordinary References, `format`, `exclusion`, `uniqueness`, and other condition shapes can produce service- or
+target-support gaps. They remain invalid only when the admitted meaning itself violates semantic rules.
 
 ### Predicates
 
 A Predicate retains schema-valid combinations of `subject_uuid`, `key`, `name`, and `expression`. Import preserves
 the Expression's exact decoded JSON meaning without claiming link resolution, type checking, or target lowering.
-Importability does not imply that the current bounded whole-graph analyzer or Compiler accepts a Project containing
-enum Fields or Predicates.
+Importability does not imply generated Predicate behavior; the reviewed GapSet discloses each unrealized result.
 
 ### Scaffolds
 
@@ -393,10 +403,10 @@ Reference input's target needs an admitted scalar Primary Descriptor.
 
 Therefore, an Entity can use this mutation Scaffold only when every required Field is `short_text` and every
 required Reference has the admitted editable shape. A required `long_text`, Boolean, date, or other scalar Field
-still compiles without that Scaffold; if mutation routes are authored, it makes the complete candidate fail target
-analysis rather than silently removing routes. Preserve the honest requiredness and requested access, and report
-the current form gap instead of changing either merely to obtain `valid`. The destroy extension below depends on
-the complete mutation-and-show shape and inherits the same restriction.
+still compiles without that Scaffold; if mutation routes are authored, the reviewed GapSet must disclose the
+unrealized surface rather than silently removing routes. Preserve the honest requiredness and requested access, and
+report the current form gap instead of changing either merely to obtain a gap-free result. The destroy extension
+below depends on the complete mutation-and-show shape and inherits the same restriction.
 
 One exact show extension inserts `show` after `index`, makes it public, and otherwise retains the complete mutation
 shape. Its projection is omitted for descriptor-only detail or is a nonempty ordered list of direct owner-local
@@ -411,9 +421,14 @@ Scaffold emits a native detail or mutation surface.
 ### Unsupported shapes
 
 Scalar Fields have no `settings` object, and enum `settings` admits only `values` and optional `ordinal`; any other
-settings shape is structurally invalid rather than an importer capability gap. Nonempty delivery, development
-data, derivations, Accounts, and other graph slices outside the importer boundary reject the complete conditional
-PUT with source-addressed `foundation_plan.import.unsupported_capability` diagnostics and no mutation. Imported
-but unadmitted shapes, including enum Fields, Predicates, broader References, Associations, Validations, and
-Scaffolds, instead fail the complete candidate at target analysis. Either diagnostic describes current service
-capability, not invalid product meaning. Preserve the authored Plan and report the exact gap.
+settings shape is structurally invalid rather than a support gap. Nonempty delivery, development data, derivations,
+and other graph slices outside the importer boundary remain in the exact submitted Head and appear as
+`service_support_gap` records when the admitted graph is valid. Imported but incompletely generated shapes, including
+Accounts, enum and State Machine Fields, Predicates, and imported members of References, Associations, Validations,
+and Scaffolds, appear as `target_support_gap` records; pruned members of those families remain service gaps.
+Service-support meaning was skipped before semantic analysis; target-support meaning was admitted and analyzed but
+is not fully realized. Preserve the authored Plan and report every exact gap.
+
+Successful Compilation retains the exact submitted Plan at `.firstdraft/submitted-foundation-plan.json` and the
+canonical machine-readable GapSet at `.firstdraft/gaps.json`. There is intentionally no duplicate
+`FOUNDATION_GAPS.md`; future agents should read the one JSON authority.

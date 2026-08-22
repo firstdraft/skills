@@ -66,8 +66,8 @@ Establish enough product meaning to answer these questions for the included firs
 
 The ambiguity matrix guides the dialogue; it is not a one-message checklist. The agent may edit the local Plan
 incrementally and may submit the current whole-file snapshot for diagnostics whenever useful. A malformed,
-incomplete, or invalid snapshot may produce descriptive diagnostics. Compilation still receives one complete
-candidate snapshot accepted by whole-graph analysis.
+incomplete, or invalid snapshot may produce descriptive diagnostics. Compilation receives one exact candidate
+snapshot, its admitted graph after whole-graph analysis, and the matching reviewed GapSet.
 
 One complete candidate is ready for read-back when it expresses a coherent, honest first-release slice; every
 included Entity, Field, and Reference has enough meaning to represent that slice without silent guesses; access and
@@ -91,9 +91,9 @@ Do not infer uniqueness from a label, presence from a form, or immutability from
 matter.
 
 Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
-order carries semantic rank rather than presentation order alone. The current importer retains enums for editing,
-but they cannot pass the bounded Compilation analysis gate; preserve the product meaning and report that capability
-gap rather than replacing an enum with a scalar.
+order carries semantic rank rather than presentation order alone. The current Compiler does not generate enum
+behavior; preserve the product meaning and review its target-support gap rather than replacing an enum with a
+scalar.
 
 The current Compiler admits unconditional integer-literal range comparisons on stored integer Fields;
 unconditional or conditional text length; and conditional text or ordinary-Reference presence and absence. A
@@ -122,8 +122,8 @@ The current Compiler admits ordinary single-target References with Boolean `one_
 with the forward traversal of another admitted Reference only when both underlying References have
 `one_to_one: false`. These are per-Association shape rules, not a quota. Aliases, broader indirect paths, predicates,
 cardinality bounds, polymorphism, exclusive arcs, immutable or defaulted References, and other relationship shapes
-fail closed. A one-to-one Reference may compile as storage, but current Scaffold forms cannot accept it as an input.
-Preserve broader product meaning and report the capability gap.
+can produce service- or target-support gaps. A one-to-one Reference may compile as storage, but current Scaffold
+forms cannot accept it as an input. Preserve broader product meaning and report the reviewed gap.
 
 ## Add behavior deliberately
 
@@ -145,38 +145,42 @@ A second extension inserts public show into that complete mutation shape, option
 owner-local scalar Fields, and may return successful mutations to the mutation record's show page. A final variant
 appends public destroy and returns only to the same-Entity index. Read the Foundation Plan reference for the exact
 coupled shapes. Standalone show, Association or nested projections, non-public authorization, broader inputs or
-return paths, and other route combinations fail closed. Do not silently narrow a broader requested Scaffold merely
-to make it compilable.
+return paths, and other route combinations can remain ungenerated. Do not silently narrow a broader requested
+Scaffold merely to make it compilable; preserve it and review the exact GapSet consequence.
 
-Select `native.ios` only when the user wants the bounded owned iPhone project. It requires at least one admitted
-public-index Scaffold for navigation. Application `domain` is admitted by analysis only with selected iOS; selected
-iOS may omit it. An Entity's optional semantic `icon` informs shared web and iPhone navigation, with a target
-fallback when omitted. The only admitted navigation Scaffold is public: adding it makes that Entity's records
+Select `native.ios` only when the user wants the bounded owned iPhone project. The target emits it only with at least
+one admitted public-index Scaffold for navigation; otherwise the valid run records an unrealized-client target gap.
+The target fully realizes Application `domain` only with generated iOS; selected iOS may omit it. An Entity's
+optional semantic `icon` informs shared web and iPhone navigation, with a target
+fallback when omitted. The only generated navigation Scaffold is public: adding it makes that Entity's records
 readable on the web without authentication. Confirm that exposure with the user before authoring it; otherwise
-preserve the private or broader access intent and report that the selected iPhone request cannot yet pass analysis.
-Do not add a public index merely to obtain `valid`, and do not silently decline the requested iPhone client.
-Appearance and Android are retained for editing but block Compilation at analysis; nonempty delivery is not
-importable. Accounts, authentication behavior, notifications and push, deployment, and iPad remain outside the
-public Compiler path. Preserve requested product meaning and report the capability boundary rather than removing
-intentional facts to obtain `valid`.
+preserve the private or broader access intent and review the resulting support gap. Do not add a public index merely
+to obtain a gap-free result, and do not silently decline the requested iPhone client. Appearance, Android, nonempty
+delivery, Accounts, and authentication behavior are schema-valid but outside or incomplete in the public Compiler
+path; preserve them and report every corresponding GapSet record. Requirements without a v0.19 shape, including
+notification definitions, deployment, and iPad, remain in the decision ledger and semantic read-back as currently
+unplannable rather than being invented as Plan JSON or promised a GapSet record.
 
 ## Preserve intent during diagnostics
 
 Fix the smallest well-founded source problem. Preserve unrelated subjects, ordering, and stable identity. If a
 diagnostic reveals an ambiguous product decision, ask the user rather than optimizing for a green response.
 
-In particular, do not remove or weaken modeled content solely because the importer reports
-`foundation_plan.import.unsupported_capability`. Preserve the local Plan and report the exact server gap.
+In particular, do not remove or weaken modeled content solely because the reviewed GapSet reports a
+`service_support_gap` or `target_support_gap`. Preserve the local Plan and report the exact pointer and consequence.
 
 ## Prepare the pre-Compile semantic read-back
 
 Immediately before the first Compile that could reach Publication, reread the exact local Plan and give a compact
 plain-language semantic summary. Cover the project-relative Plan path and SHA-256; the application scope; Entities
-and their material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; material
-assumptions, exclusions, and capability gaps; and the execution consequence that Compile does not deploy while
-terminal successful Publication is intended to create one private GitHub repository. Use the order that best
-communicates this candidate. Do not enumerate absent subject families or recite immaterial defaults and empty
-categories. Ask the user to correct or explicitly approve the exact model.
+and their material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; and material
+assumptions and exclusions. Show the matching valid AnalysisRun's GapSet digest and every ordered record, including
+its classification, code, kind, status, reason, consequence, location, and cause when present. Explain that service-support gaps were
+skipped before semantic analysis and target-support gaps were not fully realized. Also state that Compile does not
+deploy while terminal successful Publication is intended to create one private GitHub repository. Use the order
+that best communicates this candidate. Do not enumerate absent subject families or recite immaterial defaults and
+empty categories. Ask the user to correct or explicitly approve the exact model and reviewed support delta without
+requiring a digest echo or gap-specific field.
 
 The read-back reviews the staged candidate; it is not a last-minute authoring pass. Preserve existing subject
 identity and present concerns as warnings. Do not require a candidate edit without a user correction, a confirmed
@@ -185,4 +189,5 @@ semantic delta, then obtain approval of that changed candidate.
 
 Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning to make import or analysis
 green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a
-product-scope decision. Otherwise preserve the meaning, stop before Compile, and report the capability gap.
+product-scope decision. Otherwise preserve the meaning and, after approval, use the existing supplied Compile
+action without adding ceremony.

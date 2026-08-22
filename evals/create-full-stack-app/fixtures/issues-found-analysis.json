@@ -6,7 +6,13 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000901",
     "graph_version": 1,
-    "analyzer_release": "foundation-plan-rails/application-2026-08-05-conditional-length",
+    "head_source_sha256": "af3716175268aa5d50d72c28315e5d53a692db12deb8bb17c311ab2aae285fe7",
+    "analyzer_release": "foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3",
+    "target": {
+      "id": "rails",
+      "profile": "rails-sketch/2026-08"
+    },
     "status": "issues_found",
     "diagnostics": [
       {
@@ -25,6 +31,8 @@
         "suggestions": []
       }
     ],
+    "gap_set": null,
+    "gap_set_sha256": null,
     "started_at": "2026-07-30T12:00:00.000Z",
     "completed_at": "2026-07-30T12:00:01.000Z"
   }

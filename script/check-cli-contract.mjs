@@ -47,7 +47,7 @@ assert.deepEqual(
     component: "cli",
     version: cliPackageVersion,
     requires: {
-      api_contract: [">= 0.2.0", "< 0.3.0"],
+      api_contract: [">= 0.3.0", "< 0.4.0"],
       foundation_plan_formats: [foundationPlanFormat],
     },
   },
@@ -65,7 +65,12 @@ try {
     pathToFileURL(path.join(cliDirectory, "src", "compilation-artifact.js"))
       .href
   );
-  assert.equal(MAX_ARTIFACT_BYTES, 16 * 1024 * 1024);
+  const { MAX_PLAN_STATUS_RESPONSE_BYTES } = await import(
+    pathToFileURL(path.join(cliDirectory, "src", "commands", "plan-status.js"))
+      .href
+  );
+  assert.equal(MAX_ARTIFACT_BYTES, 128 * 1024 * 1024);
+  assert.equal(MAX_PLAN_STATUS_RESPONSE_BYTES, 128 * 1024 * 1024);
 
   const context = {
     runCli,

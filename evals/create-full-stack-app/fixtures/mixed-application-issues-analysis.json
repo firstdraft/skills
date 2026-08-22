@@ -6,20 +6,15 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000907",
     "graph_version": 1,
-    "analyzer_release": "foundation-plan-rails/application-2026-08-05-conditional-length",
+    "head_source_sha256": "01480bb4dad56e8a7ee42dc3b77412dec7b4e8b62c197795727015a8e96ddd05",
+    "analyzer_release": "foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3",
+    "target": {
+      "id": "rails",
+      "profile": "rails-sketch/2026-08"
+    },
     "status": "issues_found",
     "diagnostics": [
-      {
-        "code": "foundation_plan.rails_target.compiler.unsupported_application_configuration",
-        "severity": "error",
-        "message": "Application Appearance is not emitted by the current Rails Compiler release.",
-        "location": {
-          "source_pointer": "/application/appearance"
-        },
-        "subject": null,
-        "related_locations": [],
-        "suggestions": []
-      },
       {
         "code": "foundation_plan.entity.primary_descriptor_field_optional",
         "severity": "error",
@@ -40,6 +35,8 @@
         "suggestions": []
       }
     ],
+    "gap_set": null,
+    "gap_set_sha256": null,
     "started_at": "2026-07-30T12:04:00.000Z",
     "completed_at": "2026-07-30T12:04:01.000Z"
   }
