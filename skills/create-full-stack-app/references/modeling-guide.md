@@ -40,7 +40,7 @@ mixed product that needs both meanings. Do not collapse that branch into only in
 For an underspecified opening request, ask only about intended product meaning and name deferred product areas;
 wait for the user's answer before discussing target support or capability gaps unless feasibility was itself part
 of the request. Do not promote a common use case into an assumption. When target support later matters, ask for
-desired access before describing the current public Scaffold boundary. Keep one candidate Plan: do not maintain a
+desired access before describing the current Account, Policy, Web, and native boundaries. Keep one candidate Plan: do not maintain a
 parallel flattened or capability-friendly shape merely so one version can Compile.
 
 Track consequential choices as:
@@ -91,15 +91,17 @@ Do not infer uniqueness from a label, presence from a form, or immutability from
 matter.
 
 Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
-order carries semantic rank rather than presentation order alone. The current Compiler does not generate enum
-behavior; preserve the product meaning and review its target-support gap rather than replacing an enum with a
-scalar.
+order carries semantic rank rather than presentation order alone. The current Compiler emits required enum string
+storage and model inclusion. It emits a compatible literal-key default only when that required enum declares
+semantic rank with `settings.ordinal: true`. It does not emit a Rails `enum`, database membership constraint, or
+general rank semantics; optional enums and unsupported consumers remain gaps. Preserve the product meaning and
+report the reviewed consequences rather than replacing an enum with a scalar.
 
-The current Compiler admits unconditional integer-literal range comparisons on stored integer Fields;
-unconditional or conditional text length; and conditional text or ordinary-Reference presence and absence. A
-condition is limited to total direct same-record Field null tests and Boolean combinations. Treat the broader schema
-menu as product meaning that may exceed current target support; see the Foundation Plan reference before promising
-Compilation.
+The current Compiler admits bounded integer-literal range comparisons, text length, positive short-text format,
+conditional text or ordinary-Reference presence and absence, and selected unconditional Entity uniqueness with a
+matching index. A condition is limited to total direct same-record Field null tests and Boolean combinations. Treat
+the broader schema menu as product meaning that may exceed current target support; see the Foundation Plan reference
+before promising Compilation.
 
 ## Model relationships
 
@@ -116,14 +118,13 @@ Do not author the Reference's same-key forward Association. Add a referenced-sid
 needs a meaningful reverse traversal. Add an indirect Association only when the composed traversal itself has a
 stable product name or behavior.
 
-The current Compiler admits ordinary single-target References with Boolean `one_to_one`, omitted or false
-`immutable`, and their derived forward traversals. It admits an unqualified referenced-side `has_one` when
-`one_to_one` is true and `has_many` otherwise. An indirect collection may compose an admitted `has_many` inverse
-with the forward traversal of another admitted Reference only when both underlying References have
-`one_to_one: false`. These are per-Association shape rules, not a quota. Aliases, broader indirect paths, predicates,
-cardinality bounds, polymorphism, exclusive arcs, immutable or defaulted References, and other relationship shapes
-can produce service- or target-support gaps. A one-to-one Reference may compile as storage, but current Scaffold
-forms cannot accept it as an input. Preserve broader product meaning and report the reviewed gap.
+The current Compiler emits a bounded single-target Reference slice with Boolean `required`, `one_to_one`, and
+`immutable`, plus its derived forward traversal and supported direct inverses. The supported catalog also includes
+selected required-immutable inverses and several direct, predicated, indirect, and nested-through consumers; these
+are per-relationship shape rules, not a quota. Multi-target realizations, aliases, defaults, broader paths,
+cardinality, polymorphism, exclusive arcs, and unsupported consumers can remain gaps. Scaffold input support is a
+separate consumer decision from Reference storage. Preserve broader product meaning and inspect the matching GapSet
+rather than applying an older blanket relationship limit.
 
 ## Add behavior deliberately
 
@@ -136,30 +137,25 @@ forms cannot accept it as an input. Preserve broader product meaning and report 
 Do not add a realization choice when the target profile has only one supported lowering. Do not repeat derived
 Capabilities or prerequisites as authored lists.
 
-The smallest current Scaffold subset has `resource_routes: ["index"]` and a public index. One exact extension adds
-public create and update with short-text Field inputs or forward-Association inputs over admitted ordinary
-References, plus same-Entity index returns. Optional and required References may both be inputs; every required
-Field and Reference must appear in `create.inputs`. A Reference-owned conditional-presence Validation can fit when
-its optional ordinary Reference has `one_to_one: false` and its forward Association appears in both input lists.
-A second extension inserts public show into that complete mutation shape, optionally projects ordered direct
-owner-local scalar Fields, and may return successful mutations to the mutation record's show page. A final variant
-appends public destroy and returns only to the same-Entity index. Read the Foundation Plan reference for the exact
-coupled shapes. Standalone show, Association or nested projections, non-public authorization, broader inputs or
-return paths, and other route combinations can remain ungenerated. Do not silently narrow a broader requested
-Scaffold merely to make it compilable; preserve it and review the exact GapSet consequence.
+Current Web Scaffolds may select standard resource routes, direct or recursive projections, Predicate and Ordering
+consumers, cursor pagination, Field and Association inputs, server bindings, associated-create forms, and authored
+return destinations. Every request and displayed Association declares public access or a Policy binding. The exact
+Web Account/Policy slice can protect supported surfaces and provide a Web-only Account profile; unsupported Policies
+and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
+silently narrow a broader requested Scaffold or make it public merely to obtain a gap-free result.
 
-Select `native.ios` only when the user wants the bounded owned iPhone project. The target emits it only with at least
-one admitted public-index Scaffold for navigation; otherwise the valid run records an unrealized-client target gap.
-The target fully realizes Application `domain` only with generated iOS; selected iOS may omit it. An Entity's
-optional semantic `icon` informs shared web and iPhone navigation, with a target
-fallback when omitted. The only generated navigation Scaffold is public: adding it makes that Entity's records
-readable on the web without authentication. Confirm that exposure with the user before authoring it; otherwise
-preserve the private or broader access intent and review the resulting support gap. Do not add a public index merely
-to obtain a gap-free result, and do not silently decline the requested iPhone client. Appearance, Android, nonempty
-delivery, Accounts, and authentication behavior are schema-valid but outside or incomplete in the public Compiler
-path; preserve them and report every corresponding GapSet record. Requirements without a v0.19 shape, including
-notification definitions, deployment, and iPad, remain in the decision ledger and semantic read-back as currently
-unplannable rather than being invented as Plan JSON or promised a GapSet record.
+Select `native.ios` only when the user wants the bounded owned iPhone project. Ordinary public Compilation emits it
+only with at least one admitted public navigation entry; otherwise the valid run records an unrealized-client target
+gap. The target fully realizes Application `domain` only with generated iOS; selected iOS may omit it. An Entity's
+optional semantic `icon` informs shared Web and iPhone navigation, with a target fallback when omitted. Account,
+Policy, profile, detail, and mutation Web behavior does not become protected native behavior. Confirm that public
+native navigation is intentional; otherwise preserve the requested access and review the resulting support gap.
+Do not add a public index merely to obtain a gap-free result, and do not silently decline the requested iPhone
+client. Appearance theme and colors are generated while derived icon assets remain a partial gap. Nonempty delivery,
+Android, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
+v0.19 shape, including notification trigger/template definitions, deployment, and iPad, remain in the decision ledger
+and semantic read-back as currently unplannable rather than being invented as Plan JSON or promised a GapSet record.
+The authored `delivery` channel block itself remains in the Plan and receives its expected service-support gap.
 
 ## Preserve intent during diagnostics
 

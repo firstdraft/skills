@@ -7,8 +7,8 @@
     "id": "01900000-0000-7000-8000-000000000904",
     "graph_version": 2,
     "head_source_sha256": "c2e02d2ce1fac4b37bf2aece787f5e39fa7002f769091dca40d145f418952077",
-    "analyzer_release": "foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3",
+    "analyzer_release": "foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-08"

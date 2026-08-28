@@ -81,12 +81,13 @@ A dated public-install observation records Claude plugin `@firstdraft.com/claude
 CLI `@firstdraft.com/cli@0.1.0-alpha.2` as public experimental prereleases. Those immutable packages and their dated
 evidence remain historical release identities. The coordinated ordinary releases exist under protected tags:
 plugins `@firstdraft.com/claude-code@0.1.0` and `0.1.1` at `claude-v0.1.0` and `claude-v0.1.1`, and CLI
-`@firstdraft.com/cli@0.1.0` at `v0.1.0`. npm `next` and `latest` both select plugin 0.1.1; npm `next` and `latest` both
-select CLI 0.1.0. The historical public catalog at catalog-promotion revision
+`@firstdraft.com/cli@0.1.0` at `v0.1.0`. At the 2026-08-12 stable-tag observation point, npm `next` and `latest` both
+selected plugin 0.1.1, and npm `next` and `latest` both selected CLI 0.1.0. The historical public catalog at catalog-promotion revision
 `e0212cad0a89a8b0e38678e371389085f6ddc254` selected plugin 0.1.0. The public catalog promotion merged at exact
 catalog-promotion revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, selecting exact published plugin 0.1.1. A
-dated [stable-tag promotion observation](2026-08-12-stable-npm-promotion.md) reconciles that current registry
-and catalog state without rewriting the earlier observations. A separate dated
+dated [stable-tag promotion observation](2026-08-12-stable-npm-promotion.md) reconciles that 2026-08-12 registry
+and catalog state without rewriting the earlier observations. Current mutable release state belongs to
+[`RELEASING.md`](../RELEASING.md). A separate dated
 [`@firstdraft.com/claude-code@0.1.0` publication observation](2026-08-09-claude-plugin-0.1.0-release.md)
 binds its protected tag, successful publication workflow, registry identity, provenance presence, and exact
 tarball SHA-256. It records the pre-promotion point when plugin 0.1.0 was under npm `next`, with npm `latest` and the
@@ -315,9 +316,12 @@ git -C <path-to-cli-checkout> checkout --detach d38ef3e54a6476b3a91f22a17fe7bd47
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 
+Owner-authorized publication now makes that exact CLI version available under npm `next`; `latest` remains 0.1.0.
+This registry fact proves neither plugin publication/catalog selection nor service deployment.
+
 The coordinated API 0.3 projection names analyzer release
-`foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3` and Compiler release
-`foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3`.
+`foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification` and Compiler release
+`foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification`.
 
 It exercises the source runner's generators, flexible initialization, both exact-byte product Compile modes,
 phase-specific ambiguous outcomes, retained Compilation status, and historical artifact download. Direct mode starts
@@ -348,7 +352,7 @@ requires no server.
 cases.
 `initialize-empty-plan`, `author-without-local-validator`, `push-supported-enum-plan`,
 and `repair-well-founded-analysis-issue` are server-backed analysis evals. The first two create fresh state
-themselves. `validate-supported-application-intent`, `preserve-unsupported-appearance-intent`, and
+themselves. `validate-supported-application-intent`, `preserve-partially-realized-appearance-intent`, and
 `correct-source-issue-alongside-capability-gap` attach synthetic analysis results and require no server; the last
 exercises independent correction alongside a preserved capability gap.
 `replace-before-server-eval.state.json` is an unmistakably synthetic

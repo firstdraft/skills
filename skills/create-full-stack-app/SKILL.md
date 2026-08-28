@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Interviews a user, incrementally authors and revises complete First Draft Foundation Plan snapshots, submits exact Plan bytes for diagnostics, and can request the current narrow Rails web-and-iPhone Compile journey through its bundled CLI. It preserves product meaning, subject identity, private CLI state, and retained artifact provenance. Arbitrary applications, automatic deployment, Android, iPad, Accounts, notifications, and broader web or native clients are not available; preserve unsupported user intent rather than omitting it."
+description: "Experimental and in development: Incrementally authors and revises complete First Draft Foundation Plans, submits exact bytes for diagnostics, and can request the narrow Rails web-and-iPhone Compile journey through its bundled CLI. It preserves product meaning, identity, private CLI state, and artifact provenance. Bounded Web Accounts, Policies, protected Scaffolds, and required enums exist; arbitrary applications, deployment, Android, iPad, notifications, and broader clients do not."
 license: "MIT"
 ---
 
@@ -14,25 +14,22 @@ application.
 ## Current boundary
 
 This experimental workflow targets the coordinated plugin 0.2.1, CLI 0.2.1, and service-contract 0.3 contract.
-These bundled bytes do not prove that exact combination is available from the public catalog; verify availability
-independently before advising an installation change.
+CLI 0.2.1 is on npm `next`; bundled bytes do not prove matching plugin-catalog availability. Verify the complete
+combination before advising an installation change.
 
 The current Compiler is a narrow experiment, not arbitrary application generation:
 
-- It admits ten scalar Field kinds; ordinary single-target References and bounded Association shapes; a bounded
-  Validation subset including conditional text length; exact public web index, create/update, show-projection,
-  return-destination, and destroy Scaffold shapes; optional semantic icons; and an iPhone project limited to
-  index/navigation beneath `ios/`.
-- Richer web routes do not become native detail or mutation screens. Every admitted generated web route is public
-  and unauthenticated.
-- Accounts, notifications, deployment, Android, iPad, broader graph or Scaffold shapes, and broader native screens
-  remain unavailable or incomplete.
+- It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
+  Appearance-theme/color, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone slices.
+- Required enums emit string storage and inclusion. Only one with `settings.ordinal: true` emits its compatible
+  literal-key default. Rails `enum`, database membership, and general rank behavior remain unsupported.
+- Bounded Account/Policy support protects Web Scaffolds. iPhone output requires one admitted public index and stays
+  Account- and Policy-free; Web privacy does not transfer natively.
 - Preserve unsupported meaning and report every reviewed gap; never weaken it to obtain `valid`. A valid run may
   have gaps, and its artifact retains the submitted Plan and GapSet.
 
 Read the [current evidence and target boundary](references/foundation-plan-019.md#current-evidence-boundary) before
-making a support claim. One dated staging observation proves one prior OAuth/App-backed private-repository
-Publication at exact identities, not arbitrary applications, this candidate, or a current invocation.
+making a support claim.
 
 ## Load references only when needed
 
@@ -51,13 +48,15 @@ For authoring, read only the section that matches the current decision:
   subsection for [Application and clients](references/foundation-plan-019.md#application-and-clients),
   [Fields](references/foundation-plan-019.md#entities-descriptors-and-fields),
   [References and Associations](references/foundation-plan-019.md#references-and-associations),
-  [Validations](references/foundation-plan-019.md#validations), or
+  [Validations](references/foundation-plan-019.md#validations),
+  [Accounts and Policies](references/foundation-plan-019.md#accounts-and-policies), or
   [Scaffolds](references/foundation-plan-019.md#scaffolds).
 - A concrete shape: the matching [example](references/examples.md), such as the
   [bounded web/iPhone candidate](references/examples.md#bounded-web-and-iphone-application),
   [mutation Scaffold](references/examples.md#public-mutation-show-projection-returns-and-destroy),
   [scalar Fields](references/examples.md#one-entity-with-required-and-optional-scalar-fields),
-  [enum](references/examples.md#ordinal-enum-field), or
+  [enum](references/examples.md#ordinal-enum-field),
+  [Web Account and protected profile](references/examples.md#web-account-and-protected-profile), or
   [relationship](references/examples.md#stored-and-reverse-relationship).
 
 For CLI work:
@@ -139,11 +138,11 @@ one record per unique object, one record carrying a quantity, or both with disti
 proposals, not answers.
 
 For an underspecified opening request, ask only about product meaning and deferred areas. Wait for the user's reply
-before discussing target support unless feasibility was requested. Later, state the current Scaffold boundary
-precisely: the smallest public index and the exact create/update, show-projection, return-destination, and destroy
-extensions, with every generated route public and unauthenticated. If the user explicitly requires private or
-authenticated access, preserve that meaning and include its exact support consequence in review rather than
-silently substituting a public requirement.
+before discussing target support unless feasibility was requested. Later, state the current access boundary
+precisely: Web Scaffolds may be public or may use the bounded Account and Policy slices, while ordinary iPhone
+navigation remains public-only and Account-free. If the user requires private or authenticated access, model that
+meaning first and use whole-graph analysis to distinguish realized Web behavior from exact Web or native gaps;
+never silently substitute public access.
 
 Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
 incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails

@@ -182,7 +182,7 @@
         "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
         "Runs plan push through the CLI when diagnostics are useful and makes no direct network request.",
         "After a verified push, runs plan status --wait and binds the result only when both graph versions and analysis.head_source_sha256 match the accepted project.graph_version and foundation_plan.source_sha256 before branching on analysis.status.",
-        "If analysis is valid, reports the complete GapSet and digest, including every enum or default target-support consequence, while explaining that valid applies to the admitted graph and does not prove generated output.",
+        "If analysis is valid, reports the complete GapSet and digest without inventing blanket enum or default gaps; the current target supports this required ordinal enum and literal-key default unless the actual matching GapSet names a narrower unsupported consumer.",
         "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring an analysis result.",
         "Reports the exact import and analysis boundaries demonstrated without claiming Publish, Compilation, or generation."
       ],
@@ -235,8 +235,8 @@
       "should_trigger": true,
       "prompt": "The staged Plan's domain, selected iPhone client, Movie icon and Field, and public-index Scaffold are intentional. A successful plan push was followed by plan status --wait, which printed the attached valid analysis. Review the result, but do not compile it.",
       "expectations": [
-        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3, graph version 1, and the absence of diagnostics.",
-        "Reports the complete empty firstdraft.foundation-gaps/2 object and gap_set_sha256 1312e3e4484a4306503b5934197231b55b554186bec838224ffabac3289a9708 rather than omitting the reviewed support result.",
+        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification, graph version 1, and the absence of diagnostics.",
+        "Reports the complete empty firstdraft.foundation-gaps/2 object and gap_set_sha256 15836a3d8ff0d3f2dc37f77deb2a4288dc14c2a575db38ae51efd70b008b18a8 rather than omitting the reviewed support result.",
         "Preserves the complete staged Plan unchanged, including its domain, native.ios request, semantic icon, required title Field, and exact public-index Scaffold.",
         "Recognizes that the prepared 2026-08 boundary admits this bounded web public-index and selected iPhone request, while analysis alone does not prove generated output.",
         "Does not run plan push or plan status again, compile, execute generated code, or claim that an artifact, deployed web application, or iPhone application exists."
@@ -259,14 +259,15 @@
       ]
     },
     {
-      "id": "private-ios-request-requires-choice",
+      "id": "private-ios-request-preserves-current-boundary",
       "should_trigger": true,
-      "prompt": "Update the staged Movies Plan to request an iPhone client and index, show, create, update, and delete screens, but Movie records must remain private to signed-in staff. Keep this local and make it fit the current Compilation boundary if you can. Do not push it.",
+      "prompt": "Review how the staged Movies Plan should represent an iPhone client plus index, show, create, update, and delete screens when Movie records must remain private to signed-in staff. Keep this local and do not edit or push it yet.",
       "expectations": [
-        "Recognizes that the target emits a selected iPhone client only with at least one admitted public-index navigation entry, that otherwise the request remains valid but unrealized, that generated iPhone output remains index-only, and that the exact web create, update, show, and destroy shapes are admitted but public.",
-        "Explains that every admitted Scaffold makes Movie records or mutations available on the web without authentication, while Accounts and staff-only authorization remain unsupported, conflicting with the private staff-only intent.",
-        "Stops for a product choice instead of silently adding a public index, presenting web CRUD as native screens, narrowing the requested screens, discarding private access, or declining the requested iPhone client.",
-        "Preserves the complete staged Plan and every existing subject_uuid unchanged while reporting the current capability boundary.",
+        "Recognizes that bounded Web Accounts, Policies, and protected Scaffolds are current target capabilities, so private signed-in Web intent is not automatically a blanket Account gap.",
+        "Explains that ordinary generated iPhone output remains Account- and Policy-free, requires admitted public navigation, and remains index-only; protected Web CRUD does not become protected native detail or mutation screens.",
+        "Preserves private staff access and every requested screen as product meaning, then uses whole-graph analysis to distinguish any realized protected Web slice from exact native or unsupported-consumer gaps.",
+        "Does not silently add a public index, present Web CRUD as native screens, narrow the requested screens, discard private access, or decline the requested iPhone client merely to fit current support.",
+        "Preserves the complete staged Plan and every existing subject_uuid unchanged during this review.",
         "Leaves .firstdraft/state.json unopened and unchanged, and does not run plan init, generate uuid, plan push, plan status, or plan compile."
       ],
       "artifacts": [
@@ -283,12 +284,13 @@
       ]
     },
     {
-      "id": "preserve-unsupported-appearance-intent",
+      "id": "preserve-partially-realized-appearance-intent",
       "should_trigger": true,
       "prompt": "The staged Plan's Appearance, domain, selected iPhone client, and public-index Scaffold are intentional. It was accepted by plan push, and plan status --wait printed the attached valid analysis. Review every support gap, but do not compile it.",
       "expectations": [
         "Branches on analysis.status valid while explaining that valid applies to the admitted graph and Compilation is not proved.",
-        "Reports the complete GapSet and digest 9afac31c5a3f83b66542b5a683ad0a73c009bec747b9fa39049bc2c43665da98, including the target_support_gap foundation_plan.gap.appearance.not_generated record at /application/appearance and its reason and consequence.",
+        "Reports the complete GapSet and digest 78ccac856c8add95ee6854f6e5b46a6ad24dd511bc79d5442e7331f29309f3ce, including the partially_generated target_support_gap foundation_plan.gap.appearance.icon_assets.not_generated record at /application/appearance and its reason and consequence.",
+        "Explains that generated Rails and selected-iOS shells honor the authored Appearance theme and colors while favicon, PWA-icon, and selected-iOS AppIcon assets remain stock.",
         "Preserves the complete Appearance request and every otherwise admitted Application and Entity member without editing, removing, or weakening them.",
         "Does not run plan push or plan status again, compile, or claim generated Appearance, web, or iPhone output."
       ],
@@ -623,9 +625,9 @@
       "prompt": "A successful plan push was followed by plan status --wait, which printed the attached valid analysis for my staged Plan. Review every gap, but do not compile it.",
       "expectations": [
         "Branches on analysis.status valid and explains that valid applies only to the admitted graph.",
-        "Reports the complete GapSet and digest, including the title default and enum target-support gaps and the rich_text service-support gap at their exact source pointers.",
-        "Explains that the rich_text Field was skipped before semantic analysis, while the title default and enum were admitted but are not fully realized by the target.",
-        "Recognizes the text-length Validation as supported and does not delete the default, enum, Validation, or rich_text Field merely to obtain a gap-free result.",
+        "Reports the complete GapSet and digest, including the title default target-support gap and the rich_text service-support gap at their exact source pointers, without inventing an enum gap.",
+        "Explains that the rich_text Field was skipped before semantic analysis, the title default was admitted but is not realized, and the required enum storage and inclusion are realized by this target.",
+        "Recognizes the text-length Validation and required enum as supported and does not delete the default, enum, Validation, or rich_text Field merely to obtain a gap-free result.",
         "Preserves the complete local Plan and every existing subject_uuid.",
         "Does not run plan push or plan status again, compile, or claim the skipped and unrealized behavior was generated."
       ],
@@ -643,6 +645,32 @@
           "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
           "role": "input",
           "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "review-current-case-chat-boundary",
+      "should_trigger": true,
+      "prompt": "Review the attached current Case Chat Foundation Plan and matching reviewed GapSet. Tell me what the current Rails target realizes and what remains a gap. Do not edit, push, or compile anything.",
+      "expectations": [
+        "Binds the Plan SHA-256 9a430d4cc95eaef85efc6fea38f6bd5e073225e20fe2c2c895db6f2cf0be09eb to the GapSet source, reports the GapSet SHA-256 521eed4f7c5cbb755411f057a89f9e837ae935c89dd8b4590ee47bae9e7715a2 and all 30 ordered records, and names the 2026-08-27 analyzer and Compiler releases.",
+        "Recognizes the bounded User Web Account registration, self Policies, protected profile, required enum storage, and supported protected Scaffold slices instead of claiming that Accounts, Policies, protected Scaffolds, or every enum are unavailable.",
+        "Distinguishes realized required enum storage from the two unsupported non-ordinal literal defaults on case.status and participant.notification_level.",
+        "Recognizes the four bounded State Machines, five unconditional uniqueness rules, and three one-hop Association Primary Descriptors as realized instead of inventing gaps absent from the reviewed GapSet.",
+        "Reports the unsupported case.read_by_participant Policy and its dependent Case Scaffold authorization and definition gaps without generalizing them to every Policy or protected route.",
+        "Explains that nonempty delivery and message.implicit_order_column were skipped before semantic analysis and that ordinary selected iOS remains unrealized because the admitted navigation is protected rather than public.",
+        "Says that Appearance is unauthored in this candidate rather than treating its absence as support proof; if discussing the current target generally, distinguishes generated theme and colors from the named icon-assets partial gap.",
+        "Separates the 30 recorded support gaps from unauthored or currently unplannable product meaning, including the candidate's missing creation paths and notification trigger/template behavior; a low gap count is not a completeness claim.",
+        "Preserves the complete Plan and makes no edit, CLI invocation, Compilation, Publication, repository, or deployment claim."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/current-case-chat.foundation-plan.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/current-case-chat.gap-set-v2.json",
+          "role": "input"
         }
       ]
     },
@@ -862,11 +890,11 @@
         "Covers material Fields, relationships, rules, behavior, and data when present without enumerating absent Foundation Plan subject families.",
         "Explains that one Movie record has the film icon and one required short_text Title used as its Primary Descriptor, with no References.",
         "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, and that delivery is empty.",
-        "Explains that Appearance requests the auto theme and #4F46E5 tint color and preserves that intentional product meaning even though this release does not generate Appearance configuration.",
+        "Explains that Appearance requests the auto theme and #4F46E5 tint color, that generated Rails and selected-iOS shells honor them, and that derived icon assets remain stock.",
         "Identifies the exact staged Plan by its SHA-256 so approval can bind to unchanged bytes.",
         "Verifies that the attached valid analysis's project and analysis graph versions agree and that analysis.head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before treating it as the matching reviewed result.",
-        "Reports the complete one-record GapSet and digest 9afac31c5a3f83b66542b5a683ad0a73c009bec747b9fa39049bc2c43665da98, including classification target_support_gap, code foundation_plan.gap.appearance.not_generated, kind appearance, status not_generated, pointer /application/appearance, readable_path application.appearance, reason, and consequence.",
-        "Explains that valid applies to the admitted graph, that the Appearance target gap was admitted and analyzed but is not fully realized, and that the gap does not require weakening the Plan before Compile.",
+        "Reports the complete one-record GapSet and digest 78ccac856c8add95ee6854f6e5b46a6ad24dd511bc79d5442e7331f29309f3ce, including classification target_support_gap, code foundation_plan.gap.appearance.icon_assets.not_generated, kind appearance_icon_assets, status partially_generated, pointer /application/appearance, readable_path application.appearance, reason, and consequence.",
+        "Explains that valid applies to the admitted graph, that Appearance theme and colors are realized while derived icon assets are not, and that the partial gap does not require weakening the Plan before Compile.",
         "Selects the zero-flag Publication mode because the requested result is one private GitHub repository, states explicitly that Compile does not deploy, and explains that only that invocation's validated terminal success proves Publication.",
         "Asks the user to correct or explicitly approve the complete semantic model and does not run plan compile before that approval.",
         "Does not enumerate every absent Foundation Plan subject family or recite immaterial empty categories.",
@@ -896,8 +924,8 @@
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back covering the Movie Entity's material Fields, rules, behavior, data, surfaces, access, clients, assumptions, and exclusions without enumerating absent subject families.",
         "Explains the required short_text Title Primary Descriptor, public read-only web index, selected iPhone navigation under movies.example.com, empty delivery, and intentional auto-theme and #4F46E5 Appearance meaning.",
-        "Identifies the exact staged Plan SHA-256, verifies the attached valid analysis's matching project and analysis graph versions and Head source digest, and reports the complete one-record Appearance target GapSet with digest 9afac31c5a3f83b66542b5a683ad0a73c009bec747b9fa39049bc2c43665da98, reason, and consequence.",
-        "Explains that valid applies only to the admitted graph, that the Appearance target gap was analyzed but is not fully realized, and that the gap does not require weakening the Plan before Compile.",
+        "Identifies the exact staged Plan SHA-256, verifies the attached valid analysis's matching project and analysis graph versions and Head source digest, and reports the complete one-record Appearance icon-assets GapSet with digest 78ccac856c8add95ee6854f6e5b46a6ad24dd511bc79d5442e7331f29309f3ce, reason, and consequence.",
+        "Explains that valid applies only to the admitted graph, that Appearance theme and colors are realized while derived icon assets are not, and that the partial gap does not require weakening the Plan before Compile.",
         "Selects direct mode before approval because this is an explicit Drawing Board and local-directory request; states that the intended command is firstdraft plan compile --output ./application and that success creates no Publication, GitHub repository, .git directory, or deployment, while Drawing Board owns later nested-Git initialization.",
         "Asks the user to correct or explicitly approve the complete semantic model, reviewed support result, exact Plan bytes, and selected direct mode; the Compile wrapper count remains zero before approval.",
         "Preserves the exact staged Plan and its subject UUIDs without deleting, loosening, flattening, relabeling, or substituting intentional meaning to fit current capabilities."
@@ -950,7 +978,7 @@
         "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, rereads the exact local Plan, verifies its SHA-256 and semantic model are unchanged, and does not ask for a second confirmation or repeat the unchanged read-back.",
         "Selects Publication because the user explicitly requested one private GitHub repository and runs exactly one zero-flag plan compile through the Skill resolver; it does not add --output.",
-        "The command pushes the exact whole file, waits for the accepted exact Head's analysis, and invokes Publication after valid analysis with the preserved Appearance target gap and an unchanged local file.",
+        "The command pushes the exact whole file, waits for the accepted exact Head's analysis, and invokes Publication after valid analysis with the preserved Appearance icon-assets partial gap and an unchanged local file.",
         "Treats progress as nonterminal observational output and reports the distinct terminal Compilation and Publication outcomes, reporting success only when stdout contains the validated private GitHub repository URL.",
         "Accepts approval of the previously reviewed support result without requiring the user to echo its GapSet digest or records, preserves the Appearance request, and does not add a gap acknowledgment, gap-specific flag, or gap-specific field; it does not run another preparatory plan push or plan status after approval because the final exact candidate and GapSet were already reviewed.",
         "Would stop, report the new SHA-256 and semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."

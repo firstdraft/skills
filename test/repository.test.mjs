@@ -64,15 +64,15 @@ const foundationPlanAnalyzerRelease = "foundation-plan-rails/application-2026-08
 const foundationPlanCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08";
 const currentFoundationPlanAnalyzerRelease =
-  "foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3";
+  "foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification";
 const currentFoundationPlanCompilerRelease =
-  "foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3";
+  "foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification";
 const foundationPlanSchemaDigest =
-  "be7bc69019ef7393a8d94e8ccb255cccef793d8007f571c797e1b077ae0c1f15";
+  "50deea0624322a08191f235b2b7955a35f7d4e3186eea494ea6ea6bbad7865c1";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
 const currentFoundationPlanSchemaBaseline =
-  "0949afedd983ba4dbf56434eb235501e1ed0be58";
+  "de4c524b632533601ff111fe64f2982bd0693d1d";
 const currentCompilerServiceBaseline =
   "6002be2685542fedf515879f940b97ad73b1a469";
 const discoverySmokeServiceBaseline =
@@ -351,14 +351,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   );
   assertRevisionTokens(references.join("\n"), [
     currentFoundationPlanSchemaBaseline,
-    currentCompilerServiceBaseline,
-    compilationEvidenceCliBaseline,
     cliContractBaseline,
-    previousCliContractBaseline,
-    productJourneySmokeBaseline,
     foundationIosCoreRevision,
-    freshAgentEvidenceBaseline,
-    freshAgentSkillBaseline,
     catalogPromotionBaseline,
   ]);
   const skillSource = await readFile(
@@ -379,11 +373,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     assert(source.includes(`\`${preparedCliPackage}\``));
     assert.doesNotMatch(source, /(?:package )?remains unpublished/);
   }
-  for (const source of [readme, foundationPlanReference]) {
-    assert(source.includes(currentFoundationPlanAnalyzerRelease));
-    assert(source.includes(currentFoundationPlanCompilerRelease));
-  }
-  assert(foundationPlanReference.includes(previousCliContractRuntimeDigest));
+  assert(foundationPlanReference.includes(currentFoundationPlanAnalyzerRelease));
+  assert(foundationPlanReference.includes(currentFoundationPlanCompilerRelease));
 
   const workflow = (
     await readFile(path.join(repository, ".github", "workflows", "ci.yml"), "utf8")
@@ -446,7 +437,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   }
 });
 
-test("immutable plugin teaching lag distinguishes fixed and retained claims", async () => {
+test("historical plugin receipts stay separate from current availability", async () => {
   const candidateSkillPath = path.join(
     skillsDirectory,
     portableSkillName,
@@ -502,7 +493,11 @@ test("immutable plugin teaching lag distinguishes fixed and retained claims", as
   for (const source of [candidateSkill, candidateModelingGuide]) {
     assert.doesNotMatch(source, /live [Pp]ublication remains unproved/);
   }
-  assert.match(candidateSkill, /dated staging observation/);
+  assert.match(candidateSkill, /CLI 0\.2\.1 is on npm `next`/);
+  assert.match(
+    candidateSkill,
+    /bundled bytes do not prove matching plugin-catalog availability/,
+  );
   assert.doesNotMatch(candidateModelingGuide, /dated staging (?:discovery|observation)/);
   assert.match(
     publishedFoundationPlanReference,
@@ -515,7 +510,7 @@ test("immutable plugin teaching lag distinguishes fixed and retained claims", as
   assert.doesNotMatch(candidateFoundationPlanReference, /proven live Publish path/);
   assert.match(
     candidateFoundationPlanReference,
-    /controlled product-journey smoke[\s\S]*?8ebfc2ed82a610e63f47eb985c23ab7e634fe94e[\s\S]*?packed reviewed\s+CLI/,
+    /Current design and machine authority[\s\S]*?de4c524b632533601ff111fe64f2982bd0693d1d[\s\S]*?Implementation and observation evidence[\s\S]*?Older controlled smokes[\s\S]*?historical receipts[\s\S]*?must not be used to narrow or widen the current profile/,
   );
   assert(!candidateFoundationPlanReference.includes(historicalCliContractBaseline));
   assert.match(
@@ -1372,7 +1367,7 @@ test("behavioral eval cases are well-formed and reference real fixtures", async 
 
   assert.equal(document.format, "firstdraft.skill-evals/1");
   assert(Array.isArray(document.cases));
-  assert.equal(document.cases.length, 65);
+  assert.equal(document.cases.length, 66);
 
   const ids = new Set();
   const triggerValues = new Set();
@@ -1519,7 +1514,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     fieldCapabilitySection[1],
-    /\| Property \| Schema \| Conditional PUT \| Current Compiler for the ten scalar kinds \|/,
+    /\| Property \| Schema and import meaning \| Current review rule \|/,
   );
   const documentedCapabilityRows = [
     ...fieldCapabilitySection[1].matchAll(/^\| `([^`]+)` \|.*$/gm),
@@ -1532,7 +1527,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.deepEqual(documentedCapabilityProperties, fieldCapabilityProperties);
   const documentedCoreProperties = foundationPlanReference.match(
-    /Every imported Field uses ([^;]+); the table covers/,
+    /Every imported Field uses\s+([^;]+); the table covers/,
   );
   assert(
     documentedCoreProperties,
@@ -1549,35 +1544,24 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     fieldCapabilitySection[1],
-    /\| `required` \| Mandatory Boolean; write `true` or `false` \| Retained \| Both values admitted\.[^\n]*`NOT NULL`[^\n]*model validation\. \|/,
+    /\| `required` \| Mandatory Boolean; write `true` or `false`\.[^\n]*\| A realized required Field emits target nullability and validation/,
   );
   assert.match(
     fieldCapabilitySection[1],
-    /\| `default` \|[^\n]*\| Retained structurally \| Unsupported lowering appears as a target-support gap\. \|/,
+    /\| `default` \| Closed tagged Value[^\n]*Retained structurally\.[^\n]*\| Lowering is Field- and value-specific/,
   );
   assert.match(
     fieldCapabilitySection[1],
-    /\| `notes` \| Optional nonempty string on Fields only \| Retained \|[^\n]*emits no application behavior\. \|/,
+    /\| `notes` \| Optional nonempty string on Fields only\.[^\n]*\| Emits no application behavior\. \|/,
   );
-  for (const property of [
-    "immutable",
-    "encrypted_at_rest",
-    "redact_from_logs",
-  ]) {
-    assert.match(
-      capabilityRowsByProperty.get(property),
-      /\| Retained \| .*target-support gap\. \|/,
-    );
-  }
-  for (const property of ["comparison", "normalizations"]) {
-    assert.match(
-      capabilityRowsByProperty.get(property),
-      /\| Retained \| Unrealized [^|]+ target-support gaps?\. \|/,
-    );
+  for (const property of fieldCapabilityProperties.filter(
+    (property) => property !== "required" && property !== "default" && property !== "notes",
+  )) {
+    assert.match(capabilityRowsByProperty.get(property), /Retained/);
   }
   assert.doesNotMatch(
     fieldCapabilitySection[1],
-    /(?:literal )?defaults? (?:can |do )?compile(?: normally)?/i,
+    /all (?:modifiers|comparisons|normalizations|encryption|filtering) (?:are )?(?:unsupported|unrealized)/i,
   );
 
   const documentedEnumSection = foundationPlanReference.match(
@@ -1638,7 +1622,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /schema also permits Entity `orderings` and `implicit_order_column`, but the current conditional PUT imports\s+neither[\s\S]*?Generated public\s+indexes currently use `Model\.order\(:id\)`/,
+    /`implicit_order_column` is schema-valid[\s\S]*?current integrated\s+import path skips it before semantic analysis[\s\S]*?`service_support_gap`[\s\S]*?no emitter exists/,
   );
   assert.match(
     foundationPlanReference,
@@ -1646,7 +1630,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /State Machine Field retains its states,\s+initial state, transitions, and transition effects[\s\S]*?target emits its string storage, initial-state\s+default, and closed-domain validation[\s\S]*?GapSet records omitted events, effects, and AASM behavior/,
+    /exactly one required unconditional\s+State Machine per Entity[\s\S]*?one bounded local\s+datetime `set_field` effect per transition[\s\S]*?named AASM events/,
   );
   assert.match(
     foundationPlanReference,
@@ -1671,7 +1655,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /Compiler admits only an ordinary Reference with one target, Boolean `one_to_one`, omitted or false\s+`immutable`[\s\S]*?`one_to_one: true` makes that index unique[\s\S]*?current Scaffold forms cannot accept that Reference as an input[\s\S]*?supports self-References and migration-order cycles/,
+    /bounded single-target Reference slice with Boolean `required`, `one_to_one`, and\s+`immutable`[\s\S]*?supports self-References and migration-order cycles/,
   );
   assert.match(
     foundationPlanReference,
@@ -1679,23 +1663,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /An authored direct Association is admitted[\s\S]*?An authored indirect collection\s+is admitted[\s\S]*?both underlying References must\s+be one-to-one-false[\s\S]*?per-Association shape rules, not per-Entity or\s+per-Plan quotas/,
-  );
-  assert.doesNotMatch(
-    foundationPlanReference,
-    /(?:One authored (?:direct|indirect) Association|one narrow indirect (?:Association|collection))/i,
-  );
-  assert.match(
-    foundationPlanReference,
-    /Inputs are owner-local `short_text` Fields or forward Associations over admitted ordinary References\s+with `one_to_one: false`; optional and required References may both be inputs/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /Entity can use this mutation Scaffold only when every required Field is `short_text`[\s\S]*?required `long_text`, Boolean, date, or other scalar Field\s+still compiles without that Scaffold[\s\S]*?reviewed GapSet must disclose the\s+unrealized surface rather than silently removing routes[\s\S]*?destroy extension\s+below depends on the complete mutation-and-show shape and inherits the same restriction/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /conditional `presence` or `absence` on an admitted ordinary Reference[\s\S]*?nonordinary References[\s\S]*?service- or\s+target-support gaps/,
+    /conditional `presence` or `absence` on an admitted ordinary Reference[\s\S]*?unconditional Entity `uniqueness`[\s\S]*?matching structural index[\s\S]*?service- or target-support gaps/,
   );
   const documentedPredicateSection = foundationPlanReference.match(
     /A Predicate retains schema-valid combinations of ([\s\S]*?)\. Import preserves/,
@@ -1714,74 +1682,198 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     foundationPlanReference,
     /Importability does not imply generated Predicate behavior; the reviewed GapSet discloses each unrealized result/,
   );
-  assert.match(
-    foundationPlanReference,
-    /Nonempty delivery, development data, derivations,\s+and other graph slices outside the importer boundary remain in the exact submitted Head and appear as\s+`service_support_gap`[\s\S]*?Imported but incompletely generated shapes, including\s+Accounts, enum and State Machine Fields,[\s\S]*?appear as\s+`target_support_gap`/,
-  );
-  assert.match(
-    skillSource.replace(/\s+/g, " "),
-    /ordinary single-target References.*?bounded Validation subset including conditional text length.*?exact public web index, create\/update, show-projection, return-destination, and destroy Scaffold shapes.*?iPhone project limited to index\/navigation.*?web routes do not become native detail or mutation screens/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /Nonempty delivery remains in the exact Head and appears as a service-support gap/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /prepared Compiler fully realizes `domain` only when `native\.ios` is selected/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /selected iPhone\s+client may omit `domain`, but it is emitted only with at least one admitted Scaffold containing a public index[\s\S]*?reviewed GapSet records the unrealized client[\s\S]*?index supplies the native\s+navigation entry even when that Scaffold includes the exact admitted web[\s\S]*?extensions do not add native detail or mutation screens/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /prepared Compilation emits admitted web public indexes and, when selected, an owned iPhone project beneath\s+`ios\/`/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /smallest admitted Scaffold requests exactly the public `index` resource route[\s\S]*?One exact create\/update extension requires ordered `index`, `new`, `create`, `edit`, and `update` routes[\s\S]*?One exact show extension inserts `show` after `index`[\s\S]*?One exact destroy variant appends `destroy`/,
-  );
   const modelingGuide = await readFile(
     path.join(referencesDirectory, "modeling-guide.md"),
     "utf8",
   );
+  for (const source of [skillSource, foundationPlanReference, modelingGuide]) {
+    assert.doesNotMatch(source, /every generated route (?:is )?public and unauthenticated/i);
+    assert.doesNotMatch(source, /Accounts[^.;]*remain unsupported/i);
+    assert.doesNotMatch(source, /current Compiler does not generate enum behavior/i);
+    assert.doesNotMatch(source, /appearance\.not_generated/);
+    assert.doesNotMatch(source, /Association or nested projections[^.]*remain unsupported/i);
+  }
+
+  const currentCaseChatPlanSource = await readFile(
+    path.join(
+      evalsDirectory,
+      "create-full-stack-app",
+      "fixtures",
+      "current-case-chat.foundation-plan.json",
+    ),
+    "utf8",
+  );
+  const currentCaseChatGapSetSource = await readFile(
+    path.join(
+      evalsDirectory,
+      "create-full-stack-app",
+      "fixtures",
+      "current-case-chat.gap-set-v2.json",
+    ),
+    "utf8",
+  );
+  assert.equal(
+    createHash("sha256").update(currentCaseChatPlanSource).digest("hex"),
+    "9a430d4cc95eaef85efc6fea38f6bd5e073225e20fe2c2c895db6f2cf0be09eb",
+  );
+  assert.equal(
+    createHash("sha256").update(currentCaseChatGapSetSource).digest("hex"),
+    "521eed4f7c5cbb755411f057a89f9e837ae935c89dd8b4590ee47bae9e7715a2",
+  );
+  const currentCaseChatPlan = JSON.parse(currentCaseChatPlanSource);
+  const currentCaseChatGapSet = JSON.parse(currentCaseChatGapSetSource);
+  assert.equal(
+    currentCaseChatGapSet.source.sha256,
+    createHash("sha256").update(currentCaseChatPlanSource).digest("hex"),
+  );
+  assert.equal(currentCaseChatGapSet.analysis.release, currentFoundationPlanAnalyzerRelease);
+  assert.equal(currentCaseChatGapSet.compiler_release, currentFoundationPlanCompilerRelease);
+  assert.equal(currentCaseChatGapSet.gaps.length, 30);
+  assert.equal(
+    prettyJsonSha256(currentCaseChatGapSet),
+    "521eed4f7c5cbb755411f057a89f9e837ae935c89dd8b4590ee47bae9e7715a2",
+  );
+
+  const authoredStateMachinePointers = currentCaseChatPlan.application.entities.flatMap(
+    (entity, entityIndex) =>
+      (entity.fields ?? []).flatMap((field, fieldIndex) =>
+        field.type === "state_machine"
+          ? [`/application/entities/${entityIndex}/fields/${fieldIndex}`]
+          : [],
+      ),
+  );
+  assert.equal(authoredStateMachinePointers.length, 4);
+  assert(
+    authoredStateMachinePointers.every((fieldPointer) =>
+      currentCaseChatGapSet.gaps.every(
+        ({ pointer }) =>
+          pointer !== fieldPointer && !pointer.startsWith(`${fieldPointer}/settings`),
+      ),
+    ),
+    "current Case Chat bounded State Machines must not acquire invented event or effect gaps",
+  );
+
+  const uniquenessPointers = currentCaseChatPlan.application.entities.flatMap(
+    (entity, entityIndex) =>
+      (entity.validations ?? []).flatMap((validation, validationIndex) =>
+        validation.kind === "uniqueness"
+          ? [`/application/entities/${entityIndex}/validations/${validationIndex}`]
+          : [],
+      ),
+  );
+  assert.equal(uniquenessPointers.length, 5);
+  assert(
+    uniquenessPointers.every((validationPointer) =>
+      currentCaseChatGapSet.gaps.every(
+        ({ pointer }) =>
+          pointer !== validationPointer && !pointer.startsWith(`${validationPointer}/`),
+      ),
+    ),
+    "current Case Chat admitted uniqueness rules must not acquire invented gaps",
+  );
+
+  const associationDescriptorPointers = currentCaseChatPlan.application.entities.flatMap(
+    (entity, entityIndex) =>
+      entity.primary_descriptor?.association
+        ? [`/application/entities/${entityIndex}/primary_descriptor`]
+        : [],
+  );
+  assert.equal(associationDescriptorPointers.length, 3);
+  assert(
+    associationDescriptorPointers.every((descriptorPointer) =>
+      currentCaseChatGapSet.gaps.every(
+        ({ pointer }) =>
+          pointer !== descriptorPointer && !pointer.startsWith(`${descriptorPointer}/`),
+      ),
+    ),
+    "current Case Chat one-hop Association descriptors must not acquire invented gaps",
+  );
+
+  const implicitOrderGap = currentCaseChatGapSet.gaps.find(
+    ({ pointer }) => pointer === "/application/entities/5/implicit_order_column",
+  );
+  assert.deepEqual(
+    {
+      classification: implicitOrderGap?.classification,
+      code: implicitOrderGap?.code,
+      kind: implicitOrderGap?.kind,
+      status: implicitOrderGap?.status,
+    },
+    {
+      classification: "service_support_gap",
+      code: "foundation_plan.gap.service.unsupported_capability",
+      kind: "import_skip",
+      status: "skipped_at_import",
+    },
+  );
+
+  const user = currentCaseChatPlan.application.entities.find(({ key }) => key === "user");
+  assert(user.account);
+  assert.deepEqual(
+    user.account.registration.inputs.map(({ field }) => field),
+    ["user.name", "user.time_zone"],
+  );
+  assert.deepEqual(user.policies.map(({ key }) => key), ["read_self", "update_self"]);
+  assert.equal(user.scaffold.profile.authorization.policy, "user.read_self");
+  assert.equal(user.scaffold.update.authorization.policy, "user.update_self");
+  assert(
+    currentCaseChatGapSet.gaps.every(
+      ({ pointer }) => !pointer.startsWith("/application/entities/0/"),
+    ),
+    "current Case Chat User Account, Policies, and profile must not carry blanket gaps",
+  );
+
+  const requiredEnumPointers = currentCaseChatPlan.application.entities.flatMap(
+    (entity, entityIndex) =>
+      (entity.fields ?? []).flatMap((field, fieldIndex) =>
+        field.type === "enum" && field.required
+          ? [`/application/entities/${entityIndex}/fields/${fieldIndex}`]
+          : [],
+      ),
+  );
+  assert.equal(requiredEnumPointers.length, 4);
+  assert(
+    currentCaseChatGapSet.gaps.every(
+      ({ code, pointer }) =>
+        code !== "foundation_plan.gap.field_kind.not_generated" ||
+        !requiredEnumPointers.includes(pointer),
+    ),
+    "required enums must not be treated as blanket Field-kind gaps",
+  );
+  assert.deepEqual(
+    currentCaseChatGapSet.gaps
+      .filter(({ code }) => code === "foundation_plan.gap.field_modifier.default")
+      .map(({ pointer }) => pointer),
+    [
+      "/application/entities/1/fields/3/default",
+      "/application/entities/3/fields/2/default",
+    ],
+  );
+  assert(
+    currentCaseChatGapSet.gaps.some(
+      ({ code, readable_path: readablePath }) =>
+        code === "foundation_plan.gap.policy.not_generated" &&
+        readablePath === "case.read_by_participant",
+    ),
+  );
+  assert(
+    currentCaseChatGapSet.gaps.some(
+      ({ classification, pointer }) =>
+        classification === "service_support_gap" && pointer === "/application/delivery",
+    ),
+  );
+  assert(
+    currentCaseChatGapSet.gaps.some(
+      ({ code, pointer }) =>
+        code === "foundation_plan.gap.native_client.not_generated" &&
+        pointer === "/application/native/ios",
+    ),
+  );
+
+  assert.match(foundationPlanReference, /^### Accounts and Policies$/m);
   assert.match(
     modelingGuide,
-    /Compiler admits ordinary single-target References with Boolean `one_to_one`[\s\S]*?referenced-side `has_one` when\s+`one_to_one` is true and `has_many` otherwise[\s\S]*?both underlying References have\s+`one_to_one: false`[\s\S]*?per-Association shape rules, not a quota[\s\S]*?one-to-one Reference may compile as storage, but current Scaffold\s+forms cannot accept it as an input/,
-  );
-  assert.doesNotMatch(modelingGuide, /one distinct indirect collection/);
-  assert.match(
-    modelingGuide,
-    /smallest current Scaffold subset has `resource_routes: \["index"\]` and a public index[\s\S]*?exact extension adds\s+public create and update[\s\S]*?second extension inserts public show[\s\S]*?final variant\s+appends public destroy/i,
-  );
-  assert.match(
-    modelingGuide,
-    /Optional and required References may both be inputs; every required\s+Field and Reference must appear in `create\.inputs`[\s\S]*?conditional-presence Validation can fit when\s+its optional ordinary Reference has `one_to_one: false` and its forward Association appears in both input lists/,
-  );
-  assert.doesNotMatch(
-    modelingGuide,
-    /Association inputs admit only\s+required References/,
-  );
-  assert.match(
-    modelingGuide,
-    /Select `native\.ios` only when the user wants the bounded owned iPhone project[\s\S]*?target emits it only with at least\s+one admitted public-index Scaffold for navigation[\s\S]*?valid run records an unrealized-client target gap[\s\S]*?fully realizes Application `domain` only with generated iOS[\s\S]*?Appearance, Android, nonempty\s+delivery, Accounts, and authentication behavior are schema-valid but outside or incomplete[\s\S]*?Requirements without a v0\.19 shape, including\s+notification definitions, deployment, and iPad[\s\S]*?currently\s+unplannable rather than being invented as Plan JSON or promised a GapSet record/,
-  );
-  assert.match(
-    modelingGuide,
-    /only generated navigation Scaffold is public[\s\S]*?records\s+readable on the web without authentication[\s\S]*?Confirm that exposure with the user[\s\S]*?Do not add a public index merely\s+to obtain a gap-free result[\s\S]*?do not silently decline the requested iPhone client/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /admitted\s+Scaffold makes the Entity's records readable on the web without\s+authentication[\s\S]*?Confirm that exposure with the user[\s\S]*?review its support consequence/,
-  );
-  assert.match(
-    modelingGuide,
-    /current Compiler does not generate enum\s+behavior[\s\S]*?preserve the product meaning and review its target-support gap/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /Enum Fields are retained for editing, but the current Compiler does not generate their full behavior[\s\S]*?rather than weakening it to a scalar/,
+    /Account,\s+Policy, profile, detail, and mutation Web behavior does not become protected native behavior/,
   );
   assert.match(
     foundationPlanReference,
@@ -1859,13 +1951,9 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     examples,
-    /narrow indirect collection shape\. This is not a per-Plan quota[\s\S]*?both underlying References must have\s+`one_to_one: false`/,
+    /this first-level indirect collection shape\. This is not a per-Plan quota[\s\S]*?one supported shape, not the current boundary statement[\s\S]*?selected predicated sources[\s\S]*?one nested-through form[\s\S]*?reviewed GapSet/,
   );
-  assert.match(
-    examples,
-    /conditional-presence Validation can also fit this form when its optional ordinary Reference has\s+`one_to_one: false` and the Reference's forward Association appears in both input lists/,
-  );
-
+  assert.doesNotMatch(examples, /Other indirect paths remain unsupported/);
   const ordinalPlan = documentedExamplePlans.find(
     (document) => document?.application?.key === "ranked_tasks",
   );
@@ -2081,15 +2169,13 @@ test("complete examples and eval Plans validate against the bundled exact schema
   );
   assert(referenceSource.includes(foundationPlanSchemaDigest));
   assert(referenceSource.includes(currentFoundationPlanSchemaBaseline));
-  assert(referenceSource.includes(compilationEvidenceCliBaseline));
-  assert(referenceSource.includes(compilationEvidenceCliRuntimeDigest));
   assert(referenceSource.includes(cliContractBaseline));
   assert(referenceSource.includes(cliContractRuntimeDigest));
   assert(referenceSource.includes(foundationIosCoreRevision));
   assert(referenceSource.includes(foundationIosCoreArchiveDigest));
   assert.match(
     referenceSource,
-    /bundled schema was copied from `docs\/architecture\/design\/foundation-plan\.schema\.json` at reviewed service\s+revision[\s\S]*?revision is exact contract provenance,\s+not release or execution evidence/,
+    /bundled schema was copied byte-for-byte from\s+`docs\/architecture\/design\/foundation-plan\.schema\.json` at Service revision[\s\S]*?exact contract provenance, not\s+release or execution evidence/,
   );
 
   const schema = JSON.parse(schemaSource);
@@ -2476,8 +2562,8 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   assert(
     supportedEnumEvaluation.expectations.some((expectation) =>
       expectation.includes("complete GapSet and digest") &&
-      expectation.includes("enum or default target-support consequence") &&
-      expectation.includes("valid applies to the admitted graph"),
+      expectation.includes("without inventing blanket enum or default gaps") &&
+      expectation.includes("current target supports this required ordinal enum"),
     ),
   );
   assert(
@@ -2558,7 +2644,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert.match(
     readme,
-    /`validate-supported-application-intent`, `preserve-unsupported-appearance-intent`, and\s+`correct-source-issue-alongside-capability-gap` attach synthetic analysis results and require no server; the last\s+exercises independent correction alongside a preserved capability gap/,
+    /`validate-supported-application-intent`, `preserve-partially-realized-appearance-intent`, and\s+`correct-source-issue-alongside-capability-gap` attach synthetic analysis results and require no server; the last\s+exercises independent correction alongside a preserved capability gap/,
   );
   assert.match(
     readme,
@@ -2650,7 +2736,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert(
     unsupportedEvaluation.expectations.some((expectation) =>
-      expectation.includes("text-length Validation as supported") &&
+      expectation.includes("text-length Validation and required enum as supported") &&
       expectation.includes("does not delete the default, enum, Validation, or rich_text Field"),
     ),
     "unsupported eval must preserve authored intent across gaps",
@@ -2658,7 +2744,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   assert(
     unsupportedEvaluation.expectations.some((expectation) =>
       expectation.includes("rich_text Field was skipped before semantic analysis") &&
-      expectation.includes("default and enum were admitted"),
+      expectation.includes("required enum storage and inclusion are realized"),
     ),
     "unsupported eval must distinguish service and target gaps",
   );
@@ -2725,12 +2811,6 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
         "foundation_plan.gap.field_modifier.default",
         "/application/entities/0/fields/0/default",
         "movie.title",
-      ],
-      [
-        "target_support_gap",
-        "foundation_plan.gap.field_kind.not_generated",
-        "/application/entities/0/fields/1",
-        "movie.status",
       ],
       [
         "service_support_gap",
@@ -2895,7 +2975,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.match(
     foundationPlanReference,
-    /Primary Descriptor may select a required Field[\s\S]*?analyzer rejects an optional Field selected as a Primary Descriptor/,
+    /Primary Descriptor may select a required Field[\s\S]*?one required ordinary single-target forward Association hop[\s\S]*?analyzer rejects an optional Field descriptor/,
   );
   assert.match(
     readme,
@@ -2969,10 +3049,23 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     "foundation-plan-019.md: missing current evidence boundary",
   );
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
-  assert.match(
-    normalizedSkillEvidence,
-    /targets the coordinated plugin 0\.2\.1, CLI 0\.2\.1, and service-contract 0\.3 contract.*?bundled bytes do not prove that exact combination is available from the public catalog.*?narrow experiment, not arbitrary application generation.*?ordinary single-target References.*?conditional text length.*?public and unauthenticated.*?Preserve unsupported meaning and report every reviewed gap.*?valid run may have gaps/,
-  );
+  for (const fragment of [
+    "targets the coordinated plugin 0.2.1, CLI 0.2.1, and service-contract 0.3 contract",
+    "CLI 0.2.1 is on npm `next`",
+    "matching plugin-catalog availability",
+    "required-enum",
+    "Web Account",
+    "Action Policy",
+    "Web Scaffold",
+    "iPhone output requires one admitted public index",
+    "Account- and Policy-free",
+    "Preserve unsupported meaning and report every reviewed gap",
+    "A valid run may have gaps",
+  ]) {
+    assert(normalizedSkillEvidence.includes(fragment), `current boundary missing: ${fragment}`);
+  }
+  assert.doesNotMatch(normalizedSkillEvidence, /every generated route public and unauthenticated/i);
+  assert.doesNotMatch(normalizedSkillEvidence, /Accounts[^.;]*remain (?:unavailable|unsupported)/i);
   assert.match(
     skillSource.replace(/\s+/g, " "),
     /Recommend repair only after verifying the catalog serves plugin 0\.2\.1 with CLI 0\.2\.1/,
@@ -2981,23 +3074,24 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     skillSource,
     /## Load references only when needed[\s\S]*?diagnostics-and-recovery\.md#product-compile/,
   );
-  assert.match(
+  for (const fragment of [
+    "Current design and machine authority",
+    currentFoundationPlanSchemaBaseline,
+    currentFoundationPlanAnalyzerRelease,
+    currentFoundationPlanCompilerRelease,
+    "Implementation and observation evidence",
+    "implemented, exercised, generated-output, hosted, and observed claims",
+    "older observation does not define current support",
+    "historical receipts",
+  ]) {
+    assert(
+      foundationPlanEvidence[1].includes(fragment),
+      `Foundation Plan evidence boundary missing: ${fragment}`,
+    );
+  }
+  assert.doesNotMatch(
     foundationPlanEvidence[1],
-    /controlled product-journey smoke[\s\S]*?produced its recorded runs at service revision[\s\S]*?loopback\s+Rails and real Solid Queue[\s\S]*?194-file two-Entity\s+materialization[\s\S]*?strict fake[\s\S]*?later\s+materialization smoke at service revision/,
-  );
-  assert(
-    foundationPlanEvidence[1].includes(
-      `firstdraft/firstdraft/blob/${freshAgentEvidenceBaseline}/docs/solutions/2026-07-31-fresh-agent-rails-and-iphone-compilation-field-report.md`,
-    ),
-  );
-  assert(foundationPlanEvidence[1].includes(freshAgentSkillBaseline));
-  assert.match(
-    foundationPlanEvidence[1],
-    /Movie and Director[\s\S]*?graph-version-1 valid analysis[\s\S]*?Compilation once[\s\S]*?194-file, 542,894-byte artifact/,
-  );
-  assert.match(
-    foundationPlanEvidence[1],
-    /fresh agent session ended after the unmodified generated output passed its iOS doctor with 16 passes and no\s+failures[\s\S]*?Afterward, an operator performed Rails\s+setup and used a temporary test-only copy[\s\S]*?Manual Simulator inspection[\s\S]*?Dynamic Island and bottom safe area/,
+    /2026-08-22-reviewed-gap-set-v3|appearance\.not_generated/,
   );
 
   for (const id of [
@@ -3161,6 +3255,15 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert.equal(applicationIntentValid.analysis.status, "valid");
   assert.deepEqual(applicationIntentValid.analysis.diagnostics, []);
+  assert.equal(
+    applicationIntentValid.analysis.gap_set_sha256,
+    prettyJsonSha256(applicationIntentValid.analysis.gap_set),
+  );
+  assert(
+    applicationIntent.expectations.some((expectation) =>
+      expectation.includes(applicationIntentValid.analysis.gap_set_sha256),
+    ),
+  );
   assert.equal(applicationIntentPlan.application.key, "movie_catalog");
   assert.equal(applicationIntentPlan.application.domain, "movies.example.com");
   assert.deepEqual(applicationIntentPlan.application.native, { ios: {} });
@@ -3218,11 +3321,6 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
         "/application/entities/0/fields/0/default",
       ],
       [
-        "target_support_gap",
-        "foundation_plan.gap.field_kind.not_generated",
-        "/application/entities/0/fields/1",
-      ],
-      [
         "service_support_gap",
         "foundation_plan.gap.service.unsupported_capability",
         "/application/entities/0/fields/2/type",
@@ -3230,20 +3328,19 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     ],
   );
   const privateIosRequest = cases.find(
-    ({ id }) => id === "private-ios-request-requires-choice",
+    ({ id }) => id === "private-ios-request-preserves-current-boundary",
   );
   assert(privateIosRequest);
   assert.match(privateIosRequest.prompt, /iPhone client/);
   assert.match(privateIosRequest.prompt, /private to signed-in staff/);
   assert.match(privateIosRequest.prompt, /index, show, create, update, and delete/);
   for (const fragment of [
-    "generated iPhone output remains index-only",
-    "web create, update, show, and destroy shapes are admitted but public",
-    "available on the web without authentication",
-    "Accounts and staff-only authorization remain unsupported",
-    "Stops for a product choice",
-    "silently adding a public index",
-    "presenting web CRUD as native screens",
+    "bounded Web Accounts, Policies, and protected Scaffolds",
+    "ordinary generated iPhone output remains Account- and Policy-free",
+    "protected Web CRUD does not become protected native detail or mutation screens",
+    "distinguish any realized protected Web slice from exact native or unsupported-consumer gaps",
+    "silently add a public index",
+    "present Web CRUD as native screens",
     "Preserves the complete staged Plan",
     "does not run plan init",
   ]) {
@@ -3261,7 +3358,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     ],
   );
   const appearanceIntent = cases.find(
-    ({ id }) => id === "preserve-unsupported-appearance-intent",
+    ({ id }) => id === "preserve-partially-realized-appearance-intent",
   );
   assert(appearanceIntent);
   const appearanceIssues = JSON.parse(
@@ -3280,6 +3377,11 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     appearanceIssues.analysis.gap_set_sha256,
     prettyJsonSha256(appearanceIssues.analysis.gap_set),
   );
+  assert(
+    appearanceIntent.expectations.some((expectation) =>
+      expectation.includes(appearanceIssues.analysis.gap_set_sha256),
+    ),
+  );
   assert.deepEqual(
     appearanceIssues.analysis.gap_set.gaps.map(
       ({ classification, code, pointer }) => [
@@ -3290,7 +3392,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     ),
     [[
       "target_support_gap",
-      "foundation_plan.gap.appearance.not_generated",
+      "foundation_plan.gap.appearance.icon_assets.not_generated",
       "/application/appearance",
     ]],
   );
@@ -3302,7 +3404,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert(
     appearanceIntent.expectations.some((expectation) =>
       expectation.includes("complete GapSet and digest") &&
-      expectation.includes("foundation_plan.gap.appearance.not_generated"),
+      expectation.includes("foundation_plan.gap.appearance.icon_assets.not_generated"),
     ),
   );
   const mixedIntent = cases.find(
@@ -4305,17 +4407,17 @@ async function checkSkill(skillName) {
   assert(metadata.description.length <= 1024);
   assert.match(metadata.description, /^Experimental and in development:/);
   assert(metadata.description.includes("First Draft Foundation Plan"));
-  assert(
-    metadata.description.includes(
-      "submits exact Plan bytes for diagnostics, and can request the current narrow Rails web-and-iPhone Compile journey through its bundled CLI",
-    ),
-  );
-  assert(metadata.description.includes("incrementally authors and revises complete"));
-  assert(
-    metadata.description.includes(
-      "Arbitrary applications, automatic deployment, Android, iPad, Accounts, notifications, and broader web or native clients are not available; preserve unsupported user intent rather than omitting it.",
-    ),
-  );
+  for (const fragment of [
+    "Incrementally authors and revises complete First Draft Foundation Plans",
+    "submits exact bytes for diagnostics",
+    "narrow Rails web-and-iPhone Compile journey through its bundled CLI",
+    "Bounded Web Accounts, Policies, protected Scaffolds, and required enums",
+    "arbitrary applications",
+    "broader clients do not",
+  ]) {
+    assert(metadata.description.includes(fragment));
+  }
+  assert.doesNotMatch(metadata.description, /Accounts[^.;]*are not available/);
   assert(source.split("\n").length - 1 < 500);
   assert(
     Buffer.byteLength(source, "utf8") <= 20 * 1024,

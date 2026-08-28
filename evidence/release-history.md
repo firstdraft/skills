@@ -24,7 +24,8 @@ exception: merging it changes the public catalog and requires the ordered gates 
 Plugin 0.1.1 corrected the installed evidence boundary, made the Skill's CLI startup check portable across shells,
 consistently preferred a repository-owned wrapper, and removed plugin configuration that Claude Code cannot deliver
 to a model-invoked Bash executable. It kept CLI 0.1.0
-and service API 0.2 compatibility. Exact plugin 0.1.1 is published and selected by both npm `next` and `latest`. The
+and service API 0.2 compatibility. At the 2026-08-12 stable-tag promotion recorded below, exact plugin 0.1.1 was
+published and selected by both npm `next` and `latest`. The
 public catalog promotion merged at exact catalog-promotion revision
 `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, naming that immutable version. The marketplace merge itself published
 no package bytes and moved no npm dist-tag; the later stable-tag promotion was a separate explicitly approved
@@ -37,10 +38,11 @@ and alpha.5 were assembled as source candidates and abandoned before catalog pro
 publish packages. Those prerelease identities and observations remain immutable history. The coordinated ordinary
 releases exist under protected tags: plugin `@firstdraft.com/claude-code@0.1.0` at `claude-v0.1.0`, plugin
 `@firstdraft.com/claude-code@0.1.1` at `claude-v0.1.1`, and CLI `@firstdraft.com/cli@0.1.0` at `v0.1.0`. npm `next`
-and `latest` both select plugin 0.1.1; npm `next` and `latest` both select CLI 0.1.0. The historical public catalog at
+and `latest` both selected plugin 0.1.1 at that 2026-08-12 observation point; npm `next` and `latest` both selected
+CLI 0.1.0 then. The historical public catalog at
 catalog-promotion revision `e0212cad0a89a8b0e38678e371389085f6ddc254` selected plugin 0.1.0. The public catalog
 promotion merged at exact catalog-promotion revision `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1`, selecting
-plugin 0.1.1. Current registry and catalog state remain a release-time read-only check. A dated
+plugin 0.1.1. Current mutable registry and catalog states belong to [`RELEASING.md`](../RELEASING.md). A dated
 [read-only publication observation](2026-08-09-claude-plugin-0.1.0-release.md) reconciles the exact protected
 tag, package digest, provenance presence, and registry dist-tags at the pre-promotion point: `next` named 0.1.0 while
 `latest` and the public catalog still named alpha.3.

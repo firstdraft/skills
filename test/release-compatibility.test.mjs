@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "015c29ce52d5f757d6efff22ca2f6650826bc3c7a0ba79f53a99fc751e7db6d1",
+        "779f867c23891a61d003c14103b2d952d56b49406a4f3aa9eb681e80471d3156",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
@@ -61,6 +61,11 @@ test("current release docs route through structured identities", async () => {
   assert(releasing.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
   assert(releasing.includes(compatibility.plugin_source.tarball_sha256));
   assert.match(releasing, /unpublished and unpromoted/i);
+  assert.match(releasing, /CLI npm `next` \/ `latest` \| `0\.2\.1` \/ `0\.1\.0`/);
+  assert.match(
+    releasing,
+    /d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68[\s\S]*?actions\/runs\/33200181779[\s\S]*?moved neither CLI\s+`latest` nor any plugin package/,
+  );
   assert(
     releasing.includes(
       `@firstdraft.com/claude-code@${publicPlugin.version}`,
@@ -411,7 +416,7 @@ test("archived release chronology retains exact observed facts", async () => {
   ]);
   assert.match(
     releasing,
-    /Plugin 0\.1\.1 corrected[\s\S]*?selected by both npm `next` and `latest`[\s\S]*?public catalog promotion[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?naming that immutable version[\s\S]*?marketplace merge itself published[\s\S]*?no package bytes and moved no npm dist-tag[\s\S]*?later stable-tag promotion was a separate explicitly approved[\s\S]*?registry mutation/,
+    /Plugin 0\.1\.1 corrected[\s\S]*?At the 2026-08-12 stable-tag promotion recorded below[\s\S]*?selected by both npm `next` and `latest`[\s\S]*?public catalog promotion[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?naming that immutable version[\s\S]*?marketplace merge itself published[\s\S]*?no package bytes and moved no npm dist-tag[\s\S]*?later stable-tag promotion was a separate explicitly approved[\s\S]*?registry mutation/,
   );
   assert.match(
     releasing,
@@ -427,7 +432,7 @@ test("archived release chronology retains exact observed facts", async () => {
   );
   assert.match(
     releasing,
-    /ordinary[\s\S]*?releases exist under protected tags[\s\S]*?claude-v0\.1\.0[\s\S]*?claude-v0\.1\.1[\s\S]*?v0\.1\.0[\s\S]*?npm `next`[\s\S]*?`latest` both select plugin 0\.1\.1[\s\S]*?npm `next` and `latest` both select CLI 0\.1\.0[\s\S]*?historical public catalog at[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?public catalog[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?selecting[\s\S]*?plugin 0\.1\.1/,
+    /ordinary[\s\S]*?releases exist under protected tags[\s\S]*?claude-v0\.1\.0[\s\S]*?claude-v0\.1\.1[\s\S]*?v0\.1\.0[\s\S]*?npm `next`[\s\S]*?`latest` both selected plugin 0\.1\.1 at that 2026-08-12 observation point[\s\S]*?npm `next` and `latest` both selected[\s\S]*?CLI 0\.1\.0 then[\s\S]*?historical public catalog at[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?public catalog[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?selecting[\s\S]*?plugin 0\.1\.1/,
   );
   assertTextOrder(releasing, [
     "## Completed 0.1.1 patch flow",
@@ -451,7 +456,7 @@ test("archived release chronology retains exact observed facts", async () => {
   ]);
   assert.match(
     readme,
-    /ordinary releases exist under protected tags[\s\S]*?claude-v0\.1\.1[\s\S]*?npm `next` and `latest` both select plugin 0\.1\.1[\s\S]*?npm `next` and `latest` both[\s\S]*?select CLI 0\.1\.0[\s\S]*?historical public catalog at[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?public catalog[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?selecting exact published plugin 0\.1\.1[\s\S]*?Published[\s\S]*?plugin 0\.1\.1 corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?change immutable package bytes[\s\S]*?new[\s\S]*?SemVer[\s\S]*?recorded deterministic digest[\s\S]*?separate qualification/,
+    /ordinary releases exist under protected tags[\s\S]*?claude-v0\.1\.1[\s\S]*?At the 2026-08-12 stable-tag observation point[\s\S]*?npm `next` and `latest` both[\s\S]*?selected plugin 0\.1\.1[\s\S]*?npm `next` and `latest` both selected CLI 0\.1\.0[\s\S]*?historical public catalog at[\s\S]*?e0212cad0a89a8b0e38678e371389085f6ddc254[\s\S]*?selected plugin 0\.1\.0[\s\S]*?public catalog[\s\S]*?ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1[\s\S]*?selecting exact published plugin 0\.1\.1[\s\S]*?Published[\s\S]*?plugin 0\.1\.1 corrects the four Publication\/Publish negatives in canonical source[\s\S]*?retains[\s\S]*?ambiguous "packed reviewed CLI" attribution[\s\S]*?change immutable package bytes[\s\S]*?new[\s\S]*?SemVer[\s\S]*?recorded deterministic digest[\s\S]*?separate qualification/,
   );
   assert.match(
     readme,

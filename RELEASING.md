@@ -9,12 +9,12 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `015c29ce52d5f757d6efff22ca2f6650826bc3c7a0ba79f53a99fc751e7db6d1` |
+| Candidate packed SHA-256 | `779f867c23891a61d003c14103b2d952d56b49406a4f3aa9eb681e80471d3156` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
 | Compatible CLI | `@firstdraft.com/cli@0.2.1` |
-| CLI npm `next` / `latest` | `0.2.0` / `0.1.0` |
+| CLI npm `next` / `latest` | `0.2.1` / `0.1.0` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
@@ -22,6 +22,13 @@ The source candidate is unpublished and unpromoted. Its exact integration commit
 reviewed tree before release. [`release/compatibility.json`](release/compatibility.json) owns candidate version,
 digest, package, CLI, API, and Plan-format compatibility. The marketplace manifest owns public catalog selection.
 Registry, tag, environment, service, and hosted-CI state must be checked live immediately before a mutation.
+
+CLI 0.2.1 was owner-authorized and published under npm `next` from source/tag commit
+`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, tree `e62ee3ff1fb6d188c5d2c5a6e5e0efd50b40245f`, and annotated tag
+object `58681aae4c4fca8301d9a945074a4ee6b6c6b4b2`; its
+[OIDC release workflow](https://github.com/firstdraft/cli/actions/runs/33200181779) is green. Registry signature,
+provenance, exact installation, and tagged-source pack parity were verified. That release moved neither CLI
+`latest` nor any plugin package, plugin dist-tag, public catalog entry, or service deployment.
 
 ## Authorization boundaries
 
@@ -112,10 +119,10 @@ This step requires explicit authorization for protected tag creation and npm pub
 part of a named release sequence. The operator resolves and reports the exact candidate commit, package version,
 and tarball digest before mutation; the user does not need to recite them.
 
-Plugin 0.2.1 vendors and requires exact public `@firstdraft.com/cli@0.2.1`. Publish and reconcile that CLI under npm
-`next` before tagging this plugin; the plugin registry-package gate must resolve those exact public bytes. Then
-publish and reconcile plugin 0.2.1 under `next`. Both package steps precede any API 0.3 service activation, while
-plugin and CLI `latest` and the public catalog remain unchanged until their separately approved promotions.
+Plugin 0.2.1 vendors and requires exact public `@firstdraft.com/cli@0.2.1`, now available under npm `next`. Reconcile
+those exact public CLI bytes before tagging this plugin; the plugin registry-package gate must resolve them. Then
+publish and reconcile plugin 0.2.1 under `next`. The plugin step precedes any API 0.3 service activation, while both
+`latest` tags and the public catalog remain unchanged until their separately approved promotions.
 
 Immediately before tagging:
 
@@ -199,8 +206,8 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For the API 0.3 line, the 0.2.0 CLI and plugin packages are already public under `next` but unpromoted. This 0.2.1
-candidate instead requires exact CLI 0.2.1 under `next`, then plugin 0.2.1 under `next`, before any coordinated shared
+For the API 0.3 line, CLI 0.2.1 is already public under `next`, while plugin 0.2.0 remains the unpromoted plugin
+package selected there. This 0.2.1 candidate next requires plugin 0.2.1 under `next` before any coordinated shared
 service change. Leave both `latest` tags and the public catalog unchanged until the exact web and worker revisions
 are active and the selected qualification passes. During the approved window, stop other
 operator-controlled Compile and Publication invocations in that lane and serialize the one qualification invocation

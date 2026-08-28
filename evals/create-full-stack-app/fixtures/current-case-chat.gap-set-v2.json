@@ -1,0 +1,333 @@
+{
+  "format": "firstdraft.foundation-gaps/2",
+  "source": {
+    "sha256": "9a430d4cc95eaef85efc6fea38f6bd5e073225e20fe2c2c895db6f2cf0be09eb"
+  },
+  "project": {
+    "id": "01900000-0000-7423-8000-000000000001",
+    "graph_version": 1
+  },
+  "analysis": {
+    "release": "foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification"
+  },
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-08"
+  },
+  "gaps": [
+    {
+      "classification": "service_support_gap",
+      "code": "foundation_plan.gap.service.unsupported_capability",
+      "kind": "import_skip",
+      "status": "skipped_at_import",
+      "pointer": "/application/delivery",
+      "reason": "This First Draft release cannot yet import this Foundation Plan capability.",
+      "consequence": "This Plan path is omitted from the admitted Project graph and generated application."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.application_domain.not_generated",
+      "kind": "application_domain",
+      "status": "not_generated",
+      "pointer": "/application/domain",
+      "readable_path": "application.domain",
+      "reason": "The application domain is emitted only with a generated iOS client.",
+      "consequence": "The domain configuration is omitted."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.field_modifier.default",
+      "kind": "field_modifier",
+      "status": "partially_generated",
+      "pointer": "/application/entities/1/fields/3/default",
+      "readable_path": "case.status",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.policy.not_generated",
+      "kind": "policy",
+      "status": "not_generated",
+      "pointer": "/application/entities/1/policies/0",
+      "readable_path": "case.read_by_participant",
+      "reason": "This Policy was not admitted by the current bounded public record-rule lowering.",
+      "consequence": "No record rule, relation scope, or dependent protected surface is emitted for this Policy."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "kind": "scaffold_definition",
+      "status": "not_generated",
+      "pointer": "/application/entities/1/scaffold/index",
+      "readable_path": "case.scaffold.index",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/1"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "kind": "scaffold_authorization",
+      "status": "not_generated",
+      "pointer": "/application/entities/1/scaffold/index/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/1/policies/0"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "kind": "scaffold_definition",
+      "status": "not_generated",
+      "pointer": "/application/entities/1/scaffold/show",
+      "readable_path": "case.scaffold.show",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/1"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "kind": "scaffold_authorization",
+      "status": "not_generated",
+      "pointer": "/application/entities/1/scaffold/show/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/1/policies/0"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.policy.not_generated",
+      "kind": "policy",
+      "status": "not_generated",
+      "pointer": "/application/entities/2/policies/0",
+      "readable_path": "conversation.read_by_participant",
+      "reason": "This Policy was not admitted by the current bounded public record-rule lowering.",
+      "consequence": "No record rule, relation scope, or dependent protected surface is emitted for this Policy."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "kind": "scaffold_definition",
+      "status": "not_generated",
+      "pointer": "/application/entities/2/scaffold/index",
+      "readable_path": "conversation.scaffold.index",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/2"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "kind": "scaffold_authorization",
+      "status": "not_generated",
+      "pointer": "/application/entities/2/scaffold/index/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/2/policies/0"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "kind": "scaffold_definition",
+      "status": "not_generated",
+      "pointer": "/application/entities/2/scaffold/show",
+      "readable_path": "conversation.scaffold.show",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/2"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "kind": "scaffold_authorization",
+      "status": "not_generated",
+      "pointer": "/application/entities/2/scaffold/show/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/2/policies/0"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.field_modifier.default",
+      "kind": "field_modifier",
+      "status": "partially_generated",
+      "pointer": "/application/entities/3/fields/2/default",
+      "readable_path": "participant.notification_level",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.policy.not_generated",
+      "kind": "policy",
+      "status": "not_generated",
+      "pointer": "/application/entities/4/policies/0",
+      "readable_path": "conversation_thread.read_by_conversation_member",
+      "reason": "This Policy was not admitted by the current bounded public record-rule lowering.",
+      "consequence": "No record rule, relation scope, or dependent protected surface is emitted for this Policy."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "kind": "scaffold_definition",
+      "status": "not_generated",
+      "pointer": "/application/entities/4/scaffold/show",
+      "readable_path": "conversation_thread.scaffold.show",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/4"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "kind": "scaffold_authorization",
+      "status": "not_generated",
+      "pointer": "/application/entities/4/scaffold/show/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/4/policies/0"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.association.not_generated",
+      "kind": "association",
+      "status": "not_generated",
+      "pointer": "/application/entities/5/associations/0",
+      "readable_path": "message.notifications",
+      "reason": "The current Compiler release does not realize this Association shape.",
+      "consequence": "The Association declaration is omitted."
+    },
+    {
+      "classification": "service_support_gap",
+      "code": "foundation_plan.gap.service.unsupported_capability",
+      "kind": "import_skip",
+      "status": "skipped_at_import",
+      "pointer": "/application/entities/5/implicit_order_column",
+      "readable_path": "message",
+      "reason": "This First Draft release cannot yet import this Foundation Plan capability.",
+      "consequence": "This Plan path is omitted from the admitted Project graph and generated application."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.policy.not_generated",
+      "kind": "policy",
+      "status": "not_generated",
+      "pointer": "/application/entities/5/policies/0",
+      "readable_path": "message.create_by_participant",
+      "reason": "This Policy was not admitted by the current bounded public record-rule lowering.",
+      "consequence": "No record rule, relation scope, or dependent protected surface is emitted for this Policy."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.policy.not_generated",
+      "kind": "policy",
+      "status": "not_generated",
+      "pointer": "/application/entities/5/policies/1",
+      "readable_path": "message.read_by_conversation_member",
+      "reason": "This Policy was not admitted by the current bounded public record-rule lowering.",
+      "consequence": "No record rule, relation scope, or dependent protected surface is emitted for this Policy."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.policy.not_generated",
+      "kind": "policy",
+      "status": "not_generated",
+      "pointer": "/application/entities/5/policies/2",
+      "readable_path": "message.update_by_author",
+      "reason": "This Policy was not admitted by the current bounded public record-rule lowering.",
+      "consequence": "No record rule, relation scope, or dependent protected surface is emitted for this Policy."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "kind": "scaffold_definition",
+      "status": "not_generated",
+      "pointer": "/application/entities/5/scaffold/create",
+      "readable_path": "message.scaffold.create",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/5"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "kind": "scaffold_authorization",
+      "status": "not_generated",
+      "pointer": "/application/entities/5/scaffold/create/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/5/policies/0"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.field_modifier.redact_from_logs",
+      "kind": "field_modifier",
+      "status": "partially_generated",
+      "pointer": "/application/entities/6/fields/5/redact_from_logs",
+      "readable_path": "notification.deduplication_key",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "log redaction is not applied"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "kind": "scaffold_projection",
+      "status": "not_generated",
+      "pointer": "/application/entities/6/scaffold/index/projection/3",
+      "readable_path": "notification.thread",
+      "reason": "The Association authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "kind": "scaffold_authorization",
+      "status": "not_generated",
+      "pointer": "/application/entities/6/scaffold/index/projection/3/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/4/policies/0"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "kind": "scaffold_projection",
+      "status": "not_generated",
+      "pointer": "/application/entities/6/scaffold/show/projection/3",
+      "readable_path": "notification.thread",
+      "reason": "The Association authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "kind": "scaffold_authorization",
+      "status": "not_generated",
+      "pointer": "/application/entities/6/scaffold/show/projection/3/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails.",
+      "cause": "/application/entities/4/policies/0"
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.native_client.not_generated",
+      "kind": "native_client",
+      "status": "not_generated",
+      "pointer": "/application/native/ios",
+      "readable_path": "application.native.ios",
+      "reason": "The iOS client could not be generated for this Plan: A selected iOS client requires at least one main-navigation entry..",
+      "consequence": "No iOS client is emitted."
+    }
+  ]
+}
