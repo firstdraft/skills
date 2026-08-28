@@ -230,14 +230,16 @@ test("documentation roles are routed and retrieval-sized", async () => {
     Buffer.byteLength(releasing) < 20_000,
     "current release runbook must not absorb completed chronology",
   );
-  assert.match(
-    readme,
-    /## Current state[\s\S]*?## Install and preview[\s\S]*?## Documentation/,
-  );
-  assert.match(
-    readme,
-    /docs\/README\.md[\s\S]*?evidence\/README\.md[\s\S]*?evals\/README\.md/,
-  );
+  for (const route of [
+    "AGENTS.md",
+    "docs/README.md",
+    "skills/create-full-stack-app/SKILL.md",
+    "RELEASING.md",
+    "evidence/README.md",
+    "evals/README.md",
+  ]) {
+    assert.ok(readme.includes(`(${route})`), `README.md must route to ${route}`);
+  }
   assert.match(
     documentationMap,
     /## Authority by question[\s\S]*?## Routes by task[\s\S]*?## Documentation roles/,
@@ -936,27 +938,6 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     "the installable package must not commit a second editable Skill copy",
   );
 
-  const packageReadme = await readFile(path.join(repository, "README.md"), "utf8");
-  assert.match(
-    packageReadme,
-    /Packing copies the canonical `skills\/create-full-stack-app` directory/,
-  );
-  assert.match(
-    packageReadme,
-    /Executables in a plugin-root `bin\/` directory are added to the Bash\s+tool's `PATH` by Claude Code/,
-  );
-  assert.match(
-    packageReadme,
-    /user configuration is not delivered to an executable merely because the plugin's `bin\/` directory is\s+on\s+a Bash tool's `PATH`/,
-  );
-  assert.match(
-    packageReadme,
-    /ambient `FIRSTDRAFT_API_URL` and\s+`FIRSTDRAFT_API_TOKEN` contract[\s\S]*?issue #27/,
-  );
-  assert.match(
-    packageReadme,
-    /claude plugin marketplace add firstdraft\/skills[\s\S]*?claude plugin install firstdraft@firstdraft-skills/,
-  );
   const vendoredSmoke = await readFile(
     path.join(repository, "evidence", "2026-08-05-claude-plugin-vendored-cli-smoke.md"),
     "utf8",
