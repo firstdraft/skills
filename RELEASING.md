@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `b6492dc77b3084dff050055a72e56eaa25a6a1698eb2405d195ad265e3e6aa27` |
+| Candidate packed SHA-256 | `86d0efa56cc792647d81235e13072fbd25c32bc6c56022ac58ffcbb0df5a0351` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
@@ -71,36 +71,40 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-The current 0.2.1 candidate still requires one human-observed, two-turn Publication-mode approval smoke before
-publication. Use the
-paired `precompile-semantic-read-back` and `compile-prepared-movie-catalog` cases in the same fresh continuing agent
-session:
+The current 0.2.1 candidate requires two human-observed, two-turn approval smokes before publication, each in its own
+fresh continuing agent session:
 
-1. Record the exact Skills commit, package version and tarball SHA-256, compatible CLI and service identities, and
-   staged Plan SHA-256. Use a controlled local service and strict fake GitHub path unless the approved scope names a
-   live gate.
-2. In the first turn, the agent presents the complete semantic read-back of that exact Plan and the matching valid
-   AnalysisRun's one Appearance target-gap record with its digest. It explains that the admitted Appearance meaning
-   is not fully realized, Compile does not deploy, and successful Publication creates one private GitHub repository.
-   It then stops for approval. The observer confirms that the Compile wrapper count is zero before approval.
-3. Give explicit approval of the presented semantic model, reviewed support result, and Plan SHA-256 without
-   requiring the user to echo the GapSet digest or records. In the same continuing session, the agent rereads the
-   unchanged Plan, invokes exactly one zero-flag Compile without another confirmation or gap-specific field, and
-   reports the validated terminal Compilation and Publication outcome. The observer confirms that the Compile
-   wrapper count is exactly one after the turn.
+- Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
+- Direct output pairs `precompile-drawing-board-read-back` with
+  `compile-prepared-drawing-board-application`.
 
-Retain the two-turn transcript, explicit approval, identities and digests above, pre-approval Compile count zero,
-post-approval Compile count exactly one, and the final Compilation and Publication outcome. This smoke does not
-require an exhaustive tool or effect ledger, shell-command classification, workspace snapshots, or proof of generic
-no-network, no-write, or environmental inactivity. Pass only on unchanged Plan bytes, a complete approved read-back,
-exactly one post-approval Compile invocation, and terminal successful Compilation and Publication. A controlled
-setup, harness, or local failure that occurs before any Compile invocation and before any external mutation may be
-corrected and the same smoke rerun within the already approved scope. A known successful external effect is not a
-setup failure and does not make a whole-smoke rerun safe. After an ambiguous external outcome, retain the observed
-boundary and use read-only reconciliation where available. For a documented Publication-phase unknown or status
-timeout after the singleton exists, wait for the prior invocation to exit and use only the unchanged-byte,
-same-singleton replay described above, which never applies to an ambiguous Plan push; otherwise do not repeat the
-mutation.
+For each pair:
+
+1. Record the exact Skills commit, package version and tarball SHA-256, compatible CLI and service identities, staged
+   Plan SHA-256, and selected mode. Use a controlled local service; the Publication pair also uses strict fake GitHub
+   transport unless the approved scope names a live gate.
+2. In the first turn, the agent presents the complete semantic read-back and matching valid AnalysisRun's one
+   Appearance target-gap record with its digest. It explains that admitted Appearance meaning is not fully realized,
+   Compile does not deploy, and the selected mode creates either one verified local directory or one private GitHub
+   repository. It then stops for approval; the observer confirms the pre-approval Compile count is zero.
+3. Give explicit approval of the semantic model, reviewed support result, selected mode, and Plan SHA-256 without
+   requiring a GapSet echo. In the same continuing session, the agent rereads the unchanged Plan and invokes exactly
+   one selected command without another confirmation or gap-specific field. Publication uses zero-flag Compile and
+   reports terminal Compilation and Publication. Direct output uses `plan compile --output ./application`, reports
+   the retained Compilation with validated path, file count, and manifest digest, and claims no Publication,
+   repository, or `.git`. The observer confirms the post-approval Compile count is exactly one.
+
+Retain each two-turn transcript, explicit approval, identities and digests above, pre-approval Compile count zero,
+post-approval Compile count exactly one, and final mode-specific outcome. These smokes do not require an exhaustive
+tool or effect ledger, shell-command classification, workspace snapshots, or proof of generic no-network, no-write,
+or environmental inactivity. Pass only on unchanged Plan bytes, a complete approved read-back, exactly one
+post-approval Compile invocation, and the selected terminal success. A controlled setup, harness, or local failure
+before any Compile invocation and before any external mutation may be corrected and the same smoke rerun within the
+already approved scope. A known successful external effect does not make a whole-smoke rerun safe. After an ambiguous
+outcome, retain the observed boundary and reconcile read-only where available. A direct start without a retained ID
+must stop without retry or mode switch. For a documented Publication-phase unknown or status timeout after the
+singleton exists, wait for the prior invocation to exit and use only the unchanged-byte, same-singleton replay
+described above, which never applies to an ambiguous Plan push; otherwise do not repeat the mutation.
 
 ## 2. Publish the exact package under `next`
 

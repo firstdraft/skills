@@ -141,6 +141,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
 test("home-inventory corpus case probes consequential ambiguity without invented answers", async () => {
   const document = await loadEvaluationDocument();
   assert.equal(document.format, "firstdraft.skill-evals/1");
+  assert.equal(document.cases.length, 65);
 
   const cases = await loadEvaluationCases();
   const evaluation = evaluationCaseById(
@@ -252,7 +253,7 @@ test(
     );
 
     const approvalHeading = "Read back and approve the candidate before Compile";
-    const compileHeading = "Select and request the Compile journey";
+    const compileHeading = "Request the selected Compile journey";
     assert(
       skill.indexOf(`## ${approvalHeading}`) <
         skill.indexOf(`## ${compileHeading}`),
@@ -278,10 +279,12 @@ test(
       "service gaps were skipped before semantic analysis",
       "target gaps were not fully realized",
       "`valid` applies only to the admitted graph",
-      "selected mode",
+      "Before asking for approval, select direct output for Drawing Board, same-workspace, or local-directory requests",
+      "select zero-flag Publication only for an explicit private GitHub repository",
+      "Ask when unclear; generic compile or build language does not authorize Publication",
       "direct output creates only a verified local directory",
       "successful Publication creates one private GitHub repository",
-      "Neither deploys",
+      "neither deploys",
       "Do not enumerate absent subject families",
       "correct or explicitly approve the candidate and reviewed gaps",
       "require no digest echo or gap-acknowledgment field",
@@ -306,10 +309,10 @@ test(
         "After the exact candidate's semantic read-back is approved",
       ),
     );
-    assert(compile.includes("Select one completion mode deliberately"));
+    assert(compile.includes("request the already selected mode"));
     assert(compile.includes("firstdraft_cli plan compile --output ./application"));
-    assert(compile.includes("run the zero-flag Publication mode"));
-    assert(compile.includes("Invoke the selected mode exactly once"));
+    assert(compile.includes("For selected Publication, run zero-flag mode"));
+    assert(compile.includes("Invoke it exactly once"));
     assert(compile.includes("without another confirmation or gap field"));
 
     const modeling = markdownSection(
@@ -453,6 +456,34 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     1,
   );
 
+  const directReadBack = evaluationCaseById(
+    cases,
+    "precompile-drawing-board-read-back",
+  );
+  assert.match(directReadBack.prompt, /Drawing Board workspace/);
+  assert(
+    expectationIncludes(
+      directReadBack,
+      "complete one-record Appearance target GapSet",
+      "reason, and consequence",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      directReadBack,
+      "Selects direct mode before approval",
+      "firstdraft plan compile --output ./application",
+      "no Publication, GitHub repository, .git directory, or deployment",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      directReadBack,
+      "selected direct mode",
+      "Compile wrapper count remains zero before approval",
+    ),
+  );
+
   const diagnostic = evaluationCaseById(
     cases,
     "compile-invalid-candidate-is-safe",
@@ -538,11 +569,19 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     cases,
     "compile-prepared-drawing-board-application",
   );
-  assert.match(direct.prompt, /Drawing Board workspace/);
+  assert.match(direct.prompt, /Drawing Board semantic read-back/);
   assert(direct.prompt.includes(`SHA-256 ${movieCatalogSha256}`));
   assert(
     expectationIncludes(
       direct,
+      "same continuing session as precompile-drawing-board-read-back",
+      "selected direct local mode",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      direct,
+      "After approval",
       "exactly one firstdraft plan compile --output ./application",
       "does not also run zero-flag plan compile",
     ),
@@ -559,6 +598,10 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
       "creates no .git directory",
       "Drawing Board's later nested-Git initialization",
     ),
+  );
+  assert.doesNotMatch(
+    JSON.stringify([directReadBack, direct]),
+    /every attempted tool|permission-denied|effect ledger|no-network|no-write/i,
   );
 
   const ambiguousDirect = evaluationCaseById(

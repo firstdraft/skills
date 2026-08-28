@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import {
@@ -33,6 +33,7 @@ export async function verifyPlanJourney(context) {
   const moviePlan = readFileSync(context.moviePlanPath);
   await verifyHappyCompile(context, moviePlan);
   await verifyHappyDirectCompile(context, moviePlan);
+  await verifyDirectOutputRecheck(context, moviePlan);
   await verifyStaleAnalysisGeneration(context, moviePlan);
   await verifySameGenerationDifferentHead(context, moviePlan);
   await verifyStaleLocalBytes(context, moviePlan);
@@ -117,6 +118,13 @@ async function verifyHappyDirectCompile(context, planSource) {
       ],
     ],
   );
+  assert(Buffer.from(calls[0].init.body).equals(planSource));
+  assert.equal(new Headers(calls[0].init.headers).get("if-none-match"), "*");
+  assert.equal(calls[2].init.body, undefined);
+  assert.equal(
+    new Headers(calls[2].init.headers).get("if-match"),
+    `"sha256:${digest}"`,
+  );
   assert.equal(existsSync(path.join(output, ".git")), false);
   assert.equal(
     readFileSync(path.join(output, "app", "models", "movie.rb"), "utf8"),
@@ -125,6 +133,44 @@ async function verifyHappyDirectCompile(context, planSource) {
   if (process.platform !== "win32") {
     assert.equal(statSync(path.join(output, "ios", "bin", "ios")).mode & 0o777, 0o755);
   }
+}
+
+async function verifyDirectOutputRecheck(context, planSource) {
+  const cwd = await initializedProject(context, "compile-direct-output-race", {
+    planSource,
+  });
+  const output = path.join(cwd, "application");
+  const marker = path.join(output, "owner.txt");
+  const calls = [];
+  const result = await invokeRunner(
+    context.runCli,
+    ["plan", "compile", "--output", "./application"],
+    cwd,
+    {
+      fetchFunction: sequenceFetch(
+        [
+          acceptedPlanResponse(planSource),
+          () => {
+            mkdirSync(output);
+            writeFileSync(marker, "preserve\n");
+            return jsonResponse(
+              analysisProjection("valid", {
+                headSourceSha256: sha256(planSource),
+              }),
+            );
+          },
+        ],
+        calls,
+      ),
+    },
+  );
+
+  assertErrorEnvelope(result, "invalid_output_path", { status: 2 });
+  assert.deepEqual(
+    calls.map(({ init }) => init?.method),
+    ["PUT", "GET"],
+  );
+  assert.equal(readFileSync(marker, "utf8"), "preserve\n");
 }
 
 async function verifySameGenerationDifferentHead(context, planSource) {

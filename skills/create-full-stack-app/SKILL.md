@@ -205,8 +205,10 @@ Before the first `plan compile`, reread the exact current
 Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
 and exclusions. Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Explain that service
 gaps were skipped before semantic analysis, target gaps were not fully realized, and `valid` applies only to the
-admitted graph. State the selected mode: direct output creates only a verified local directory; successful Publication
-creates one private GitHub repository. Neither deploys.
+admitted graph. Before asking for approval, select direct output for Drawing Board, same-workspace, or local-directory
+requests; select zero-flag Publication only for an explicit private GitHub repository. Ask when unclear; generic
+compile or build language does not authorize Publication. State that direct output creates only a verified local
+directory, successful Publication creates one private GitHub repository, and neither deploys.
 Do not enumerate absent subject families or immaterial properties. Ask the user to correct or explicitly approve the
 candidate and reviewed gaps; require no digest echo or gap-acknowledgment field.
 
@@ -215,18 +217,17 @@ In the same continuing conversation, after unambiguous approval, reread the Plan
 and make the initial request with exactly one invocation in the selected mode. Do not ask for a second command-level
 confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
 green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it.
-After approval of the unchanged candidate and GapSet, use the already selected Compile mode without more ceremony.
 
 This gate does not block an explicitly requested diagnostic-only Compile of exact bytes already known to be
 invalid from those bytes or matching diagnostics. Invalid analysis cannot start a Compilation or Publication. Valid
 analysis with gaps can; do not require removal of the corresponding Plan fields.
 
-## Select and request the Compile journey
+## Request the selected Compile journey
 
 After the exact candidate's semantic read-back is approved, read
-[Product Compile](references/diagnostics-and-recovery.md#product-compile). Select one completion mode deliberately:
+[Product Compile](references/diagnostics-and-recovery.md#product-compile) and request the already selected mode:
 
-- Drawing Board, same-workspace, or local-directory result: choose absent `./application` and run:
+- For selected direct output, choose absent `./application` and run:
 
   ```sh
   firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
@@ -234,15 +235,14 @@ After the exact candidate's semantic read-back is approved, read
   ```
 
   Direct mode creates no Publication, repository, or `.git`; Drawing Board owns nested-Git setup.
-- Explicit private GitHub repository: run the zero-flag Publication mode:
+- For selected Publication, run zero-flag mode:
 
   ```sh
   firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
   firstdraft_cli plan compile
   ```
 
-Ask when unclear; generic compile or build language does not authorize Publication. Invoke the selected
-mode exactly once, without another confirmation or gap field, and do not reimplement CLI internals.
+Invoke it exactly once, without another confirmation or gap field, and do not reimplement CLI internals.
 
 Report direct output only after verified materialization. On `request_outcome_unknown` with `phase: "compilation"`,
 preserve the Plan, private state, and absent output; do not retry or switch modes. A validated retained ID permits only

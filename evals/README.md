@@ -1,12 +1,12 @@
 # Behavioral evaluation index
 
-`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 64 fresh-context cases. Cases and
+`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 65 fresh-context cases. Cases and
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
 
-Except for the two-phase release qualification described below, run one case in a fresh agent context and record the
-agent, model, Skill revision, commands, resulting file changes, and external effects. Replace synthetic state only
-for a specifically prepared server-backed run. Never print or commit private `.firstdraft/state.json` contents.
+Except for the two paired release qualifications below, run one case in a fresh agent context and record the agent,
+model, Skill revision, commands, resulting file changes, and external effects. Replace synthetic state only for a
+specifically prepared server-backed run. Never print or commit private `.firstdraft/state.json` contents.
 
 ## Initialization, interview, and authoring
 
@@ -62,6 +62,7 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 ## Semantic approval and product Compile
 
 - `precompile-semantic-read-back`
+- `precompile-drawing-board-read-back`
 - `compile-invalid-candidate-is-safe`
 - `compile-prepared-movie-catalog`
 - `compile-prepared-drawing-board-application`
@@ -80,39 +81,45 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-For the human-observed 0.2.1 release smoke, run `precompile-semantic-read-back` and
-`compile-prepared-movie-catalog` as two user turns in the same fresh continuing agent session. Before the first turn,
-record the exact candidate and package identity, compatible CLI and service identities, staged Plan SHA-256, and a
-zero Compile-wrapper count. The first response must present the complete semantic model, the matching GapSet digest,
-and the one Appearance target-gap record; explain that admitted target meaning is not fully realized, identify the
-execution consequence, preserve Appearance, and stop for explicit approval. This deliberately exercises a valid
-candidate with a nonempty GapSet.
+The 0.2.1 release gate has two human-observed, two-turn approval smokes, each in its own fresh continuing agent
+session:
 
-The second prompt approves that semantic model, reviewed support result, and Plan SHA-256 without echoing the GapSet
-digest or records. The same session must reread unchanged Plan bytes,
-invoke exactly one zero-flag Compile without another confirmation, and report the validated terminal Compilation and
-Publication outcome. A live run requires approval that includes that journey and freshly initialized private state;
-otherwise use a controlled local service and strict fake GitHub transport.
+- Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
+- Direct output pairs `precompile-drawing-board-read-back` with
+  `compile-prepared-drawing-board-application`.
 
-Retain the two-turn transcript, explicit approval, exact candidate/package identities and digests, Plan SHA-256,
-pre-approval Compile count zero, post-approval Compile count exactly one, and final Compilation and Publication
-outcome. A human observer grades the semantic read-back and approval continuity. Do not require an exhaustive tool or
-effect ledger, shell-command classification, workspace snapshots, or proof of generic no-network, no-write, or
-environmental inactivity. A controlled setup, harness, or local failure before any Compile invocation and before any
-external mutation may be corrected and the same smoke rerun within its approved scope. A known successful external
-effect is not retry-safe for the whole smoke. After an ambiguous external result, record what happened and reconcile
-read-only where possible rather than repeating the mutation. The exception is the documented unchanged-byte,
-same-singleton `plan compile` replay after the prior invocation exits with a Publication-phase unknown or status
-timeout; that conditional replay is itself reconciliation and never applies to an ambiguous Plan push.
+Before each first turn, record the exact candidate/package identities and digest, compatible CLI and service
+identities, staged Plan SHA-256, and pre-approval Compile count zero. The first response must present the complete
+semantic model, matching GapSet digest, and one Appearance target-gap record; explain that admitted target meaning is
+not fully realized, preserve Appearance, state the selected mode, and stop for explicit approval. This deliberately
+exercises a valid candidate with a nonempty GapSet.
+
+The second prompt approves that semantic model, reviewed support result, selected mode, and Plan SHA-256 without
+echoing the GapSet digest or records. The same session must reread unchanged Plan bytes and invoke exactly one selected
+command without another confirmation. Publication uses zero-flag `plan compile` and reports terminal Compilation and
+Publication. Direct output uses `plan compile --output ./application`, reports the retained Compilation plus validated
+path, file count, and manifest digest, and claims no Publication, repository, or `.git`. Use a controlled local service;
+Publication also uses strict fake GitHub transport unless a live journey is explicitly approved.
+
+Retain each two-turn transcript, explicit approval, identities and digests, Plan SHA-256, pre-approval Compile count
+zero, post-approval Compile count exactly one, and final mode-specific outcome. A human observer grades the semantic
+read-back and approval continuity. Do not require an exhaustive tool or effect ledger, shell-command classification,
+workspace snapshots, or proof of generic no-network, no-write, or environmental inactivity. A controlled setup,
+harness, or local failure before any Compile invocation and before any external mutation may be corrected and the
+same smoke rerun within its approved scope. A known successful external effect is not retry-safe for the whole smoke.
+After an ambiguous external result, record it and reconcile read-only where possible rather than repeating the
+mutation. A direct start without a retained ID stops with no retry or mode switch. The sole exception is the documented
+unchanged-byte, same-singleton replay after the prior invocation exits with a Publication-phase unknown or status
+timeout; it never applies to an ambiguous Plan push.
 
 Authentication pauses an already requested operation; once the user confirms credentials are configured, resume it
 without another authorization prompt. After analysis timeout, change, or supersession, bounded read-only status
 follow-up is report-only; never edit, push, or Compile the replacement.
 
-The Drawing Board case selects `plan compile --output ./application` from an explicit same-workspace request and must
-make no Publication or repository claim. Its ambiguous-direct-start companion stops without repeating that command
-or switching to zero-flag Publication. The prepared Movie Catalog release case remains the explicit private-GitHub
-path and therefore selects one zero-flag Compile.
+The paired Drawing Board cases select and then invoke `plan compile --output ./application` for an explicit
+same-workspace request without a Publication or repository claim. The ambiguous-direct-start companion stops without
+repeating that command or switching to zero-flag Publication. The prepared Movie Catalog Publication pair selects one
+zero-flag Compile.
 
 `create-full-stack-app/cases.json` remains the harness-neutral behavioral contract. It declares prompts,
 expectations, and artifact roles; it does not grant capabilities or configure a sandbox or transport. Omit

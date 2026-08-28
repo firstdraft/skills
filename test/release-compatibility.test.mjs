@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "b6492dc77b3084dff050055a72e56eaa25a6a1698eb2405d195ad265e3e6aa27",
+        "86d0efa56cc792647d81235e13072fbd25c32bc6c56022ac58ffcbb0df5a0351",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
@@ -137,7 +137,7 @@ test("approval-flow docs define the lightweight human-observed smoke", async () 
       "Plan SHA-256",
       "pre-approval Compile count zero",
       "post-approval Compile count exactly one",
-      "Compilation and Publication outcome",
+      "mode-specific outcome",
     ]) {
       assert(
         source.includes(expected) ||
@@ -149,19 +149,19 @@ test("approval-flow docs define the lightweight human-observed smoke", async () 
 
   assert.match(
     candidate,
-    /same fresh continuing agent session.*?complete semantic read-back.*?Compile does not deploy.*?one private GitHub repository.*?stops for approval.*?same continuing session.*?exactly one zero-flag Compile without another confirmation/,
+    /two human-observed, two-turn approval smokes.*?`precompile-semantic-read-back`.*?`compile-prepared-movie-catalog`.*?`precompile-drawing-board-read-back`.*?`compile-prepared-drawing-board-application`.*?selected mode.*?complete semantic read-back.*?stops for approval.*?same continuing session.*?exactly one selected command/,
   );
   assert.match(
     evaluation,
-    /two user turns.*?first response must present the complete semantic model.*?one Appearance target-gap record.*?stop for explicit approval.*?valid candidate with a nonempty GapSet.*?second prompt approves that semantic model, reviewed support result, and Plan SHA-256 without echoing the GapSet digest or records.*?reread unchanged Plan bytes.*?exactly one zero-flag Compile without another confirmation/,
+    /two human-observed, two-turn approval smokes.*?`precompile-semantic-read-back`.*?`compile-prepared-movie-catalog`.*?`precompile-drawing-board-read-back`.*?`compile-prepared-drawing-board-application`.*?first response must present the complete semantic model.*?stop for explicit approval.*?second prompt approves that semantic model, reviewed support result, selected mode, and Plan SHA-256.*?reread unchanged Plan bytes.*?exactly one selected command/,
   );
   assert.match(
     candidate,
-    /exact Skills commit, package version and tarball SHA-256.*?compatible CLI and service identities.*?two-turn transcript.*?explicit approval.*?pre-approval Compile count zero.*?post-approval Compile count exactly one.*?final Compilation and Publication outcome/,
+    /exact Skills commit, package version and tarball SHA-256.*?compatible CLI and service identities.*?each two-turn transcript.*?explicit approval.*?pre-approval Compile count zero.*?post-approval Compile count exactly one.*?final mode-specific outcome/,
   );
   assert.match(
     evaluation,
-    /two-turn transcript.*?explicit approval.*?exact candidate\/package identities and digests.*?Plan SHA-256.*?pre-approval Compile count zero.*?post-approval Compile count exactly one.*?final Compilation and Publication outcome/,
+    /exact candidate\/package identities and digest.*?Plan SHA-256.*?each two-turn transcript.*?explicit approval.*?pre-approval Compile count zero.*?post-approval Compile count exactly one.*?final mode-specific outcome/,
   );
   for (const source of [candidate, evaluation]) {
     assert.match(
@@ -186,6 +186,10 @@ test("approval-flow docs define the lightweight human-observed smoke", async () 
     assert.match(
       source,
       /never applies to an ambiguous Plan push/i,
+    );
+    assert.match(
+      source,
+      /direct start without a retained ID.*?stop.*?(?:no retry or mode switch|without retry or mode switch)/i,
     );
   }
 });

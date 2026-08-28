@@ -1372,7 +1372,7 @@ test("behavioral eval cases are well-formed and reference real fixtures", async 
 
   assert.equal(document.format, "firstdraft.skill-evals/1");
   assert(Array.isArray(document.cases));
-  assert(document.cases.length > 0);
+  assert.equal(document.cases.length, 65);
 
   const ids = new Set();
   const triggerValues = new Set();
@@ -2827,7 +2827,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
   const pushSection = skillSource.match(
-    /## Submit snapshots and use diagnostics([\s\S]*?)## Select and request the Compile journey/,
+    /## Submit snapshots and use diagnostics([\s\S]*?)## Request the selected Compile journey/,
   );
   assert(pushSection, "SKILL.md: missing snapshot submission section");
   const normalizedPushSection = pushSection[1].replace(/\s+/g, " ");
@@ -3711,6 +3711,36 @@ test("product Compile and retained Compilation evals match the CLI contract", as
       stage_as: ".firstdraft/state.json",
     },
   ]);
+
+  const directReadBack = evaluation("precompile-drawing-board-read-back");
+  hasExpectation(
+    directReadBack,
+    "Selects direct mode before approval",
+    "firstdraft plan compile --output ./application",
+    "no Publication, GitHub repository, .git directory, or deployment",
+  );
+  hasExpectation(
+    directReadBack,
+    "selected direct mode",
+    "Compile wrapper count remains zero before approval",
+  );
+
+  const direct = evaluation("compile-prepared-drawing-board-application");
+  hasExpectation(
+    direct,
+    "same continuing session as precompile-drawing-board-read-back",
+    "selected direct local mode",
+  );
+  hasExpectation(
+    direct,
+    "After approval",
+    "exactly one firstdraft plan compile --output ./application",
+    "does not also run zero-flag plan compile",
+  );
+  hasExpectation(
+    direct,
+    "no Publication, GitHub repository, repository URL, or deployment claim",
+  );
 
   const terminalStage = evaluation("compile-distinguishes-terminal-stage");
   hasExpectation(
