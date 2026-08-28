@@ -1,6 +1,6 @@
 # Behavioral evaluation index
 
-`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 65 fresh-context cases. Cases and
+`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 66 fresh-context cases. Cases and
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
 
@@ -34,8 +34,8 @@ The protocol is evaluator-facing and is not packaged with the Skill.
 - `push-supported-enum-plan`
 - `repair-well-founded-analysis-issue`
 - `validate-supported-application-intent`
-- `private-ios-request-requires-choice`
-- `preserve-unsupported-appearance-intent`
+- `private-ios-request-preserves-current-boundary`
+- `preserve-partially-realized-appearance-intent`
 - `correct-source-issue-alongside-capability-gap`
 - `analysis-failed-stop`
 - `standalone-status-binds-accepted-generation`
@@ -45,6 +45,7 @@ The protocol is evaluator-facing and is not packaged with the Skill.
 - `analysis-wait-timeout-stop`
 - `analysis-changed-stop`
 - `unsupported-field-capabilities`
+- `review-current-case-chat-boundary`
 - `stale-writer-conflict`
 - `ambiguous-network-outcome`
 - `local-state-not-saved`

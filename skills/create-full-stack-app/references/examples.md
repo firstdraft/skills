@@ -13,6 +13,7 @@ change.
 - [Public mutation, show projection, returns, and destroy](#public-mutation-show-projection-returns-and-destroy)
 - [One Entity with required and optional scalar Fields](#one-entity-with-required-and-optional-scalar-fields)
 - [Ordinal enum Field](#ordinal-enum-field)
+- [Web Account and protected profile](#web-account-and-protected-profile)
 - [Stored and reverse relationship](#stored-and-reverse-relationship)
 
 ## Empty starter
@@ -101,10 +102,11 @@ Web-only plans may use the same exact Scaffold with `native: {}` and no domain. 
 on the web without authentication. Confirm that exposure with the user before adding it; do not add it merely to
 satisfy the iPhone navigation requirement or silently discard private or broader access intent.
 
-Adding `appearance` to this candidate remains structurally valid and importable. A matching valid AnalysisRun
-records `foundation_plan.gap.appearance.not_generated` at `/application/appearance` as a target-support gap.
-Preserve an intentional Appearance request and report the complete reviewed GapSet rather than deleting it merely
-to obtain a gap-free result.
+Adding `appearance` to this candidate emits the selected theme and colors in generated Rails and selected-iOS
+shells. A matching valid AnalysisRun still records the partial
+`foundation_plan.gap.appearance.icon_assets.not_generated` record at `/application/appearance` because derived
+favicon, PWA-icon, and iOS AppIcon assets remain stock. Preserve the intentional Appearance request and report that
+precise reviewed delta rather than describing Appearance as wholly unsupported.
 
 ## Conditional text length
 
@@ -147,16 +149,16 @@ only after a release date exists; nil title handling still comes from requiredne
 }
 ```
 
-The same release also admits unconditional ordered integer-literal range comparisons and conditional text or
-ordinary-Reference presence and absence. See the Foundation Plan reference for the exact closed subset. A
-conditional maximum does not become an unconditional form `maxlength`.
+The same release also admits unconditional or bounded conditional ordered integer-literal range comparisons and
+conditional text or ordinary-Reference presence and absence. See the Foundation Plan reference for the exact closed
+subset. A conditional maximum does not become an unconditional form `maxlength`.
 
 ## Public mutation, show projection, returns, and destroy
 
-This Scaffold fragment is the complete show-and-destroy extension for a `movie` Entity with owner-local `title` and
-`notes` short-text Fields and a required ordinary `director` Reference. The `movie.director` input names the
-Reference's mechanically derived forward Association. Route order, public authorizations, nonempty create and
-update inputs, and return destinations are coupled exactly as shown.
+This Scaffold fragment is one complete supported show-and-destroy shape for a `movie` Entity with owner-local
+`title` and `notes` short-text Fields and a required ordinary `director` Reference. The `movie.director` input names
+the Reference's mechanically derived forward Association. Its route order, public authorizations, nonempty create
+and update inputs, and return destinations are internally coherent; this is not the only admitted route combination.
 
 ```jsonc
 {
@@ -218,11 +220,10 @@ update inputs, and return destinations are coupled exactly as shown.
 }
 ```
 
-Omit `show.projection` for descriptor-only detail. Without destroy, omit its route and definition. The base
-create/update shape omits show and returns both mutations to the same Entity's public index. Standalone show,
-Association or nested projections, cross-Entity returns, and other destroy destinations remain unsupported.
-A Reference-owned conditional-presence Validation can also fit this form when its optional ordinary Reference has
-`one_to_one: false` and the Reference's forward Association appears in both input lists.
+Omit `show.projection` for descriptor-only detail. Without destroy, omit its route and definition. Standalone show,
+Policy-controlled authorization, server bindings, Association or recursive projections, and other route subsets are
+assessed from their own structured prerequisites. This fragment demonstrates one public combination; use the current
+Foundation Plan reference and matching GapSet for any other authored consumer instead of generalizing from it.
 
 ## One Entity with required and optional scalar Fields
 
@@ -352,6 +353,171 @@ so it has no UUID and does not require `generate uuid`. Its literal names the se
 key. If `medium` is renamed, update the default in the same candidate while preserving that value's UUID. Omit
 `ordinal` when order is presentational rather than ranked.
 
+The current target emits this required enum as a non-null string with model inclusion and the literal `medium`
+default. It does not emit Rails `enum` helpers, a database membership constraint, or general ordinal-rank behavior.
+Do not assume a blanket enum gap; inspect the matching analysis for any unsupported consumer.
+
+## Web Account and protected profile
+
+This complete document expresses the current bounded Web Account topology with Field-only self-service registration,
+two self Policies, and a protected `/profile` surface. It requests no native client; adding `native.ios` would not
+make this Account or profile available natively.
+
+```json
+{
+  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-08"
+  },
+  "application": {
+    "key": "member_directory",
+    "name": "Member Directory",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a02b34-a4e7-78fe-9382-6ada628659c8",
+        "key": "user",
+        "name": "User",
+        "icon": "person",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              },
+              {
+                "field": "user.time_zone",
+                "required": true
+              }
+            ]
+          },
+          "verification": {
+            "kind": "email"
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a02b34-a520-7c1e-af71-cfb98a50dcb8",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "collapse_whitespace"
+            ]
+          },
+          {
+            "subject_uuid": "01a02b34-a558-772f-a5a0-7402b3d4da24",
+            "key": "time_zone",
+            "name": "Time zone",
+            "type": "time_zone",
+            "required": true
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a02b34-a602-7a5b-9782-e3fc270c719d",
+            "key": "read_self",
+            "operation": "read",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          },
+          {
+            "subject_uuid": "01a02b34-a63c-7b80-902c-380e5186d9d4",
+            "key": "update_self",
+            "operation": "update",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "profile": {
+            "authorization": {
+              "policy": "user.read_self"
+            },
+            "projection": [
+              {
+                "field": "user.name"
+              },
+              {
+                "field": "user.time_zone"
+              }
+            ],
+            "return_to": {
+              "kind": "resource",
+              "entity": "user",
+              "route": "profile"
+            }
+          },
+          "update": {
+            "authorization": {
+              "policy": "user.update_self"
+            },
+            "inputs": [
+              {
+                "field": "user.name"
+              },
+              {
+                "field": "user.time_zone"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+The Account-bearing Entity owns all required registration Fields, and every registration input is required and
+Field-backed. Each Scaffold definition references one authored Policy; neither route is public. Broader Account
+topologies, Association registration inputs, and unsupported Policy expressions remain authored meaning with exact
+GapSet consequences.
+
 ## Stored and reverse relationship
 
 This complete document is structurally valid v0.19 and lies within the current ordinary Reference and direct inverse
@@ -433,7 +599,7 @@ Association. The forward `task.project` Association is derived and therefore omi
 
 Changing the deletion behavior is a product decision. Do not choose it silently from target convention.
 
-The current Compiler also admits a narrow indirect collection shape. This is not a per-Plan quota. For example, if
+The current Compiler also admits this first-level indirect collection shape. This is not a per-Plan quota. For example, if
 `Task` additionally owns an admitted ordinary `team` Reference to `Team` with `one_to_one: false`—whose mechanically
 derived forward `task.team` Association is omitted from the Plan—and `Project` owns the admitted `project.tasks`
 inverse above, Project may author:
@@ -449,6 +615,9 @@ inverse above, Project may author:
 }
 ```
 
-The generated collection is distinct. The `through` step must be an admitted referenced-side `has_many` inverse,
-and `source` must be an admitted mechanically derived forward Association; both underlying References must have
-`one_to_one: false`. Other indirect paths remain unsupported.
+The generated collection is distinct. In this example, the `through` step is an admitted referenced-side `has_many`
+inverse, the `source` is an admitted mechanically derived forward Association, and both underlying References have
+`one_to_one: false`. This is one supported shape, not the current boundary statement: the reviewed Case Chat result
+also realizes selected predicated sources, several first-level indirect Associations, and one nested-through form.
+Use [the exact Association reference](foundation-plan-019.md#references-and-associations) and the reviewed GapSet to decide whether
+another authored path is realized.

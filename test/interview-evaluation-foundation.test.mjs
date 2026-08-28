@@ -141,7 +141,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
 test("home-inventory corpus case probes consequential ambiguity without invented answers", async () => {
   const document = await loadEvaluationDocument();
   assert.equal(document.format, "firstdraft.skill-evals/1");
-  assert.equal(document.cases.length, 65);
+  assert.equal(document.cases.length, 66);
 
   const cases = await loadEvaluationCases();
   const evaluation = evaluationCaseById(
@@ -205,14 +205,14 @@ test("packaged interview guidance keeps the opening turn focused on one product 
   );
   assert.match(
     normalizedSkill,
-    /smallest public index and the exact create\/update, show-projection, return-destination, and destroy extensions/,
+    /Web Scaffolds may be public or may use the bounded Account and Policy slices.*?ordinary iPhone navigation remains public-only and Account-free/,
   );
-  assert.match(normalizedSkill, /every generated route public and unauthenticated/);
+  assert.doesNotMatch(normalizedSkill, /every generated route public and unauthenticated/);
   const interview = markdownSection(skill, "Interview and author incrementally");
   assert.doesNotMatch(interview, /successful Publication|dated staging discovery/i);
   assert.match(
     interview,
-    /explicitly requires private or\s+authenticated access[\s\S]*?preserve that meaning[\s\S]*?exact support consequence in review[\s\S]*?rather than\s+silently substituting a public requirement/,
+    /requires private or authenticated access[\s\S]*?model that\s+meaning first[\s\S]*?distinguish realized Web behavior from exact Web or native gaps[\s\S]*?never silently substitute public access/,
   );
   assert.match(
     modelingGuide,
@@ -411,9 +411,9 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       readBack,
       "complete one-record GapSet",
-      "foundation_plan.gap.appearance.not_generated",
-      "kind appearance",
-      "status not_generated",
+      "foundation_plan.gap.appearance.icon_assets.not_generated",
+      "kind appearance_icon_assets",
+      "status partially_generated",
       "/application/appearance",
       "readable_path application.appearance",
     ),
@@ -422,7 +422,8 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       readBack,
       "valid applies to the admitted graph",
-      "Appearance target gap",
+      "Appearance theme and colors are realized",
+      "derived icon assets are not",
       "does not require weakening the Plan",
     ),
   );
@@ -460,11 +461,31 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     cases,
     "precompile-drawing-board-read-back",
   );
+  const appearanceAnalysis = await readEvaluationJson(
+    path.join(
+      repository,
+      "evals",
+      "create-full-stack-app",
+      "fixtures",
+      "appearance-issues-analysis.json",
+    ),
+  );
+  const expectedAppearanceGapSetDigest =
+    appearanceAnalysis.analysis.gap_set_sha256;
+  assert.match(expectedAppearanceGapSetDigest, /^[0-9a-f]{64}$/);
+  for (const evaluationCase of [readBack, directReadBack]) {
+    assert(
+      evaluationCase.expectations.some((expectation) =>
+        expectation.includes(expectedAppearanceGapSetDigest),
+      ),
+      `${evaluationCase.id}: missing fixture GapSet digest`,
+    );
+  }
   assert.match(directReadBack.prompt, /Drawing Board workspace/);
   assert(
     expectationIncludes(
       directReadBack,
-      "complete one-record Appearance target GapSet",
+      "complete one-record Appearance icon-assets GapSet",
       "reason, and consequence",
     ),
   );

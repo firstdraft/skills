@@ -3388,7 +3388,7 @@
     },
     "scaffoldDestroy": {
       "title": "Scaffold destroy",
-      "description": "Authorization and the required return destination for a generated destroy control.",
+      "description": "Authorization and the required return destination for an authored destroy interaction.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -3423,12 +3423,12 @@
     },
     "scaffoldAuthorization": {
       "title": "Scaffold authorization",
-      "description": "Every generated resource request declares public access or a Policy.",
+      "description": "Every authored Scaffold resource request declares public access or a Policy.",
       "oneOf": [
         {
           "const": "public",
           "title": "Public",
-          "description": "No Account or Policy decision is required for this generated surface."
+          "description": "No Account or Policy decision is required for this authored surface."
         },
         {
           "$ref": "#/$defs/authorizationBinding"
@@ -3462,7 +3462,7 @@
         {
           "const": "public",
           "title": "Public",
-          "description": "No Account or Policy decision is required for this generated presentation."
+          "description": "No Account or Policy decision is required for this authored Association presentation."
         },
         {
           "$ref": "#/$defs/scaffoldAssociationAuthorizationBinding"
@@ -4212,7 +4212,7 @@
     },
     "rubyPattern": {
       "title": "Ruby regular-expression pattern",
-      "description": "A non-executable Regexp body compiled and safety-checked by the pinned Ruby target.",
+      "description": "A non-executable Regexp body whose lowering target must prove valid and safe for the target runtime before generation.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -4221,13 +4221,13 @@
       "properties": {
         "source": {
           "title": "Source",
-          "description": "Ruby Regexp source without slash delimiters. Use \\A and \\z for whole-value positive matches. The line anchors ^ and $ are rejected. A positive-position \\Z is accepted only for does_not_match so a pattern may include one final newline in its matched set; \\Z is rejected inside lookaround or absent expressions and is not a substitute for Field whitespace normalization.",
+          "description": "Ruby Regexp source without slash delimiters. Use \\A and \\z for whole-value positive matches. The current positive Rails lowering admits only those anchors around printable-ASCII character-class atoms with optional ?, *, or +; every other source, including ^, $, and \\Z, remains a target gap. The does_not_match semantic shape reserves positive-position \\Z so a pattern can include one final newline in its matched set. No current target lowers does_not_match, so its authoring rule that \\Z stay outside lookaround or absent expressions does not yet have executable target proof. \\Z is not a substitute for Field whitespace normalization.",
           "type": "string",
           "minLength": 1
         },
         "case_insensitive": {
           "title": "Case insensitive",
-          "description": "Compile the pattern with Ruby's ignore-case option.",
+          "description": "Request Ruby ignore-case matching.",
           "type": "boolean",
           "default": false
         }
@@ -4736,7 +4736,7 @@
     },
     "scaffoldBinding": {
       "title": "Server-owned create binding",
-      "description": "A Field or Reference assigned by generated request code before authorization and persistence.",
+      "description": "A Field or Reference assigned by request code claiming this authored binding before authorization and persistence.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -4794,7 +4794,7 @@
     },
     "returnTo": {
       "title": "Return to",
-      "description": "The one required destination carried by a generated HTML mutation interaction. It is never a fallback.",
+      "description": "The one required destination carried by an authored HTML mutation interaction when claimed as realized. It is never a fallback.",
       "oneOf": [
         {
           "title": "Current location",
