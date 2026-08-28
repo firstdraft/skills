@@ -57,6 +57,7 @@ syntax; do not add compatibility aliases.
    ```sh
    npm ci --ignore-scripts
    sh script/check
+   node script/check-cli-contract.mjs /path/to/exact/cli
    node script/check-claude-plugin-package.mjs --cli-root /path/to/exact/cli
    ```
 
@@ -162,7 +163,12 @@ the approved named release sequence.
    bypass for this gate.
 4. Merge only after the exact package and all selected pre-merge qualification gates pass.
 5. After merge, run the two public installation commands in fresh isolated Claude state and record the exact fetched
-   catalog commit, selected npm package, installed manifest, Skill declaration, inline install path, and bundled CLI.
+   catalog commit, selected npm package, installed manifest, Skill declaration, inline install path, and bundled CLI:
+
+   ```sh
+   claude plugin marketplace add firstdraft/skills
+   claude plugin install firstdraft@firstdraft-skills
+   ```
 
 A post-merge public install cannot be a circular pre-merge gate. Local validation, direct npm installation, package
 publication, and catalog source inspection do not prove the public two-command installation path.
@@ -243,6 +249,7 @@ From a clean, non-shallow candidate checkout:
 ```sh
 npm ci --ignore-scripts
 npm run check
+node script/check-cli-contract.mjs /path/to/exact/cli
 node script/check-claude-plugin-package.mjs --cli-root /path/to/exact/cli
 ```
 

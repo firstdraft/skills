@@ -51,23 +51,21 @@ test("current release docs route through structured identities", async () => {
     ({ name }) => name === "firstdraft",
   );
 
-  for (const source of [readme, releasing]) {
-    assert(
-      source.includes(`Plugin \`${compatibility.version}\``) ||
-        source.includes(
-          `@firstdraft.com/claude-code@${compatibility.version}`,
-        ),
-    );
-    assert(source.includes(compatibility.plugin_source.tarball_sha256));
-    assert.match(source, /unpublished and unpromoted/i);
-  }
-  assert(readme.includes(`Plugin \`${publicPlugin.version}\``));
+  assert.match(readme, /\(release\/compatibility\.json\)/);
+  assert.match(readme, /\(RELEASING\.md\)/);
+  assert(
+    releasing.includes(
+      `@firstdraft.com/claude-code@${compatibility.version}`,
+    ),
+  );
+  assert(releasing.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
+  assert(releasing.includes(compatibility.plugin_source.tarball_sha256));
+  assert.match(releasing, /unpublished and unpromoted/i);
   assert(
     releasing.includes(
       `@firstdraft.com/claude-code@${publicPlugin.version}`,
     ),
   );
-  assert(readme.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
   assert.match(releasing, /release\/compatibility\.json.*owns candidate/s);
   assert.match(releasing, /marketplace manifest owns public catalog selection/);
   assert.match(

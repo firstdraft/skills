@@ -1,109 +1,102 @@
 # First Draft Skills
 
-Portable Agent Skills for [First Draft](https://github.com/firstdraft/firstdraft): author a Foundation Plan and use
-the current bounded Rails-and-iPhone Compilation workflow.
+This repository packages the portable agent instructions that turn a product conversation into a reviewed
+[Foundation Plan](https://github.com/firstdraft/firstdraft) and drive the First Draft authoring workflow. The
+canonical Skill is packaged for Claude Code; Drawing Board installs the same Skill into Claude and Codex workspaces.
 
-This repository is experimental. It does not offer arbitrary application generation, deployment, Android, iPad,
-Accounts, notifications, or broader web and native clients. Unsupported product meaning must remain explicit. A
-valid review can carry a complete GapSet describing meaning skipped by the service or not realized by the selected
-target.
+Trying First Draft as a tester? Start with the
+[Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
 
-## Current state
+## What this repository owns
 
-| Surface | Selected identity |
-|---|---|
-| Source candidate | Plugin `0.2.0`; packed SHA-256 `c3e87bb450630f04da9c6f724045784a4396f0e41222bab9f6ac5297273b0313` |
-| Public marketplace | Plugin `0.1.1` |
-| npm `next` and `latest` | Plugin `0.1.1` |
-| Bundled CLI | `@firstdraft.com/cli@0.2.0` |
-| Compatible service API | `>= 0.3.0`, `< 0.4.0` |
-| Foundation Plan | `firstdraft.foundation-plan.sketch/0.19` |
+- the portable create-full-stack-app Skill and its task routing;
+- beginner-to-machine-reference authoring guidance for Foundation Plan 0.19;
+- the exact schema, examples, and review checklists packaged with the Skill;
+- behavioral evaluations for agent workflow changes;
+- Claude plugin assembly around the canonical Skill and reviewed CLI package; and
+- release compatibility checks, package evidence, and promotion runbooks.
 
-The source candidate is unpublished and unpromoted. Public installation still selects immutable plugin `0.1.1`.
-A source merge is integration, not authorization to publish a package, move an npm dist-tag, change the public
-catalog, or deploy First Draft. See [`RELEASING.md`](RELEASING.md) for the current approval-gated sequence.
+The Service owns Foundation Plan semantics and Compilation behavior. The CLI owns transport and terminal command
+behavior. This repository teaches an agent how to use those contracts without creating a second product definition.
 
-The current Compiler admits ten scalar Field kinds, bounded References and Associations, a bounded Validation
-subset, exact public Scaffold shapes, optional semantic icons, and an iPhone project limited to index/navigation.
-Every admitted generated route is public and unauthenticated. Read the packaged
-[current evidence boundary](skills/create-full-stack-app/references/foundation-plan-019.md#current-evidence-boundary)
-before making a support claim.
-
-## Install and preview
-
-The public colleague installation commands currently install plugin `0.1.1` with bundled CLI `0.1.0`:
-
-```sh
-claude plugin marketplace add firstdraft/skills
-claude plugin install firstdraft@firstdraft-skills
-```
-
-From a checkout, preview the canonical Skill without registering a marketplace:
-
-```sh
-claude --plugin-dir .
-```
-
-With a GitHub CLI build that provides the preview command:
-
-```sh
-gh skill preview firstdraft/skills create-full-stack-app
-```
-
-Do not present the Skill as ordinary-use-ready. A bounded public install has been observed, but existing-install
-updates and the authenticated template-and-Codespace journey remain unproved. Configure `FIRSTDRAFT_API_URL` and
-`FIRSTDRAFT_API_TOKEN` outside the agent conversation; never place a token in chat or on a command line.
-
-## Documentation
-
-Start with the route for the task instead of reading the repository front to back:
+## Start with the right document
 
 | Task | Read first |
 |---|---|
-| Maintain this repository | [`docs/README.md`](docs/README.md) |
-| Use or review the installable workflow | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md) |
-| Check current release policy | [`RELEASING.md`](RELEASING.md) |
-| Find an observed result | [`evidence/README.md`](evidence/README.md) |
-| Find a behavioral evaluation | [`evals/README.md`](evals/README.md) |
-| Inspect exact structural syntax | [`foundation-plan-0.19.schema.json`](skills/create-full-stack-app/references/foundation-plan-0.19.schema.json) |
+| Change the Skill or repository | [Agent instructions](AGENTS.md), then [documentation map](docs/README.md) |
+| Understand the installed workflow | [Skill entrypoint](skills/create-full-stack-app/SKILL.md) |
+| Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
+| Check current Foundation Plan capability | [Foundation Plan reference](skills/create-full-stack-app/references/foundation-plan-019.md) |
+| Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.19.schema.json) |
+| Add or run behavioral evaluations | [Evaluation guide](evals/README.md) |
+| Inspect a dated observation | [Evidence archive](evidence/README.md) |
+| Prepare or promote a release | [Release runbook](RELEASING.md) |
 
-Historical cross-repository pins and release chronology are retained in the evidence archive. They are not current
-instructions.
+Historical pins and release chronology in the evidence archive are receipts, not current instructions.
 
-## Packaging
+## Repository layout
 
-Each directory under `skills/` is an independently installable portable Skill. Repository tests, evals, and evidence
-remain outside those installable directories.
+| Path | Responsibility |
+|---|---|
+| skills/create-full-stack-app/ | Canonical portable Skill and packaged references |
+| .claude-plugin/, packages/ | Release-gated public catalog selection and plugin assembly, not a second editable Skill copy |
+| evals/ | Behavioral cases and evaluator contracts |
+| evidence/ | Dated installation, compatibility, and workflow receipts |
+| script/ | Repository, package, and release compatibility checks |
+| docs/ | Maintainer documentation and ownership map |
 
-Packing copies the canonical `skills/create-full-stack-app` directory into a temporary plugin tree; no second
-editable Skill copy is committed under `packages/`. The assembled plugin also includes a small `firstdraft` adapter
-and the exact packed files from CLI `0.2.0`. Executables in a plugin-root `bin/` directory are added to the Bash
-tool's `PATH` by Claude Code.
-
-Sensitive user configuration is not delivered to an executable merely because the plugin's `bin/` directory is on
-a Bash tool's `PATH`. Plugin `0.1.1` therefore uses the ambient `FIRSTDRAFT_API_URL` and
-`FIRSTDRAFT_API_TOKEN` contract. A future Claude-native secure bridge remains tracked in
-[issue #27](https://github.com/firstdraft/skills/issues/27).
+Packing copies the canonical Skill into a temporary plugin tree and adds the reviewed CLI package. Keep authoring
+truth in the canonical Skill; do not maintain parallel prose under a package directory.
 
 ## Development
 
-Use Node.js 22 or newer. Checks require a real, clean, non-shallow Git checkout because they inspect the index,
-historical evidence objects, and the complete `skills/` subtree. Hosted CI uses full history.
+Use Node.js 22 or newer and a real, non-shallow Git checkout. Checks inspect the repository index, historical
+evidence objects, and the complete Skill tree.
 
-```sh
+~~~sh
 npm ci --ignore-scripts
 sh script/check
-```
+~~~
 
-The full check validates release compatibility, deterministic plugin packaging, the portable Skill boundary,
-behavioral eval structure, exact examples and schema fixtures, and the pinned CLI contract. CI additionally rehearses
-prospective release ordering on Node 24.18.0 and checks the exact reviewed CLI revision.
+The check covers:
+
+- repository and documentation structure;
+- the portable Skill boundary;
+- Foundation Plan schema and example fixtures;
+- behavioral-evaluation structure;
+- deterministic plugin packaging with a stub CLI; and
+- release compatibility.
+
+CI separately checks the exact pinned CLI contract and candidate package digest. The release runbook owns the
+commands for reproducing that check against a local exact CLI checkout.
+
+Preview the plugin directly from a checkout:
+
+~~~sh
+claude --plugin-dir .
+~~~
+
+If the installed GitHub CLI supports Skill preview:
+
+~~~sh
+gh skill preview firstdraft/skills create-full-stack-app
+~~~
 
 Before proposing a Skill collection release, also run:
 
-```sh
+~~~sh
 gh skill publish --dry-run
-```
+~~~
 
-These checks establish source and package eligibility only. They do not authorize or prove publication, catalog
-promotion, service deployment, authentication, Compilation, GitHub Publication, or production readiness.
+Source validation does not publish a package, move a dist-tag, promote a marketplace entry, or deploy the Service.
+Those actions follow the machine-owned [compatibility record](release/compatibility.json),
+[RELEASING.md](RELEASING.md), and the serialized cross-repository release process described there.
+
+## Credential boundary
+
+The Skill expects FIRSTDRAFT_API_URL and FIRSTDRAFT_API_TOKEN to be supplied by its workspace. Claude Code does not
+deliver plugin `userConfig` to `bin/` executables, so the adapter is a transparent launcher over those ambient
+variables; a Claude-native secure bridge is tracked in [issue #27](https://github.com/firstdraft/skills/issues/27).
+Never put a token in agent conversation, command-line arguments, checked-in files, examples, evaluations, or
+evidence. The executable adapter may read the environment, but ordinary Skill reference text must not receive or
+reproduce secret values.
