@@ -242,12 +242,12 @@ After the exact candidate's semantic read-back is approved, read
   firstdraft_cli plan compile
   ```
 
-Invoke it exactly once, without another confirmation or gap field, and do not reimplement CLI internals.
+Invoke it exactly once without another confirmation or gap field; do not reimplement CLI internals.
 
-Report direct output only after verified materialization. On `request_outcome_unknown` with `phase: "compilation"`,
-preserve the Plan, private state, and absent output; do not retry or switch modes. A validated retained ID permits only
+Report direct output only after materialization verifies. On `request_outcome_unknown` with `phase: "compilation"`,
+preserve Plan, private state, and absent output; do not retry or switch modes. A validated retained ID permits
 status and, after success, download. In zero-flag mode, require terminal Publication success and its validated URL;
-Compilation success alone is insufficient. Never Compile concurrently. The documented Publication-singleton replay
+Compilation success alone is insufficient. Never Compile concurrently. Publication-singleton replay
 never applies to an ambiguous push or direct start.
 
 ## Inspect or download the retained Compilation
@@ -296,7 +296,8 @@ In particular:
 - treat `invalid_publication_status` as a contract mismatch that replay cannot repair;
 - distinguish a failed Compilation from a later failed Publication by validated statuses;
 - keep `local_state_not_saved.recovery_state` private; and
-- correct `invalid_output_path` without network access, but never bypass provenance or artifact validation.
+- for `invalid_output_path`, choose an absent path. Direct preflight and retained download make no request; a
+  post-analysis recheck may follow an accepted push but starts no Compilation.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.

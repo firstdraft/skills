@@ -2570,7 +2570,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert.match(
     readme,
-    /`precompile-semantic-read-back`[\s\S]*?nonempty target GapSet[\s\S]*?`compile-prepared-movie-catalog` is the executable product-journey fixture[\s\S]*?without echoing the GapSet digest or records[\s\S]*?earlier gap-free Movie Catalog journey[\s\S]*?does not establish the\s+new nonempty-GapSet approval path[\s\S]*?successor driver[\s\S]*?fresh Claude Code process[\s\S]*?dated\s+\[report\][\s\S]*?For a future live run[\s\S]*?exact reviewed\s+CLI revision[\s\S]*?install the candidate plugin[\s\S]*?stage `appearance-issues\.foundation-plan\.json`[\s\S]*?matching complete valid GapSet before approval[\s\S]*?zero-flag `firstdraft plan compile` command[\s\S]*?pushes the exact file[\s\S]*?matching\s+exact Head[\s\S]*?final byte check/,
+    /`precompile-semantic-read-back` and `precompile-drawing-board-read-back`[\s\S]*?selects Publication or\s+direct output before approval[\s\S]*?`compile-prepared-movie-catalog` and `compile-prepared-drawing-board-application`[\s\S]*?post-approval execution halves[\s\S]*?without echoing the GapSet digest or records[\s\S]*?For a future live Publication-pair run[\s\S]*?zero-flag `firstdraft plan compile`[\s\S]*?For the direct pair[\s\S]*?`firstdraft plan compile --output \.\/application`[\s\S]*?pushes the exact file[\s\S]*?matching exact Head[\s\S]*?final byte check/,
   );
   assert.match(
     readme,
@@ -3506,7 +3506,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     readme,
-    /final exact\s+Movie Catalog candidate requires its matching push and status before approval[\s\S]*?after approval, zero-flag product\s+Compile repeats the push and owns the remaining journey without a redundant preparatory status read/,
+    /final exact\s+Movie Catalog candidate requires its matching push and status before approval[\s\S]*?after approval, the selected product\s+Compile repeats the push and owns the remaining journey without a redundant preparatory status read/,
   );
   assert.match(
     readme,
@@ -3527,6 +3527,10 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   assert.match(
     skill,
     /\[Product Compile\]\(references\/diagnostics-and-recovery\.md#product-compile\)/,
+  );
+  assert.match(
+    skill.replace(/\s+/g, " "),
+    /for `invalid_output_path`, choose an absent path\. Direct preflight and retained download make no request; a post-analysis recheck may follow an accepted push but starts no Compilation/,
   );
   const normalizedRecovery = recovery.replace(/\s+/g, " ");
   assert.match(
