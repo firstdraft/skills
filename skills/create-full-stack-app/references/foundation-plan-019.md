@@ -103,13 +103,12 @@ The bounded local Compilation evidence used reviewed CLI revision
 `205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d`. Prior contract checks used reviewed
 successor revision `e53eb38d7e8254e6ba1e660b38c5d32d0314be17`, with JavaScript-source runtime digest
 `0983106d7c1054137d70dccb1091eeadd8272ffcca1f7bba1bde9c8028452fad`. The current fixtures and check use reviewed
-GapSet-contract revision `5ac300f1a2e7262c56473de270a0bd140f169c25`, with JavaScript-source runtime digest
-`5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc`, as contract provenance rather than release
-or execution evidence. The current revision exposes `generate uuid`, `generate
-application-key`, `plan init`, `plan push`, `plan status`, zero-flag `plan compile`, `compilation status`, and
-`compilation download`. It deliberately has no public `plan subject-id`, `plan publish`, or local-start
-`plan compile --output` contract. The coordinated checkout declares the experimental
-`@firstdraft.com/cli@0.2.0` package. Check commands rather than inferring compatibility from the version
+direct-Compilation revision `d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, with JavaScript-source runtime digest
+`0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098`, as contract provenance rather than release
+or execution evidence. The current revision exposes `generate uuid`, `generate application-key`, `plan init`,
+`plan push`, `plan status`, zero-flag `plan compile`, direct `plan compile --output`, `compilation status`, and
+`compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
+experimental `@firstdraft.com/cli@0.2.1` package. Check commands rather than inferring compatibility from the version
 number. Candidate qualification or package publication does not prove authentication, staging compatibility, or a
 complete user journey.
 

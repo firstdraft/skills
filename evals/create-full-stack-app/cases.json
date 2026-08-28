@@ -856,7 +856,7 @@
     {
       "id": "precompile-semantic-read-back",
       "should_trigger": true,
-      "prompt": "Prepare the staged Movie Catalog for Compilation. Reread the exact Plan and attached matching valid analysis, identify the Plan and GapSet digests, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
+      "prompt": "Prepare the staged Movie Catalog for Compilation. I want the approved result published to one private GitHub repository. Reread the exact Plan and attached matching valid analysis, identify the Plan and GapSet digests, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
         "Covers material Fields, relationships, rules, behavior, and data when present without enumerating absent Foundation Plan subject families.",
@@ -867,7 +867,7 @@
         "Verifies that the attached valid analysis's project and analysis graph versions agree and that analysis.head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before treating it as the matching reviewed result.",
         "Reports the complete one-record GapSet and digest 9afac31c5a3f83b66542b5a683ad0a73c009bec747b9fa39049bc2c43665da98, including classification target_support_gap, code foundation_plan.gap.appearance.not_generated, kind appearance, status not_generated, pointer /application/appearance, readable_path application.appearance, reason, and consequence.",
         "Explains that valid applies to the admitted graph, that the Appearance target gap was admitted and analyzed but is not fully realized, and that the gap does not require weakening the Plan before Compile.",
-        "States explicitly that Compile does not deploy and that a terminal successful Publication is intended to create one private GitHub repository, while only that invocation's validated terminal success proves it.",
+        "Selects the zero-flag Publication mode because the requested result is one private GitHub repository, states explicitly that Compile does not deploy, and explains that only that invocation's validated terminal success proves Publication.",
         "Asks the user to correct or explicitly approve the complete semantic model and does not run plan compile before that approval.",
         "Does not enumerate every absent Foundation Plan subject family or recite immaterial empty categories.",
         "Preserves the exact staged Plan and its existing subject UUIDs, does not call the staged candidate unstaged, and does not delete, loosen, flatten, relabel, substitute, or require a speculative last-minute change merely to fit current capabilities."
@@ -894,8 +894,8 @@
       "should_trigger": true,
       "prompt": "Try to Compile the staged malformed Foundation Plan now so we can use First Draft's diagnostics.",
       "expectations": [
-        "Runs the zero-flag plan compile product subcommand through the Skill resolver and lets it submit the exact current file even though local JSON parsing would fail.",
-        "Uses the narrow known-invalid diagnostic exception instead of requiring semantic approval, because the exact staged bytes are malformed and invalid analysis cannot enter Publication.",
+        "Runs plan compile through the Skill resolver and lets it submit the exact current file even though local JSON parsing would fail, without treating this diagnostic-only invocation as a Publication-mode preference.",
+        "Uses the narrow known-invalid diagnostic exception instead of requiring semantic approval, because the exact staged bytes are malformed and invalid analysis cannot start a Compilation or Publication.",
         "Branches on the validated server_rejected malformed-JSON diagnostic and uses its one-based location without exposing Plan contents.",
         "Recognizes that invalid analysis prevents the command's Publication phase, so no GitHub repository was created by this attempt.",
         "Repairs or asks about the actual diagnostic rather than treating an early Compile attempt as harmful."
@@ -915,13 +915,40 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f. Preserve its intentional Appearance request and Compile that exact candidate now.",
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
       "expectations": [
-        "Requires the installed CLI to expose the zero-flag plan compile product command and not public plan publish or plan compile --output.",
+        "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, rereads the exact local Plan, verifies its SHA-256 and semantic model are unchanged, and does not ask for a second confirmation or repeat the unchanged read-back.",
-        "Runs exactly one zero-flag plan compile through the Skill resolver for this prepared journey; the command pushes the exact whole file, waits for the accepted exact Head's analysis, and invokes Publication after valid analysis with the preserved Appearance target gap and an unchanged local file.",
+        "Selects Publication because the user explicitly requested one private GitHub repository and runs exactly one zero-flag plan compile through the Skill resolver; it does not add --output.",
+        "The command pushes the exact whole file, waits for the accepted exact Head's analysis, and invokes Publication after valid analysis with the preserved Appearance target gap and an unchanged local file.",
         "Treats progress as nonterminal observational output and reports the distinct terminal Compilation and Publication outcomes, reporting success only when stdout contains the validated private GitHub repository URL.",
         "Accepts approval of the previously reviewed support result without requiring the user to echo its GapSet digest or records, preserves the Appearance request, and does not add a gap acknowledgment, gap-specific flag, or gap-specific field; it does not run another preparatory plan push or plan status after approval because the final exact candidate and GapSet were already reviewed.",
+        "Would stop, report the new SHA-256 and semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "compile-prepared-drawing-board-application",
+      "should_trigger": true,
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f. This is a Drawing Board workspace: materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
+      "expectations": [
+        "Requires the installed CLI to expose plan compile --output as a direct local completion mode while retaining zero-flag plan compile as the separate GitHub Publication mode.",
+        "Treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and direct local completion mode; rereads the Plan, verifies its SHA-256 is unchanged, and asks for no second confirmation.",
+        "Runs exactly one firstdraft plan compile --output ./application through the Skill resolver and does not also run zero-flag plan compile, plan publish, or a preparatory plan push or plan status.",
+        "Lets the CLI push the exact Plan, wait for matching valid analysis, start and poll one retained direct Compilation, verify its artifact, and atomically materialize exact bytes and modes without duplicating those mechanics.",
+        "Reports the validated output path, file count, manifest digest, and Compilation status only after materialization succeeds, and makes no Publication, GitHub repository, repository URL, or deployment claim.",
+        "Recognizes that direct mode creates no .git directory and leaves Drawing Board's later nested-Git initialization to the workspace workflow.",
         "Would stop, report the new SHA-256 and semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
       ],
       "artifacts": [
@@ -1001,7 +1028,7 @@
       "prompt": "plan compile returned one validated plan_not_valid envelope whose current analysis is issues_found. Fix the generated repository anyway.",
       "expectations": [
         "Branches on plan_not_valid and the validated semantic diagnostics rather than the shell exit code or human-readable detail.",
-        "Recognizes that no Publication was requested because analysis was not valid and does not claim that a repository or generated app exists.",
+        "Recognizes that no Compilation or Publication was requested because analysis was not valid and does not claim that a repository or generated app exists.",
         "Uses well-founded diagnostics to revise the local candidate or returns to the user for a material product choice before trying again.",
         "Does not invent generated output to repair."
       ],
@@ -1072,6 +1099,17 @@
         "Uses phase publication to recognize that the exact Plan was accepted and analyzed but repository creation may have succeeded despite the unknown response.",
         "Does not infer failure, invent a repository URL, or bypass the CLI with direct First Draft or GitHub requests.",
         "Does not infer failure or start a concurrent command because the Project singleton may already exist, then waits and reruns the same zero-flag plan compile through the Skill resolver with unchanged Plan bytes after the failed invocation exits so its conditional PUT can safely reconcile or resume the retained Publication."
+      ]
+    },
+    {
+      "id": "compile-ambiguous-direct-compilation-outcome",
+      "should_trigger": true,
+      "prompt": "firstdraft plan compile --output ./application returned request_outcome_unknown with phase compilation. The output directory is still absent. Rerun the command, or switch to zero-flag Publication so we get something.",
+      "expectations": [
+        "Uses phase compilation to recognize that the exact Plan was accepted and analyzed and that one direct Compilation may have started without a verified retained identity.",
+        "Does not infer failure from the absent output directory or claim that no retained work exists.",
+        "Preserves the exact approved Plan, private CLI state, and absent output path and stops until First Draft or an operator reconciles the Project.",
+        "Does not rerun plan compile --output, switch to zero-flag plan compile, invoke retained status without a trustworthy Compilation ID, issue HTTP directly, or claim Publication or a GitHub repository."
       ]
     },
     {

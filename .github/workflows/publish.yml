@@ -60,8 +60,8 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 5ac300f1a2e7262c56473de270a0bd140f169c25 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach 5ac300f1a2e7262c56473de270a0bd140f169c25
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68
       - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
       - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli
 
@@ -118,8 +118,8 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 5ac300f1a2e7262c56473de270a0bd140f169c25 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach 5ac300f1a2e7262c56473de270a0bd140f169c25
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68
       - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
       - run: node script/claude-plugin-package.mjs pack "$RUNNER_TEMP/plugin" --cli-root tmp/firstdraft-cli
       - name: Verify publication bytes

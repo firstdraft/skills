@@ -88,9 +88,9 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "5ac300f1a2e7262c56473de270a0bd140f169c25";
+  "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
 const cliContractRuntimeDigest =
-  "5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc";
+  "0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098";
 const previousCliContractBaseline =
   "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
 const previousCliContractRuntimeDigest =
@@ -121,7 +121,7 @@ const freshModelPublicationTree =
   "5815d094e204f8b3928ff5b5467ef85e2551d109";
 const freshModelPublicationCommit =
   "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead";
-const preparedCliPackage = "@firstdraft.com/cli@0.2.0";
+const preparedCliPackage = "@firstdraft.com/cli@0.2.1";
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
     .update(`${JSON.stringify(value, null, 2)}\n`)
@@ -877,8 +877,8 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.1.1",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.2.0");
-  assert.equal(installableManifest.version, "0.2.0");
+  assert.equal(packageTemplate.version, "0.2.1");
+  assert.equal(installableManifest.version, "0.2.1");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, [
     "./skills/create-full-stack-app",
@@ -2759,7 +2759,7 @@ test("local capability check is shell-portable and uses the project wrapper", as
   );
   assert.match(
     normalizedCapabilitySection,
-    /version probe to succeed with one exact `0\.2\.0` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
+    /version probe to succeed with one exact `0\.2\.1` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
   );
   assert.match(
     normalizedCapabilitySection,
@@ -2784,11 +2784,12 @@ test("local capability check is shell-portable and uses the project wrapper", as
   );
   assert(firstDraftBlocks.length > 0);
   for (const body of firstDraftBlocks) {
+    const normalizedBody = body.trimStart();
     assert.match(
-      body,
+      normalizedBody,
       /^firstdraft_cli\(\) \{ if \[ -x \.\/bin\/firstdraft \]; then \.\/bin\/firstdraft "\$@"; else firstdraft "\$@"; fi; \}/,
     );
-    assert.doesNotMatch(body, /^firstdraft (?:generate|plan|compilation)/m);
+    assert.doesNotMatch(normalizedBody, /^firstdraft (?:generate|plan|compilation)/m);
   }
 
   for (const relativePath of canonicalClaudePluginSkillFiles.filter((file) =>
@@ -2826,13 +2827,13 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     await readFile(path.join(evaluationDirectory, "cases.json"), "utf8"),
   ).cases;
   const pushSection = skillSource.match(
-    /## Submit snapshots and use diagnostics([\s\S]*?)## Request the Compile journey/,
+    /## Submit snapshots and use diagnostics([\s\S]*?)## Select and request the Compile journey/,
   );
   assert(pushSection, "SKILL.md: missing snapshot submission section");
   const normalizedPushSection = pushSection[1].replace(/\s+/g, " ");
   assert.match(
     skillSource,
-    /The compatible CLI supplies these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and zero-flag `plan compile`/,
+    /The compatible CLI supplies these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and `plan compile` with either zero flags or `--output`/,
   );
   assert.match(
     normalizedPushSection,
@@ -2970,11 +2971,11 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   assert.match(
     normalizedSkillEvidence,
-    /targets the coordinated plugin 0\.2\.0, CLI 0\.2\.0, and service-contract 0\.3 contract.*?bundled bytes do not prove that exact combination is available from the public catalog.*?narrow experiment, not arbitrary application generation.*?ordinary single-target References.*?conditional text length.*?public and unauthenticated.*?Preserve unsupported meaning and report every reviewed gap.*?valid run may have gaps/,
+    /targets the coordinated plugin 0\.2\.1, CLI 0\.2\.1, and service-contract 0\.3 contract.*?bundled bytes do not prove that exact combination is available from the public catalog.*?narrow experiment, not arbitrary application generation.*?ordinary single-target References.*?conditional text length.*?public and unauthenticated.*?Preserve unsupported meaning and report every reviewed gap.*?valid run may have gaps/,
   );
   assert.match(
     skillSource.replace(/\s+/g, " "),
-    /Recommend repair only after verifying the catalog serves plugin 0\.2\.0 with CLI 0\.2\.0/,
+    /Recommend repair only after verifying the catalog serves plugin 0\.2\.1 with CLI 0\.2\.1/,
   );
   assert.match(
     skillSource,
@@ -3485,19 +3486,19 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   assert(readme.includes(compilationProvenanceServiceBaseline));
   assert.match(
     readme,
-    /zero-flag `plan compile` command pushes[\s\S]*?accepted graph generation[\s\S]*?valid unchanged candidate/,
+    /both exact-byte product Compile modes[\s\S]*?Direct mode starts[\s\S]*?one conditional Compilation[\s\S]*?creates no Publication or `\.git`[\s\S]*?ambiguous direct start is not retried/,
   );
   assert.match(
     readme,
-    /Public `plan publish`\s+and local-start `plan compile --output` are not commands[\s\S]*?`compilation download <id> --output <path>`/,
+    /removed[\s\S]*?`plan subject-id` and public `plan publish` surfaces/,
   );
   assert.match(
     readme,
-    /diagnostic corpus deliberately exercises malformed JSON, local schema diagnostics, semantic and recurring\s+diagnostics, a standalone status result older than its accepted push generation, stale product-Compile analysis,\s+stale local Plan bytes, and phase-specific ambiguous push and Publication outcomes/,
+    /diagnostic corpus deliberately exercises malformed JSON, local schema diagnostics, semantic and recurring\s+diagnostics, a standalone status result older than its accepted push generation, stale product-Compile analysis,\s+stale local Plan bytes, and phase-specific ambiguous push, direct Compilation, and Publication outcomes/,
   );
   assert.match(
     readme,
-    /retains the push graph version\s+and source digest, reads again when status is older, and surfaces a newer generation as a replacement/,
+    /retains\s+the push graph version and source digest, reads again when status is older, and surfaces a newer generation as a\s+replacement/,
   );
   assert.match(
     readme,
@@ -3521,7 +3522,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     skill,
-    /Treat Compilation and Publication as separate retained stages[\s\S]*?Compilation success does not prove publication[\s\S]*?Call it published only after terminal Publication success and a validated private-repository URL/,
+    /Direct output and private GitHub Publication are separate completion modes[\s\S]*?In zero-flag mode, require terminal Publication success and its validated URL[\s\S]*?Compilation success alone is insufficient/,
   );
   assert.match(
     skill,
@@ -3558,7 +3559,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     skill.replace(/\s+/g, " "),
-    /Successful `plan compile` prints only the repository URL and no Compilation ID.*?never recover one from private state or unvalidated output/,
+    /Zero-flag success prints only the repository URL.*?never recover one from private state or unvalidated output/,
   );
   assert.match(
     recovery,
@@ -3678,13 +3679,13 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   assert.equal(schemaDiagnostics.errors[0].instancePath, "/application/key");
 
   const malformed = evaluation("compile-invalid-candidate-is-safe");
-  hasExpectation(malformed, "zero-flag plan compile", "Skill resolver");
-  hasExpectation(malformed, "invalid analysis prevents", "Publication phase");
+  hasExpectation(malformed, "Runs plan compile", "Skill resolver");
+  hasExpectation(malformed, "invalid analysis cannot start", "Compilation or Publication");
   hasExpectation(malformed, "early Compile attempt as harmful");
 
   const movie = evaluation("compile-prepared-movie-catalog");
-  hasExpectation(movie, "not public plan publish or plan compile --output");
-  hasExpectation(movie, "plan compile", "Skill resolver", "prepared journey");
+  hasExpectation(movie, "both plan compile completion modes", "no public plan publish");
+  hasExpectation(movie, "explicitly requested one private GitHub repository", "zero-flag plan compile");
   hasExpectation(movie, "pushes the exact whole file", "accepted exact Head's analysis");
   hasExpectation(movie, "progress as nonterminal observational output");
   hasExpectation(movie, "stdout", "validated private GitHub repository URL");
@@ -3814,7 +3815,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
 
   const semantic = evaluation("compile-semantic-diagnostics");
   hasExpectation(semantic, "Branches on plan_not_valid", "semantic diagnostics");
-  hasExpectation(semantic, "no Publication was requested");
+  hasExpectation(semantic, "no Compilation or Publication was requested");
 
   const recurring = evaluation("compile-recurring-diagnostics");
   hasExpectation(recurring, "recurring diagnostic has not produced new information");

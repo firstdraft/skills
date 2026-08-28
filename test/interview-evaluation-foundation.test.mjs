@@ -107,8 +107,10 @@ test("candidate protocol defines interview coverage and complete-candidate readi
     "service gaps were skipped before semantic analysis",
     "target gaps were not fully realized",
     "`valid` applies only to the admitted graph",
-    "Compile does not deploy",
+    "selected completion mode",
+    "direct output creates only a verified local directory",
     "terminal successful Publication is intended to create one private GitHub repository",
+    "Neither deploys",
     "Use whatever order is clearest",
     "Do not enumerate absent subject families",
     "Preserve its existing subject UUIDs",
@@ -117,13 +119,13 @@ test("candidate protocol defines interview coverage and complete-candidate readi
     "new SHA-256 and semantic delta",
     "same continuing conversation",
     "hash-check it",
-    "run one zero-flag Compile",
+    "run one deliberately selected Compile mode",
     "without a second command-level confirmation",
     "reviewed valid analysis with gaps can proceed through the existing Compile action",
     "without a Plan edit",
     "Do not weaken product meaning",
     "known to be invalid",
-    "invalid analysis cannot enter Publication",
+    "invalid analysis cannot start a Compilation or Publication",
   ]) {
     assert(
       normalizedReadBack.includes(expected),
@@ -218,7 +220,7 @@ test("packaged interview guidance keeps the opening turn focused on one product 
 });
 
 test(
-  "packaged workflow requires one exact semantic approval before a publish-capable Compile",
+  "packaged workflow requires one exact semantic approval before remote Compile work",
   async () => {
     const skill = await readFile(
       path.join(repository, "skills", "create-full-stack-app", "SKILL.md"),
@@ -238,11 +240,11 @@ test(
 
     assert.match(
       normalizedSkill,
-      /targets the coordinated plugin 0\.2\.0, CLI 0\.2\.0, and service-contract 0\.3/,
+      /targets the coordinated plugin 0\.2\.1, CLI 0\.2\.1, and service-contract 0\.3/,
     );
     assert.match(
       normalizedSkill,
-      /catalog serves plugin 0\.2\.0 with CLI 0\.2\.0/,
+      /catalog serves plugin 0\.2\.1 with CLI 0\.2\.1/,
     );
     assert.match(
       normalizedSkill,
@@ -250,7 +252,7 @@ test(
     );
 
     const approvalHeading = "Read back and approve the candidate before Compile";
-    const compileHeading = "Request the Compile journey";
+    const compileHeading = "Select and request the Compile journey";
     assert(
       skill.indexOf(`## ${approvalHeading}`) <
         skill.indexOf(`## ${compileHeading}`),
@@ -276,6 +278,10 @@ test(
       "service gaps were skipped before semantic analysis",
       "target gaps were not fully realized",
       "`valid` applies only to the admitted graph",
+      "selected mode",
+      "direct output creates only a verified local directory",
+      "successful Publication creates one private GitHub repository",
+      "Neither deploys",
       "Do not enumerate absent subject families",
       "correct or explicitly approve the candidate and reviewed gaps",
       "require no digest echo or gap-acknowledgment field",
@@ -284,7 +290,7 @@ test(
       "Do not delete, loosen, flatten, relabel, or substitute intended product meaning",
       "explicitly requested diagnostic-only Compile",
       "already known to be invalid",
-      "Invalid analysis cannot enter Publication",
+      "Invalid analysis cannot start a Compilation or Publication",
       "Valid analysis with gaps can",
       "do not require removal of the corresponding Plan fields",
     ]) {
@@ -300,8 +306,11 @@ test(
         "After the exact candidate's semantic read-back is approved",
       ),
     );
-    assert(compile.includes("do not add a second confirmation ceremony"));
-    assert(compile.includes("or any gap-specific flag or field"));
+    assert(compile.includes("Select one completion mode deliberately"));
+    assert(compile.includes("firstdraft_cli plan compile --output ./application"));
+    assert(compile.includes("run the zero-flag Publication mode"));
+    assert(compile.includes("Invoke the selected mode exactly once"));
+    assert(compile.includes("without another confirmation or gap field"));
 
     const modeling = markdownSection(
       modelingGuide,
@@ -329,8 +338,10 @@ test(
       "every ordered record",
       "service-support gaps were skipped before semantic analysis",
       "target-support gaps were not fully realized",
-      "Compile does not deploy",
+      "deliberately selected completion mode",
+      "direct output creates only a verified local directory",
       "terminal successful Publication is intended to create one private GitHub repository",
+      "Neither deploys",
       "Use the order that best communicates this candidate",
       "Do not enumerate absent subject families",
       "correct or explicitly approve the exact model and reviewed support delta",
@@ -415,8 +426,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert(
     expectationIncludes(
       readBack,
-      "Compile does not deploy",
-      "terminal successful Publication",
+      "zero-flag Publication mode",
       "one private GitHub repository",
       "validated terminal success",
     ),
@@ -438,7 +448,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   );
   assert.equal(
     readBack.expectations.filter((expectation) =>
-      expectation.includes("terminal successful Publication"),
+      expectation.includes("zero-flag Publication mode"),
     ).length,
     1,
   );
@@ -451,7 +461,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       diagnostic,
       "known-invalid diagnostic exception",
-      "invalid analysis cannot enter Publication",
+      "invalid analysis cannot start a Compilation or Publication",
     ),
   );
 
@@ -485,7 +495,14 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
       "SHA-256 and semantic model are unchanged",
     ),
   );
-  assert(expectationIncludes(compile, "exactly one zero-flag plan compile"));
+  assert(
+    expectationIncludes(
+      compile,
+      "explicitly requested one private GitHub repository",
+      "exactly one zero-flag plan compile",
+      "does not add --output",
+    ),
+  );
   assert(
     expectationIncludes(
       compile,
@@ -514,6 +531,53 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
       "new SHA-256 and semantic delta",
       "obtain approval of the changed candidate",
       "no longer matched",
+    ),
+  );
+
+  const direct = evaluationCaseById(
+    cases,
+    "compile-prepared-drawing-board-application",
+  );
+  assert.match(direct.prompt, /Drawing Board workspace/);
+  assert(direct.prompt.includes(`SHA-256 ${movieCatalogSha256}`));
+  assert(
+    expectationIncludes(
+      direct,
+      "exactly one firstdraft plan compile --output ./application",
+      "does not also run zero-flag plan compile",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      direct,
+      "no Publication, GitHub repository, repository URL, or deployment claim",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      direct,
+      "creates no .git directory",
+      "Drawing Board's later nested-Git initialization",
+    ),
+  );
+
+  const ambiguousDirect = evaluationCaseById(
+    cases,
+    "compile-ambiguous-direct-compilation-outcome",
+  );
+  assert(
+    expectationIncludes(
+      ambiguousDirect,
+      "one direct Compilation may have started",
+      "without a verified retained identity",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      ambiguousDirect,
+      "Does not rerun plan compile --output",
+      "switch to zero-flag plan compile",
+      "without a trustworthy Compilation ID",
     ),
   );
 });

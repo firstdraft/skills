@@ -8,12 +8,12 @@ license: "MIT"
 
 Turn one product idea into one coherent Foundation Plan candidate through conversation, incremental local edits,
 and exact-byte diagnostics. Request Compilation only after the user approves a semantic read-back of the exact
-candidate. A terminal successful Publication is intended to create one private GitHub repository; Compile does not
-deploy the application.
+candidate. Direct output and private GitHub Publication are separate completion modes; neither deploys the
+application.
 
 ## Current boundary
 
-This experimental workflow targets the coordinated plugin 0.2.0, CLI 0.2.0, and service-contract 0.3 contract.
+This experimental workflow targets the coordinated plugin 0.2.1, CLI 0.2.1, and service-contract 0.3 contract.
 These bundled bytes do not prove that exact combination is available from the public catalog; verify availability
 independently before advising an installation change.
 
@@ -90,18 +90,18 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.2.0` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.2.1` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Existing cross-repository contract tests own the exhaustive leaf-command
 matrix, including separate stdout and stderr assertions; startup should not rediscover it through a synthesized
 shell loop. The compatible CLI supplies these public commands:
 
 - `generate uuid` and `generate application-key`;
-- `plan init`, `plan push`, `plan status`, and zero-flag `plan compile`; and
+- `plan init`, `plan push`, `plan status`, and `plan compile` with either zero flags or `--output`; and
 - `compilation status` and `compilation download`.
 
-There is no public `plan publish`, `plan subject-id`, or `plan compile --output`. Never replace the CLI automatically.
+There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.
 If its path, version, or help differs, report it and stop remote work instead of using HTTP directly; local Plan work
-may continue. Recommend repair only after verifying the catalog serves plugin 0.2.0 with CLI 0.2.0.
+may continue. Recommend repair only after verifying the catalog serves plugin 0.2.1 with CLI 0.2.1.
 
 Treat `.firstdraft/state.json` as private CLI-owned concurrency state. Never print, paste, commit, or treat it as
 Plan content. Let the user configure `FIRSTDRAFT_API_TOKEN` and any initial `FIRSTDRAFT_API_URL` outside the
@@ -200,57 +200,61 @@ valid status so the complete GapSet can be reviewed. `plan compile` later repeat
 
 ## Read back and approve the candidate before Compile
 
-Before the first `plan compile` that could reach valid analysis and Publication, reread the exact current
+Before the first `plan compile`, reread the exact current
 `.firstdraft/foundation-plan.json`. Give a compact semantic summary covering its path and SHA-256; application scope;
 Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
 and exclusions. Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Explain that service
 gaps were skipped before semantic analysis, target gaps were not fully realized, and `valid` applies only to the
-admitted graph. State that Compile does not deploy and successful Publication is intended to create one private
-GitHub repository. Do not enumerate absent subject families or immaterial properties. Ask the user to correct or
-explicitly approve the candidate and reviewed gaps; require no digest echo or gap-acknowledgment field.
+admitted graph. State the selected mode: direct output creates only a verified local directory; successful Publication
+creates one private GitHub repository. Neither deploys.
+Do not enumerate absent subject families or immaterial properties. Ask the user to correct or explicitly approve the
+candidate and reviewed gaps; require no digest echo or gap-acknowledgment field.
 
 If the Plan bytes change, show the new SHA-256 and the semantic delta, then obtain approval of the changed candidate.
 In the same continuing conversation, after unambiguous approval, reread the Plan, confirm its SHA-256 is unchanged,
-and make the initial request with exactly one zero-flag Compile invocation. Do not ask for a second command-level
+and make the initial request with exactly one invocation in the selected mode. Do not ask for a second command-level
 confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
 green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it.
-After approval of the unchanged candidate and GapSet, use the supplied zero-flag Compile action without more
-ceremony.
+After approval of the unchanged candidate and GapSet, use the already selected Compile mode without more ceremony.
 
 This gate does not block an explicitly requested diagnostic-only Compile of exact bytes already known to be
-invalid from those bytes or matching diagnostics. Invalid analysis cannot enter Publication. Valid analysis with
-gaps can; do not require removal of the corresponding Plan fields.
+invalid from those bytes or matching diagnostics. Invalid analysis cannot start a Compilation or Publication. Valid
+analysis with gaps can; do not require removal of the corresponding Plan fields.
 
-## Request the Compile journey
+## Select and request the Compile journey
 
-After the exact candidate's semantic read-back is approved and the included slice is coherent, read
-[Product Compile](references/diagnostics-and-recovery.md#product-compile), then run:
+After the exact candidate's semantic read-back is approved, read
+[Product Compile](references/diagnostics-and-recovery.md#product-compile). Select one completion mode deliberately:
 
-```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
-firstdraft_cli plan compile
-```
+- Drawing Board, same-workspace, or local-directory result: choose absent `./application` and run:
 
-This is the Compile request; do not add a second confirmation ceremony or any gap-specific flag or field. It pushes
-the current exact bytes, waits for their analysis generation, and requests Publication only after `valid`.
-Immediately before that mutation, the CLI rechecks the accepted ETag and local bytes.
+  ```sh
+  firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+  firstdraft_cli plan compile --output ./application
+  ```
 
-Treat Compilation and Publication as separate retained stages. Compilation success does not prove publication.
-Call it published only after terminal Publication success and a validated private-repository URL. Report validated
-progress without inferring provider causes; a wait timeout does not cancel retained work.
+  Direct mode creates no Publication, repository, or `.git`; Drawing Board owns nested-Git setup.
+- Explicit private GitHub repository: run the zero-flag Publication mode:
 
-One Publication singleton exists per Project. Never Compile concurrently. After an invocation that reached it exits
-with a Publication-phase outcome unknown, unavailable status, wait timeout, or interruption, wait for exit, then
-replay the same zero-flag command with unchanged Plan bytes. That replay reconciles or resumes the singleton; it is
-not a second Publication request. An outcome-unknown Plan push or `phase: "push"` Compile stops without replay. Do
-not replay `invalid_publication_status`; reconcile the coordinated CLI/service contract first. A later Head or
-different repository requires a fresh Project.
+  ```sh
+  firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+  firstdraft_cli plan compile
+  ```
+
+Ask when unclear; generic compile or build language does not authorize Publication. Invoke the selected
+mode exactly once, without another confirmation or gap field, and do not reimplement CLI internals.
+
+Report direct output only after verified materialization. On `request_outcome_unknown` with `phase: "compilation"`,
+preserve the Plan, private state, and absent output; do not retry or switch modes. A validated retained ID permits only
+status and, after success, download. In zero-flag mode, require terminal Publication success and its validated URL;
+Compilation success alone is insufficient. Never Compile concurrently. The documented Publication-singleton replay
+never applies to an ambiguous push or direct start.
 
 ## Inspect or download the retained Compilation
 
-Successful `plan compile` prints only the repository URL and no Compilation ID. Use retained commands only with an
-exact ID supplied by the user or a validated structured projection; never recover one from private state or
-unvalidated output.
+Zero-flag success prints only the repository URL. Use retained commands only with an exact ID
+supplied by the user or a validated structured projection; never recover one from private state or unvalidated
+output.
 
 ```sh
 firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
@@ -285,6 +289,8 @@ In particular:
 - treat a diagnostic `422 server_rejected`, or `plan_not_valid` whose status is `issues_found`, as feedback about
   the submitted snapshot that may lead to edits, dialogue, another push, or another Compile attempt;
 - stop after an outcome-unknown push because an accepted Head may exist without recoverable local state;
+- stop after an outcome-unknown direct Compilation start because repeating either Compile mode could start competing
+  retained work;
 - preserve exact bytes and avoid concurrent work for ambiguous Publication outcomes, following only the documented
   unchanged-byte singleton replay;
 - treat `invalid_publication_status` as a contract mismatch that replay cannot repair;
@@ -303,10 +309,10 @@ Report:
   or whole-graph analysis;
 - material choices, delegated decisions, exclusions, open questions, warnings, and capability gaps;
 - the observed analyzer release, graph version, and Head SHA, plus the complete valid GapSet and its digest;
-- distinct Compilation and Publication statuses plus validated progress fields when available;
-- the private repository URL only after terminal Publication success;
-- a downloaded path, file count, and manifest digest only after verified materialization; and
+- the selected mode and distinct Compilation and Publication statuses when Publication was requested;
+- a private URL only after Publication success, or a path, file count, and manifest digest after materialization;
+- that direct mode created no Publication, repository, or `.git`; and
 - any recovery blocker or external prerequisite.
 
-Do not call source published before the validated Publication projection, or local source generated before retained
-download succeeds. Neither result is deployed, production-ready, or proof beyond the admitted narrow slice.
+Do not call source published before validated Publication, or generated before verified materialization. Neither
+result is deployed, production-ready, or proof beyond the admitted narrow slice.
