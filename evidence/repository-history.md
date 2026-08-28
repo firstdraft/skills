@@ -321,7 +321,7 @@ The coordinated API 0.3 projection names analyzer release
 
 It exercises the source runner's generators, flexible initialization, both exact-byte product Compile modes,
 phase-specific ambiguous outcomes, retained Compilation status, and historical artifact download. Direct mode starts
-one conditional Compilation, polls its retained ID, verifies and atomically materializes exact bytes and modes, and
+one conditional Compilation, polls its retained ID, verifies and materializes exact bytes and modes, and
 creates no Publication or `.git`; an ambiguous direct start is not retried. It also verifies the removed
 `plan subject-id` and public `plan publish` surfaces, then checks representative behavior through a freshly packed and
 installed CLI. The workflow records the same revision. This is deterministic contract evidence, not a server-backed

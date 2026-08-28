@@ -117,6 +117,10 @@ analysis, then starts one direct conditional Compilation. It polls only that ret
 and atomically materializes the bytes and modes. The CLI owns those transport and installation mechanics; do not
 reimplement them with HTTP, a retained download shortcut, or archive tooling.
 
+An `invalid_output_path` preflight makes no request. If the destination appears during analysis, the second check may
+follow an accepted Plan push and analysis reads, but it still prevents the Compilation start. Preserve the destination
+in either case and choose another absent path; do not repeat an outcome-unknown push.
+
 Direct mode never starts GitHub Publication. Success writes one validated JSON object containing the Project,
 Compilation, absolute output path, file count, and manifest digest. The materialized tree contains only artifact
 files: the CLI creates no repository or `.git`, runs no formatter, and repairs nothing. When the output is nested in
@@ -284,7 +288,8 @@ tree.
 | `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before the selected mutation. |
 | `plan compile --output` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | Direct Compilation start or status did not complete its validated contract. Do not infer Publication. |
 | `plan compile --output` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned direct Compilation changed, remained nonterminal, or reached a non-success terminal state. |
-| `plan compile --output`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `invalid_output_path`, `materialization_failed` | No verified local tree was installed; only `invalid_output_path` is known to precede network access. |
+| `plan compile --output` | `invalid_output_path` | Preflight makes no request; a post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve the destination. |
+| `plan compile --output`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `materialization_failed` | No verified local tree was installed. |
 | Zero-flag `plan compile` | `publication_start_rejected` | First Draft returned a validated non-timeout 4xx rejection; Publication success was not verified. |
 | Zero-flag `plan compile` | `publication_status_unavailable` | The retained Publication status read failed. |
 | Zero-flag `plan compile` | `invalid_publication_status` | The response did not satisfy the coordinated Publication protocol. |
