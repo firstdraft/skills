@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import path from "node:path";
 
 import {
   analysisId,
+  compilationId,
   projectId,
   staleAnalysisId,
   storedApiUrl,
@@ -10,7 +12,11 @@ import {
 import {
   acceptedPlanResponse,
   analysisProjection,
+  artifactResponse,
+  compilationArtifact,
+  compilationProjection,
   jsonResponse,
+  problemResponse,
   publicationProjection,
 } from "./fixtures.mjs";
 import {
@@ -26,11 +32,99 @@ import {
 export async function verifyPlanJourney(context) {
   const moviePlan = readFileSync(context.moviePlanPath);
   await verifyHappyCompile(context, moviePlan);
+  await verifyHappyDirectCompile(context, moviePlan);
   await verifyStaleAnalysisGeneration(context, moviePlan);
   await verifySameGenerationDifferentHead(context, moviePlan);
   await verifyStaleLocalBytes(context, moviePlan);
   await verifyAmbiguousPhases(context, moviePlan);
   await verifyDiagnosticsStopPublication(context, moviePlan);
+}
+
+async function verifyHappyDirectCompile(context, planSource) {
+  const cwd = await initializedProject(context, "compile-direct-happy", {
+    planSource,
+  });
+  const digest = sha256(planSource);
+  const output = path.join(cwd, "application");
+  const artifact = compilationArtifact(digest, {
+    foundationPlanSha256: digest,
+    provenanceGraphVersion: 1,
+    provenanceAnalysisId: analysisId,
+  });
+  const queued = compilationProjection("queued", {
+    headSourceSha256: digest,
+    graphVersion: 1,
+    analysisRunId: analysisId,
+  });
+  const succeeded = compilationProjection("succeeded", {
+    headSourceSha256: digest,
+    artifact,
+    graphVersion: 1,
+    analysisRunId: analysisId,
+  });
+  const calls = [];
+  const result = await invokeRunner(
+    context.runCli,
+    ["plan", "compile", "--output", "./application"],
+    cwd,
+    {
+      fetchFunction: sequenceFetch(
+        [
+          acceptedPlanResponse(planSource),
+          jsonResponse(analysisProjection("valid", { headSourceSha256: digest })),
+          jsonResponse(queued, 202, {
+            Location: queued.compilation.status_path,
+          }),
+          jsonResponse(succeeded),
+          artifactResponse(artifact),
+        ],
+        calls,
+      ),
+      compilationSleep: async () => {},
+    },
+  );
+
+  assert.equal(result.status, 0);
+  assert.deepEqual(JSON.parse(result.stdout), {
+    project: succeeded.project,
+    compilation: succeeded.compilation,
+    output: {
+      path: output,
+      file_count: 2,
+      manifest_sha256: artifact.manifestSha256,
+    },
+  });
+  assert.deepEqual(progressMessages(result), [
+    "First Draft: Analyzing Foundation Plan...",
+    "First Draft: Foundation Plan analysis valid.",
+    "First Draft: Compiling application...",
+    "First Draft: Application compiled.",
+  ]);
+  assert.doesNotMatch(result.stderr, /GitHub|Publication/i);
+  assert.deepEqual(
+    calls.map(({ input, init }) => [init?.method, String(input)]),
+    [
+      ["PUT", `${storedApiUrl}/v1/projects/${projectId}/foundation-plan`],
+      ["GET", `${storedApiUrl}/v1/projects/${projectId}/analysis`],
+      ["POST", `${storedApiUrl}/v1/projects/${projectId}/compilations`],
+      [
+        "GET",
+        `${storedApiUrl}/v1/projects/${projectId}/compilations/${compilationId}`,
+      ],
+      [
+        "GET",
+        `${storedApiUrl}/v1/projects/${projectId}/compilations/${compilationId}/artifact`,
+      ],
+    ],
+  );
+  assert.equal(existsSync(path.join(output, ".git")), false);
+  assert.equal(
+    readFileSync(path.join(output, "app", "models", "movie.rb"), "utf8"),
+    "class Movie < ApplicationRecord\nend\n",
+  );
+  if (process.platform !== "win32") {
+    assert.equal(statSync(path.join(output, "ios", "bin", "ios")).mode & 0o777, 0o755);
+  }
 }
 
 async function verifySameGenerationDifferentHead(context, planSource) {
@@ -189,6 +283,90 @@ async function verifyAmbiguousPhases(context, planSource) {
   assert.deepEqual(
     pushCalls.map(({ input, init }) => [init?.method, String(input)]),
     [["PUT", `${storedApiUrl}/v1/projects/${projectId}/foundation-plan`]],
+  );
+
+  const directCwd = await initializedProject(
+    context,
+    "compile-ambiguous-direct",
+    { planSource },
+  );
+  const directOutput = path.join(directCwd, "application");
+  const directCalls = [];
+  const direct = await invokeRunner(
+    context.runCli,
+    ["plan", "compile", "--output", "./application"],
+    directCwd,
+    {
+      fetchFunction: sequenceFetch(
+        [
+          acceptedPlanResponse(planSource),
+          jsonResponse(
+            analysisProjection("valid", {
+              headSourceSha256: sha256(planSource),
+            }),
+          ),
+          () => {
+            throw new TypeError("ambiguous direct Compilation");
+          },
+        ],
+        directCalls,
+      ),
+    },
+  );
+  const directEnvelope = assertErrorEnvelope(
+    direct,
+    "request_outcome_unknown",
+    { privateValues: ["ambiguous direct Compilation"] },
+  );
+  assert.equal(directEnvelope.phase, "compilation");
+  assert.deepEqual(
+    directCalls.map(({ init }) => init?.method),
+    ["PUT", "GET", "POST"],
+  );
+  assert.equal(existsSync(directOutput), false);
+
+  const retainedCwd = await initializedProject(
+    context,
+    "compile-direct-retained-recovery",
+    { planSource },
+  );
+  const digest = sha256(planSource);
+  const retained = compilationProjection("queued", {
+    headSourceSha256: digest,
+    graphVersion: 1,
+    analysisRunId: analysisId,
+  });
+  const retainedCalls = [];
+  const retainedFailure = await invokeRunner(
+    context.runCli,
+    ["plan", "compile", "--output", "./application"],
+    retainedCwd,
+    {
+      fetchFunction: sequenceFetch(
+        [
+          acceptedPlanResponse(planSource),
+          jsonResponse(
+            analysisProjection("valid", { headSourceSha256: digest }),
+          ),
+          jsonResponse(retained, 202, {
+            Location: retained.compilation.status_path,
+          }),
+          problemResponse(503, "status_unavailable"),
+        ],
+        retainedCalls,
+      ),
+      compilationSleep: async () => {},
+    },
+  );
+  const retainedEnvelope = assertErrorEnvelope(
+    retainedFailure,
+    "compilation_status_unavailable",
+  );
+  assert.equal(retainedEnvelope.current.compilation.id, compilationId);
+  assert.equal(retainedEnvelope.current.compilation.status, "queued");
+  assert.deepEqual(
+    retainedCalls.map(({ init }) => init?.method),
+    ["PUT", "GET", "POST", "GET"],
   );
 
   const publicationCwd = await initializedProject(

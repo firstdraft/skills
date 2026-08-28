@@ -171,13 +171,15 @@ In particular, do not remove or weaken modeled content solely because the review
 
 ## Prepare the pre-Compile semantic read-back
 
-Immediately before the first Compile that could reach Publication, reread the exact local Plan and give a compact
-plain-language semantic summary. Cover the project-relative Plan path and SHA-256; the application scope; Entities
-and their material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; and material
+Immediately before the first Compile that could start direct retained work or reach Publication, reread the exact
+local Plan and give a compact plain-language semantic summary. Cover the project-relative Plan path and SHA-256; the
+application scope; Entities and their material Fields, relationships, rules, behavior, and data; surfaces, access,
+and clients; and material
 assumptions and exclusions. Show the matching valid AnalysisRun's GapSet digest and every ordered record, including
-its classification, code, kind, status, reason, consequence, location, and cause when present. Explain that service-support gaps were
-skipped before semantic analysis and target-support gaps were not fully realized. Also state that Compile does not
-deploy while terminal successful Publication is intended to create one private GitHub repository. Use the order
+its classification, code, kind, status, reason, consequence, location, and cause when present. Explain that
+service-support gaps were skipped before semantic analysis and target-support gaps were not fully realized. Also
+state the deliberately selected completion mode: direct output creates only a verified local directory, while
+terminal successful Publication is intended to create one private GitHub repository. Neither deploys. Use the order
 that best communicates this candidate. Do not enumerate absent subject families or recite immaterial defaults and
 empty categories. Ask the user to correct or explicitly approve the exact model and reviewed support delta without
 requiring a digest echo or gap-specific field.
@@ -190,4 +192,4 @@ semantic delta, then obtain approval of that changed candidate.
 Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning to make import or analysis
 green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a
 product-scope decision. Otherwise preserve the meaning and, after approval, use the existing supplied Compile
-action without adding ceremony.
+mode without adding ceremony.

@@ -24,8 +24,8 @@ A successor
 [fresh-model rehearsal driver](https://github.com/firstdraft/firstdraft/blob/3a029a8b425addbbba4f56d9197878cc002752f4/script/compilation_http_cli_model_rehearsal)
 used native Claude Code 2.1.221 with Opus/high, candidate plugin revision
 `b5c3897b240bfa3a9117d1a564d8e6b7d783e993`, and a freshly packed CLI at historical reviewed revision
-`f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, version `0.1.0-alpha.2`. The current reviewed 0.2.0 successor is
-`5ac300f1a2e7262c56473de270a0bd140f169c25`, pinned separately below. The agent made two exact-byte pushes through
+`f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, version `0.1.0-alpha.2`. The current reviewed 0.2.1 successor is
+`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, pinned separately below. The agent made two exact-byte pushes through
 the driver's own two-Entity Movie Catalog fixture, repaired the expected
 reserved-constant diagnostic, waited for valid graph-version-2 analysis, and invoked product Compile once. The
 service then verified the 194-file, 542,894-byte artifact, strict fake-GitHub Publication, retained download, and
@@ -304,14 +304,14 @@ sh script/check
 ```
 
 The CLI contract check requires a checkout at the exact reviewed revision
-`5ac300f1a2e7262c56473de270a0bd140f169c25`, whose independently reproduced JavaScript-source runtime digest is
-`5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc` and whose source package is
-`@firstdraft.com/cli@0.2.0`:
+`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, whose independently reproduced JavaScript-source runtime digest is
+`0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098` and whose source package is
+`@firstdraft.com/cli@0.2.1`:
 
 ```sh
 git -C <path-to-cli-checkout> fetch origin main
-git -C <path-to-cli-checkout> merge-base --is-ancestor 5ac300f1a2e7262c56473de270a0bd140f169c25 origin/main
-git -C <path-to-cli-checkout> checkout --detach 5ac300f1a2e7262c56473de270a0bd140f169c25
+git -C <path-to-cli-checkout> merge-base --is-ancestor d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68 origin/main
+git -C <path-to-cli-checkout> checkout --detach d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 
@@ -319,11 +319,13 @@ The coordinated API 0.3 projection names analyzer release
 `foundation-plan-rails/application-2026-08-22-reviewed-gap-set-v3` and Compiler release
 `foundation-plan-rails/compiler-application-2026-08-22-reviewed-gap-set-v3`.
 
-It exercises the source runner's generators, flexible initialization, exact-byte product Compile, phase-specific
-ambiguous outcomes, retained Compilation status and historical artifact download. It also verifies the removed
-`plan subject-id`, public `plan publish`, and local-start `plan compile --output` surfaces, then checks representative
-behavior through a freshly packed and installed CLI. The workflow records the same revision. This is contract
-evidence, not a server-backed Compilation or GitHub Publication. The separately pinned controlled product-journey
+It exercises the source runner's generators, flexible initialization, both exact-byte product Compile modes,
+phase-specific ambiguous outcomes, retained Compilation status, and historical artifact download. Direct mode starts
+one conditional Compilation, polls its retained ID, verifies and atomically materializes exact bytes and modes, and
+creates no Publication or `.git`; an ambiguous direct start is not retried. It also verifies the removed
+`plan subject-id` and public `plan publish` surfaces, then checks representative behavior through a freshly packed and
+installed CLI. The workflow records the same revision. This is deterministic contract evidence, not a server-backed
+Compilation or GitHub Publication. The separately pinned controlled product-journey
 harness at service revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e` crosses the local service and queue
 boundary while replacing only remote GitHub work with a strict fake.
 
@@ -358,7 +360,10 @@ placeholder that names no known Project; never send it. Before `push-supported-e
 request and the matching nonempty target GapSet.
 `compile-prepared-movie-catalog` is the executable product-journey fixture; its prompt supplies explicit approval of
 the matching unchanged semantic read-back and reviewed support result without echoing the GapSet digest or records,
-so the agent should not add a second confirmation or gap-acknowledgment ceremony.
+so the agent should not add a second confirmation or gap-acknowledgment ceremony. It explicitly requests a private
+GitHub repository and therefore selects zero-flag Publication. `compile-prepared-drawing-board-application` instead
+selects `plan compile --output ./application` for an absent same-workspace destination and makes no Publication claim;
+`compile-ambiguous-direct-compilation-outcome` stops without replay or a mode switch when start identity is unknown.
 The controlled local harness at service
 revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e` establishes an earlier gap-free Movie Catalog journey through real
 local Compilation and Publication coordination with a strict fake for remote GitHub work. It does not establish the
@@ -378,8 +383,9 @@ contents.
 
 The diagnostic corpus deliberately exercises malformed JSON, local schema diagnostics, semantic and recurring
 diagnostics, a standalone status result older than its accepted push generation, stale product-Compile analysis,
-stale local Plan bytes, and phase-specific ambiguous push and Publication outcomes. It retains the push graph version
-and source digest, reads again when status is older, and surfaces a newer generation as a replacement. It does not
+stale local Plan bytes, and phase-specific ambiguous push, direct Compilation, and Publication outcomes. It retains
+the push graph version and source digest, reads again when status is older, and surfaces a newer generation as a
+replacement. It does not
 require a permission ceremony around ordinary pushes or impose an unchanged-byte or retry-count rule. The final exact
 Movie Catalog candidate requires its matching push and status before approval; after approval, zero-flag product
 Compile repeats the push and owns the remaining journey without a redundant preparatory status read. Dedicated

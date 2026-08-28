@@ -1,6 +1,6 @@
 # Behavioral evaluation index
 
-`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 62 fresh-context cases. Cases and
+`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 64 fresh-context cases. Cases and
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
 
@@ -64,6 +64,7 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `precompile-semantic-read-back`
 - `compile-invalid-candidate-is-safe`
 - `compile-prepared-movie-catalog`
+- `compile-prepared-drawing-board-application`
 - `compile-distinguishes-terminal-stage`
 - `compile-reports-publication-retry-progress`
 - `compile-reports-parked-publication`
@@ -75,10 +76,11 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `compile-stale-plan-bytes`
 - `compile-ambiguous-push-outcome`
 - `compile-ambiguous-publication-outcome`
+- `compile-ambiguous-direct-compilation-outcome`
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-For the human-observed 0.2.0 release smoke, run `precompile-semantic-read-back` and
+For the human-observed 0.2.1 release smoke, run `precompile-semantic-read-back` and
 `compile-prepared-movie-catalog` as two user turns in the same fresh continuing agent session. Before the first turn,
 record the exact candidate and package identity, compatible CLI and service identities, staged Plan SHA-256, and a
 zero Compile-wrapper count. The first response must present the complete semantic model, the matching GapSet digest,
@@ -106,6 +108,11 @@ timeout; that conditional replay is itself reconciliation and never applies to a
 Authentication pauses an already requested operation; once the user confirms credentials are configured, resume it
 without another authorization prompt. After analysis timeout, change, or supersession, bounded read-only status
 follow-up is report-only; never edit, push, or Compile the replacement.
+
+The Drawing Board case selects `plan compile --output ./application` from an explicit same-workspace request and must
+make no Publication or repository claim. Its ambiguous-direct-start companion stops without repeating that command
+or switching to zero-flag Publication. The prepared Movie Catalog release case remains the explicit private-GitHub
+path and therefore selects one zero-flag Compile.
 
 `create-full-stack-app/cases.json` remains the harness-neutral behavioral contract. It declares prompts,
 expectations, and artifact roles; it does not grant capabilities or configure a sandbox or transport. Omit

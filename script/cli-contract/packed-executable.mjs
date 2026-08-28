@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import path from "node:path";
 
@@ -70,6 +70,22 @@ export async function verifyPackedExecutable(context) {
   assert.match(planHelp.stdout, /^  compile\s/m);
   assert.doesNotMatch(planHelp.stdout, /^  (?:subject-id|publish)\s/m);
 
+  const compileHelp = invokeExecutable(
+    context.executable,
+    ["plan", "compile", "--help"],
+    context.installationDirectory,
+  );
+  assert.equal(compileHelp.status, 0);
+  assert.match(compileHelp.stdout, /firstdraft plan compile\n/);
+  assert.match(
+    compileHelp.stdout,
+    /firstdraft plan compile --output <absent-directory>/,
+  );
+  assert.match(
+    compileHelp.stdout,
+    /--output <absent-directory>\s+Materialize the generated application here/,
+  );
+
   const generated = invokeExecutable(
     context.executable,
     ["generate", "application-key", "--name", "Café Planner"],
@@ -130,12 +146,18 @@ export async function verifyPackedExecutable(context) {
     assert.match(removed.stderr, /^Unknown command\./);
   }
 
-  const removedOutput = invokeExecutable(
+  const existingOutput = path.join(
+    context.installationDirectory,
+    "existing-direct-output",
+  );
+  mkdirSync(existingOutput);
+  const protectedOutput = invokeExecutable(
     context.executable,
-    ["plan", "compile", "--output", "generated"],
+    ["plan", "compile", "--output", existingOutput],
     context.installationDirectory,
   );
-  assertErrorEnvelope(removedOutput, "invalid_arguments", { status: 2 });
+  assertErrorEnvelope(protectedOutput, "invalid_output_path", { status: 2 });
+  assert.equal(existsSync(existingOutput), true);
 
   const invalidCompilation = invokeExecutable(
     context.executable,

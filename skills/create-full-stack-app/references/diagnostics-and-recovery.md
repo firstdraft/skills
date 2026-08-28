@@ -9,9 +9,9 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 The reviewed CLI contract in this stack is revision
-`5ac300f1a2e7262c56473de270a0bd140f169c25`, with JavaScript-source runtime digest
-`5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc`. Its source package is
-`@firstdraft.com/cli@0.2.0`. Check the command surface rather than assuming the version alone
+`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, with JavaScript-source runtime digest
+`0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098`. Its source package is
+`@firstdraft.com/cli@0.2.1`. Check the command surface rather than assuming the version alone
 establishes compatibility. Candidate
 qualification or package publication does not prove service authentication, staging compatibility, or a complete
 user journey.
@@ -102,9 +102,40 @@ as the submitted candidate, and do not edit, push, or Compile the replacement.
 
 ## Product Compile
 
-`plan compile` performs a new exact-byte push, waits for the analysis whose graph version and Head digest came from
-that accepted push, and requests the internal singleton GitHub Publication only when the result is `valid`. It uses
-the existing bodyless action and exact Head condition; do not add a gap digest, acknowledgment field, or Plan edit.
+Both `plan compile` modes perform a new exact-byte push and wait for the analysis whose graph version and Head digest
+came from that accepted push. Only `valid` analysis proceeds. Each mode uses the accepted exact Head condition; do
+not add a gap digest, acknowledgment field, or Plan edit.
+
+Choose the completion mode from the user's requested result. `--output` is for Drawing Board, same-workspace work,
+or another explicit local-directory request. Zero flags are for an explicit private GitHub repository. If the result
+is unclear, ask before the mutation rather than treating a generic Compile request as Publication authorization.
+
+### Direct local output
+
+`plan compile --output <absent-directory>` validates the absent destination before Plan mutation and again after
+analysis, then starts one direct conditional Compilation. It polls only that retained ID, verifies its exact artifact,
+and atomically materializes the bytes and modes. The CLI owns those transport and installation mechanics; do not
+reimplement them with HTTP, a retained download shortcut, or archive tooling.
+
+Direct mode never starts GitHub Publication. Success writes one validated JSON object containing the Project,
+Compilation, absolute output path, file count, and manifest digest. The materialized tree contains only artifact
+files: the CLI creates no repository or `.git`, runs no formatter, and repairs nothing. When the output is nested in
+Drawing Board or another Git worktree, leave nested-Git initialization to that workspace's own workflow.
+
+Progress contains only the analysis and Compilation messages from the stable table below. Do not report Publication,
+a repository, or a GitHub URL in direct mode. A direct wait timeout does not cancel retained work. When its validated
+`current` projection supplies the exact Compilation ID, use read-only `compilation status <id> --wait` and, after
+terminal success, `compilation download <id> --output <still-absent-directory>` rather than starting another
+Compilation.
+
+An ambiguous direct start is not replayable: `request_outcome_unknown` with `phase: "compilation"` means one
+Compilation may exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and absent
+output, then stop until First Draft or an operator reconciles the Project. Do not rerun either Compile mode.
+
+### Private GitHub Publication
+
+Zero-flag `plan compile` requests the internal singleton GitHub Publication after valid analysis. It remains a
+separate explicit completion mode from direct local output.
 
 The command reserves standard output for one validated private GitHub repository URL on success. While waiting, its
 progress output distinguishes the retained Compilation from GitHub Publication. Treat
@@ -182,12 +213,12 @@ is a later GitHub delivery outcome. A terminal failed Publication permits only a
 terminal cancelled Publication permits only a cancelled or succeeded Compilation. The CLI rejects terminal
 projections paired with a queued or running Compilation instead of rendering an unspecified message.
 
-`plan_not_valid` includes the validated current analysis and means no Publication was requested. When its status is
+`plan_not_valid` includes the validated current analysis and means no Compilation or Publication was requested. When its status is
 `issues_found`, continue the product conversation, edit, push, or invoke Compile again when useful. Treat
 `analysis_failed` as an analyzer failure and `superseded` as a concurrency outcome rather than making a speculative
 source correction. `local_plan_changed` means the bytes changed after acceptance or analysis and before the
-Publication mutation. If the current bytes are intended, present their new SHA-256 and semantic delta, obtain
-approval of that changed candidate, and only then invoke zero-flag `plan compile` for its own analysis.
+selected mutation. If the current bytes are intended, present their new SHA-256 and semantic delta, obtain approval
+of that changed candidate, and only then invoke the deliberately selected Compile mode for its own analysis.
 
 The first accepted Publication request establishes this release's Project singleton, whether it later succeeds,
 parks, or ends in another terminal state. While one `plan compile` invocation polls it, do not launch a concurrent
@@ -250,12 +281,15 @@ tree.
 | `plan compile` | `analysis_changed`, `analysis_wait_timed_out` | The accepted generation changed or did not reach a terminal analysis within two minutes. |
 | `plan compile` | `analysis_status_unavailable`, `invalid_analysis_status`, `analysis_status_rejected` | Compile's analysis read failed or was rejected. |
 | `plan compile` | `plan_not_valid` | The accepted graph did not reach `valid`; inspect `current`. |
-| `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before Publication. |
-| `plan compile` | `publication_start_rejected` | First Draft returned a validated non-timeout 4xx rejection; Publication success was not verified. |
-| `plan compile` | `publication_status_unavailable` | The retained Publication status read failed. |
-| `plan compile` | `invalid_publication_status` | The response did not satisfy the coordinated Publication protocol. |
-| `plan compile` | `publication_changed`, `publication_wait_timed_out` | The pinned singleton changed or remained nonterminal. |
-| `plan compile` | `publication_failed`, `publication_cancelled` | The retained singleton reached a non-success terminal state. |
+| `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before the selected mutation. |
+| `plan compile --output` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | Direct Compilation start or status did not complete its validated contract. Do not infer Publication. |
+| `plan compile --output` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned direct Compilation changed, remained nonterminal, or reached a non-success terminal state. |
+| `plan compile --output`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `invalid_output_path`, `materialization_failed` | No verified local tree was installed; only `invalid_output_path` is known to precede network access. |
+| Zero-flag `plan compile` | `publication_start_rejected` | First Draft returned a validated non-timeout 4xx rejection; Publication success was not verified. |
+| Zero-flag `plan compile` | `publication_status_unavailable` | The retained Publication status read failed. |
+| Zero-flag `plan compile` | `invalid_publication_status` | The response did not satisfy the coordinated Publication protocol. |
+| Zero-flag `plan compile` | `publication_changed`, `publication_wait_timed_out` | The pinned singleton changed or remained nonterminal. |
+| Zero-flag `plan compile` | `publication_failed`, `publication_cancelled` | The retained singleton reached a non-success terminal state. |
 | `compilation status`, `compilation download` | `compilation_status_unavailable`, `invalid_compilation_status` | The retained status could not be verified. |
 | `compilation status --wait` | `compilation_changed`, `compilation_wait_timed_out` | Retained identity/provenance changed or the wait ended. |
 | `compilation download` | `compilation_not_succeeded` | No artifact request was made. |
@@ -277,6 +311,19 @@ described below.
 `request_outcome_unknown` on ordinary `plan push` or with `phase: "push"` from `plan compile` means the Plan
 PUT may have been accepted but local state cannot prove the new Head. There is no Plan GET/reconciliation command,
 so preserve the local files and stop rather than repeating that mutation or manufacturing an ETag.
+
+`request_outcome_unknown` with `phase: "compilation"` means direct mode sent its conditional start but could not
+verify a retained Compilation identity. Unlike Publication, direct Compilation has no Project singleton or safe
+same-command reconciliation path. Preserve the approved exact Plan, CLI state, and absent output. Do not rerun
+`plan compile --output`, switch to zero-flag Publication, or issue a direct request. Stop until First Draft or an
+operator identifies the retained work and supplies a trustworthy recovery boundary.
+
+After a validated `202` start, act only on an error envelope carrying validated `current.compilation.id`.
+`compilation_status_unavailable` permits a bounded read-only status retry; an invalid status or artifact requires
+contract reconciliation. After `artifact_unavailable` or `materialization_failed`, preserve that ID and use retained
+download into a new absent path once the status or destination condition is ready. Authentication recovery also
+resumes from that ID. Report timeout, failed, cancelled, or changed projections at their validated boundary. Never
+repeat the direct start because polling, artifact retrieval, authentication, or materialization did not finish.
 
 `request_outcome_unknown` with `phase: "publication"` has a different recovery boundary. The Publication
 endpoint is a Project singleton, and the CLI already attempted one read-only reconciliation. The singleton may

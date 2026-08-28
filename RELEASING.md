@@ -8,13 +8,13 @@ This is the current policy and operator sequence for coordinated work across `fi
 
 | Surface | Current identity |
 |---|---|
-| Source candidate | `@firstdraft.com/claude-code@0.2.0` |
-| Candidate packed SHA-256 | `c3e87bb450630f04da9c6f724045784a4396f0e41222bab9f6ac5297273b0313` |
+| Source candidate | `@firstdraft.com/claude-code@0.2.1` |
+| Candidate packed SHA-256 | `b6492dc77b3084dff050055a72e56eaa25a6a1698eb2405d195ad265e3e6aa27` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
-| Plugin npm `next` / `latest` | `0.1.1` / `0.1.1` |
-| Compatible CLI | `@firstdraft.com/cli@0.2.0` |
-| CLI npm `next` / `latest` | `0.1.0` / `0.1.0` |
+| Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
+| Compatible CLI | `@firstdraft.com/cli@0.2.1` |
+| CLI npm `next` / `latest` | `0.2.0` / `0.1.0` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
@@ -37,7 +37,7 @@ Registry, tag, environment, service, and hosted-CI state must be checked live im
   read-only and do not repeat it. The current product-journey exception is the CLI's documented unchanged-byte,
   same-Project Publication-singleton replay after the prior invocation exits with a Publication-phase outcome
   unknown or status timeout; that conditional replay is itself the reconciliation path. It never applies to an
-  ambiguous Plan push.
+  ambiguous Plan push or direct Compilation start.
 - Never reuse a published npm version, protected release tag, or marketplace SemVer for different bytes. An
   unpublished and unpromoted candidate may be revised at a new exact commit and digest. Changed bytes after any
   release identity exists require a new version.
@@ -71,7 +71,8 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-The current 0.2.0 candidate still requires one human-observed, two-turn approval smoke before publication. Use the
+The current 0.2.1 candidate still requires one human-observed, two-turn Publication-mode approval smoke before
+publication. Use the
 paired `precompile-semantic-read-back` and `compile-prepared-movie-catalog` cases in the same fresh continuing agent
 session:
 
@@ -107,9 +108,9 @@ This step requires explicit authorization for protected tag creation and npm pub
 part of a named release sequence. The operator resolves and reports the exact candidate commit, package version,
 and tarball digest before mutation; the user does not need to recite them.
 
-Plugin 0.2.0 vendors and requires exact public `@firstdraft.com/cli@0.2.0`. Publish and reconcile that CLI under npm
+Plugin 0.2.1 vendors and requires exact public `@firstdraft.com/cli@0.2.1`. Publish and reconcile that CLI under npm
 `next` before tagging this plugin; the plugin registry-package gate must resolve those exact public bytes. Then
-publish and reconcile plugin 0.2.0 under `next`. Both package steps precede any API 0.3 service activation, while
+publish and reconcile plugin 0.2.1 under `next`. Both package steps precede any API 0.3 service activation, while
 plugin and CLI `latest` and the public catalog remain unchanged until their separately approved promotions.
 
 Immediately before tagging:
@@ -194,9 +195,10 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For the current API 0.3 transition, publish and reconcile CLI 0.2.0 under `next`, then plugin 0.2.0 under `next`,
-before changing shared service roles. Leave both `latest` tags and the public catalog unchanged until the exact web
-and worker revisions are active and the selected qualification passes. During the approved window, stop other
+For the API 0.3 line, the 0.2.0 CLI and plugin packages are already public under `next` but unpromoted. This 0.2.1
+candidate instead requires exact CLI 0.2.1 under `next`, then plugin 0.2.1 under `next`, before any coordinated shared
+service change. Leave both `latest` tags and the public catalog unchanged until the exact web and worker revisions
+are active and the selected qualification passes. During the approved window, stop other
 operator-controlled Compile and Publication invocations in that lane and serialize the one qualification invocation
 through its retained outcome.
 
@@ -216,6 +218,8 @@ mutation beyond that scope.
   prior invocation exits with a Publication-phase outcome unknown, status unavailable, or wait timeout, the same
   zero-flag command with exact unchanged Plan bytes conditionally resumes or reconciles that singleton. It is not a
   second Publication request and does not authorize an ambiguous Plan-push retry.
+- A direct `plan compile --output` start with outcome unknown is not replayable. Preserve the exact Plan, private
+  state, and absent destination; do not repeat it or switch to zero-flag Publication without reconciliation.
 - A catalog rollback may select a prior immutable package. It must not publish changed bytes under an existing
   version.
 - A recovery that repoints the catalog must update its coupled structured assertions and current-state docs in one

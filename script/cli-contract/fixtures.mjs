@@ -264,6 +264,8 @@ export function compilationProjection(
     artifact = null,
     changes = {},
     projectIdentifier = projectId,
+    graphVersion = 7,
+    analysisRunId = compilationAnalysisId,
   } = {},
 ) {
   const retainedHead = headSourceSha256 ?? "1".repeat(64);
@@ -271,11 +273,11 @@ export function compilationProjection(
   const statusPath =
     `/v1/projects/${projectIdentifier}/compilations/${compilationId}`;
   return {
-    project: { id: projectIdentifier, graph_version: 7 },
+    project: { id: projectIdentifier, graph_version: graphVersion },
     compilation: {
       id: compilationId,
-      analysis_run_id: compilationAnalysisId,
-      graph_version: 7,
+      analysis_run_id: analysisRunId,
+      graph_version: graphVersion,
       head_source_sha256: retainedHead,
       status,
       compiler_release: compilerRelease,

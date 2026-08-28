@@ -1,8 +1,8 @@
-export const cliRevision = "5ac300f1a2e7262c56473de270a0bd140f169c25";
+export const cliRevision = "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
 export const cliRuntimeSha256 =
-  "5fac5209f06406fcedde85c1ee46f0b539e95e96bb3369330a137e2137e70fcc";
+  "0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.2.0";
+export const cliPackageVersion = "0.2.1";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",

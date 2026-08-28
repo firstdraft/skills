@@ -55,7 +55,14 @@ export async function verifyLocalCommands(context) {
   );
   assert.equal(compileHelp.status, 0);
   assert.match(compileHelp.stdout, /submits the exact current whole-file Plan/);
-  assert.doesNotMatch(compileHelp.stdout, /--output/);
+  assert.match(
+    compileHelp.stdout,
+    /firstdraft plan compile --output <absent-directory>/,
+  );
+  assert.match(
+    compileHelp.stdout,
+    /With --output, it starts one direct Compilation/,
+  );
 
   const uuids = await invokeRunner(
     context.runCli,
@@ -106,12 +113,17 @@ export async function verifyLocalCommands(context) {
   assert.equal(removedPublish.stdout, "");
   assert.match(removedPublish.stderr, /^Unknown command\./);
 
-  const removedOutput = await invokeRunner(
+  const existingOutput = path.join(
+    context.temporaryDirectory,
+    "existing-direct-output",
+  );
+  mkdirSync(existingOutput);
+  const protectedOutput = await invokeRunner(
     context.runCli,
-    ["plan", "compile", "--output", "generated"],
+    ["plan", "compile", "--output", existingOutput],
     context.temporaryDirectory,
   );
-  assertErrorEnvelope(removedOutput, "invalid_arguments", { status: 2 });
+  assertErrorEnvelope(protectedOutput, "invalid_output_path", { status: 2 });
 }
 
 async function verifyLocalFailureBoundaries(context) {
