@@ -131,7 +131,10 @@ On success, root adoption creates `design`, moves every preexisting non-Git top-
 artifact at the root, and reports `root_adoption`. It preserves an existing root `.git` and history, prepares an index
 that stages tracked paths beneath `design` plus exact generated paths, and does not stage previously untracked or
 ignored files. A non-Git root stays non-Git. Inspect and commit the staged transformation before destructive Git
-restoration. The CLI never creates a repository in either direct mode.
+restoration. The CLI never creates a repository in either direct mode. The existing `.firstdraft` Plan and private
+state move to `design/.firstdraft`; after success, run later First Draft `plan` and `compilation` commands from
+`design/`, never initialize a replacement Project in the generated application root. Use the generated root for
+ordinary application development.
 
 An `invalid_output_path` preflight makes no request. For an absent destination that appears during analysis, the
 second check may follow an accepted Plan push and analysis reads but still prevents Compilation. For root adoption,
@@ -154,7 +157,7 @@ terminal success, `compilation download <id> --output <still-absent-directory>` 
 Compilation.
 
 An ambiguous direct start is not replayable: `request_outcome_unknown` with `phase: "compilation"` means one
-Compilation may exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and absent
+Compilation may exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and selected
 output, then stop until First Draft or an operator reconciles the Project. Do not rerun either Compile mode.
 
 ### Private GitHub Publication

@@ -279,10 +279,10 @@ test(
       "service gaps were skipped before semantic analysis",
       "target gaps were not fully realized",
       "`valid` applies only to the admitted graph",
-      "Before asking for approval, select absent `./application` for direct requests",
+      "Select absent `./application` for direct requests",
       "`.` only for explicit current-root adoption",
       "zero-flag Publication only for an explicit private GitHub repository",
-      "Ask when unclear: generic compile or build language does not authorize Publication",
+      "Ask if unclear: generic compile or build language does not authorize Publication",
       "Direct output creates only a verified local directory",
       "successful Publication creates one private GitHub repository",
       "neither deploys",
@@ -642,6 +642,14 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
       root,
       "existing root .git and history are preserved",
       "transformation staged",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      root,
+      "Plan and private CLI state moved to design/.firstdraft",
+      "later First Draft plan or compilation command from design",
+      "never initializes a replacement Project",
     ),
   );
   assert(

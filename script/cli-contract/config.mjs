@@ -23,6 +23,11 @@ export const safeGithubReasonCodes = Object.freeze([
   "github.preflight_unavailable.repository_ref_client",
 ]);
 
+export const rootOutputRecovery = Object.freeze({
+  transactionName: ".firstdraft-root-output",
+  rollbackIncompleteReason: "root_rollback_incomplete",
+});
+
 export const projectId = "01900000-0000-7000-8000-000000000980";
 export const compilationId = "01900000-0000-7000-8000-000000000981";
 export const compilationAnalysisId =

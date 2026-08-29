@@ -21,7 +21,10 @@ import {
   renderManifestValidationEvidence,
   renderStatePresenceNames,
 } from "../script/claude-plugin-observation.mjs";
-import { safeGithubReasonCodes } from "../script/cli-contract/config.mjs";
+import {
+  rootOutputRecovery,
+  safeGithubReasonCodes,
+} from "../script/cli-contract/config.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const skillsDirectory = path.join(repository, "skills");
@@ -385,6 +388,14 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     "utf8",
   );
   assert(readme.includes(`\`${previousPreparedCliPackage}\``));
+  assert.match(
+    readme,
+    /CLI contract check requires the exact revision, runtime digest, and package version owned by\s+`script\/cli-contract\/config\.mjs`[\s\S]*?Follow the current checkout and reconciliation procedure in\s+`RELEASING\.md`/,
+  );
+  assert.doesNotMatch(
+    readme,
+    /CLI contract check requires a checkout at the exact reviewed revision/,
+  );
   for (const source of [foundationPlanReference, diagnosticsReference]) {
     assert(source.includes(`\`${preparedCliPackage}\``));
     assert.match(source, /not yet on npm/);
@@ -515,7 +526,7 @@ test("historical plugin receipts stay separate from current availability", async
   assert.match(candidateSkill, /CLI 0\.2\.2 is not yet\s+on npm/);
   assert.match(
     candidateSkill,
-    /candidate bytes do not prove registry or plugin-catalog availability/,
+    /source bytes do not prove npm or catalog availability/,
   );
   assert.doesNotMatch(candidateModelingGuide, /dated staging (?:discovery|observation)/);
   assert.match(
@@ -1251,6 +1262,8 @@ test("CI checks the exact modular CLI contract", async () => {
     ),
     safeGithubReasonCodes,
   );
+  assert(contractConfig.includes(rootOutputRecovery.transactionName));
+  assert(contractConfig.includes(rootOutputRecovery.rollbackIncompleteReason));
   assert.match(contractCheck, /api_contract: \[">= 0\.3\.0", "< 0\.4\.0"\]/);
   for (const module of [
     "compilations",
@@ -1318,10 +1331,18 @@ test("CI checks the exact modular CLI contract", async () => {
     "packed-executable": [
       "packed-download",
       "packed-root-download",
+      "packed-git-root",
+      "packed-root-reserved",
+      "packed-root-dirty",
       "foundation_plan.sha256",
       "invokeExecutableAsync",
       "compilationTarget",
       "root_adoption",
+      "git_repository_preserved",
+      "git_index_replaced",
+      "rootOutputRecovery",
+      "root_reserved_path",
+      "root_git_dirty",
     ],
     "plan-journey": [
       "local_plan_changed",
@@ -2005,9 +2026,13 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     "utf8",
   );
   for (const source of [skillSource, agentMetadata, ...installedNarrativeSources]) {
+    const withoutRootGitPrecondition = source.replace(
+      /no unmerged or sparse\s+state/gi,
+      "",
+    );
     assert.doesNotMatch(
-      source,
-      /before pushing this (?:Skill )?change|pending local-work|(?:candidate|change|branch)[^.\n]{0,40}(?:unmerged|unpushed)/i,
+      withoutRootGitPrecondition,
+      /before pushing this (?:Skill )?change|pending local-work|unmerged|unpushed/i,
     );
   }
   assert.match(
@@ -3199,7 +3224,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   for (const fragment of [
     "targets plugin candidate 0.2.1, integrated CLI 0.2.2, and service-contract 0.3",
     "CLI 0.2.2 is not yet on npm",
-    "registry or plugin-catalog availability",
+    "npm or catalog availability",
     "required-enum",
     "Web Account",
     "Action Policy",
@@ -4014,6 +4039,12 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   hasExpectation(
     root,
+    "Plan and private CLI state moved to design/.firstdraft",
+    "later First Draft plan or compilation command from design",
+    "never initializes a replacement Project",
+  );
+  hasExpectation(
+    root,
     "non-Git root stays non-Git",
     "no Publication, GitHub repository",
   );
@@ -4578,12 +4609,12 @@ async function checkSkill(skillName) {
   assert.match(metadata.description, /^Experimental and in development:/);
   assert(metadata.description.includes("First Draft Foundation Plan"));
   for (const fragment of [
-    "Incrementally authors and revises complete First Draft Foundation Plans",
-    "submits exact bytes for diagnostics",
-    "narrow Rails web-and-iPhone Compile journey through its bundled CLI",
-    "Bounded Web Accounts, Policies, protected Scaffolds, and required enums",
-    "arbitrary applications",
-    "broader clients do not",
+    "Authors and revises First Draft Foundation Plans",
+    "submits bytes",
+    "bounded Rails/iPhone Compile through its CLI",
+    "Web Accounts, Policies, protected Scaffolds, and required enums are bounded",
+    "arbitrary apps",
+    "clients are unavailable",
   ]) {
     assert(metadata.description.includes(fragment));
   }

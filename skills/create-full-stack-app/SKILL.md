@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Incrementally authors and revises complete First Draft Foundation Plans; submits exact bytes for diagnostics; and requests a narrow Rails web-and-iPhone Compile journey through its bundled CLI. Preserves product meaning, identity, private CLI state, and artifact provenance. Bounded Web Accounts, Policies, protected Scaffolds, and required enums exist; arbitrary applications, deployment, Android, iPad, notifications, and broader clients do not."
+description: "Experimental and in development: Authors and revises First Draft Foundation Plans, submits bytes, and requests bounded Rails/iPhone Compile through its CLI. Preserves identity, state, and provenance. Web Accounts, Policies, protected Scaffolds, and required enums are bounded; arbitrary apps, deployment, Android, iPad, notifications, and clients are unavailable."
 license: "MIT"
 ---
 
@@ -14,7 +14,7 @@ application.
 ## Current boundary
 
 This workflow targets plugin candidate 0.2.1, integrated CLI 0.2.2, and service-contract 0.3. CLI 0.2.2 is not yet
-on npm; candidate bytes do not prove registry or plugin-catalog availability.
+on npm; source bytes do not prove npm or catalog availability.
 
 Current Compiler coverage is narrow:
 
@@ -108,6 +108,9 @@ reading or bypassing its ignored environment files. After the user confirms auth
 the already requested CLI operation without asking them to authorize it again.
 
 ## Initialize or resume the local Plan
+
+After root adoption, run later First Draft commands from `design/`, where `.firstdraft/` moved; never initialize the
+generated root.
 
 If `.firstdraft/` does not exist, establish or propose the application name, then initialize:
 
@@ -203,9 +206,9 @@ Before the first `plan compile`, reread the exact current
 Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
 and exclusions. Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Explain that service
 gaps were skipped before semantic analysis, target gaps were not fully realized, and `valid` applies only to the
-admitted graph. Before asking for approval, select absent `./application` for direct requests, `.` only for explicit
-current-root adoption, and zero-flag Publication only for an explicit private GitHub repository. Ask when unclear:
-generic compile or build language does not authorize Publication. Direct output creates only a verified local
+admitted graph. Select absent `./application` for direct requests, `.` only for explicit current-root adoption, and
+zero-flag Publication only for an explicit private GitHub repository. Ask if unclear: generic compile or build
+language does not authorize Publication. Direct output creates only a verified local
 directory, successful Publication creates one private GitHub repository, and neither deploys.
 Do not enumerate absent subject families or immaterial properties. Ask the user to correct or explicitly approve the
 candidate and reviewed gaps; require no digest echo or gap-acknowledgment field.
@@ -244,7 +247,7 @@ After the exact candidate's semantic read-back is approved, read
 Invoke it exactly once without another confirmation or gap field; do not reimplement CLI internals.
 
 Report direct output only after materialization verifies. On `request_outcome_unknown` with `phase: "compilation"`,
-preserve Plan, private state, and absent output; do not retry or switch modes. A validated retained ID permits
+preserve Plan, private state, and the selected output; do not retry or switch modes. A validated retained ID permits
 status and, after success, download. In zero-flag mode, require terminal Publication success and its validated URL;
 Compilation success alone is insufficient. Never Compile concurrently. Publication-singleton replay
 never applies to an ambiguous push or direct start.
@@ -310,8 +313,10 @@ Report:
 - material choices, delegated decisions, exclusions, open questions, warnings, and capability gaps;
 - the observed analyzer release, graph version, and Head SHA, plus the complete valid GapSet and its digest;
 - the selected mode and distinct Compilation and Publication statuses when Publication was requested;
-- a private URL only after Publication success, or a path, file count, and manifest digest after materialization;
-- that direct mode created no Publication, repository, or `.git`; and
+- a private URL only after Publication success, or a path, file count, manifest digest, and any `root_adoption`
+  result after materialization;
+- that direct mode created no Publication or repository; absent output creates no `.git`, while root adoption only
+  preserves a preexisting root `.git`; and
 - any recovery blocker or external prerequisite.
 
 Do not call source published before validated Publication, or generated before verified materialization. Neither

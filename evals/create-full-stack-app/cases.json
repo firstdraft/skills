@@ -1031,6 +1031,7 @@
         "Before mutation, applies the CLI-owned POSIX current-root preconditions: the physical current directory is writable, has no reserved design or .firstdraft-root-output entry, contains only eligible top-level entries, and is not nested inside another worktree; an existing Git root must be clean, nonsparse, operation-free, and have no submodule metadata.",
         "Lets the CLI own the root transaction, artifact verification, same-filesystem moves, rollback journal, and installation instead of moving, deleting, archiving, or overwriting workspace material itself.",
         "On success, reports the validated output path, file count, manifest digest, Compilation status, and root_adoption result; prior non-Git top-level material is under design and an existing root .git and history are preserved with the transformation staged.",
+        "Recognizes that the approved Plan and private CLI state moved to design/.firstdraft, runs any later First Draft plan or compilation command from design, and never initializes a replacement Project in the generated application root.",
         "Recognizes that a non-Git root stays non-Git and makes no Publication, GitHub repository, repository URL, deployment, or newly created Git repository claim.",
         "On invalid_output_path or incomplete rollback, preserves owner material and follows the structured recovery reason rather than deleting a conflicting path, running Git restoration blindly, or retrying an outcome-unknown mutation."
       ],

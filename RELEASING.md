@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `9d9125b22b63cd68cb37b760a14be175b5c61e5056f5bbe148fbfa36baec5483` |
+| Candidate packed SHA-256 | `01f20aeb4b7b708cfe7bf402df0e4045b55ee948f302bcaf6fd2fa56155d6b00` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
@@ -36,7 +36,9 @@ The integrated CLI 0.2.2 source is commit `799a184cb2453ceadf5575f7b46ba975e084f
 `e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`. The exact-main
 [source CI](https://github.com/firstdraft/cli/actions/runs/33248883396) is green and its source contract includes
 explicit POSIX current-root adoption with `--output .`. CLI 0.2.2 is not published on npm, so those observations do
-not establish registry installation or release availability.
+not establish registry installation or release availability. The root mode has source and exact packed-CLI contract
+proof, but no retained fresh-agent two-turn or registry-installed observation; it does not replace either required
+Publication or `./application` smoke below.
 
 ## Authorization boundaries
 
@@ -239,7 +241,7 @@ mutation beyond that scope.
   zero-flag command with exact unchanged Plan bytes conditionally resumes or reconciles that singleton. It is not a
   second Publication request and does not authorize an ambiguous Plan-push retry.
 - A direct `plan compile --output` start with outcome unknown is not replayable. Preserve the exact Plan, private
-  state, and absent destination; do not repeat it or switch to zero-flag Publication without reconciliation.
+  state, and selected output; do not repeat it or switch to zero-flag Publication without reconciliation.
 - A catalog rollback may select a prior immutable package. It must not publish changed bytes under an existing
   version.
 - A recovery that repoints the catalog must update its coupled structured assertions and current-state docs in one
