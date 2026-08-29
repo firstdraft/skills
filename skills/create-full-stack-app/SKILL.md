@@ -21,7 +21,7 @@ The current Compiler is a narrow experiment, not arbitrary application generatio
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
   Appearance-theme/color, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone slices.
-- Required enums emit string storage and inclusion. Only one with `settings.ordinal: true` emits its compatible
+- Required enums emit string storage and inclusion. Any admitted required enum accepts a compatible in-domain
   literal-key default. Rails `enum`, database membership, and general rank behavior remain unsupported.
 - Bounded Account/Policy support protects Web Scaffolds. iPhone output requires one admitted public index and stays
   Account- and Policy-free; Web privacy does not transfer natively.

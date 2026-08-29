@@ -7,8 +7,8 @@
     "id": "01900000-0000-7000-8000-000000000905",
     "graph_version": 1,
     "head_source_sha256": "d8ecce5f4029058bae0c72e235bb671eeb8b065aba2d2800c15dd4bea269ecd4",
-    "analyzer_release": "foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification",
+    "analyzer_release": "foundation-plan-rails/application-2026-08-28-reviewed-realization",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-08"
@@ -25,16 +25,16 @@
         "graph_version": 1
       },
       "analysis": {
-        "release": "foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification"
+        "release": "foundation-plan-rails/application-2026-08-28-reviewed-realization"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization",
       "target": {
         "id": "rails",
         "profile": "rails-sketch/2026-08"
       },
       "gaps": []
     },
-    "gap_set_sha256": "15836a3d8ff0d3f2dc37f77deb2a4288dc14c2a575db38ae51efd70b008b18a8",
+    "gap_set_sha256": "3326e75714d1a2724b05fcf8146977a788247b92d5335cd588aeff64a6e18bff",
     "started_at": "2026-07-30T12:02:00.000Z",
     "completed_at": "2026-07-30T12:02:01.000Z"
   }

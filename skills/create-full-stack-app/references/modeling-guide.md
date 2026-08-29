@@ -92,10 +92,10 @@ matter.
 
 Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
 order carries semantic rank rather than presentation order alone. The current Compiler emits required enum string
-storage and model inclusion. It emits a compatible literal-key default only when that required enum declares
-semantic rank with `settings.ordinal: true`. It does not emit a Rails `enum`, database membership constraint, or
-general rank semantics; optional enums and unsupported consumers remain gaps. Preserve the product meaning and
-report the reviewed consequences rather than replacing an enum with a scalar.
+storage and model inclusion. Any admitted required enum accepts a compatible in-domain literal-key default,
+regardless of whether its order is semantically ranked. It does not emit a Rails `enum`, database membership
+constraint, or general rank semantics; optional enums and unsupported consumers remain gaps. Preserve the product
+meaning and report the reviewed consequences rather than replacing an enum with a scalar.
 
 The current Compiler admits bounded integer-literal range comparisons, text length, positive short-text format,
 conditional text or ordinary-Reference presence and absence, and selected unconditional Entity uniqueness with a
@@ -146,10 +146,11 @@ silently narrow a broader requested Scaffold or make it public merely to obtain 
 
 Select `native.ios` only when the user wants the bounded owned iPhone project. Ordinary public Compilation emits it
 only with at least one admitted public navigation entry; otherwise the valid run records an unrealized-client target
-gap. The target fully realizes Application `domain` only with generated iOS; selected iOS may omit it. An Entity's
-optional semantic `icon` informs shared Web and iPhone navigation, with a target fallback when omitted. Account,
-Policy, profile, detail, and mutation Web behavior does not become protected native behavior. Confirm that public
-native navigation is intentional; otherwise preserve the requested access and review the resulting support gap.
+gap. Application `domain` independently configures the generated Rails production mailer host; it does not configure
+DNS, deployment, Rails host authorization, or native identity. An Entity's optional semantic `icon` informs shared
+Web and iPhone navigation, with a target fallback when omitted. Account, Policy, profile, detail, and mutation Web
+behavior does not become protected native behavior. Confirm that public native navigation is intentional; otherwise
+preserve the requested access and review the resulting support gap.
 Do not add a public index merely to obtain a gap-free result, and do not silently decline the requested iPhone
 client. Appearance theme and colors are generated while derived icon assets remain a partial gap. Nonempty delivery,
 Android, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a

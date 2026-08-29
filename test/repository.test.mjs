@@ -64,15 +64,15 @@ const foundationPlanAnalyzerRelease = "foundation-plan-rails/application-2026-08
 const foundationPlanCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08";
 const currentFoundationPlanAnalyzerRelease =
-  "foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification";
+  "foundation-plan-rails/application-2026-08-28-reviewed-realization";
 const currentFoundationPlanCompilerRelease =
-  "foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification";
+  "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
 const foundationPlanSchemaDigest =
   "50deea0624322a08191f235b2b7955a35f7d4e3186eea494ea6ea6bbad7865c1";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
 const currentFoundationPlanSchemaBaseline =
-  "de4c524b632533601ff111fe64f2982bd0693d1d";
+  "cc72dad5b26b887f3f21496b568b80678ceac47f";
 const currentCompilerServiceBaseline =
   "6002be2685542fedf515879f940b97ad73b1a469";
 const discoverySmokeServiceBaseline =
@@ -510,7 +510,7 @@ test("historical plugin receipts stay separate from current availability", async
   assert.doesNotMatch(candidateFoundationPlanReference, /proven live Publish path/);
   assert.match(
     candidateFoundationPlanReference,
-    /Current design and machine authority[\s\S]*?de4c524b632533601ff111fe64f2982bd0693d1d[\s\S]*?Implementation and observation evidence[\s\S]*?Older controlled smokes[\s\S]*?historical receipts[\s\S]*?must not be used to narrow or widen the current profile/,
+    /Current design and machine authority[\s\S]*?cc72dad5b26b887f3f21496b568b80678ceac47f[\s\S]*?Implementation and observation evidence[\s\S]*?Older controlled smokes[\s\S]*?historical receipts[\s\S]*?must not be used to narrow or widen the current profile/,
   );
   assert(!candidateFoundationPlanReference.includes(historicalCliContractBaseline));
   assert.match(
@@ -1718,7 +1718,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.equal(
     createHash("sha256").update(currentCaseChatGapSetSource).digest("hex"),
-    "521eed4f7c5cbb755411f057a89f9e837ae935c89dd8b4590ee47bae9e7715a2",
+    "9cabc8cc300038f50ddc3febf8d73b9cff3b08a0c4288e2d05fce6d35a8b2c64",
   );
   const currentCaseChatPlan = JSON.parse(currentCaseChatPlanSource);
   const currentCaseChatGapSet = JSON.parse(currentCaseChatGapSetSource);
@@ -1728,10 +1728,56 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.equal(currentCaseChatGapSet.analysis.release, currentFoundationPlanAnalyzerRelease);
   assert.equal(currentCaseChatGapSet.compiler_release, currentFoundationPlanCompilerRelease);
-  assert.equal(currentCaseChatGapSet.gaps.length, 30);
+  assert.equal(currentCaseChatGapSet.gaps.length, 4);
   assert.equal(
     prettyJsonSha256(currentCaseChatGapSet),
-    "521eed4f7c5cbb755411f057a89f9e837ae935c89dd8b4590ee47bae9e7715a2",
+    "9cabc8cc300038f50ddc3febf8d73b9cff3b08a0c4288e2d05fce6d35a8b2c64",
+  );
+  assert.deepEqual(
+    currentCaseChatGapSet.gaps.map(
+      ({ classification, code, kind, pointer, readable_path: readablePath, status }) => ({
+        classification,
+        code,
+        kind,
+        pointer,
+        readablePath: readablePath ?? null,
+        status,
+      }),
+    ),
+    [
+      {
+        classification: "service_support_gap",
+        code: "foundation_plan.gap.service.unsupported_capability",
+        kind: "import_skip",
+        pointer: "/application/delivery",
+        readablePath: null,
+        status: "skipped_at_import",
+      },
+      {
+        classification: "target_support_gap",
+        code: "foundation_plan.gap.association.not_generated",
+        kind: "association",
+        pointer: "/application/entities/5/associations/0",
+        readablePath: "message.notifications",
+        status: "not_generated",
+      },
+      {
+        classification: "service_support_gap",
+        code: "foundation_plan.gap.service.unsupported_capability",
+        kind: "import_skip",
+        pointer: "/application/entities/5/implicit_order_column",
+        readablePath: "message",
+        status: "skipped_at_import",
+      },
+      {
+        classification: "target_support_gap",
+        code: "foundation_plan.gap.native_client.not_generated",
+        kind: "native_client",
+        pointer: "/application/native/ios",
+        readablePath: "application.native.ios",
+        status: "not_generated",
+      },
+    ],
   );
 
   const authoredStateMachinePointers = currentCaseChatPlan.application.entities.flatMap(
@@ -1844,17 +1890,36 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     currentCaseChatGapSet.gaps
       .filter(({ code }) => code === "foundation_plan.gap.field_modifier.default")
       .map(({ pointer }) => pointer),
-    [
-      "/application/entities/1/fields/3/default",
-      "/application/entities/3/fields/2/default",
-    ],
+    [],
+  );
+  assert.deepEqual(
+    currentCaseChatPlan.application.entities
+      .flatMap(({ policies = [] }, entityIndex) =>
+        policies.map((_policy, policyIndex) =>
+          `/application/entities/${entityIndex}/policies/${policyIndex}`,
+        ),
+      )
+      .filter((policyPointer) =>
+        currentCaseChatGapSet.gaps.some(
+          ({ pointer }) => pointer === policyPointer || pointer.startsWith(`${policyPointer}/`),
+        ),
+      ),
+    [],
+    "all 14 current Case Chat Policies must remain realized at this exact boundary",
+  );
+  assert.equal(
+    currentCaseChatPlan.application.entities.flatMap(({ policies = [] }) => policies).length,
+    14,
   );
   assert(
-    currentCaseChatGapSet.gaps.some(
-      ({ code, readable_path: readablePath }) =>
-        code === "foundation_plan.gap.policy.not_generated" &&
-        readablePath === "case.read_by_participant",
+    currentCaseChatGapSet.gaps.every(
+      ({ pointer }) => !pointer.startsWith("/application/entities/6/fields/5/redact_from_logs"),
     ),
+    "notification.deduplication_key redaction must remain realized",
+  );
+  assert(
+    currentCaseChatGapSet.gaps.every(({ pointer }) => pointer !== "/application/domain"),
+    "the current Case Chat domain must remain realized independently of native output",
   );
   assert(
     currentCaseChatGapSet.gaps.some(
@@ -1869,11 +1934,18 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
         pointer === "/application/native/ios",
     ),
   );
+  assert(
+    currentCaseChatGapSet.gaps.some(
+      ({ code, readable_path: readablePath }) =>
+        code === "foundation_plan.gap.association.not_generated" &&
+        readablePath === "message.notifications",
+    ),
+  );
 
   assert.match(foundationPlanReference, /^### Accounts and Policies$/m);
   assert.match(
     modelingGuide,
-    /Account,\s+Policy, profile, detail, and mutation Web behavior does not become protected native behavior/,
+    /Account,\s+Policy, profile, detail, and mutation Web\s+behavior does not become protected native behavior/,
   );
   assert.match(
     foundationPlanReference,

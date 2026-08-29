@@ -46,9 +46,9 @@ An empty Plan is preferable to a fake Entity. Tell the user that the application
 
 This complete document is the smallest canonical `rails-sketch/2026-08` web-and-iPhone success candidate. It
 requests one read-only public web index and one selected iPhone project with the same navigation label and semantic
-icon. The domain is coupled to the selected iPhone client, and the required title Field supplies the human-facing
-Primary Descriptor. The prepared analyzer is designed to return `valid`; that result is still only the Compilation
-gate, not proof that output exists.
+icon. The domain supplies the generated Rails production mailer host independently of the selected iPhone client,
+and the required title Field supplies the human-facing Primary Descriptor. The prepared analyzer is designed to
+return `valid`; that result is still only the Compilation gate, not proof that output exists.
 
 ```json
 {
@@ -97,10 +97,11 @@ gate, not proof that output exists.
 
 The selected native output is iPhone-only. Do not describe it as Android or iPad support. The target emits a selected
 iPhone client only with at least one admitted public-index Scaffold; without one, a valid analysis records an
-unrealized-client target gap. A domain without generated iOS is likewise admitted but recorded as ungenerated.
-Web-only plans may use the same exact Scaffold with `native: {}` and no domain. The admitted Scaffold makes Movie records readable
-on the web without authentication. Confirm that exposure with the user before adding it; do not add it merely to
-satisfy the iPhone navigation requirement or silently discard private or broader access intent.
+unrealized-client target gap. A domain with or without generated iOS configures only the Rails production mailer host;
+it does not prove DNS, deployment, Rails host authorization, or native identity. Web-only plans may use the same exact
+Scaffold with `native: {}` and may include or omit a domain. The admitted Scaffold makes Movie records readable on
+the web without authentication. Confirm that exposure with the user before adding it; do not add it merely to satisfy
+the iPhone navigation requirement or silently discard private or broader access intent.
 
 Adding `appearance` to this candidate emits the selected theme and colors in generated Rails and selected-iOS
 shells. A matching valid AnalysisRun still records the partial
