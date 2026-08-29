@@ -407,7 +407,7 @@ algebra and the relation scopes demanded by supported consumers. Unsupported Pol
 and every dependent Scaffold or projection remains an exact child gap. Do not infer that all Policies are supported
 or that all Scaffolds are public; inspect the whole matching GapSet.
 
-The bundled current Case Chat fixture exercises all 14 authored Policies and their admitted protected Web consumers
+The repository's current Case Chat fixture exercises all 14 authored Policies and their admitted protected Web consumers
 without a Policy or dependent Scaffold gap. That reviewed application is one exact supported graph, not a general
 claim that arbitrary Policy expressions or protected consumers are realized.
 
