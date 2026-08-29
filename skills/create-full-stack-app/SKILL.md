@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Incrementally authors and revises complete First Draft Foundation Plans, submits exact bytes for diagnostics, and can request the narrow Rails web-and-iPhone Compile journey through its bundled CLI. It preserves product meaning, identity, private CLI state, and artifact provenance. Bounded Web Accounts, Policies, protected Scaffolds, and required enums exist; arbitrary applications, deployment, Android, iPad, notifications, and broader clients do not."
+description: "Experimental and in development: Incrementally authors and revises complete First Draft Foundation Plans; submits exact bytes for diagnostics; and requests a narrow Rails web-and-iPhone Compile journey through its bundled CLI. Preserves product meaning, identity, private CLI state, and artifact provenance. Bounded Web Accounts, Policies, protected Scaffolds, and required enums exist; arbitrary applications, deployment, Android, iPad, notifications, and broader clients do not."
 license: "MIT"
 ---
 
@@ -13,16 +13,15 @@ application.
 
 ## Current boundary
 
-This experimental workflow targets the coordinated plugin 0.2.1, CLI 0.2.1, and service-contract 0.3 contract.
-CLI 0.2.1 is on npm `next`; bundled bytes do not prove matching plugin-catalog availability. Verify the complete
-combination before advising an installation change.
+This workflow targets plugin candidate 0.2.1, integrated CLI 0.2.2, and service-contract 0.3. CLI 0.2.2 is not yet
+on npm; candidate bytes do not prove registry or plugin-catalog availability.
 
-The current Compiler is a narrow experiment, not arbitrary application generation:
+Current Compiler coverage is narrow:
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
   Appearance-theme/color, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone slices.
-- Required enums emit string storage and inclusion. Any admitted required enum accepts a compatible in-domain
-  literal-key default. Rails `enum`, database membership, and general rank behavior remain unsupported.
+- Required enums emit string storage and inclusion plus compatible in-domain literal-key defaults. Rails `enum`,
+  database membership, and general rank behavior remain unsupported.
 - Bounded Account/Policy support protects Web Scaffolds. iPhone output requires one admitted public index and stays
   Account- and Policy-free; Web privacy does not transfer natively.
 - Preserve unsupported meaning and report every reviewed gap; never weaken it to obtain `valid`. A valid run may
@@ -89,7 +88,7 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.2.1` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.2.2` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Existing cross-repository contract tests own the exhaustive leaf-command
 matrix, including separate stdout and stderr assertions; startup should not rediscover it through a synthesized
 shell loop. The compatible CLI supplies these public commands:
@@ -100,7 +99,7 @@ shell loop. The compatible CLI supplies these public commands:
 
 There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.
 If its path, version, or help differs, report it and stop remote work instead of using HTTP directly; local Plan work
-may continue. Recommend repair only after verifying the catalog serves plugin 0.2.1 with CLI 0.2.1.
+may continue. Recommend repair only after verifying the registry and catalog serve plugin 0.2.1 with CLI 0.2.2.
 
 Treat `.firstdraft/state.json` as private CLI-owned concurrency state. Never print, paste, commit, or treat it as
 Plan content. Let the user configure `FIRSTDRAFT_API_TOKEN` and any initial `FIRSTDRAFT_API_URL` outside the
@@ -204,9 +203,9 @@ Before the first `plan compile`, reread the exact current
 Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
 and exclusions. Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Explain that service
 gaps were skipped before semantic analysis, target gaps were not fully realized, and `valid` applies only to the
-admitted graph. Before asking for approval, select direct output for Drawing Board, same-workspace, or local-directory
-requests; select zero-flag Publication only for an explicit private GitHub repository. Ask when unclear; generic
-compile or build language does not authorize Publication. State that direct output creates only a verified local
+admitted graph. Before asking for approval, select absent `./application` for direct requests, `.` only for explicit
+current-root adoption, and zero-flag Publication only for an explicit private GitHub repository. Ask when unclear:
+generic compile or build language does not authorize Publication. Direct output creates only a verified local
 directory, successful Publication creates one private GitHub repository, and neither deploys.
 Do not enumerate absent subject families or immaterial properties. Ask the user to correct or explicitly approve the
 candidate and reviewed gaps; require no digest echo or gap-acknowledgment field.
@@ -226,14 +225,15 @@ analysis with gaps can; do not require removal of the corresponding Plan fields.
 After the exact candidate's semantic read-back is approved, read
 [Product Compile](references/diagnostics-and-recovery.md#product-compile) and request the already selected mode:
 
-- For selected direct output, choose absent `./application` and run:
+- For direct output, use absent `./application` unless the approved request selects current-root adoption. Run:
 
   ```sh
   firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
   firstdraft_cli plan compile --output ./application
   ```
 
-  Direct mode creates no Publication, repository, or `.git`; Drawing Board owns nested-Git setup.
+  For POSIX root adoption, read the recovery preconditions and use `.`. It preserves a root `.git`, stages
+  the move to `design`, and creates no repository; absent output creates no `.git`. Neither mode starts Publication.
 - For selected Publication, run zero-flag mode:
 
   ```sh
@@ -295,8 +295,8 @@ In particular:
 - treat `invalid_publication_status` as a contract mismatch that replay cannot repair;
 - distinguish a failed Compilation from a later failed Publication by validated statuses;
 - keep `local_state_not_saved.recovery_state` private; and
-- for `invalid_output_path`, choose an absent path. Direct preflight and retained download make no request; a
-  post-analysis recheck may follow an accepted push but starts no Compilation.
+- for `invalid_output_path`, correct the root precondition or use an absent path. Preflight and retained download make
+  no request; a post-analysis recheck may follow an accepted push but starts no Compilation.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.

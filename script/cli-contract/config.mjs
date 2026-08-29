@@ -1,8 +1,8 @@
-export const cliRevision = "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
+export const cliRevision = "799a184cb2453ceadf5575f7b46ba975e084f192";
 export const cliRuntimeSha256 =
-  "0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098";
+  "e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.2.1";
+export const cliPackageVersion = "0.2.2";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
@@ -72,6 +72,7 @@ export const packedFileAllowlist = [
   "src/file-system.js",
   "src/plan-compile-progress.js",
   "src/plan-state.js",
+  "src/root-output.js",
   "src/uuid-v7.js",
   "src/version.js",
 ];

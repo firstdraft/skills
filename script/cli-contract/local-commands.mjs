@@ -57,7 +57,7 @@ export async function verifyLocalCommands(context) {
   assert.match(compileHelp.stdout, /submits the exact current whole-file Plan/);
   assert.match(
     compileHelp.stdout,
-    /firstdraft plan compile --output <absent-directory>/,
+    /firstdraft plan compile --output <absent-directory\|\.>/,
   );
   assert.match(
     compileHelp.stdout,

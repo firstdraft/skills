@@ -1022,6 +1022,32 @@
       ]
     },
     {
+      "id": "compile-prepared-current-root",
+      "should_trigger": true,
+      "prompt": "I approve the unchanged staged Movie Catalog with SHA-256 52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f and its reviewed support result. Put the generated application at this current workspace root, moving my existing design materials under design. Do not create a GitHub repository.",
+      "expectations": [
+        "Treats the explicit current-root request as selection of firstdraft plan compile --output . and never substitutes an absent application directory or zero-flag Publication without another user decision.",
+        "Rereads the staged Plan, verifies the approved SHA-256 and semantic model remain unchanged, and runs the selected Compile exactly once without another command-level confirmation or preparatory push or status command.",
+        "Before mutation, applies the CLI-owned POSIX current-root preconditions: the physical current directory is writable, has no reserved design or .firstdraft-root-output entry, contains only eligible top-level entries, and is not nested inside another worktree; an existing Git root must be clean, nonsparse, operation-free, and have no submodule metadata.",
+        "Lets the CLI own the root transaction, artifact verification, same-filesystem moves, rollback journal, and installation instead of moving, deleting, archiving, or overwriting workspace material itself.",
+        "On success, reports the validated output path, file count, manifest digest, Compilation status, and root_adoption result; prior non-Git top-level material is under design and an existing root .git and history are preserved with the transformation staged.",
+        "Recognizes that a non-Git root stays non-Git and makes no Publication, GitHub repository, repository URL, deployment, or newly created Git repository claim.",
+        "On invalid_output_path or incomplete rollback, preserves owner material and follows the structured recovery reason rather than deleting a conflicting path, running Git restoration blindly, or retrying an outcome-unknown mutation."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
       "id": "compile-distinguishes-terminal-stage",
       "should_trigger": true,
       "prompt": "Explain these two validated terminal results: A has compilation.status failed, publication.status failed, and publication.progress.phase failed. B has compilation.status succeeded, publication.status failed, and publication.progress.phase failed.",

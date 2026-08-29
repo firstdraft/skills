@@ -1,5 +1,12 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 
 import {
@@ -33,12 +40,103 @@ export async function verifyPlanJourney(context) {
   const moviePlan = readFileSync(context.moviePlanPath);
   await verifyHappyCompile(context, moviePlan);
   await verifyHappyDirectCompile(context, moviePlan);
+  await verifyHappyRootCompile(context, moviePlan);
   await verifyDirectOutputRecheck(context, moviePlan);
   await verifyStaleAnalysisGeneration(context, moviePlan);
   await verifySameGenerationDifferentHead(context, moviePlan);
   await verifyStaleLocalBytes(context, moviePlan);
   await verifyAmbiguousPhases(context, moviePlan);
   await verifyDiagnosticsStopPublication(context, moviePlan);
+}
+
+async function verifyHappyRootCompile(context, planSource) {
+  if (process.platform === "win32") return;
+  const cwd = await initializedProject(context, "compile-root-happy", {
+    planSource,
+  });
+  writeFileSync(path.join(cwd, "product-notes.md"), "Design notes\n");
+  const digest = sha256(planSource);
+  const artifact = compilationArtifact(digest, {
+    foundationPlanSha256: digest,
+    provenanceGraphVersion: 1,
+    provenanceAnalysisId: analysisId,
+  });
+  const queued = compilationProjection("queued", {
+    headSourceSha256: digest,
+    graphVersion: 1,
+    analysisRunId: analysisId,
+  });
+  const succeeded = compilationProjection("succeeded", {
+    headSourceSha256: digest,
+    artifact,
+    graphVersion: 1,
+    analysisRunId: analysisId,
+  });
+  const calls = [];
+  const result = await invokeRunner(
+    context.runCli,
+    ["plan", "compile", "--output", "."],
+    cwd,
+    {
+      fetchFunction: sequenceFetch(
+        [
+          acceptedPlanResponse(planSource),
+          jsonResponse(analysisProjection("valid", { headSourceSha256: digest })),
+          jsonResponse(queued, 202, {
+            Location: queued.compilation.status_path,
+          }),
+          jsonResponse(succeeded),
+          artifactResponse(artifact),
+        ],
+        calls,
+      ),
+      compilationSleep: async () => {},
+    },
+  );
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(JSON.parse(result.stdout), {
+    project: succeeded.project,
+    compilation: succeeded.compilation,
+    output: {
+      path: realpathSync(cwd),
+      file_count: 2,
+      manifest_sha256: artifact.manifestSha256,
+      root_adoption: {
+        design_path: path.join(realpathSync(cwd), "design"),
+        moved_entry_count: 2,
+        git_repository_preserved: false,
+        git_index_replaced: false,
+      },
+    },
+  });
+  assert.deepEqual(progressMessages(result), [
+    "First Draft: Analyzing Foundation Plan...",
+    "First Draft: Foundation Plan analysis valid.",
+    "First Draft: Compiling application...",
+    "First Draft: Application compiled.",
+  ]);
+  assert.doesNotMatch(result.stderr, /GitHub|Publication/i);
+  assert.equal(
+    readFileSync(path.join(cwd, "app", "models", "movie.rb"), "utf8"),
+    "class Movie < ApplicationRecord\nend\n",
+  );
+  assert.equal(
+    readFileSync(path.join(cwd, "design", "product-notes.md"), "utf8"),
+    "Design notes\n",
+  );
+  assert.equal(
+    readFileSync(
+      path.join(cwd, "design", ".firstdraft", "foundation-plan.json"),
+    ).equals(planSource),
+    true,
+  );
+  assert.equal(existsSync(path.join(cwd, ".firstdraft-root-output")), false);
+  assert.equal(existsSync(path.join(cwd, ".git")), false);
+  assert.deepEqual(
+    calls.map(({ init }) => init?.method),
+    ["PUT", "GET", "POST", "GET", "GET"],
+  );
 }
 
 async function verifyHappyDirectCompile(context, planSource) {
