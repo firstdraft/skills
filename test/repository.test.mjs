@@ -4610,11 +4610,11 @@ async function checkSkill(skillName) {
   assert(metadata.description.includes("First Draft Foundation Plan"));
   for (const fragment of [
     "Authors and revises First Draft Foundation Plans",
-    "submits bytes",
-    "bounded Rails/iPhone Compile through its CLI",
+    "submits exact bytes",
+    "bounded Rails/iPhone Compile",
     "Web Accounts, Policies, protected Scaffolds, and required enums are bounded",
     "arbitrary apps",
-    "clients are unavailable",
+    "broader clients are unavailable",
   ]) {
     assert(metadata.description.includes(fragment));
   }

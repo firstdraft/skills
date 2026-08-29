@@ -342,9 +342,16 @@ async function verifyPackedGitRootDownload({
   writeFileSync(path.join(root, "README.md"), "Design README\n");
   writeFileSync(path.join(root, ".env"), "SECRET=value\n");
   writeFileSync(path.join(root, "notes.md"), "Untracked notes\n");
-  git(root, ["add", ".gitignore", "README.md", ".firstdraft"]);
+  mkdirSync(path.join(root, "wireframes"));
+  writeFileSync(path.join(root, "wireframes", "home.md"), "Home sketch\n");
+  git(root, ["add", ".gitignore", "README.md", ".firstdraft", "wireframes"]);
   git(root, ["commit", "--quiet", "-m", "Design application"]);
   const originalHead = git(root, ["rev-parse", "HEAD"]).trim();
+  assert.deepEqual(git(root, ["ls-files"]).trim().split("\n").sort(), [
+    ".gitignore",
+    "README.md",
+    "wireframes/home.md",
+  ]);
   const requestCount = requests.length;
 
   const result = await invokeExecutableAsync(
@@ -356,7 +363,7 @@ async function verifyPackedGitRootDownload({
   const body = JSON.parse(result.stdout);
   assert.deepEqual(body.output.root_adoption, {
     design_path: path.join(realpathSync(root), "design"),
-    moved_entry_count: 5,
+    moved_entry_count: 6,
     git_repository_preserved: true,
     git_index_replaced: true,
   });
@@ -365,6 +372,7 @@ async function verifyPackedGitRootDownload({
     "app/models/movie.rb",
     "design/.gitignore",
     "design/README.md",
+    "design/wireframes/home.md",
     "ios/bin/ios",
   ]);
   assert.equal(gitStatus(root, ["check-ignore", "design/.env"]), 0);

@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `01f20aeb4b7b708cfe7bf402df0e4045b55ee948f302bcaf6fd2fa56155d6b00` |
+| Candidate packed SHA-256 | `c4a5052a2a1ce6dc7e2c4e8734515b9980285e9febb164d61688ad0ba36bc7a2` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
