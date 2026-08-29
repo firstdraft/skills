@@ -319,9 +319,13 @@ node script/check-cli-contract.mjs <path-to-cli-checkout>
 Owner-authorized publication now makes that exact CLI version available under npm `next`; `latest` remains 0.1.0.
 This registry fact proves neither plugin publication/catalog selection nor service deployment.
 
-The coordinated API 0.3 projection exercised by this archived contract snapshot named analyzer release
-`foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification` and Compiler release
-`foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification`.
+At predecessor Skills source revision `160d33a5a7d9f9b2282729ecfd3b2e24a1123143`, tree
+`6f3db12c017e884d8b14c66f7d82e64229ec2073`, the coordinated API 0.3 projection used by this exact CLI contract
+named analyzer release `foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification` and Compiler
+release `foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification`. The current contract
+check uses analyzer release `foundation-plan-rails/application-2026-08-28-reviewed-realization` and Compiler release
+`foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization`; `script/cli-contract/config.mjs` owns
+those mutable fixture coordinates.
 
 It exercises the source runner's generators, flexible initialization, both exact-byte product Compile modes,
 phase-specific ambiguous outcomes, retained Compilation status, and historical artifact download. Direct mode starts
