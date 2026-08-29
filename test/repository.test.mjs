@@ -96,8 +96,12 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
+  "799a184cb2453ceadf5575f7b46ba975e084f192";
 const cliContractRuntimeDigest =
+  "e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72";
+const previousPublicCliContractBaseline =
+  "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
+const previousPublicCliContractRuntimeDigest =
   "0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098";
 const previousCliContractBaseline =
   "e53eb38d7e8254e6ba1e660b38c5d32d0314be17";
@@ -129,7 +133,8 @@ const freshModelPublicationTree =
   "5815d094e204f8b3928ff5b5467ef85e2551d109";
 const freshModelPublicationCommit =
   "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead";
-const preparedCliPackage = "@firstdraft.com/cli@0.2.1";
+const preparedCliPackage = "@firstdraft.com/cli@0.2.2";
+const previousPreparedCliPackage = "@firstdraft.com/cli@0.2.1";
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
     .update(`${JSON.stringify(value, null, 2)}\n`)
@@ -327,7 +332,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   assertRevisionTokens(readme, [
     foundationPlanServerBaseline,
     compilationEvidenceCliBaseline,
-    cliContractBaseline,
+    previousPublicCliContractBaseline,
     compilationProvenanceServiceBaseline,
     productJourneySmokeBaseline,
     freshModelServiceBaseline,
@@ -379,9 +384,10 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     path.join(referencesDirectory, "diagnostics-and-recovery.md"),
     "utf8",
   );
-  for (const source of [readme, foundationPlanReference, diagnosticsReference]) {
+  assert(readme.includes(`\`${previousPreparedCliPackage}\``));
+  for (const source of [foundationPlanReference, diagnosticsReference]) {
     assert(source.includes(`\`${preparedCliPackage}\``));
-    assert.doesNotMatch(source, /(?:package )?remains unpublished/);
+    assert.match(source, /not yet on npm/);
   }
   assert(foundationPlanReference.includes(currentFoundationPlanAnalyzerRelease));
   assert(foundationPlanReference.includes(currentFoundationPlanCompilerRelease));
@@ -410,6 +416,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       discoverySmokeServiceBaseline,
       compilationEvidenceCliBaseline,
       cliContractBaseline,
+      previousPublicCliContractBaseline,
       previousCliContractBaseline,
       historicalCliContractBaseline,
       compilationProvenanceServiceBaseline,
@@ -505,10 +512,10 @@ test("historical plugin receipts stay separate from current availability", async
   for (const source of [candidateSkill, candidateModelingGuide]) {
     assert.doesNotMatch(source, /live [Pp]ublication remains unproved/);
   }
-  assert.match(candidateSkill, /CLI 0\.2\.1 is on npm `next`/);
+  assert.match(candidateSkill, /CLI 0\.2\.2 is not yet\s+on npm/);
   assert.match(
     candidateSkill,
-    /bundled bytes do not prove matching plugin-catalog availability/,
+    /candidate bytes do not prove registry or plugin-catalog availability/,
   );
   assert.doesNotMatch(candidateModelingGuide, /dated staging (?:discovery|observation)/);
   assert.match(
@@ -1310,13 +1317,16 @@ test("CI checks the exact modular CLI contract", async () => {
     ],
     "packed-executable": [
       "packed-download",
+      "packed-root-download",
       "foundation_plan.sha256",
       "invokeExecutableAsync",
       "compilationTarget",
+      "root_adoption",
     ],
     "plan-journey": [
       "local_plan_changed",
       "compile-replaced-head",
+      "compile-root-happy",
       "analysis_changed",
       "head_source_sha256",
       "plan_not_valid",
@@ -1326,6 +1336,7 @@ test("CI checks the exact modular CLI contract", async () => {
       "malformed-json-diagnostics.json",
       "First Draft: Application compiled.",
       "https://github.com/octocat/movie-catalog",
+      "root_adoption",
     ],
     "plan-status": [
       "project_not_pushed",
@@ -1379,7 +1390,7 @@ test("behavioral eval cases are well-formed and reference real fixtures", async 
 
   assert.equal(document.format, "firstdraft.skill-evals/1");
   assert(Array.isArray(document.cases));
-  assert.equal(document.cases.length, 66);
+  assert.equal(document.cases.length, 67);
 
   const ids = new Set();
   const triggerValues = new Set();
@@ -1996,7 +2007,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   for (const source of [skillSource, agentMetadata, ...installedNarrativeSources]) {
     assert.doesNotMatch(
       source,
-      /before pushing this (?:Skill )?change|pending local-work|unmerged|unpushed/i,
+      /before pushing this (?:Skill )?change|pending local-work|(?:candidate|change|branch)[^.\n]{0,40}(?:unmerged|unpushed)/i,
     );
   }
   assert.match(
@@ -2749,7 +2760,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
       ].join("|"),
     ),
   );
-  assert(readme.includes(cliContractBaseline));
+  assert(readme.includes(previousPublicCliContractBaseline));
   const normalizedHistory = readme.replace(/\s+/g, " ");
   assert.match(
     normalizedHistory,
@@ -2975,7 +2986,7 @@ test("local capability check is shell-portable and uses the project wrapper", as
   );
   assert.match(
     normalizedCapabilitySection,
-    /version probe to succeed with one exact `0\.2\.1` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
+    /version probe to succeed with one exact `0\.2\.2` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
   );
   assert.match(
     normalizedCapabilitySection,
@@ -3139,8 +3150,8 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert(readme.includes(foundationPlanServerBaseline));
   assert(readme.includes(compilationEvidenceCliBaseline));
   assert(readme.includes(compilationEvidenceCliRuntimeDigest));
-  assert(readme.includes(cliContractBaseline));
-  assert(readme.includes(cliContractRuntimeDigest));
+  assert(readme.includes(previousPublicCliContractBaseline));
+  assert(readme.includes(previousPublicCliContractRuntimeDigest));
   assert(readme.includes(productJourneySmokeBaseline));
   assert(readme.includes(foundationIosCoreRevision));
   assert(readme.includes(foundationIosCoreArchiveDigest));
@@ -3186,9 +3197,9 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   for (const fragment of [
-    "targets the coordinated plugin 0.2.1, CLI 0.2.1, and service-contract 0.3 contract",
-    "CLI 0.2.1 is on npm `next`",
-    "matching plugin-catalog availability",
+    "targets plugin candidate 0.2.1, integrated CLI 0.2.2, and service-contract 0.3",
+    "CLI 0.2.2 is not yet on npm",
+    "registry or plugin-catalog availability",
     "required-enum",
     "Web Account",
     "Action Policy",
@@ -3204,7 +3215,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.doesNotMatch(normalizedSkillEvidence, /Accounts[^.;]*remain (?:unavailable|unsupported)/i);
   assert.match(
     skillSource.replace(/\s+/g, " "),
-    /Recommend repair only after verifying the catalog serves plugin 0\.2\.1 with CLI 0\.2\.1/,
+    /Recommend repair only after verifying the registry and catalog serve plugin 0\.2\.1 with CLI 0\.2\.2/,
   );
   assert.match(
     skillSource,
@@ -3719,8 +3730,8 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     );
   };
 
-  assert(readme.includes(cliContractBaseline));
-  assert(readme.includes(cliContractRuntimeDigest));
+  assert(readme.includes(previousPublicCliContractBaseline));
+  assert(readme.includes(previousPublicCliContractRuntimeDigest));
   assert(readme.includes(compilationProvenanceServiceBaseline));
   assert.match(
     readme,
@@ -3768,7 +3779,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     skill.replace(/\s+/g, " "),
-    /for `invalid_output_path`, choose an absent path\. Direct preflight and retained download make no request; a post-analysis recheck may follow an accepted push but starts no Compilation/,
+    /for `invalid_output_path`, correct the root precondition or use an absent path\. Preflight and retained download make no request; a post-analysis recheck may follow an accepted push but starts no Compilation/,
   );
   const normalizedRecovery = recovery.replace(/\s+/g, " ");
   assert.match(
@@ -3982,6 +3993,29 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(
     direct,
     "no Publication, GitHub repository, repository URL, or deployment claim",
+  );
+
+  const root = evaluation("compile-prepared-current-root");
+  hasExpectation(
+    root,
+    "explicit current-root request",
+    "firstdraft plan compile --output .",
+    "never substitutes",
+  );
+  hasExpectation(
+    root,
+    "CLI-owned POSIX current-root preconditions",
+    "existing Git root must be clean",
+  );
+  hasExpectation(
+    root,
+    "existing root .git and history are preserved",
+    "transformation staged",
+  );
+  hasExpectation(
+    root,
+    "non-Git root stays non-Git",
+    "no Publication, GitHub repository",
   );
 
   const terminalStage = evaluation("compile-distinguishes-terminal-stage");

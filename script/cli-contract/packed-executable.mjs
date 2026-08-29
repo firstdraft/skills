@@ -1,5 +1,11 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  writeFileSync,
+} from "node:fs";
 import { createServer } from "node:http";
 import path from "node:path";
 
@@ -79,11 +85,11 @@ export async function verifyPackedExecutable(context) {
   assert.match(compileHelp.stdout, /firstdraft plan compile\n/);
   assert.match(
     compileHelp.stdout,
-    /firstdraft plan compile --output <absent-directory>/,
+    /firstdraft plan compile --output <absent-directory\|\.>/,
   );
   assert.match(
     compileHelp.stdout,
-    /--output <absent-directory>\s+Materialize the generated application here/,
+    /--output <absent-directory\|\.>\s+Materialize the generated application here/,
   );
 
   const generated = invokeExecutable(
@@ -221,6 +227,62 @@ async function verifyPackedDownload(context, project) {
         `/v1/projects/${projectId}/compilations/${compilationId}/artifact`,
       ],
     ]);
+
+    if (process.platform !== "win32") {
+      const rootProject = path.join(
+        context.installationDirectory,
+        "packed-root-download",
+      );
+      mkdirSync(rootProject);
+      const initialized = invokeExecutable(
+        context.executable,
+        ["plan", "init", "--name", "Movie Catalog"],
+        rootProject,
+      );
+      assert.equal(initialized.status, 0);
+      pinRemoteState(rootProject, { apiUrl, projectIdentifier: projectId });
+      writeFileSync(path.join(rootProject, "product-notes.md"), "Design notes\n");
+
+      const rootResult = await invokeExecutableAsync(
+        context.executable,
+        ["compilation", "download", compilationId, "--output", "."],
+        rootProject,
+      );
+      assert.equal(rootResult.status, 0, rootResult.stderr);
+      assert.equal(rootResult.stderr, "");
+      assert.equal(
+        readFileSync(
+          path.join(rootProject, "app", "models", "movie.rb"),
+          "utf8",
+        ),
+        "class Movie < ApplicationRecord\nend\n",
+      );
+      assert.equal(
+        readFileSync(
+          path.join(rootProject, "design", "product-notes.md"),
+          "utf8",
+        ),
+        "Design notes\n",
+      );
+      const rootBody = JSON.parse(rootResult.stdout);
+      assert.equal(rootBody.output.path, realpathSync(rootProject));
+      assert.deepEqual(rootBody.output.root_adoption, {
+        design_path: path.join(realpathSync(rootProject), "design"),
+        moved_entry_count: 2,
+        git_repository_preserved: false,
+        git_index_replaced: false,
+      });
+      assert.deepEqual(requests.slice(2), [
+        [
+          "GET",
+          `/v1/projects/${projectId}/compilations/${compilationId}`,
+        ],
+        [
+          "GET",
+          `/v1/projects/${projectId}/compilations/${compilationId}/artifact`,
+        ],
+      ]);
+    }
   } finally {
     await new Promise((resolve, reject) => {
       server.close((error) => (error ? reject(error) : resolve()));

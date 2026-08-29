@@ -9,9 +9,9 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 The reviewed CLI contract in this stack is revision
-`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, with JavaScript-source runtime digest
-`0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098`. Its source package is
-`@firstdraft.com/cli@0.2.1`. Check the command surface rather than assuming the version alone
+`799a184cb2453ceadf5575f7b46ba975e084f192`, with JavaScript-source runtime digest
+`e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`. Its source package is
+`@firstdraft.com/cli@0.2.2`, which is not yet on npm. Check the command surface rather than assuming the version alone
 establishes compatibility. Candidate
 qualification or package publication does not prove service authentication, staging compatibility, or a complete
 user journey.
@@ -112,19 +112,40 @@ is unclear, ask before the mutation rather than treating a generic Compile reque
 
 ### Direct local output
 
-`plan compile --output <absent-directory>` validates the absent destination before Plan mutation and again after
-analysis, then starts one direct conditional Compilation. It polls only that retained ID, verifies its exact artifact,
-and atomically materializes the bytes and modes. The CLI owns those transport and installation mechanics; do not
-reimplement them with HTTP, a retained download shortcut, or archive tooling.
+`plan compile --output` accepts an absent destination or a spelling that resolves to the physical current directory.
+It validates the destination before Plan mutation, then starts one direct conditional Compilation. An absent path is
+checked again after analysis. Current-root adoption instead holds one owned transaction lock, rechecks the original
+top-level identities immediately before moving anything, verifies the artifact inside the root, and installs through
+same-filesystem renames. The CLI owns those transport and installation mechanics; do not reimplement them with HTTP,
+a retained download shortcut, or archive tooling.
 
-An `invalid_output_path` preflight makes no request. If the destination appears during analysis, the second check may
-follow an accepted Plan push and analysis reads, but it still prevents the Compilation start. Preserve the destination
-in either case and choose another absent path; do not repeat an outcome-unknown push.
+The ordinary `./application` path must remain absent. Current-root adoption is selected only by `.`, `./`, an absolute
+current-directory spelling, or another spelling resolving to the same physical directory. It is POSIX-only, applies
+to any eligible real directory rather than a Drawing Board-specific shape, and requires a writable directory other
+than the filesystem root with no top-level `design` or `.firstdraft-root-output`. Entries other than `.git` must be regular files
+or real same-filesystem directories. A Git root must have a clean tracked worktree and index, no unmerged or sparse
+state or in-progress Git operation, and no submodule metadata; untracked and ignored design material may remain.
+A directory nested inside another worktree is ineligible.
+
+On success, root adoption creates `design`, moves every preexisting non-Git top-level entry beneath it, installs the
+artifact at the root, and reports `root_adoption`. It preserves an existing root `.git` and history, prepares an index
+that stages tracked paths beneath `design` plus exact generated paths, and does not stage previously untracked or
+ignored files. A non-Git root stays non-Git. Inspect and commit the staged transformation before destructive Git
+restoration. The CLI never creates a repository in either direct mode.
+
+An `invalid_output_path` preflight makes no request. For an absent destination that appears during analysis, the
+second check may follow an accepted Plan push and analysis reads but still prevents Compilation. For root adoption,
+correct only the reported precondition or select an absent output; do not delete or overwrite owner material. A
+`materialization_failed` result with `reason: "root_rollback_incomplete"` retains the private
+`.firstdraft-root-output` journal. Do not delete it or run Git restoration commands: inspect the journal and restore
+its named index and paths to the recorded original identities before removing the transaction. Do not repeat an
+outcome-unknown push.
 
 Direct mode never starts GitHub Publication. Success writes one validated JSON object containing the Project,
-Compilation, absolute output path, file count, and manifest digest. The materialized tree contains only artifact
-files: the CLI creates no repository or `.git`, runs no formatter, and repairs nothing. When the output is nested in
-Drawing Board or another Git worktree, leave nested-Git initialization to that workspace's own workflow.
+Compilation, absolute output path, file count, and manifest digest. Absent output contains only artifact files and
+creates no repository or `.git`. Root adoption additionally contains preserved `design` and existing `.git` paths
+and reports the move/index facts above. The CLI runs no formatter and repairs nothing. When absent output is nested
+in Drawing Board or another Git worktree, leave nested-Git initialization to that workspace's own workflow.
 
 Progress contains only the analysis and Compilation messages from the stable table below. Do not report Publication,
 a repository, or a GitHub URL in direct mode. A direct wait timeout does not cancel retained work. When its validated
@@ -252,20 +273,21 @@ or provenance-changing response requires reconciling the CLI and service contrac
 
 ## Retained Compilation download
 
-`compilation download <id> --output <absent-path>`:
+`compilation download <id> --output <absent-path-or-current-root>`:
 
-1. validates the UUID and absent destination before network access;
+1. validates the UUID and selected absent or current-root destination before network access;
 2. makes one status read and requires `succeeded`;
 3. makes one artifact read without polling or starting work;
 4. requires the envelope's `head_source_sha256` to equal the retained
    `compilation.head_source_sha256`;
 5. verifies transport metadata and exact bytes against the retained artifact digest, then validates the canonical
    Foundation Plan digest, envelope, manifest, paths, modes, Base64 contents, and file digests; and
-6. installs a private sibling tree with one atomic rename.
+6. installs an absent private sibling tree with one atomic rename, or applies the same current-root transaction used
+   by direct Compile.
 
-`invalid_output_path` is safe to correct because no request was made. Preserve an existing destination and choose
-another absent path. Artifact or materialization errors are not a reason to weaken validation or use a partial
-tree.
+`invalid_output_path` is safe to correct because no request was made. Preserve an existing destination; choose
+another absent path or correct only a named current-root precondition. Artifact or materialization errors are not a
+reason to weaken validation or use a partial tree.
 
 ## Stable error families
 
@@ -288,7 +310,7 @@ tree.
 | `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before the selected mutation. |
 | `plan compile --output` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | Direct Compilation start or status did not complete its validated contract. Do not infer Publication. |
 | `plan compile --output` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned direct Compilation changed, remained nonterminal, or reached a non-success terminal state. |
-| `plan compile --output` | `invalid_output_path` | Preflight makes no request; a post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve the destination. |
+| `plan compile --output` | `invalid_output_path` | Preflight makes no request; an absent-path post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve owner material and correct only the reported root precondition or choose an absent path. |
 | `plan compile --output`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `materialization_failed` | No verified local tree was installed. |
 | Zero-flag `plan compile` | `publication_start_rejected` | First Draft returned a validated non-timeout 4xx rejection; Publication success was not verified. |
 | Zero-flag `plan compile` | `publication_status_unavailable` | The retained Publication status read failed. |
@@ -299,7 +321,7 @@ tree.
 | `compilation status --wait` | `compilation_changed`, `compilation_wait_timed_out` | Retained identity/provenance changed or the wait ended. |
 | `compilation download` | `compilation_not_succeeded` | No artifact request was made. |
 | `compilation download` | `artifact_unavailable`, `invalid_artifact` | Artifact transport or integrity failed before installation. |
-| `compilation download` | `invalid_output_path` | No network request was made; choose another absent path. |
+| `compilation download` | `invalid_output_path` | No network request was made; correct only a reported root precondition or choose another absent path. |
 | `compilation download` | `materialization_failed` | The verified tree could not be atomically installed. |
 
 ## Ambiguous mutations
@@ -319,7 +341,7 @@ so preserve the local files and stop rather than repeating that mutation or manu
 
 `request_outcome_unknown` with `phase: "compilation"` means direct mode sent its conditional start but could not
 verify a retained Compilation identity. Unlike Publication, direct Compilation has no Project singleton or safe
-same-command reconciliation path. Preserve the approved exact Plan, CLI state, and absent output. Do not rerun
+same-command reconciliation path. Preserve the approved exact Plan, CLI state, and selected output. Do not rerun
 `plan compile --output`, switch to zero-flag Publication, or issue a direct request. Stop until First Draft or an
 operator identifies the retained work and supplies a trustworthy recovery boundary.
 

@@ -141,7 +141,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
 test("home-inventory corpus case probes consequential ambiguity without invented answers", async () => {
   const document = await loadEvaluationDocument();
   assert.equal(document.format, "firstdraft.skill-evals/1");
-  assert.equal(document.cases.length, 66);
+  assert.equal(document.cases.length, 67);
 
   const cases = await loadEvaluationCases();
   const evaluation = evaluationCaseById(
@@ -241,11 +241,11 @@ test(
 
     assert.match(
       normalizedSkill,
-      /targets the coordinated plugin 0\.2\.1, CLI 0\.2\.1, and service-contract 0\.3/,
+      /targets plugin candidate 0\.2\.1, integrated CLI 0\.2\.2, and service-contract 0\.3/,
     );
     assert.match(
       normalizedSkill,
-      /catalog serves plugin 0\.2\.1 with CLI 0\.2\.1/,
+      /registry and catalog serve plugin 0\.2\.1 with CLI 0\.2\.2/,
     );
     assert.match(
       normalizedSkill,
@@ -279,10 +279,11 @@ test(
       "service gaps were skipped before semantic analysis",
       "target gaps were not fully realized",
       "`valid` applies only to the admitted graph",
-      "Before asking for approval, select direct output for Drawing Board, same-workspace, or local-directory requests",
-      "select zero-flag Publication only for an explicit private GitHub repository",
-      "Ask when unclear; generic compile or build language does not authorize Publication",
-      "direct output creates only a verified local directory",
+      "Before asking for approval, select absent `./application` for direct requests",
+      "`.` only for explicit current-root adoption",
+      "zero-flag Publication only for an explicit private GitHub repository",
+      "Ask when unclear: generic compile or build language does not authorize Publication",
+      "Direct output creates only a verified local directory",
       "successful Publication creates one private GitHub repository",
       "neither deploys",
       "Do not enumerate absent subject families",
@@ -623,6 +624,32 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert.doesNotMatch(
     JSON.stringify([directReadBack, direct]),
     /every attempted tool|permission-denied|effect ledger|no-network|no-write/i,
+  );
+
+  const root = evaluationCaseById(cases, "compile-prepared-current-root");
+  assert.match(root.prompt, /current workspace root/);
+  assert(root.prompt.includes(`SHA-256 ${movieCatalogSha256}`));
+  assert(
+    expectationIncludes(
+      root,
+      "explicit current-root request",
+      "firstdraft plan compile --output .",
+      "never substitutes",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      root,
+      "existing root .git and history are preserved",
+      "transformation staged",
+    ),
+  );
+  assert(
+    expectationIncludes(
+      root,
+      "non-Git root stays non-Git",
+      "no Publication, GitHub repository",
+    ),
   );
 
   const ambiguousDirect = evaluationCaseById(

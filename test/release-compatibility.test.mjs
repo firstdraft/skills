@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "1b7669451089299f51a32bc9533be421ad51be6f15896b68a2752b46cc2246a5",
+        "9d9125b22b63cd68cb37b760a14be175b5c61e5056f5bbe148fbfa36baec5483",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
@@ -65,6 +65,14 @@ test("current release docs route through structured identities", async () => {
   assert.match(
     releasing,
     /d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68[\s\S]*?actions\/runs\/33200181779[\s\S]*?moved neither CLI\s+`latest` nor any plugin package/,
+  );
+  assert.match(
+    releasing,
+    /799a184cb2453ceadf5575f7b46ba975e084f192[\s\S]*?7c66247b4d8460b130a5d65443466575a9a3cea1[\s\S]*?42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a[\s\S]*?e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72[\s\S]*?actions\/runs\/33248883396[\s\S]*?not published on npm/,
+  );
+  assert.match(
+    releasing,
+    /source contract includes[\s\S]*?current-root adoption[\s\S]*?`--output \.`/,
   );
   assert(
     releasing.includes(

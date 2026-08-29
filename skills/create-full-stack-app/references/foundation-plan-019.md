@@ -92,15 +92,16 @@ The bundled schema was copied byte-for-byte from
 `50deea0624322a08191f235b2b7955a35f7d4e3186eea494ea6ea6bbad7865c1`. This is exact contract provenance, not
 release or execution evidence.
 
-The current fixtures and check use reviewed direct-Compilation CLI revision
-`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, with JavaScript-source runtime digest
-`0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098`, as contract provenance rather than release
+The current fixtures and check use reviewed root-output CLI revision
+`799a184cb2453ceadf5575f7b46ba975e084f192`, with JavaScript-source runtime digest
+`e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`, as contract provenance rather than release
 or execution evidence. It exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, zero-flag `plan compile`, direct `plan compile --output`, `compilation status`, and
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-experimental `@firstdraft.com/cli@0.2.1` package. Check commands rather than inferring compatibility from a version
-number. Candidate qualification or package publication does not prove authentication, staging compatibility, or a
-complete user journey.
+experimental `@firstdraft.com/cli@0.2.2` package. Direct output accepts the ordinary absent destination and, on
+POSIX, explicit current-root adoption with `--output .`; the recovery reference owns its preconditions. CLI 0.2.2 is
+not yet on npm. Check commands rather than inferring compatibility from a version number. Candidate qualification or
+later package publication does not prove authentication, staging compatibility, or a complete user journey.
 
 The selected iPhone project composes `firstdraft/foundation-ios-core` revision
 `aa2ac902fa52abab51a4502953b7b962f949a21d`, archive SHA-256

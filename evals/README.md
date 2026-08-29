@@ -1,6 +1,6 @@
 # Behavioral evaluation index
 
-`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 66 fresh-context cases. Cases and
+`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 67 fresh-context cases. Cases and
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
 
@@ -67,6 +67,7 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `compile-invalid-candidate-is-safe`
 - `compile-prepared-movie-catalog`
 - `compile-prepared-drawing-board-application`
+- `compile-prepared-current-root`
 - `compile-distinguishes-terminal-stage`
 - `compile-reports-publication-retry-progress`
 - `compile-reports-parked-publication`
