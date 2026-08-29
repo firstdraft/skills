@@ -1733,6 +1733,21 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     prettyJsonSha256(currentCaseChatGapSet),
     "9cabc8cc300038f50ddc3febf8d73b9cff3b08a0c4288e2d05fce6d35a8b2c64",
   );
+  const currentCaseChatReviewCase = JSON.parse(
+    await readFile(
+      path.join(evalsDirectory, "create-full-stack-app", "cases.json"),
+      "utf8",
+    ),
+  ).cases.find(({ id }) => id === "review-current-case-chat-boundary");
+  assert(currentCaseChatReviewCase);
+  assert(
+    currentCaseChatReviewCase.expectations.some(
+      (expectation) =>
+        expectation.includes(prettyJsonSha256(currentCaseChatGapSet)) &&
+        expectation.includes(`all ${currentCaseChatGapSet.gaps.length} ordered records`),
+    ),
+    "the Case Chat eval must bind its current GapSet digest and ordered count",
+  );
   assert.deepEqual(
     currentCaseChatGapSet.gaps.map(
       ({ classification, code, kind, pointer, readable_path: readablePath, status }) => ({
@@ -2704,6 +2719,10 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     "utf8",
   );
   assert(readme.includes(cliContractBaseline));
+  assert.match(
+    readme,
+    /projection exercised by this archived contract snapshot named analyzer release[\s\S]*?application-2026-08-27-codespace-ssh-qualification[\s\S]*?compiler-application-2026-08-27-codespace-ssh-qualification/,
+  );
   assert(
     readme.includes(
       "| `create-full-stack-app` | Author, analyze, request product Compile, and inspect retained Compilations | Experimental scaffold |",
