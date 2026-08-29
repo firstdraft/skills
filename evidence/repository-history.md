@@ -24,7 +24,7 @@ A successor
 [fresh-model rehearsal driver](https://github.com/firstdraft/firstdraft/blob/3a029a8b425addbbba4f56d9197878cc002752f4/script/compilation_http_cli_model_rehearsal)
 used native Claude Code 2.1.221 with Opus/high, candidate plugin revision
 `b5c3897b240bfa3a9117d1a564d8e6b7d783e993`, and a freshly packed CLI at historical reviewed revision
-`f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, version `0.1.0-alpha.2`. The current reviewed 0.2.1 successor is
+`f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, version `0.1.0-alpha.2`. The published 0.2.1 successor is
 `d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, runtime digest
 `0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098`, package
 `@firstdraft.com/cli@0.2.1`. The agent made two exact-byte pushes through the driver's own two-Entity Movie Catalog fixture, repaired the expected
@@ -313,8 +313,9 @@ run:
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 
-Owner-authorized publication now makes that exact CLI version available under npm `next`; `latest` remains 0.1.0.
-This registry fact proves neither plugin publication/catalog selection nor service deployment.
+Owner-authorized publication makes CLI 0.2.1 available under npm `next`; `latest` remains 0.1.0. The config-owned
+CLI 0.2.2 contract revision is not published. This registry fact proves neither plugin publication/catalog
+selection nor service deployment.
 
 At predecessor Skills source revision `160d33a5a7d9f9b2282729ecfd3b2e24a1123143`, tree
 `6f3db12c017e884d8b14c66f7d82e64229ec2073`, the coordinated API 0.3 projection used by this exact CLI contract

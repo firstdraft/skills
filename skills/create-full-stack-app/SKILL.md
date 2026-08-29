@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Authors and revises First Draft Foundation Plans, submits bytes, and requests bounded Rails/iPhone Compile through its CLI. Preserves identity, state, and provenance. Web Accounts, Policies, protected Scaffolds, and required enums are bounded; arbitrary apps, deployment, Android, iPad, notifications, and clients are unavailable."
+description: "Experimental and in development: Authors and revises First Draft Foundation Plans, submits exact bytes, and requests bounded Rails/iPhone Compile. Preserves identity, state, and provenance. Web Accounts, Policies, protected Scaffolds, and required enums are bounded; arbitrary apps, deployment, Android, iPad, notifications, and broader clients are unavailable."
 license: "MIT"
 ---
 
