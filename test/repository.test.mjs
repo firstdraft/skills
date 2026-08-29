@@ -73,6 +73,14 @@ const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
 const currentFoundationPlanSchemaBaseline =
   "cc72dad5b26b887f3f21496b568b80678ceac47f";
+const previousSkillsCurrentTruthBaseline =
+  "160d33a5a7d9f9b2282729ecfd3b2e24a1123143";
+const previousSkillsCurrentTruthTree =
+  "6f3db12c017e884d8b14c66f7d82e64229ec2073";
+const previousFoundationPlanAnalyzerRelease =
+  "foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification";
+const previousFoundationPlanCompilerRelease =
+  "foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification";
 const currentCompilerServiceBaseline =
   "6002be2685542fedf515879f940b97ad73b1a469";
 const discoverySmokeServiceBaseline =
@@ -334,6 +342,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     catalogPromotionBaseline,
     pluginPatchCatalogPromotionBaseline,
     pluginReleaseBaseline,
+    previousSkillsCurrentTruthBaseline,
+    previousSkillsCurrentTruthTree,
   ]);
 
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
@@ -394,6 +404,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     [
       foundationPlanServerBaseline,
       currentFoundationPlanSchemaBaseline,
+      previousSkillsCurrentTruthBaseline,
+      previousSkillsCurrentTruthTree,
       currentCompilerServiceBaseline,
       discoverySmokeServiceBaseline,
       compilationEvidenceCliBaseline,
@@ -2718,10 +2730,43 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     path.join(repository, "evidence", "repository-history.md"),
     "utf8",
   );
+  const previousCliContractConfig = gitBlobAtRevision(
+    previousSkillsCurrentTruthBaseline,
+    "script/cli-contract/config.mjs",
+  ).toString("utf8");
+  assert.equal(
+    gitTreeAtRevision(previousSkillsCurrentTruthBaseline),
+    previousSkillsCurrentTruthTree,
+  );
+  assert(previousCliContractConfig.includes(previousFoundationPlanAnalyzerRelease));
+  assert(previousCliContractConfig.includes(previousFoundationPlanCompilerRelease));
+  assert.doesNotMatch(
+    previousCliContractConfig,
+    new RegExp(
+      [
+        currentFoundationPlanAnalyzerRelease,
+        currentFoundationPlanCompilerRelease,
+      ].join("|"),
+    ),
+  );
   assert(readme.includes(cliContractBaseline));
+  const normalizedHistory = readme.replace(/\s+/g, " ");
   assert.match(
-    readme,
-    /projection exercised by this archived contract snapshot named analyzer release[\s\S]*?application-2026-08-27-codespace-ssh-qualification[\s\S]*?compiler-application-2026-08-27-codespace-ssh-qualification/,
+    normalizedHistory,
+    new RegExp(
+      [
+        "At predecessor Skills source revision",
+        previousSkillsCurrentTruthBaseline,
+        "tree",
+        previousSkillsCurrentTruthTree,
+        "the coordinated API 0\\.3 projection used by this exact CLI contract",
+        previousFoundationPlanAnalyzerRelease,
+        previousFoundationPlanCompilerRelease,
+        "The current contract check uses analyzer release",
+        currentFoundationPlanAnalyzerRelease,
+        currentFoundationPlanCompilerRelease,
+      ].join(".*?"),
+    ),
   );
   assert(
     readme.includes(
@@ -4767,6 +4812,19 @@ function gitBlobAtRevision(revision, relativePath) {
       spawnBufferText(blob.stderr),
   );
   return blob.stdout;
+}
+
+function gitTreeAtRevision(revision) {
+  const tree = spawnSync("git", ["rev-parse", `${revision}^{tree}`], {
+    cwd: repository,
+    encoding: "utf8",
+  });
+  assert.equal(
+    tree.status,
+    0,
+    `git rev-parse failed for ${revision}: ${tree.stderr.trim()}`,
+  );
+  return tree.stdout.trim();
 }
 
 function gitTreePathsAtRevision(revision, ...roots) {
