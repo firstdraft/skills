@@ -7,8 +7,8 @@
     "id": "01900000-0000-7000-8000-000000000907",
     "graph_version": 1,
     "head_source_sha256": "01480bb4dad56e8a7ee42dc3b77412dec7b4e8b62c197795727015a8e96ddd05",
-    "analyzer_release": "foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification",
+    "analyzer_release": "foundation-plan-rails/application-2026-08-28-reviewed-realization",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-08"

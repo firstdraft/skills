@@ -42,11 +42,11 @@ deployed journey, and an older observation does not define current support.
 **Current design and machine authority**
 
 - The bundled JSON Schema owns v0.19 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/de4c524b632533601ff111fe64f2982bd0693d1d/docs/architecture/targets/rails/profile.md)
-  owns current lowering at Service revision `de4c524b632533601ff111fe64f2982bd0693d1d`.
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/cc72dad5b26b887f3f21496b568b80678ceac47f/docs/architecture/targets/rails/profile.md)
+  owns current lowering at Service revision `cc72dad5b26b887f3f21496b568b80678ceac47f`.
 - The current analyzer release is
-  `foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification`; the matching Compiler release is
-  `foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification`.
+  `foundation-plan-rails/application-2026-08-28-reviewed-realization`; the matching Compiler release is
+  `foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization`.
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
@@ -57,8 +57,8 @@ deployed journey, and an older observation does not define current support.
   State Machine, Appearance-theme/color, Web Account, Action Policy, generalized Web Scaffold, development-data,
   and selected-iPhone slices. Their prerequisites matter: unsupported children and consumers remain exact gaps
   rather than widening the supported shape. Appearance icon assets remain one named partial gap.
-- Required enums emit string storage and model inclusion in authored key order. A compatible literal-key default is
-  supported only when the required enum declares semantic rank with `settings.ordinal: true`. Optional enums,
+- Required enums emit string storage and model inclusion in authored key order. Any admitted required enum accepts
+  its compatible in-domain literal-key default. Optional enums,
   Rails-enum helper behavior, database membership constraints, general rank behavior, and broader enum consumers
   remain unsupported.
 - Web Account realization requires the exact email/password/self-service registration, verification, recovery,
@@ -72,11 +72,12 @@ deployed journey, and an older observation does not define current support.
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/de4c524b632533601ff111fe64f2982bd0693d1d/docs/evidence/status.md)
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/cc72dad5b26b887f3f21496b568b80678ceac47f/docs/evidence/status.md)
   distinguishes implemented, exercised, generated-output, hosted, and observed claims. Its
-  [current generated-repository qualification](https://github.com/firstdraft/firstdraft/blob/de4c524b632533601ff111fe64f2982bd0693d1d/docs/solutions/2026-08-27-codespace-ssh-generated-repository-qualification.md)
-  binds the current release identities and representative Plan GapSets to exact local and hosted evidence. It does
-  not establish Service deployment, device use, or arbitrary application support.
+  [current reviewed-realization qualification](https://github.com/firstdraft/firstdraft/blob/cc72dad5b26b887f3f21496b568b80678ceac47f/docs/solutions/2026-08-28-reviewed-realization-local-qualification.md)
+  binds the current release identities, the exact Oscar 40 / Case Chat 4 / Photogram 36 GapSets, generated runtime,
+  and separately identified hosted checks. It does not establish current browser or device use, Service deployment,
+  or arbitrary application support.
 - A dated
   [staging discovery smoke](https://github.com/firstdraft/skills/blob/e0212cad0a89a8b0e38678e371389085f6ddc254/evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
   records one older OAuth/App-backed private-repository Publication at its named identities. It is not deployment
@@ -87,7 +88,7 @@ deployed journey, and an older observation does not define current support.
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`de4c524b632533601ff111fe64f2982bd0693d1d` and has SHA-256
+`cc72dad5b26b887f3f21496b568b80678ceac47f` and has SHA-256
 `50deea0624322a08191f235b2b7955a35f7d4e3186eea494ea6ea6bbad7865c1`. This is exact contract provenance, not
 release or execution evidence.
 
@@ -202,17 +203,17 @@ and appears as a service-support gap instead of being silently discarded. Develo
 record when its assignments and dependencies are realizable; unsupported assignments remain precise gaps rather
 than causing the whole development-data graph to disappear.
 
-The prepared Compiler fully realizes `domain` only when an iPhone client is actually generated. A selected iPhone
-client may omit `domain`, but the client itself is emitted only with at least one admitted public Scaffold navigation
-entry; a selected-but-ungenerated client also leaves `domain` ungenerated. Otherwise the reviewed GapSet records the
-unrealized client. Richer Web Scaffold routes, Account behavior, and Policy decisions do not add native detail,
+The prepared Compiler uses an admitted `domain` as the generated Rails production mailer host, independently of
+native-client selection. That does not prove DNS, deployment, host authorization, TLS, sender identity, or email
+provider configuration. A selected iPhone client is emitted only with at least one admitted public Scaffold
+navigation entry. Richer Web Scaffold routes, Account behavior, and Policy decisions do not add native detail,
 mutation, profile, or protected navigation. Confirm that public native navigation is intentional; otherwise preserve
 the requested access and review its exact support consequence.
 
 Appearance theme and colors are emitted for generated Rails shells and any emitted selected iOS shell. Derived
 favicon, PWA-icon, and iOS AppIcon assets remain stock and produce the precise
-`foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Android, a domain without generated iOS, and
-other admitted but unconsumed Application configuration remain target gaps.
+`foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Android and other admitted but unconsumed
+Application configuration remain target gaps.
 
 The prepared Compilation emits admitted public and bounded Account/Policy-controlled Web surfaces and, when the
 public-navigation prerequisite is met, an owned iPhone project beneath `ios/`; this is not general generated resource
@@ -282,13 +283,13 @@ one target release into machine syntax.
 | Property | Schema and import meaning | Current review rule |
 | --- | --- | --- |
 | `required` | Mandatory Boolean; write `true` or `false`. Retained on admitted Fields. | A realized required Field emits target nullability and validation; an ungenerated Field remains a Field gap. |
-| `default` | Closed tagged Value where the Field variant permits it. Retained structurally. | Lowering is Field- and value-specific; the exact current-time and ordinal-enum cases are documented target slices. |
+| `default` | Closed tagged Value where the Field variant permits it. Retained structurally. | Lowering is Field- and value-specific; the exact current-time and admitted-required-enum cases are documented target slices. |
 | `notes` | Optional nonempty string on Fields only. Retained as review context. | Emits no application behavior. |
 | `immutable` | Optional Boolean; omission means `false`. Retained. | Realized for admitted emitted scalar and required-enum Fields; otherwise the owning Field or modifier remains a gap. |
 | `comparison` | `case_insensitive` on `short_text` only. Retained. | Lowering and downstream query use are profile-dependent; inspect the matching GapSet. |
 | `normalizations` | Ordered pipeline on text or URL Fields, with URL restrictions. Retained. | Lowering is Field- and pipeline-specific; inspect the matching GapSet. |
 | `encrypted_at_rest` | Optional Boolean; omission means `false`. Retained. | Lowering and consumer support are Field-specific; inspect the matching GapSet. |
-| `redact_from_logs` | Optional Boolean; omission means `false`. Retained. | Lowering and consumer support are Field-specific; inspect the matching GapSet. |
+| `redact_from_logs` | Optional Boolean; omission means `false`. Retained. | An admitted emitted ordinary scalar or required enum adds model-qualified request and inspection filtering; other shapes keep an exact gap. |
 
 Preserve intentional values that the Compiler cannot emit. Report the exact output gap instead of deleting a
 default, security property, or other product meaning to obtain `valid`.
@@ -306,7 +307,8 @@ selected value's owner-local `key`, not its UUID. Update that literal in the sam
 while preserving the value's UUID.
 
 The current Compiler emits a required enum as a non-null string column with ordinary model inclusion over stable
-value keys in authored order. It admits the exact literal-key default for a required ordinal enum. It does not emit a
+value keys in authored order. It admits the exact compatible in-domain literal-key default for any admitted required
+enum. It does not emit a
 Rails `enum`, native PostgreSQL enum, database `CHECK`, helper API, label mapping, or general rank semantics. Optional
 enums and unsupported defaults or consumers remain precise gaps. Preserve the enum and report only the reviewed
 consequences rather than assuming either blanket support or blanket failure.
@@ -404,6 +406,10 @@ record or an explicit `environment/current_account` gate record. The current tar
 algebra and the relation scopes demanded by supported consumers. Unsupported Policy meaning remains a Policy gap,
 and every dependent Scaffold or projection remains an exact child gap. Do not infer that all Policies are supported
 or that all Scaffolds are public; inspect the whole matching GapSet.
+
+The bundled current Case Chat fixture exercises all 14 authored Policies and their admitted protected Web consumers
+without a Policy or dependent Scaffold gap. That reviewed application is one exact supported graph, not a general
+claim that arbitrary Policy expressions or protected consumers are realized.
 
 The Account Entity may own the bounded Web-only `profile` surface resolved from `current_account`. Ordinary iPhone
 output stays Account- and Policy-free, omits profile and protected Web navigation, and records the applicable native
