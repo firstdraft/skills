@@ -25,8 +25,9 @@ A successor
 used native Claude Code 2.1.221 with Opus/high, candidate plugin revision
 `b5c3897b240bfa3a9117d1a564d8e6b7d783e993`, and a freshly packed CLI at historical reviewed revision
 `f55edffc9e88924f9a4c95f41c4d0bc9b72422f8`, version `0.1.0-alpha.2`. The current reviewed 0.2.1 successor is
-`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, pinned separately below. The agent made two exact-byte pushes through
-the driver's own two-Entity Movie Catalog fixture, repaired the expected
+`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, runtime digest
+`0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098`, package
+`@firstdraft.com/cli@0.2.1`. The agent made two exact-byte pushes through the driver's own two-Entity Movie Catalog fixture, repaired the expected
 reserved-constant diagnostic, waited for valid graph-version-2 analysis, and invoked product Compile once. The
 service then verified the 194-file, 542,894-byte artifact, strict fake-GitHub Publication, retained download, and
 materialized output. The dated
@@ -304,15 +305,11 @@ npm ci --ignore-scripts
 sh script/check
 ```
 
-The CLI contract check requires a checkout at the exact reviewed revision
-`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, whose independently reproduced JavaScript-source runtime digest is
-`0dec2ca75ce7862208fd093933d0954cbe9cbebc58dbc8fe6f589a1bee493098` and whose source package is
-`@firstdraft.com/cli@0.2.1`:
+The CLI contract check requires the exact revision, runtime digest, and package version owned by
+`script/cli-contract/config.mjs`. Follow the current checkout and reconciliation procedure in `RELEASING.md`, then
+run:
 
 ```sh
-git -C <path-to-cli-checkout> fetch origin main
-git -C <path-to-cli-checkout> merge-base --is-ancestor d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68 origin/main
-git -C <path-to-cli-checkout> checkout --detach d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68
 node script/check-cli-contract.mjs <path-to-cli-checkout>
 ```
 
@@ -332,8 +329,8 @@ phase-specific ambiguous outcomes, retained Compilation status, and historical a
 one conditional Compilation, polls its retained ID, verifies and materializes exact bytes and modes, and
 creates no Publication or `.git`; an ambiguous direct start is not retried. It also verifies the removed
 `plan subject-id` and public `plan publish` surfaces, then checks representative behavior through a freshly packed and
-installed CLI. The workflow records the same revision. This is deterministic contract evidence, not a server-backed
-Compilation or GitHub Publication. The separately pinned controlled product-journey
+installed CLI. The workflow checks the same config-owned revision. This is deterministic contract evidence, not a
+server-backed Compilation or GitHub Publication. The separately pinned controlled product-journey
 harness at service revision `8ebfc2ed82a610e63f47eb985c23ab7e634fe94e` crosses the local service and queue
 boundary while replacing only remote GitHub work with a strict fake.
 
