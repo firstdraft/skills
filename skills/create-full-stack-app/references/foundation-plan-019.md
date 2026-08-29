@@ -407,9 +407,11 @@ algebra and the relation scopes demanded by supported consumers. Unsupported Pol
 and every dependent Scaffold or projection remains an exact child gap. Do not infer that all Policies are supported
 or that all Scaffolds are public; inspect the whole matching GapSet.
 
-The repository's current Case Chat fixture exercises all 14 authored Policies and their admitted protected Web consumers
-without a Policy or dependent Scaffold gap. That reviewed application is one exact supported graph, not a general
-claim that arbitrary Policy expressions or protected consumers are realized.
+The
+[pinned current Service qualification](https://github.com/firstdraft/firstdraft/blob/cc72dad5b26b887f3f21496b568b80678ceac47f/docs/solutions/2026-08-28-reviewed-realization-local-qualification.md)
+records a Case Chat result with all 14 authored Policies and their admitted protected Web consumers and no Policy or
+dependent Scaffold gap. That reviewed application is one exact supported graph, not a general claim that arbitrary
+Policy expressions or protected consumers are realized.
 
 The Account Entity may own the bounded Web-only `profile` surface resolved from `current_account`. Ordinary iPhone
 output stays Account- and Policy-free, omits profile and protected Web navigation, and records the applicable native

@@ -319,7 +319,7 @@ node script/check-cli-contract.mjs <path-to-cli-checkout>
 Owner-authorized publication now makes that exact CLI version available under npm `next`; `latest` remains 0.1.0.
 This registry fact proves neither plugin publication/catalog selection nor service deployment.
 
-The coordinated API 0.3 projection names analyzer release
+The coordinated API 0.3 projection exercised by this archived contract snapshot named analyzer release
 `foundation-plan-rails/application-2026-08-27-codespace-ssh-qualification` and Compiler release
 `foundation-plan-rails/compiler-application-2026-08-27-codespace-ssh-qualification`.
 

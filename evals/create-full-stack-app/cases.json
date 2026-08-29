@@ -653,7 +653,7 @@
       "should_trigger": true,
       "prompt": "Review the attached current Case Chat Foundation Plan and matching reviewed GapSet. Tell me what the current Rails target realizes and what remains a gap. Do not edit, push, or compile anything.",
       "expectations": [
-        "Binds the Plan SHA-256 9a430d4cc95eaef85efc6fea38f6bd5e073225e20fe2c2c895db6f2cf0be09eb to the GapSet source, reports the GapSet SHA-256 9cabc8cc300038f50ddc3febf8d73b9cff3b08a0c4288e2d05fce6d35a8b2c64 and all four ordered records, and names the 2026-08-28 reviewed-realization analyzer and Compiler releases.",
+        "Binds the Plan SHA-256 9a430d4cc95eaef85efc6fea38f6bd5e073225e20fe2c2c895db6f2cf0be09eb to the GapSet source, reports the GapSet SHA-256 9cabc8cc300038f50ddc3febf8d73b9cff3b08a0c4288e2d05fce6d35a8b2c64 and all 4 ordered records, and names the 2026-08-28 reviewed-realization analyzer and Compiler releases.",
         "Recognizes the bounded User Web Account registration, all 14 authored Policies, protected profile and Scaffold consumers, required enum storage and compatible literal defaults, notification.deduplication_key log redaction, and the Rails mailer domain instead of claiming those current Case Chat surfaces remain gaps.",
         "Recognizes the four bounded State Machines, five unconditional uniqueness rules, and three one-hop Association Primary Descriptors as realized instead of inventing gaps absent from the reviewed GapSet.",
         "Reports the exact remaining message.notifications Association gap without generalizing it to other Associations or consumers.",
