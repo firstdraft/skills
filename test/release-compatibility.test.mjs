@@ -84,28 +84,43 @@ test("current release docs route through structured identities", async () => {
   );
   assert.match(
     releasing,
-    /Both pairs passed at the package boundary[\s\S]*?2026-08-30-claude-plugin-0\.2\.1-two-turn-smokes\.md[\s\S]*?docs-only final descendant[\s\S]*?hosted CI[\s\S]*?same packed digest[\s\S]*?not another product smoke/,
+    /Both pairs passed at the exact candidate boundary[\s\S]*?2026-08-30-claude-plugin-0\.2\.1-two-turn-smokes\.md[\s\S]*?docs-only final descendant[\s\S]*?hosted CI[\s\S]*?same packed digest[\s\S]*?not another product smoke/,
   );
+  const publicationGapSetDigest =
+    "19a65129ae87823366a9d83c99d82bcd9bd7af901312a7aed79253b33f662c85";
+  const directGapSetDigest =
+    "23705bf4134a77c762d74ef819096a8861b48687dc5782cee47fbee11d6ce5e0";
+  const syntheticAppearanceGapSetDigest =
+    "b81653ef0fa349c5a149ae0302a9c528f181ca814c17bde80635ba92fda211e0";
   for (const identity of [
     "b59565c83965f8f8436b16ac62660e89c9edd539",
     "20967d6b84cd957b8052984da9bc1098ef1725d1",
-    compatibility.plugin_source.tarball_sha256,
+    "6ba0efb4fcb2dbf06d412ea8847593593fa832dc9cbcb419857a74c42e6cf74f",
     "799a184cb2453ceadf5575f7b46ba975e084f192",
     "06cf7e51148e69b6ca732cfdf9b86e939f1c3cdc",
     "52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f",
+    publicationGapSetDigest,
+    directGapSetDigest,
     "ddec63e329d10fc55b8308273478773c0658e0178a766e37d1e84c71c359bf62",
     "17bc2c5e62935210fcdccb897108fd0148ee520df78d959b7bf87e27ac43d2e9",
     "a35ba28b4a432309ebd42f03a1c50fdd24ca98310b1024565ad90642f82d0ee9",
   ]) {
     assert(candidateSmokeEvidence.includes(identity));
   }
+  assert.notEqual(publicationGapSetDigest, directGapSetDigest);
+  assert.notEqual(publicationGapSetDigest, syntheticAppearanceGapSetDigest);
+  assert.notEqual(directGapSetDigest, syntheticAppearanceGapSetDigest);
   assert.match(
     candidateSmokeEvidence,
-    /count before approval `0`[\s\S]*?`plan compile` count after approval `1`[\s\S]*?no real GitHub side effect[\s\S]*?count before approval `0`[\s\S]*?`plan compile --output \.\/application` count after approval `1`[\s\S]*?198 files[\s\S]*?Publication count `0`/,
+    /count before approval `0`[\s\S]*?`plan compile` count after approval `1`[\s\S]*?no real GitHub side effect[\s\S]*?count before approval `0`[\s\S]*?`plan compile --output \.\/application` count after approval `1`[\s\S]*?198 files[\s\S]*?no `\.git`[\s\S]*?Publication count `0`/,
   );
   assert.match(
     candidateSmokeEvidence,
-    /does not publish or install the plugin[\s\S]*?protected tag[\s\S]*?npm dist-tag[\s\S]*?public catalog[\s\S]*?deploy the Service[\s\S]*?real GitHub Publication[\s\S]*?template-and-Codespace journey/,
+    /does not publish the plugin or prove registry\/public[\s\S]*?installation[\s\S]*?protected tag[\s\S]*?npm dist-tag[\s\S]*?public catalog[\s\S]*?deploy the Service[\s\S]*?real GitHub Publication[\s\S]*?template-and-Codespace journey/,
+  );
+  assert.match(
+    candidateSmokeEvidence,
+    /controlled Service revision is a descendant of the pinned current-truth Service revision[\s\S]*?cc72dad5b26b887f3f21496b568b80678ceac47f[\s\S]*?does not repin the packaged[\s\S]*?current-authority source/,
   );
   assert.match(
     releasing,

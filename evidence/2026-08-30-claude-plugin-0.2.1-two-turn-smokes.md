@@ -21,6 +21,9 @@ Both sessions received a matching valid Analysis with one `target_support_gap` a
 `foundation_plan.gap.appearance.icon_assets.not_generated`, `appearance_icon_assets`, `partially_generated`. The
 record says Rails theme, colors, favicon, and PWA icons are generated while the emitted iOS AppIcon remains stock.
 The project-bound GapSet SHA-256 values correctly differ between the two runs.
+The controlled Service revision is a descendant of the pinned current-truth Service revision `cc72dad5b26b887f3f21496b568b80678ceac47f`
+and both retain the 2026-08-28 Analyzer and Compiler identities above; this observation does not repin the packaged
+current-authority source.
 
 ## Publication session
 
@@ -50,8 +53,8 @@ The project-bound GapSet SHA-256 values correctly differ between the two runs.
 
 ## Boundary
 
-This establishes the two required human-observed approval flows for the exact Skills source, package bytes, CLI,
-Service, Plan, and mode-specific outcomes above. It does not publish or install the plugin, create a protected tag,
-move an npm dist-tag, promote the public catalog, deploy the Service, exercise real GitHub Publication, run a public
-marketplace install, or prove the template-and-Codespace journey. The task-owned harness resources were cleaned after
-the two private mode-`0600` receipts were retained.
+This establishes the two required human-observed approval flows for the exact Skills source, recorded package digest,
+CLI, Service, Plan, and mode-specific outcomes above. It does not publish the plugin or prove registry/public
+installation, create a protected tag, move an npm dist-tag, promote the public catalog, deploy the Service, exercise
+real GitHub Publication, run a public marketplace install, or prove the template-and-Codespace journey. The task-owned
+harness resources were cleaned after the two private mode-`0600` receipts were retained.
