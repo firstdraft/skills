@@ -6,10 +6,9 @@ license: "MIT"
 
 # Create a Full-Stack App with First Draft
 
-Turn one product idea into one coherent Foundation Plan candidate through conversation, incremental local edits,
-and exact-byte diagnostics. Request Compilation only after the user approves a semantic read-back of the exact
-candidate. Direct output and private GitHub Publication are separate completion modes; neither deploys the
-application.
+Author one coherent Foundation Plan through conversation and exact-byte diagnostics. After the user approves its
+exact semantic read-back, request Compilation. Direct output and private GitHub Publication are separate completion modes;
+neither deploys.
 
 ## Current boundary
 
@@ -19,13 +18,14 @@ CLI; plugin and catalog publication remain unproved.
 Current Compiler coverage is narrow:
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
-  Appearance-theme/color, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone slices.
-- Required enums emit string storage and inclusion plus compatible in-domain literal-key defaults. Rails `enum`,
-  database membership, and general rank behavior remain unsupported.
-- Bounded Account/Policy support protects Web Scaffolds. iPhone output requires one admitted public index and stays
-  Account- and Policy-free; Web privacy does not transfer natively.
-- Preserve unsupported meaning and report every reviewed gap; never weaken it to obtain `valid`. A valid run may
-  have gaps, and its artifact retains the submitted Plan and GapSet.
+  Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone slices. Rails emits
+  authored theme/colors and derived favicon/PWA icons; an emitted iOS AppIcon stays stock.
+- Required enums emit string storage, inclusion, and compatible literal defaults; Rails `enum`, database membership,
+  and rank behavior remain unsupported.
+- Bounded Account/Policy protects Web Scaffolds. iPhone output requires one admitted public index, stays Account- and
+  Policy-free, and does not inherit Web privacy.
+- Preserve unsupported meaning and report every reviewed gap; never weaken it for `valid`. A valid run may have gaps;
+  artifacts retain the submitted Plan and GapSet.
 
 Read the [current evidence and target boundary](references/foundation-plan-019.md#current-evidence-boundary) before
 making a support claim.
@@ -68,12 +68,11 @@ For CLI work:
   read [ambiguous mutations](references/diagnostics-and-recovery.md#ambiguous-mutations) only when the named error
   requires it.
 
-The bundled [JSON Schema](references/foundation-plan-0.19.schema.json) is machine-readable validator input, not
-prose. Use a compatible JSON Schema 2020-12 command named by the user, exposed by the project, or found through a
-straightforward check of existing local commands. Pass the schema path without loading it into context; never read
-it end to end. Do not install dependencies or add validation/build plumbing solely for this workflow. If no
-compatible local command is available, rely on First Draft's exact-byte diagnostics and say local schema validation
-was not performed.
+The bundled [JSON Schema](references/foundation-plan-0.19.schema.json) is machine-readable validator input, not prose.
+Use a compatible JSON Schema 2020-12 command named by the user, exposed by the project, or found through a
+straightforward check of existing local commands. Pass only its path; never read it end to end. Do not install
+dependencies or add validation/build plumbing solely for this workflow. Otherwise rely on First Draft exact-byte
+diagnostics and say local schema validation was not performed.
 
 ## Verify the local capability
 
@@ -133,11 +132,10 @@ reinitialize. Inspect private state only for a recovery check explicitly named i
 
 ## Interview and author incrementally
 
-Use the modeling guide's decision ledger and readiness criteria. In the opening turn, ask no more than three
-closely related questions. Start with product choices that change Entity boundaries, record granularity, access, or
-requested clients. When a collection could mean unique objects, interchangeable goods, or both, offer all three:
-one record per unique object, one record carrying a quantity, or both with distinct meaning. Treat alternatives as
-proposals, not answers.
+Use the modeling guide's decision ledger and readiness criteria. In the opening turn, ask no more than three closely
+related questions about choices changing Entity boundaries, record granularity, access, or clients. When a collection
+could mean unique objects, interchangeable goods, or both, offer one record per unique object, one record carrying a
+quantity, or both with distinct meaning. Alternatives are proposals, not answers.
 
 For an underspecified opening request, ask only about product meaning and deferred areas. Wait for the user's reply
 before discussing target support unless feasibility was requested. Later, state the current access boundary
@@ -204,9 +202,10 @@ valid status so the complete GapSet can be reviewed. `plan compile` later repeat
 Before the first `plan compile`, reread the exact current
 `.firstdraft/foundation-plan.json`. Give a compact semantic summary covering its path and SHA-256; application scope;
 Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
-and exclusions. Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Explain that service
-gaps were skipped before semantic analysis, target gaps were not fully realized, and `valid` applies only to the
-admitted graph. Select absent `./application` for direct requests, `.` only for explicit current-root adoption, and
+and exclusions. Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Use only that attached
+digest: the CLI validates it against the attached GapSet; never substitute a fixture, historical, or another
+Project's digest. Explain that service gaps were skipped before semantic analysis, target gaps were not fully
+realized, and `valid` applies only to the admitted graph. Select absent `./application` for direct requests, `.` only for explicit current-root adoption, and
 zero-flag Publication only for an explicit private GitHub repository. Ask if unclear: generic compile or build
 language does not authorize Publication. Direct output creates only a verified local
 directory, successful Publication creates one private GitHub repository, and neither deploys.

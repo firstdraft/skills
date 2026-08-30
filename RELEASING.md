@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `cdee5b457b8e48d7e32b501022754b812f2f7f38630a81330de629aef097e7e8` |
+| Candidate packed SHA-256 | `6ba0efb4fcb2dbf06d412ea8847593593fa832dc9cbcb419857a74c42e6cf74f` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
@@ -96,10 +96,10 @@ fresh continuing agent session:
 - Direct output pairs `precompile-drawing-board-read-back` with
   `compile-prepared-drawing-board-application`.
 
-The Appearance fixture is synthetic, not a universal digest oracle: live GapSet digests include Project identity.
-Each smoke must verify that its attached `analysis.gap_set_sha256` identifies its attached complete GapSet and use
-that digest, never the fixture, history, or another Project. The one record says derived Web icons are generated and
-only the emitted iOS AppIcon remains stock.
+Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
+attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates
+against its attached complete GapSet, never a fixture, history, or another Project. The Appearance record says
+derived Web icons are generated and only the emitted iOS AppIcon remains stock.
 
 For each pair:
 

@@ -1788,10 +1788,16 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   assert(
     currentCaseChatReviewCase.expectations.some(
       (expectation) =>
-        expectation.includes(prettyJsonSha256(currentCaseChatGapSet)) &&
-        expectation.includes(`all ${currentCaseChatGapSet.gaps.length} ordered records`),
+        expectation.includes("computes and reports the SHA-256 of the attached complete GapSet bytes") &&
+        expectation.includes(`all ${currentCaseChatGapSet.gaps.length} ordered records`) &&
+        expectation.includes("other Project's digest"),
     ),
-    "the Case Chat eval must bind its current GapSet digest and ordered count",
+    "the Case Chat eval must derive its attached GapSet digest and bind the ordered count",
+  );
+  assert.doesNotMatch(
+    currentCaseChatReviewCase.expectations.join("\n"),
+    new RegExp(prettyJsonSha256(currentCaseChatGapSet)),
+    "the Case Chat eval must not freeze the fixture's project-bound GapSet digest",
   );
   assert.deepEqual(
     currentCaseChatGapSet.gaps.map(
@@ -3230,6 +3236,8 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     "Web Account",
     "Action Policy",
     "Web Scaffold",
+    "authored theme/colors and derived favicon/PWA icons",
+    "emitted iOS AppIcon stays stock",
     "iPhone output requires one admitted public index",
     "Account- and Policy-free",
     "Preserve unsupported meaning and report every reviewed gap",
@@ -3432,9 +3440,17 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     applicationIntentValid.analysis.gap_set_sha256,
     prettyJsonSha256(applicationIntentValid.analysis.gap_set),
   );
+  assert.doesNotMatch(
+    applicationIntent.expectations.join("\n"),
+    /\b[0-9a-f]{64}\b/,
+    "application-intent eval must not freeze a project-bound GapSet digest",
+  );
   assert(
-    applicationIntent.expectations.some((expectation) =>
-      expectation.includes(applicationIntentValid.analysis.gap_set_sha256),
+    applicationIntent.expectations.some(
+      (expectation) =>
+        expectation.includes("exact attached analysis.gap_set_sha256") &&
+        expectation.includes("CLI validated") &&
+        expectation.includes("other Project's digest"),
     ),
   );
   assert.equal(applicationIntentPlan.application.key, "movie_catalog");
@@ -3478,6 +3494,23 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.equal(
     unsupportedGraph.analysis.gap_set_sha256,
     prettyJsonSha256(unsupportedGraph.analysis.gap_set),
+  );
+  const unsupportedEvaluation = cases.find(
+    ({ id }) => id === "unsupported-field-capabilities",
+  );
+  assert(unsupportedEvaluation);
+  assert.doesNotMatch(
+    unsupportedEvaluation.expectations.join("\n"),
+    /\b[0-9a-f]{64}\b/,
+    "unsupported-field eval must not freeze a project-bound GapSet digest",
+  );
+  assert(
+    unsupportedEvaluation.expectations.some(
+      (expectation) =>
+        expectation.includes("exact attached analysis.gap_set_sha256") &&
+        expectation.includes("CLI validated") &&
+        expectation.includes("other Project's digest"),
+    ),
   );
   assert.deepEqual(
     unsupportedGraph.analysis.gap_set.gaps.map(
@@ -3577,6 +3610,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert(
     appearanceIntent.expectations.some((expectation) =>
       expectation.includes("exact attached analysis.gap_set_sha256") &&
+      expectation.includes("CLI validated") &&
       expectation.includes("attached GapSet bytes") &&
       expectation.includes("other Project's digest") &&
       expectation.includes("foundation_plan.gap.appearance.icon_assets.not_generated"),
