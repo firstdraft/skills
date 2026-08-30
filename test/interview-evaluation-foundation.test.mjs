@@ -241,7 +241,7 @@ test(
 
     assert.match(
       normalizedSkill,
-      /targets plugin candidate 0\.2\.1, integrated CLI 0\.2\.2, and service-contract 0\.3/,
+      /targets plugin candidate 0\.2\.1, published CLI 0\.2\.2, and service contract 0\.3/,
     );
     assert.match(
       normalizedSkill,
@@ -423,8 +423,8 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       readBack,
       "valid applies to the admitted graph",
-      "Appearance theme and colors are realized",
-      "derived icon assets are not",
+      "Appearance theme, colors, and Rails Web icons are realized",
+      "selected-iOS AppIcon remains stock",
       "does not require weakening the Plan",
     ),
   );
@@ -475,11 +475,19 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     appearanceAnalysis.analysis.gap_set_sha256;
   assert.match(expectedAppearanceGapSetDigest, /^[0-9a-f]{64}$/);
   for (const evaluationCase of [readBack, directReadBack]) {
+    assert.doesNotMatch(
+      evaluationCase.expectations.join("\n"),
+      /\b[0-9a-f]{64}\b/,
+      `${evaluationCase.id}: must not freeze any project-bound GapSet digest`,
+    );
     assert(
-      evaluationCase.expectations.some((expectation) =>
-        expectation.includes(expectedAppearanceGapSetDigest),
+      expectationIncludes(
+        evaluationCase,
+        "exact attached analysis.gap_set_sha256",
+        "attached GapSet bytes",
+        "other Project's digest",
       ),
-      `${evaluationCase.id}: missing fixture GapSet digest`,
+      `${evaluationCase.id}: missing attached project-bound digest validation`,
     );
   }
   assert.match(directReadBack.prompt, /Drawing Board workspace/);
@@ -487,7 +495,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       directReadBack,
       "complete one-record Appearance icon-assets GapSet",
-      "reason, and consequence",
+      "reason, consequence",
     ),
   );
   assert(

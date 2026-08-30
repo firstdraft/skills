@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "c4a5052a2a1ce6dc7e2c4e8734515b9980285e9febb164d61688ad0ba36bc7a2",
+        "cdee5b457b8e48d7e32b501022754b812f2f7f38630a81330de629aef097e7e8",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
@@ -61,14 +61,18 @@ test("current release docs route through structured identities", async () => {
   assert(releasing.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
   assert(releasing.includes(compatibility.plugin_source.tarball_sha256));
   assert.match(releasing, /unpublished and unpromoted/i);
-  assert.match(releasing, /CLI npm `next` \/ `latest` \| `0\.2\.1` \/ `0\.1\.0`/);
+  assert.match(releasing, /CLI npm `next` \/ `latest` \| `0\.2\.2` \/ `0\.1\.0`/);
   assert.match(
     releasing,
     /d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68[\s\S]*?actions\/runs\/33200181779[\s\S]*?moved neither CLI\s+`latest` nor any plugin package/,
   );
   assert.match(
     releasing,
-    /799a184cb2453ceadf5575f7b46ba975e084f192[\s\S]*?7c66247b4d8460b130a5d65443466575a9a3cea1[\s\S]*?42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a[\s\S]*?e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72[\s\S]*?actions\/runs\/33248883396[\s\S]*?not published on npm/,
+    /799a184cb2453ceadf5575f7b46ba975e084f192[\s\S]*?7c66247b4d8460b130a5d65443466575a9a3cea1[\s\S]*?42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a[\s\S]*?e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72[\s\S]*?75b8bb95d3ce38e1b2a58d23c39738cb7c8242d3[\s\S]*?actions\/runs\/33292963543[\s\S]*?match across[\s\S]*?27 files[\s\S]*?verified its signature and provenance[\s\S]*?`latest` remains 0\.1\.0/,
+  );
+  assert.match(
+    releasing,
+    /Appearance fixture is synthetic[\s\S]*?live GapSet digests include Project identity[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?attached complete GapSet[\s\S]*?never the fixture[\s\S]*?derived Web icons are generated[\s\S]*?only the emitted iOS AppIcon remains stock/,
   );
   assert.match(
     releasing,

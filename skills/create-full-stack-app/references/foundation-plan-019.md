@@ -54,9 +54,10 @@ deployed journey, and an older observation does not define current support.
   AnalysisRun, including an empty `gaps` array. `valid` applies only to the admitted graph; it is not proof of
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
-  State Machine, Appearance-theme/color, Web Account, Action Policy, generalized Web Scaffold, development-data,
-  and selected-iPhone slices. Their prerequisites matter: unsupported children and consumers remain exact gaps
-  rather than widening the supported shape. Appearance icon assets remain one named partial gap.
+  State Machine, Appearance-theme/color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
+  development-data, and selected-iPhone slices. Their prerequisites matter: unsupported children and consumers
+  remain exact gaps rather than widening the supported shape. An emitted iOS client retains one named partial gap
+  for its stock AppIcon.
 - Required enums emit string storage and model inclusion in authored key order. Any admitted required enum accepts
   its compatible in-domain literal-key default. Optional enums,
   Rails-enum helper behavior, database membership constraints, general rank behavior, and broader enum consumers
@@ -100,8 +101,9 @@ or execution evidence. It exposes `generate uuid`, `generate application-key`, `
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
 experimental `@firstdraft.com/cli@0.2.2` package. Direct output accepts the ordinary absent destination and, on
 POSIX, explicit current-root adoption with `--output .`; the recovery reference owns its preconditions. CLI 0.2.2 is
-not yet on npm. Check commands rather than inferring compatibility from a version number. Candidate qualification or
-later package publication does not prove authentication, staging compatibility, or a complete user journey.
+published under npm `next` with exact source-package parity. Check commands rather than inferring compatibility from
+a version number. CLI availability does not prove plugin/catalog publication, authentication, staging compatibility,
+or a complete user journey.
 
 The selected iPhone project composes `firstdraft/foundation-ios-core` revision
 `aa2ac902fa52abab51a4502953b7b962f949a21d`, archive SHA-256
@@ -211,10 +213,11 @@ navigation entry. Richer Web Scaffold routes, Account behavior, and Policy decis
 mutation, profile, or protected navigation. Confirm that public native navigation is intentional; otherwise preserve
 the requested access and review its exact support consequence.
 
-Appearance theme and colors are emitted for generated Rails shells and any emitted selected iOS shell. Derived
-favicon, PWA-icon, and iOS AppIcon assets remain stock and produce the precise
-`foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Android and other admitted but unconsumed
-Application configuration remain target gaps.
+Appearance theme and colors are emitted for generated Rails shells and any emitted selected iOS shell. Rails also
+derives the adaptive SVG and deterministic PNG used by its favicon and PWA references. When iOS is emitted, its
+stock AppIcon remains the sole reason for the precise
+`foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Web-only output has no Appearance
+icon-assets gap. Android and other admitted but unconsumed Application configuration remain target gaps.
 
 The prepared Compilation emits admitted public and bounded Account/Policy-controlled Web surfaces and, when the
 public-navigation prerequisite is met, an owned iPhone project beneath `ios/`; this is not general generated resource
