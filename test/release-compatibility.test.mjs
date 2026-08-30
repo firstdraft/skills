@@ -46,6 +46,7 @@ test("current release docs route through structured identities", async () => {
     releasing,
     releaseHistory,
     candidateSmokeEvidence,
+    syntheticAppearanceAnalysis,
   ] =
     await Promise.all([
       readJson("release/compatibility.json"),
@@ -54,6 +55,9 @@ test("current release docs route through structured identities", async () => {
       readText("RELEASING.md"),
       readText("evidence/release-history.md"),
       readText("evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md"),
+      readJson(
+        "evals/create-full-stack-app/fixtures/appearance-issues-analysis.json",
+      ),
     ]);
   const publicPlugin = marketplace.plugins.find(
     ({ name }) => name === "firstdraft",
@@ -90,8 +94,11 @@ test("current release docs route through structured identities", async () => {
     "19a65129ae87823366a9d83c99d82bcd9bd7af901312a7aed79253b33f662c85";
   const directGapSetDigest =
     "23705bf4134a77c762d74ef819096a8861b48687dc5782cee47fbee11d6ce5e0";
-  const syntheticAppearanceGapSetDigest =
-    "b81653ef0fa349c5a149ae0302a9c528f181ca814c17bde80635ba92fda211e0";
+  const observedSmokeGapSetDigests = [
+    ...candidateSmokeEvidence.matchAll(
+      /\| Attached analysis \|[^\n]*?GapSet SHA-256 `([0-9a-f]{64})` \|/g,
+    ),
+  ].map((match) => match[1]);
   for (const identity of [
     "b59565c83965f8f8436b16ac62660e89c9edd539",
     "20967d6b84cd957b8052984da9bc1098ef1725d1",
@@ -107,9 +114,14 @@ test("current release docs route through structured identities", async () => {
   ]) {
     assert(candidateSmokeEvidence.includes(identity));
   }
-  assert.notEqual(publicationGapSetDigest, directGapSetDigest);
-  assert.notEqual(publicationGapSetDigest, syntheticAppearanceGapSetDigest);
-  assert.notEqual(directGapSetDigest, syntheticAppearanceGapSetDigest);
+  assert.deepEqual(observedSmokeGapSetDigests, [
+    publicationGapSetDigest,
+    directGapSetDigest,
+  ]);
+  assert.notEqual(observedSmokeGapSetDigests[0], observedSmokeGapSetDigests[1]);
+  for (const digest of observedSmokeGapSetDigests) {
+    assert.notEqual(digest, syntheticAppearanceAnalysis.analysis.gap_set_sha256);
+  }
   assert.match(
     candidateSmokeEvidence,
     /count before approval `0`[\s\S]*?`plan compile` count after approval `1`[\s\S]*?no real GitHub side effect[\s\S]*?count before approval `0`[\s\S]*?`plan compile --output \.\/application` count after approval `1`[\s\S]*?198 files[\s\S]*?no `\.git`[\s\S]*?Publication count `0`/,
