@@ -96,6 +96,9 @@ fresh continuing agent session:
 - Direct output pairs `precompile-drawing-board-read-back` with
   `compile-prepared-drawing-board-application`.
 
+Both pairs passed at the package boundary in the [dated record](evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md).
+A docs-only final descendant still needs hosted CI and the same packed digest, not another product smoke.
+
 Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
 attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates
 against its attached complete GapSet, never a fixture, history, or another Project. The Appearance record says
@@ -221,9 +224,9 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For API 0.3, npm `next` selects CLI 0.2.2 and plugin 0.2.0. Plugin candidate 0.2.1 still needs its repaired package
-checks and two-turn smokes. Leave both `latest` tags and the catalog unchanged until exact web and worker revisions
-are active and qualification passes. During the approved window, stop other
+For API 0.3, npm `next` selects CLI 0.2.2 and plugin 0.2.0. Plugin candidate 0.2.1 completed its repaired package
+checks and two-turn smokes at the exact recorded package boundary. Leave both `latest` tags and the catalog unchanged
+until exact web and worker revisions are active and qualification passes. During the approved window, stop other
 operator-controlled Compile and Publication invocations in that lane and serialize the one qualification invocation
 through its retained outcome.
 
