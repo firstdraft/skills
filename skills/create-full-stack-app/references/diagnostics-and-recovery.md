@@ -11,10 +11,9 @@ human-readable `detail` or broad process exit status.
 The reviewed CLI contract in this stack is revision
 `799a184cb2453ceadf5575f7b46ba975e084f192`, with JavaScript-source runtime digest
 `e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`. Its source package is
-`@firstdraft.com/cli@0.2.2`, which is not yet on npm. Check the command surface rather than assuming the version alone
-establishes compatibility. Candidate
-qualification or package publication does not prove service authentication, staging compatibility, or a complete
-user journey.
+`@firstdraft.com/cli@0.2.2`, published under npm `next` with exact source-package parity. Check the command surface
+rather than assuming the version alone establishes compatibility. CLI availability does not prove plugin/catalog
+publication, service authentication, staging compatibility, or a complete user journey.
 
 ## Contents
 

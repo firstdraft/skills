@@ -398,7 +398,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   );
   for (const source of [foundationPlanReference, diagnosticsReference]) {
     assert(source.includes(`\`${preparedCliPackage}\``));
-    assert.match(source, /not yet on npm/);
+    assert.match(source, /published under npm `next` with exact source-package parity/);
+    assert.match(source, /does not prove plugin(?:\/| or )catalog\s+publication/);
   }
   assert(foundationPlanReference.includes(currentFoundationPlanAnalyzerRelease));
   assert(foundationPlanReference.includes(currentFoundationPlanCompilerRelease));
@@ -523,10 +524,10 @@ test("historical plugin receipts stay separate from current availability", async
   for (const source of [candidateSkill, candidateModelingGuide]) {
     assert.doesNotMatch(source, /live [Pp]ublication remains unproved/);
   }
-  assert.match(candidateSkill, /CLI 0\.2\.2 is not yet\s+on npm/);
+  assert.match(candidateSkill, /published CLI 0\.2\.2/);
   assert.match(
     candidateSkill,
-    /source bytes do not prove npm or catalog availability/,
+    /plugin and catalog publication remain unproved/,
   );
   assert.doesNotMatch(candidateModelingGuide, /dated staging (?:discovery|observation)/);
   assert.match(
@@ -3222,9 +3223,9 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   for (const fragment of [
-    "targets plugin candidate 0.2.1, integrated CLI 0.2.2, and service-contract 0.3",
-    "CLI 0.2.2 is not yet on npm",
-    "npm or catalog availability",
+    "targets plugin candidate 0.2.1, published CLI 0.2.2, and service contract 0.3",
+    "npm `next` selects that CLI",
+    "plugin and catalog publication remain unproved",
     "required-enum",
     "Web Account",
     "Action Policy",
@@ -3549,10 +3550,10 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     appearanceIssues.analysis.gap_set_sha256,
     prettyJsonSha256(appearanceIssues.analysis.gap_set),
   );
-  assert(
-    appearanceIntent.expectations.some((expectation) =>
-      expectation.includes(appearanceIssues.analysis.gap_set_sha256),
-    ),
+  assert.doesNotMatch(
+    appearanceIntent.expectations.join("\n"),
+    /\b[0-9a-f]{64}\b/,
+    "Appearance intent must not freeze any project-bound GapSet digest",
   );
   assert.deepEqual(
     appearanceIssues.analysis.gap_set.gaps.map(
@@ -3575,10 +3576,24 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   assert(
     appearanceIntent.expectations.some((expectation) =>
-      expectation.includes("complete GapSet and digest") &&
+      expectation.includes("exact attached analysis.gap_set_sha256") &&
+      expectation.includes("attached GapSet bytes") &&
+      expectation.includes("other Project's digest") &&
       expectation.includes("foundation_plan.gap.appearance.icon_assets.not_generated"),
     ),
   );
+  assert.deepEqual(appearanceIssues.analysis.gap_set.gaps[0], {
+    classification: "target_support_gap",
+    code: "foundation_plan.gap.appearance.icon_assets.not_generated",
+    kind: "appearance_icon_assets",
+    status: "partially_generated",
+    pointer: "/application/appearance",
+    readable_path: "application.appearance",
+    reason:
+      "Application shell colors, theme, and derived Web icon assets are generated, but the emitted iOS client still uses its stock AppIcon.",
+    consequence:
+      "The generated Rails shell and emitted selected iOS shell honor Appearance, and favicon and PWA icons use the derived pair; only the emitted iOS AppIcon remains a stock Core asset.",
+  });
   const mixedIntent = cases.find(
     ({ id }) => id === "correct-source-issue-alongside-capability-gap",
   );

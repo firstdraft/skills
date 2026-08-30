@@ -152,8 +152,9 @@ Web and iPhone navigation, with a target fallback when omitted. Account, Policy,
 behavior does not become protected native behavior. Confirm that public native navigation is intentional; otherwise
 preserve the requested access and review the resulting support gap.
 Do not add a public index merely to obtain a gap-free result, and do not silently decline the requested iPhone
-client. Appearance theme and colors are generated while derived icon assets remain a partial gap. Nonempty delivery,
-Android, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
+client. Appearance theme, colors, and the Rails Web icon pair are generated; an emitted iOS client retains a partial
+gap solely for its stock AppIcon. Nonempty delivery, Android, broader Account/Policy shapes, and broader clients
+remain unsupported or incomplete. Requirements without a
 v0.19 shape, including notification trigger/template definitions, deployment, and iPad, remain in the decision ledger
 and semantic read-back as currently unplannable rather than being invented as Plan JSON or promised a GapSet record.
 The authored `delivery` channel block itself remains in the Plan and receives its expected service-support gap.

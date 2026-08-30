@@ -104,10 +104,11 @@ the web without authentication. Confirm that exposure with the user before addin
 the iPhone navigation requirement or silently discard private or broader access intent.
 
 Adding `appearance` to this candidate emits the selected theme and colors in generated Rails and selected-iOS
-shells. A matching valid AnalysisRun still records the partial
-`foundation_plan.gap.appearance.icon_assets.not_generated` record at `/application/appearance` because derived
-favicon, PWA-icon, and iOS AppIcon assets remain stock. Preserve the intentional Appearance request and report that
-precise reviewed delta rather than describing Appearance as wholly unsupported.
+shells, plus the adaptive SVG and deterministic PNG used by Rails favicon and PWA references. Because this example
+also emits iOS, a matching valid AnalysisRun still records the partial
+`foundation_plan.gap.appearance.icon_assets.not_generated` record at `/application/appearance` solely for the stock
+iOS AppIcon. Preserve the intentional Appearance request and report that precise reviewed delta rather than
+describing Appearance as wholly unsupported.
 
 ## Conditional text length
 

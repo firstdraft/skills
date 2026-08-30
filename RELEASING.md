@@ -9,12 +9,12 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `c4a5052a2a1ce6dc7e2c4e8734515b9980285e9febb164d61688ad0ba36bc7a2` |
+| Candidate packed SHA-256 | `cdee5b457b8e48d7e32b501022754b812f2f7f38630a81330de629aef097e7e8` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
-| CLI npm `next` / `latest` | `0.2.1` / `0.1.0` |
+| CLI npm `next` / `latest` | `0.2.2` / `0.1.0` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
@@ -30,15 +30,16 @@ object `58681aae4c4fca8301d9a945074a4ee6b6c6b4b2`; its
 provenance, exact installation, and tagged-source pack parity were verified. That release moved neither CLI
 `latest` nor any plugin package, plugin dist-tag, public catalog entry, or service deployment.
 
-The integrated CLI 0.2.2 source is commit `799a184cb2453ceadf5575f7b46ba975e084f192`, tree
-`7c66247b4d8460b130a5d65443466575a9a3cea1`. Its candidate package SHA-256 is
-`42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a` and its JavaScript runtime digest is
-`e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`. The exact-main
-[source CI](https://github.com/firstdraft/cli/actions/runs/33248883396) is green and its source contract includes
-explicit POSIX current-root adoption with `--output .`. CLI 0.2.2 is not published on npm, so those observations do
-not establish registry installation or release availability. The root mode has source and exact packed-CLI contract
-proof, but no retained fresh-agent two-turn or registry-installed observation; it does not replace either required
-Publication or `./application` smoke below.
+CLI 0.2.2 is source commit `799a184cb2453ceadf5575f7b46ba975e084f192`, tree
+`7c66247b4d8460b130a5d65443466575a9a3cea1`, package SHA-256
+`42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a`, and runtime digest
+`e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`; its
+[source CI](https://github.com/firstdraft/cli/actions/runs/33248883396) is green, and its source contract includes
+POSIX current-root adoption with `--output .`. It was published under npm `next`
+from tag object `75b8bb95d3ce38e1b2a58d23c39738cb7c8242d3` by green
+[workflow 33292963543](https://github.com/firstdraft/cli/actions/runs/33292963543). Registry and source match across
+27 files; a fresh install verified its signature and provenance. `latest` remains 0.1.0. This neither published nor
+promoted the plugin and proves neither required smoke.
 
 ## Authorization boundaries
 
@@ -95,6 +96,11 @@ fresh continuing agent session:
 - Direct output pairs `precompile-drawing-board-read-back` with
   `compile-prepared-drawing-board-application`.
 
+The Appearance fixture is synthetic, not a universal digest oracle: live GapSet digests include Project identity.
+Each smoke must verify that its attached `analysis.gap_set_sha256` identifies its attached complete GapSet and use
+that digest, never the fixture, history, or another Project. The one record says derived Web icons are generated and
+only the emitted iOS AppIcon remains stock.
+
 For each pair:
 
 1. Record the exact Skills commit, package version and tarball SHA-256, compatible CLI and service identities, staged
@@ -129,10 +135,9 @@ This step requires explicit authorization for protected tag creation and npm pub
 part of a named release sequence. The operator resolves and reports the exact candidate commit, package version,
 and tarball digest before mutation; the user does not need to recite them.
 
-Plugin 0.2.1 vendors and requires exact `@firstdraft.com/cli@0.2.2`. That CLI version is not yet on npm. Do not tag
-or publish this plugin until CLI 0.2.2 is separately authorized, published, and reconciled from the registry; the
-plugin registry-package gate must resolve those exact public bytes. A later separately authorized plugin publication
-must keep both `latest` tags and the public catalog unchanged until their separately approved promotions.
+Plugin 0.2.1 requires exact `@firstdraft.com/cli@0.2.2`, now reconciled under npm `next`. Do not tag or publish the
+plugin until its repaired package reproduces its digest and both two-turn smokes pass. A later authorized publication
+must leave both `latest` tags and the catalog unchanged pending separate promotion approval.
 
 Immediately before tagging:
 
@@ -216,11 +221,9 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For the API 0.3 line, public npm `next` still selects CLI 0.2.1 and plugin 0.2.0. The source plugin 0.2.1 candidate
-requires unpublished CLI 0.2.2; publish and reconcile that exact CLI first, then repeat the candidate's exact-package
-checks and required two-turn smokes before any plugin publication or coordinated shared service change. Leave both
-`latest` tags and the public catalog unchanged until the exact web and worker revisions are active and the selected
-qualification passes. During the approved window, stop other
+For API 0.3, npm `next` selects CLI 0.2.2 and plugin 0.2.0. Plugin candidate 0.2.1 still needs its repaired package
+checks and two-turn smokes. Leave both `latest` tags and the catalog unchanged until exact web and worker revisions
+are active and qualification passes. During the approved window, stop other
 operator-controlled Compile and Publication invocations in that lane and serialize the one qualification invocation
 through its retained outcome.
 

@@ -13,8 +13,8 @@ application.
 
 ## Current boundary
 
-This workflow targets plugin candidate 0.2.1, integrated CLI 0.2.2, and service-contract 0.3. CLI 0.2.2 is not yet
-on npm; source bytes do not prove npm or catalog availability.
+This workflow targets plugin candidate 0.2.1, published CLI 0.2.2, and service contract 0.3. npm `next` selects that
+CLI; plugin and catalog publication remain unproved.
 
 Current Compiler coverage is narrow:
 
