@@ -39,13 +39,21 @@ test("release compatibility matches the installable plugin manifest", async () =
 });
 
 test("current release docs route through structured identities", async () => {
-  const [compatibility, marketplace, readme, releasing, releaseHistory] =
+  const [
+    compatibility,
+    marketplace,
+    readme,
+    releasing,
+    releaseHistory,
+    candidateSmokeEvidence,
+  ] =
     await Promise.all([
       readJson("release/compatibility.json"),
       readJson(".claude-plugin/marketplace.json"),
       readText("README.md"),
       readText("RELEASING.md"),
       readText("evidence/release-history.md"),
+      readText("evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md"),
     ]);
   const publicPlugin = marketplace.plugins.find(
     ({ name }) => name === "firstdraft",
@@ -73,6 +81,31 @@ test("current release docs route through structured identities", async () => {
   assert.match(
     releasing,
     /Synthetic fixture GapSets are not universal digest oracles[\s\S]*?live GapSet digests include Project identity[\s\S]*?Every[\s\S]*?attached-analysis evaluation and smoke[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?CLI validates[\s\S]*?attached complete GapSet[\s\S]*?never a fixture, history, or another Project[\s\S]*?derived Web icons are generated[\s\S]*?only the emitted iOS AppIcon[\s\S]*?remains stock/i,
+  );
+  assert.match(
+    releasing,
+    /Both pairs passed at the package boundary[\s\S]*?2026-08-30-claude-plugin-0\.2\.1-two-turn-smokes\.md[\s\S]*?docs-only final descendant[\s\S]*?hosted CI[\s\S]*?same packed digest[\s\S]*?not another product smoke/,
+  );
+  for (const identity of [
+    "b59565c83965f8f8436b16ac62660e89c9edd539",
+    "20967d6b84cd957b8052984da9bc1098ef1725d1",
+    compatibility.plugin_source.tarball_sha256,
+    "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "06cf7e51148e69b6ca732cfdf9b86e939f1c3cdc",
+    "52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f",
+    "ddec63e329d10fc55b8308273478773c0658e0178a766e37d1e84c71c359bf62",
+    "17bc2c5e62935210fcdccb897108fd0148ee520df78d959b7bf87e27ac43d2e9",
+    "a35ba28b4a432309ebd42f03a1c50fdd24ca98310b1024565ad90642f82d0ee9",
+  ]) {
+    assert(candidateSmokeEvidence.includes(identity));
+  }
+  assert.match(
+    candidateSmokeEvidence,
+    /count before approval `0`[\s\S]*?`plan compile` count after approval `1`[\s\S]*?no real GitHub side effect[\s\S]*?count before approval `0`[\s\S]*?`plan compile --output \.\/application` count after approval `1`[\s\S]*?198 files[\s\S]*?Publication count `0`/,
+  );
+  assert.match(
+    candidateSmokeEvidence,
+    /does not publish or install the plugin[\s\S]*?protected tag[\s\S]*?npm dist-tag[\s\S]*?public catalog[\s\S]*?deploy the Service[\s\S]*?real GitHub Publication[\s\S]*?template-and-Codespace journey/,
   );
   assert.match(
     releasing,
