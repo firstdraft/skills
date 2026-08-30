@@ -175,7 +175,9 @@ application scope; Entities and their material Fields, relationships, rules, beh
 and clients; and material
 assumptions and exclusions. Show the matching valid AnalysisRun's GapSet digest and every ordered record, including
 its classification, code, kind, status, reason, consequence, location, and cause when present. Explain that
-service-support gaps were skipped before semantic analysis and target-support gaps were not fully realized. Also
+the CLI validated that run's attached digest against its GapSet; never substitute a fixture, historical, or another
+Project's digest. Explain that service-support gaps were skipped before semantic analysis and target-support gaps were
+not fully realized. Also
 state the deliberately selected completion mode: direct output creates only a verified local directory, while
 terminal successful Publication is intended to create one private GitHub repository. Neither deploys. Use the order
 that best communicates this candidate. Do not enumerate absent subject families or recite immaterial defaults and

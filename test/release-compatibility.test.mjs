@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "cdee5b457b8e48d7e32b501022754b812f2f7f38630a81330de629aef097e7e8",
+        "6ba0efb4fcb2dbf06d412ea8847593593fa832dc9cbcb419857a74c42e6cf74f",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
@@ -72,7 +72,7 @@ test("current release docs route through structured identities", async () => {
   );
   assert.match(
     releasing,
-    /Appearance fixture is synthetic[\s\S]*?live GapSet digests include Project identity[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?attached complete GapSet[\s\S]*?never the fixture[\s\S]*?derived Web icons are generated[\s\S]*?only the emitted iOS AppIcon remains stock/,
+    /Synthetic fixture GapSets are not universal digest oracles[\s\S]*?live GapSet digests include Project identity[\s\S]*?Every[\s\S]*?attached-analysis evaluation and smoke[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?CLI validates[\s\S]*?attached complete GapSet[\s\S]*?never a fixture, history, or another Project[\s\S]*?derived Web icons are generated[\s\S]*?only the emitted iOS AppIcon[\s\S]*?remains stock/i,
   );
   assert.match(
     releasing,

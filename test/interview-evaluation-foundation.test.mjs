@@ -275,6 +275,9 @@ test(
       "surfaces, access, and clients",
       "assumptions; and exclusions",
       "matching valid run's `gap_set_sha256`",
+      "Use only that attached digest",
+      "CLI validates it against the attached GapSet",
+      "never substitute a fixture, historical, or another Project's digest",
       "every ordered GapSet record",
       "service gaps were skipped before semantic analysis",
       "target gaps were not fully realized",
@@ -339,6 +342,8 @@ test(
       "surfaces, access, and clients",
       "material assumptions and exclusions",
       "matching valid AnalysisRun's GapSet digest",
+      "CLI validated that run's attached digest against its GapSet",
+      "never substitute a fixture, historical, or another Project's digest",
       "every ordered record",
       "service-support gaps were skipped before semantic analysis",
       "target-support gaps were not fully realized",
@@ -474,7 +479,13 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   const expectedAppearanceGapSetDigest =
     appearanceAnalysis.analysis.gap_set_sha256;
   assert.match(expectedAppearanceGapSetDigest, /^[0-9a-f]{64}$/);
-  for (const evaluationCase of [readBack, directReadBack]) {
+  for (const evaluationCase of [
+    evaluationCaseById(cases, "validate-supported-application-intent"),
+    evaluationCaseById(cases, "preserve-partially-realized-appearance-intent"),
+    evaluationCaseById(cases, "unsupported-field-capabilities"),
+    readBack,
+    directReadBack,
+  ]) {
     assert.doesNotMatch(
       evaluationCase.expectations.join("\n"),
       /\b[0-9a-f]{64}\b/,
@@ -484,6 +495,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
       expectationIncludes(
         evaluationCase,
         "exact attached analysis.gap_set_sha256",
+        "CLI validated",
         "attached GapSet bytes",
         "other Project's digest",
       ),
