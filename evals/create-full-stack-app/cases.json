@@ -1024,7 +1024,7 @@
     {
       "id": "compile-prepared-current-root",
       "should_trigger": true,
-      "prompt": "I approve the unchanged staged Movie Catalog with SHA-256 52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f and its reviewed support result. Put the generated application at this current workspace root, moving my existing design materials under design. Do not create a GitHub repository.",
+      "prompt": "I approve the unchanged staged Movie Catalog with SHA-256 52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f and its reviewed support result. Put the generated application at this current workspace root, moving my existing design materials under design. Do not create a GitHub repository. Tell me how to boot it and add features here afterward.",
       "expectations": [
         "Treats the explicit current-root request as selection of firstdraft plan compile --output . and never substitutes an absent application directory or zero-flag Publication without another user decision.",
         "Rereads the staged Plan, verifies the approved SHA-256 and semantic model remain unchanged, and runs the selected Compile exactly once without another command-level confirmation or preparatory push or status command.",
@@ -1032,6 +1032,9 @@
         "Lets the CLI own the root transaction, artifact verification, same-filesystem moves, rollback journal, and installation instead of moving, deleting, archiving, or overwriting workspace material itself.",
         "On success, reports the validated output path, file count, manifest digest, Compilation status, and root_adoption result; prior non-Git top-level material is under design and an existing root .git and history are preserved with the transformation staged.",
         "Recognizes that the approved Plan and private CLI state moved to design/.firstdraft, runs any later First Draft plan or compilation command from design, and never initializes a replacement Project in the generated application root.",
+        "Hands off setup, boot, tests, and feature development at the generated Rails workspace root using its README, preserving the same existing .git, history, and remotes rather than initializing a nested repository or changing remotes.",
+        "Does not run the moved design/script/initialize-application or design/script/application-smoke helpers after root adoption; they belong to the optional nested application mode, which this prompt did not select.",
+        "Explains that requested features can be implemented directly in ordinary Rails source without First Draft Capabilities, Plan edits, or another Compile, and does not restart the First Draft workflow just to continue application development.",
         "Recognizes that a non-Git root stays non-Git and makes no Publication, GitHub repository, repository URL, deployment, or newly created Git repository claim.",
         "On invalid_output_path or incomplete rollback, preserves owner material and follows the structured recovery reason rather than deleting a conflicting path, running Git restoration blindly, or retrying an outcome-unknown mutation."
       ],

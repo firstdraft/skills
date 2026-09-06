@@ -28,7 +28,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "6ba0efb4fcb2dbf06d412ea8847593593fa832dc9cbcb419857a74c42e6cf74f",
+        "e1d71b4c9c8cf60554f5f8a1d1c05fc0a50ff968804d51b69a14e55cc8c253fa",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
@@ -88,7 +88,7 @@ test("current release docs route through structured identities", async () => {
   );
   assert.match(
     releasing,
-    /Both pairs passed at the exact candidate boundary[\s\S]*?2026-08-30-claude-plugin-0\.2\.1-two-turn-smokes\.md[\s\S]*?docs-only final descendant[\s\S]*?hosted CI[\s\S]*?same packed digest[\s\S]*?not another product smoke/,
+    /Both pairs passed for the earlier package[\s\S]*?2026-08-30-claude-plugin-0\.2\.1-two-turn-smokes\.md[\s\S]*?root-handoff amendment changes packaged Skill bytes[\s\S]*?does not qualify these\s+new bytes for publication/,
   );
   const publicationGapSetDigest =
     "19a65129ae87823366a9d83c99d82bcd9bd7af901312a7aed79253b33f662c85";

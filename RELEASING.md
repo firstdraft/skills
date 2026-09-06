@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `6ba0efb4fcb2dbf06d412ea8847593593fa832dc9cbcb419857a74c42e6cf74f` |
+| Candidate packed SHA-256 | `e1d71b4c9c8cf60554f5f8a1d1c05fc0a50ff968804d51b69a14e55cc8c253fa` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
@@ -96,8 +96,8 @@ fresh continuing agent session:
 - Direct output pairs `precompile-drawing-board-read-back` with
   `compile-prepared-drawing-board-application`.
 
-Both pairs passed at the exact candidate boundary in the [dated record](evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md).
-A docs-only final descendant still needs hosted CI and the same packed digest, not another product smoke.
+Both pairs passed for the earlier package in the [dated record](evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md).
+The root-handoff amendment changes packaged Skill bytes; that record does not qualify these new bytes for publication.
 
 Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
 attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates
@@ -224,8 +224,8 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For API 0.3, npm `next` selects CLI 0.2.2 and plugin 0.2.0. Plugin candidate 0.2.1 completed its two-turn smokes
-at the recorded candidate boundary. Leave both `latest` tags and the catalog unchanged
+For API 0.3, npm `next` selects CLI 0.2.2 and plugin 0.2.0. The recorded plugin 0.2.1 two-turn smokes remain scoped to
+their earlier package digest. Leave both `latest` tags and the catalog unchanged
 until exact web and worker revisions are active and qualification passes. During the approved window, stop other
 operator-controlled Compile and Publication invocations in that lane and serialize the one qualification invocation
 through its retained outcome.

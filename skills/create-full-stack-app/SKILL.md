@@ -314,8 +314,8 @@ Report:
 - the selected mode and distinct Compilation and Publication statuses when Publication was requested;
 - a private URL only after Publication success, or a path, file count, manifest digest, and any `root_adoption`
   result after materialization;
-- that direct mode created no Publication or repository; absent output creates no `.git`, while root adoption only
-  preserves a preexisting root `.git`; and
+- that direct mode created no Publication or repository; after root adoption, use the
+  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff); and
 - any recovery blocker or external prerequisite.
 
 Do not call source published before validated Publication, or generated before verified materialization. Neither
