@@ -159,6 +159,15 @@ An ambiguous direct start is not replayable: `request_outcome_unknown` with `pha
 Compilation may exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and selected
 output, then stop until First Draft or an operator reconciles the Project. Do not rerun either Compile mode.
 
+#### Root-adoption handoff
+
+After current-root adoption, the generated Rails application is the workspace root and the original design material
+is under `design/`. Keep the existing root `.git`, history, and remotes when present. Follow the generated root's
+README for setup and boot, then continue requested feature work there in ordinary Rails source. Do not run Drawing
+Board's moved `design/script/initialize-application` or `design/script/application-smoke`: those helpers belong to the
+optional nested `./application` mode. Adding application features does not require First Draft Capabilities, Plan
+edits, or another Compile.
+
 ### Private GitHub Publication
 
 Zero-flag `plan compile` requests the internal singleton GitHub Publication after valid analysis. It remains a
