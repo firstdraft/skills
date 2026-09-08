@@ -241,7 +241,7 @@ test(
 
     assert.match(
       normalizedSkill,
-      /targets plugin candidate 0\.2\.1, published CLI 0\.2\.2, and service contract 0\.3/,
+      /targets plugin 0\.2\.1, published CLI 0\.2\.2, and service contract 0\.3/,
     );
     assert.match(
       normalizedSkill,

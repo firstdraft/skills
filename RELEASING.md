@@ -9,7 +9,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `e1d71b4c9c8cf60554f5f8a1d1c05fc0a50ff968804d51b69a14e55cc8c253fa` |
+| Candidate packed SHA-256 | `e6fad4af8eaa64d33a4ff437ecbd5cf31ff85c2a09af147ceb1d960714c90dad` |
 | Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
 | Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
 | Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
@@ -97,7 +97,8 @@ fresh continuing agent session:
   `compile-prepared-drawing-board-application`.
 
 Both pairs passed for the earlier package in the [dated record](evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md).
-The root-handoff amendment changes packaged Skill bytes; that record does not qualify these new bytes for publication.
+The root-handoff and GitHub repository guidance change packaged Skill bytes; that record does not qualify these new
+bytes for publication.
 
 Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
 attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates

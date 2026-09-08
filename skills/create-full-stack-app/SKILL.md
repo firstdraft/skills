@@ -6,14 +6,13 @@ license: "MIT"
 
 # Create a Full-Stack App with First Draft
 
-Author one coherent Foundation Plan through conversation and exact-byte diagnostics. After the user approves its
-exact semantic read-back, request Compilation. Direct output and private GitHub Publication are separate completion modes;
-neither deploys.
+Author a coherent Foundation Plan and obtain approval of its exact semantic read-back. Then Compile into the
+workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-This workflow targets plugin candidate 0.2.1, published CLI 0.2.2, and service contract 0.3. npm `next` selects that
-CLI; plugin and catalog publication remain unproved.
+This workflow targets plugin 0.2.1, published CLI 0.2.2, and service contract 0.3. These compatibility requirements
+do not establish catalog selection.
 
 Current Compiler coverage is narrow:
 
@@ -310,13 +309,14 @@ Report:
 - the Plan path and the latest boundary actually demonstrated: JSON parsing, local schema validation, server import,
   or whole-graph analysis;
 - material choices, delegated decisions, exclusions, open questions, warnings, and capability gaps;
-- the observed analyzer release, graph version, and Head SHA, plus the complete valid GapSet and its digest;
-- the selected mode and distinct Compilation and Publication statuses when Publication was requested;
-- a private URL only after Publication success, or a path, file count, manifest digest, and any `root_adoption`
-  result after materialization;
-- that direct mode created no Publication or repository; after root adoption, use the
-  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff); and
+- observed analyzer release, graph version, Head SHA, and complete valid GapSet and digest;
+- mode and distinct Compilation/Publication statuses when Publication was requested;
+- zero-flag mode's private URL after Publication success; direct output's path, file count, manifest digest, and
+  any `root_adoption` after materialization;
+- that direct Compile created no Publication or repository; after root adoption, use the
+  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for the GitHub checkpoint before setup; and
 - any recovery blocker or external prerequisite.
 
-Do not call source published before validated Publication, or generated before verified materialization. Neither
-result is deployed, production-ready, or proof beyond the admitted narrow slice.
+Report source generated only after verified materialization. Distinguish validated First Draft Publication from
+later verified GitHub publication or pushes. Neither is deployed, production-ready, or proof beyond the admitted
+narrow slice.

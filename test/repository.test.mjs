@@ -527,7 +527,7 @@ test("historical plugin receipts stay separate from current availability", async
   assert.match(candidateSkill, /published CLI 0\.2\.2/);
   assert.match(
     candidateSkill,
-    /plugin and catalog publication remain unproved/,
+    /compatibility requirements\s+do not establish catalog selection/,
   );
   assert.doesNotMatch(candidateModelingGuide, /dated staging (?:discovery|observation)/);
   assert.match(
@@ -3229,9 +3229,8 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   for (const fragment of [
-    "targets plugin candidate 0.2.1, published CLI 0.2.2, and service contract 0.3",
-    "npm `next` selects that CLI",
-    "plugin and catalog publication remain unproved",
+    "targets plugin 0.2.1, published CLI 0.2.2, and service contract 0.3",
+    "compatibility requirements do not establish catalog selection",
     "required-enum",
     "Web Account",
     "Action Policy",
@@ -3845,7 +3844,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     skill,
-    /Direct output and private GitHub Publication are separate completion modes[\s\S]*?In zero-flag mode, require terminal Publication success and its validated URL[\s\S]*?Compilation success alone is insufficient/,
+    /Compile into the\s+workspace or \*\*Compile and publish through First Draft\*\*[\s\S]*?In zero-flag mode, require terminal Publication success and its validated URL[\s\S]*?Compilation success alone is insufficient/,
   );
   assert.match(
     skill,

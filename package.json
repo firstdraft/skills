@@ -12,7 +12,7 @@
     "ajv": "8.20.0"
   },
   "overrides": {
-    "fast-uri": "3.1.5"
+    "fast-uri": "3.1.6"
   },
   "scripts": {
     "check": "sh script/check",
