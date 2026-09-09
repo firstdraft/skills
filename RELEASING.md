@@ -262,7 +262,8 @@ mutation beyond that scope.
 
 ## Outstanding authenticated journey
 
-The template-and-Codespace journey remains unproved. Before attempting it, obtain explicit approval for one
+The [token probe](evidence/2026-09-08-codespaces-private-repository.md) covers repository creation and pushes only.
+The full template-and-Codespace journey remains unproved. Before attempting it, obtain explicit approval for one
 serialized qualification journey and name its material external effects: plugin installation, token onboarding,
 repository and Codespace creation, billed Compilation, and GitHub Publication. The operator resolves and reports
 the exact candidate identities before mutation; the user need not recite them.
@@ -277,14 +278,7 @@ does not prove the authenticated template path or full qualification.
 
 ## Checks
 
-From a clean, non-shallow candidate checkout:
-
-```sh
-npm ci --ignore-scripts
-npm run check
-node script/check-cli-contract.mjs /path/to/exact/cli
-node script/check-claude-plugin-package.mjs --cli-root /path/to/exact/cli
-```
+Run the [candidate checks](#1-prepare-one-exact-candidate) from a clean, non-shallow checkout.
 
 Run the exact release-order, registry, package, Claude, service, and public-install checks only at the stage that owns
 them. Record new observations in [`evidence/`](evidence/README.md); do not rewrite an earlier record when current
