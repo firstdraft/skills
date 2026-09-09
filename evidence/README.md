@@ -40,6 +40,7 @@ The source/public split observed at the start of this documentation change is ca
 | [`2026-08-10-staging-movie-catalog-discovery-smoke.md`](2026-08-10-staging-movie-catalog-discovery-smoke.md) | One bounded live staging Compilation and OAuth/App-backed Publication |
 | [`2026-08-17-claude-plugin-0.1.2-approval-flow-failure.md`](2026-08-17-claude-plugin-0.1.2-approval-flow-failure.md) | Exact earlier 0.1.2 phase-one failure and no-effect boundary |
 | [`2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md`](2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md) | Exact unpublished 0.2.1 Publication and direct-output two-turn approval smokes |
+| [`2026-09-08-codespaces-private-repository.md`](2026-09-08-codespaces-private-repository.md) | Built-in Codespaces token created a private repository and pushed two README-only commits; no Compilation or full template journey |
 
 ## Historical narratives
 

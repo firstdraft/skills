@@ -101,9 +101,29 @@ as the submitted candidate, and do not edit, push, or Compile the replacement.
 
 ## Product Compile
 
-Both `plan compile` modes perform a new exact-byte push and wait for the analysis whose graph version and Head digest
-came from that accepted push. Only `valid` analysis proceeds. Each mode uses the accepted exact Head condition; do
-not add a gap digest, acknowledgment field, or Plan edit.
+Use these terms when explaining the workflow:
+
+| Term | Meaning |
+| --- | --- |
+| Submit the Plan | Send the current Plan to First Draft for analysis (`plan push` through the verified CLI wrapper). |
+| Compile | Generate and verify application source from the reviewed Foundation Plan. |
+| Commit | Record changes in local Git history; this does not copy them to GitHub. |
+| Create GitHub repository | Create a private repository for this workspace, connect it as `origin`, and push its existing commits. All three steps must succeed. |
+| Compile and publish through First Draft | Compile the Plan, then create and populate a private repository with the generated Foundation. |
+| Push | Send Git commits to an existing remote repository with `git push`. |
+| Deploy | Make the application run on a hosting service. GitHub publication does not deploy it. |
+
+Zero-flag mode selects **Compile and publish through First Draft**. Its internal **Publication** record tracks
+server-managed repository creation and artifact delivery. Publishing an existing workspace through GitHub creates
+no First Draft Publication record. **Materialization** means writing the verified artifact into a local directory;
+use "write the generated application into this workspace" when explaining that mechanic to the user.
+
+Use **Publish to GitHub** when referring to VS Code's command, choosing its private repository option. Do not call
+repository creation "Create origin": `origin` is the local name for a remote, not the repository itself.
+
+Both `plan compile` modes submit the exact Plan bytes again and wait for the analysis whose graph version and Head
+digest came from that accepted submission. Only `valid` analysis proceeds. Each mode uses the accepted exact Head
+condition; do not add a gap digest, acknowledgment field, or Plan edit.
 
 Choose the completion mode from the user's requested result. `--output` is for Drawing Board, same-workspace work,
 or another explicit local-directory request. Zero flags are for an explicit private GitHub repository. If the result
@@ -149,11 +169,11 @@ creates no repository or `.git`. Root adoption additionally contains preserved `
 and reports the move/index facts above. The CLI runs no formatter and repairs nothing. When absent output is nested
 in Drawing Board or another Git worktree, leave nested-Git initialization to that workspace's own workflow.
 
-Progress contains only the analysis and Compilation messages from the stable table below. Do not report Publication,
-a repository, or a GitHub URL in direct mode. A direct wait timeout does not cancel retained work. When its validated
-`current` projection supplies the exact Compilation ID, use read-only `compilation status <id> --wait` and, after
-terminal success, `compilation download <id> --output <still-absent-directory>` rather than starting another
-Compilation.
+Progress contains only the analysis and Compilation messages from the stable table below. Direct Compile itself
+creates no Publication or repository; report later GitHub publication or pushes separately. A direct wait timeout
+does not cancel retained work. When its validated `current` projection supplies the exact Compilation ID, use
+read-only `compilation status <id> --wait` and, after terminal success,
+`compilation download <id> --output <still-absent-directory>` rather than starting another Compilation.
 
 An ambiguous direct start is not replayable: `request_outcome_unknown` with `phase: "compilation"` means one
 Compilation may exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and selected
@@ -162,11 +182,48 @@ output, then stop until First Draft or an operator reconciles the Project. Do no
 #### Root-adoption handoff
 
 After current-root adoption, the generated Rails application is the workspace root and the original design material
-is under `design/`. Keep the existing root `.git`, history, and remotes when present. Follow the generated root's
-README for setup and boot, then continue requested feature work there in ordinary Rails source. Do not run Drawing
-Board's moved `design/script/initialize-application` or `design/script/application-smoke`: those helpers belong to the
-optional nested `./application` mode. Adding application features does not require First Draft Capabilities, Plan
-edits, or another Compile.
+is under `design/`. Keep the existing root `.git`, history, and remotes when present. With an existing Git root,
+inspect and commit the staged baseline before setup or feature work, keeping credentials such as `design/.env` and
+private CLI state ignored. Make **Create GitHub repository**, or **Push** when a remote exists, an early checkpoint.
+Confirm that the destination and applicable remote writes are authorized; approval of direct Compile alone does
+not authorize them.
+If the user declines, report that the baseline remains local and continue their requested local work without asking again.
+
+If a remote already exists, use that approved destination and an ordinary push; do not create another repository or
+replace its remote. The following creation route applies only to an unpublished template Codespace with an existing
+Git root and no remote. For other workspaces, follow their existing Git workflow; a non-Git root stays non-Git unless
+the user requests initialization.
+
+Use the Codespace's integrated terminal and built-in GitHub credential. Confirm the personal owner with
+`gh api user --jq .login`, then substitute the approved repository name:
+
+```sh
+gh api --method POST "/user/codespaces/$CODESPACE_NAME/publish" \
+  -f name="APPROVED_REPO_NAME" -F private=true \
+  --jq '.repository | {full_name, private, html_url}'
+```
+
+This [Codespaces endpoint](https://docs.github.com/en/rest/codespaces/codespaces#create-a-repository-from-an-unpublished-codespace)
+creates the repository, associates the Codespace with it, and grants its token write access. General `gh repo create`
+and `POST /user/repos` do not work with that built-in token. No additional login, PAT, or First Draft token is needed.
+The API does not add local `origin` or push commits. Verify the returned owner/name and `private: true`, then use the
+returned repository URL from the generated application's Git root:
+
+```sh
+git remote add origin https://github.com/OWNER/REPO.git && git push -u origin HEAD
+```
+
+Verify private visibility, the remote baseline commit, and the retained `design/` files before reporting the source
+published to GitHub. Report its URL and commit; send later commits with `git push`. After an ambiguous creation
+result, inspect the Codespace's repository association and the approved repository read-only before any retry.
+If creation succeeded but pushing failed, retain the repository and resolve the push failure without creating
+another one. This publishes the existing Git history; do not invoke zero-flag Compile or First Draft Publication
+to publish an already-compiled workspace.
+
+Follow the generated root's README for setup and boot, then continue requested feature work in ordinary Rails source.
+Do not run Drawing Board's moved `design/script/initialize-application` or `design/script/application-smoke`: those
+helpers belong to the optional nested `./application` mode. Adding application features does not require First Draft
+Capabilities, Plan edits, or another Compile.
 
 ### Private GitHub Publication
 
