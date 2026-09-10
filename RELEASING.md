@@ -22,8 +22,8 @@ Plugin 0.2.1 was published from source `629a4d5dce05306226ed3ba75f80b7bb0562e004
 [GitHub OIDC workflow 34433993588](https://github.com/firstdraft/skills/actions/runs/34433993588).
 Both exact-package approval smokes and fresh registry-package qualification passed; the
 [dated publication record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md) records their distinct boundaries.
-Catalog selection is declared here; the two-command public install is a post-merge check. npm `latest` promotion
-remains a separate step. [`release/compatibility.json`](release/compatibility.json) owns candidate version,
+The [fresh public install](evidence/2026-09-10-public-plugin-0.2.1-install.md) passed after catalog merge.
+npm `latest` promotion remains separate. [`release/compatibility.json`](release/compatibility.json) owns candidate version,
 digest, package, CLI, API, and Plan-format compatibility. The marketplace manifest owns public catalog selection.
 Registry, tag, environment, service, and hosted-CI state must be checked live immediately before a mutation.
 
@@ -257,7 +257,8 @@ mutation beyond that scope.
 
 ## Outstanding authenticated journey
 
-The [token probe](evidence/2026-09-08-codespaces-private-repository.md) covers repository creation and pushes only.
+The [token probe](evidence/2026-09-10-codespaces-workflow-publication.md) covers private repository creation and the
+complete template push, including workflows; it also records the subsequent contents-API 403.
 The full template-and-Codespace journey remains unproved. Before attempting it, obtain explicit approval for one
 serialized qualification journey and name its material external effects: plugin installation, token onboarding,
 repository and Codespace creation, billed Compilation, and GitHub Publication. The operator resolves and reports
