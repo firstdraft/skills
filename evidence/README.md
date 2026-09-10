@@ -27,6 +27,7 @@ The source/public split observed at the start of this documentation change is ca
 | [`2026-08-07-npm-trusted-publisher.md`](2026-08-07-npm-trusted-publisher.md) | npm trusted-publisher configuration only |
 | [`2026-08-09-claude-plugin-0.1.0-release.md`](2026-08-09-claude-plugin-0.1.0-release.md) | Protected plugin 0.1.0 publication, provenance, digest, and dist-tags |
 | [`2026-08-12-claude-plugin-0.1.1-release.md`](2026-08-12-claude-plugin-0.1.1-release.md) | Protected plugin 0.1.1 publication, provenance, digest, and dist-tags |
+| [`2026-09-10-claude-plugin-0.2.1-publication.md`](2026-09-10-claude-plugin-0.2.1-publication.md) | Exact two-turn approval smokes, protected OIDC publication, and fresh registry-package qualification |
 | [`2026-08-12-stable-npm-promotion.md`](2026-08-12-stable-npm-promotion.md) | Approved `latest` promotions and reconciled stable defaults |
 | [`2026-08-13-release-state.json`](2026-08-13-release-state.json) | Machine-readable source-candidate and public-state snapshot |
 
@@ -41,6 +42,7 @@ The source/public split observed at the start of this documentation change is ca
 | [`2026-08-17-claude-plugin-0.1.2-approval-flow-failure.md`](2026-08-17-claude-plugin-0.1.2-approval-flow-failure.md) | Exact earlier 0.1.2 phase-one failure and no-effect boundary |
 | [`2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md`](2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md) | Exact unpublished 0.2.1 Publication and direct-output two-turn approval smokes |
 | [`2026-09-08-codespaces-private-repository.md`](2026-09-08-codespaces-private-repository.md) | Built-in Codespaces token created a private repository and pushed two README-only commits; no Compilation or full template journey |
+| [`2026-09-10-codespaces-workflow-publication.md`](2026-09-10-codespaces-workflow-publication.md) | Built-in token published the actual template checkout with both workflow files; no Compilation |
 
 ## Historical narratives
 
