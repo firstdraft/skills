@@ -72,7 +72,7 @@ test("current release docs route through structured identities", async () => {
   );
   assert(releasing.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
   assert(releasing.includes(compatibility.plugin_source.tarball_sha256));
-  assert.match(releasing, /CLI npm `next` \/ `latest` \| `0\.2\.2` \/ `0\.1\.0`/);
+  assert.match(releasing, /CLI npm `next` \/ `latest` \| `0\.2\.2` \/ `0\.2\.2`/);
   assert.match(
     releasing,
     /Synthetic fixture GapSets are not universal digest oracles[\s\S]*?live GapSet digests include Project identity[\s\S]*?Every[\s\S]*?attached-analysis evaluation and smoke[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?CLI validates[\s\S]*?attached complete GapSet[\s\S]*?never a fixture, history, or another Project[\s\S]*?derived Web icons are generated[\s\S]*?only the emitted iOS AppIcon[\s\S]*?remains stock/i,

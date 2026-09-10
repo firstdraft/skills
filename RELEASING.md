@@ -12,9 +12,9 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Candidate packed SHA-256 | `e6fad4af8eaa64d33a4ff437ecbd5cf31ff85c2a09af147ceb1d960714c90dad` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.1` |
 | Public catalog | Plugin `0.2.1`, selected by `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.1` / `0.1.1` at the publication observation below |
+| Plugin npm `next` / `latest` | `0.2.1` / `0.2.1` |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
-| CLI npm `next` / `latest` | `0.2.2` / `0.1.0` |
+| CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
@@ -23,11 +23,13 @@ Plugin 0.2.1 was published from source `629a4d5dce05306226ed3ba75f80b7bb0562e004
 Both exact-package approval smokes and fresh registry-package qualification passed; the
 [dated publication record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md) records their distinct boundaries.
 The [fresh public install](evidence/2026-09-10-public-plugin-0.2.1-install.md) passed after catalog merge.
-npm `latest` promotion remains separate. [`release/compatibility.json`](release/compatibility.json) owns candidate version,
-digest, package, CLI, API, and Plan-format compatibility. The marketplace manifest owns public catalog selection.
+Both [`latest` promotions](evidence/2026-09-10-stable-npm-promotion.md) are verified.
+[`release/compatibility.json`](release/compatibility.json) owns candidate compatibility.
+The marketplace manifest owns public catalog selection.
 Registry, tag, environment, service, and hosted-CI state must be checked live immediately before a mutation.
 
-CLI 0.2.2 is published under `next`; its source contract includes POSIX current-root adoption with `--output .`.
+CLI 0.2.2 is published under `next` and `latest`; its source contract includes POSIX current-root adoption with
+`--output .`.
 The dated publication record retains the exact CLI source, tarball, release workflow, and registry observations.
 
 ## Authorization boundaries
@@ -218,7 +220,7 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For API 0.3, CLI 0.2.2 and plugin 0.2.1 are published under `next`. The exact current plugin's controlled approval
+For API 0.3, CLI 0.2.2 and plugin 0.2.1 are published under `next` and `latest`. The plugin's controlled approval
 smokes passed against service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, observed on both staging roles through
 Render deployment listings at `2026-09-10T04:13:47Z`.
 This records staging readiness, not production activation or the full authenticated Codespaces journey. For a new
