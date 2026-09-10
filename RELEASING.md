@@ -10,36 +10,25 @@ This is the current policy and operator sequence for coordinated work across `fi
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.1` |
 | Candidate packed SHA-256 | `e6fad4af8eaa64d33a4ff437ecbd5cf31ff85c2a09af147ceb1d960714c90dad` |
-| Public plugin package | `@firstdraft.com/claude-code@0.1.1` |
-| Public catalog | Plugin `0.1.1` at promotion commit `ff2f0863f85e1f95194c8e3fbe9986b56efb0ad1` |
-| Plugin npm `next` / `latest` | `0.2.0` / `0.1.1` |
+| Public plugin package | `@firstdraft.com/claude-code@0.2.1` |
+| Public catalog | Plugin `0.2.1`, selected by `.claude-plugin/marketplace.json` |
+| Plugin npm `next` / `latest` | `0.2.1` / `0.1.1` at the publication observation below |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.1.0` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
-The source candidate is unpublished and unpromoted. Its exact integration commit must be resolved from the final
-reviewed tree before release. [`release/compatibility.json`](release/compatibility.json) owns candidate version,
+Plugin 0.2.1 was published from source `629a4d5dce05306226ed3ba75f80b7bb0562e004` by
+[GitHub OIDC workflow 34433993588](https://github.com/firstdraft/skills/actions/runs/34433993588).
+Both exact-package approval smokes and fresh registry-package qualification passed; the
+[dated publication record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md) records their distinct boundaries.
+Catalog selection is declared here; the two-command public install is a post-merge check. npm `latest` promotion
+remains a separate step. [`release/compatibility.json`](release/compatibility.json) owns candidate version,
 digest, package, CLI, API, and Plan-format compatibility. The marketplace manifest owns public catalog selection.
 Registry, tag, environment, service, and hosted-CI state must be checked live immediately before a mutation.
 
-CLI 0.2.1 was owner-authorized and published under npm `next` from source/tag commit
-`d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68`, tree `e62ee3ff1fb6d188c5d2c5a6e5e0efd50b40245f`, and annotated tag
-object `58681aae4c4fca8301d9a945074a4ee6b6c6b4b2`; its
-[OIDC release workflow](https://github.com/firstdraft/cli/actions/runs/33200181779) is green. Registry signature,
-provenance, exact installation, and tagged-source pack parity were verified. That release moved neither CLI
-`latest` nor any plugin package, plugin dist-tag, public catalog entry, or service deployment.
-
-CLI 0.2.2 is source commit `799a184cb2453ceadf5575f7b46ba975e084f192`, tree
-`7c66247b4d8460b130a5d65443466575a9a3cea1`, package SHA-256
-`42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a`, and runtime digest
-`e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`; its
-[source CI](https://github.com/firstdraft/cli/actions/runs/33248883396) is green, and its source contract includes
-POSIX current-root adoption with `--output .`. It was published under npm `next`
-from tag object `75b8bb95d3ce38e1b2a58d23c39738cb7c8242d3` by green
-[workflow 33292963543](https://github.com/firstdraft/cli/actions/runs/33292963543). Registry and source match across
-27 files; a fresh install verified its signature and provenance. `latest` remains 0.1.0. This neither published nor
-promoted the plugin and proves neither required smoke.
+CLI 0.2.2 is published under `next`; its source contract includes POSIX current-root adoption with `--output .`.
+The dated publication record retains the exact CLI source, tarball, release workflow, and registry observations.
 
 ## Authorization boundaries
 
@@ -96,9 +85,10 @@ fresh continuing agent session:
 - Direct output pairs `precompile-drawing-board-read-back` with
   `compile-prepared-drawing-board-application`.
 
-Both pairs passed for the earlier package in the [dated record](evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md).
-The root-handoff and GitHub repository guidance change packaged Skill bytes; that record does not qualify these new
-bytes for publication.
+Both pairs passed for the exact published package in the
+[September 10 record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md). The
+[August 30 record](evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md) covers an earlier unpublished digest and
+does not qualify later packaged Skill bytes.
 
 Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
 attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates
@@ -139,15 +129,13 @@ This step requires explicit authorization for protected tag creation and npm pub
 part of a named release sequence. The operator resolves and reports the exact candidate commit, package version,
 and tarball digest before mutation; the user does not need to recite them.
 
-Plugin 0.2.1 requires exact `@firstdraft.com/cli@0.2.2`, now reconciled under npm `next`. Do not tag or publish the
-plugin until its repaired package reproduces its digest and both two-turn smokes pass. A later authorized publication
-must leave both `latest` tags and the catalog unchanged pending separate promotion approval.
-
 Immediately before tagging:
 
 1. Verify the `claude-v*` ruleset protects tags from deletion and unauthorized updates.
 2. Verify the GitHub `npm` environment has the intended required reviewer and `NPM_RELEASE_ENABLED=true`.
-3. Recheck the npm trusted-publisher binding for this repository and `.github/workflows/publish.yml`.
+3. Verify that this repository and `.github/workflows/publish.yml` still match the retained npm trusted-publisher
+   binding. Verify the binding interactively when it is created or changed; an ordinary release does not require
+   another `npm trust list` login. The protected workflow's successful OIDC publication confirms the retained binding.
 4. Reconcile npm versions, `next`, `latest`, protected tags, public catalog, exact-main CI, and the candidate digest.
 5. Run the prospective order check from the exact checkout:
 
@@ -218,6 +206,11 @@ Do not call a stable catalog-distributed release complete until the public catal
 select the same exact qualified plugin version. The dist-tag move never authorizes new package bytes, service
 deployment, catalog editing, or another live qualification.
 
+GitHub OIDC publication needs no npm login, but `npm dist-tag` still requires ordinary authentication
+([npm's supported operations](https://docs.npmjs.com/trusted-publishers/#limitations-and-future-improvements)).
+Authenticate when ready for the tag changes; do not repeatedly start expiring logins during other checks. Future
+direct-to-`latest` publication would avoid this step, but requires a coordinated policy/workflow change.
+
 ## Breaking service transitions
 
 For a breaking API line, obtain explicit authorization for the package-first rollout and for a later lane-scoped
@@ -225,9 +218,11 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For API 0.3, npm `next` selects CLI 0.2.2 and plugin 0.2.0. The recorded plugin 0.2.1 two-turn smokes remain scoped to
-their earlier package digest. Leave both `latest` tags and the catalog unchanged
-until exact web and worker revisions are active and qualification passes. During the approved window, stop other
+For API 0.3, CLI 0.2.2 and plugin 0.2.1 are published under `next`. The exact current plugin's controlled approval
+smokes passed against service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, which is active on both staging roles.
+This records staging readiness, not production activation or the full authenticated Codespaces journey. For a new
+breaking transition, leave both `latest` tags and the catalog unchanged until exact web and worker revisions are
+active and qualification passes. During the approved window, stop other
 operator-controlled Compile and Publication invocations in that lane and serialize the one qualification invocation
 through its retained outcome.
 
