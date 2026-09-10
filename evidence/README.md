@@ -18,6 +18,7 @@ The source/public split observed at the start of this documentation change is ca
 | [`2026-08-09-direct-package-0.1.0-check.md`](2026-08-09-direct-package-0.1.0-check.md) | Exact public plugin 0.1.0 direct-package check |
 | [`2026-08-12-direct-package-0.1.1-check.md`](2026-08-12-direct-package-0.1.1-check.md) | Exact public plugin 0.1.1 direct-package and wrapper check |
 | [`2026-08-12-public-claude-code-plugin-0.1.1-install.md`](2026-08-12-public-claude-code-plugin-0.1.1-install.md) | Fresh public two-command installation of catalog-selected 0.1.1 |
+| [`2026-09-10-public-plugin-0.2.1-install.md`](2026-09-10-public-plugin-0.2.1-install.md) | Fresh public two-command installation of catalog-selected 0.2.1 and qualification identities |
 
 ## Publication and registry
 
