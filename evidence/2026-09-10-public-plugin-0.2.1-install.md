@@ -52,6 +52,11 @@ revision; the earlier 198-file observation and this release's 199-file results r
 
 ## Boundary
 
+At `2026-09-10T04:13:47Z`, Render CLI `2.22.0` deployment listings identified both staging roles as `live` at
+`9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`: web `srv-d9sa35favr4c73aqk64g`, deployment
+`dep-daed5tht0dsc739onf30`; worker `srv-d9sa35favr4c73aqk650`, deployment `dep-daed5tid0e5s7382cph0`.
+This dated observation does not replace a later pre-mutation revision check.
+
 The public catalog now selects the qualified package, and fresh public installation is observed. npm `latest`
 promotion remains separate. This did not update an existing installation, authenticate with First Draft, call a
 model, compile an application, create a GitHub repository, or deploy a service. The controlled approval smokes and

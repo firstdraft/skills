@@ -219,7 +219,8 @@ reports the exact package and service candidates and the approval names affected
 and completion criteria.
 
 For API 0.3, CLI 0.2.2 and plugin 0.2.1 are published under `next`. The exact current plugin's controlled approval
-smokes passed against service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, which is active on both staging roles.
+smokes passed against service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, observed on both staging roles through
+Render deployment listings at `2026-09-10T04:13:47Z`.
 This records staging readiness, not production activation or the full authenticated Codespaces journey. For a new
 breaking transition, leave both `latest` tags and the catalog unchanged until exact web and worker revisions are
 active and qualification passes. During the approved window, stop other
