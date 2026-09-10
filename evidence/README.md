@@ -30,6 +30,7 @@ The source/public split observed at the start of this documentation change is ca
 | [`2026-08-12-claude-plugin-0.1.1-release.md`](2026-08-12-claude-plugin-0.1.1-release.md) | Protected plugin 0.1.1 publication, provenance, digest, and dist-tags |
 | [`2026-09-10-claude-plugin-0.2.1-publication.md`](2026-09-10-claude-plugin-0.2.1-publication.md) | Exact two-turn approval smokes, protected OIDC publication, and fresh registry-package qualification |
 | [`2026-08-12-stable-npm-promotion.md`](2026-08-12-stable-npm-promotion.md) | Approved `latest` promotions and reconciled stable defaults |
+| [`2026-09-10-stable-npm-promotion.md`](2026-09-10-stable-npm-promotion.md) | CLI 0.2.2 and plugin 0.2.1 selected by both `next` and `latest`, with unchanged qualified tarballs |
 | [`2026-08-13-release-state.json`](2026-08-13-release-state.json) | Machine-readable source-candidate and public-state snapshot |
 
 ## Product and model observations
