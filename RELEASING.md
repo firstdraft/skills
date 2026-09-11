@@ -8,20 +8,21 @@ This is the current policy and operator sequence for coordinated work across `fi
 
 | Surface | Current identity |
 |---|---|
-| Source candidate | `@firstdraft.com/claude-code@0.2.2` (unreleased) |
-| Candidate packed SHA-256 | `5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef` |
-| Public plugin package | `@firstdraft.com/claude-code@0.2.1` |
-| Public catalog | Plugin `0.2.1`, selected by `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.1` / `0.2.1` |
+| Source package | `@firstdraft.com/claude-code@0.2.2` |
+| Packed SHA-256 | `5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef` |
+| Public plugin package | `@firstdraft.com/claude-code@0.2.2` |
+| Public catalog | Plugin `0.2.2`, selected by `.claude-plugin/marketplace.json` |
+| Plugin npm `next` / `latest` | `0.2.2` / `0.2.1` |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
-marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate. See the [0.2.1 publication record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md),
-[fresh public install](evidence/2026-09-10-public-plugin-0.2.1-install.md), and
-[stable promotions](evidence/2026-09-10-stable-npm-promotion.md) for observed public state.
+marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate. The
+[0.2.2 release receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) records the protected publication,
+controlled-service approval pairs, and final-package Codex cases. Public catalog installation and `latest`
+promotion are subsequent observations, recorded after those steps succeed.
 Recheck registry, tags, environments, service, and hosted CI immediately before a mutation.
 
 CLI 0.2.2's source contract includes current-root adoption with `--output .`.
@@ -76,7 +77,7 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-The 0.2.2 candidate requires two human-observed, two-turn approval smokes before publication, each in its own
+The 0.2.2 qualification requires two human-observed, two-turn approval smokes before publication, each in its own
 fresh continuing agent session:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
@@ -86,9 +87,8 @@ fresh continuing agent session:
 Also run the [shared client qualification](evals/README.md#shared-client-qualification) for the new Codex surface.
 Keep fixture-based agent behavior separate from real Compiler and hosted-journey evidence.
 
-The [September 10 record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md) qualifies published 0.2.1 only.
-The 0.2.2 controlled-service pairs remain outstanding; neither that record nor earlier smokes qualify changed
-packaged Skill bytes.
+The [0.2.2 release record](evidence/2026-09-10-shared-plugin-0.2.2-release.md) binds the completed gates to this
+package. Earlier records do not qualify changed Skill bytes.
 
 Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
 attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates
@@ -220,7 +220,7 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For API 0.3, CLI 0.2.2 and plugin 0.2.1 are published under `next` and `latest`. The plugin's controlled approval
+For API 0.3, CLI 0.2.2 and plugin 0.2.2 are published; their channel state is listed above. The earlier 0.2.1 controlled approval
 smokes passed against service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, observed on both staging roles through
 Render deployment listings at `2026-09-10T04:13:47Z`.
 This records staging readiness, not production activation or the full authenticated Codespaces journey. For a new
