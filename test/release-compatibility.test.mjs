@@ -77,7 +77,7 @@ test("current release docs route through structured identities", async () => {
     releasing,
     /Synthetic fixture GapSets are not universal digest oracles[\s\S]*?live GapSet digests include Project identity[\s\S]*?Every[\s\S]*?attached-analysis evaluation and smoke[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?CLI validates[\s\S]*?attached complete GapSet[\s\S]*?never a fixture, history, or another Project[\s\S]*?derived Web icons are generated[\s\S]*?only the emitted iOS AppIcon[\s\S]*?remains stock/i,
   );
-  assert.match(releasing, /evidence\/2026-09-10-claude-plugin-0\.2\.1-publication\.md/);
+  assert.match(releasing, /evidence\/2026-09-10-shared-plugin-0\.2\.2-release\.md/);
   const publicationGapSetDigest =
     "19a65129ae87823366a9d83c99d82bcd9bd7af901312a7aed79253b33f662c85";
   const directGapSetDigest =

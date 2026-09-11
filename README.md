@@ -42,12 +42,12 @@ In Drawing Board, the Skill and CLI are already installed. Follow the
 Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
 conversation, run `codex resume` from the same workspace root.
 
-The public catalog still selects 0.2.1. Standalone Codex CLI discovery is repaired in the **unreleased 0.2.2
-candidate**; use the local candidate procedure below to test that change before promotion. Drawing Board supplies
-its own project wrapper and installed CLI. The [release runbook](RELEASING.md) distinguishes source candidates from
-published packages.
+The public catalog selects shared plugin `0.2.2`, which includes the compatible CLI and discovers it in either
+agent. Drawing Board supplies its own project wrapper and installed CLI. The
+[release receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) distinguishes package and controlled behavioral
+checks from the still-unproved fresh authenticated Codespace journey.
 
-Outside Drawing Board, Codex uses the same catalog as Claude. After 0.2.2 is promoted, install it with:
+Outside Drawing Board, Codex uses the same catalog as Claude. Install it with:
 
 ~~~sh
 codex plugin marketplace add firstdraft/skills

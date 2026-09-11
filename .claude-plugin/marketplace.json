@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "firstdraft-skills",
-  "description": "Experimental First Draft application-authoring skills for Claude Code",
+  "description": "Experimental First Draft application-authoring skills for Claude Code and Codex",
   "owner": {
     "name": "First Draft",
     "url": "https://github.com/firstdraft"
@@ -9,11 +9,11 @@
   "plugins": [
     {
       "name": "firstdraft",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "source": {
         "source": "npm",
         "package": "@firstdraft.com/claude-code",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "registry": "https://registry.npmjs.org/"
       },
       "displayName": "First Draft",

@@ -167,7 +167,7 @@ test("catalog reconciliation reads npm, fetched tags, and the catalog", async ()
         return {
           status: 0,
           stderr: "",
-          stdout: "claude-v0.1.0-alpha.3\nclaude-v0.1.0\nclaude-v0.1.1\nclaude-v0.2.0\nclaude-v0.2.1\n",
+          stdout: "claude-v0.1.0-alpha.3\nclaude-v0.1.0\nclaude-v0.1.1\nclaude-v0.2.0\nclaude-v0.2.1\nclaude-v0.2.2\n",
         };
       }
       return {
@@ -179,16 +179,17 @@ test("catalog reconciliation reads npm, fetched tags, and the catalog", async ()
           "0.1.1",
           "0.2.0",
           "0.2.1",
+          "0.2.2",
         ]),
       };
     },
   });
 
   assert.equal(result.candidateVersion, "0.2.2");
-  assert.deepEqual(result.catalogVersions, ["0.2.1"]);
-  assert.deepEqual(result.taggedVersions, ["0.1.0-alpha.3", "0.1.0", "0.1.1", "0.2.0", "0.2.1"]);
-  assert.equal(result.releaseState, "prospective");
-  assert.equal(invocations.length, 2);
+  assert.deepEqual(result.catalogVersions, ["0.2.2"]);
+  assert.deepEqual(result.taggedVersions, ["0.1.0-alpha.3", "0.1.0", "0.1.1", "0.2.0", "0.2.1", "0.2.2"]);
+  assert.equal(result.releaseState, "catalog");
+  assert.equal(invocations.length, 3);
   assert.deepEqual(invocations[1][1], [
     "for-each-ref",
     "--format=%(refname:strip=3)",
