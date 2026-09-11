@@ -11,7 +11,7 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-This workflow targets plugin 0.2.1, published CLI 0.2.2, and service contract 0.3. These compatibility requirements
+This workflow targets plugin 0.2.2, published CLI 0.2.2, and service contract 0.3. These compatibility requirements
 do not establish catalog selection.
 
 Current Compiler coverage is narrow:
@@ -75,13 +75,16 @@ diagnostics and say local schema validation was not performed.
 
 ## Verify the local capability
 
-Work from the project root. Prefer an executable project wrapper at `./bin/firstdraft`; otherwise use the installed
-`firstdraft`. Run this block literally. Do not collapse multiword CLI invocations into scalar shell variables:
-shells differ in word splitting and may pass the whole line as one unknown command.
+Work from the project root. Resolve `<skill-dir>` below to the absolute directory containing this `SKILL.md`,
+using the loaded Skill path (expand any alias with its supplied Skill root). The helper prefers an executable
+project wrapper at `./bin/firstdraft`, then
+the plugin's bundled CLI, then `firstdraft` on PATH. Keep that order: a project wrapper may supply credentials.
+Use the same resolved helper path in each shell call; shell functions do not persist between tool calls.
+Do not collapse multiword CLI invocations into scalar shell variables: shells differ in word splitting and may
+pass the whole line as one unknown command.
 
 ```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
-if [ -x ./bin/firstdraft ]; then command -v ./bin/firstdraft; else command -v firstdraft; fi
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli --version
 firstdraft_cli --help
 ```
@@ -96,8 +99,8 @@ shell loop. The compatible CLI supplies these public commands:
 - `compilation status` and `compilation download`.
 
 There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.
-If its path, version, or help differs, report it and stop remote work instead of using HTTP directly; local Plan work
-may continue. Recommend repair only after verifying the registry and catalog serve plugin 0.2.1 with CLI 0.2.2.
+If its version or help differs, report it and stop remote work instead of using HTTP directly; local Plan work
+may continue. Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased.
 
 Treat `.firstdraft/state.json` as private CLI-owned concurrency state. Never print, paste, commit, or treat it as
 Plan content. Let the user configure `FIRSTDRAFT_API_TOKEN` and any initial `FIRSTDRAFT_API_URL` outside the
@@ -113,14 +116,14 @@ generated root.
 If `.firstdraft/` does not exist, establish or propose the application name, then initialize:
 
 ```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli plan init --name "<name>"
 ```
 
 The command also accepts `--application-key <key>` alone or both options. Preview a derived key only when useful:
 
 ```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli generate application-key --name "<name>"
 ```
 
@@ -151,7 +154,7 @@ maintain a second flattened candidate merely for Compilation.
 Generate a fresh UUIDv7 for each genuinely new independently mutable subject:
 
 ```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli generate uuid
 firstdraft_cli generate uuid --count <n>
 ```
@@ -166,7 +169,7 @@ Read [Push and analysis](references/diagnostics-and-recovery.md#push-and-analysi
 would help:
 
 ```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli plan push
 ```
 
@@ -175,7 +178,7 @@ frequently revised snapshots; there is no separate permission, batching, or chan
 retain `project.graph_version` and `foundation_plan.source_sha256`, then read the matching analysis:
 
 ```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli plan status --wait
 ```
 
@@ -229,7 +232,7 @@ After the exact candidate's semantic read-back is approved, read
 - For direct output, use absent `./application` unless the approved request selects current-root adoption. Run:
 
   ```sh
-  firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+  firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
   firstdraft_cli plan compile --output ./application
   ```
 
@@ -238,7 +241,7 @@ After the exact candidate's semantic read-back is approved, read
 - For selected Publication, run zero-flag mode:
 
   ```sh
-  firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+  firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
   firstdraft_cli plan compile
   ```
 
@@ -257,7 +260,7 @@ supplied by the user or a validated structured projection; never recover one fro
 output.
 
 ```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli compilation status <compilation-id>
 firstdraft_cli compilation status <compilation-id> --wait
 ```
@@ -269,7 +272,7 @@ For local source, choose an absent destination beneath an existing real director
 [Retained Compilation download](references/diagnostics-and-recovery.md#retained-compilation-download):
 
 ```sh
-firstdraft_cli() { if [ -x ./bin/firstdraft ]; then ./bin/firstdraft "$@"; else firstdraft "$@"; fi; }
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli compilation download <compilation-id> --output <absent-path>
 ```
 

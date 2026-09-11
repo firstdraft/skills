@@ -48,5 +48,5 @@
 - For plugin 0.1.0 only, `RELEASING.md` records the human-selected PAT-less discovery smoke that gates catalog
   promotion and the stricter qualification boundaries it does not prove. Do not silently substitute either boundary
   for the other.
-- The installable Claude package is assembled from the canonical Skill during packing. Do not commit a second
-  editable copy under `packages/`.
+- The shared Claude/Codex package is assembled from the canonical Skill during packing. Both clients use the
+  existing public catalog; generate client manifests from shared metadata and never commit a second editable Skill.

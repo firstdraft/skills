@@ -8,8 +8,8 @@ This is the current policy and operator sequence for coordinated work across `fi
 
 | Surface | Current identity |
 |---|---|
-| Source candidate | `@firstdraft.com/claude-code@0.2.1` |
-| Candidate packed SHA-256 | `e6fad4af8eaa64d33a4ff437ecbd5cf31ff85c2a09af147ceb1d960714c90dad` |
+| Source candidate | `@firstdraft.com/claude-code@0.2.2` (unreleased) |
+| Candidate packed SHA-256 | `5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.1` |
 | Public catalog | Plugin `0.2.1`, selected by `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.1` / `0.2.1` |
@@ -18,19 +18,13 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
-Plugin 0.2.1 was published from source `629a4d5dce05306226ed3ba75f80b7bb0562e004` by
-[GitHub OIDC workflow 34433993588](https://github.com/firstdraft/skills/actions/runs/34433993588).
-Both exact-package approval smokes and fresh registry-package qualification passed; the
-[dated publication record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md) records their distinct boundaries.
-The [fresh public install](evidence/2026-09-10-public-plugin-0.2.1-install.md) passed after catalog merge.
-Both [`latest` promotions](evidence/2026-09-10-stable-npm-promotion.md) are verified.
-[`release/compatibility.json`](release/compatibility.json) owns candidate compatibility.
-The marketplace manifest owns public catalog selection.
-Registry, tag, environment, service, and hosted-CI state must be checked live immediately before a mutation.
+[`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
+marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate. See the [0.2.1 publication record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md),
+[fresh public install](evidence/2026-09-10-public-plugin-0.2.1-install.md), and
+[stable promotions](evidence/2026-09-10-stable-npm-promotion.md) for observed public state.
+Recheck registry, tags, environments, service, and hosted CI immediately before a mutation.
 
-CLI 0.2.2 is published under `next` and `latest`; its source contract includes POSIX current-root adoption with
-`--output .`.
-The dated publication record retains the exact CLI source, tarball, release workflow, and registry observations.
+CLI 0.2.2's source contract includes current-root adoption with `--output .`.
 
 ## Authorization boundaries
 
@@ -72,7 +66,9 @@ syntax; do not add compatibility aliases.
 
 4. Pack deterministically, record the tarball SHA-256, install it in isolated state, validate it with the then-current
    supported Claude Code CLI, and confirm its adapter invokes the exact compatible CLI version. Do not call First
-   Draft during the no-service package check.
+   Draft during the no-service package check. For Codex, stage the same candidate and run
+   `script/check-codex-plugin-install.mjs --codex <absolute-executable> --plugin-root <staged-candidate>`.
+   CI pins one Codex version; separately reconcile the actual Drawing Board and desktop versions.
 5. Require hosted CI at the exact candidate head. The Node 24.18.0 job must include the prospective release-order
    rehearsal. If any registry, tag, catalog, or candidate identity changes afterward, repeat the relevant read-only
    checks at the exact candidate.
@@ -80,17 +76,19 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-The current 0.2.1 candidate requires two human-observed, two-turn approval smokes before publication, each in its own
+The 0.2.2 candidate requires two human-observed, two-turn approval smokes before publication, each in its own
 fresh continuing agent session:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
 - Direct output pairs `precompile-drawing-board-read-back` with
   `compile-prepared-drawing-board-application`.
 
-Both pairs passed for the exact published package in the
-[September 10 record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md). The
-[August 30 record](evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md) covers an earlier unpublished digest and
-does not qualify later packaged Skill bytes.
+Also run the [shared client qualification](evals/README.md#shared-client-qualification) for the new Codex surface.
+Keep fixture-based agent behavior separate from real Compiler and hosted-journey evidence.
+
+The [September 10 record](evidence/2026-09-10-claude-plugin-0.2.1-publication.md) qualifies published 0.2.1 only.
+The 0.2.2 controlled-service pairs remain outstanding; neither that record nor earlier smokes qualify changed
+packaged Skill bytes.
 
 Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
 attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates
@@ -183,12 +181,14 @@ the approved named release sequence.
 3. Require the exact promotion head's Node 24.18.0 CI job and release-order rehearsal. Never use an administrative
    bypass for this gate.
 4. Merge only after the exact package and all selected pre-merge qualification gates pass.
-5. After merge, run the two public installation commands in fresh isolated Claude state and record the exact fetched
-   catalog commit, selected npm package, installed manifest, Skill declaration, inline install path, and bundled CLI:
+5. After merge, run each client's public install in fresh isolated state. Record the exact catalog commit, npm
+   package, installed manifest, Skill locator, and bundled CLI:
 
    ```sh
    claude plugin marketplace add firstdraft/skills
    claude plugin install firstdraft@firstdraft-skills
+   codex plugin marketplace add firstdraft/skills
+   codex plugin add firstdraft@firstdraft-skills
    ```
 
 A post-merge public install cannot be a circular pre-merge gate. Local validation, direct npm installation, package

@@ -903,8 +903,8 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.2.1",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.2.1");
-  assert.equal(installableManifest.version, "0.2.1");
+  assert.equal(packageTemplate.version, "0.2.2");
+  assert.equal(installableManifest.version, "0.2.2");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, [
     "./skills/create-full-stack-app",
@@ -3001,7 +3001,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
 });
 
-test("local capability check is shell-portable and uses the project wrapper", async () => {
+test("local capability check uses the shared helper for version and help probes", async () => {
   const skillSource = await readFile(
     path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
     "utf8",
@@ -3014,7 +3014,7 @@ test("local capability check is shell-portable and uses the project wrapper", as
 
   assert.match(
     capabilitySection[1],
-    /firstdraft_cli\(\) \{ if \[ -x \.\/bin\/firstdraft \]; then \.\/bin\/firstdraft "\$@"; else firstdraft "\$@"; fi; \}\nif \[ -x \.\/bin\/firstdraft \]; then command -v \.\/bin\/firstdraft; else command -v firstdraft; fi\nfirstdraft_cli --version\nfirstdraft_cli --help/,
+    /firstdraft_cli\(\) \{ sh "<skill-dir>\/scripts\/firstdraft\.sh" "\$@"; \}\nfirstdraft_cli --version\nfirstdraft_cli --help/,
   );
   assert.match(
     normalizedCapabilitySection,
@@ -3046,7 +3046,7 @@ test("local capability check is shell-portable and uses the project wrapper", as
     const normalizedBody = body.trimStart();
     assert.match(
       normalizedBody,
-      /^firstdraft_cli\(\) \{ if \[ -x \.\/bin\/firstdraft \]; then \.\/bin\/firstdraft "\$@"; else firstdraft "\$@"; fi; \}/,
+      /^firstdraft_cli\(\) \{ sh "<skill-dir>\/scripts\/firstdraft\.sh" "\$@"; \}/,
     );
     assert.doesNotMatch(normalizedBody, /^firstdraft (?:generate|plan|compilation)/m);
   }
@@ -3229,7 +3229,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   for (const fragment of [
-    "targets plugin 0.2.1, published CLI 0.2.2, and service contract 0.3",
+    "targets plugin 0.2.2, published CLI 0.2.2, and service contract 0.3",
     "compatibility requirements do not establish catalog selection",
     "required-enum",
     "Web Account",
@@ -3248,7 +3248,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.doesNotMatch(normalizedSkillEvidence, /Accounts[^.;]*remain (?:unavailable|unsupported)/i);
   assert.match(
     skillSource.replace(/\s+/g, " "),
-    /Recommend repair only after verifying the registry and catalog serve plugin 0\.2\.1 with CLI 0\.2\.2/,
+    /Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased/,
   );
   assert.match(
     skillSource,
@@ -4676,7 +4676,10 @@ async function checkSkill(skillName) {
   assert(!source.includes("TODO"));
 
   const files = await filesUnder(skillDirectory);
-  assert(!files.some((file) => file.includes(`${path.sep}scripts${path.sep}`)));
+  assert.deepEqual(
+    files.filter((file) => file.includes(`${path.sep}scripts${path.sep}`)),
+    [path.join(skillDirectory, "scripts", "firstdraft.sh")],
+  );
 
   for (const file of files) {
     const details = await stat(file);

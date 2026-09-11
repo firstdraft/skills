@@ -83,7 +83,7 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-The 0.2.1 release gate has two human-observed, two-turn approval smokes, each in its own fresh continuing agent
+Release qualification has two human-observed, two-turn approval smokes, each in its own fresh continuing agent
 session:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
@@ -145,3 +145,17 @@ credentials and private state contents from retained evidence.
 The two controls must remain the only `should_trigger: false` cases. Complete plans and JSON/JSONC fragments in the
 corpus are validated by repository checks; synthetic responses remain examples of the pinned contract, not evidence
 that a server produced them during an eval.
+
+## Shared client qualification
+
+Use the same cases and exact assembled package in Claude and Codex. Record each client's version and the actual
+model. For the Codex 0.2.2 candidate, exercise installed Skill discovery, bundled CLI use without a global
+`firstdraft`, project-wrapper precedence, local-only initialization, authentication pause/resume, the continuing
+two-turn direct-Compile pair, and both non-trigger controls. The automatic install check is model-free; running it
+does not execute these behavioral cases.
+
+A loopback fixture server can exercise the real packaged CLI and count requests without a live First Draft service.
+Retain that boundary: returned fixture artifacts are not real Compiler output, and an existing agent login does not
+prove fresh browser sign-in. Record unchanged Plan bytes, zero Compile starts before approval, exactly one after
+approval, and the final response. Treat fresh registry installation, the hosted Codespace journey, and first-time
+sign-in as separate observations. Keep the existing controlled-service release smokes required by `RELEASING.md`.

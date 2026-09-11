@@ -89,10 +89,12 @@ try {
 
   const expectedFiles = [
     ".claude-plugin/plugin.json",
+    ".codex-plugin/plugin.json",
     "LICENSE",
     "bin/firstdraft",
     "bin/firstdraft.js",
     "package.json",
+    "plugin.json",
     ...canonicalClaudePluginSkillFiles.map(
       (file) => `skills/create-full-stack-app/${file}`,
     ),
@@ -123,6 +125,26 @@ try {
     directory: path.join(temporaryDirectory, "fake-installation"),
     packages: [fakePlugin.tarball],
   });
+  const installedRoot = path.dirname(path.dirname(pluginExecutable(fakeInstallation)));
+  const installedClaude = readJson(path.join(installedRoot, ".claude-plugin", "plugin.json"));
+  const installedCodex = readJson(path.join(installedRoot, ".codex-plugin", "plugin.json"));
+  const installedPortable = readJson(path.join(installedRoot, "plugin.json"));
+  assert.equal(installedPortable.$schema, "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json");
+  for (const key of ["name", "version", "description", "author", "homepage", "repository", "license", "keywords"]) {
+    assert.deepEqual(installedCodex[key], installedClaude[key], `Codex ${key} must match Claude`);
+    assert.deepEqual(installedPortable[key], installedClaude[key], `portable ${key} must match Claude`);
+  }
+  assert.equal(installedCodex.skills, "./skills/");
+  assert.equal(installedCodex.interface.displayName, installedClaude.displayName);
+  assert.equal(installedCodex.apps, undefined);
+  assert.equal(installedCodex.mcpServers, undefined);
+  for (const file of canonicalClaudePluginSkillFiles) {
+    assert.deepEqual(
+      readFileSync(path.join(installedRoot, "skills", "create-full-stack-app", file)),
+      readFileSync(path.join(repository, "skills", "create-full-stack-app", file)),
+      `both clients must receive the canonical ${file}`,
+    );
+  }
   const canaryToken = `fd_${"a".repeat(43)}`;
   const execution = run(
     pluginExecutable(fakeInstallation),
@@ -199,7 +221,7 @@ try {
   rmSync(temporaryDirectory, {recursive: true, force: true});
 }
 
-process.stdout.write("Claude plugin package is deterministic and valid.\n");
+process.stdout.write("Shared Claude and Codex plugin package is deterministic and valid.\n");
 
 function createFakeCli(directory) {
   const source = path.join(directory, "fake-cli");

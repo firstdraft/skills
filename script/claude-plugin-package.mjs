@@ -45,10 +45,45 @@ export async function stageClaudePlugin(destination, cliRoot) {
       path.join(target, "package.json"),
     ),
   ]);
+  await stagePortableManifests(target);
   await stageCli(path.resolve(cliRoot), path.join(target, "vendor", "cli"));
   await chmod(path.join(target, "bin", "firstdraft.js"), 0o644);
   await chmod(path.join(target, "bin", "firstdraft"), 0o755);
   return target;
+}
+
+async function stagePortableManifests(target) {
+  const { $schema, displayName, skills, ...identity } = JSON.parse(
+    await readFile(path.join(target, ".claude-plugin", "plugin.json"), "utf8"),
+  );
+  const codexManifest = {
+    ...identity,
+    skills: "./skills/",
+    interface: {
+      displayName,
+      shortDescription: "Author and compile an application with First Draft",
+      longDescription: identity.description,
+      developerName: identity.author.name,
+      category: "Developer Tools",
+      capabilities: ["Read", "Write"],
+      websiteURL: identity.homepage,
+      defaultPrompt: ["Help me plan and build an app with First Draft."],
+    },
+  };
+  await mkdir(path.join(target, ".codex-plugin"), {recursive: true});
+  await Promise.all([
+    writeFile(
+      path.join(target, "plugin.json"),
+      `${JSON.stringify({
+        $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+        ...identity,
+      }, null, 2)}\n`,
+    ),
+    writeFile(
+      path.join(target, ".codex-plugin", "plugin.json"),
+      `${JSON.stringify(codexManifest, null, 2)}\n`,
+    ),
+  ]);
 }
 
 export async function packClaudePlugin(destination, cliRoot) {

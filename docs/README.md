@@ -8,7 +8,7 @@ historical observations intentionally have different owners.
 | Question | Authority |
 |---|---|
 | What package is the source candidate compatible with? | [`release/compatibility.json`](../release/compatibility.json) |
-| What does the public catalog select? | [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) |
+| What does the shared Claude/Codex catalog select? | [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) |
 | What is the current release procedure? | [`RELEASING.md`](../RELEASING.md) |
 | What does the agent execute? | [`SKILL.md`](../skills/create-full-stack-app/SKILL.md) |
 | What is exact Plan syntax? | [JSON Schema](../skills/create-full-stack-app/references/foundation-plan-0.19.schema.json) |

@@ -24,11 +24,11 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.2.1",
+    version: "0.2.2",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "e6fad4af8eaa64d33a4ff437ecbd5cf31ff85c2a09af147ceb1d960714c90dad",
+        "5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
@@ -135,7 +135,7 @@ test("current release docs route through structured identities", async () => {
   assert.match(releasing, /marketplace manifest owns public catalog selection/);
   assert.match(
     releasing,
-    /Registry, tag, environment, service, and hosted-CI state must be checked live/,
+    /Recheck registry, tags, environments, service, and hosted CI immediately before a mutation/,
   );
   assert.match(
     releasing,
@@ -402,7 +402,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   );
 
   const withCheckoutReleaseVersion = structuredClone(documents);
-  withCheckoutReleaseVersion.checkoutManifest.version = "0.2.1";
+  withCheckoutReleaseVersion.checkoutManifest.version = documents.compatibility.version;
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCheckoutReleaseVersion),
     /must not reuse the installable plugin release version/,
