@@ -10,6 +10,7 @@ historical observations intentionally have different owners.
 | What package is the source candidate compatible with? | [`release/compatibility.json`](../release/compatibility.json) |
 | What does the shared Claude/Codex catalog select? | [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) |
 | What is the current release procedure? | [`RELEASING.md`](../RELEASING.md) |
+| How does a Git tag promote npm defaults? | [npm promotion](npm-promotion.md) |
 | What does the agent execute? | [`SKILL.md`](../skills/create-full-stack-app/SKILL.md) |
 | What is exact Plan syntax? | [JSON Schema](../skills/create-full-stack-app/references/foundation-plan-0.19.schema.json) |
 | What capability is currently described? | [Foundation Plan reference](../skills/create-full-stack-app/references/foundation-plan-019.md) |
@@ -41,7 +42,7 @@ dated observation records an earlier value.
 |---|---|---|
 | Entry and routing | `README.md`, this page | Keep short; link rather than restate |
 | Always-loaded guardrails | `AGENTS.md` | Include only rules that prevent likely high-impact mistakes |
-| Current operator procedure | `RELEASING.md` | No completed chronology or historical shell transcripts |
+| Current operator procedure | `RELEASING.md` and its linked runbooks | No completed chronology or historical shell transcripts |
 | Packaged agent workflow | `skills/create-full-stack-app/` | Progressive disclosure; preserve exact safety boundaries |
 | Point-in-time evidence | `evidence/YYYY-MM-DD-*` | Append a new record; do not rewrite an old observation as current |
 | Historical narrative | `evidence/*-history.md` | Archive only; never treat as the current runbook |
