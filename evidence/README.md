@@ -27,6 +27,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-11-shared-plugin-0.2.2-default-promotion.md`](2026-09-11-shared-plugin-0.2.2-default-promotion.md) | Shared plugin 0.2.2 selected by `next`, `latest`, and the catalog, with unchanged qualified tarballs; [machine receipt](2026-09-11-shared-plugin-0.2.2-default-promotion.json) |
 | [`2026-08-07-cli-0.1.0-release.md`](2026-08-07-cli-0.1.0-release.md) | Protected CLI 0.1.0 publication and publication-time dist-tags |
 | [`2026-08-07-npm-trusted-publisher.md`](2026-08-07-npm-trusted-publisher.md) | npm trusted-publisher configuration only |
 | [`2026-08-09-claude-plugin-0.1.0-release.md`](2026-08-09-claude-plugin-0.1.0-release.md) | Protected plugin 0.1.0 publication, provenance, digest, and dist-tags |
