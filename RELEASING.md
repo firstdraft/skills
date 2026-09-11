@@ -12,7 +12,7 @@ This is the current policy and operator sequence for coordinated work across `fi
 | Packed SHA-256 | `5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.2` |
 | Public catalog | Plugin `0.2.2`, selected by `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.2` / `0.2.1` |
+| Plugin npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
@@ -23,7 +23,7 @@ marketplace manifest owns public catalog selection. Drawing Board's source-Skill
 [0.2.2 release receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) records the protected publication,
 controlled-service approval pairs, and final-package Codex cases. The
 [public-install receipt](evidence/2026-09-10-shared-plugin-0.2.2-public-install.md) records both clients.
-The approved plugin `latest` promotion awaits npm authentication.
+See the [default promotion](evidence/2026-09-11-shared-plugin-0.2.2-default-promotion.md).
 Recheck registry, tags, environments, service, and hosted CI immediately before a mutation.
 
 CLI 0.2.2's source contract includes current-root adoption with `--output .`.

@@ -1,0 +1,48 @@
+{
+  "observed_at": "2026-09-11T13:20:57.967Z",
+  "operator": "raghubetina",
+  "mutation": {
+    "package": "@firstdraft.com/claude-code",
+    "tag": "latest",
+    "previous": "0.2.1",
+    "selected": "0.2.2"
+  },
+  "packages": [
+    {
+      "name": "@firstdraft.com/claude-code",
+      "version": "0.2.2",
+      "dist_tags": {
+        "latest": "0.2.2",
+        "next": "0.2.2"
+      },
+      "versionless_metadata": "0.2.2",
+      "tarball": "https://registry.npmjs.org/@firstdraft.com/claude-code/-/claude-code-0.2.2.tgz",
+      "tarball_sha256": "5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef",
+      "integrity": "sha512-P7G80+a51l9ej+azezFsuRTjlfpmSCMgk4iKWkY7vv+NXszS2COTzevO3O9D5ixBEa1QC5Ld52H5fUXwT9IBYw==",
+      "bytes": 130227
+    },
+    {
+      "name": "@firstdraft.com/cli",
+      "version": "0.2.2",
+      "dist_tags": {
+        "latest": "0.2.2",
+        "next": "0.2.2"
+      },
+      "versionless_metadata": "0.2.2",
+      "tarball": "https://registry.npmjs.org/@firstdraft.com/cli/-/cli-0.2.2.tgz",
+      "tarball_sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+      "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg==",
+      "bytes": 72936
+    }
+  ],
+  "catalog": {
+    "commit": "1d2b7e21e29740dfc2d4aa327c84e30e5af4a89f",
+    "plugin_version": "0.2.2",
+    "source": {
+      "source": "npm",
+      "package": "@firstdraft.com/claude-code",
+      "version": "0.2.2",
+      "registry": "https://registry.npmjs.org/"
+    }
+  }
+}
