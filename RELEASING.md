@@ -202,17 +202,16 @@ before claiming update or auto-refresh behavior.
 
 Moving npm `latest` is an explicitly approved registry mutation after the exact package passes its release-specific
 qualification and the public catalog selects it. That approval may already be part of the named release sequence.
-One operator changes only the intended dist-tag, then reconciles package integrity, `next`, `latest`, and the catalog
-read-only.
+One operator uses the [protected-tag promotion workflow](docs/npm-promotion.md) to move the compatible CLI and plugin
+pair, then reconciles package integrity, `next`, `latest`, and the catalog read-only.
 
 Do not call a stable catalog-distributed release complete until the public catalog and both npm `next` and `latest`
 select the same exact qualified plugin version. The dist-tag move never authorizes new package bytes, service
 deployment, catalog editing, or another live qualification.
 
-GitHub OIDC publication needs no npm login, but `npm dist-tag` still requires ordinary authentication
-([npm's supported operations](https://docs.npmjs.com/trusted-publishers/#limitations-and-future-improvements)).
-Authenticate when ready for the tag changes; do not repeatedly start expiring logins during other checks. Future
-direct-to-`latest` publication would avoid this step, but requires a coordinated policy/workflow change.
+Publication keeps GitHub OIDC. Promotion uses a separate package-scoped stage-only token in the `npm-promotion`
+environment: npm authentication is needed to create or renew that token, not for each release. See the linked
+runbook for setup, exact tag creation, and recovery after a partial or ambiguous result.
 
 ## Breaking service transitions
 
