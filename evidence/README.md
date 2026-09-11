@@ -10,6 +10,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-10-shared-plugin-0.2.2-public-install.md`](2026-09-10-shared-plugin-0.2.2-public-install.md) | Fresh public installation in Claude and Codex from exact catalog 0.2.2; [machine receipt](2026-09-10-shared-plugin-0.2.2-public-install.json) |
 | [`2026-09-10-shared-plugin-0.2.2-release.md`](2026-09-10-shared-plugin-0.2.2-release.md) | Shared 0.2.2 exact-byte qualification, OIDC publication, and fresh registry installation |
 | [`2026-09-10-codex-onboarding.md`](2026-09-10-codex-onboarding.md) | Shared catalog installation, exact local Codex candidate, and bounded fixture-driven agent behavior |
 | [`2026-08-04-claude-code-plugin-install-smoke.md`](2026-08-04-claude-code-plugin-install-smoke.md) | Historical source-only local marketplace installation and isolation |

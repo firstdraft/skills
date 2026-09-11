@@ -21,8 +21,9 @@ This is the current policy and operator sequence for coordinated work across `fi
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate. The
 [0.2.2 release receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) records the protected publication,
-controlled-service approval pairs, and final-package Codex cases. Public catalog installation and `latest`
-promotion are subsequent observations, recorded after those steps succeed.
+controlled-service approval pairs, and final-package Codex cases. The
+[public-install receipt](evidence/2026-09-10-shared-plugin-0.2.2-public-install.md) records both clients.
+The approved plugin `latest` promotion awaits npm authentication.
 Recheck registry, tags, environments, service, and hosted CI immediately before a mutation.
 
 CLI 0.2.2's source contract includes current-root adoption with `--output .`.

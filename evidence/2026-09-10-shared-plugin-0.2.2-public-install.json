@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-09-11T04:54:10.340977+00:00",
+  "catalog_commit": "fb6c8e63105f1f139e6ae59f3958f9c98b44cd69",
+  "plugin_package": "@firstdraft.com/claude-code@0.2.2",
+  "plugin_tarball_sha256": "5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef",
+  "skill_source": "7920d06717d0f70a1d7afe1405a8754109f7d388",
+  "clients": [
+    {
+      "client": "2.1.267 (Claude Code)",
+      "plugin_enabled": true,
+      "plugin_version": "0.2.2",
+      "bundled_cli_version": "0.2.2",
+      "matching_canonical_files": 9,
+      "fresh_public_commands_passed": true,
+      "local_key_generation_passed": true
+    },
+    {
+      "client": "codex-cli 0.154.0",
+      "plugin_enabled": true,
+      "plugin_version": "0.2.2",
+      "bundled_cli_version": "0.2.2",
+      "matching_canonical_files": 9,
+      "fresh_public_commands_passed": true,
+      "local_key_generation_passed": true
+    }
+  ],
+  "npm_dist_tags_at_observation": {
+    "@firstdraft.com/claude-code": {
+      "next": "0.2.2",
+      "latest": "0.2.1"
+    },
+    "@firstdraft.com/cli": {
+      "latest": "0.2.2",
+      "next": "0.2.2"
+    }
+  },
+  "credentials_supplied": false,
+  "model_or_service_invoked": false,
+  "skill_md_sha256": "bf774411481abf525d85bf06b99b54e9702898e27512915467cc3d4f29010cbc"
+}
