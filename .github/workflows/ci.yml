@@ -50,3 +50,9 @@ jobs:
       - run: git -C tmp/firstdraft-cli checkout --detach 799a184cb2453ceadf5575f7b46ba975e084f192
       - run: node script/check-cli-contract.mjs tmp/firstdraft-cli
       - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli
+      - name: Check Codex installation and Skill discovery
+        if: matrix.node == '24.18.0'
+        run: |
+          npm install --prefix "$RUNNER_TEMP/codex" --ignore-scripts --no-audit --no-fund @openai/codex@0.154.0
+          node script/claude-plugin-package.mjs stage "$RUNNER_TEMP/firstdraft" --cli-root tmp/firstdraft-cli
+          node script/check-codex-plugin-install.mjs --codex "$RUNNER_TEMP/codex/node_modules/.bin/codex" --plugin-root "$RUNNER_TEMP/firstdraft"

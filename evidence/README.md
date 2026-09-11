@@ -10,6 +10,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-10-codex-onboarding.md`](2026-09-10-codex-onboarding.md) | Shared catalog installation, exact local Codex candidate, and bounded fixture-driven agent behavior |
 | [`2026-08-04-claude-code-plugin-install-smoke.md`](2026-08-04-claude-code-plugin-install-smoke.md) | Historical source-only local marketplace installation and isolation |
 | [`claude-code-plugin-install-observation.json`](claude-code-plugin-install-observation.json) | Machine-readable inventory behind that local observation |
 | [`2026-08-05-claude-plugin-vendored-cli-smoke.md`](2026-08-05-claude-plugin-vendored-cli-smoke.md) | Local npm-source plugin installation and vendored CLI discovery |

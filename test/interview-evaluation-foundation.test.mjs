@@ -241,11 +241,11 @@ test(
 
     assert.match(
       normalizedSkill,
-      /targets plugin 0\.2\.1, published CLI 0\.2\.2, and service contract 0\.3/,
+      /targets plugin 0\.2\.2, published CLI 0\.2\.2, and service contract 0\.3/,
     );
     assert.match(
       normalizedSkill,
-      /registry and catalog serve plugin 0\.2\.1 with CLI 0\.2\.2/,
+      /Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased/,
     );
     assert.match(
       normalizedSkill,

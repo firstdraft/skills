@@ -184,19 +184,15 @@ test("catalog reconciliation reads npm, fetched tags, and the catalog", async ()
     },
   });
 
-  assert.equal(result.candidateVersion, "0.2.1");
+  assert.equal(result.candidateVersion, "0.2.2");
   assert.deepEqual(result.catalogVersions, ["0.2.1"]);
   assert.deepEqual(result.taggedVersions, ["0.1.0-alpha.3", "0.1.0", "0.1.1", "0.2.0", "0.2.1"]);
-  assert.equal(result.releaseState, "catalog");
-  assert.equal(invocations.length, 3);
+  assert.equal(result.releaseState, "prospective");
+  assert.equal(invocations.length, 2);
   assert.deepEqual(invocations[1][1], [
     "for-each-ref",
     "--format=%(refname:strip=3)",
     "refs/release-check/tags/claude-v*",
-  ]);
-  assert.deepEqual(invocations[2][1], [
-    "show",
-    "refs/release-check/tags/claude-v0.2.1:release/compatibility.json",
   ]);
 });
 

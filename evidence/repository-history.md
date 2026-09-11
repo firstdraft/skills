@@ -282,8 +282,8 @@ the rejected transitive-dependency design, and successful bare-command discovery
 Cross-repository compatibility metadata and the approval-gated release process are documented in
 [`RELEASING.md`](../RELEASING.md).
 
-The portable Skill directories contain no executable code or runtime packages. The assembled Claude plugin adds
-only its CLI adapter and exact vendored CLI package. Repository checks use Node.js 22 or newer and one locked
+Before the September 2026 shared CLI launcher, portable Skill directories contained no executable code or runtime
+packages; the assembled Claude plugin added its CLI adapter and exact vendored CLI package. Repository checks use Node.js 22 or newer and one locked
 development dependency for exact JSON Schema validation:
 
 Repository checks require `git` on `PATH` and a real Git checkout with its index and working tree available. A source

@@ -9,6 +9,7 @@ export const canonicalClaudePluginSkillFiles = Object.freeze([
   "references/foundation-plan-0.19.schema.json",
   "references/foundation-plan-019.md",
   "references/modeling-guide.md",
+  "scripts/firstdraft.sh",
 ]);
 
 export const forbiddenCheckoutRootClaudePluginComponentPaths = Object.freeze([
@@ -36,7 +37,6 @@ export const forbiddenClaudePluginPathSegments = Object.freeze([
   "package-lock.json",
   "package.json",
   "script",
-  "scripts",
   "test",
 ]);
 
