@@ -95,10 +95,10 @@ return `valid`; that result is still only the Compilation gate, not proof that o
 }
 ```
 
-The selected native output is iPhone-only. Do not describe it as Android or iPad support. The target emits a selected
-iPhone client only with at least one admitted public-index Scaffold; without one, a valid analysis records an
-unrealized-client target gap. A domain with or without generated iOS configures only the Rails production mailer host;
-it does not prove DNS, deployment, Rails host authorization, or native identity. Web-only plans may use the same exact
+This example requests iPhone. Add `"android": {}` beside `"ios": {}` to request both, or replace the iOS member
+to request Android alone. Each client requires an admitted public-index Scaffold and lowerable identity; without
+those, a valid analysis records an unrealized-client target gap. iPad remains outside this boundary. Domain configures
+the native origin/identifier and Rails production mailer host; it does not provision DNS, TLS, or deployment. Web-only plans may use the same exact
 Scaffold with `native: {}` and may include or omit a domain. The admitted Scaffold makes Movie records readable on
 the web without authentication. Confirm that exposure with the user before adding it; do not add it merely to satisfy
 the iPhone navigation requirement or silently discard private or broader access intent.

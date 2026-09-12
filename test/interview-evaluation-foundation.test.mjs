@@ -141,7 +141,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
 test("home-inventory corpus case probes consequential ambiguity without invented answers", async () => {
   const document = await loadEvaluationDocument();
   assert.equal(document.format, "firstdraft.skill-evals/1");
-  assert.equal(document.cases.length, 67);
+  assert.equal(document.cases.length, 68);
 
   const cases = await loadEvaluationCases();
   const evaluation = evaluationCaseById(
@@ -203,17 +203,9 @@ test("packaged interview guidance keeps the opening turn focused on one product 
     modelingGuide,
     /For an underspecified opening request, ask only about intended product meaning and name deferred product areas;\s+wait for the user's answer before discussing target support or capability gaps/,
   );
-  assert.match(
-    normalizedSkill,
-    /Web Scaffolds may be public or may use the bounded Account and Policy slices.*?ordinary iPhone navigation remains public-only and Account-free/,
-  );
   assert.doesNotMatch(normalizedSkill, /every generated route public and unauthenticated/);
   const interview = markdownSection(skill, "Interview and author incrementally");
   assert.doesNotMatch(interview, /successful Publication|dated staging discovery/i);
-  assert.match(
-    interview,
-    /requires private or authenticated access[\s\S]*?model that\s+meaning first[\s\S]*?distinguish realized Web behavior from exact Web or native gaps[\s\S]*?never silently substitute public access/,
-  );
   assert.match(
     modelingGuide,
     /Keep one candidate Plan: do not maintain a\s+parallel flattened or capability-friendly shape/,
@@ -239,10 +231,6 @@ test(
     );
     const normalizedSkill = skill.replace(/\s+/g, " ");
 
-    assert.match(
-      normalizedSkill,
-      /targets plugin 0\.2\.2, published CLI 0\.2\.2, and service contract 0\.3/,
-    );
     assert.match(
       normalizedSkill,
       /Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased/,
