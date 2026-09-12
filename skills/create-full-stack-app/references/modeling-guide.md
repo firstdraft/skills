@@ -92,10 +92,11 @@ matter.
 
 Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
 order carries semantic rank rather than presentation order alone. The current Compiler emits required enum string
-storage and model inclusion. Any admitted required enum accepts a compatible in-domain literal-key default,
-regardless of whether its order is semantically ranked. It does not emit a Rails `enum`, database membership
-constraint, or general rank semantics; optional enums and unsupported consumers remain gaps. Preserve the product
-meaning and report the reviewed consequences rather than replacing an enum with a scalar.
+storage using Rails `enum` with inclusion and presence validation, with scopes and instance methods disabled.
+Compatible in-domain literal-key defaults work regardless of whether the order has semantic rank. Database
+membership constraints, general rank semantics, optional enums, and unsupported consumers remain gaps. Preserve
+product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-019.md#enums)
+owns the exact lowering.
 
 The current Compiler admits bounded integer-literal range comparisons, text length, positive short-text format,
 conditional text or ordinary-Reference presence and absence, and selected unconditional Entity uniqueness with a
@@ -145,8 +146,9 @@ and dependent consumers remain exact gaps. Read the Foundation Plan reference fo
 silently narrow a broader requested Scaffold or make it public merely to obtain a gap-free result.
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
-Compilation emits each with at least one admitted public navigation entry and a lowerable identity; otherwise the
-valid run records an unrealized-client target gap. Domain supplies a native HTTPS origin and platform identifier;
+Compilation emits each with at least one admitted public navigation entry and an identity that fits its
+[platform limits](foundation-plan-019.md#application-and-clients); otherwise the valid run records an unrealized-client
+target gap. Domain supplies a native HTTPS origin and platform identifier;
 it also configures the Rails production mailer host. It does not provision DNS, deployment, TLS, or mail delivery.
 Without a domain the native identifiers are explicit placeholders. Semantic icons inform Web, SF Symbol, and
 Material navigation. Public Rails detail and form links work within Hotwire Native; Web Account and Policy support

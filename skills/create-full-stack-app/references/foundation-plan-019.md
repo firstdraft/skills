@@ -56,8 +56,8 @@ deployed journey, and an older observation does not define current support.
 - Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
   State Machine, Appearance-theme/color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
   development-data, and selected-iPhone/Android slices. Their prerequisites matter: unsupported children and consumers
-  remain exact gaps rather than widening the supported shape. Emitted native clients retain one named partial gap
-  for their stock launcher icons.
+  remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
+  retain one named partial gap for their stock launcher icons.
 - Required enums emit string storage with ordinary Rails enum inclusion and presence validation in authored key order. Any admitted required enum accepts
   its compatible in-domain literal-key default. Optional enums,
   Rails-enum helper behavior, database membership constraints, general rank behavior, and broader enum consumers
@@ -79,6 +79,15 @@ deployed journey, and an older observation does not define current support.
   records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
   Rails, but its available device's WebView was too old for a clean preview. These observations do not establish a
   fresh student sign-in, native authentication, service deployment, or arbitrary application support.
+- The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
+  separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
+  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/architecture/targets/rails/capabilities/native.md)
+  owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
+  runtime observations do not qualify iPhone runtime behavior.
+- The Android receipt also records the required-enum presence correction and its generated schema-check failure.
+  The [model renderer](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/lib/foundation_plan/rails_target/compiler/renderers/model.rb)
+  emits `enum` with `validate: true`, `scopes: false`, `instance_methods: false`, and separate presence validation.
+  Those options disable predicate/bang helpers and enum scopes; do not infer them from the macro name.
 - A dated
   [staging discovery smoke](https://github.com/firstdraft/skills/blob/e0212cad0a89a8b0e38678e371389085f6ddc254/evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
   records one older OAuth/App-backed private-repository Publication at its named identities. It is not deployment
@@ -213,12 +222,21 @@ and appears as a service-support gap instead of being silently discarded. Develo
 record when its assignments and dependencies are realizable; unsupported assignments remain precise gaps rather
 than causing the whole development-data graph to disappear.
 
-The prepared Compiler uses an admitted `domain` as the generated Rails production mailer host, independently of
-native-client selection. That does not prove DNS, deployment, host authorization, TLS, sender identity, or email
-provider configuration. A selected iPhone or Android client is emitted with an admitted public Scaffold
-navigation entry. Public detail and form links work through Hotwire; Web Account and Policy support does not
-implement native sign-in, profile, or protected navigation. Confirm that public native navigation is intentional; otherwise preserve
-the requested access and review its exact support consequence.
+The prepared Compiler uses an admitted `domain` for the native HTTPS origin and reversed identifier prefix, and
+for the Rails production mailer host independently of native-client selection. It provisions no DNS, deployment,
+host authorization, TLS, sender identity, or email provider. A domain is optional: without one, native clients use
+an explicit `.invalid` origin and `invalid.firstdraft` identifier prefix.
+
+Each selected client is emitted only when it has an admitted public-index Scaffold and its generated identity
+fits platform rules. Structurally valid long names can exceed those rules: the application key must form one
+DNS-safe label of at most 63 ASCII bytes, and Android application IDs must fit 223 bytes after domain conversion.
+The [native target](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/architecture/targets/rails/capabilities/native.md)
+owns the full rules. A missing public entry or unusable identity omits that client and records
+`foundation_plan.gap.native_client.not_generated`; a missing domain alone does not. Preserve the user's requested
+clients and access rather than changing product meaning to avoid that gap.
+
+Public detail and form links use Hotwire; Web Account and Policy support does not implement native sign-in,
+profile, or protected navigation. Confirm that public native access is intentional.
 
 Appearance theme and colors are emitted for generated Rails shells and any emitted iPhone or Android shell. Rails also
 derives the adaptive SVG and deterministic PNG used by its favicon and PWA references. When native clients are emitted, their
@@ -317,10 +335,11 @@ UUID through renames, reordering, and coherent moves between enum Fields. An enu
 selected value's owner-local `key`, not its UUID. Update that literal in the same candidate when renaming the value,
 while preserving the value's UUID.
 
-The current Compiler emits a required enum as a non-null string column with ordinary model inclusion over stable
-value keys in authored order. It admits the exact compatible in-domain literal-key default for any admitted required
-enum. It does not emit a
-native PostgreSQL enum, database `CHECK`, helper API, label mapping, or general rank semantics. Optional
+The current Compiler emits a required enum as a non-null string column and a Rails `enum` mapping stable keys to
+themselves in authored order. `validate: true` supplies inclusion; a separate presence declaration handles requiredness.
+`scopes: false` and `instance_methods: false` disable enum scopes and predicate/bang methods. Compatible in-domain
+literal-key defaults work. The Compiler does not emit a native PostgreSQL enum, database `CHECK`, helper API,
+label mapping, or general rank semantics. Optional
 enums and unsupported defaults or consumers remain precise gaps. Preserve the enum and report only the reviewed
 consequences rather than assuming either blanket support or blanket failure.
 

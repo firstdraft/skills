@@ -1,10 +1,10 @@
 {
   "observed_on": "2026-09-12",
-  "boundary": "unpublished exact-package advisory qualification",
+  "boundary": "revised unpublished exact-package advisory qualification",
   "package": {
     "name": "@firstdraft.com/claude-code",
     "version": "0.2.3",
-    "sha256": "ce52fec65d165f81c21c42c77222ab54f54ddafe9b3f737d1e4e7356c0222ef5"
+    "sha256": "0c882463c407f95f472527f6ff3f378edafe872a68121d78d0d9ca872faa11cc"
   },
   "cli": {
     "version": "0.2.2",
@@ -12,21 +12,17 @@
   },
   "service": {
     "integration": "fe11462d42ee1848fe7dde0ec0dbc75fa040ee32",
-    "packaged_reference": "89a2d6866f9448f4e75b58cac26f61c52daaa0b0",
-    "delta": [
-      "script/compiler_case_chat_runtime_smoke",
-      "script/compiler_photogram_runtime_smoke"
-    ]
+    "packaged_reference": "89a2d6866f9448f4e75b58cac26f61c52daaa0b0"
   },
   "canonical_skill_files": {
     "skills/create-full-stack-app/LICENSE.txt": "76e6c24352bbf1faebee87707bf069d5c5dddbab827b8308e9def44589ed58b0",
-    "skills/create-full-stack-app/SKILL.md": "dd23961ba36240b38290debd97cfeaacb4888ce81d14c42e0afc5da07f7854be",
+    "skills/create-full-stack-app/SKILL.md": "348205ab6cf98f4aa175d2653ff5c6da774ebd89b7f7b6092e3143ca001587dd",
     "skills/create-full-stack-app/agents/openai.yaml": "a8c7fdd2a8cfdebec754d77071fc0354ff44e00a5fdd299e3c1c1780b858108f",
     "skills/create-full-stack-app/references/diagnostics-and-recovery.md": "d40ba993fa76fedcaf63d882c67f8bcdbe9e64b63db484fb74688dd60eb1a661",
-    "skills/create-full-stack-app/references/examples.md": "fc06bb97026c86cd87056c61d5f5b56814699a22bc855c62031c9d0f3429365d",
+    "skills/create-full-stack-app/references/examples.md": "7195123fe99e8c9c2539a47e8f3246c1db95c3cc0951782659b52ac824fbf080",
     "skills/create-full-stack-app/references/foundation-plan-0.19.schema.json": "19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e",
-    "skills/create-full-stack-app/references/foundation-plan-019.md": "a45e35c632555d6dbc99e8bca91043ebb8e15a42e902a800d3c98cf00240afbe",
-    "skills/create-full-stack-app/references/modeling-guide.md": "9c30325c1876d2e900fc97f0650a147da15598e1b804ed462e19ca497417d60f",
+    "skills/create-full-stack-app/references/foundation-plan-019.md": "6520c8c2147f4b344fdc718ab404b0774dc7e8b5077cce269d884861ac649b93",
+    "skills/create-full-stack-app/references/modeling-guide.md": "c4aa535f598a7ff851327e51273e47e673644178d3755a9367b3dadf55152905",
     "skills/create-full-stack-app/scripts/firstdraft.sh": "2866e4e101dd4ba58446ccbb1f212a4ea7025782ede737091683dbced3b0c26e"
   },
   "clients": {
@@ -45,12 +41,12 @@
       "case": "android-preview-respects-provider-limit",
       "result": "passed",
       "input_sha256": {
-        "ANDROID_PREVIEW.md": "db9fb3a2b0098abe06e03e0767ac16c512c5e0e062aecec251311b8e1b712904"
+        "ANDROID_PREVIEW.md": "9ce9f9394e8167e5f5271fda14aaea49dcda46c43348dcdb57d909e242e08423"
       },
       "prompt_sha256": "2ded6ec6ae195c6fb8d7ab83fa8a600c6279dec043b41d4a9d9e10546fb7b900",
-      "response_sha256": "b0508ca92e8358c37d3739cb9f159902cb533937db25d04d494e74bc1b3dad30",
+      "response_sha256": "0e7e0d268c9bf44d667ef884c46a00bed055f83c162e761e22d1a4e11d1d0748",
       "transcript_file": "transcript.jsonl",
-      "transcript_sha256": "c64a059a54dba6471c5c68dfb7f11e7561b4c368727c4818b4cd669e92cd23a8",
+      "transcript_sha256": "a9fbcd51c01b9e1e0deed98cf6dcf36b14761796f6b307d38abcd5322040b7b2",
       "inputs_unchanged": true,
       "external_mutations": false
     },
@@ -63,9 +59,9 @@
         ".firstdraft/state.json": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
       },
       "prompt_sha256": "4a7e077268ba484b5fed096c3c0eb4c25cfe45c7d91bc22d57fc46477430d6d8",
-      "response_sha256": "5ba447085f306af7842553545c55d8bd92daf7eb239ab40428d8b77173a7529a",
+      "response_sha256": "c3ad31eb43b1f2282519a4f1eefd98843ff062f3d1360f6de332e38ab236e640",
       "transcript_file": "transcript.jsonl",
-      "transcript_sha256": "0f22534245ddac1c1debb554e9d22bdecc78a423cab55df333fd25ceeebdb156",
+      "transcript_sha256": "e564eee382a00e0e0715d595e6e77f58c8bad97a1efa8f91a8904a3ba4e4f679",
       "inputs_unchanged": true,
       "external_mutations": false,
       "private_state_contents_read": false
@@ -75,12 +71,12 @@
       "case": "android-preview-respects-provider-limit",
       "result": "passed",
       "input_sha256": {
-        "ANDROID_PREVIEW.md": "db9fb3a2b0098abe06e03e0767ac16c512c5e0e062aecec251311b8e1b712904"
+        "ANDROID_PREVIEW.md": "9ce9f9394e8167e5f5271fda14aaea49dcda46c43348dcdb57d909e242e08423"
       },
       "prompt_sha256": "2ded6ec6ae195c6fb8d7ab83fa8a600c6279dec043b41d4a9d9e10546fb7b900",
-      "response_sha256": "1d2f6e9d09d472bdedbf3319b747be2bdf9bdf2f625b2a0b5759ee3022ba536f",
+      "response_sha256": "421c6696931ec8b16b228dfa64d979ec3835cc9214b7011e6fef9856dc63ed97",
       "transcript_file": "stderr.log",
-      "transcript_sha256": "beaf5012082519167d0114a0362ec6cef4d41f9c5539ed374f9998e915100f81",
+      "transcript_sha256": "d8cac2f13e318e97f5f208c0bc44aec313515e686c1f662c057399c29f4f6c83",
       "inputs_unchanged": true,
       "external_mutations": false,
       "public_web_reads": true
@@ -94,38 +90,25 @@
         ".firstdraft/state.json": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
       },
       "prompt_sha256": "4a7e077268ba484b5fed096c3c0eb4c25cfe45c7d91bc22d57fc46477430d6d8",
-      "response_sha256": "dff8794c869b289fa505a41b7322ec8aa4bf0c4a9834c6ed73e0af25605a7ae1",
+      "response_sha256": "8ea9644249badd54b209cbd47828696cc60411bb5a665f8f33ceffe43a700507",
       "transcript_file": "stderr.log",
-      "transcript_sha256": "81d71dfa6d713e50b53e443f13933a6f54fafc57d0df7ee831ba441fa79f1ec6",
+      "transcript_sha256": "08dd397fab664db33a5c87345c1bcb7bcae7fb4232ca1ea18f63f521e1bb0dcb",
       "inputs_unchanged": true,
       "external_mutations": false,
       "private_state_contents_read": false
     }
   ],
-  "raw_artifact_root": "tools/skill-behavior-0.2.3-intent in the retained task workspace",
-  "superseded_failure": {
-    "package_sha256": "ada80bd5665c115889e7e2170e199b15a6c3734bd2c921e575cbeab472749c40",
-    "client": "claude",
-    "case": "private-native-request-preserves-current-boundary",
-    "finding": "recommended dropping requested native clients to avoid gaps",
-    "response_sha256": "b465799ed321715e3461473a099d873fb6ee681b5471b8d80fa190cc9576745a",
-    "transcript_sha256": "e88dc6bdbb2d4bfff709d00f8b8cf8060006a0687a565ed8d6c2e21f97f8a86e"
+  "approval_section_parity": {
+    "## Read back and approve the candidate before Compile": {
+      "sha256": "73b51eeecd2db1a34de4a57c9edd383194de3a7e86031d3c3311e829ac9f2a80",
+      "bytes": 2213,
+      "equal_to_source": "74f8343c5144ea3a5bcb7745a0d8b36f67e38018"
+    },
+    "## Request the selected Compile journey": {
+      "sha256": "06fdb6afbe65c6041e4c9b7a03cae401a296fff8f0deab3f181d9d8d41dd6354",
+      "bytes": 1458,
+      "equal_to_source": "74f8343c5144ea3a5bcb7745a0d8b36f67e38018"
+    }
   },
-  "fixture_reconciliation": {
-    "path": "evals/create-full-stack-app/fixtures/android-preview-instructions.md",
-    "change": "Two generated android/README.md Markdown links became plain code paths; instructions and commands unchanged.",
-    "current_sha256": "9ce9f9394e8167e5f5271fda14aaea49dcda46c43348dcdb57d909e242e08423"
-  },
-  "packaging_umask_fix": {
-    "restrictive_umask": "077",
-    "before_sha256": "063345fa914efadc506883c2df462da38e9a3b7ed12d8681d9cf9452ec25e46a",
-    "changed_modes": [
-      "package/.codex-plugin/plugin.json",
-      "package/plugin.json"
-    ],
-    "before_mode": "0600",
-    "canonical_mode": "0644",
-    "file_contents_identical": true,
-    "after_sha256": "ce52fec65d165f81c21c42c77222ab54f54ddafe9b3f737d1e4e7356c0222ef5"
-  }
+  "raw_artifact_root": "tools/skill-behavior-0.2.3-reviewed in the retained task workspace"
 }

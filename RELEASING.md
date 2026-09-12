@@ -1,14 +1,14 @@
 # Releasing First Draft Skills
 
-This runbook coordinates `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
-[Completed history](evidence/release-history.md) is not the operator sequence.
+Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
+[History](evidence/release-history.md) is separate.
 
 ## Current identities
 
 | Surface | Current identity |
 |---|---|
 | Source candidate | `@firstdraft.com/claude-code@0.2.3` (unpublished) |
-| Packed SHA-256 | `ce52fec65d165f81c21c42c77222ab54f54ddafe9b3f737d1e4e7356c0222ef5` |
+| Packed SHA-256 | `0c882463c407f95f472527f6ff3f378edafe872a68121d78d0d9ca872faa11cc` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.2` |
 | Public catalog | Plugin `0.2.2`, selected by `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.2` / `0.2.2` |
@@ -22,7 +22,7 @@ marketplace manifest owns public catalog selection. Drawing Board's source-Skill
 [0.2.2 release receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) records the protected publication,
 controlled-service approval pairs, and final-package Codex cases. The
 [public-install receipt](evidence/2026-09-10-shared-plugin-0.2.2-public-install.md) records both clients.
-[Default promotion receipt](evidence/2026-09-11-shared-plugin-0.2.2-default-promotion.md). Recheck live state before mutations.
+[Promotion](evidence/2026-09-11-shared-plugin-0.2.2-default-promotion.md). Recheck before mutations.
 
 ## Authorization boundaries
 
@@ -77,7 +77,8 @@ syntax; do not add compatibility aliases.
 For 0.2.3, run `private-native-request-preserves-current-boundary` and
 `android-preview-respects-provider-limit` in Claude and Codex against the same packed bytes, plus both install
 adapters and the CLI contract check. Bind results to the package digest and service Android receipt. Keep the Revyl
-WebView blocker visible. Approval and Publication mechanics are unchanged; their 0.2.2 gates below are historical.
+WebView blocker visible. The unchanged approval/Publication sections do not require repeating the 0.2.2 service
+smokes for this release; the procedure below is historical.
 
 The 0.2.2 qualification used two human-observed approval smokes in separate continuing sessions:
 

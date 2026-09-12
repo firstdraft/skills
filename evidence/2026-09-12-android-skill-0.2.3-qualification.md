@@ -36,6 +36,13 @@ Codex 0.154.0 matches Drawing Board's pin. The model cases used Claude Code 2.1.
 this is not model-behavior evidence for that older Claude version. Drawing Board's built-container pin smoke and
 post-promotion public installation remain separate checks. No global client installation or login was changed.
 
+The cross-repository check exposed a packaging defect under its restrictive `077` umask: the two generated portable
+manifests had mode `0600` instead of `0644`, yielding tarball
+`063345fa914efadc506883c2df462da38e9a3b7ed12d8681d9cf9452ec25e46a`. Every file's content matched the qualified
+package; only those two archive modes differed. The packer now sets both modes explicitly, and the package check
+compares ordinary and restrictive umasks. Both reproduce the original qualified digest, so this correction changes
+no installed Skill, CLI, manifest content, or artifact identity.
+
 ## Advisory model cases
 
 Each case used the unpacked tarball above in a fresh local workspace. Claude used inline plugin discovery and

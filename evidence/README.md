@@ -10,6 +10,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-12-android-skill-0.2.3-final-qualification.md`](2026-09-12-android-skill-0.2.3-final-qualification.md) | Revised exact package, native reference reconciliation, deterministic permissions, and four fresh advisory cases; [machine receipt](2026-09-12-android-skill-0.2.3-final-qualification.json) |
 | [`2026-09-12-android-skill-0.2.3-qualification.md`](2026-09-12-android-skill-0.2.3-qualification.md) | Exact unpublished Android Skill candidate, client adapters, and four advisory model cases; [machine receipt](2026-09-12-android-skill-0.2.3-qualification.json) |
 | [`2026-09-10-shared-plugin-0.2.2-public-install.md`](2026-09-10-shared-plugin-0.2.2-public-install.md) | Fresh public installation in Claude and Codex from exact catalog 0.2.2; [machine receipt](2026-09-10-shared-plugin-0.2.2-public-install.json) |
 | [`2026-09-10-shared-plugin-0.2.2-release.md`](2026-09-10-shared-plugin-0.2.2-release.md) | Shared 0.2.2 exact-byte qualification, OIDC publication, and fresh registry installation |

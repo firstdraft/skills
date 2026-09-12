@@ -84,6 +84,10 @@ async function stagePortableManifests(target) {
       `${JSON.stringify(codexManifest, null, 2)}\n`,
     ),
   ]);
+  await Promise.all([
+    chmod(path.join(target, "plugin.json"), 0o644),
+    chmod(path.join(target, ".codex-plugin", "plugin.json"), 0o644),
+  ]);
 }
 
 export async function packClaudePlugin(destination, cliRoot) {

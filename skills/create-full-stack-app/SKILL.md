@@ -14,13 +14,13 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 This workflow targets plugin 0.2.3, published CLI 0.2.2, and service contract 0.3. These compatibility requirements
 do not establish catalog selection.
 
-Current Compiler coverage is narrow:
+Bounded Compiler coverage:
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
   Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone/Android slices. Rails emits
   authored theme/colors and derived favicon/PWA icons; emitted native launcher icons stay stock.
-- Required enums use Rails `enum` with inclusion and presence validation and compatible literal defaults; helper
-  methods, database membership constraints, and general rank behavior remain unsupported.
+- Required enums use Rails `enum` with inclusion and presence; scopes and instance methods are disabled.
+  Compatible literal defaults work; database membership constraints and general rank behavior remain unsupported.
 - Bounded Account/Policy protects Web Scaffolds. Each native client requires one admitted public index, stays Account- and
   Policy-free, and does not inherit Web privacy.
 - Preserve unsupported requests and report gaps; do not propose dropping clients or weakening access to obtain `valid`.
@@ -144,7 +144,7 @@ before discussing target support unless feasibility was requested. Later, state 
 precisely: Web Scaffolds may be public or may use the bounded Account and Policy slices, while ordinary iPhone and Android
 navigation remains public-only and Account-free. If the user requires private or authenticated access, model that
 meaning first and use whole-graph analysis to distinguish realized Web behavior from exact Web or native gaps.
-Keep requested clients in the Plan even when private navigation remains ungenerated.
+Keep private access and requested clients in the Plan even when native behavior remains ungenerated.
 
 Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
 incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails
