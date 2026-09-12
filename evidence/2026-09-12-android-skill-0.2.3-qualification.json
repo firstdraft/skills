@@ -110,5 +110,10 @@
     "finding": "recommended dropping requested native clients to avoid gaps",
     "response_sha256": "b465799ed321715e3461473a099d873fb6ee681b5471b8d80fa190cc9576745a",
     "transcript_sha256": "e88dc6bdbb2d4bfff709d00f8b8cf8060006a0687a565ed8d6c2e21f97f8a86e"
+  },
+  "fixture_reconciliation": {
+    "path": "evals/create-full-stack-app/fixtures/android-preview-instructions.md",
+    "change": "Two generated android/README.md Markdown links became plain code paths; instructions and commands unchanged.",
+    "current_sha256": "9ce9f9394e8167e5f5271fda14aaea49dcda46c43348dcdb57d909e242e08423"
   }
 }

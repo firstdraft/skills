@@ -59,6 +59,10 @@ Both explained the WebView blocker, web/local-emulator alternatives, explicit de
 and the absence of a guaranteed recurring free allowance. Neither proposed Google Play sign-in or lowering the
 WebView requirement to complete the trial.
 
+The standalone eval fixture now renders the two `android/README.md` references as plain code paths: that generated
+file is not bundled with this advisory fixture. The observed input digest retains the original Markdown links.
+Only link markup changed; its instructions, commands, and preview prerequisites remain identical.
+
 ## Correction found during qualification
 
 An earlier unpublished package, SHA-256 `ada80bd5665c115889e7e2170e199b15a6c3734bd2c921e575cbeab472749c40`,

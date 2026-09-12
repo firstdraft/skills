@@ -14,7 +14,7 @@ Check `revyl device targets --platform android` for available images. If the app
 WebView, stop the device with `bin/android preview revyl stop` and continue in the web preview.
 Use a compatible image when available; do not weaken the WebView requirement or sign into Google Play
 just to complete this trial. A local emulator with a current WebView works; see
-[`android/README.md`](android/README.md).
+`android/README.md`.
 
 ## First preview on a compatible device
 
@@ -99,4 +99,4 @@ A collaborator using another Revyl account may need to remove the saved `app_id`
 For a build made elsewhere, use `--artifact PATH/Example.apk --manifest PATH/manifest.json`.
 An explicit artifact must match the checkout's current commit and pass the manifest's digest and platform
 checks. The regular command handles reuse automatically. Local build instructions remain in
-[`android/README.md`](android/README.md). Revyl previews an Android Emulator build; this does not install an app on a phone.
+`android/README.md`. Revyl previews an Android Emulator build; this does not install an app on a phone.
