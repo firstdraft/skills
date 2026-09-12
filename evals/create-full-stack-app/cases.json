@@ -259,14 +259,14 @@
       ]
     },
     {
-      "id": "private-ios-request-preserves-current-boundary",
+      "id": "private-native-request-preserves-current-boundary",
       "should_trigger": true,
-      "prompt": "Review how the staged Movies Plan should represent an iPhone client plus index, show, create, update, and delete screens when Movie records must remain private to signed-in staff. Keep this local and do not edit or push it yet.",
+      "prompt": "Review how the staged Movies Plan should represent iPhone and Android clients plus index, show, create, update, and delete screens when Movie records must remain private to signed-in staff. Keep this local and do not edit or push it yet.",
       "expectations": [
         "Recognizes that bounded Web Accounts, Policies, and protected Scaffolds are current target capabilities, so private signed-in Web intent is not automatically a blanket Account gap.",
-        "Explains that ordinary generated iPhone output remains Account- and Policy-free, requires admitted public navigation, and remains index-only; protected Web CRUD does not become protected native detail or mutation screens.",
+        "Explains that ordinary iPhone and Android output uses public entry points and public detail/forms; Web Accounts and Policies do not establish native sign-in, session restoration, or protected navigation.",
         "Preserves private staff access and every requested screen as product meaning, then uses whole-graph analysis to distinguish any realized protected Web slice from exact native or unsupported-consumer gaps.",
-        "Does not silently add a public index, present Web CRUD as native screens, narrow the requested screens, discard private access, or decline the requested iPhone client merely to fit current support.",
+        "Does not silently add a public index, present protected Web CRUD as working native screens, narrow the requested screens, discard private access, or decline either requested native client merely to fit current support.",
         "Preserves the complete staged Plan and every existing subject_uuid unchanged during this review.",
         "Leaves .firstdraft/state.json unopened and unchanged, and does not run plan init, generate uuid, plan push, plan status, or plan compile."
       ],
@@ -1305,6 +1305,26 @@
       "prompt": "Analyze this CSV of support tickets and write a summary of the most common themes.",
       "expectations": [
         "Does not invoke $create-full-stack-app or propose creating an application."
+      ]
+    },
+    {
+      "id": "android-preview-respects-provider-limit",
+      "should_trigger": true,
+      "prompt": "I have compiled my Android app in Codespaces. Read ANDROID_PREVIEW.md and explain the next step to preview it in Revyl from my browser. I use a free account. Explain where the APK is built, which account allowance each stage uses, and how saving to a private repository the first time differs from later pushes. Keep this advisory: do not install anything, sign in, start a device, or change files.",
+      "expectations": [
+        "Reads the emitted preview guide before recommending commands.",
+        "Explains the current WebView 113 versus required 120 blocker and does not promise that the available Revyl image provides a clean preview.",
+        "Recommends the web preview or a compatible local emulator until a compatible provider image is available; does not lower WebView requirements or suggest Google Play sign-in as part of this trial.",
+        "Distinguishes GitHub Linux APK builds from Revyl device usage and remote build compute; does not promise a recurring free allowance.",
+        "Explains that the compiled baseline needs its own private origin before GitHub builds and that an existing origin uses ordinary commit and push.",
+        "Does not invoke First Draft or Revyl, install software, authenticate, create a repository, start a device, or modify the staged files."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/android-preview-instructions.md",
+          "role": "input",
+          "stage_as": "ANDROID_PREVIEW.md"
+        }
       ]
     }
   ]

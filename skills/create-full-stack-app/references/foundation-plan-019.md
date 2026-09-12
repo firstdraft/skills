@@ -42,11 +42,11 @@ deployed journey, and an older observation does not define current support.
 **Current design and machine authority**
 
 - The bundled JSON Schema owns v0.19 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/cc72dad5b26b887f3f21496b568b80678ceac47f/docs/architecture/targets/rails/profile.md)
-  owns current lowering at Service revision `cc72dad5b26b887f3f21496b568b80678ceac47f`.
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/architecture/targets/rails/profile.md)
+  owns current lowering at Service revision `89a2d6866f9448f4e75b58cac26f61c52daaa0b0`.
 - The current analyzer release is
-  `foundation-plan-rails/application-2026-08-28-reviewed-realization`; the matching Compiler release is
-  `foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization`.
+  `foundation-plan-rails/application-2026-09-05-alpha-scaffold-handoff`; the matching Compiler release is
+  `foundation-plan-rails/compiler-application-2026-09-12-android-preview`.
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
@@ -55,30 +55,39 @@ deployed journey, and an older observation does not define current support.
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
   State Machine, Appearance-theme/color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
-  development-data, and selected-iPhone slices. Their prerequisites matter: unsupported children and consumers
-  remain exact gaps rather than widening the supported shape. An emitted iOS client retains one named partial gap
-  for its stock AppIcon.
-- Required enums emit string storage and model inclusion in authored key order. Any admitted required enum accepts
+  development-data, and selected-iPhone/Android slices. Their prerequisites matter: unsupported children and consumers
+  remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
+  retain one named partial gap for their stock launcher icons.
+- Required enums emit string storage with ordinary Rails enum inclusion and presence validation in authored key order. Any admitted required enum accepts
   its compatible in-domain literal-key default. Optional enums,
   Rails-enum helper behavior, database membership constraints, general rank behavior, and broader enum consumers
   remain unsupported.
 - Web Account realization requires the exact email/password/self-service registration, verification, recovery,
   lockout, Account-self, and Field-only input topology described below. Bounded Account-backed Policies and protected
-  Web Scaffolds are supported. Ordinary iPhone output remains Account- and Policy-free and consumes public-only
+  Web Scaffolds are supported. Ordinary iPhone and Android output remains Account- and Policy-free and consumes public-only
   navigation; protected Web support does not imply protected native behavior.
-- There is no Plan GET or pull operation, arbitrary application generation, deployment workflow, Android or iPad
+- There is no Plan GET or pull operation, arbitrary application generation, deployment workflow, iPad
   output, or complete support for the Foundation Plan vocabulary. Preserve intended meaning and let the reviewed
   GapSet name the current delta.
 
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/cc72dad5b26b887f3f21496b568b80678ceac47f/docs/evidence/status.md)
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/evidence/status.md)
   distinguishes implemented, exercised, generated-output, hosted, and observed claims. Its
-  [current reviewed-realization qualification](https://github.com/firstdraft/firstdraft/blob/cc72dad5b26b887f3f21496b568b80678ceac47f/docs/solutions/2026-08-28-reviewed-realization-local-qualification.md)
-  binds the current release identities, the exact Oscar 40 / Case Chat 4 / Photogram 36 GapSets, generated runtime,
-  and separately identified hosted checks. It does not establish current browser or device use, Service deployment,
-  or arbitrary application support.
+  [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
+  records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
+  Rails, but its available device's WebView was too old for a clean preview. These observations do not establish a
+  fresh student sign-in, native authentication, service deployment, or arbitrary application support.
+- The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
+  separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
+  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/architecture/targets/rails/capabilities/native.md)
+  owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
+  runtime observations do not qualify iPhone runtime behavior.
+- The Android receipt also records the required-enum presence correction and its generated schema-check failure.
+  The [model renderer](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/lib/foundation_plan/rails_target/compiler/renderers/model.rb)
+  emits `enum` with `validate: true`, `scopes: false`, `instance_methods: false`, and separate presence validation.
+  Those options disable predicate/bang helpers and enum scopes; do not infer them from the macro name.
 - A dated
   [staging discovery smoke](https://github.com/firstdraft/skills/blob/e0212cad0a89a8b0e38678e371389085f6ddc254/evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
   records one older OAuth/App-backed private-repository Publication at its named identities. It is not deployment
@@ -89,8 +98,8 @@ deployed journey, and an older observation does not define current support.
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`cc72dad5b26b887f3f21496b568b80678ceac47f` and has SHA-256
-`50deea0624322a08191f235b2b7955a35f7d4e3186eea494ea6ea6bbad7865c1`. This is exact contract provenance, not
+`89a2d6866f9448f4e75b58cac26f61c52daaa0b0` and has SHA-256
+`19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e`. This is exact contract provenance, not
 release or execution evidence.
 
 The current fixtures and check use reviewed root-output CLI revision
@@ -105,12 +114,19 @@ published under npm `next` with exact source-package parity. Check commands rath
 a version number. CLI availability does not prove plugin/catalog publication, authentication, staging compatibility,
 or a complete user journey.
 
-The selected iPhone project composes `firstdraft/foundation-ios-core` revision
-`aa2ac902fa52abab51a4502953b7b962f949a21d`, archive SHA-256
-`0807e76cf02296af27d4eb1aae68e298beef162a7daa8a3da55d83e88ab6d748`. The archive excludes `.github` and is
-materialized beneath `ios/`, including executable `ios/bin/ios`. This package is an iPhone baseline, not iPad
-support. The pins alone are prepared provenance; the dated field report provides bounded execution evidence for one
-composed output.
+Selected native projects compose separate pinned Cores under `ios/` and `android/`. Each emitted
+`FOUNDATION_PROVENANCE.json` records the exact revision, archive digest, and replaced application seams. Use the
+Service's native evidence record for exercised versions; pins alone do not establish device behavior.
+Public native navigation stays Account-free. Android uses up to five tabs, or four plus a More list when there are
+more destinations. Generated `IOS_PREVIEW.md` and `ANDROID_PREVIEW.md` own Revyl setup and the current commands.
+Publish the useful compiled baseline to a private GitHub repository first; GitHub builds the iPhone Simulator
+artifact on a Mac runner and the standalone debug Android APK on an Ubuntu runner. Most Rails edits need only a
+refresh. Native changes require a new artifact. Stop Revyl explicitly and restore the Codespace port to Private
+when finished. Revyl preview does not install an app on a phone or publish it to a store.
+Android requires System WebView 120 or newer. The September 12 Revyl image had 113, and its Update button required
+Google Play sign-in. Until a compatible image is available, continue with the web preview or a local emulator;
+do not promise a clean Android Revyl journey, weaken the version requirement, or ask students to spend more device
+usage retrying that image. The emitted guide explains this prerequisite before its device-start instructions.
 
 ## Closed envelope
 
@@ -206,22 +222,31 @@ and appears as a service-support gap instead of being silently discarded. Develo
 record when its assignments and dependencies are realizable; unsupported assignments remain precise gaps rather
 than causing the whole development-data graph to disappear.
 
-The prepared Compiler uses an admitted `domain` as the generated Rails production mailer host, independently of
-native-client selection. That does not prove DNS, deployment, host authorization, TLS, sender identity, or email
-provider configuration. A selected iPhone client is emitted only with at least one admitted public Scaffold
-navigation entry. Richer Web Scaffold routes, Account behavior, and Policy decisions do not add native detail,
-mutation, profile, or protected navigation. Confirm that public native navigation is intentional; otherwise preserve
-the requested access and review its exact support consequence.
+The prepared Compiler uses an admitted `domain` for the native HTTPS origin and reversed identifier prefix, and
+for the Rails production mailer host independently of native-client selection. It provisions no DNS, deployment,
+host authorization, TLS, sender identity, or email provider. A domain is optional: without one, native clients use
+an explicit `.invalid` origin and `invalid.firstdraft` identifier prefix.
 
-Appearance theme and colors are emitted for generated Rails shells and any emitted selected iOS shell. Rails also
-derives the adaptive SVG and deterministic PNG used by its favicon and PWA references. When iOS is emitted, its
-stock AppIcon remains the sole reason for the precise
+Each selected client is emitted only when it has an admitted public-index Scaffold and its generated identity
+fits platform rules. Structurally valid long names can exceed those rules: the application key must form one
+DNS-safe label of at most 63 ASCII bytes, and Android application IDs must fit 223 bytes after domain conversion.
+The [native target](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/architecture/targets/rails/capabilities/native.md)
+owns the full rules. A missing public entry or unusable identity omits that client and records
+`foundation_plan.gap.native_client.not_generated`; a missing domain alone does not. Preserve the user's requested
+clients and access rather than changing product meaning to avoid that gap.
+
+Public detail and form links use Hotwire; Web Account and Policy support does not implement native sign-in,
+profile, or protected navigation. Confirm that public native access is intentional.
+
+Appearance theme and colors are emitted for generated Rails shells and any emitted iPhone or Android shell. Rails also
+derives the adaptive SVG and deterministic PNG used by its favicon and PWA references. When native clients are emitted, their
+stock launcher icons are the reason for the precise
 `foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Web-only output has no Appearance
-icon-assets gap. Android and other admitted but unconsumed Application configuration remain target gaps.
+icon-assets gap. Other admitted but unconsumed Application configuration remains a target gap.
 
 The prepared Compilation emits admitted public and bounded Account/Policy-controlled Web surfaces and, when the
-public-navigation prerequisite is met, an owned iPhone project beneath `ios/`; this is not general generated resource
-UI, protected native behavior, Android, or iPad support.
+public-navigation prerequisite is met, selected owned iPhone and Android projects beneath `ios/` and `android/`.
+Native authenticated sessions, push, and iPad remain outside the public boundary.
 
 `entities` may contain any number of closed Entity objects. The schema owns their exact optional families, including
 `account`, `fields`, `references`, `associations`, `predicates`, `orderings`, `validations`, `trees`, `policies`,
@@ -310,10 +335,11 @@ UUID through renames, reordering, and coherent moves between enum Fields. An enu
 selected value's owner-local `key`, not its UUID. Update that literal in the same candidate when renaming the value,
 while preserving the value's UUID.
 
-The current Compiler emits a required enum as a non-null string column with ordinary model inclusion over stable
-value keys in authored order. It admits the exact compatible in-domain literal-key default for any admitted required
-enum. It does not emit a
-Rails `enum`, native PostgreSQL enum, database `CHECK`, helper API, label mapping, or general rank semantics. Optional
+The current Compiler emits a required enum as a non-null string column and a Rails `enum` mapping stable keys to
+themselves in authored order. `validate: true` supplies inclusion; a separate presence declaration handles requiredness.
+`scopes: false` and `instance_methods: false` disable enum scopes and predicate/bang methods. Compatible in-domain
+literal-key defaults work. The Compiler does not emit a native PostgreSQL enum, database `CHECK`, helper API,
+label mapping, or general rank semantics. Optional
 enums and unsupported defaults or consumers remain precise gaps. Preserve the enum and report only the reviewed
 consequences rather than assuming either blanket support or blanket failure.
 
@@ -412,12 +438,12 @@ and every dependent Scaffold or projection remains an exact child gap. Do not in
 or that all Scaffolds are public; inspect the whole matching GapSet.
 
 The
-[pinned current Service qualification](https://github.com/firstdraft/firstdraft/blob/cc72dad5b26b887f3f21496b568b80678ceac47f/docs/solutions/2026-08-28-reviewed-realization-local-qualification.md)
+[dated reviewed-realization qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-08-28-reviewed-realization-local-qualification.md)
 records a Case Chat result with all 14 authored Policies and their admitted protected Web consumers and no Policy or
 dependent Scaffold gap. That reviewed application is one exact supported graph, not a general claim that arbitrary
 Policy expressions or protected consumers are realized.
 
-The Account Entity may own the bounded Web-only `profile` surface resolved from `current_account`. Ordinary iPhone
+The Account Entity may own the bounded Web-only `profile` surface resolved from `current_account`. Ordinary iPhone and Android
 output stays Account- and Policy-free, omits profile and protected Web navigation, and records the applicable native
 consequence instead of borrowing Web authorization.
 
@@ -444,8 +470,8 @@ During pre-alpha, generated Rails may also contain conventional unclaimed scaffo
 starter code is neither authored meaning nor proof that unsupported consequences work. Preserve the Plan and report
 the reviewed gaps instead of changing requiredness, access, or workflows to match incidental output.
 
-Only public indexes feed ordinary iPhone navigation. Web profile, protected navigation, detail, and mutation
-surfaces do not become native screens.
+Only public indexes become native entry points. Public detail and form pages remain reachable through links, with
+new and edit forms presented in native sheets. Web profile and protected navigation do not become native screens.
 
 ### Unsupported shapes
 

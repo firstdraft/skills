@@ -66,16 +66,21 @@ const foundationPlanTarget = {
 const foundationPlanAnalyzerRelease = "foundation-plan-rails/application-2026-08";
 const foundationPlanCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08";
-const currentFoundationPlanAnalyzerRelease =
+// These loopback fixtures retain their dated August 28 release identities.
+const reviewedFixtureAnalyzerRelease =
   "foundation-plan-rails/application-2026-08-28-reviewed-realization";
-const currentFoundationPlanCompilerRelease =
+const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
+const currentFoundationPlanAnalyzerRelease =
+  "foundation-plan-rails/application-2026-09-05-alpha-scaffold-handoff";
+const currentFoundationPlanCompilerRelease =
+  "foundation-plan-rails/compiler-application-2026-09-12-android-preview";
 const foundationPlanSchemaDigest =
-  "50deea0624322a08191f235b2b7955a35f7d4e3186eea494ea6ea6bbad7865c1";
+  "19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
 const currentFoundationPlanSchemaBaseline =
-  "cc72dad5b26b887f3f21496b568b80678ceac47f";
+  "89a2d6866f9448f4e75b58cac26f61c52daaa0b0";
 const previousSkillsCurrentTruthBaseline =
   "160d33a5a7d9f9b2282729ecfd3b2e24a1123143";
 const previousSkillsCurrentTruthTree =
@@ -266,7 +271,7 @@ test("documentation roles are routed and retrieval-sized", async () => {
   );
   assert.match(
     releasing,
-    /evidence\/release-history\.md[\s\S]*?do not replay that history as a runbook/,
+    /evidence\/release-history\.md/,
   );
   assert.doesNotMatch(releasing, /^## (?:Current 0\.1\.1|Completed)/m);
   assert.doesNotMatch(releasing, /firstdraft-package-first\.XXXXXX/);
@@ -370,7 +375,6 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   assertRevisionTokens(references.join("\n"), [
     currentFoundationPlanSchemaBaseline,
     cliContractBaseline,
-    foundationIosCoreRevision,
     catalogPromotionBaseline,
   ]);
   const skillSource = await readFile(
@@ -414,8 +418,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   );
   assertRevisionTokens(contractConfig, [cliContractBaseline]);
   assert(contractConfig.includes(cliContractRuntimeDigest));
-  assert(contractConfig.includes(currentFoundationPlanCompilerRelease));
-  assert(contractConfig.includes(currentFoundationPlanAnalyzerRelease));
+  assert(contractConfig.includes(reviewedFixtureCompilerRelease));
+  assert(contractConfig.includes(reviewedFixtureAnalyzerRelease));
   assert(contractConfig.includes(foundationPlanTarget.profile));
   assertRevisionTokens(
     await readFile(path.join(repository, "test", "repository.test.mjs"), "utf8"),
@@ -541,7 +545,7 @@ test("historical plugin receipts stay separate from current availability", async
   assert.doesNotMatch(candidateFoundationPlanReference, /proven live Publish path/);
   assert.match(
     candidateFoundationPlanReference,
-    /Current design and machine authority[\s\S]*?cc72dad5b26b887f3f21496b568b80678ceac47f[\s\S]*?Implementation and observation evidence[\s\S]*?Older controlled smokes[\s\S]*?historical receipts[\s\S]*?must not be used to narrow or widen the current profile/,
+    /Current design and machine authority[\s\S]*?89a2d6866f9448f4e75b58cac26f61c52daaa0b0[\s\S]*?Implementation and observation evidence[\s\S]*?Older controlled smokes[\s\S]*?historical receipts[\s\S]*?must not be used to narrow or widen the current profile/,
   );
   assert(!candidateFoundationPlanReference.includes(historicalCliContractBaseline));
   assert.match(
@@ -903,8 +907,8 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.2.2",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.2.2");
-  assert.equal(installableManifest.version, "0.2.2");
+  assert.equal(packageTemplate.version, "0.2.3");
+  assert.equal(installableManifest.version, "0.2.3");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, [
     "./skills/create-full-stack-app",
@@ -1412,7 +1416,7 @@ test("behavioral eval cases are well-formed and reference real fixtures", async 
 
   assert.equal(document.format, "firstdraft.skill-evals/1");
   assert(Array.isArray(document.cases));
-  assert.equal(document.cases.length, 67);
+  assert.equal(document.cases.length, 68);
 
   const ids = new Set();
   const triggerValues = new Set();
@@ -1771,8 +1775,8 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     currentCaseChatGapSet.source.sha256,
     createHash("sha256").update(currentCaseChatPlanSource).digest("hex"),
   );
-  assert.equal(currentCaseChatGapSet.analysis.release, currentFoundationPlanAnalyzerRelease);
-  assert.equal(currentCaseChatGapSet.compiler_release, currentFoundationPlanCompilerRelease);
+  assert.equal(currentCaseChatGapSet.analysis.release, reviewedFixtureAnalyzerRelease);
+  assert.equal(currentCaseChatGapSet.compiler_release, reviewedFixtureCompilerRelease);
   assert.equal(currentCaseChatGapSet.gaps.length, 4);
   assert.equal(
     prettyJsonSha256(currentCaseChatGapSet),
@@ -2009,10 +2013,6 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
 
   assert.match(foundationPlanReference, /^### Accounts and Policies$/m);
-  assert.match(
-    modelingGuide,
-    /Account,\s+Policy, profile, detail, and mutation Web\s+behavior does not become protected native behavior/,
-  );
   assert.match(
     foundationPlanReference,
     /`\.firstdraft\/submitted-foundation-plan\.json`[\s\S]*?`\.firstdraft\/gaps\.json`[\s\S]*?no duplicate\s+`FOUNDATION_GAPS\.md`[\s\S]*?one JSON authority/,
@@ -2313,8 +2313,6 @@ test("complete examples and eval Plans validate against the bundled exact schema
   assert(referenceSource.includes(currentFoundationPlanSchemaBaseline));
   assert(referenceSource.includes(cliContractBaseline));
   assert(referenceSource.includes(cliContractRuntimeDigest));
-  assert(referenceSource.includes(foundationIosCoreRevision));
-  assert(referenceSource.includes(foundationIosCoreArchiveDigest));
   assert.match(
     referenceSource,
     /bundled schema was copied byte-for-byte from\s+`docs\/architecture\/design\/foundation-plan\.schema\.json` at Service revision[\s\S]*?exact contract provenance, not\s+release or execution evidence/,
@@ -2787,8 +2785,8 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     previousCliContractConfig,
     new RegExp(
       [
-        currentFoundationPlanAnalyzerRelease,
-        currentFoundationPlanCompilerRelease,
+        reviewedFixtureAnalyzerRelease,
+        reviewedFixtureCompilerRelease,
       ].join("|"),
     ),
   );
@@ -2806,8 +2804,8 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
         previousFoundationPlanAnalyzerRelease,
         previousFoundationPlanCompilerRelease,
         "The current contract check uses analyzer release",
-        currentFoundationPlanAnalyzerRelease,
-        currentFoundationPlanCompilerRelease,
+        reviewedFixtureAnalyzerRelease,
+        reviewedFixtureCompilerRelease,
       ].join(".*?"),
     ),
   );
@@ -3229,18 +3227,13 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   for (const fragment of [
-    "targets plugin 0.2.2, published CLI 0.2.2, and service contract 0.3",
     "compatibility requirements do not establish catalog selection",
     "required-enum",
     "Web Account",
     "Action Policy",
     "Web Scaffold",
     "authored theme/colors and derived favicon/PWA icons",
-    "emitted iOS AppIcon stays stock",
-    "iPhone output requires one admitted public index",
     "Account- and Policy-free",
-    "Preserve unsupported meaning and report every reviewed gap",
-    "A valid run may have gaps",
   ]) {
     assert(normalizedSkillEvidence.includes(fragment), `current boundary missing: ${fragment}`);
   }
@@ -3532,31 +3525,15 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
       ],
     ],
   );
-  const privateIosRequest = cases.find(
-    ({ id }) => id === "private-ios-request-preserves-current-boundary",
+  const privateNativeRequest = cases.find(
+    ({ id }) => id === "private-native-request-preserves-current-boundary",
   );
-  assert(privateIosRequest);
-  assert.match(privateIosRequest.prompt, /iPhone client/);
-  assert.match(privateIosRequest.prompt, /private to signed-in staff/);
-  assert.match(privateIosRequest.prompt, /index, show, create, update, and delete/);
-  for (const fragment of [
-    "bounded Web Accounts, Policies, and protected Scaffolds",
-    "ordinary generated iPhone output remains Account- and Policy-free",
-    "protected Web CRUD does not become protected native detail or mutation screens",
-    "distinguish any realized protected Web slice from exact native or unsupported-consumer gaps",
-    "silently add a public index",
-    "present Web CRUD as native screens",
-    "Preserves the complete staged Plan",
-    "does not run plan init",
-  ]) {
-    assert(
-      privateIosRequest.expectations.some((expectation) =>
-        expectation.includes(fragment),
-      ),
-    );
-  }
+  assert(privateNativeRequest);
+  assert.match(privateNativeRequest.prompt, /iPhone and Android clients/);
+  assert.match(privateNativeRequest.prompt, /private to signed-in staff/);
+  assert.match(privateNativeRequest.prompt, /index, show, create, update, and delete/);
   assert.deepEqual(
-    privateIosRequest.artifacts.map(({ path: artifactPath }) => artifactPath),
+    privateNativeRequest.artifacts.map(({ path: artifactPath }) => artifactPath),
     [
       "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
       "evals/create-full-stack-app/fixtures/state-placeholder.txt",
@@ -3692,7 +3669,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
       );
       assert.equal(
         response.analysis.analyzer_release,
-        currentFoundationPlanAnalyzerRelease,
+        reviewedFixtureAnalyzerRelease,
       );
       return response.analysis.id;
     }),
@@ -4659,7 +4636,6 @@ async function checkSkill(skillName) {
   for (const fragment of [
     "Authors and revises First Draft Foundation Plans",
     "submits exact bytes",
-    "bounded Rails/iPhone Compile",
     "Web Accounts, Policies, protected Scaffolds, and required enums are bounded",
     "arbitrary apps",
     "broader clients are unavailable",

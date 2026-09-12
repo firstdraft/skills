@@ -92,10 +92,11 @@ matter.
 
 Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
 order carries semantic rank rather than presentation order alone. The current Compiler emits required enum string
-storage and model inclusion. Any admitted required enum accepts a compatible in-domain literal-key default,
-regardless of whether its order is semantically ranked. It does not emit a Rails `enum`, database membership
-constraint, or general rank semantics; optional enums and unsupported consumers remain gaps. Preserve the product
-meaning and report the reviewed consequences rather than replacing an enum with a scalar.
+storage using Rails `enum` with inclusion and presence validation, with scopes and instance methods disabled.
+Compatible in-domain literal-key defaults work regardless of whether the order has semantic rank. Database
+membership constraints, general rank semantics, optional enums, and unsupported consumers remain gaps. Preserve
+product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-019.md#enums)
+owns the exact lowering.
 
 The current Compiler admits bounded integer-literal range comparisons, text length, positive short-text format,
 conditional text or ordinary-Reference presence and absence, and selected unconditional Entity uniqueness with a
@@ -144,17 +145,22 @@ Web Account/Policy slice can protect supported surfaces and provide a Web-only A
 and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
 silently narrow a broader requested Scaffold or make it public merely to obtain a gap-free result.
 
-Select `native.ios` only when the user wants the bounded owned iPhone project. Ordinary public Compilation emits it
-only with at least one admitted public navigation entry; otherwise the valid run records an unrealized-client target
-gap. Application `domain` independently configures the generated Rails production mailer host; it does not configure
-DNS, deployment, Rails host authorization, or native identity. An Entity's optional semantic `icon` informs shared
-Web and iPhone navigation, with a target fallback when omitted. Account, Policy, profile, detail, and mutation Web
-behavior does not become protected native behavior. Confirm that public native navigation is intentional; otherwise
-preserve the requested access and review the resulting support gap.
-Do not add a public index merely to obtain a gap-free result, and do not silently decline the requested iPhone
-client. Appearance theme, colors, and the Rails Web icon pair are generated; an emitted iOS client retains a partial
-gap solely for its stock AppIcon. Nonempty delivery, Android, broader Account/Policy shapes, and broader clients
-remain unsupported or incomplete. Requirements without a
+Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
+Compilation emits each with at least one admitted public navigation entry and an identity that fits its
+[platform limits](foundation-plan-019.md#application-and-clients); otherwise the valid run records an unrealized-client
+target gap. Domain supplies a native HTTPS origin and platform identifier;
+it also configures the Rails production mailer host. It does not provision DNS, deployment, TLS, or mail delivery.
+Without a domain the native identifiers are explicit placeholders. Semantic icons inform Web, SF Symbol, and
+Material navigation. Public Rails detail and form links work within Hotwire Native; Web Account and Policy support
+does not establish native authentication or protected navigation. Confirm public access is intentional; preserve
+private requirements and requested clients, then review the support gap. Do not recommend removing a requested
+client to quiet gaps, or adding public indexes to satisfy native prerequisites. The user may change product scope;
+target support alone is not that decision.
+Appearance theme, colors, and Web icons are generated; emitted native launcher icons remain stock. Android shows
+one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, follow the
+emitted platform preview guide. GitHub builds iPhone artifacts on Mac runners and Android APKs on Linux runners;
+Revyl runs the preview, while ordinary Rails iteration stays in the web browser.
+Nonempty delivery, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
 v0.19 shape, including notification trigger/template definitions, deployment, and iPad, remain in the decision ledger
 and semantic read-back as currently unplannable rather than being invented as Plan JSON or promised a GapSet record.
 The authored `delivery` channel block itself remains in the Plan and receives its expected service-support gap.

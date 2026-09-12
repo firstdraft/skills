@@ -1,6 +1,6 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Authors and revises First Draft Foundation Plans, submits exact bytes, and requests bounded Rails/iPhone Compile. Preserves identity, state, and provenance. Web Accounts, Policies, protected Scaffolds, and required enums are bounded; arbitrary apps, deployment, Android, iPad, notifications, and broader clients are unavailable."
+description: "Experimental and in development: Authors and revises First Draft Foundation Plans, submits exact bytes, and requests bounded Rails/iPhone/Android Compile. Preserves identity, state, and provenance. Web Accounts, Policies, protected Scaffolds, and required enums are bounded; arbitrary apps, deployment, iPad, notifications, and broader clients are unavailable."
 license: "MIT"
 ---
 
@@ -11,20 +11,20 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-This workflow targets plugin 0.2.2, published CLI 0.2.2, and service contract 0.3. These compatibility requirements
+This workflow targets plugin 0.2.3, published CLI 0.2.2, and service contract 0.3. These compatibility requirements
 do not establish catalog selection.
 
-Current Compiler coverage is narrow:
+Bounded Compiler coverage:
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
-  Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone slices. Rails emits
-  authored theme/colors and derived favicon/PWA icons; an emitted iOS AppIcon stays stock.
-- Required enums emit string storage, inclusion, and compatible literal defaults; Rails `enum`, database membership,
-  and rank behavior remain unsupported.
-- Bounded Account/Policy protects Web Scaffolds. iPhone output requires one admitted public index, stays Account- and
+  Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone/Android slices. Rails emits
+  authored theme/colors and derived favicon/PWA icons; emitted native launcher icons stay stock.
+- Required enums use Rails `enum` with inclusion and presence; scopes and instance methods are disabled.
+  Compatible literal defaults work; database membership constraints and general rank behavior remain unsupported.
+- Bounded Account/Policy protects Web Scaffolds. Each native client requires one admitted public index, stays Account- and
   Policy-free, and does not inherit Web privacy.
-- Preserve unsupported meaning and report every reviewed gap; never weaken it for `valid`. A valid run may have gaps;
-  artifacts retain the submitted Plan and GapSet.
+- Preserve unsupported requests and report gaps; do not propose dropping clients or weakening access to obtain `valid`.
+  Artifacts retain the submitted Plan and GapSet.
 
 Read the [current evidence and target boundary](references/foundation-plan-019.md#current-evidence-boundary) before
 making a support claim.
@@ -141,10 +141,10 @@ quantity, or both with distinct meaning. Alternatives are proposals, not answers
 
 For an underspecified opening request, ask only about product meaning and deferred areas. Wait for the user's reply
 before discussing target support unless feasibility was requested. Later, state the current access boundary
-precisely: Web Scaffolds may be public or may use the bounded Account and Policy slices, while ordinary iPhone
+precisely: Web Scaffolds may be public or may use the bounded Account and Policy slices, while ordinary iPhone and Android
 navigation remains public-only and Account-free. If the user requires private or authenticated access, model that
-meaning first and use whole-graph analysis to distinguish realized Web behavior from exact Web or native gaps;
-never silently substitute public access.
+meaning first and use whole-graph analysis to distinguish realized Web behavior from exact Web or native gaps.
+Keep private access and requested clients in the Plan even when native behavior remains ungenerated.
 
 Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
 incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails

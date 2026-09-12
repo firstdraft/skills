@@ -1,15 +1,14 @@
 # Releasing First Draft Skills
 
-This is the current policy and operator sequence for coordinated work across `firstdraft/firstdraft`,
-`firstdraft/cli`, and `firstdraft/skills`. Completed 0.1.0 and 0.1.1 chronology is retained in
-[`evidence/release-history.md`](evidence/release-history.md); do not replay that history as a runbook.
+Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
+[History](evidence/release-history.md) is separate.
 
 ## Current identities
 
 | Surface | Current identity |
 |---|---|
-| Source package | `@firstdraft.com/claude-code@0.2.2` |
-| Packed SHA-256 | `5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef` |
+| Source candidate | `@firstdraft.com/claude-code@0.2.3` (unpublished) |
+| Packed SHA-256 | `0c882463c407f95f472527f6ff3f378edafe872a68121d78d0d9ca872faa11cc` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.2` |
 | Public catalog | Plugin `0.2.2`, selected by `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.2` / `0.2.2` |
@@ -23,10 +22,7 @@ marketplace manifest owns public catalog selection. Drawing Board's source-Skill
 [0.2.2 release receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) records the protected publication,
 controlled-service approval pairs, and final-package Codex cases. The
 [public-install receipt](evidence/2026-09-10-shared-plugin-0.2.2-public-install.md) records both clients.
-See the [default promotion](evidence/2026-09-11-shared-plugin-0.2.2-default-promotion.md).
-Recheck registry, tags, environments, service, and hosted CI immediately before a mutation.
-
-CLI 0.2.2's source contract includes current-root adoption with `--output .`.
+[Promotion](evidence/2026-09-11-shared-plugin-0.2.2-default-promotion.md). Recheck before mutations.
 
 ## Authorization boundaries
 
@@ -78,8 +74,13 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-The 0.2.2 qualification requires two human-observed, two-turn approval smokes before publication, each in its own
-fresh continuing agent session:
+For 0.2.3, run `private-native-request-preserves-current-boundary` and
+`android-preview-respects-provider-limit` in Claude and Codex against the same packed bytes, plus both install
+adapters and the CLI contract check. Bind results to the package digest and service Android receipt. Keep the Revyl
+WebView blocker visible. The unchanged approval/Publication sections do not require repeating the 0.2.2 service
+smokes for this release; the procedure below is historical.
+
+The 0.2.2 qualification used two human-observed approval smokes in separate continuing sessions:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
 - Direct output pairs `precompile-drawing-board-read-back` with
@@ -88,13 +89,12 @@ fresh continuing agent session:
 Also run the [shared client qualification](evals/README.md#shared-client-qualification) for the new Codex surface.
 Keep fixture-based agent behavior separate from real Compiler and hosted-journey evidence.
 
-The [0.2.2 release record](evidence/2026-09-10-shared-plugin-0.2.2-release.md) binds the completed gates to this
-package. Earlier records do not qualify changed Skill bytes.
+The [0.2.2 record](evidence/2026-09-10-shared-plugin-0.2.2-release.md) binds those gates to its package, not changed bytes.
 
 Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
 attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates
 against its attached complete GapSet, never a fixture, history, or another Project. The Appearance record says
-derived Web icons are generated and only the emitted iOS AppIcon remains stock.
+derived Web icons are generated and emitted native launcher icons remain stock.
 
 For each pair:
 

@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "firstdraft",
   "displayName": "First Draft",
-  "version": "0.2.2",
-  "description": "Author a Foundation Plan with your user and compile a bounded Rails and iPhone application",
+  "version": "0.2.3",
+  "description": "Author a Foundation Plan with your user and compile a bounded Rails, iPhone, and Android application",
   "author": {
     "name": "First Draft",
     "url": "https://github.com/firstdraft"

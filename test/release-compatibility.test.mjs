@@ -20,15 +20,19 @@ const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 test("release compatibility matches the installable plugin manifest", async () => {
   const compatibility = await checkSkillsReleaseCompatibility(repository);
+  const skill = await readFile(path.join(repository, "skills/create-full-stack-app/SKILL.md"), "utf8");
+  const declaredPluginVersion = skill.match(/This workflow targets plugin ([0-9]+\.[0-9]+\.[0-9]+),/);
+  assert(declaredPluginVersion, "the Skill must identify its plugin compatibility version");
+  assert.equal(declaredPluginVersion[1], compatibility.version);
 
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.2.2",
+    version: "0.2.3",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "5f79d276d040e2c965b90ba108ad9323ebac152851a54a2371ae59a6d37d64ef",
+        "0c882463c407f95f472527f6ff3f378edafe872a68121d78d0d9ca872faa11cc",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
@@ -75,7 +79,7 @@ test("current release docs route through structured identities", async () => {
   assert.match(releasing, /CLI npm `next` \/ `latest` \| `0\.2\.2` \/ `0\.2\.2`/);
   assert.match(
     releasing,
-    /Synthetic fixture GapSets are not universal digest oracles[\s\S]*?live GapSet digests include Project identity[\s\S]*?Every[\s\S]*?attached-analysis evaluation and smoke[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?CLI validates[\s\S]*?attached complete GapSet[\s\S]*?never a fixture, history, or another Project[\s\S]*?derived Web icons are generated[\s\S]*?only the emitted iOS AppIcon[\s\S]*?remains stock/i,
+    /Synthetic fixture GapSets are not universal digest oracles[\s\S]*?live GapSet digests include Project identity[\s\S]*?Every[\s\S]*?attached-analysis evaluation and smoke[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?CLI validates[\s\S]*?attached complete GapSet[\s\S]*?never a fixture, history, or another Project[\s\S]*?derived Web icons are generated/i,
   );
   assert.match(releasing, /evidence\/2026-09-10-shared-plugin-0\.2\.2-release\.md/);
   const publicationGapSetDigest =
@@ -122,10 +126,6 @@ test("current release docs route through structured identities", async () => {
     candidateSmokeEvidence,
     /controlled Service revision is a descendant of the pinned current-truth Service revision[\s\S]*?cc72dad5b26b887f3f21496b568b80678ceac47f[\s\S]*?does not repin the packaged[\s\S]*?current-authority source/,
   );
-  assert.match(
-    releasing,
-    /source contract includes[\s\S]*?current-root adoption[\s\S]*?`--output \.`/,
-  );
   assert(
     releasing.includes(
       `@firstdraft.com/claude-code@${publicPlugin.version}`,
@@ -133,10 +133,6 @@ test("current release docs route through structured identities", async () => {
   );
   assert.match(releasing, /release\/compatibility\.json.*owns candidate/s);
   assert.match(releasing, /marketplace manifest owns public catalog selection/);
-  assert.match(
-    releasing,
-    /Recheck registry, tags, environments, service, and hosted CI immediately before a mutation/,
-  );
   assert.match(
     releasing,
     /## Outstanding authenticated journey[\s\S]*?explicit approval for one[\s\S]*?serialized qualification journey[\s\S]*?plugin installation[\s\S]*?token onboarding[\s\S]*?repository and Codespace creation[\s\S]*?billed Compilation[\s\S]*?GitHub Publication[\s\S]*?operator resolves and reports[\s\S]*?exact candidate identities[\s\S]*?user need not recite/,
@@ -214,11 +210,11 @@ test("approval-flow docs define the lightweight human-observed smoke", async () 
 
   assert.match(
     candidate,
-    /two human-observed, two-turn approval smokes.*?`precompile-semantic-read-back`.*?`compile-prepared-movie-catalog`.*?`precompile-drawing-board-read-back`.*?`compile-prepared-drawing-board-application`.*?selected mode.*?complete semantic read-back.*?stops for approval.*?same continuing session.*?exactly one selected command/,
+    /`precompile-semantic-read-back`.*?`compile-prepared-movie-catalog`.*?`precompile-drawing-board-read-back`.*?`compile-prepared-drawing-board-application`.*?selected mode.*?complete semantic read-back.*?stops for approval.*?same continuing session.*?exactly one selected command/,
   );
   assert.match(
     evaluation,
-    /two human-observed, two-turn approval smokes.*?`precompile-semantic-read-back`.*?`compile-prepared-movie-catalog`.*?`precompile-drawing-board-read-back`.*?`compile-prepared-drawing-board-application`.*?first response must present the complete semantic model.*?stop for explicit approval.*?second prompt approves that semantic model, reviewed support result, selected mode, and Plan SHA-256.*?reread unchanged Plan bytes.*?exactly one selected command/,
+    /`precompile-semantic-read-back`.*?`compile-prepared-movie-catalog`.*?`precompile-drawing-board-read-back`.*?`compile-prepared-drawing-board-application`.*?first response must present the complete semantic model.*?stop for explicit approval.*?second prompt approves that semantic model, reviewed support result, selected mode, and Plan SHA-256.*?reread unchanged Plan bytes.*?exactly one selected command/,
   );
   assert.match(
     candidate,

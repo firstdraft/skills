@@ -1,6 +1,6 @@
 # Behavioral evaluation index
 
-`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 67 fresh-context cases. Cases and
+`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 68 fresh-context cases. Cases and
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
 
@@ -34,7 +34,8 @@ The protocol is evaluator-facing and is not packaged with the Skill.
 - `push-supported-enum-plan`
 - `repair-well-founded-analysis-issue`
 - `validate-supported-application-intent`
-- `private-ios-request-preserves-current-boundary`
+- `private-native-request-preserves-current-boundary`
+- `android-preview-respects-provider-limit`
 - `preserve-partially-realized-appearance-intent`
 - `correct-source-issue-alongside-capability-gap`
 - `analysis-failed-stop`
@@ -83,8 +84,8 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-Release qualification has two human-observed, two-turn approval smokes, each in its own fresh continuing agent
-session:
+`RELEASING.md` owns the cases required for each release. When it selects the two human-observed approval smokes,
+run each in its own fresh continuing agent session:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
 - Direct output pairs `precompile-drawing-board-read-back` with
@@ -158,4 +159,5 @@ A loopback fixture server can exercise the real packaged CLI and count requests 
 Retain that boundary: returned fixture artifacts are not real Compiler output, and an existing agent login does not
 prove fresh browser sign-in. Record unchanged Plan bytes, zero Compile starts before approval, exactly one after
 approval, and the final response. Treat fresh registry installation, the hosted Codespace journey, and first-time
-sign-in as separate observations. Keep the existing controlled-service release smokes required by `RELEASING.md`.
+sign-in as separate observations. Follow `RELEASING.md` for the selected release's gates; the controlled-service
+approval smokes above record the 0.2.2 procedure.

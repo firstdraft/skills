@@ -74,11 +74,17 @@ try {
     path.join(temporaryDirectory, "first"),
     packageCliRoot,
   );
-  const second = await packClaudePlugin(
-    path.join(temporaryDirectory, "second"),
-    packageCliRoot,
-  );
-  assert.equal(first.sha256, second.sha256, "plugin tarballs must be deterministic");
+  const previousUmask = process.umask(0o077);
+  let second;
+  try {
+    second = await packClaudePlugin(
+      path.join(temporaryDirectory, "second"),
+      packageCliRoot,
+    );
+  } finally {
+    process.umask(previousUmask);
+  }
+  assert.equal(first.sha256, second.sha256, "plugin tarballs must be independent of the process umask");
   if (cliRoot) {
     assert.equal(
       first.sha256,
