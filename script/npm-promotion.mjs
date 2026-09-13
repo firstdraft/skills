@@ -302,7 +302,7 @@ export function npmDistTagArguments(operation, name, version, tag) {
   assert(tag === "latest" || /^promotion-check-[1-9]\d*$/.test(tag));
   assert(operation !== "rm" || tag !== "latest", "only temporary probe tags may be removed");
   return ["dist-tag", operation, operation === "add" ? `${name}@${version}` : name, tag,
-    `--registry=${registry}`, "--fetch-retries=0", "--fetch-timeout=30000"];
+    `--registry=${registry}`, "--prefer-online", "--fetch-retries=0", "--fetch-timeout=30000"];
 }
 
 function writeTag(operation, name, version, tag) {

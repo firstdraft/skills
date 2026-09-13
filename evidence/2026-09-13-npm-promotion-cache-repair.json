@@ -1,0 +1,255 @@
+{
+  "format": "firstdraft.npm-promotion-cache-repair/1",
+  "observed_at": "2026-09-13T18:54:53.715Z",
+  "status": "cleanup-reconciled; GitHub two-package verification pending",
+  "source": "de582bf391b269885710c05025a1e8b8490c780f",
+  "source_ci": {
+    "run": 34774778460,
+    "status": "success"
+  },
+  "policy": {
+    "observed_at": "2026-09-13T18:50:09.835Z",
+    "policy": {
+      "package": "@firstdraft.com/cli",
+      "saved": true,
+      "method": "Existing npm passkey; fresh settings reload",
+      "selected": "Require two-factor authentication or a granular access token with bypass 2fa enabled",
+      "trusted_publisher": "firstdraft/cli publish.yml npm"
+    },
+    "tags": [
+      {
+        "name": "@firstdraft.com/cli",
+        "tags": {
+          "latest": "0.2.2",
+          "next": "0.2.2"
+        }
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        }
+      }
+    ]
+  },
+  "credential_probe": {
+    "observed_at": "2026-09-13T18:50:58.582Z",
+    "mode": "verify-token",
+    "status": "incomplete",
+    "operations": [
+      {
+        "package": "@firstdraft.com/cli",
+        "phase": "add-probe",
+        "before": {
+          "latest": "0.2.2",
+          "next": "0.2.2"
+        },
+        "requested": {
+          "promotion-check-34775853212": "0.2.2"
+        },
+        "command_status": 0,
+        "readbacks": [
+          {
+            "latest": "0.2.2",
+            "next": "0.2.2"
+          },
+          {
+            "next": "0.2.2",
+            "latest": "0.2.2",
+            "promotion-check-34775853212": "0.2.2"
+          }
+        ],
+        "after": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34775853212": "0.2.2"
+        },
+        "readback_status": "verified"
+      },
+      {
+        "package": "@firstdraft.com/cli",
+        "phase": "remove-probe",
+        "before": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34775853212": "0.2.2"
+        },
+        "command_status": 1,
+        "readbacks": [
+          {
+            "next": "0.2.2",
+            "latest": "0.2.2",
+            "promotion-check-34775853212": "0.2.2"
+          }
+        ],
+        "after": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34775853212": "0.2.2"
+        },
+        "readback_status": "prior-state-after-command-failure"
+      }
+    ],
+    "request": {
+      "ref": "refs/heads/main",
+      "run_id": "34775853212",
+      "attempt": "1"
+    },
+    "candidate": {
+      "plugin_version": "0.2.3",
+      "skills_source": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+      "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+      "catalog_commit": "de582bf391b269885710c05025a1e8b8490c780f",
+      "packages": [
+        {
+          "name": "@firstdraft.com/cli",
+          "version": "0.2.2",
+          "tags": {
+            "latest": "0.2.2",
+            "next": "0.2.2"
+          },
+          "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+          "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+        },
+        {
+          "name": "@firstdraft.com/claude-code",
+          "version": "0.2.3",
+          "tags": {
+            "latest": "0.2.3",
+            "next": "0.2.3"
+          },
+          "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+          "integrity": "sha512-opAnVnpWrLXZht4FrTu/lBlbBp6jAK0LQ2hba9oDVysKNvdmWKzTquv2Nyd3lwD+0IvbjCtekhPuWro6Js2OCQ=="
+        }
+      ]
+    },
+    "probe_tag": "promotion-check-34775853212"
+  },
+  "reconciliation": {
+    "observed_at": "2026-09-13T18:54:53.715Z",
+    "run": 34775853212,
+    "probe_tag": "promotion-check-34775853212",
+    "package": "@firstdraft.com/cli",
+    "cleanup": {
+      "operator": "raghubetina",
+      "method": "local npm11.16.0 dist-tag rm with --prefer-online; existing CLI login plus npm passkey confirmation",
+      "command_status": 0,
+      "permanent_tags_unchanged": true
+    },
+    "packages": [
+      {
+        "name": "@firstdraft.com/cli",
+        "tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2"
+        }
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        }
+      }
+    ],
+    "status": "probe-removed; two-package credential check still incomplete"
+  },
+  "local_reproduction": {
+    "observed_at": "2026-09-13T18:52:37.099Z",
+    "npm": "11.16.0",
+    "results": [
+      {
+        "prefer_online": false,
+        "add": {
+          "operation": "add",
+          "status": 0,
+          "stdout": "+promotion-check-12345: @firstdraft.com/cli@0.2.2",
+          "stderr": []
+        },
+        "remove": {
+          "operation": "rm",
+          "status": 1,
+          "stdout": "",
+          "stderr": [
+            "npm error promotion-check-12345 is not a dist-tag on @firstdraft.com/cli"
+          ]
+        },
+        "requests": [
+          {
+            "method": "GET",
+            "url": "/npm",
+            "cache_control": null
+          },
+          {
+            "method": "GET",
+            "url": "/-/package/@firstdraft.com%2fcli/dist-tags",
+            "cache_control": null
+          },
+          {
+            "method": "PUT",
+            "url": "/-/package/@firstdraft.com%2fcli/dist-tags/promotion-check-12345",
+            "cache_control": null
+          }
+        ],
+        "final_tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-12345": "0.2.2"
+        }
+      },
+      {
+        "prefer_online": true,
+        "add": {
+          "operation": "add",
+          "status": 0,
+          "stdout": "+promotion-check-12345: @firstdraft.com/cli@0.2.2",
+          "stderr": []
+        },
+        "remove": {
+          "operation": "rm",
+          "status": 0,
+          "stdout": "-promotion-check-12345: @firstdraft.com/cli@0.2.2",
+          "stderr": []
+        },
+        "requests": [
+          {
+            "method": "GET",
+            "url": "/npm",
+            "cache_control": null
+          },
+          {
+            "method": "GET",
+            "url": "/-/package/@firstdraft.com%2fcli/dist-tags",
+            "cache_control": null
+          },
+          {
+            "method": "PUT",
+            "url": "/-/package/@firstdraft.com%2fcli/dist-tags/promotion-check-12345",
+            "cache_control": null
+          },
+          {
+            "method": "GET",
+            "url": "/-/package/@firstdraft.com%2fcli/dist-tags",
+            "cache_control": null
+          },
+          {
+            "method": "DELETE",
+            "url": "/-/package/@firstdraft.com%2fcli/dist-tags/promotion-check-12345",
+            "cache_control": null
+          }
+        ],
+        "final_tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2"
+        }
+      }
+    ]
+  },
+  "limits": [
+    "The hosted cleanup command exited1 without retained npm stderr; its exact error is unobserved.",
+    "Local cleanup used the existing interactive npm login, not the protected GitHub token.",
+    "No complete two-package add/remove credential check has passed yet.",
+    "No package bytes, permanent tags, public catalog, Drawing Board pin or service deployment changed."
+  ]
+}

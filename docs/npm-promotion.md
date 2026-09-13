@@ -88,7 +88,9 @@ pending; reconcile any started mutation before cancellation or another release.
 
 Each invocation attempts a needed write once, with npm transport retries disabled. The pinned
 [npm command](https://github.com/npm/cli/blob/v11.16.0/lib/commands/dist-tag.js) waits for the PUT or DELETE response
-without verifying a subsequent read. After a successful command, the helper makes up to six anonymous readbacks,
+without verifying a subsequent read. `--prefer-online` revalidates npm's own cached tag metadata before each
+command, so probe cleanup can see the preceding addition. This is separate from the helper's anonymous readbacks:
+after a successful command, it makes up to six of those reads,
 waiting two seconds between them only while the **complete tag map exactly matches its pre-write state**. It proceeds
 only when the complete map equals the requested result. Any other tag change or read error stops immediately.
 This adds at most ten seconds of waiting per write, excluding request time; it is a bounded verification window,
