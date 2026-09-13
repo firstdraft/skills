@@ -105,11 +105,11 @@ test("GitHub writes require the protected version tag or a main credential check
 test("npm argument construction restricts registry, packages, versions, operations and tags", () => {
   assert.deepEqual(npmDistTagArguments("add", names[0], version, "latest"), [
     "dist-tag", "add", `${names[0]}@${version}`, "latest",
-    "--registry=https://registry.npmjs.org/", "--fetch-retries=0", "--fetch-timeout=30000",
+    "--registry=https://registry.npmjs.org/", "--prefer-online", "--fetch-retries=0", "--fetch-timeout=30000",
   ]);
   assert.deepEqual(npmDistTagArguments("rm", names[1], version, "promotion-check-123"), [
     "dist-tag", "rm", names[1], "promotion-check-123",
-    "--registry=https://registry.npmjs.org/", "--fetch-retries=0", "--fetch-timeout=30000",
+    "--registry=https://registry.npmjs.org/", "--prefer-online", "--fetch-retries=0", "--fetch-timeout=30000",
   ]);
   for (const args of [
     ["publish", names[0], version, "latest"],

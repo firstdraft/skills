@@ -22,8 +22,8 @@ marketplace manifest owns public catalog selection. Drawing Board's source-Skill
 The [promotion record](evidence/2026-09-13-shared-plugin-0.2.3-default-promotion.md) links publication,
 qualification, and installation receipts. Recheck before mutations.
 
-CLI token setup remains incomplete: save the approved npm policy change with its security key, then pass the
-[two-package check](docs/npm-promotion.md#initial-setup-and-renewal) before another CLI default promotion.
+CLI's policy is saved; [probe cleanup is reconciled](evidence/2026-09-13-npm-promotion-cache-repair.md).
+Pass the [two-package check](docs/npm-promotion.md#initial-setup-and-renewal) before another CLI default promotion.
 
 ## Authorization boundaries
 
