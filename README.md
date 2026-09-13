@@ -6,6 +6,9 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. Package contents in this checkout are a source candidate; the public catalog and
 Drawing Board pins determine what an installed workspace actually receives.
 
+The UI migration is candidate `0.2.4`, with its exact digest in [release compatibility](release/compatibility.json).
+The public catalog still selects the published one-Skill `0.2.3` package; candidate checks do not promote it.
+
 Trying First Draft as a tester? Start with the
 [Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
 
@@ -95,7 +98,8 @@ The [portable layout](https://developers.openai.com/plugins/build/plugins#create
 The source candidate adds `extend-app-ui` and `review-ui-consistency` alongside `create-full-stack-app`. Once that
 candidate is released and installed, both clients discover all three from the same package. Ask for a normal UI
 task, or invoke the namespaced Skill: `$firstdraft:extend-app-ui` in Codex or `/firstdraft:extend-app-ui` in Claude
-Code. Use the matching review name for a consistency review.
+Code's [plugin Skill form](https://code.claude.com/docs/en/skills#choose-where-skills-load). Use the matching review
+name for a consistency review.
 
 The UI Skills read the app's `UI.md`, comparable screens, and actual component source before making changes.
 For the new Rails UI, ordinary pages and forms use ERB/Basecoat Vega; selected interactive controls use existing

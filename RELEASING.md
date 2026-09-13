@@ -7,8 +7,8 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 
 | Surface | Current identity |
 |---|---|
-| Package source | `@firstdraft.com/claude-code@0.2.3`, tag `claude-v0.2.3` |
-| Packed SHA-256 | `53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc` |
+| Package source candidate | `@firstdraft.com/claude-code@0.2.4` (unpublished; future tag `claude-v0.2.4`) |
+| Candidate packed SHA-256 | `16a32bf407464fa705e6f0ebe4f837ada67b6fa59ec74a162c63cb22355e3e56` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.3` |
 | Public catalog | Plugin `0.2.3`, selected by `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.3` / `0.2.3` |
@@ -63,10 +63,10 @@ syntax; do not add compatibility aliases.
    node script/check-claude-plugin-package.mjs --cli-root /path/to/exact/cli
    ```
 
-4. Pack deterministically, record the tarball SHA-256, install it in isolated state, validate it with the then-current
-   supported Claude Code CLI, and confirm its adapter invokes the exact compatible CLI version. Do not call First
-   Draft during the no-service package check. For Codex, stage the same candidate and run
-   `script/check-codex-plugin-install.mjs --codex <absolute-executable> --plugin-root <staged-candidate>`.
+4. Pack deterministically, record the tarball SHA-256, and run [both isolated install checks](README.md#development):
+   `check-codex-plugin-install.mjs` and `check-packaged-claude-plugin-install.mjs`. Stage the same bytes for both.
+   Require every canonical Skill file, strict validation, discovery, and the exact bundled CLI. Do not call First
+   Draft during these package-only checks.
    CI pins one Codex version; separately reconcile the actual Drawing Board and desktop versions.
 5. Require hosted CI at the exact candidate head. The Node 24.18.0 job must include the prospective release-order
    rehearsal. If any registry, tag, catalog, or candidate identity changes afterward, repeat the relevant read-only
@@ -75,11 +75,10 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-For 0.2.3, run `private-native-request-preserves-current-boundary` and
-`android-preview-respects-provider-limit` in Claude and Codex against the same packed bytes, plus both install
-adapters and the CLI contract check. Bind results to the package digest and service Android receipt. Keep the Revyl
-WebView blocker visible. The unchanged approval/Publication sections do not require repeating the 0.2.2 service
-smokes for this release; the procedure below is historical.
+For 0.2.4, run the [UI continuation qualification](evals/ui-continuation/README.md) in Claude and Codex, both install
+checks, and the CLI contract check. Bind results to the package digest and generated app revisions. Preserve the
+published 0.2.3 native boundaries, including the Revyl WebView blocker. The unchanged approval/Publication
+procedure below records the historical 0.2.2 service smokes.
 
 The 0.2.2 qualification used two human-observed approval smokes in separate continuing sessions:
 
@@ -158,7 +157,7 @@ push or publication result is ambiguous, inspect tags, Actions, and npm read-onl
 ## 3. Qualify the published package
 
 Install the exact version—not a moving dist-tag—in fresh isolated npm and Claude state. Confirm package and plugin
-identity, canonical Skill presence, strict validation, inline discovery, bundled CLI identity, wrapper preference,
+identity, all packaged canonical Skills, strict validation, inline discovery, bundled CLI identity, wrapper preference,
 and signature or provenance presence. Keep First Draft credentials unset for this package-only check.
 
 Record the environment, exact package and CLI versions, digest, observations, and deliberately unproved boundaries

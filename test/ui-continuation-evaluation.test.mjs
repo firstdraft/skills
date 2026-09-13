@@ -13,6 +13,7 @@ test("offline UI cases supply bounded inputs and distinguish all Skill routes", 
   const corpus = JSON.parse(await readFile(path.join(evaluationRoot, "cases.json"), "utf8"));
   assert.equal(corpus.format, "firstdraft.ui-skill-evals/1");
   assert(Array.isArray(corpus.cases));
+  assert.equal(corpus.cases.length, 9);
   const ids = new Set();
   const routes = new Set();
   const usedArtifacts = new Set();

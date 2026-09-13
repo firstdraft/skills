@@ -11,7 +11,7 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-Targets plugin 0.2.3, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
+Targets plugin 0.2.4, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
   Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone/Android slices. Rails emits

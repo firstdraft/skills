@@ -1,8 +1,8 @@
 # Rails integration
 
-Read the application's `UI.md`, installed versions, and comparable source. Newly generated First Draft Rails apps
-use ERB with Basecoat Vega for ordinary markup and actual shadcn `radix-vega` components in selected React islands
-through Turbo Mount. Existing apps may use another system; a UI feature does not authorize migrating that app.
+Read the application's `UI.md`, installed versions, and comparable source. In apps using the new First Draft Rails
+UI, ordinary markup uses ERB with Basecoat Vega and selected React islands use actual shadcn `radix-vega` components
+through Turbo Mount. Other apps may use another system; a UI feature does not authorize migrating that app.
 
 ## Choose the smallest owner
 

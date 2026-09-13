@@ -918,8 +918,8 @@ test("Claude Code packaging reuses every portable Skill exactly once", async () 
     version: "0.2.3",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.2.3");
-  assert.equal(installableManifest.version, "0.2.3");
+  assert.equal(packageTemplate.version, "0.2.4");
+  assert.equal(installableManifest.version, "0.2.4");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);
