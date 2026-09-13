@@ -22,8 +22,8 @@ marketplace manifest owns public catalog selection. Drawing Board's source-Skill
 The [promotion record](evidence/2026-09-13-shared-plugin-0.2.3-default-promotion.md) links publication,
 qualification, and installation receipts. Recheck before mutations.
 
-CLI policy is saved; [token cleanup is pending](evidence/2026-09-13-npm-token-cleanup.md).
-Pass the [two-package check](docs/npm-promotion.md#initial-setup-and-renewal) before another CLI default promotion.
+[CLI probe and plugin default writes are verified](evidence/2026-09-13-npm-token-write-verification.md).
+CLI default write is unexercised; probes are removed. Follow [setup](docs/npm-promotion.md#initial-setup-and-renewal).
 
 ## Authorization boundaries
 

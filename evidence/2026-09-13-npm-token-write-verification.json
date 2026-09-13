@@ -1,0 +1,342 @@
+{
+  "format": "firstdraft.npm-token-write-verification/1",
+  "recorded_at": "2026-09-13T19:31:25.567702+00:00",
+  "source": {
+    "repository": "firstdraft/skills",
+    "commit": "a1b353af63136d8f0e67455b251c98c0539358b1",
+    "tree": "e69b7964b16e46d6d5d30925e811a9911ad08645",
+    "candidate_ci": 34777224524,
+    "main_ci": 34777279406
+  },
+  "credential": {
+    "observed_at": "2026-09-13T17:43:25.111062+00:00",
+    "token_name": "FirstDraftGitHubPromotion-20260913",
+    "created_on": "2026-09-13",
+    "expires_on": "2026-12-12",
+    "permission": "Read and write (stage only)",
+    "packages": [
+      "@firstdraft.com/claude-code",
+      "@firstdraft.com/cli"
+    ],
+    "scopes": [],
+    "organization_access": "none",
+    "bypass_2fa": true,
+    "stored_only_in": {
+      "repository": "firstdraft/skills",
+      "environment": "npm-promotion",
+      "secret": "NPM_PROMOTION_TOKEN",
+      "created_at": "2026-09-13T17:40:50Z"
+    },
+    "ui_verified": true,
+    "token_value_retained_in_evidence": false
+  },
+  "secret_metadata_rechecked": {
+    "repository": "firstdraft/skills",
+    "environment": "npm-promotion",
+    "name": "NPM_PROMOTION_TOKEN",
+    "created_at": "2026-09-13T17:40:50Z",
+    "updated_at": "2026-09-13T17:40:50Z",
+    "observed_at": "2026-09-13T19:22:47.216060+00:00"
+  },
+  "qualified_candidate": {
+    "observed_at": "2026-09-13T19:19:58.552Z",
+    "plugin_version": "0.2.3",
+    "skills_source": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+    "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "catalog_commit": "a1b353af63136d8f0e67455b251c98c0539358b1",
+    "packages": [
+      {
+        "name": "@firstdraft.com/cli",
+        "version": "0.2.2",
+        "tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+        "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "version": "0.2.3",
+        "tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        },
+        "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+        "integrity": "sha512-opAnVnpWrLXZht4FrTu/lBlbBp6jAK0LQ2hba9oDVysKNvdmWKzTquv2Nyd3lwD+0IvbjCtekhPuWro6Js2OCQ=="
+      }
+    ]
+  },
+  "plugin_write": {
+    "run_url": "https://github.com/firstdraft/skills/actions/runs/34772335895",
+    "receipt_sha256": "548cc2fef75b8d5076a6bb347c4b002f89ef7e2b36ecd9bc8b4c05ae5f61f411",
+    "observed_at": "2026-09-13T17:41:47.642Z",
+    "mode": "promote",
+    "status": "incomplete",
+    "request": {
+      "ref": "refs/tags/promote-v0.2.3",
+      "run_id": "34772335895",
+      "attempt": "1"
+    },
+    "operations": [
+      {
+        "package": "@firstdraft.com/cli",
+        "status": "already-selected",
+        "tags": {
+          "latest": "0.2.2",
+          "next": "0.2.2"
+        }
+      },
+      {
+        "package": "@firstdraft.com/claude-code",
+        "before": {
+          "next": "0.2.3",
+          "latest": "0.2.2"
+        },
+        "requested": {
+          "latest": "0.2.3"
+        },
+        "command_status": 0,
+        "after": {
+          "next": "0.2.3",
+          "latest": "0.2.2"
+        }
+      }
+    ]
+  },
+  "plugin_reconciliation": {
+    "run_url": "https://github.com/firstdraft/skills/actions/runs/34772335895",
+    "receipt_sha256": "e87782e69e98a07dda0119c4fed4c7c30ee5297d4d431109d41a587a4da2cc6a",
+    "observed_at": "2026-09-13T17:43:09.060Z",
+    "mode": "promote",
+    "status": "promoted",
+    "request": {
+      "ref": "refs/tags/promote-v0.2.3",
+      "run_id": "34772335895",
+      "attempt": "2"
+    },
+    "operations": [
+      {
+        "package": "@firstdraft.com/cli",
+        "status": "already-selected",
+        "tags": {
+          "latest": "0.2.2",
+          "next": "0.2.2"
+        }
+      },
+      {
+        "package": "@firstdraft.com/claude-code",
+        "status": "already-selected",
+        "tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        }
+      }
+    ]
+  },
+  "cli_probe": {
+    "run_url": "https://github.com/firstdraft/skills/actions/runs/34776479919",
+    "receipt_sha256": "517e865e11b2e6077c41e10666623c6fdb04fa7b7976da1a43e97de7229e5a7a",
+    "observed_at": "2026-09-13T19:03:40.243Z",
+    "mode": "verify-token",
+    "status": "incomplete",
+    "request": {
+      "ref": "refs/heads/main",
+      "run_id": "34776479919",
+      "attempt": "1"
+    },
+    "operations": [
+      {
+        "package": "@firstdraft.com/cli",
+        "phase": "add-probe",
+        "before": {
+          "next": "0.2.2",
+          "latest": "0.2.2"
+        },
+        "requested": {
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "command_status": 0,
+        "readbacks": [
+          {
+            "next": "0.2.2",
+            "latest": "0.2.2",
+            "promotion-check-34776479919": "0.2.2"
+          }
+        ],
+        "after": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "readback_status": "verified"
+      },
+      {
+        "package": "@firstdraft.com/cli",
+        "phase": "remove-probe",
+        "before": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "command_status": 1,
+        "readbacks": [
+          {
+            "next": "0.2.2",
+            "latest": "0.2.2",
+            "promotion-check-34776479919": "0.2.2"
+          }
+        ],
+        "after": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "readback_status": "prior-state-after-command-failure"
+      }
+    ]
+  },
+  "token_cleanup": {
+    "run_url": "https://github.com/firstdraft/skills/actions/runs/34777316836",
+    "receipt_sha256": "fd239bdf0200cb9f4b4d27f3b25b1e6671f0691a94cecfc9061069000bea1781",
+    "observed_at": "2026-09-13T19:19:58.552Z",
+    "mode": "cleanup-probe",
+    "status": "incomplete",
+    "request": {
+      "ref": "refs/heads/main",
+      "run_id": "34777316836",
+      "attempt": "1"
+    },
+    "operations": [
+      {
+        "package": "@firstdraft.com/cli",
+        "phase": "cleanup-probe",
+        "before": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "command_status": 1,
+        "command_error": "npm error code E403\nnpm error 403 403 Forbidden - DELETE https://registry.npmjs.org/-/package/@firstdraft.com%2fcli/dist-tags/promotion-check-34776479919\nnpm error 403 In most cases, you or one of your dependencies are requesting a package version that is forbidden by your security policy, or on a server you do not have access to.\nnpm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-09-13T19_20_00_014Z-debug-0.log",
+        "readbacks": [
+          {
+            "next": "0.2.2",
+            "latest": "0.2.2",
+            "promotion-check-34776479919": "0.2.2"
+          }
+        ],
+        "after": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "readback_status": "prior-state-after-command-failure"
+      }
+    ]
+  },
+  "manual_cleanup": {
+    "observed_at": "2026-09-13T19:21:29.555399+00:00",
+    "credential": "local interactive npm session; existing npm passkey",
+    "removed_probe": "promotion-check-34776479919",
+    "command_status": 0,
+    "packages": [
+      {
+        "name": "@firstdraft.com/cli",
+        "version": "0.2.2",
+        "tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2"
+        }
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "version": "0.2.3",
+        "tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        }
+      }
+    ],
+    "boundary": "The GitHub stage-only token still cannot DELETE this probe; manual cleanup does not establish token removal."
+  },
+  "conclusions": {
+    "configured_token_write_access": "verified on both packages across separate runs",
+    "probe_cleanup": "complete through interactive npm",
+    "token_delete": "E403 at the exact CLI dist-tag DELETE endpoint; server-side policy cause unknown",
+    "automated_two_package_add_remove_check": "incomplete; failed runs remain failed"
+  },
+  "boundaries": [
+    "No default version or package bytes changed during cleanup.",
+    "Both package writes used the configured unchanged token; manual cleanup used an interactive session.",
+    "No token permissions, workflow approvals, protected tags, catalog, service, or template pins were changed.",
+    "This does not prove a future CLI default move or unattended probe deletion."
+  ],
+  "token_cleanup_reconciliation": {
+    "observed_at": "2026-09-13T19:20:31.016527+00:00",
+    "run": 34777316836,
+    "packages": [
+      {
+        "name": "@firstdraft.com/cli",
+        "version": "0.2.2",
+        "tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        }
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "version": "0.2.3",
+        "tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        }
+      }
+    ],
+    "conclusion": "exact retained probe reconciled; npm DELETE rejected with E403; no mutation observed"
+  },
+  "policy_sequence": {
+    "cli": "Owner-approved bypass-token policy saved after the plugin promotion and before the CLI probe write.",
+    "plugin": "No package-policy change during this sequence.",
+    "source": "2026-09-13-npm-promotion-cache-repair.md"
+  },
+  "external_documentation": {
+    "url": "https://docs.npmjs.com/about-access-tokens/#about-stage-only-tokens",
+    "observed_on": "2026-09-13",
+    "excerpts": [
+      "Move dist-tags",
+      "does not otherwise restrict the token's write capabilities"
+    ],
+    "boundary": "These statements do not identify the server-side rule that rejected this DELETE."
+  },
+  "npm_configuration_recheck": {
+    "observed_at": "2026-09-13T19:28:53.292065+00:00",
+    "method": "fresh npm website pages through native browser accessibility",
+    "identity": "raghubetina",
+    "token": {
+      "name": "FirstDraftGitHubPromotion-20260913",
+      "permission": "Read and write (stage only)",
+      "packages": [
+        "@firstdraft.com/claude-code",
+        "@firstdraft.com/cli"
+      ],
+      "organization_access": "none",
+      "bypass_2fa": true,
+      "expires_on": "2026-12-12"
+    },
+    "packages": [
+      {
+        "name": "@firstdraft.com/cli",
+        "publishing_access": "Require two-factor authentication or a granular access token with bypass 2fa enabled",
+        "oidc": "firstdraft/cli / publish.yml / npm"
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "publishing_access": "Require two-factor authentication or a granular access token with bypass 2fa enabled",
+        "oidc": "firstdraft/skills / publish.yml / npm"
+      }
+    ],
+    "mutations": "none"
+  }
+}
