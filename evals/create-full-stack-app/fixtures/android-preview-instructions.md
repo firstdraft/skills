@@ -1,8 +1,43 @@
 # Build and preview your Android app
 
 Keep `bin/dev` running in one Codespace terminal and use the web preview for everyday Rails work.
-GitHub builds the Android Emulator app on a Linux runner. Revyl can run that APK in a browser when its
-device image meets the app's WebView requirement.
+For native Android checks, use Android Studio's local Emulator. Revyl's tested Android image needs a newer
+WebView before it can provide a clean browser preview.
+
+## Recommended: Android Studio and a local Emulator
+
+1. Save the compiled app to your own **private GitHub repository**, then clone it onto your computer.
+   Before a remote exists, use **Publish to GitHub → Publish to GitHub private repository** in Source Control.
+   Afterward, commit and push normally. Open the clone's `android/` directory in Android Studio.
+2. Install Android SDK platform **36** and build-tools **36.0.0**, and select **JDK 17** as the Gradle JDK.
+   In **Device Manager**, create a phone using an **Android 16 / API 36** system image with Google APIs.
+   The app requires **WebView 120 or newer**; use a compatible image if it reports an outdated WebView.
+3. Leave Rails running in your Codespace and keep port 3000 **Private**. On your computer, sign into the
+   GitHub CLI if needed, then forward Rails to your computer in a terminal that stays open:
+
+   ```sh
+   gh codespace ssh -- -N -L 3001:127.0.0.1:3000
+   ```
+
+   Select the Codespace running this app. If Rails runs on your computer instead, skip the tunnel and use
+   `http://10.0.2.2:3000` in the next step. `10.0.2.2` is the Emulator's address for your computer.
+4. In **Run → Edit Configurations**, select the `app` configuration, keep **Launch: Default Activity**, and
+   enter this under **Launch Flags**:
+
+   ```text
+   --es APP_ROOT_URL http://10.0.2.2:3001
+   ```
+
+   Select the **debug** build variant and your Emulator, then click **Run**. Android Studio builds and installs
+   the app. This launch setting points the Debug app at Rails; it does not change the compiled Release origin.
+5. Check navigation and forms. Rails changes need a page refresh; native changes need a new local build.
+   Pull updated native source into the local clone before rebuilding. When finished, stop the Emulator in
+   Device Manager and press **Ctrl+C** in the forwarding terminal.
+
+This path uses your computer for the Android build and preview; it consumes no Revyl device or remote-build time.
+See [Android's device setup](https://developer.android.com/studio/run/managing-avds),
+[launch settings](https://developer.android.com/studio/run/rundebugconfig), and
+[GitHub's SSH command](https://cli.github.com/manual/gh_codespace_ssh).
 
 ## Revyl device prerequisite
 
@@ -16,7 +51,7 @@ Use a compatible image when available; do not weaken the WebView requirement or 
 just to complete this trial. A local emulator with a current WebView works; see
 `android/README.md`.
 
-## First preview on a compatible device
+## Optional Revyl preview on a compatible device
 
 1. Save the compiled app to your own **private GitHub repository**. If Source Control shows
    **Publish to GitHub**, choose that and then **Publish to GitHub private repository**. Once the

@@ -158,8 +158,9 @@ client to quiet gaps, or adding public indexes to satisfy native prerequisites. 
 target support alone is not that decision.
 Appearance theme, colors, and Web icons are generated; emitted native launcher icons remain stock. Android shows
 one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, follow the
-emitted platform preview guide. GitHub builds iPhone artifacts on Mac runners and Android APKs on Linux runners;
-Revyl runs the preview, while ordinary Rails iteration stays in the web browser.
+emitted platform preview guide and the [native preview boundary](foundation-plan-019.md#preview-generated-native-apps).
+Use local Android Studio Emulator for Android checks while Revyl's tested WebView image remains incompatible.
+iPhone browser preview retains its separate Revyl path. Ordinary Rails iteration stays in the web browser.
 Nonempty delivery, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
 v0.19 shape, including notification trigger/template definitions, deployment, and iPad, remain in the decision ledger
 and semantic read-back as currently unplannable rather than being invented as Plan JSON or promised a GapSet record.

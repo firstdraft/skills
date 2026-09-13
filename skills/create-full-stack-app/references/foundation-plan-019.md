@@ -18,6 +18,7 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
 ## Contents
 
 - [Current evidence boundary](#current-evidence-boundary)
+- [Preview generated native apps](#preview-generated-native-apps)
 - [Closed envelope](#closed-envelope)
 - [Subject identity](#subject-identity)
 - [Ownership](#ownership)
@@ -42,11 +43,12 @@ deployed journey, and an older observation does not define current support.
 **Current design and machine authority**
 
 - The bundled JSON Schema owns v0.19 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/architecture/targets/rails/profile.md)
-  owns current lowering at Service revision `89a2d6866f9448f4e75b58cac26f61c52daaa0b0`.
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/architecture/targets/rails/profile.md)
+  owns current lowering at reviewed Service source `9ff77985c821501f0174aec5da6192871395cd6b`.
+  A source reference does not establish the deployed service revision.
 - The current analyzer release is
-  `foundation-plan-rails/application-2026-09-05-alpha-scaffold-handoff`; the matching Compiler release is
-  `foundation-plan-rails/compiler-application-2026-09-12-android-preview`.
+  `foundation-plan-rails/application-2026-09-13-native-usability`; the matching Compiler release is
+  `foundation-plan-rails/compiler-application-2026-09-13-ios-interactions`.
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
@@ -73,17 +75,23 @@ deployed journey, and an older observation does not define current support.
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/evidence/status.md)
-  distinguishes implemented, exercised, generated-output, hosted, and observed claims. Its
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/evidence/status.md)
+  distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
   [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
   records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
   Rails, but its available device's WebView was too old for a clean preview. These observations do not establish a
   fresh student sign-in, native authentication, service deployment, or arbitrary application support.
 - The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
   separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
-  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/architecture/targets/rails/capabilities/native.md)
+  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/architecture/targets/rails/capabilities/native.md)
   owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
   runtime observations do not qualify iPhone runtime behavior.
+- The September 13
+  [Android usability report](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/solutions/2026-09-13-native-screen-usability.md)
+  records local Android Emulator interaction and browser checks; Android Studio UI steps were not executed. The
+  separate [iOS interaction report](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/solutions/2026-09-13-ios-interaction-polish.md)
+  records ordinary Compilation and local Simulator checks for More, forms, Cancel, text sizing, and landscape
+  keyboard behavior. These local observations do not repeat the earlier Revyl journey or qualify a fresh student.
 - The Android receipt also records the required-enum presence correction and its generated schema-check failure.
   The [model renderer](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/lib/foundation_plan/rails_target/compiler/renderers/model.rb)
   emits `enum` with `validate: true`, `scopes: false`, `instance_methods: false`, and separate presence validation.
@@ -117,16 +125,35 @@ or a complete user journey.
 Selected native projects compose separate pinned Cores under `ios/` and `android/`. Each emitted
 `FOUNDATION_PROVENANCE.json` records the exact revision, archive digest, and replaced application seams. Use the
 Service's native evidence record for exercised versions; pins alone do not establish device behavior.
-Public native navigation stays Account-free. Android uses up to five tabs, or four plus a More list when there are
-more destinations. Generated `IOS_PREVIEW.md` and `ANDROID_PREVIEW.md` own Revyl setup and the current commands.
-Publish the useful compiled baseline to a private GitHub repository first; GitHub builds the iPhone Simulator
-artifact on a Mac runner and the standalone debug Android APK on an Ubuntu runner. Most Rails edits need only a
-refresh. Native changes require a new artifact. Stop Revyl explicitly and restore the Codespace port to Private
-when finished. Revyl preview does not install an app on a phone or publish it to a store.
-Android requires System WebView 120 or newer. The September 12 Revyl image had 113, and its Update button required
-Google Play sign-in. Until a compatible image is available, continue with the web preview or a local emulator;
-do not promise a clean Android Revyl journey, weaken the version requirement, or ask students to spend more device
-usage retrying that image. The emitted guide explains this prerequisite before its device-start instructions.
+This release composes iOS Core `7365ba0bf7ea5e6c8e8223d24e54cf685b067950` and Android Core
+`6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e`. Older receipts retain their own source pins and observed scope.
+Public native navigation stays Account-free. Both clients use one stack, up to five direct tabs, or four direct
+tabs plus More for additional destinations. Follow the [preview guidance](#preview-generated-native-apps) after
+verified materialization.
+
+## Preview generated native apps
+
+Keep ordinary Rails iteration in the web preview. For Android checks, the current path is **Android Studio Emulator
+on the user's computer**. Read the emitted `ANDROID_PREVIEW.md`; `android/README.md` covers the local build. Clone the
+saved private repository, open `android/` in Studio, select a compatible phone image, and launch the Debug variant.
+The guide owns the SDK/JDK versions, private Codespace SSH tunnel, and `APP_ROOT_URL` launch flags. The emulator's
+[`10.0.2.2` host alias](https://developer.android.com/studio/run/emulator-networking-address) reaches that computer,
+not the Codespace. Local Rails is a separate supported origin. This path uses local compute and no Revyl device
+hours; it requires a computer capable of running the emulator and is not an all-browser preview.
+
+Android requires **System WebView 120 or newer**. The September 12 Revyl Pixel 7 / Android 14 image had 113; its
+Update button opened Google Play sign-in. Revyl Android preview remains blocked on a compatible provider image.
+Do not weaken that requirement, route students through Google Play sign-in, or spend more device time retrying the
+tested image. If a Revyl session is already running, stop it with `bin/android preview revyl stop`. A student without
+a suitable local computer can continue Rails work in the web preview while the native-provider gap remains open.
+
+For iPhone browser preview, follow `IOS_PREVIEW.md`. Publish the useful compiled baseline to a private repository
+first; GitHub builds the iPhone Simulator artifact on a Mac runner. The optional Android GitHub build produces a
+debug APK on an Ubuntu runner. Revyl consumes device usage for an uploaded artifact; this path uses no Revyl remote
+build compute. Most Rails edits need only a refresh, while native changes require a new artifact. Stop Revyl and
+restore any exposed Codespace port to Private when finished. The earlier iPhone Revyl receipt proves index/refresh
+only; local iOS Simulator improvements do not establish new Revyl form, Back, or sign-in proof. Preview does not
+install the app on a phone or publish it to a store.
 
 ## Closed envelope
 
@@ -230,7 +257,7 @@ an explicit `.invalid` origin and `invalid.firstdraft` identifier prefix.
 Each selected client is emitted only when it has an admitted public-index Scaffold and its generated identity
 fits platform rules. Structurally valid long names can exceed those rules: the application key must form one
 DNS-safe label of at most 63 ASCII bytes, and Android application IDs must fit 223 bytes after domain conversion.
-The [native target](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/architecture/targets/rails/capabilities/native.md)
+The [native target](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/architecture/targets/rails/capabilities/native.md)
 owns the full rules. A missing public entry or unusable identity omits that client and records
 `foundation_plan.gap.native_client.not_generated`; a missing domain alone does not. Preserve the user's requested
 clients and access rather than changing product meaning to avoid that gap.
@@ -421,7 +448,8 @@ Importability does not imply generated Predicate behavior; the reviewed GapSet d
 At most one Entity may own `account`. The schema requires one email identifier and one password sign-in method at
 this format boundary; optional registration, verification, recovery, and lockout objects express the requested
 flows. Do not add Account merely because a surface is private: establish the user's identity and access model first,
-then author the Account and Policies that represent it.
+then author the Account and Policies that represent it. Self-service registration or sign-in does not establish
+staff membership; preserve required eligibility conditions and ask when they are unspecified.
 
 Current public Web Account realization requires self-service registration, email verification, password-reset
 recovery, lockout, and a successfully admitted Account-self profile. Registration inputs must be one contiguous
@@ -470,8 +498,9 @@ During pre-alpha, generated Rails may also contain conventional unclaimed scaffo
 starter code is neither authored meaning nor proof that unsupported consequences work. Preserve the Plan and report
 the reviewed gaps instead of changing requiredness, access, or workflows to match incidental output.
 
-Only public indexes become native entry points. Public detail and form pages remain reachable through links, with
-new and edit forms presented in native sheets. Web profile and protected navigation do not become native screens.
+Only public indexes become native entry points. Public detail and form pages remain reachable through links.
+New/edit use modal context: iOS sheets and Android's full-screen form destination, with pull-to-refresh disabled.
+Web profile and protected navigation do not become native screens.
 
 ### Unsupported shapes
 

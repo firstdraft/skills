@@ -21,7 +21,7 @@ const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 test("release compatibility matches the installable plugin manifest", async () => {
   const compatibility = await checkSkillsReleaseCompatibility(repository);
   const skill = await readFile(path.join(repository, "skills/create-full-stack-app/SKILL.md"), "utf8");
-  const declaredPluginVersion = skill.match(/This workflow targets plugin ([0-9]+\.[0-9]+\.[0-9]+),/);
+  const declaredPluginVersion = skill.match(/^Targets plugin ([0-9]+\.[0-9]+\.[0-9]+),/m);
   assert(declaredPluginVersion, "the Skill must identify its plugin compatibility version");
   assert.equal(declaredPluginVersion[1], compatibility.version);
 
@@ -32,7 +32,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "0c882463c407f95f472527f6ff3f378edafe872a68121d78d0d9ca872faa11cc",
+        "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
