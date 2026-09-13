@@ -38,8 +38,9 @@ edit the shared authority and inspect both ordinary HTML and enhanced controls i
 
 ## Verify the result
 
-Start with the checks that exercise the changed surface. Once they pass, expand only for a new failure or
-unresolved concern; report unrelated baseline failures instead of broadening the task.
+Start with the checks that exercise the changed surface, including the browser checks below. Expand beyond that
+surface only for a new failure or unresolved concern. Confirm a failure predates your change before reporting it
+as an unrelated baseline failure instead of broadening the task.
 
 Run relevant project checks and inspect the changed UI in a real browser. Exercise the actual form or navigation
 path, open affected overlays, and compare with a related screen. For a comparative change, capture the relevant
