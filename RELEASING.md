@@ -11,7 +11,7 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 | Packed SHA-256 | `53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.3` |
 | Public catalog | Plugin `0.2.3`, selected by `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.3` / `0.2.2` (default promotion pending) |
+| Plugin npm `next` / `latest` | `0.2.3` / `0.2.3` |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
@@ -19,10 +19,11 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
-See the [0.2.3 publication](evidence/2026-09-13-shared-plugin-0.2.3-publication.md) and
-[qualification](evidence/2026-09-13-native-preview-skill-0.2.3-qualification.md) receipts.
-[Fresh public installation](evidence/2026-09-13-shared-plugin-0.2.3-public-install.md) passed in both clients.
-Only npm `latest` promotion remains pending. Recheck before mutations.
+The [promotion record](evidence/2026-09-13-shared-plugin-0.2.3-default-promotion.md) links publication,
+qualification, and installation receipts. Recheck before mutations.
+
+CLI token setup remains incomplete: save the approved npm policy change with its security key, then pass the
+[two-package check](docs/npm-promotion.md#initial-setup-and-renewal) before another CLI default promotion.
 
 ## Authorization boundaries
 

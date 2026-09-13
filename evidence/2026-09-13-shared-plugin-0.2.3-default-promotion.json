@@ -1,0 +1,308 @@
+{
+  "format": "firstdraft.npm-default-promotion/1",
+  "observed_at": "2026-09-13T17:43:13Z",
+  "status": "promoted",
+  "promotion_tag": {
+    "name": "promote-v0.2.3",
+    "object": "bbad4aca12d37ee50090b118a50881965ed1c28c",
+    "commit": "693e100ac0ee5520851ad472a5137ced5d629d17"
+  },
+  "workflow": "https://github.com/firstdraft/skills/actions/runs/34772335895",
+  "attempt_1": {
+    "observed_at": "2026-09-13T17:41:47.642Z",
+    "mode": "promote",
+    "status": "incomplete",
+    "operations": [
+      {
+        "package": "@firstdraft.com/cli",
+        "status": "already-selected",
+        "tags": {
+          "latest": "0.2.2",
+          "next": "0.2.2"
+        }
+      },
+      {
+        "package": "@firstdraft.com/claude-code",
+        "before": {
+          "next": "0.2.3",
+          "latest": "0.2.2"
+        },
+        "requested": {
+          "latest": "0.2.3"
+        },
+        "command_status": 0,
+        "after": {
+          "next": "0.2.3",
+          "latest": "0.2.2"
+        }
+      }
+    ],
+    "request": {
+      "ref": "refs/tags/promote-v0.2.3",
+      "run_id": "34772335895",
+      "attempt": "1"
+    },
+    "candidate": {
+      "plugin_version": "0.2.3",
+      "skills_source": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+      "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+      "catalog_commit": "693e100ac0ee5520851ad472a5137ced5d629d17",
+      "packages": [
+        {
+          "name": "@firstdraft.com/cli",
+          "version": "0.2.2",
+          "tags": {
+            "latest": "0.2.2",
+            "next": "0.2.2"
+          },
+          "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+          "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+        },
+        {
+          "name": "@firstdraft.com/claude-code",
+          "version": "0.2.3",
+          "tags": {
+            "next": "0.2.3",
+            "latest": "0.2.2"
+          },
+          "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+          "integrity": "sha512-opAnVnpWrLXZht4FrTu/lBlbBp6jAK0LQ2hba9oDVysKNvdmWKzTquv2Nyd3lwD+0IvbjCtekhPuWro6Js2OCQ=="
+        }
+      ]
+    }
+  },
+  "attempt_2": {
+    "observed_at": "2026-09-13T17:43:09.060Z",
+    "mode": "promote",
+    "status": "promoted",
+    "operations": [
+      {
+        "package": "@firstdraft.com/cli",
+        "status": "already-selected",
+        "tags": {
+          "latest": "0.2.2",
+          "next": "0.2.2"
+        }
+      },
+      {
+        "package": "@firstdraft.com/claude-code",
+        "status": "already-selected",
+        "tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        }
+      }
+    ],
+    "request": {
+      "ref": "refs/tags/promote-v0.2.3",
+      "run_id": "34772335895",
+      "attempt": "2"
+    },
+    "candidate": {
+      "plugin_version": "0.2.3",
+      "skills_source": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+      "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+      "catalog_commit": "693e100ac0ee5520851ad472a5137ced5d629d17",
+      "packages": [
+        {
+          "name": "@firstdraft.com/cli",
+          "version": "0.2.2",
+          "tags": {
+            "latest": "0.2.2",
+            "next": "0.2.2"
+          },
+          "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+          "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+        },
+        {
+          "name": "@firstdraft.com/claude-code",
+          "version": "0.2.3",
+          "tags": {
+            "latest": "0.2.3",
+            "next": "0.2.3"
+          },
+          "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+          "integrity": "sha512-opAnVnpWrLXZht4FrTu/lBlbBp6jAK0LQ2hba9oDVysKNvdmWKzTquv2Nyd3lwD+0IvbjCtekhPuWro6Js2OCQ=="
+        }
+      ]
+    }
+  },
+  "independent_reconciliation": {
+    "observed_at": "2026-09-13T17:42:32.770Z",
+    "mode": "inspect",
+    "status": "verified",
+    "operations": [],
+    "request": {},
+    "candidate": {
+      "plugin_version": "0.2.3",
+      "skills_source": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+      "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+      "catalog_commit": "693e100ac0ee5520851ad472a5137ced5d629d17",
+      "packages": [
+        {
+          "name": "@firstdraft.com/cli",
+          "version": "0.2.2",
+          "tags": {
+            "latest": "0.2.2",
+            "next": "0.2.2"
+          },
+          "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+          "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+        },
+        {
+          "name": "@firstdraft.com/claude-code",
+          "version": "0.2.3",
+          "tags": {
+            "latest": "0.2.3",
+            "next": "0.2.3"
+          },
+          "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+          "integrity": "sha512-opAnVnpWrLXZht4FrTu/lBlbBp6jAK0LQ2hba9oDVysKNvdmWKzTquv2Nyd3lwD+0IvbjCtekhPuWro6Js2OCQ=="
+        }
+      ]
+    }
+  },
+  "token_setup": {
+    "observed_at": "2026-09-13T17:43:25.111062+00:00",
+    "token_name": "FirstDraftGitHubPromotion-20260913",
+    "created_on": "2026-09-13",
+    "expires_on": "2026-12-12",
+    "permission": "Read and write (stage only)",
+    "packages": [
+      "@firstdraft.com/claude-code",
+      "@firstdraft.com/cli"
+    ],
+    "scopes": [],
+    "organization_access": "none",
+    "bypass_2fa": true,
+    "stored_only_in": {
+      "repository": "firstdraft/skills",
+      "environment": "npm-promotion",
+      "secret": "NPM_PROMOTION_TOKEN",
+      "created_at": "2026-09-13T17:40:50Z"
+    },
+    "ui_verified": true,
+    "token_value_retained_in_evidence": false
+  },
+  "credential_probe": {
+    "status": "incomplete",
+    "workflow": "https://github.com/firstdraft/skills/actions/runs/34773442118",
+    "workflow_source": "c1736bea0bf23a16b0a62ea4efe682ea1aef17f8",
+    "receipt": {
+      "observed_at": "2026-09-13T18:04:47.805Z",
+      "mode": "verify-token",
+      "status": "incomplete",
+      "operations": [
+        {
+          "package": "@firstdraft.com/cli",
+          "phase": "add-probe",
+          "before": {
+            "latest": "0.2.2",
+            "next": "0.2.2"
+          },
+          "requested": {
+            "promotion-check-34773442118": "0.2.2"
+          },
+          "command_status": 1,
+          "readbacks": [
+            {
+              "latest": "0.2.2",
+              "next": "0.2.2"
+            }
+          ],
+          "after": {
+            "latest": "0.2.2",
+            "next": "0.2.2"
+          },
+          "readback_status": "prior-state-after-command-failure"
+        }
+      ],
+      "request": {
+        "ref": "refs/heads/main",
+        "run_id": "34773442118",
+        "attempt": "1"
+      },
+      "candidate": {
+        "plugin_version": "0.2.3",
+        "skills_source": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+        "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+        "catalog_commit": "c1736bea0bf23a16b0a62ea4efe682ea1aef17f8",
+        "packages": [
+          {
+            "name": "@firstdraft.com/cli",
+            "version": "0.2.2",
+            "tags": {
+              "latest": "0.2.2",
+              "next": "0.2.2"
+            },
+            "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+            "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+          },
+          {
+            "name": "@firstdraft.com/claude-code",
+            "version": "0.2.3",
+            "tags": {
+              "latest": "0.2.3",
+              "next": "0.2.3"
+            },
+            "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+            "integrity": "sha512-opAnVnpWrLXZht4FrTu/lBlbBp6jAK0LQ2hba9oDVysKNvdmWKzTquv2Nyd3lwD+0IvbjCtekhPuWro6Js2OCQ=="
+          }
+        ]
+      },
+      "probe_tag": "promotion-check-34773442118"
+    },
+    "reconciliation": {
+      "observed_at": "2026-09-13T18:07:11.241209+00:00",
+      "probe_run": "https://github.com/firstdraft/skills/actions/runs/34773442118",
+      "probe_status": "CLI command failed before a probe was observed; workflow stopped",
+      "independent_registry_read": {
+        "cli": {
+          "latest": "0.2.2",
+          "next": "0.2.2"
+        },
+        "plugin": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        },
+        "probe_tags_present": false
+      },
+      "npm_ui": {
+        "url": "https://www.npmjs.com/package/@firstdraft.com/cli/access",
+        "package": "@firstdraft.com/cli",
+        "selected_policy": "Require two-factor authentication and disallow bypass 2fa tokens (recommended)",
+        "alternative_policy": "Require two-factor authentication or a granular access token with bypass 2fa enabled",
+        "trusted_publisher": {
+          "repository": "firstdraft/cli",
+          "workflow": "publish.yml",
+          "environment": "npm",
+          "permissions": [
+            "npm publish",
+            "npm stage publish"
+          ]
+        },
+        "changes_made": false
+      },
+      "diagnosis": "The selected package policy forbids the promotion token and is consistent with this failure. The npm command exited 1 without retained stderr; the exact cause and any HTTP status remain unobserved.",
+      "documentation": "https://docs.npmjs.com/requiring-2fa-for-package-publishing-and-settings-modification/",
+      "next_action": "Await explicit approval for the package policy change; no probe rerun until repaired and reconciled."
+    },
+    "package_policy_change": {
+      "package": "@firstdraft.com/cli",
+      "authorized": true,
+      "saved": false,
+      "pending": "npm security-key confirmation",
+      "observed_at": "2026-09-13T18:18:10Z",
+      "authorization_source": "Explicit user approval after the 18:07 reconciliation and before the browser save was attempted.",
+      "save_result": "npm required security-key confirmation. A fresh package-settings read at this observation still showed bypass tokens disallowed.",
+      "supersedes_next_action_in": "credential_probe.reconciliation"
+    }
+  },
+  "limits": [
+    "Promotion does not publish new package bytes or update an existing installation.",
+    "The first attempt made one successful plugin dist-tag write; its immediate readback was stale.",
+    "Attempt 2 reconciled read-only and performed no tag mutations.",
+    "The initial two-package credential probe stopped at CLI; its package policy change awaits npm security-key confirmation."
+  ],
+  "promotion_workflow_source": "693e100ac0ee5520851ad472a5137ced5d629d17"
+}
