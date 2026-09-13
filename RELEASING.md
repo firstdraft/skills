@@ -21,7 +21,8 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
 See the [0.2.3 publication](evidence/2026-09-13-shared-plugin-0.2.3-publication.md) and
 [qualification](evidence/2026-09-13-native-preview-skill-0.2.3-qualification.md) receipts.
-Public installation and `latest` promotion remain pending. Recheck before mutations.
+[Fresh public installation](evidence/2026-09-13-shared-plugin-0.2.3-public-install.md) passed in both clients.
+Only npm `latest` promotion remains pending. Recheck before mutations.
 
 ## Authorization boundaries
 
