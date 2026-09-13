@@ -8,7 +8,7 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 | Surface | Current identity |
 |---|---|
 | Package source candidate | `@firstdraft.com/claude-code@0.2.4` (unpublished; future tag `claude-v0.2.4`) |
-| Candidate packed SHA-256 | `16a32bf407464fa705e6f0ebe4f837ada67b6fa59ec74a162c63cb22355e3e56` |
+| Candidate packed SHA-256 | `44cb85f1ada0ef68ea2516782865e1d2651a8a2cb9274c98deedd4beef8deb25` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.3` |
 | Public catalog | Plugin `0.2.3`, selected by `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.3` / `0.2.3` |
