@@ -35,7 +35,13 @@ Before a new credential check, reconcile and remove any retained `promotion-chec
 the [cleanup procedure](#partial-results-and-recovery). Supply `cleanup_run_id` for that recovery dispatch; leaving it
 blank creates a new probe. The check rejects retained probes on either package before adding another.
 
-After setup or renewal and any cleanup, dispatch `Promote npm defaults` on current `main` with `cleanup_run_id` blank.
+First check existing write receipts against the proof requirements below. The
+[current token's CLI probe deletion returned 403](../evidence/2026-09-13-npm-token-write-verification.md#deletion-boundary).
+Its writes are already proved; do not repeat that rejected probe. A full check with that behavior stops before the
+plugin and leaves a CLI probe requiring [interactive cleanup](#partial-results-and-recovery).
+
+When new write proof is needed, after setup or renewal and any cleanup, dispatch `Promote npm defaults` on current
+`main` with `cleanup_run_id` blank and be prepared for interactive cleanup if the rejection persists.
 This is a credential check, not a release promotion. It requires `next`, `latest`, and the catalog to select the
 qualified pair already. For each package it
 adds `promotion-check-<run-id>` selecting that same version, verifies the result, removes that tag, and verifies the
@@ -43,6 +49,17 @@ original tags are restored. Approve the environment job after inspecting its ver
 release promotion alone would not prove token write access.
 This probe does not prove least privilege. At creation and each renewal, inspect the token's two-package list,
 stage-only permission, lack of organization access, and expiry in npm; retain its name and expiry in setup evidence.
+
+Promotion needs a successful tag write on each package with the configured token, with the resulting selections
+independently verified. A no-op does not count. Receipts from separate runs may establish those writes if secret
+metadata confirms the token was not replaced between them. Recheck its current npm permissions and both packages'
+token policies; each package's write must postdate the latest relevant policy or credential change. A new token
+cannot inherit the old token's write proof. All probes must also be reconciled and removed before
+declaring setup ready. Record that combined proof explicitly; never relabel a failed credential-check run as passed.
+The full check additionally exercises tag deletion, which normal promotion does not use. If deletion is rejected,
+follow [recovery](#partial-results-and-recovery) and retain that limitation separately. A package the failed check
+never reached remains unexercised until a separately approved tag write supplies that proof. Repeating the same
+rejected cleanup or broadening the token solely to make the probe pass is not required for promotion.
 
 ## Promote a qualified release
 
@@ -127,7 +144,8 @@ workflow on passing current `main` with `cleanup_run_id` set to that prior run I
 approve its protected environment job. This mode creates no probe: it removes only the named `promotion-check-*`
 tag from the two qualified packages, rejects changed versions or maps, and verifies the final maps. An absent tag
 needs no write. A cleanup rerun refuses writes; inspect the receipt and registry before any further attempt.
-If token cleanup fails, an authorized operator can remove that exact observed tag through interactive npm.
+If token cleanup fails, an authorized operator can remove that exact observed tag through interactive npm. For an
+already reconciled 403, use that interactive path directly; do not repeat the same token deletion without a repair.
 Do not dispatch
 another check to evade an uncertain outcome. If the add command reported failure but the exact probe is observed,
 the original invocation removes its own probe once before stopping; an ambiguous add or cleanup requires operator

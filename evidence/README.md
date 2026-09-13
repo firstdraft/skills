@@ -31,6 +31,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-13-npm-token-write-verification.md`](2026-09-13-npm-token-write-verification.md) | CLI probe and plugin default writes verified; CLI default move unexercised; token DELETE returned 403 and interactive cleanup restored clean maps; [machine receipt](2026-09-13-npm-token-write-verification.json) |
 | [`2026-09-13-npm-token-cleanup.md`](2026-09-13-npm-token-cleanup.md) | Token cleanup still failed after cache revalidation; retained probe and diagnostic recovery boundary; [machine receipt](2026-09-13-npm-token-cleanup.json) |
 | [`2026-09-13-npm-promotion-cache-repair.md`](2026-09-13-npm-promotion-cache-repair.md) | Saved CLI policy, successful token addition, failed cleanup and manual reconciliation, plus an isolated npm cache regression; [machine receipt](2026-09-13-npm-promotion-cache-repair.json) |
 | [`2026-09-13-shared-plugin-0.2.3-default-promotion.md`](2026-09-13-shared-plugin-0.2.3-default-promotion.md) | Protected-tag default promotion, stale-read reconciliation, and scoped-token setup; [machine receipt](2026-09-13-shared-plugin-0.2.3-default-promotion.json) |
