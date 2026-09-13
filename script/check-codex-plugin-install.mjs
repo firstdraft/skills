@@ -16,6 +16,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { parseArgs } from "node:util";
 
+import { canonicalPluginSkillNames, canonicalPluginSkillPaths } from "./claude-plugin-boundaries.mjs";
 import { cliPackageVersion } from "./cli-contract/config.mjs";
 
 const { values } = parseArgs({
@@ -44,7 +45,6 @@ assert.equal(candidateEntries.length, 1, "the shared catalog must contain exactl
 const [candidateEntry] = candidateEntries;
 candidateEntry.version = manifest.version;
 candidateEntry.source = { source: "local", path: "./plugins/firstdraft" };
-const skillRelativePath = "skills/create-full-stack-app/SKILL.md";
 const helperRelativePath = "skills/create-full-stack-app/scripts/firstdraft.sh";
 assert(existsSync(path.join(candidateRoot, helperRelativePath)), "candidate is missing the portable CLI helper");
 
@@ -134,27 +134,31 @@ try {
     .map((content) => content.text ?? "")
     .filter((text) => text.includes("<skills_instructions>"))
     .join("\n");
-  const skillLines = catalogText.split("\n")
-    .filter((line) => line.startsWith("- firstdraft:create-full-stack-app:"));
-  assert.equal(skillLines.length, 1, "the installed Skill must appear exactly once in model-visible context");
-  const locator = skillLines[0].match(/\(file: (.+)\)$/)?.[1];
-  assert(locator, "the installed Skill must expose its file locator");
   const roots = new Map(
     [...catalogText.matchAll(/^- `(r\d+)` = `([^`]+)`$/gm)]
       .map((match) => [match[1], match[2]]),
   );
-  const alias = locator.match(/^(r\d+)\/(.+)$/);
-  const loadedSkill = alias
-    ? path.join(assertRoot(roots, alias[1]), alias[2])
-    : locator;
-  assert(path.isAbsolute(loadedSkill), "the loaded Skill locator must resolve to an absolute path");
-  assert.equal(realpathSync(loadedSkill), realpathSync(path.join(installedRoot, skillRelativePath)));
-  assert(
-    readFileSync(loadedSkill).equals(readFileSync(path.join(candidateRoot, skillRelativePath))),
-    "Codex loaded Skill bytes that differ from the assembled candidate",
-  );
+  for (const name of canonicalPluginSkillNames) {
+    const skillLines = catalogText.split("\n")
+      .filter((line) => line.startsWith(`- firstdraft:${name}:`));
+    assert.equal(skillLines.length, 1, `${name} must appear exactly once in model-visible context`);
+    const locator = skillLines[0].match(/\(file: (.+)\)$/)?.[1];
+    assert(locator, `${name} must expose its file locator`);
+    const alias = locator.match(/^(r\d+)\/(.+)$/);
+    const loadedSkill = alias
+      ? path.join(assertRoot(roots, alias[1]), alias[2])
+      : locator;
+    assert(path.isAbsolute(loadedSkill), "the loaded Skill locator must resolve to an absolute path");
+    assert.equal(realpathSync(loadedSkill), realpathSync(path.join(installedRoot, "skills", name, "SKILL.md")));
+  }
+  for (const file of canonicalPluginSkillPaths) {
+    assert(
+      readFileSync(path.join(installedRoot, file)).equals(readFileSync(path.join(candidateRoot, file))),
+      `Codex installed bytes differ from the assembled candidate: ${file}`,
+    );
+  }
 
-  const loadedHelper = path.join(path.dirname(loadedSkill), "scripts", "firstdraft.sh");
+  const loadedHelper = path.join(installedRoot, helperRelativePath);
   const version = run("/bin/sh", [loadedHelper, "--version"]);
   assert.equal(version.stdout, `${cliPackageVersion}\n`);
   assert.equal(version.stderr, "");
@@ -167,7 +171,7 @@ try {
   assert.equal(existsSync(path.join(locations.config, "auth.json")), false);
 
   process.stdout.write(
-    `${codexVersion}: installed First Draft ${manifest.version}; loaded its exact Skill; ` +
+    `${codexVersion}: installed First Draft ${manifest.version}; discovered ${canonicalPluginSkillNames.length} exact Skills; ` +
       `invoked CLI ${cliPackageVersion} and local generation without a global CLI or credentials.\n`,
   );
 } finally {

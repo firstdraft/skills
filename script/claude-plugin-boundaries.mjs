@@ -12,6 +12,30 @@ export const canonicalClaudePluginSkillFiles = Object.freeze([
   "scripts/firstdraft.sh",
 ]);
 
+export const canonicalPluginSkills = Object.freeze({
+  "create-full-stack-app": canonicalClaudePluginSkillFiles,
+  "extend-app-ui": Object.freeze([
+    "LICENSE.txt",
+    "SKILL.md",
+    "agents/openai.yaml",
+    "references/rails.md",
+    "references/shadcn.md",
+  ]),
+  "review-ui-consistency": Object.freeze([
+    "LICENSE.txt",
+    "SKILL.md",
+    "agents/openai.yaml",
+    "references/capture.md",
+  ]),
+});
+
+export const canonicalPluginSkillNames = Object.freeze(Object.keys(canonicalPluginSkills));
+export const canonicalPluginSkillPaths = Object.freeze(
+  Object.entries(canonicalPluginSkills).flatMap(([name, files]) =>
+    files.map((file) => `skills/${name}/${file}`),
+  ).sort(),
+);
+
 export const forbiddenCheckoutRootClaudePluginComponentPaths = Object.freeze([
   ".lsp.json",
   ".mcp.json",
@@ -27,7 +51,7 @@ export const forbiddenCheckoutRootClaudePluginComponentPaths = Object.freeze([
   "workflows",
 ]);
 
-// The checkout plugin deliberately exposes only the portable Skill. The assembled
+// The checkout plugin deliberately exposes only portable Skills. The assembled
 // installable plugin separately admits bin/ as Claude Code's documented executable
 // component so the exact CLI adapter is available to the Bash tool.
 

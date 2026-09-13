@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { canonicalPluginSkillNames } from "./claude-plugin-boundaries.mjs";
+
 import {
   cliPackageVersion,
   foundationPlanFormat,
@@ -160,9 +162,7 @@ export function assertSkillsReleaseCompatibility({
 
   assert.equal(installableManifest.name, installablePlugin.name);
   assert.equal(installableManifest.version, compatibility.version);
-  assert.deepEqual(installableManifest.skills, [
-    "./skills/create-full-stack-app",
-  ]);
+  assert.deepEqual(installableManifest.skills, canonicalPluginSkillNames.map((name) => `./skills/${name}`));
 
   assert.equal(packageTemplate.name, compatibility.plugin_source.package);
   assert.equal(packageTemplate.version, compatibility.version);

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Extend app UI"
+  short_description: "Extend screens using the app’s existing design"
+  default_prompt: "Use $extend-app-ui to build this feature using my app’s existing components, design, and behavior."

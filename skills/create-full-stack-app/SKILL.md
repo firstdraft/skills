@@ -11,7 +11,7 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-Targets plugin 0.2.3, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
+Targets plugin 0.2.4, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
   Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone/Android slices. Rails emits
@@ -318,6 +318,5 @@ Report:
   [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for the GitHub checkpoint before setup; and
 - any recovery blocker or external prerequisite.
 
-Report source generated only after verified materialization. Distinguish validated First Draft Publication from
-later verified GitHub publication or pushes. Neither is deployed, production-ready, or proof beyond the admitted
-narrow slice.
+Distinguish verified materialization, First Draft Publication, and GitHub pushes. None proves deployment or
+production readiness. For UI work, follow [UI continuation](references/diagnostics-and-recovery.md#ui-continuation).

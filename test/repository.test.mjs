@@ -10,6 +10,8 @@ import Ajv2020 from "ajv/dist/2020.js";
 
 import {
   canonicalClaudePluginSkillFiles,
+  canonicalPluginSkills,
+  canonicalPluginSkillNames,
   classifyInventoryEntry,
   forbiddenCheckoutRootClaudePluginComponentPaths,
   forbiddenClaudePluginPathSegments,
@@ -875,14 +877,14 @@ test("installable Skills follow the portable repository profile", async () => {
     .map((entry) => entry.name)
     .sort();
 
-  assert.deepEqual(skillNames, ["create-full-stack-app"]);
+  assert.deepEqual(skillNames, canonicalPluginSkillNames);
 
   for (const skillName of skillNames) {
     await checkSkill(skillName);
   }
 });
 
-test("Claude Code packaging reuses the portable Skill exactly once", async () => {
+test("Claude Code packaging reuses every portable Skill exactly once", async () => {
   const checkoutManifest = JSON.parse(
     await readFile(path.join(claudePluginDirectory, "plugin.json"), "utf8"),
   );
@@ -905,7 +907,7 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
   assert.equal(checkoutManifest.name, claudePluginName);
   assert.equal(checkoutManifest.displayName, "First Draft");
   assert.equal(checkoutManifest.version, "0.0.0");
-  assert.deepEqual(checkoutManifest.skills, [`./skills/${portableSkillName}`]);
+  assert.deepEqual(checkoutManifest.skills, canonicalPluginSkillNames.map((name) => `./skills/${name}`));
   assert.equal(marketplace.name, claudeMarketplaceName);
   assert.equal(marketplace.plugins.length, 1);
   assert.equal(marketplace.plugins[0].name, claudePluginName);
@@ -916,12 +918,10 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     version: "0.2.3",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.2.3");
-  assert.equal(installableManifest.version, "0.2.3");
+  assert.equal(packageTemplate.version, "0.2.4");
+  assert.equal(installableManifest.version, "0.2.4");
   assert.equal(packageTemplate.dependencies, undefined);
-  assert.deepEqual(installableManifest.skills, [
-    "./skills/create-full-stack-app",
-  ]);
+  assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);
 
   const repositoryFiles = trackedFiles();
@@ -940,32 +940,32 @@ test("Claude Code packaging reuses the portable Skill exactly once", async () =>
     );
   }
 
-  const pluginSkillDirectory = path.join(skillsDirectory, portableSkillName);
   const skillFiles = repositoryFiles.filter(
     (file) => path.basename(file) === "SKILL.md",
   );
-  assert.deepEqual(skillFiles, [path.join(pluginSkillDirectory, "SKILL.md")]);
-  const canonicalBody = await readFile(skillFiles[0]);
-  const exactCopies = [];
-  for (const file of repositoryFiles) {
-    if (file === skillFiles[0]) continue;
-    if ((await readFile(file)).equals(canonicalBody)) exactCopies.push(file);
-  }
-  assert.deepEqual(exactCopies, []);
-
-  const installedSourceFiles = (await filesUnder(pluginSkillDirectory)).map(
-    (file) => path.relative(pluginSkillDirectory, file),
-  );
-  assert.deepEqual(installedSourceFiles, canonicalClaudePluginSkillFiles);
+  assert.deepEqual(skillFiles, canonicalPluginSkillNames.map((name) => path.join(skillsDirectory, name, "SKILL.md")));
   const forbiddenSegments = new Set(forbiddenClaudePluginPathSegments);
-  for (const relativePath of installedSourceFiles) {
-    assert.equal(
-      relativePath
-        .split(path.sep)
-        .some((segment) => forbiddenSegments.has(segment)),
-      false,
-      `unexpected portable Skill path: ${relativePath}`,
+  for (const [name, expectedFiles] of Object.entries(canonicalPluginSkills)) {
+    const pluginSkillDirectory = path.join(skillsDirectory, name);
+    const skillFile = path.join(pluginSkillDirectory, "SKILL.md");
+    const canonicalBody = await readFile(skillFile);
+    const exactCopies = [];
+    for (const file of repositoryFiles) {
+      if (file === skillFile) continue;
+      if ((await readFile(file)).equals(canonicalBody)) exactCopies.push(file);
+    }
+    assert.deepEqual(exactCopies, [], `${name} has a second editable copy`);
+    const installedSourceFiles = (await filesUnder(pluginSkillDirectory)).map(
+      (file) => path.relative(pluginSkillDirectory, file),
     );
+    assert.deepEqual(installedSourceFiles, expectedFiles);
+    for (const relativePath of installedSourceFiles) {
+      assert.equal(
+        relativePath.split(path.sep).some((segment) => forbiddenSegments.has(segment)),
+        false,
+        `unexpected portable Skill path: ${name}/${relativePath}`,
+      );
+    }
   }
 
   const packageSources = trackedFiles().filter((file) =>
@@ -4616,13 +4616,12 @@ test("malformed source fixture is bound to its coordinate diagnostic", async () 
   );
 });
 
-test("the independently installed Skill retains the repository license", async () => {
+test("every independently installed Skill retains the repository license", async () => {
   const repositoryLicense = await readFile(path.join(repository, "LICENSE"), "utf8");
-  const skillLicense = await readFile(
-    path.join(skillsDirectory, "create-full-stack-app", "LICENSE.txt"),
-    "utf8",
-  );
-  assert.equal(skillLicense, repositoryLicense);
+  for (const name of canonicalPluginSkillNames) {
+    const skillLicense = await readFile(path.join(skillsDirectory, name, "LICENSE.txt"), "utf8");
+    assert.equal(skillLicense, repositoryLicense);
+  }
 });
 
 async function checkSkill(skillName) {
@@ -4640,30 +4639,34 @@ async function checkSkill(skillName) {
   assert(metadata.name.length <= 64);
   assert(metadata.description.length > 0);
   assert(metadata.description.length <= 1024);
-  assert.match(metadata.description, /^Experimental and in development:/);
-  assert(metadata.description.includes("First Draft Foundation Plan"));
-  for (const fragment of [
-    "Authors and revises First Draft Foundation Plans",
-    "submits exact bytes",
-    "Web Accounts, Policies, protected Scaffolds, and required enums are bounded",
-    "arbitrary apps",
-    "broader clients are unavailable",
-  ]) {
-    assert(metadata.description.includes(fragment));
+  if (skillName === "create-full-stack-app") {
+    assert.match(metadata.description, /^Experimental and in development:/);
+    assert(metadata.description.includes("First Draft Foundation Plan"));
+    for (const fragment of [
+      "Authors and revises First Draft Foundation Plans",
+      "submits exact bytes",
+      "Web Accounts, Policies, protected Scaffolds, and required enums are bounded",
+      "arbitrary apps",
+      "broader clients are unavailable",
+    ]) {
+      assert(metadata.description.includes(fragment));
+    }
+    assert.doesNotMatch(metadata.description, /Accounts[^.;]*are not available/);
+    assert(source.includes("## Load references only when needed"));
   }
-  assert.doesNotMatch(metadata.description, /Accounts[^.;]*are not available/);
   assert(source.split("\n").length - 1 < 500);
   assert(
     Buffer.byteLength(source, "utf8") <= 20 * 1024,
     `${skillName}: SKILL.md exceeds the 20 KiB progressive-disclosure budget`,
   );
-  assert(source.includes("## Load references only when needed"));
   assert(!source.includes("TODO"));
 
   const files = await filesUnder(skillDirectory);
   assert.deepEqual(
     files.filter((file) => file.includes(`${path.sep}scripts${path.sep}`)),
-    [path.join(skillDirectory, "scripts", "firstdraft.sh")],
+    canonicalPluginSkills[skillName]
+      .filter((file) => file.startsWith("scripts/"))
+      .map((file) => path.join(skillDirectory, file)),
   );
 
   for (const file of files) {
@@ -4704,15 +4707,17 @@ async function checkSkill(skillName) {
   const shortDescription = quotedYamlValue(interfaceSource, "short_description");
   const defaultPrompt = quotedYamlValue(interfaceSource, "default_prompt");
   assert(shortDescription.length >= 25 && shortDescription.length <= 64);
-  assert.equal(
-    shortDescription,
-    "Interview, author, diagnose, and compile a Plan",
-  );
   assert(defaultPrompt.includes(`$${skillName}`));
-  assert.equal(
-    defaultPrompt,
-    `Use $${skillName} to interview me, incrementally author and diagnose one complete First Draft Foundation Plan candidate, and use the available Compile workflow when that candidate is ready.`,
-  );
+  if (skillName === "create-full-stack-app") {
+    assert.equal(
+      shortDescription,
+      "Interview, author, diagnose, and compile a Plan",
+    );
+    assert.equal(
+      defaultPrompt,
+      `Use $${skillName} to interview me, incrementally author and diagnose one complete First Draft Foundation Plan candidate, and use the available Compile workflow when that candidate is ready.`,
+    );
+  }
 }
 
 function markdownHeadingAnchors(source) {

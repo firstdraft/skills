@@ -12,7 +12,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { canonicalClaudePluginSkillFiles } from "./claude-plugin-boundaries.mjs";
+import { canonicalPluginSkillNames, canonicalPluginSkillPaths } from "./claude-plugin-boundaries.mjs";
 import { packClaudePlugin } from "./claude-plugin-package.mjs";
 import { cliPackageVersion } from "./cli-contract/config.mjs";
 
@@ -101,9 +101,7 @@ try {
     "bin/firstdraft.js",
     "package.json",
     "plugin.json",
-    ...canonicalClaudePluginSkillFiles.map(
-      (file) => `skills/create-full-stack-app/${file}`,
-    ),
+    ...canonicalPluginSkillPaths,
   ].sort();
   const packagedFiles = first.manifest.files.map(({path: file}) => file).sort();
   assert.deepEqual(
@@ -141,13 +139,14 @@ try {
     assert.deepEqual(installedPortable[key], installedClaude[key], `portable ${key} must match Claude`);
   }
   assert.equal(installedCodex.skills, "./skills/");
+  assert.deepEqual(installedClaude.skills, canonicalPluginSkillNames.map((name) => `./skills/${name}`));
   assert.equal(installedCodex.interface.displayName, installedClaude.displayName);
   assert.equal(installedCodex.apps, undefined);
   assert.equal(installedCodex.mcpServers, undefined);
-  for (const file of canonicalClaudePluginSkillFiles) {
+  for (const file of canonicalPluginSkillPaths) {
     assert.deepEqual(
-      readFileSync(path.join(installedRoot, "skills", "create-full-stack-app", file)),
-      readFileSync(path.join(repository, "skills", "create-full-stack-app", file)),
+      readFileSync(path.join(installedRoot, file)),
+      readFileSync(path.join(repository, file)),
       `both clients must receive the canonical ${file}`,
     );
   }

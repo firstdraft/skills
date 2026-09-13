@@ -12,6 +12,7 @@ historical observations intentionally have different owners.
 | What is the current release procedure? | [`RELEASING.md`](../RELEASING.md) |
 | How does a Git tag promote npm defaults? | [npm promotion](npm-promotion.md) |
 | What does the agent execute? | [`SKILL.md`](../skills/create-full-stack-app/SKILL.md) |
+| How does an agent extend or review generated UI? | [`extend-app-ui`](../skills/extend-app-ui/SKILL.md), [`review-ui-consistency`](../skills/review-ui-consistency/SKILL.md), then the app's `UI.md` |
 | What is exact Plan syntax? | [JSON Schema](../skills/create-full-stack-app/references/foundation-plan-0.19.schema.json) |
 | What capability is currently described? | [Foundation Plan reference](../skills/create-full-stack-app/references/foundation-plan-019.md) |
 | What happened in a particular run? | [`evidence/README.md`](../evidence/README.md), then one dated record |
@@ -23,7 +24,7 @@ dated observation records an earlier value.
 
 ## Routes by task
 
-- **Skill authoring:** read `SKILL.md`, then only the reference section named by its routing table. Packaged bytes are
+- **Skill authoring:** read the relevant Skill's `SKILL.md`, then only its applicable reference. Packaged bytes are
   the product surface; changing any of them changes the candidate digest.
 - **Foundation Plan examples or schema:** start with `references/examples.md` or the relevant prose subsection. Pass
   the schema to a validator or search one `$defs` entry; do not load the entire schema as prose.
@@ -43,7 +44,7 @@ dated observation records an earlier value.
 | Entry and routing | `README.md`, this page | Keep short; link rather than restate |
 | Always-loaded guardrails | `AGENTS.md` | Include only rules that prevent likely high-impact mistakes |
 | Current operator procedure | `RELEASING.md` and its linked runbooks | No completed chronology or historical shell transcripts |
-| Packaged agent workflow | `skills/create-full-stack-app/` | Progressive disclosure; preserve exact safety boundaries |
+| Packaged agent workflow | `skills/` | One editable source per Skill; app-owned `UI.md` controls UI choices |
 | Point-in-time evidence | `evidence/YYYY-MM-DD-*` | Append a new record; do not rewrite an old observation as current |
 | Historical narrative | `evidence/*-history.md` | Archive only; never treat as the current runbook |
 | Behavioral corpus | `evals/` | Cases are expectations and fixtures, not proof of execution |
