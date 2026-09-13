@@ -7,22 +7,21 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 
 | Surface | Current identity |
 |---|---|
-| Source candidate | `@firstdraft.com/claude-code@0.2.3` (unpublished) |
+| Package source | `@firstdraft.com/claude-code@0.2.3`, tag `claude-v0.2.3` |
 | Packed SHA-256 | `53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc` |
-| Public plugin package | `@firstdraft.com/claude-code@0.2.2` |
-| Public catalog | Plugin `0.2.2`, selected by `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.2` / `0.2.2` |
+| Public plugin package | `@firstdraft.com/claude-code@0.2.3` |
+| Public catalog | Plugin `0.2.3`, selected by `.claude-plugin/marketplace.json` |
+| Plugin npm `next` / `latest` | `0.2.3` / `0.2.2` (default promotion pending) |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.0`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
-marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate. The
-[0.2.2 release receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) records the protected publication,
-controlled-service approval pairs, and final-package Codex cases. The
-[public-install receipt](evidence/2026-09-10-shared-plugin-0.2.2-public-install.md) records both clients.
-[Promotion](evidence/2026-09-11-shared-plugin-0.2.2-default-promotion.md). Recheck before mutations.
+marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
+See the [0.2.3 publication](evidence/2026-09-13-shared-plugin-0.2.3-publication.md) and
+[qualification](evidence/2026-09-13-native-preview-skill-0.2.3-qualification.md) receipts.
+Public installation and `latest` promotion remain pending. Recheck before mutations.
 
 ## Authorization boundaries
 
@@ -220,7 +219,7 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For API 0.3, CLI 0.2.2 and plugin 0.2.2 are published; their channel state is listed above. The earlier 0.2.1 controlled approval
+For API 0.3, CLI 0.2.2 and plugin 0.2.3 are published; their channel state is listed above. The earlier 0.2.1 controlled approval
 smokes passed against service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, observed on both staging roles through
 Render deployment listings at `2026-09-10T04:13:47Z`.
 This records staging readiness, not production activation or the full authenticated Codespaces journey. For a new
