@@ -42,9 +42,9 @@ In Drawing Board, the Skill and CLI are already installed. Follow the
 Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
 conversation, run `codex resume` from the same workspace root.
 
-The public catalog selects shared plugin `0.2.2`, which includes the compatible CLI and discovers it in either
+The public catalog selects shared plugin `0.2.3`, which includes the compatible CLI and discovers it in either
 agent. Drawing Board supplies its own project wrapper and installed CLI. The
-[release receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) distinguishes package and controlled behavioral
+[release receipt](evidence/2026-09-13-shared-plugin-0.2.3-publication.md) distinguishes package and controlled behavioral
 checks from the still-unproved fresh authenticated Codespace journey.
 
 Outside Drawing Board, Codex uses the same catalog as Claude. Install it with:

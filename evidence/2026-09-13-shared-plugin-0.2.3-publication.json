@@ -1,0 +1,59 @@
+{
+  "observed_at": "2026-09-13T17:20:01.148880+00:00",
+  "package": "@firstdraft.com/claude-code",
+  "version": "0.2.3",
+  "source_sha": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+  "protected_tag_object": "8616ad5402d177b715fae1a4b9dc0e0d5b9e2e86",
+  "publication_run": "https://github.com/firstdraft/skills/actions/runs/34771138358",
+  "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+  "bytes": 132997,
+  "integrity": "sha512-opAnVnpWrLXZht4FrTu/lBlbBp6jAK0LQ2hba9oDVysKNvdmWKzTquv2Nyd3lwD+0IvbjCtekhPuWro6Js2OCQ==",
+  "dist_tags": {
+    "next": "0.2.3",
+    "latest": "0.2.2"
+  },
+  "attestations": {
+    "url": "https://registry.npmjs.org/-/npm/v1/attestations/@firstdraft.com%2fclaude-code@0.2.3",
+    "provenance": {
+      "predicateType": "https://slsa.dev/provenance/v1"
+    }
+  },
+  "signatures_present": true,
+  "format": "firstdraft.plugin-publication-observation/1",
+  "catalog_at_publication": {
+    "commit": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+    "version": "0.2.2"
+  },
+  "service": {
+    "sha": "df255d56f68ef47fdb11db66e1bce1001502b30f",
+    "roles": [
+      "staging-web",
+      "staging-worker"
+    ],
+    "api_contract": "0.3.0"
+  },
+  "cli": {
+    "version": "0.2.2",
+    "source_sha": "799a184cb2453ceadf5575f7b46ba975e084f192"
+  },
+  "qualification": {
+    "record": "2026-09-13-native-preview-skill-0.2.3-qualification.json",
+    "advisory_passed": 3,
+    "advisory_accepted_partial": 1
+  },
+  "registry_install": {
+    "claude_version": "2.1.267",
+    "codex_version": "0.154.0",
+    "registry_signature": "verified",
+    "provenance_attestation": "verified",
+    "provenance_source_sha": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+    "canonical_skill_files_matched": 9,
+    "bundled_cli_version": "0.2.2",
+    "claude_strict_validation": "passed",
+    "codex_model_free_skill_inventory": "passed",
+    "credentials_supplied": false,
+    "model_calls": false,
+    "firstdraft_calls": false,
+    "public_catalog_install": false
+  }
+}
