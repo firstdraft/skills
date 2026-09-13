@@ -1,0 +1,125 @@
+{
+  "format": "firstdraft.npm-token-cleanup/1",
+  "observed_at": "2026-09-13T19:09:18.388Z",
+  "status": "retained probe; diagnostic cleanup pending",
+  "source": "5d6d7f313bfbf5ddfc02c655b2244aa79c7d9a3d",
+  "source_ci": {
+    "run": 34776439837,
+    "status": "success"
+  },
+  "credential_check": {
+    "observed_at": "2026-09-13T19:03:40.243Z",
+    "mode": "verify-token",
+    "status": "incomplete",
+    "operations": [
+      {
+        "package": "@firstdraft.com/cli",
+        "phase": "add-probe",
+        "before": {
+          "next": "0.2.2",
+          "latest": "0.2.2"
+        },
+        "requested": {
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "command_status": 0,
+        "readbacks": [
+          {
+            "next": "0.2.2",
+            "latest": "0.2.2",
+            "promotion-check-34776479919": "0.2.2"
+          }
+        ],
+        "after": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "readback_status": "verified"
+      },
+      {
+        "package": "@firstdraft.com/cli",
+        "phase": "remove-probe",
+        "before": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "command_status": 1,
+        "readbacks": [
+          {
+            "next": "0.2.2",
+            "latest": "0.2.2",
+            "promotion-check-34776479919": "0.2.2"
+          }
+        ],
+        "after": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        },
+        "readback_status": "prior-state-after-command-failure"
+      }
+    ],
+    "request": {
+      "ref": "refs/heads/main",
+      "run_id": "34776479919",
+      "attempt": "1"
+    },
+    "candidate": {
+      "plugin_version": "0.2.3",
+      "skills_source": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+      "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+      "catalog_commit": "5d6d7f313bfbf5ddfc02c655b2244aa79c7d9a3d",
+      "packages": [
+        {
+          "name": "@firstdraft.com/cli",
+          "version": "0.2.2",
+          "tags": {
+            "next": "0.2.2",
+            "latest": "0.2.2"
+          },
+          "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+          "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+        },
+        {
+          "name": "@firstdraft.com/claude-code",
+          "version": "0.2.3",
+          "tags": {
+            "latest": "0.2.3",
+            "next": "0.2.3"
+          },
+          "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+          "integrity": "sha512-opAnVnpWrLXZht4FrTu/lBlbBp6jAK0LQ2hba9oDVysKNvdmWKzTquv2Nyd3lwD+0IvbjCtekhPuWro6Js2OCQ=="
+        }
+      ]
+    },
+    "probe_tag": "promotion-check-34776479919"
+  },
+  "reconciliation": {
+    "observed_at": "2026-09-13T19:09:18.388Z",
+    "packages": [
+      {
+        "name": "@firstdraft.com/cli",
+        "tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2",
+          "promotion-check-34776479919": "0.2.2"
+        }
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Original hosted npm stderr was not retained.",
+    "The cache flag did not resolve this hosted cleanup failure.",
+    "Token addition is proved; token removal and complete two-package verification remain unproved.",
+    "The diagnostic cleanup mode has local tests but no hosted result yet."
+  ]
+}

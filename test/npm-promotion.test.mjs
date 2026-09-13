@@ -4,7 +4,7 @@ import test from "node:test";
 
 import {
   assertCatalog, assertDistributionState, assertGithubContext,
-  assertPackageBytes, npmDistTagArguments, promoteLatest, verifyToken,
+  assertPackageBytes, cleanupProbe, npmDistTagArguments, promoteLatest, redactNpmError, verifyToken,
 } from "../script/npm-promotion.mjs";
 import { file, tarball } from "./helpers/tarball.mjs";
 
@@ -97,8 +97,10 @@ test("GitHub writes require the protected version tag or a main credential check
   ]) assert.throws(() => assertGithubContext({ ...env, ...override }, "promote", version));
   const dispatch = { ...env, GITHUB_EVENT_NAME: "workflow_dispatch", GITHUB_REF: "refs/heads/main" };
   assertGithubContext(dispatch, "verify-token", version);
+  assertGithubContext(dispatch, "cleanup-probe", version);
   assert.throws(() => assertGithubContext(dispatch, "promote", version));
   assert.throws(() => assertGithubContext(env, "verify-token", version));
+  assert.throws(() => assertGithubContext(env, "cleanup-probe", version));
   assert.throws(() => assertGithubContext({ ...dispatch, GITHUB_REF: "refs/heads/feature" }, "verify-token", version));
 });
 
@@ -394,6 +396,18 @@ test("credential checks refuse reruns, existing probe tags, and unpromoted relea
   }
 });
 
+test("retained probes on either package block a new check before any write", async () => {
+  for (const name of names) {
+    for (const tag of ["promotion-check-12345", "promotion-check-12344"]) {
+      const h = harness(version);
+      h.states.get(name)[tag] = version;
+      await assert.rejects(verifyToken(h), /a retained probe must be reconciled/);
+      assert.deepEqual(h.writes, []);
+      assert.deepEqual(h.report.operations, []);
+    }
+  }
+});
+
 test("an observed probe is cleaned after an add error, then the check stops", async () => {
   const h = harness(version);
   const write = h.writeTag;
@@ -462,4 +476,107 @@ test("a failed probe removal observed absent stops without repeating deletion", 
   assert.equal(h.report.operations[1].readback_status, "verified");
   assert.deepEqual(h.waits, []);
   assert.equal(h.report.status, "incomplete");
+});
+
+test("cleanup removes only the reconciled prior probe and preserves all other tags", async () => {
+  const h = harness(version);
+  h.probeRunId = "12344";
+  for (const tags of h.states.values()) Object.assign(tags, {
+    "promotion-check-12344": version, "promotion-check-12343": version,
+  });
+  await cleanupProbe(h);
+  assert.deepEqual(h.writes, names.map((name) => ({ operation: "rm", name, target: version, tag: "promotion-check-12344" })));
+  assert.equal(h.report.status, "probe-cleaned");
+  assert.equal(h.report.final_verification.status, "verified");
+  for (const tags of h.states.values()) assert.deepEqual(tags, {
+    next: version, latest: version, legacy: "0.1.0", "promotion-check-12343": version,
+  });
+});
+
+test("cleanup already absent on both packages makes no write", async () => {
+  const h = harness(version);
+  h.probeRunId = "12344";
+  await cleanupProbe(h);
+  assert.deepEqual(h.writes, []);
+  assert.equal(h.report.status, "probe-cleaned");
+  assert(h.report.operations.every(({ status }) => status === "already-absent"));
+});
+
+test("cleanup rejects invalid context or a changed version before any write", async () => {
+  for (const mutate of [
+    (h) => { h.attempt = "2"; },
+    (h) => { h.probeRunId = h.runId; },
+    (h) => { h.probeRunId = "../12344"; },
+    (h) => { h.probeRunId = ["12344"]; },
+    (h) => { h.states.get(names[1]).latest = "0.2.1"; },
+    (h) => { h.states.get(names[1]).next = "0.2.1"; },
+    (h) => { h.states.get(names[1])["promotion-check-12344"] = "0.2.1"; },
+  ]) {
+    const h = harness(version);
+    h.probeRunId = "12344";
+    h.states.get(names[0])["promotion-check-12344"] = version;
+    mutate(h);
+    await assert.rejects(cleanupProbe(h));
+    assert.deepEqual(h.writes, []);
+  }
+});
+
+test("failed cleanup preserves diagnostic and observation without repeating a write", async () => {
+  const h = harness(version);
+  h.probeRunId = "12344";
+  h.states.get(names[0])["promotion-check-12344"] = version;
+  h.writeTag = async (...args) => {
+    h.writes.push(args);
+    return { status: 1, error: "npm error code E403" };
+  };
+  await assert.rejects(cleanupProbe(h), /read-only reconciliation/);
+  assert.equal(h.writes.length, 1);
+  assert.deepEqual(h.waits, []);
+  assert.equal(h.report.operations[0].command_error, "npm error code E403");
+  assert.equal(h.report.operations[0].after["promotion-check-12344"], version);
+  assert.equal(h.report.status, "incomplete");
+});
+
+test("cleanup waits only on unchanged successful-write readbacks", async () => {
+  const h = harness(version);
+  h.probeRunId = "12344";
+  h.states.get(names[0])["promotion-check-12344"] = version;
+  lagSuccessfulWrites(h);
+  await cleanupProbe(h);
+  assert.equal(h.writes.length, 1);
+  assert.deepEqual(h.waits, [2000, 2000]);
+  assert.equal(h.report.status, "probe-cleaned");
+});
+
+test("cleanup closing check retains a changed final map without another mutation", async () => {
+  const h = harness(version);
+  h.probeRunId = "12344";
+  const read = h.readTags;
+  h.readTags = async (name) => {
+    if (h.report.final_verification) return { ...(await read(name)), unexpected: version };
+    return read(name);
+  };
+  await assert.rejects(cleanupProbe(h), /changed after cleanup/);
+  assert.deepEqual(h.writes, []);
+  assert.equal(h.report.final_verification.status, "incomplete");
+  assert.equal(h.report.final_verification.packages[0].tags.unexpected, version);
+});
+
+test("npm error text redacts credentials before truncation and preserves useful errors", () => {
+  const token = "configured-secret";
+  const text = `\u001b[31mnpm error code E403\u001b[0m\nBearer ${token}\nnpm_otherToken123`;
+  assert.equal(redactNpmError(text, token), "npm error code E403\nBearer [REDACTED]\n[REDACTED]");
+  const long = redactNpmError(`${"x".repeat(4090)}${token}`, token);
+  assert.equal(long.length, 4096);
+  assert(!long.includes("configured"));
+  assert.throws(() => redactNpmError("error", ""), /cannot redact/);
+});
+
+test("promotion and credential failures retain the npm diagnostic", async () => {
+  for (const [method, latest] of [[promoteLatest, "0.2.1"], [verifyToken, version]]) {
+    const h = harness(latest);
+    h.writeTag = async () => ({ status: 1, error: "npm error code EOTP" });
+    await assert.rejects(method(h));
+    assert.equal(h.report.operations[0].command_error, "npm error code EOTP");
+  }
 });

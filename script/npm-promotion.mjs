@@ -5,7 +5,7 @@ import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
-import { isDeepStrictEqual } from "node:util";
+import { isDeepStrictEqual, stripVTControlCharacters } from "node:util";
 
 import { cliPackageInventory } from "./check-cli-registry-package.mjs";
 import {
@@ -89,7 +89,7 @@ export function assertGithubContext(env, mode, version) {
     assert.equal(env.GITHUB_REF, `refs/tags/${env.GITHUB_REF_NAME}`);
   } else {
     assert.equal(env.GITHUB_EVENT_NAME, "workflow_dispatch");
-    assert(mode === "inspect" || mode === "verify-token");
+    assert(mode === "inspect" || mode === "verify-token" || mode === "cleanup-probe");
     assert.equal(env.GITHUB_REF, "refs/heads/main");
   }
 }
@@ -142,6 +142,7 @@ export async function promoteLatest({ candidate, readTags, writeTag, attempt, re
     report.operations.push(operation);
     const result = await writeTag("add", item.name, item.version, "latest");
     operation.command_status = result.status;
+    if (result.error) operation.command_error = result.error;
     const expected = { ...before, latest: item.version };
     const after = await readTagsAfterWrite({ operation, expected, readTags, wait });
     assert.equal(result.status, 0, "npm reported a write failure; inspect the receipt before any further mutation");
@@ -165,14 +166,20 @@ export async function verifyToken({ candidate, readTags, writeTag, runId, attemp
   const tag = `promotion-check-${runId}`;
   report.probe_tag = tag;
   for (const item of candidate.packages) {
-    const before = await readTags(item.name);
-    assert.equal(before.latest, item.version, "check credentials against the already-promoted release");
-    assert.equal(before.next, item.version);
-    assert.equal(before[tag], undefined, "probe tag already exists; reconcile it without repeating writes");
+    const current = await Promise.all(candidate.packages.map(async (entry) =>
+      ({ ...entry, tags: await readTags(entry.name) })));
+    for (const { version, tags } of current) {
+      assert.equal(tags.latest, version, "check credentials against the already-promoted release");
+      assert.equal(tags.next, version);
+      assert(!Object.keys(tags).some((key) => key.startsWith("promotion-check-")),
+        "a retained probe must be reconciled before another credential check");
+    }
+    const before = current.find(({ name }) => name === item.name).tags;
     const addition = { package: item.name, phase: "add-probe", before, requested: { [tag]: item.version } };
     report.operations.push(addition);
     const added = await writeTag("add", item.name, item.version, tag);
     addition.command_status = added.status;
+    if (added.error) addition.command_error = added.error;
     const expected = { ...before, [tag]: item.version };
     const afterAdd = await readTagsAfterWrite({ operation: addition, expected, readTags, wait });
     assert.deepEqual(afterAdd, expected, "probe write needs read-only reconciliation");
@@ -180,12 +187,57 @@ export async function verifyToken({ candidate, readTags, writeTag, runId, attemp
     report.operations.push(removal);
     const removed = await writeTag("rm", item.name, item.version, tag);
     removal.command_status = removed.status;
+    if (removed.error) removal.command_error = removed.error;
     const afterRemove = await readTagsAfterWrite({ operation: removal, expected: before, readTags, wait });
     assert.deepEqual(afterRemove, before, "probe cleanup needs read-only reconciliation");
     assert.equal(added.status, 0, "npm reported a probe failure; the observed probe was cleaned up");
     assert.equal(removed.status, 0, "npm reported a cleanup failure; the probe is observed absent");
   }
   report.status = "credentials-verified";
+}
+
+export async function cleanupProbe({ candidate, readTags, writeTag, probeRunId, runId, attempt, report, wait = delay }) {
+  assert.equal(attempt, "1", "cleanup reruns refuse writes; reconcile the retained receipt");
+  assert(typeof probeRunId === "string" && /^[1-9]\d*$/.test(probeRunId), "expected the reconciled probe run ID");
+  assert(typeof runId === "string" && /^[1-9]\d*$/.test(runId) && probeRunId !== runId, "cleanup must name a prior run");
+  assertDistributionState(candidate.packages);
+  const tag = `promotion-check-${probeRunId}`;
+  report.probe_tag = tag;
+  const current = await Promise.all(candidate.packages.map(async (item) =>
+    ({ ...item, tags: await readTags(item.name) })));
+  for (const { name, version, tags } of current) {
+    assert.equal(tags.next, version, `${name}: next changed before cleanup`);
+    assert.equal(tags.latest, version, `${name}: latest changed before cleanup`);
+    assert(tags[tag] === undefined || tags[tag] === version, `${name}: probe version changed before cleanup`);
+  }
+  for (const { name, version } of current) {
+    const before = await readTags(name);
+    assert.deepEqual(before, current.find((item) => item.name === name).tags, "tags changed before cleanup");
+    if (before[tag] === undefined) {
+      report.operations.push({ package: name, phase: "cleanup-probe", status: "already-absent", tags: before });
+      continue;
+    }
+    const operation = { package: name, phase: "cleanup-probe", before };
+    report.operations.push(operation);
+    const removed = await writeTag("rm", name, version, tag);
+    operation.command_status = removed.status;
+    if (removed.error) operation.command_error = removed.error;
+    const expected = { ...before };
+    delete expected[tag];
+    const after = await readTagsAfterWrite({ operation, expected, readTags, wait });
+    assert.deepEqual(after, expected, "probe cleanup needs read-only reconciliation");
+    assert.equal(removed.status, 0, "npm reported cleanup failure; the probe is observed absent");
+  }
+  report.final_verification = { status: "incomplete", packages: [] };
+  for (const { name, version, tags } of current) {
+    const after = await readTags(name);
+    report.final_verification.packages.push({ name, version, tags: after });
+    const expected = { ...tags };
+    delete expected[tag];
+    assert.deepEqual(after, expected, "tag map changed after cleanup");
+  }
+  report.final_verification.status = "verified";
+  report.status = "probe-cleaned";
 }
 
 export async function inspectPromotion({ root = repository, env = process.env } = {}) {
@@ -311,12 +363,23 @@ function writeTag(operation, name, version, tag) {
   const result = spawnSync("npm", args, {
     encoding: "utf8", timeout: 60_000, stdio: ["ignore", "pipe", "pipe"],
   });
-  return { status: result.status };
+  return {
+    status: result.status,
+    ...(result.status === 0 ? {} : {
+      error: redactNpmError(result.stderr || result.error?.message || "npm returned no error text", process.env.NODE_AUTH_TOKEN),
+    }),
+  };
+}
+
+export function redactNpmError(message, token) {
+  assert(typeof token === "string" && token.length > 0, "cannot redact without the configured token");
+  return stripVTControlCharacters(message).replaceAll(token, "[REDACTED]")
+    .replace(/npm_[A-Za-z0-9]+/g, "[REDACTED]").trim().slice(0, 4096);
 }
 
 async function main() {
   const mode = process.argv[2] ?? "inspect";
-  assert(process.argv.length <= 3 && ["inspect", "promote", "verify-token"].includes(mode));
+  assert(process.argv.length <= 3 && ["inspect", "promote", "verify-token", "cleanup-probe"].includes(mode));
   const report = {
     observed_at: new Date().toISOString(), mode, status: "incomplete", operations: [],
     request: { ref: process.env.GITHUB_REF, run_id: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT },
@@ -330,6 +393,8 @@ async function main() {
       assertGithubContext(process.env, mode, candidate.plugin_version);
       const options = { candidate, readTags, writeTag, report, attempt: process.env.GITHUB_RUN_ATTEMPT };
       if (mode === "promote") await promoteLatest(options);
+      else if (mode === "cleanup-probe") await cleanupProbe({ ...options,
+        probeRunId: process.env.NPM_PROMOTION_CLEANUP_RUN_ID, runId: process.env.GITHUB_RUN_ID });
       else await verifyToken({ ...options, runId: process.env.GITHUB_RUN_ID });
     }
   } finally {

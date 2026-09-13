@@ -31,8 +31,13 @@ Configure these controls before using [the workflow](../.github/workflows/promot
   blocks this workflow. If a package uses that setting, its owner must explicitly allow scoped token operations.
   Trusted publication remains configured separately.
 
-After setup or renewal, dispatch `Promote npm defaults` on current `main`. This is a credential check, not a release
-promotion. It requires `next`, `latest`, and the catalog to select the qualified pair already. For each package it
+Before a new credential check, reconcile and remove any retained `promotion-check-*` tags from either package using
+the [cleanup procedure](#partial-results-and-recovery). Supply `cleanup_run_id` for that recovery dispatch; leaving it
+blank creates a new probe. The check rejects retained probes on either package before adding another.
+
+After setup or renewal and any cleanup, dispatch `Promote npm defaults` on current `main` with `cleanup_run_id` blank.
+This is a credential check, not a release promotion. It requires `next`, `latest`, and the catalog to select the
+qualified pair already. For each package it
 adds `promotion-check-<run-id>` selecting that same version, verifies the result, removes that tag, and verifies the
 original tags are restored. Approve the environment job after inspecting its verification job. A successful no-op
 release promotion alone would not prove token write access.
@@ -98,7 +103,9 @@ not a guarantee about npm propagation. Exhausting it requires read-only reconcil
 
 A failed command receives one immediate readback and stops, subject to the observed-probe cleanup below. Its
 `npm-promotion-<run-id>-<attempt>` artifact and job summary record requested changes, exit status, every successful
-readback in order, and `readback_status` without credentials. `after` is the last observed tag map, so an earlier
+readback in order, and `readback_status` without credentials. Failed commands also retain `command_error`: npm stderr
+with terminal controls removed, the configured token and npm token-shaped strings redacted, then limited to 4,096
+characters. Older receipts have exit status only. `after` is the last observed tag map, so an earlier
 sample can remain there when a later read fails; it does not establish the final outcome. Runner loss or cancellation
 can also prevent receipt upload: query the registry before any further mutation.
 
@@ -115,7 +122,13 @@ the remaining defaults. This also handles a first attempt that changed nothing, 
 move/delete/reuse either tag. After recovery, a rerun of the original job may record completion without another write.
 
 A credential-check rerun refuses writes. If a probe remains, verify its run ID and exact selected version, reconcile
-both permanent tags, and remove only that observed probe under the original cleanup authorization. Do not dispatch
+both permanent tags, and remove only that observed probe under the original cleanup authorization. Dispatch the
+workflow on passing current `main` with `cleanup_run_id` set to that prior run ID. After package verification,
+approve its protected environment job. This mode creates no probe: it removes only the named `promotion-check-*`
+tag from the two qualified packages, rejects changed versions or maps, and verifies the final maps. An absent tag
+needs no write. A cleanup rerun refuses writes; inspect the receipt and registry before any further attempt.
+If token cleanup fails, an authorized operator can remove that exact observed tag through interactive npm.
+Do not dispatch
 another check to evade an uncertain outcome. If the add command reported failure but the exact probe is observed,
 the original invocation removes its own probe once before stopping; an ambiguous add or cleanup requires operator
 reconciliation. A new dispatch after a reconciled token repair gets a new run ID.
