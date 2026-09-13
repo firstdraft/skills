@@ -2,8 +2,9 @@
 
 This repository packages the portable agent instructions that turn a product conversation into a reviewed
 [Foundation Plan](https://github.com/firstdraft/firstdraft) and drive the First Draft authoring workflow. The
-canonical Skill and bundled CLI are packaged once for Claude Code and Codex. Drawing Board installs that same Skill
-into both agents' workspaces.
+canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI continuation follows the generated
+app's own design and components. Package contents in this checkout are a source candidate; the public catalog and
+Drawing Board pins determine what an installed workspace actually receives.
 
 Trying First Draft as a tester? Start with the
 [Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
@@ -11,10 +12,11 @@ Trying First Draft as a tester? Start with the
 ## What this repository owns
 
 - the portable create-full-stack-app Skill and its task routing;
+- portable UI extension and consistency-review Skills that reuse the consumer app's design and components;
 - beginner-to-machine-reference authoring guidance for Foundation Plan 0.19;
 - the exact schema, examples, and review checklists packaged with the Skill;
 - behavioral evaluations for agent workflow changes;
-- shared Claude/Codex plugin assembly around the canonical Skill and reviewed CLI package; and
+- shared Claude/Codex plugin assembly around the canonical Skills and reviewed CLI package; and
 - release compatibility checks, package evidence, and promotion runbooks.
 
 The Service owns Foundation Plan semantics and Compilation behavior. The CLI owns transport and terminal command
@@ -26,6 +28,8 @@ behavior. This repository teaches an agent how to use those contracts without cr
 |---|---|
 | Change the Skill or repository | [Agent instructions](AGENTS.md), then [documentation map](docs/README.md) |
 | Understand the installed workflow | [Skill entrypoint](skills/create-full-stack-app/SKILL.md) |
+| Continue an app's UI | [Extend app UI](skills/extend-app-ui/SKILL.md), then the app's `UI.md` |
+| Review related screens or captures | [Review UI consistency](skills/review-ui-consistency/SKILL.md) |
 | Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
 | Check current Foundation Plan capability | [Foundation Plan reference](skills/create-full-stack-app/references/foundation-plan-019.md) |
 | Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.19.schema.json) |
@@ -69,14 +73,15 @@ Codex requests network access; its tool permission is separate from approval of 
 | Path | Responsibility |
 |---|---|
 | skills/create-full-stack-app/ | Canonical portable Skill and packaged references |
+| skills/extend-app-ui/, skills/review-ui-consistency/ | Canonical UI continuation and review guidance |
 | .claude-plugin/, packages/ | Release-gated public catalog selection and plugin assembly, not a second editable Skill copy |
 | evals/ | Behavioral cases and evaluator contracts |
 | evidence/ | Dated installation, compatibility, and workflow receipts |
 | script/ | Repository, package, and release compatibility checks |
 | docs/ | Maintainer documentation and ownership map |
 
-Packing copies the canonical Skill into a temporary plugin tree and adds the reviewed CLI package. Keep authoring
-truth in the canonical Skill; do not maintain parallel prose under a package directory.
+Packing copies each canonical Skill into a temporary plugin tree and adds the reviewed CLI package. Keep editable
+truth under `skills/`; do not maintain parallel prose under a package directory.
 The packer derives portable `plugin.json` and the `.codex-plugin/plugin.json` compatibility overlay from the same
 release metadata as the Claude manifest. Both clients use `.claude-plugin/marketplace.json`, which
 [Codex supports directly](https://developers.openai.com/plugins/build/plugins#how-local-marketplaces-work).
@@ -84,6 +89,22 @@ The existing npm package name is retained so release versions and catalog select
 between clients. Package checks compare every installed Skill file with its canonical bytes.
 The [portable layout](https://developers.openai.com/plugins/build/plugins#create-a-plugin-manually) discovers
 `skills/` by convention; the Codex overlay supplies display metadata, not additional tool permissions.
+
+## UI continuation
+
+The source candidate adds `extend-app-ui` and `review-ui-consistency` alongside `create-full-stack-app`. Once that
+candidate is released and installed, both clients discover all three from the same package. Ask for a normal UI
+task, or invoke the namespaced Skill: `$firstdraft:extend-app-ui` in Codex or `/firstdraft:extend-app-ui` in Claude
+Code. Use the matching review name for a consistency review.
+
+The UI Skills read the app's `UI.md`, comparable screens, and actual component source before making changes.
+For the new Rails UI, ordinary pages and forms use ERB/Basecoat Vega; selected interactive controls use existing
+shadcn `radix-vega` islands through Turbo Mount. The app owns its chosen theme, partial contracts, and component
+update commands. Existing generated apps keep their own stack unless a migration is requested.
+
+[Upstream shadcn guidance](https://ui.shadcn.com/docs/skills) and its [MCP](https://ui.shadcn.com/docs/mcp) can help
+discover React components. They are optional development aids, not bundled Skills, required sign-ins, or dependencies
+of Compilation, builds, or CI. A registry page example does not change the Rails ownership of an existing screen.
 
 ## Development
 
@@ -98,9 +119,9 @@ sh script/check
 The check covers:
 
 - repository and documentation structure;
-- the portable Skill boundary;
+- every portable Skill's discovery, references, license, and packaging boundary;
 - Foundation Plan schema and example fixtures;
-- behavioral-evaluation structure;
+- behavioral-evaluation structure and offline UI evaluation fixtures;
 - deterministic plugin packaging with a stub CLI; and
 - release compatibility.
 
@@ -118,11 +139,14 @@ To test a standalone Codex candidate with its bundled CLI:
 ~~~sh
 node script/claude-plugin-package.mjs stage tmp/firstdraft --cli-root /path/to/exact/cli
 node script/check-codex-plugin-install.mjs --codex /absolute/path/to/codex --plugin-root tmp/firstdraft
+node script/check-packaged-claude-plugin-install.mjs --claude /absolute/path/to/claude --plugin-root tmp/firstdraft
 ~~~
 
-The install check uses temporary Codex state, discovers the Skill through the real client, and exercises the
-bundled CLI without a global `firstdraft`. It needs no agent login or First Draft service. Behavioral cases remain
-shared across clients; [the eval guide](evals/README.md) describes the separate agent-session checks.
+These install checks use temporary client state, discover every Skill through the real client, compare all Skill
+files with the candidate, and exercise the bundled CLI without a global `firstdraft`. They need no agent login or
+First Draft service. The old `check-claude-plugin-install.mjs` is a retired historical recording path, not the
+assembled-package check. Behavioral cases remain shared across clients; [the eval guide](evals/README.md) describes
+the separate agent-session checks.
 
 If the installed GitHub CLI supports Skill preview:
 

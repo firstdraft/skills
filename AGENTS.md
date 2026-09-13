@@ -4,7 +4,8 @@
 
 | Task | Route |
 |---|---|
-| Skill behavior or packaged references | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md), then only its routed reference section |
+| Plan authoring or Compile behavior | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md), then only its routed reference section |
+| UI continuation or review | [`extend-app-ui`](skills/extend-app-ui/SKILL.md) or [`review-ui-consistency`](skills/review-ui-consistency/SKILL.md); the consumer app's `UI.md` owns its design |
 | Release work | [`RELEASING.md`](RELEASING.md) and [`release/compatibility.json`](release/compatibility.json) |
 | Evidence or prior rollout facts | [`evidence/README.md`](evidence/README.md), then one dated record |
 | Behavioral evals | [`evals/README.md`](evals/README.md), then one case and its declared artifacts |
@@ -48,5 +49,6 @@
 - For plugin 0.1.0 only, `RELEASING.md` records the human-selected PAT-less discovery smoke that gates catalog
   promotion and the stricter qualification boundaries it does not prove. Do not silently substitute either boundary
   for the other.
-- The shared Claude/Codex package is assembled from the canonical Skill during packing. Both clients use the
-  existing public catalog; generate client manifests from shared metadata and never commit a second editable Skill.
+- The shared Claude/Codex package is assembled from canonical `skills/` sources during packing. Both clients use
+  the existing public catalog; generate client manifests from shared metadata and never commit a second editable
+  Skill. Update the explicit packaging inventory when adding a Skill or packaged reference.

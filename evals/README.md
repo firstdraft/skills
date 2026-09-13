@@ -4,6 +4,10 @@
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
 
+For existing-app UI work, use the separate [UI continuation corpus](ui-continuation/README.md). Its nine offline
+source cases cover normal screens, forms, component reuse, themes, unavailable discovery, an older app, source-only
+review, and routing controls. They are evaluation inputs, not evidence that a client completed those tasks.
+
 Except for the two paired release qualifications below, run one case in a fresh agent context and record the agent,
 model, Skill revision, commands, resulting file changes, and external effects. Replace synthetic state only for a
 specifically prepared server-backed run. Never print or commit private `.firstdraft/state.json` contents.

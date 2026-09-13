@@ -15,13 +15,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { canonicalPluginSkillNames } from "./claude-plugin-boundaries.mjs";
+
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const packageSource = path.join(repository, "packages", "claude-plugin");
-const skillSource = path.join(
-  repository,
-  "skills",
-  "create-full-stack-app",
-);
 
 export async function stageClaudePlugin(destination, cliRoot) {
   assert(cliRoot, "the exact CLI checkout is required");
@@ -36,9 +33,11 @@ export async function stageClaudePlugin(destination, cliRoot) {
     cp(path.join(packageSource, "bin"), path.join(target, "bin"), {
       recursive: true,
     }),
-    cp(skillSource, path.join(target, "skills", "create-full-stack-app"), {
-      recursive: true,
-    }),
+    ...canonicalPluginSkillNames.map((name) => cp(
+      path.join(repository, "skills", name),
+      path.join(target, "skills", name),
+      {recursive: true},
+    )),
     cp(path.join(repository, "LICENSE"), path.join(target, "LICENSE")),
     cp(
       path.join(packageSource, "package.template.json"),
@@ -61,13 +60,13 @@ async function stagePortableManifests(target) {
     skills: "./skills/",
     interface: {
       displayName,
-      shortDescription: "Author and compile an application with First Draft",
+      shortDescription: "Plan, compile, and extend an app with First Draft",
       longDescription: identity.description,
       developerName: identity.author.name,
       category: "Developer Tools",
       capabilities: ["Read", "Write"],
       websiteURL: identity.homepage,
-      defaultPrompt: ["Help me plan and build an app with First Draft."],
+      defaultPrompt: ["Help me plan, build, or extend my app with First Draft."],
     },
   };
   await mkdir(path.join(target, ".codex-plugin"), {recursive: true});

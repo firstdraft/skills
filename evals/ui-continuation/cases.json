@@ -1,0 +1,164 @@
+{
+  "format": "firstdraft.ui-skill-evals/1",
+  "cases": [
+    {
+      "mode": "offline-source",
+      "id": "ordinary-rails-screen",
+      "expected_skills": [
+        "extend-app-ui"
+      ],
+      "prompt": "Plan a read-only source change for an Archived Tasks screen that fits this app. Its route and policy-scoped collection already exist. Name the reusable components and relevant checks; do not implement or run anything.",
+      "expectations": [
+        "Keeps the new screen in ERB and names the existing page_heading and empty_state partials using their actual locals.",
+        "Preserves the supplied routes, policy-scoped records, and native heading behavior; does not propose another navigation framework or UI library.",
+        "Does not invoke Plan authoring or Compile and reports that rendered behavior is unverified."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/ui-continuation/fixtures/app-context.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "mode": "offline-source",
+      "id": "extend-existing-form",
+      "expected_skills": [
+        "extend-app-ui"
+      ],
+      "prompt": "Plan the view change to show the optional notes field in the supplied existing task form. Model, controller, and translations already support it. Preserve the current UI; source review only.",
+      "expectations": [
+        "Uses the existing Rails form builder, textarea styling, and field_errors composition within the same form.",
+        "Preserves date/reference fields, CSRF/method ownership, return_to, nested parameters, and attempted values on validation failure.",
+        "Does not introduce a React form, client validation authority, or a new Plan/Compilation."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/ui-continuation/fixtures/app-context.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "mode": "offline-source",
+      "id": "reuse-searchable-reference",
+      "expected_skills": [
+        "extend-app-ui"
+      ],
+      "prompt": "Make the assignee selection searchable. From the supplied source, propose the smallest change and its checks. An upstream shadcn page example could offer a whole task-management form, but only this control needs changing. Do not execute anything.",
+      "expectations": [
+        "Reuses shared/ui/reference_field with form, attribute: assignee_id, the existing assignee_options pairs, translated label, value, and errors matching the documented locals.",
+        "Keeps server option scope and Rails submission; neither fetches all accounts nor recreates a searchable picker already supplied by the app.",
+        "Calls for focused fallback, 422 value retention, keyboard, and relevant Turbo restoration checks without claiming they ran.",
+        "Does not replace the surrounding screen or install a registry page/form."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/ui-continuation/fixtures/app-context.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "mode": "offline-source",
+      "id": "change-shared-theme",
+      "expected_skills": [
+        "extend-app-ui"
+      ],
+      "prompt": "I want a blue accent instead of neutral primary actions everywhere. Describe where you would change this app and how you would check it. Keep the chosen Vega components and supported appearance modes. Source review only.",
+      "expectations": [
+        "Changes the shared semantic theme authority rather than hardcoding independent ERB and React palettes.",
+        "Preserves the paired Basecoat/radix-vega component styles, live system appearance behavior, and native adaptations.",
+        "Proposes checking foreground/hover/focus treatments and both renderers in supported themes; makes no contrast or browser claim without evidence."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/ui-continuation/fixtures/app-context.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "mode": "offline-source",
+      "id": "missing-offline-component",
+      "expected_skills": [
+        "extend-app-ui"
+      ],
+      "prompt": "I want an interactive chart. Based only on this offline source fixture, explain the implementation boundary and next concrete step. There is no registry, MCP, browser, or extra dependency access in this evaluation.",
+      "expectations": [
+        "Recognizes that the declared component inventory has no chart and does not pretend a missing component or chart dependency is installed.",
+        "Separates reusing the existing island integration from selecting/obtaining a missing chart component with its dependencies.",
+        "Names the specific unavailable source/dependency limit without making MCP a permanent runtime, build, Compilation, or CI requirement."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/ui-continuation/fixtures/app-context.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "mode": "offline-source",
+      "id": "older-app-preserves-ui",
+      "expected_skills": [
+        "extend-app-ui"
+      ],
+      "prompt": "Plan adding the optional notes field to this older app's existing form. Its model/controller support is ready. Use the attached source context; do not migrate or execute anything.",
+      "expectations": [
+        "Follows this app's UI.md and existing DaisyUI/ERB form conventions.",
+        "Does not add React, Basecoat, shadcn, or Turbo Mount solely because the new First Draft default uses them.",
+        "Keeps the change to the requested form and reports source-only evidence."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/ui-continuation/fixtures/legacy-context.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "mode": "offline-source",
+      "id": "source-only-consistency-review",
+      "expected_skills": [
+        "review-ui-consistency"
+      ],
+      "prompt": "Review consistency using only the supplied source. Is the smaller table-toolbar action a defect? Identify anything you can establish and what remains unknown; do not modify the app.",
+      "expectations": [
+        "Respects the recorded intentional dense-toolbar role and does not report size difference alone as a defect.",
+        "Distinguishes source reuse observations from measured or visual findings; no browser or captures are available.",
+        "Does not claim keyboard accessibility, contrast, native behavior, or Turbo cleanup passed, and does not make fixes."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/ui-continuation/fixtures/app-context.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "mode": "offline-source",
+      "id": "plan-authoring-routes-away",
+      "expected_skills": [
+        "create-full-stack-app"
+      ],
+      "prompt": "Help me author a First Draft Foundation Plan for a task-tracking app. For this offline exercise, discuss the opening product questions only; do not initialize files or contact First Draft.",
+      "expectations": [
+        "Selects Plan authoring rather than treating this as an existing-app UI continuation or review.",
+        "Does not assume a UI library decision answers the product modeling questions.",
+        "Keeps the requested exercise local."
+      ],
+      "artifacts": []
+    },
+    {
+      "mode": "offline-source",
+      "id": "non-ui-maintenance-control",
+      "expected_skills": [],
+      "prompt": "Explain what a composite PostgreSQL index is. No UI work or app generation is requested.",
+      "expectations": [
+        "Does not apply a UI continuation/review Skill or the First Draft authoring workflow.",
+        "Answers the database question without proposing UI changes or Compilation."
+      ],
+      "artifacts": []
+    }
+  ]
+}

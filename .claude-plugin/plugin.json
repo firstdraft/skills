@@ -3,7 +3,7 @@
   "name": "firstdraft",
   "displayName": "First Draft",
   "version": "0.0.0",
-  "description": "Experimental Foundation Plan authoring and bounded Rails application creation with First Draft",
+  "description": "Author a Foundation Plan, compile a bounded application, and extend its UI with First Draft",
   "author": {
     "name": "First Draft",
     "url": "https://github.com/firstdraft"
@@ -14,9 +14,12 @@
   "keywords": [
     "foundation-plan",
     "rails",
-    "application-generation"
+    "application-generation",
+    "ui-development"
   ],
   "skills": [
-    "./skills/create-full-stack-app"
+    "./skills/create-full-stack-app",
+    "./skills/extend-app-ui",
+    "./skills/review-ui-consistency"
   ]
 }

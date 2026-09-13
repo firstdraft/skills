@@ -318,6 +318,5 @@ Report:
   [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for the GitHub checkpoint before setup; and
 - any recovery blocker or external prerequisite.
 
-Report source generated only after verified materialization. Distinguish validated First Draft Publication from
-later verified GitHub publication or pushes. Neither is deployed, production-ready, or proof beyond the admitted
-narrow slice.
+Distinguish verified materialization, First Draft Publication, and GitHub pushes. None proves deployment or
+production readiness. For UI work, follow [UI continuation](references/diagnostics-and-recovery.md#ui-continuation).
