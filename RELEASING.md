@@ -75,10 +75,10 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-For 0.2.4, run the [UI continuation qualification](evals/ui-continuation/README.md) in Claude and Codex, both install
-checks, and the CLI contract check. Bind results to the package digest and generated app revisions. Preserve the
-published 0.2.3 native boundaries, including the Revyl WebView blocker. The unchanged approval/Publication
-procedure below records the historical 0.2.2 service smokes.
+For 0.2.4, run [UI continuation qualification](evals/ui-continuation/README.md),
+`private-native-request-preserves-current-boundary`, and `android-preview-respects-provider-limit` in both clients,
+plus both install checks and the CLI contract. Bind results to the same digest and generated app revisions.
+Keep the Revyl WebView blocker visible. The unchanged approval/Publication procedure below records 0.2.2 smokes.
 
 The 0.2.2 qualification used two human-observed approval smokes in separate continuing sessions:
 
