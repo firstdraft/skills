@@ -4,6 +4,11 @@ on:
   push:
     tags: ["promote-v*"]
   workflow_dispatch:
+    inputs:
+      cleanup_run_id:
+        description: Reconciled prior probe run to clean up; leave blank for a new credential check
+        required: false
+        type: string
 
 permissions: {}
 
@@ -61,10 +66,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PROMOTION_TOKEN }}
       - name: Check token with temporary tags
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.cleanup_run_id == ''
         run: node script/npm-promotion.mjs verify-token
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PROMOTION_TOKEN }}
+      - name: Clean up a reconciled probe
+        if: github.event_name == 'workflow_dispatch' && inputs.cleanup_run_id != ''
+        run: node script/npm-promotion.mjs cleanup-probe
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PROMOTION_TOKEN }}
+          NPM_PROMOTION_CLEANUP_RUN_ID: ${{ inputs.cleanup_run_id }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
