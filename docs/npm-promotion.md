@@ -22,8 +22,8 @@ Configure these controls before using [the workflow](../.github/workflows/promot
   allowed, matching the existing single-operator publication environment.
 - Create one granular npm token restricted to **only** `@firstdraft.com/cli` and `@firstdraft.com/claude-code`,
   with **stage-only** access and **Bypass two-factor authentication** enabled. Grant no organization-management
-  access. Choose an expiry and arrange renewal before it expires. Stage-only access also permits staging and
-  deprecation; npm does not offer a dist-tag-only permission.
+  access. Choose an expiry and arrange renewal before it expires. The stage-only token UI also lists staging,
+  deprecation, and unpublishing; npm does not offer a dist-tag-only permission.
 - Store it only as `NPM_PROMOTION_TOKEN` in that environment. Pass the secret through stdin or the GitHub UI;
   never put it in a command argument, receipt, repository file, or log. Do not add it to the publication environment.
 - Verify both packages permit granular tokens with bypass 2FA. The npm setting
@@ -86,11 +86,23 @@ the same release operator. It rereads both packages before each promotion write 
 An approval waiting in the shared group blocks another publication. Cancel an abandoned run instead of leaving it
 pending; reconcile any started mutation before cancellation or another release.
 
-Each invocation attempts a needed write once, with npm transport retries disabled. A failed command or unexpected
-readback stops the workflow. Its `npm-promotion-<run-id>-<attempt>` artifact and job summary record requested changes,
-exit status, and observed tags without credentials. If a readback fails, a requested operation with no `after` value
-means the outcome is unknown. Runner loss or cancellation can also prevent receipt upload: query the registry before
-any further mutation.
+Each invocation attempts a needed write once, with npm transport retries disabled. The pinned
+[npm command](https://github.com/npm/cli/blob/v11.16.0/lib/commands/dist-tag.js) waits for the PUT or DELETE response
+without verifying a subsequent read. After a successful command, the helper makes up to six anonymous readbacks,
+waiting two seconds between them only while the **complete tag map exactly matches its pre-write state**. It proceeds
+only when the complete map equals the requested result. Any other tag change or read error stops immediately.
+This adds at most ten seconds of waiting per write, excluding request time; it is a bounded verification window,
+not a guarantee about npm propagation. Exhausting it requires read-only reconciliation, never another automatic write.
+
+A failed command receives one immediate readback and stops, subject to the observed-probe cleanup below. Its
+`npm-promotion-<run-id>-<attempt>` artifact and job summary record requested changes, exit status, every successful
+readback in order, and `readback_status` without credentials. `after` is the last observed tag map, so an earlier
+sample can remain there when a later read fails; it does not establish the final outcome. Runner loss or cancellation
+can also prevent receipt upload: query the registry before any further mutation.
+
+Before declaring promotion complete, a strict final pair check rereads each package once. `final_verification`
+retains its `incomplete` or `verified` status and returned tag maps, including partial observations if a read fails.
+Verified writes with an incomplete closing check require read-only reconciliation; never retry already-observed writes.
 
 Do not blindly rerun a failed job. A promotion rerun is read-only: it can confirm both defaults already moved, but
 refuses to finish a partial promotion. Inspect the registry and receipt, repair the cause, and obtain authorization

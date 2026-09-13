@@ -3,7 +3,9 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 
 import { cliPackageInventory } from "./check-cli-registry-package.mjs";
 import {
@@ -92,7 +94,39 @@ export function assertGithubContext(env, mode, version) {
   }
 }
 
-export async function promoteLatest({ candidate, readTags, writeTag, attempt, report }) {
+async function readTagsAfterWrite({ operation, expected, readTags, wait }) {
+  operation.readbacks = [];
+  for (let attempt = 1; attempt <= 6; attempt += 1) {
+    let after;
+    try {
+      after = await readTags(operation.package);
+    } catch (error) {
+      operation.readback_status = "read-failed";
+      throw error;
+    }
+    operation.readbacks.push(after);
+    operation.after = after;
+    if (isDeepStrictEqual(after, expected)) {
+      operation.readback_status = "verified";
+      return after;
+    }
+    if (!isDeepStrictEqual(after, operation.before)) {
+      operation.readback_status = "conflicting-state";
+      return after;
+    }
+    if (operation.command_status !== 0) {
+      operation.readback_status = "prior-state-after-command-failure";
+      return after;
+    }
+    if (attempt === 6) {
+      operation.readback_status = "prior-state-timeout";
+      assert.fail(`${operation.package}: readback did not converge after six reads; reconcile before another mutation`);
+    }
+    await wait(2000);
+  }
+}
+
+export async function promoteLatest({ candidate, readTags, writeTag, attempt, report, wait = delay }) {
   assertDistributionState(candidate.packages);
   for (const item of candidate.packages) {
     const current = await Promise.all(candidate.packages.map(async (entry) =>
@@ -108,21 +142,23 @@ export async function promoteLatest({ candidate, readTags, writeTag, attempt, re
     report.operations.push(operation);
     const result = await writeTag("add", item.name, item.version, "latest");
     operation.command_status = result.status;
-    const after = await readTags(item.name);
-    operation.after = after;
+    const expected = { ...before, latest: item.version };
+    const after = await readTagsAfterWrite({ operation, expected, readTags, wait });
     assert.equal(result.status, 0, "npm reported a write failure; inspect the receipt before any further mutation");
-    assert.deepEqual(after, { ...before, latest: item.version }, "npm tag state changed unexpectedly");
+    assert.deepEqual(after, expected, "npm tag state changed unexpectedly");
   }
   const final = [];
+  report.final_verification = { status: "incomplete", packages: final };
   for (const item of candidate.packages) {
-    final.push({ ...item, tags: await readTags(item.name) });
+    final.push({ name: item.name, version: item.version, tags: await readTags(item.name) });
   }
   assertDistributionState(final);
   assert(final.every(({ version, tags }) => tags.latest === version), "promotion is incomplete");
+  report.final_verification.status = "verified";
   report.status = "promoted";
 }
 
-export async function verifyToken({ candidate, readTags, writeTag, runId, attempt, report }) {
+export async function verifyToken({ candidate, readTags, writeTag, runId, attempt, report, wait = delay }) {
   assertDistributionState(candidate.packages);
   assert.equal(attempt, "1", "credential-check reruns are read-only; inspect retained probe tags");
   assert(/^[1-9]\d*$/.test(runId), "expected a GitHub run ID");
@@ -137,15 +173,14 @@ export async function verifyToken({ candidate, readTags, writeTag, runId, attemp
     report.operations.push(addition);
     const added = await writeTag("add", item.name, item.version, tag);
     addition.command_status = added.status;
-    const afterAdd = await readTags(item.name);
-    addition.after = afterAdd;
-    assert.deepEqual(afterAdd, { ...before, [tag]: item.version }, "probe write needs read-only reconciliation");
+    const expected = { ...before, [tag]: item.version };
+    const afterAdd = await readTagsAfterWrite({ operation: addition, expected, readTags, wait });
+    assert.deepEqual(afterAdd, expected, "probe write needs read-only reconciliation");
     const removal = { package: item.name, phase: "remove-probe", before: afterAdd };
     report.operations.push(removal);
     const removed = await writeTag("rm", item.name, item.version, tag);
     removal.command_status = removed.status;
-    const afterRemove = await readTags(item.name);
-    removal.after = afterRemove;
+    const afterRemove = await readTagsAfterWrite({ operation: removal, expected: before, readTags, wait });
     assert.deepEqual(afterRemove, before, "probe cleanup needs read-only reconciliation");
     assert.equal(added.status, 0, "npm reported a probe failure; the observed probe was cleaned up");
     assert.equal(removed.status, 0, "npm reported a cleanup failure; the probe is observed absent");
