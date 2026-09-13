@@ -11,27 +11,25 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-This workflow targets plugin 0.2.3, published CLI 0.2.2, and service contract 0.3. These compatibility requirements
-do not establish catalog selection.
-
-Bounded Compiler coverage:
+Targets plugin 0.2.3, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
   Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone/Android slices. Rails emits
   authored theme/colors and derived favicon/PWA icons; emitted native launcher icons stay stock.
 - Required enums use Rails `enum` with inclusion and presence; scopes and instance methods are disabled.
   Compatible literal defaults work; database membership constraints and general rank behavior remain unsupported.
-- Bounded Account/Policy protects Web Scaffolds. Each native client requires one admitted public index, stays Account- and
-  Policy-free, and does not inherit Web privacy.
-- Preserve unsupported requests and report gaps; do not propose dropping clients or weakening access to obtain `valid`.
+- Bounded Account/Policy protects Web Scaffolds. Native clients require an admitted public index, are Account/Policy-free,
+  and do not inherit Web privacy.
+- Preserve unsupported requests; report gaps. Never drop clients or weaken access to get `valid`.
   Artifacts retain the submitted Plan and GapSet.
+- For Android preview, recommend Android Studio's local Emulator while Revyl is incompatible. It requires a suitable
+  local computer; follow emitted `ANDROID_PREVIEW.md`.
 
-Read the [current evidence and target boundary](references/foundation-plan-019.md#current-evidence-boundary) before
-making a support claim.
+Before support claims, read [current evidence](references/foundation-plan-019.md#current-evidence-boundary).
 
 ## Load references only when needed
 
-For authoring, read only the section that matches the current decision:
+For authoring, read the relevant section:
 
 - Plan structure or identity: [closed envelope](references/foundation-plan-019.md#closed-envelope),
   [subject identity](references/foundation-plan-019.md#subject-identity),

@@ -1314,7 +1314,7 @@
       "expectations": [
         "Reads the emitted preview guide before recommending commands.",
         "Explains the current WebView 113 versus required 120 blocker and does not promise that the available Revyl image provides a clean preview.",
-        "Recommends the web preview or a compatible local emulator until a compatible provider image is available; does not lower WebView requirements or suggest Google Play sign-in as part of this trial.",
+        "Recommends local Android Studio Emulator for native checks and the web preview for ordinary Rails work; explains that the emulator needs a suitable local computer and is not an all-browser fallback. Does not lower WebView requirements or suggest Google Play sign-in as part of this trial.",
         "Distinguishes GitHub Linux APK builds from Revyl device usage and remote build compute; does not promise a recurring free allowance.",
         "Explains that the compiled baseline needs its own private origin before GitHub builds and that an existing origin uses ordinary commit and push.",
         "Does not invoke First Draft or Revyl, install software, authenticate, create a repository, start a device, or modify the staged files."

@@ -72,9 +72,12 @@ const reviewedFixtureAnalyzerRelease =
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
 const currentFoundationPlanAnalyzerRelease =
-  "foundation-plan-rails/application-2026-09-05-alpha-scaffold-handoff";
+  "foundation-plan-rails/application-2026-09-13-native-usability";
 const currentFoundationPlanCompilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-12-android-preview";
+  "foundation-plan-rails/compiler-application-2026-09-13-ios-interactions";
+const currentFoundationPlanServiceBaseline = "9ff77985c821501f0174aec5da6192871395cd6b";
+const currentFoundationIosCoreRevision = "7365ba0bf7ea5e6c8e8223d24e54cf685b067950";
+const currentFoundationAndroidCoreRevision = "6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e";
 const foundationPlanSchemaDigest =
   "19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e";
 const foundationPlanServerBaseline =
@@ -374,6 +377,9 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   );
   assertRevisionTokens(references.join("\n"), [
     currentFoundationPlanSchemaBaseline,
+    currentFoundationPlanServiceBaseline,
+    currentFoundationIosCoreRevision,
+    currentFoundationAndroidCoreRevision,
     cliContractBaseline,
     catalogPromotionBaseline,
   ]);
@@ -426,6 +432,9 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     [
       foundationPlanServerBaseline,
       currentFoundationPlanSchemaBaseline,
+      currentFoundationPlanServiceBaseline,
+      currentFoundationIosCoreRevision,
+      currentFoundationAndroidCoreRevision,
       previousSkillsCurrentTruthBaseline,
       previousSkillsCurrentTruthTree,
       currentCompilerServiceBaseline,
@@ -531,7 +540,7 @@ test("historical plugin receipts stay separate from current availability", async
   assert.match(candidateSkill, /published CLI 0\.2\.2/);
   assert.match(
     candidateSkill,
-    /compatibility requirements\s+do not establish catalog selection/,
+    /compatibility does not establish catalog selection/,
   );
   assert.doesNotMatch(candidateModelingGuide, /dated staging (?:discovery|observation)/);
   assert.match(
@@ -545,7 +554,7 @@ test("historical plugin receipts stay separate from current availability", async
   assert.doesNotMatch(candidateFoundationPlanReference, /proven live Publish path/);
   assert.match(
     candidateFoundationPlanReference,
-    /Current design and machine authority[\s\S]*?89a2d6866f9448f4e75b58cac26f61c52daaa0b0[\s\S]*?Implementation and observation evidence[\s\S]*?Older controlled smokes[\s\S]*?historical receipts[\s\S]*?must not be used to narrow or widen the current profile/,
+    new RegExp(`Current design and machine authority[\\s\\S]*?${currentFoundationPlanServiceBaseline}[\\s\\S]*?Implementation and observation evidence[\\s\\S]*?Older controlled smokes[\\s\\S]*?historical receipts[\\s\\S]*?must not be used to narrow or widen the current profile`),
   );
   assert(!candidateFoundationPlanReference.includes(historicalCliContractBaseline));
   assert.match(
@@ -3227,13 +3236,13 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   );
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   for (const fragment of [
-    "compatibility requirements do not establish catalog selection",
+    "compatibility does not establish catalog selection",
     "required-enum",
     "Web Account",
     "Action Policy",
     "Web Scaffold",
     "authored theme/colors and derived favicon/PWA icons",
-    "Account- and Policy-free",
+    "Account/Policy-free",
   ]) {
     assert(normalizedSkillEvidence.includes(fragment), `current boundary missing: ${fragment}`);
   }

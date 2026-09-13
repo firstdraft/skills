@@ -1,0 +1,308 @@
+{
+  "observed_on": "2026-09-13",
+  "boundary": "exact-package advisory and installation qualification",
+  "package": {
+    "name": "@firstdraft.com/claude-code",
+    "version": "0.2.3",
+    "sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+    "bytes": 132997
+  },
+  "skills": {
+    "checked_source": "d71fa15531aafbe71f2f8b26ff54c43a98ecc165",
+    "checked_source_tree": "88a674b430b382945995cabccd6deb3f39cbe5d7",
+    "evidence_is_not_packaged": true
+  },
+  "cli": {
+    "version": "0.2.2",
+    "source": "799a184cb2453ceadf5575f7b46ba975e084f192"
+  },
+  "service": {
+    "referenced_reviewed_source": "9ff77985c821501f0174aec5da6192871395cd6b",
+    "merged_source": "df255d56f68ef47fdb11db66e1bce1001502b30f",
+    "identical_tree": "059dbf14c0b7eea528a994d4b2415011ac04dac2",
+    "deployment_and_hosted_journey_not_exercised_by_this_qualification": true
+  },
+  "analyzer_release": "foundation-plan-rails/application-2026-09-13-native-usability",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-09-13-ios-interactions",
+  "native_core_revisions": {
+    "ios": "7365ba0bf7ea5e6c8e8223d24e54cf685b067950",
+    "android": "6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e"
+  },
+  "canonical_skill_files": {
+    "skills/create-full-stack-app/LICENSE.txt": "76e6c24352bbf1faebee87707bf069d5c5dddbab827b8308e9def44589ed58b0",
+    "skills/create-full-stack-app/SKILL.md": "a9a03cecfd5f9acfe1c984a406108a24c408231b091de673c83cc57603af019f",
+    "skills/create-full-stack-app/agents/openai.yaml": "a8c7fdd2a8cfdebec754d77071fc0354ff44e00a5fdd299e3c1c1780b858108f",
+    "skills/create-full-stack-app/references/diagnostics-and-recovery.md": "d40ba993fa76fedcaf63d882c67f8bcdbe9e64b63db484fb74688dd60eb1a661",
+    "skills/create-full-stack-app/references/examples.md": "7195123fe99e8c9c2539a47e8f3246c1db95c3cc0951782659b52ac824fbf080",
+    "skills/create-full-stack-app/references/foundation-plan-0.19.schema.json": "19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e",
+    "skills/create-full-stack-app/references/foundation-plan-019.md": "c08a7d52d7774556c78bde4e03e20bf533330af8c367cb53d46112125dcf45dc",
+    "skills/create-full-stack-app/references/modeling-guide.md": "a93a12229a27be76788458159bb72562f47e9a39219a4b18c4fc89841b5f2f2f",
+    "skills/create-full-stack-app/scripts/firstdraft.sh": "2866e4e101dd4ba58446ccbb1f212a4ea7025782ede737091683dbced3b0c26e"
+  },
+  "skill_entrypoint_bytes": 20480,
+  "clients": {
+    "claude": {
+      "version": "2.1.267",
+      "model": "claude-opus-5[1m]",
+      "tools": [
+        "Glob",
+        "Grep",
+        "Read",
+        "Skill"
+      ],
+      "mcp_servers": []
+    },
+    "codex": {
+      "version": "0.154.0",
+      "selected_model": "gpt-6-astra",
+      "sandbox": "read-only",
+      "ephemeral": true
+    }
+  },
+  "checks": {
+    "repository": {
+      "result": "passed",
+      "log_sha256": "534c28204fbaf087b81985dd4ae122ebf150b791c93ad3ffaab4de8a2e813416",
+      "tests": 95,
+      "failures": 0,
+      "skips": 0
+    },
+    "cli_contract": {
+      "result": "passed",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "deterministic_package": {
+      "result": "passed",
+      "log_sha256": "753e259d25c22780c5796c28bff22677379582a16795e0ab63bacb3b5d86d192"
+    },
+    "codex_install_adapter": {
+      "result": "passed",
+      "log_sha256": "4f0634541404cc870b394d48cc0bead8a6735a9daa09fbec1e07170938e42d11"
+    },
+    "claude_install_adapter": {
+      "result": "passed",
+      "receipt_sha256": "5fad63d50c581db660b9b8605b0abd6308efe5fe424eb7c1810935e815efd42f",
+      "boundary": "isolated local tarball install, strict Claude validation, exact canonical Skill and bundled CLI, local application-key generation"
+    },
+    "evidence_amendment_repository": {
+      "result": "passed",
+      "log_sha256": "0c64eb9d98658abb1516656ecaab88aec2a50ebbdd622099ada81801d2ae824c"
+    },
+    "evidence_amendment_package_reproduction": {
+      "result": "passed",
+      "log_sha256": "2e93ed7ac0916c9296d97df4dcb5df29a48e7a54db358ab481a0c4b258b460ad"
+    },
+    "skill_validation": {
+      "result": "passed",
+      "log_sha256": "0a5459b952b27f0ca1cde0d4b5440bfe42599a0392c390f3cd12e2ebe67839f9"
+    }
+  },
+  "cases": [
+    {
+      "client": "claude",
+      "case": "private-native-request-preserves-current-boundary",
+      "result": "passed selected advisory criteria",
+      "duration_seconds": 37.76,
+      "input_sha256": {
+        ".firstdraft/foundation-plan.json": "4e9af785e0805ad4d979294fee6c19be16e13b653bf3e5aa51f0d27901e76ff5",
+        ".firstdraft/state.json": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+      },
+      "prompt_sha256": "4a7e077268ba484b5fed096c3c0eb4c25cfe45c7d91bc22d57fc46477430d6d8",
+      "response_sha256": "f80df3faa8e69c3c3a8e19a861782b4d42ee1e718cca515a87cbeb124c43d9ac",
+      "transcript_sha256": "24d49b1b2f416ee474e6fe79ba805e2213c57b8236aa3882f81a501ba6646825",
+      "inputs_unchanged": true,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_cli_invocations": false,
+      "product_mutations": false,
+      "public_web_reads": false
+    },
+    {
+      "client": "claude",
+      "case": "android-preview-respects-provider-limit",
+      "result": "passed selected advisory criteria",
+      "duration_seconds": 25.22,
+      "input_sha256": {
+        "ANDROID_PREVIEW.md": "9f0a362af475d14e0ceabb313c31dfd287ac97eb54f9bf4806e04000ff6f95b4"
+      },
+      "prompt_sha256": "2ded6ec6ae195c6fb8d7ab83fa8a600c6279dec043b41d4a9d9e10546fb7b900",
+      "response_sha256": "c2d3882217893066c7b7490799cb73a4562fbd78034bd23c98ce29110901f3cc",
+      "transcript_sha256": "682a2fbf7af72d3918b418683f412be0aaa784069365f3d6b3c08346d01655f0",
+      "inputs_unchanged": true,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_cli_invocations": false,
+      "product_mutations": false,
+      "public_web_reads": false
+    },
+    {
+      "client": "codex",
+      "case": "private-native-request-preserves-current-boundary",
+      "result": "passed selected advisory criteria",
+      "duration_seconds": 38.51,
+      "input_sha256": {
+        ".firstdraft/foundation-plan.json": "4e9af785e0805ad4d979294fee6c19be16e13b653bf3e5aa51f0d27901e76ff5",
+        ".firstdraft/state.json": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+      },
+      "prompt_sha256": "4a7e077268ba484b5fed096c3c0eb4c25cfe45c7d91bc22d57fc46477430d6d8",
+      "response_sha256": "b8562e80100defc2e310a78b90f5c0a501c78b00064c1358a4af76cde30ffcce",
+      "transcript_sha256": "5dc4dfe72f57357d2d96373625d0f7bcdc841f52a1a4c40c7944b5c6484e2793",
+      "inputs_unchanged": true,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_cli_invocations": false,
+      "product_mutations": false,
+      "public_web_reads": false
+    },
+    {
+      "client": "codex",
+      "case": "android-preview-respects-provider-limit",
+      "result": "partial: local hardware prerequisite implicit",
+      "duration_seconds": 59.06,
+      "input_sha256": {
+        "ANDROID_PREVIEW.md": "9f0a362af475d14e0ceabb313c31dfd287ac97eb54f9bf4806e04000ff6f95b4"
+      },
+      "prompt_sha256": "2ded6ec6ae195c6fb8d7ab83fa8a600c6279dec043b41d4a9d9e10546fb7b900",
+      "response_sha256": "d8bf52b52e9e8d09a20e490f9e5d0677ee3cbbad9b917cb8df72372ee3fcbab9",
+      "transcript_sha256": "feeba6daae18d02623a6e42fa02751f7137846f2e27ee0e2a60cc4232148218c",
+      "inputs_unchanged": true,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_cli_invocations": false,
+      "product_mutations": false,
+      "public_web_reads": true,
+      "limitation": "Names Android Studio local Emulator and distinguishes browser-only Rails work, but does not explicitly repeat the suitable-local-computer requirement.",
+      "release_disposition": "Accepted for this release: the response supplies the usable local fallback and routes to the emitted guide; the Skill entrypoint and guide explicitly state the local-computer prerequisite. This is not a claim that every literal advisory expectation passed."
+    }
+  ],
+  "android_fixture": {
+    "sha256": "9f0a362af475d14e0ceabb313c31dfd287ac97eb54f9bf4806e04000ff6f95b4",
+    "source": "df255d56f68ef47fdb11db66e1bce1001502b30f:lib/foundation_plan/rails_target/compiler/templates/android_preview/ANDROID_PREVIEW.md.template",
+    "normalization": "The android/README.md relative Markdown link is rendered as code in the standalone fixture; all other bytes match.",
+    "private_tunnel": "gh codespace ssh -- -N -L 3001:127.0.0.1:3000",
+    "emulator_root": "http://10.0.2.2:3001"
+  },
+  "approval_section_parity": {
+    "## Read back and approve the candidate before Compile": {
+      "sha256": "73b51eeecd2db1a34de4a57c9edd383194de3a7e86031d3c3311e829ac9f2a80",
+      "bytes": 2213,
+      "equal_to_source": "74f8343c5144ea3a5bcb7745a0d8b36f67e38018"
+    },
+    "## Request the selected Compile journey": {
+      "sha256": "06fdb6afbe65c6041e4c9b7a03cae401a296fff8f0deab3f181d9d8d41dd6354",
+      "bytes": 1458,
+      "equal_to_source": "74f8343c5144ea3a5bcb7745a0d8b36f67e38018"
+    }
+  },
+  "earlier_attempts": [
+    {
+      "attempt": "v1",
+      "source": "08349c673a58c8ccc91bf3e35539e98138aec1c0",
+      "package_sha256": "a1f0a9ac1236f2ebcfc05b7c0587efeadbd718a12abaa5fee3cd7e177a603ee0",
+      "result_counts": {
+        "passed": 2,
+        "failed": 2
+      },
+      "cases": [
+        {
+          "client": "claude",
+          "case": "private-native-request-preserves-current-boundary",
+          "inputs_unchanged": true,
+          "response_sha256": "6d91d9fff9537577ffed22218bc00dcbd5d5df50964110391673b39bd67b70b6",
+          "transcript_sha256": "1b50886e3ac165a96dc60fffe5a0ccbebffb68dde0f8311eeb191008e3bdbae2",
+          "external_mutations": false,
+          "private_state_contents_read": false,
+          "result": "failed",
+          "finding": "The response blurred staff eligibility with self-service registration and proposed signed-in-only access."
+        },
+        {
+          "client": "claude",
+          "case": "android-preview-respects-provider-limit",
+          "inputs_unchanged": true,
+          "response_sha256": "013754da31356a9b74fae070cd53c41539a86c3fa492864484307313a42bd2ba",
+          "transcript_sha256": "d8c5bcb5183b6a8416c95acb05149f761ccfe4ee934eea6b66d425960f2e9134",
+          "external_mutations": false,
+          "private_state_contents_read": false,
+          "result": "passed"
+        },
+        {
+          "client": "codex",
+          "case": "private-native-request-preserves-current-boundary",
+          "inputs_unchanged": true,
+          "response_sha256": "f4f4732c4d86fb9bb26196d9456fa7a6dc67a25e8d42f8c2e1e17d1c3afe22b0",
+          "transcript_sha256": "82a942d111ac241d57c41c42de9e4ad87a6b27365b2cc837c0b1986b81544caf",
+          "external_mutations": false,
+          "private_state_contents_read": false,
+          "result": "passed"
+        },
+        {
+          "client": "codex",
+          "case": "android-preview-respects-provider-limit",
+          "inputs_unchanged": true,
+          "response_sha256": "5a288f19648ac21b42cc6c4761639429d55239766a4acb5c961f16b4ebdf2118",
+          "transcript_sha256": "eb4d5ae34e41ae0fba9fe05935606daec65aa7189b14ce38744075151caf8cef",
+          "external_mutations": false,
+          "private_state_contents_read": false,
+          "result": "failed",
+          "finding": "The response omitted the recommended local Android Emulator alternative."
+        }
+      ]
+    },
+    {
+      "attempt": "v2",
+      "source": "eefb1356683bd4de2937b45b2abc70c534b9f526",
+      "package_sha256": "d3e1c1a2d37513e50ae25432a8b6a9cb8df27ae9e634a3fbd419e02a851320f6",
+      "result_counts": {
+        "passed": 3,
+        "failed": 1
+      },
+      "cases": [
+        {
+          "client": "claude",
+          "case": "private-native-request-preserves-current-boundary",
+          "inputs_unchanged": true,
+          "response_sha256": "47aba471747d66d31f3ad8e44401c666099f9f96a25cfa5602fcf776e8e07f04",
+          "transcript_sha256": "dfaa789bee4f8aaeb1374357342c66c77eedda8fad0909c876015b61db4568df",
+          "external_mutations": false,
+          "private_state_contents_read": false,
+          "result": "passed"
+        },
+        {
+          "client": "claude",
+          "case": "android-preview-respects-provider-limit",
+          "inputs_unchanged": true,
+          "response_sha256": "5db482cf8106f34c194a26f87524910729ad5679c236387e4685e2f446ce10f3",
+          "transcript_sha256": "cbd6b9a172cb0a0f9e44396220a96e9864a290fec5ddd97f1c08775ae29e1999",
+          "external_mutations": false,
+          "private_state_contents_read": false,
+          "result": "passed"
+        },
+        {
+          "client": "codex",
+          "case": "private-native-request-preserves-current-boundary",
+          "inputs_unchanged": true,
+          "response_sha256": "f242c77f95a7656614f00d2b82f541c1b244b27b6cc520faca9638e2cf962ea9",
+          "transcript_sha256": "4b305a8c3f0036c05f1726318a7f505fea3d7404c8b9a3dc944fc43824f4e3e1",
+          "external_mutations": false,
+          "private_state_contents_read": false,
+          "result": "passed"
+        },
+        {
+          "client": "codex",
+          "case": "android-preview-respects-provider-limit",
+          "inputs_unchanged": true,
+          "response_sha256": "8d5510450d99d0c66e9bf81fef0c4cbf7e439dbaf38b8bcaf73ff9f8d411d232",
+          "transcript_sha256": "6d1a2d3a883271e73a56902118b9c70d5343c98acce5a57cb8038ce043d834e0",
+          "external_mutations": false,
+          "private_state_contents_read": false,
+          "result": "failed",
+          "finding": "The response omitted the recommended local Android Emulator alternative."
+        }
+      ]
+    }
+  ],
+  "advisory_limitations": [
+    "No Plan was authored, schema-validated, submitted, analyzed, or compiled.",
+    "Claude private-native response listed five resource_routes and imprecisely said new/edit forms come along. It preserved all requested screen meanings; exact route emission was not qualified.",
+    "These were explicit Skill-selected cases, not automatic model triggering or a fresh public marketplace installation.",
+    "No fresh provider sign-in, new hosted Compile, Revyl session, Android Studio UI session, or phone installation was exercised.",
+    "Names Android Studio local Emulator and distinguishes browser-only Rails work, but does not explicitly repeat the suitable-local-computer requirement."
+  ],
+  "raw_artifact_root": "skills-native-release/tmp/native-preview-release in the retained task workspace; v3 contains final results; root and v2 retain earlier attempts"
+}
