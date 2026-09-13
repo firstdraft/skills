@@ -1,0 +1,106 @@
+{
+  "format": "firstdraft.plugin-public-install-observation/1",
+  "observed_at": "2026-09-13T17:26:07.945Z",
+  "catalog_commit": "dcb522d5fae253f972dcf7f84008f04b804c7129",
+  "catalog_pull_request": "https://github.com/firstdraft/skills/pull/61",
+  "plugin_package": "@firstdraft.com/claude-code@0.2.3",
+  "plugin_tarball_sha256": "53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc",
+  "skill_source": "e84a6ecddfa6a4170774768f24ddc798c0f13331",
+  "clients": [
+    {
+      "client": "claude",
+      "client_version": "2.1.267 (Claude Code)",
+      "catalog_commit": "dcb522d5fae253f972dcf7f84008f04b804c7129",
+      "catalog_tree": "79e0893a4b8395d8fed4bc63ccea2eb8476143d6",
+      "plugin_id": "firstdraft@firstdraft-skills",
+      "plugin_version": "0.2.3",
+      "enabled": true,
+      "canonical_files_match": 9,
+      "bundled_cli_version": "0.2.2",
+      "no_global_cli": true,
+      "local_key_generation": true,
+      "credentials_supplied": false,
+      "model_or_firstdraft_service_invoked": false,
+      "public_commands_passed": true,
+      "documented_command_pairs_exact": true,
+      "commands_receipt_sha256": "5c8fab97498c85f314f17f2673e2f02c653b7f81feb1ecf7358ad8ad4c8312d4",
+      "installed_skill_path": "skills/create-full-stack-app/SKILL.md",
+      "strict_plugin_validation": "passed"
+    },
+    {
+      "client": "codex",
+      "client_version": "codex-cli 0.154.0",
+      "catalog_commit": "dcb522d5fae253f972dcf7f84008f04b804c7129",
+      "catalog_tree": "79e0893a4b8395d8fed4bc63ccea2eb8476143d6",
+      "plugin_id": "firstdraft@firstdraft-skills",
+      "plugin_version": "0.2.3",
+      "enabled": true,
+      "canonical_files_match": 9,
+      "bundled_cli_version": "0.2.2",
+      "no_global_cli": true,
+      "local_key_generation": true,
+      "credentials_supplied": false,
+      "model_or_firstdraft_service_invoked": false,
+      "public_commands_passed": true,
+      "documented_command_pairs_exact": true,
+      "commands_receipt_sha256": "8b2160d10e11b3a41e7923f4c3ad39008814c99916247ae0502d859fef1e7a0d",
+      "installed_skill_path": "skills/create-full-stack-app/SKILL.md",
+      "model_free_skill_inventory": "passed",
+      "matching_skills": 1,
+      "skill_locator_resolves_to_active_install": true
+    }
+  ],
+  "canonical_skill_files": {
+    "skills/create-full-stack-app/LICENSE.txt": "76e6c24352bbf1faebee87707bf069d5c5dddbab827b8308e9def44589ed58b0",
+    "skills/create-full-stack-app/SKILL.md": "a9a03cecfd5f9acfe1c984a406108a24c408231b091de673c83cc57603af019f",
+    "skills/create-full-stack-app/agents/openai.yaml": "a8c7fdd2a8cfdebec754d77071fc0354ff44e00a5fdd299e3c1c1780b858108f",
+    "skills/create-full-stack-app/references/diagnostics-and-recovery.md": "d40ba993fa76fedcaf63d882c67f8bcdbe9e64b63db484fb74688dd60eb1a661",
+    "skills/create-full-stack-app/references/examples.md": "7195123fe99e8c9c2539a47e8f3246c1db95c3cc0951782659b52ac824fbf080",
+    "skills/create-full-stack-app/references/foundation-plan-0.19.schema.json": "19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e",
+    "skills/create-full-stack-app/references/foundation-plan-019.md": "c08a7d52d7774556c78bde4e03e20bf533330af8c367cb53d46112125dcf45dc",
+    "skills/create-full-stack-app/references/modeling-guide.md": "a93a12229a27be76788458159bb72562f47e9a39219a4b18c4fc89841b5f2f2f",
+    "skills/create-full-stack-app/scripts/firstdraft.sh": "2866e4e101dd4ba58446ccbb1f212a4ea7025782ede737091683dbced3b0c26e"
+  },
+  "documented_public_commands": [
+    "claude plugin marketplace add firstdraft/skills",
+    "claude plugin install firstdraft@firstdraft-skills",
+    "codex plugin marketplace add firstdraft/skills",
+    "codex plugin add firstdraft@firstdraft-skills"
+  ],
+  "isolation": {
+    "separate_empty_home_configuration_npm_cache_and_workspace": true,
+    "credentials_supplied": false,
+    "authentication_commands": false,
+    "model_or_firstdraft_service_invoked": false,
+    "global_firstdraft_cli_present": false,
+    "plan_or_firstdraft_state_created": false,
+    "host_claude_registries_and_settings_changed": false
+  },
+  "npm_dist_tags_queried_or_changed_by_this_check": false,
+  "harness_sha256": "e71d537f16d959cff1ba9fa889bb1d1fe88fdbf378230647019bbb516ce9a211",
+  "harness_recovery": {
+    "before_final_run": "Two harness-only failures preceded the complete fresh-state rerun. One stopped before public commands at an existing host Git-hook symlink; the other counted npm download cache alongside the active installation.",
+    "final_result": "Both complete public installation flows passed in fresh state after correcting those checks."
+  },
+  "raw_artifact_location": {
+    "availability": "Local task artifacts; not committed repository paths",
+    "run": "run-2026-09-13T17-26-01-353Z",
+    "retained": [
+      "initial-state inventories",
+      "environment key names",
+      "command arguments, statuses, stdout and stderr",
+      "client inventories and exact catalog revisions",
+      "Codex model-free prompt inventory",
+      "public registry metadata and tarball",
+      "aggregate and per-client receipts"
+    ]
+  },
+  "not_established": [
+    "existing-install refresh",
+    "sign-in or authenticated authoring",
+    "Compilation or GitHub Publication",
+    "Revyl or Android Studio UI",
+    "hosted Codespace journey",
+    "npm latest promotion or deployment"
+  ]
+}
