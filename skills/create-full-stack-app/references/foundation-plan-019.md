@@ -43,8 +43,8 @@ deployed journey, and an older observation does not define current support.
 **Current design and machine authority**
 
 - The bundled JSON Schema owns v0.19 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/9d86c533cc00fd34ef8f9f5807a2b041d42e9e0f/docs/architecture/targets/rails/profile.md)
-  owns current lowering at Service candidate `9d86c533cc00fd34ef8f9f5807a2b041d42e9e0f`.
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/9729ce9f118dd6172d5037e1d74a892f996b7af4/docs/architecture/targets/rails/profile.md)
+  owns current lowering at Service candidate `9729ce9f118dd6172d5037e1d74a892f996b7af4`.
   A source reference does not establish the deployed service revision.
 - The current analyzer release is
   `foundation-plan-rails/application-2026-09-14-redirect-defaults`; the matching Compiler release is
@@ -75,7 +75,7 @@ deployed journey, and an older observation does not define current support.
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/9d86c533cc00fd34ef8f9f5807a2b041d42e9e0f/docs/evidence/status.md)
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/9729ce9f118dd6172d5037e1d74a892f996b7af4/docs/evidence/status.md)
   distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
   [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
   records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
@@ -106,7 +106,7 @@ deployed journey, and an older observation does not define current support.
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`9d86c533cc00fd34ef8f9f5807a2b041d42e9e0f` and has SHA-256
+`9729ce9f118dd6172d5037e1d74a892f996b7af4` and has SHA-256
 `3c363d999c37ec5dd4a3f3705f4e621330e4cb6c57257385f105d9a425d14ff9`. This is exact contract provenance, not
 release or execution evidence.
 

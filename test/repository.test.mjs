@@ -87,7 +87,7 @@ const foundationPlanServerBaseline =
 const nativeQualificationServiceBaseline =
   "89a2d6866f9448f4e75b58cac26f61c52daaa0b0";
 const currentFoundationPlanSchemaBaseline =
-  "9d86c533cc00fd34ef8f9f5807a2b041d42e9e0f";
+  "9729ce9f118dd6172d5037e1d74a892f996b7af4";
 const previousSkillsCurrentTruthBaseline =
   "160d33a5a7d9f9b2282729ecfd3b2e24a1123143";
 const previousSkillsCurrentTruthTree =
