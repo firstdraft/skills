@@ -495,7 +495,11 @@ admitted collection, then application home. The context matrix applies to emitte
 create/edit forms.
 
 Use the existing Plan `return_to` only for a product exception. Resource overrides name an Entity and admitted
-index/show/profile route, never a URL. Associated `create_form: {}` requests its default; its optional override is
+index/show/profile route, never a URL. A show override requires `record`, such as `{"from": "mutation_record"}` for
+the saved record itself. To return from a Rating to its Movie, use Entity `movie`, route `show`, and
+`"record": {"from": "mutation_record", "through": [{"association": "rating.movie"}]}`. Every `through` hop must be
+singular and guaranteed present; unsupported paths remain gaps. Index and profile overrides omit `record`.
+Associated `create_form: {}` requests its default; its optional override is
 independent of the standalone create override. `scaffold_record` is available only to that associated-create
 context. Destroy cannot return to its deleted record. Unsupported explicit returns remain reviewed gaps, including
 the modeled `current_location` kind. Known destinations emit as direct Rails routes, without a hidden return URL;

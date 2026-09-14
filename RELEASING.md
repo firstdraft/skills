@@ -8,7 +8,7 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 | Surface | Current identity |
 |---|---|
 | Package source candidate | `@firstdraft.com/claude-code@0.2.4` (unpublished; future tag `claude-v0.2.4`) |
-| Candidate packed SHA-256 | `ad797ffadb8bee906e42c754015b360f0931c1c2156ca1f6f5a1f73f4413966e` |
+| Candidate packed SHA-256 | `fce897445460ad8e0386eca8edfc4c8b1d712f7ec0cccb54b94b06d7cfde361f` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.3` |
 | Public catalog | Plugin `0.2.3`, selected by `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.3` / `0.2.3` |
@@ -76,7 +76,7 @@ syntax; do not add compatibility aliases.
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
 For 0.2.4, run the service's `script/compiler_redirect_defaults_smoke` at the compatible service SHA. Require zero
-gaps, identical output, and 7 request tests/124 assertions passing after migration and schema loading. Record its log
+gaps, identical output, and all request tests passing after migration and schema loading. Record its log
 and SHA with the package digest as local generated-app proof. Run [UI continuation qualification](evals/ui-continuation/README.md),
 `private-native-request-preserves-current-boundary`, and `android-preview-respects-provider-limit` in both clients,
 plus both install checks and the CLI contract. Bind results to the same digest and generated app revisions.
