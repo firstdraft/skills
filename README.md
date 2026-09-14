@@ -6,7 +6,8 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. Package contents in this checkout are a source candidate; the public catalog and
 Drawing Board pins determine what an installed workspace actually receives.
 
-The UI migration is candidate `0.2.4`, with its exact digest in [release compatibility](release/compatibility.json).
+UI migration and conventional Scaffold returns are candidate `0.2.4`, requiring service API `>= 0.3.1`, `< 0.4.0`.
+Its exact digest is in [release compatibility](release/compatibility.json); [RELEASING.md](RELEASING.md) owns promotion.
 The public catalog still selects the published one-Skill `0.2.3` package; candidate checks do not promote it.
 
 Trying First Draft as a tester? Start with the

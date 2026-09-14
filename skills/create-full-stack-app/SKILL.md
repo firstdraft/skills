@@ -65,8 +65,6 @@ For CLI work:
   read [ambiguous mutations](references/diagnostics-and-recovery.md#ambiguous-mutations) only when the named error
   requires it.
 
-Omit routine `return_to`; ask only about product exceptions. See the Scaffold reference for defaults and readiness.
-
 Use the bundled [JSON Schema](references/foundation-plan-0.19.schema.json) as machine-readable validator input;
 never read it end to end. Pass only its path to an existing JSON Schema 2020-12 command named by the user, exposed by
 the project, or found through a straightforward check of existing local commands. Do not install dependencies or add
@@ -133,6 +131,8 @@ directory. If `.firstdraft/` already exists, confirm with project-relative metad
 reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
 
 ## Interview and author incrementally
+
+Omit routine `return_to`; ask only about product exceptions. The Scaffold reference owns defaults and API needs.
 
 Use the modeling guide's decision ledger and readiness criteria. In the opening turn, ask no more than three closely
 related questions about choices changing Entity boundaries, record granularity, access, or clients. When a collection

@@ -206,7 +206,7 @@ and update inputs are internally coherent; this is not the only admitted route c
 }
 ```
 
-On the compatible API `0.3.1` source candidate, these omitted returns use defaults: create/update opens the Movie,
+With service API `>= 0.3.1`, `< 0.4.0`, these omitted returns use defaults: create/update opens the Movie,
 delete returns to Movies, and profile editing returns to profile. Selecting a Director in the standalone Movie
 form does not return to that Director. To intentionally return to Movies after creation, add
 `"return_to": {"kind": "resource", "entity": "movie", "route": "index"}` to `create`. Ask about that product

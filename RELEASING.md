@@ -8,13 +8,13 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 | Surface | Current identity |
 |---|---|
 | Package source candidate | `@firstdraft.com/claude-code@0.2.4` (unpublished; future tag `claude-v0.2.4`) |
-| Candidate packed SHA-256 | `78129bcfa123b3a4598f0a04e4986f011415fbee2d95e0218f8efcd0526385ed` |
+| Candidate packed SHA-256 | `2f287dffdf05a244b40c378a0d3a0841ae6184e1a6614a2dac1139e69f7009da` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.3` |
 | Public catalog | Plugin `0.2.3`, selected by `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.3` / `0.2.3` |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
-| Service API contract | `>= 0.3.1`, `< 0.4.0` |
+| Candidate's required service API contract | `>= 0.3.1`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
@@ -75,21 +75,22 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-For 0.2.4, qualify redirects on API 0.3.1 and run [UI continuation qualification](evals/ui-continuation/README.md),
+For 0.2.4, run the service's `script/compiler_redirect_defaults_smoke` at the compatible service SHA. Require zero
+gaps, identical output, and 7 request tests/124 assertions passing after migration and schema loading. Record its log
+and SHA with the package digest as local generated-app proof. Run [UI continuation qualification](evals/ui-continuation/README.md),
 `private-native-request-preserves-current-boundary`, and `android-preview-respects-provider-limit` in both clients,
 plus both install checks and the CLI contract. Bind results to the same digest and generated app revisions.
 Keep the Revyl WebView blocker visible. The unchanged approval/Publication procedure below records 0.2.2 smokes.
 
-The 0.2.2 qualification used two human-observed approval smokes in separate continuing sessions:
+The [0.2.2 receipt](evidence/2026-09-10-shared-plugin-0.2.2-release.md) records two human-observed approval smokes
+in separate continuing sessions:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
 - Direct output pairs `precompile-drawing-board-read-back` with
   `compile-prepared-drawing-board-application`.
 
-Also run the [shared client qualification](evals/README.md#shared-client-qualification) for the new Codex surface.
+Also run the [shared client qualification](evals/README.md#shared-client-qualification).
 Keep fixture-based agent behavior separate from real Compiler and hosted-journey evidence.
-
-The [0.2.2 record](evidence/2026-09-10-shared-plugin-0.2.2-release.md) binds those gates to its package, not changed bytes.
 
 Synthetic fixture GapSets are not universal digest oracles: live GapSet digests include Project identity. Every
 attached-analysis evaluation and smoke must use its attached `analysis.gap_set_sha256`, which the CLI validates
@@ -112,11 +113,10 @@ For each pair:
    the retained Compilation with validated path, file count, and manifest digest, and claims no Publication,
    repository, or `.git`. The observer confirms the post-approval Compile count is exactly one.
 
-Retain each two-turn transcript, explicit approval, identities and digests above, pre-approval Compile count zero,
-post-approval Compile count exactly one, and final mode-specific outcome. These smokes do not require an exhaustive
-tool or effect ledger, shell-command classification, workspace snapshots, or proof of generic no-network, no-write,
-or environmental inactivity. Pass only on unchanged Plan bytes, a complete approved read-back, exactly one
-post-approval Compile invocation, and the selected terminal success. A controlled setup, harness, or local failure
+Retain each two-turn transcript, explicit approval, identities and digests, pre-approval Compile count zero,
+post-approval Compile count exactly one, and final mode-specific outcome. Pass only on unchanged Plan bytes, a complete approved read-back, one post-approval
+Compile, and selected terminal success. These smokes do not require an exhaustive tool or effect ledger, shell-command classification, workspace snapshots,
+or proof of generic no-network, no-write, or environmental inactivity. A controlled setup, harness, or local failure
 before any Compile invocation and before any external mutation may be corrected and the same smoke rerun within the
 already approved scope. A known successful external effect does not make a whole-smoke rerun safe. After an ambiguous
 outcome, retain the observed boundary and reconcile read-only where available. A direct start without a retained ID
@@ -126,9 +126,8 @@ described above, which never applies to an ambiguous Plan push; otherwise do not
 
 ## 2. Publish the exact package under `next`
 
-This step requires explicit authorization for protected tag creation and npm publication, either on its own or as
-part of a named release sequence. The operator resolves and reports the exact candidate commit, package version,
-and tarball digest before mutation; the user does not need to recite them.
+Tag creation and npm publication require explicit approval, separately or within a named sequence. Report the exact
+candidate commit, package version, and tarball digest before mutation.
 
 Immediately before tagging:
 
@@ -164,8 +163,10 @@ Record the environment, exact package and CLI versions, digest, observations, an
 in a new dated evidence file. A package-only check does not prove the public marketplace commands, model behavior,
 authentication, First Draft transport, Compilation, GitHub Publication, or a generated application.
 
-Complete the release-specific product qualification defined in step 1. A compatible patch may require no service
-mutation; a breaking compatibility transition follows the additional service rules below.
+Complete step 1 qualification. Before catalog or `latest` promotion, verify active web and worker revisions read-only
+against `requires.api_contract`, even within an unchanged API line. Both roles must serve API `>= 0.3.1`, `< 0.4.0`
+for 0.2.4. A compatible patch needs no service change only when that requirement is already met. Breaking transitions
+follow the additional rules below.
 
 Qualification remains bound to the packed digest and compatible CLI and service identities. If a later final-head
 commit changes only non-packaged documentation, tests, or workflows, require final-head hosted CI and reproduction
@@ -173,15 +174,14 @@ of the same packed digest; do not repeat the product smoke solely because of tha
 
 ## 4. Promote the public catalog
 
-This is a separate reviewable source change and requires explicit merge authorization, which may already be part of
-the approved named release sequence.
+Catalog promotion is a separate source change requiring explicit merge approval, possibly in the named sequence.
 
 1. Update `.claude-plugin/marketplace.json` to the exact published package.
 2. Update current structured compatibility and catalog assertions plus current-state documentation; do not rewrite
    dated evidence.
 3. Require the exact promotion head's Node 24.18.0 CI job and release-order rehearsal. Never use an administrative
    bypass for this gate.
-4. Merge only after the exact package and all selected pre-merge qualification gates pass.
+4. Merge only after the exact package, active-service compatibility, and selected pre-merge qualification gates pass.
 5. After merge, run each client's public install in fresh isolated state. Record the exact catalog commit, npm
    package, installed manifest, Skill locator, and bundled CLI:
 
@@ -220,14 +220,10 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For API 0.3, CLI 0.2.2 and plugin 0.2.3 are published; their channel state is listed above. The earlier 0.2.1 controlled approval
-smokes passed against service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, observed on both staging roles through
-Render deployment listings at `2026-09-10T04:13:47Z`.
-This records staging readiness, not production activation or the full authenticated Codespaces journey. For a new
-breaking transition, leave both `latest` tags and the catalog unchanged until exact web and worker revisions are
-active and qualification passes. During the approved window, stop other
-operator-controlled Compile and Publication invocations in that lane and serialize the one qualification invocation
-through its retained outcome.
+The 0.2.1 approval smokes used service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, observed on both staging roles at
+`2026-09-10T04:13:47Z`; that is not production or full-journey proof. For a new breaking transition, retain both `latest`
+tags and the catalog until exact web and worker revisions are active and qualification passes. During the approved
+window, stop other operator-controlled Compile/Publication in that lane and serialize qualification through its outcome.
 
 Reconcile web, worker, queue, package, catalog, and supported-client state at every boundary. A web-only or
 worker-only activation is not completion. Public traffic may continue as unattributed capacity activity under the
