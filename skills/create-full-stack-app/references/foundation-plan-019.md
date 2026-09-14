@@ -43,12 +43,12 @@ deployed journey, and an older observation does not define current support.
 **Current design and machine authority**
 
 - The bundled JSON Schema owns v0.19 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/architecture/targets/rails/profile.md)
-  owns current lowering at reviewed Service source `9ff77985c821501f0174aec5da6192871395cd6b`.
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/b18c40f45ebb7a05c2a7194a23b7d9b6b8c15411/docs/architecture/targets/rails/profile.md)
+  owns current lowering at Service candidate `b18c40f45ebb7a05c2a7194a23b7d9b6b8c15411`.
   A source reference does not establish the deployed service revision.
 - The current analyzer release is
-  `foundation-plan-rails/application-2026-09-13-native-usability`; the matching Compiler release is
-  `foundation-plan-rails/compiler-application-2026-09-13-ios-interactions`.
+  `foundation-plan-rails/application-2026-09-14-redirect-defaults`; the matching Compiler release is
+  `foundation-plan-rails/compiler-application-2026-09-14-redirect-defaults`.
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
@@ -75,7 +75,7 @@ deployed journey, and an older observation does not define current support.
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/evidence/status.md)
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/b18c40f45ebb7a05c2a7194a23b7d9b6b8c15411/docs/evidence/status.md)
   distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
   [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
   records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
@@ -106,8 +106,8 @@ deployed journey, and an older observation does not define current support.
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`89a2d6866f9448f4e75b58cac26f61c52daaa0b0` and has SHA-256
-`19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e`. This is exact contract provenance, not
+`b18c40f45ebb7a05c2a7194a23b7d9b6b8c15411` and has SHA-256
+`3c363d999c37ec5dd4a3f3705f4e621330e4cb6c57257385f105d9a425d14ff9`. This is exact contract provenance, not
 release or execution evidence.
 
 The current fixtures and check use reviewed root-output CLI revision
@@ -486,6 +486,22 @@ recursive projections, Predicate and Ordering selection, cursor pagination, Fiel
 bindings, associated-create forms, and authored return destinations. It also realizes the Account Entity's exact
 Web-only profile/update pair. Each consumer still has shape-specific prerequisites. Unsupported children are omitted
 or partially generated with exact GapSet records; a supported sibling may survive.
+
+On API `0.3.1` and later in the `0.3` line, omit ordinary `return_to`: standalone New/Edit returns to the saved
+record; Index -> New -> Save counts as New. A belongs-to select does not create parent context. An actual associated
+create returns to its parent. Delete from an index or the record's own detail returns to the collection; deleting a
+child within a parent returns there. Profile editing returns to profile. Preferred detail routes fall back to the
+admitted collection, then application home. The context matrix applies to emitted surfaces; it does not add inline
+create/edit forms.
+
+Use the existing Plan `return_to` only for a product exception. Resource overrides name an Entity and admitted
+index/show/profile route, never a URL. Associated `create_form: {}` requests its default; its optional override is
+independent of the standalone create override. `scaffold_record` is available only to that associated-create
+context. Destroy cannot return to its deleted record. Unsupported explicit returns remain reviewed gaps, including
+the modeled `current_location` kind. Known destinations emit as direct Rails routes, without a hidden return URL;
+shared actions retain parent/form context and authorization through failed writes. Do not infer Referer or session
+history or interview the user about every redirect. This source candidate requires a compatible promoted service
+before a distributed Skill can rely on omission support.
 
 Create and update controls cover the admitted scalar, required-enum, and direct-Association slices. Required
 destinations need an admitted source such as a control, binding, realized default, state-machine initial state, or

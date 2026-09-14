@@ -74,18 +74,20 @@ const reviewedFixtureAnalyzerRelease =
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
 const currentFoundationPlanAnalyzerRelease =
-  "foundation-plan-rails/application-2026-09-13-native-usability";
+  "foundation-plan-rails/application-2026-09-14-redirect-defaults";
 const currentFoundationPlanCompilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-13-ios-interactions";
+  "foundation-plan-rails/compiler-application-2026-09-14-redirect-defaults";
 const currentFoundationPlanServiceBaseline = "9ff77985c821501f0174aec5da6192871395cd6b";
 const currentFoundationIosCoreRevision = "7365ba0bf7ea5e6c8e8223d24e54cf685b067950";
 const currentFoundationAndroidCoreRevision = "6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e";
 const foundationPlanSchemaDigest =
-  "19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e";
+  "3c363d999c37ec5dd4a3f3705f4e621330e4cb6c57257385f105d9a425d14ff9";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
-const currentFoundationPlanSchemaBaseline =
+const nativeQualificationServiceBaseline =
   "89a2d6866f9448f4e75b58cac26f61c52daaa0b0";
+const currentFoundationPlanSchemaBaseline =
+  "b18c40f45ebb7a05c2a7194a23b7d9b6b8c15411";
 const previousSkillsCurrentTruthBaseline =
   "160d33a5a7d9f9b2282729ecfd3b2e24a1123143";
 const previousSkillsCurrentTruthTree =
@@ -379,6 +381,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   );
   assertRevisionTokens(references.join("\n"), [
     currentFoundationPlanSchemaBaseline,
+    nativeQualificationServiceBaseline,
     currentFoundationPlanServiceBaseline,
     currentFoundationIosCoreRevision,
     currentFoundationAndroidCoreRevision,
@@ -434,6 +437,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     [
       foundationPlanServerBaseline,
       currentFoundationPlanSchemaBaseline,
+      nativeQualificationServiceBaseline,
       currentFoundationPlanServiceBaseline,
       currentFoundationIosCoreRevision,
       currentFoundationAndroidCoreRevision,
@@ -556,7 +560,7 @@ test("historical plugin receipts stay separate from current availability", async
   assert.doesNotMatch(candidateFoundationPlanReference, /proven live Publish path/);
   assert.match(
     candidateFoundationPlanReference,
-    new RegExp(`Current design and machine authority[\\s\\S]*?${currentFoundationPlanServiceBaseline}[\\s\\S]*?Implementation and observation evidence[\\s\\S]*?Older controlled smokes[\\s\\S]*?historical receipts[\\s\\S]*?must not be used to narrow or widen the current profile`),
+    new RegExp(`Current design and machine authority[\\s\\S]*?${currentFoundationPlanSchemaBaseline}[\\s\\S]*?Implementation and observation evidence[\\s\\S]*?Older controlled smokes[\\s\\S]*?historical receipts[\\s\\S]*?must not be used to narrow or widen the current profile`),
   );
   assert(!candidateFoundationPlanReference.includes(historicalCliContractBaseline));
   assert.match(
