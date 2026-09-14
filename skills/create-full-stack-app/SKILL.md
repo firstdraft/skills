@@ -11,7 +11,7 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-Targets plugin 0.2.4, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
+Targets plugin 0.2.4, published CLI 0.2.2, and API 0.3.1; compatibility does not establish catalog selection.
 
 - It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
   Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone/Android slices. Rails emits
@@ -65,11 +65,11 @@ For CLI work:
   read [ambiguous mutations](references/diagnostics-and-recovery.md#ambiguous-mutations) only when the named error
   requires it.
 
-The bundled [JSON Schema](references/foundation-plan-0.19.schema.json) is machine-readable validator input, not prose.
-Use a compatible JSON Schema 2020-12 command named by the user, exposed by the project, or found through a
-straightforward check of existing local commands. Pass only its path; never read it end to end. Do not install
-dependencies or add validation/build plumbing solely for this workflow. Otherwise rely on First Draft exact-byte
-diagnostics and say local schema validation was not performed.
+Use the bundled [JSON Schema](references/foundation-plan-0.19.schema.json) as machine-readable validator input;
+never read it end to end. Pass only its path to an existing JSON Schema 2020-12 command named by the user, exposed by
+the project, or found through a straightforward check of existing local commands. Do not install dependencies or add
+validation/build plumbing solely for this workflow. Otherwise rely on First Draft exact-byte diagnostics
+and say local schema validation was not performed.
 
 ## Verify the local capability
 
@@ -132,6 +132,8 @@ reinitialize. Inspect private state only for a recovery check explicitly named i
 
 ## Interview and author incrementally
 
+Omit routine `return_to`; ask only about product exceptions. The Scaffold reference owns defaults and API needs.
+
 Use the modeling guide's decision ledger and readiness criteria. In the opening turn, ask no more than three closely
 related questions about choices changing Entity boundaries, record granularity, access, or clients. When a collection
 could mean unique objects, interchangeable goods, or both, offer one record per unique object, one record carrying a
@@ -149,7 +151,7 @@ incomplete or malformed local snapshot is safe to submit for diagnostics. Model 
 tables, macros, gems, callbacks, or arbitrary code. Keep capability gaps separate from product choices and never
 maintain a second flattened candidate merely for Compilation.
 
-Generate a fresh UUIDv7 for each genuinely new independently mutable subject:
+Generate a UUIDv7 for each new independently mutable subject:
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -157,9 +159,8 @@ firstdraft_cli generate uuid
 firstdraft_cli generate uuid --count <n>
 ```
 
-Preserve an existing subject UUID through renames and coherent same-kind moves; update every affected readable path
-in the same snapshot. Use a new UUID for a replacement concept. Defaults and other owner-inherited values do not
-receive UUIDs.
+Preserve UUIDs through renames and same-kind moves; update affected paths together. Use a new UUID for a replacement
+concept. Defaults and other inherited values have no UUIDs.
 
 ## Submit snapshots and use diagnostics
 

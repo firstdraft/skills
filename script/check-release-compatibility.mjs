@@ -119,7 +119,7 @@ export function assertSkillsReleaseCompatibility({
     assertComparator(requirement);
   }
   assert.deepEqual(compatibility.requires, {
-    api_contract: [">= 0.3.0", "< 0.4.0"],
+    api_contract: [">= 0.3.1", "< 0.4.0"],
     cli: [`= ${cliPackageVersion}`],
     foundation_plan_formats: [foundationPlanFormat],
   });

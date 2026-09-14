@@ -20,7 +20,8 @@
   continue within that scope; otherwise ask whether to coordinate a candidate across `firstdraft`, `cli`, and
   `skills` and promote it.
 - SemVer compatibility establishes candidate eligibility only. Record the exact SHA of every repository and the
-  packed Claude plugin SHA-256, then follow [`RELEASING.md`](RELEASING.md).
+  packed Claude plugin SHA-256, then follow [`RELEASING.md`](RELEASING.md). A raised API floor, even within the same
+  compatibility line, requires active compatible web and worker revisions before catalog or `latest` promotion.
 - Do not publish npm packages, move npm dist-tags, deploy First Draft, create protected release tags, or release the
   plugin without explicit user approval. One approval may cover a named release sequence. Resolve and report its
   immutable identities before mutation; do not require the user to recite them. Completing one approved step does

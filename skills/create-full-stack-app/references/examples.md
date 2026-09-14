@@ -161,7 +161,7 @@ subset. A conditional maximum does not become an unconditional form `maxlength`.
 This Scaffold fragment is one complete supported show-and-destroy shape for a `movie` Entity with owner-local
 `title` and `notes` short-text Fields and a required ordinary `director` Reference. The `movie.director` input names
 the Reference's mechanically derived forward Association. Its route order, public authorizations, nonempty create
-and update inputs, and return destinations are internally coherent; this is not the only admitted route combination.
+and update inputs are internally coherent; this is not the only admitted route combination.
 
 ```jsonc
 {
@@ -190,13 +190,7 @@ and update inputs, and return destinations are internally coherent; this is not 
       { "field": "movie.notes" },
       { "association": "movie.director" }
     ],
-    "authorization": "public",
-    "return_to": {
-      "kind": "resource",
-      "entity": "movie",
-      "route": "show",
-      "record": { "from": "mutation_record" }
-    }
+    "authorization": "public"
   },
   "update": {
     "inputs": [
@@ -204,24 +198,19 @@ and update inputs, and return destinations are internally coherent; this is not 
       { "field": "movie.notes" },
       { "association": "movie.director" }
     ],
-    "authorization": "public",
-    "return_to": {
-      "kind": "resource",
-      "entity": "movie",
-      "route": "show",
-      "record": { "from": "mutation_record" }
-    }
+    "authorization": "public"
   },
   "destroy": {
-    "authorization": "public",
-    "return_to": {
-      "kind": "resource",
-      "entity": "movie",
-      "route": "index"
-    }
+    "authorization": "public"
   }
 }
 ```
+
+With service API `>= 0.3.1`, `< 0.4.0`, these omitted returns use defaults: create/update opens the Movie,
+delete returns to Movies, and profile editing returns to profile. Selecting a Director in the standalone Movie
+form does not return to that Director. To intentionally return to Movies after creation, add
+`"return_to": {"kind": "resource", "entity": "movie", "route": "index"}` to `create`. Ask about that product
+exception only when it matters to the workflow.
 
 Omit `show.projection` for descriptor-only detail. Without destroy, omit its route and definition. Standalone show,
 Policy-controlled authorization, server bindings, Association or recursive projections, and other route subsets are
@@ -489,12 +478,7 @@ make this Account or profile available natively.
               {
                 "field": "user.time_zone"
               }
-            ],
-            "return_to": {
-              "kind": "resource",
-              "entity": "user",
-              "route": "profile"
-            }
+            ]
           },
           "update": {
             "authorization": {
