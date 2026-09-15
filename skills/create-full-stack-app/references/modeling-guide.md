@@ -139,8 +139,10 @@ Do not add a realization choice when the target profile has only one supported l
 Capabilities or prerequisites as authored lists.
 
 Current Web Scaffolds may select standard resource routes, direct or recursive projections, Predicate and Ordering
-consumers, cursor pagination, Field and Association inputs, server bindings, associated-create forms, and authored
-return destinations. Every request and displayed Association declares public access or a Policy binding. The exact
+consumers, cursor pagination, Field and Association inputs, server bindings, associated-create entry points, and
+optional return overrides. Omit `return_to` for conventional interaction defaults; author it only for a product
+choice. A supported associated `create_form` supplies a scoped New page, not an inline form in the details card.
+Every request and displayed Association declares public access or a Policy binding. The exact
 Web Account/Policy slice can protect supported surfaces and provide a Web-only Account profile; unsupported Policies
 and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
 silently narrow a broader requested Scaffold or make it public merely to obtain a gap-free result.
@@ -156,7 +158,8 @@ does not establish native authentication or protected navigation. Confirm public
 private requirements and requested clients, then review the support gap. Do not recommend removing a requested
 client to quiet gaps, or adding public indexes to satisfy native prerequisites. The user may change product scope;
 target support alone is not that decision.
-Appearance theme, colors, and Web icons are generated; emitted native launcher icons remain stock. Android shows
+Appearance sets the cross-client theme, native colors, and Web icon branding. Omitted theme means light; explicit
+`auto` follows the system. Web components retain the stock Zinc theme, and native launcher icons remain stock. Android shows
 one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, follow the
 emitted platform preview guide and the [native preview boundary](foundation-plan-019.md#preview-generated-native-apps).
 Use local Android Studio Emulator for Android checks while Revyl's tested WebView image remains incompatible.

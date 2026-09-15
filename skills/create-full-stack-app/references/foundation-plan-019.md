@@ -43,12 +43,12 @@ deployed journey, and an older observation does not define current support.
 **Current design and machine authority**
 
 - The bundled JSON Schema owns v0.19 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/architecture/targets/rails/profile.md)
-  owns current lowering at reviewed Service source `9ff77985c821501f0174aec5da6192871395cd6b`.
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/3ab16255b3d03c7e588b5bc95a079e36d9923e03/docs/architecture/targets/rails/profile.md)
+  owns current lowering at reviewed Service source `3ab16255b3d03c7e588b5bc95a079e36d9923e03`.
   A source reference does not establish the deployed service revision.
 - The current analyzer release is
-  `foundation-plan-rails/application-2026-09-13-native-usability`; the matching Compiler release is
-  `foundation-plan-rails/compiler-application-2026-09-13-ios-interactions`.
+  `foundation-plan-rails/application-2026-09-14-ui-foundation`; the matching Compiler release is
+  `foundation-plan-rails/compiler-application-2026-09-14-ui-foundation`.
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
@@ -56,7 +56,7 @@ deployed journey, and an older observation does not define current support.
   AnalysisRun, including an empty `gaps` array. `valid` applies only to the admitted graph; it is not proof of
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
-  State Machine, Appearance-theme/color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
+  State Machine, Appearance theme/native-color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
   development-data, and selected-iPhone/Android slices. Their prerequisites matter: unsupported children and consumers
   remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
   retain one named partial gap for their stock launcher icons.
@@ -75,15 +75,20 @@ deployed journey, and an older observation does not define current support.
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/evidence/status.md)
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/3ab16255b3d03c7e588b5bc95a079e36d9923e03/docs/evidence/status.md)
   distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
   [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
   records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
   Rails, but its available device's WebView was too old for a clean preview. These observations do not establish a
   fresh student sign-in, native authentication, service deployment, or arbitrary application support.
+- The September 14
+  [generated UI qualification](https://github.com/firstdraft/firstdraft/blob/3ab16255b3d03c7e588b5bc95a079e36d9923e03/docs/solutions/2026-09-14-generated-ui-integration.md)
+  records compiled Oscar, Case, and Equipment foundations, browser checks, and bounded iPhone Revyl interactions.
+  Its receipts bind each check to exact inputs; they do not prove this plugin's agent behavior, a fresh student
+  journey, physical-device installation, or production deployment.
 - The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
   separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
-  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/architecture/targets/rails/capabilities/native.md)
+  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/3ab16255b3d03c7e588b5bc95a079e36d9923e03/docs/architecture/targets/rails/capabilities/native.md)
   owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
   runtime observations do not qualify iPhone runtime behavior.
 - The September 13
@@ -106,8 +111,8 @@ deployed journey, and an older observation does not define current support.
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`89a2d6866f9448f4e75b58cac26f61c52daaa0b0` and has SHA-256
-`19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e`. This is exact contract provenance, not
+`3ab16255b3d03c7e588b5bc95a079e36d9923e03` and has SHA-256
+`5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a`. This is exact contract provenance, not
 release or execution evidence.
 
 The current fixtures and check use reviewed root-output CLI revision
@@ -265,9 +270,10 @@ clients and access rather than changing product meaning to avoid that gap.
 Public detail and form links use Hotwire; Web Account and Policy support does not implement native sign-in,
 profile, or protected navigation. Confirm that public native access is intentional.
 
-Appearance theme and colors are emitted for generated Rails shells and any emitted iPhone or Android shell. Rails also
-derives the adaptive SVG and deterministic PNG used by its favicon and PWA references. When native clients are emitted, their
-stock launcher icons are the reason for the precise
+Appearance theme applies to web and native clients. Omitted theme means `light`; explicit `auto` follows the system,
+and `dark` fixes dark mode. Generated pages expose no theme toggle. Native tint and background colors do not replace
+the stock Zinc web component tokens. Rails derives the adaptive SVG and deterministic PNG used by its favicon and
+PWA references from the authored branding. When native clients are emitted, their stock launcher icons are the reason for the precise
 `foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Web-only output has no Appearance
 icon-assets gap. Other admitted but unconsumed Application configuration remains a target gap.
 
@@ -365,8 +371,10 @@ while preserving the value's UUID.
 The current Compiler emits a required enum as a non-null string column and a Rails `enum` mapping stable keys to
 themselves in authored order. `validate: true` supplies inclusion; a separate presence declaration handles requiredness.
 `scopes: false` and `instance_methods: false` disable enum scopes and predicate/bang methods. Compatible in-domain
-literal-key defaults work. The Compiler does not emit a native PostgreSQL enum, database `CHECK`, helper API,
-label mapping, or general rank semantics. Optional
+literal-key defaults work. Admitted form options and read-only projections use Rails I18n entries under
+`enums.<model>.<field>.<key>` in `config/locales/foundation_domain.en.yml`, seeded from the authored value names.
+Forms submit stable keys in authored order. Edit the locale to change labels after Compile; general ordinal rank
+semantics, a native PostgreSQL enum, database `CHECK`, and enum instance or scope helpers are not emitted. Optional
 enums and unsupported defaults or consumers remain precise gaps. Preserve the enum and report only the reviewed
 consequences rather than assuming either blanket support or blanket failure.
 
@@ -483,7 +491,7 @@ public or Policy-controlled authorization; do not infer access from route shape.
 
 The current Web target realizes bounded standard routes, public and Policy-controlled request checks, direct and
 recursive projections, Predicate and Ordering selection, cursor pagination, Field and Association inputs, server
-bindings, associated-create forms, and authored return destinations. It also realizes the Account Entity's exact
+bindings, associated-create entry points, and optional return overrides. It also realizes the Account Entity's exact
 Web-only profile/update pair. Each consumer still has shape-specific prerequisites. Unsupported children are omitted
 or partially generated with exact GapSet records; a supported sibling may survive.
 
@@ -492,6 +500,21 @@ destinations need an admitted source such as a control, binding, realized defaul
 the exact associated-create parent. Protected forms authorize before loading options. A `current_account` binding
 may target only the realized Account Reference in a non-public Account-backed context; it cannot silently turn a
 public create into an authenticated request.
+
+Omit `return_to` when the conventional interaction is intended: standalone New/Edit returns to the saved record,
+scoped associated create returns to its collection, destroy returns to the record's collection, and profile updates
+return to the profile. If a preferred record or collection route is unavailable, Rails uses the admitted collection
+or home fallback. An explicit override remains authored meaning and must itself be lowerable; it does not silently
+become a default. The browser supplies no destination URL, hidden return input, or history-based redirect.
+
+Admitted details collections show a bounded preview with a separate paginated View all page. A supported
+`create_form` selects an Add entry point on that collection page and a dedicated scoped New page, such as
+`/movies/42/credits/new`, posting to `/movies/42/credits`. Rails supplies `params[:movie_id]` from the route; child
+attributes remain under `params[:credit]`. The authorized parent association builds the child, with no hidden
+parent input. The shared target new/create actions and form retain the other inputs and validation errors.
+Ordinary child edit/update/destroy routes stay flat. Preview rows contain selected properties and an optional
+authorized details link, without inline mutation controls. If no target show route is selected, its flat mutation
+routes can remain unlinked starter code. Do not invent a show route or discard authored properties to fill that gap.
 
 For behavior claimed as realized, routes, projections, authorization, inputs, and returns follow the authored Plan.
 During pre-alpha, generated Rails may also contain conventional unclaimed scaffold boilerplate; that editable

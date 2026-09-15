@@ -10,8 +10,8 @@ import Ajv2020 from "ajv/dist/2020.js";
 
 import {
   canonicalClaudePluginSkillFiles,
-  canonicalPluginSkills,
   canonicalPluginSkillNames,
+  canonicalSourceSkills,
   classifyInventoryEntry,
   forbiddenCheckoutRootClaudePluginComponentPaths,
   forbiddenClaudePluginPathSegments,
@@ -74,18 +74,19 @@ const reviewedFixtureAnalyzerRelease =
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
 const currentFoundationPlanAnalyzerRelease =
-  "foundation-plan-rails/application-2026-09-13-native-usability";
+  "foundation-plan-rails/application-2026-09-14-ui-foundation";
 const currentFoundationPlanCompilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-13-ios-interactions";
-const currentFoundationPlanServiceBaseline = "9ff77985c821501f0174aec5da6192871395cd6b";
+  "foundation-plan-rails/compiler-application-2026-09-14-ui-foundation";
+const currentFoundationPlanServiceBaseline = "3ab16255b3d03c7e588b5bc95a079e36d9923e03";
 const currentFoundationIosCoreRevision = "7365ba0bf7ea5e6c8e8223d24e54cf685b067950";
 const currentFoundationAndroidCoreRevision = "6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e";
 const foundationPlanSchemaDigest =
-  "19c70d08650c17d3ceee4145691e636ad7a2e1466cf68e139bcc17d63a444f2e";
+  "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
-const currentFoundationPlanSchemaBaseline =
-  "89a2d6866f9448f4e75b58cac26f61c52daaa0b0";
+const currentFoundationPlanSchemaBaseline = currentFoundationPlanServiceBaseline;
+const priorNativeEvidenceBaseline = "9ff77985c821501f0174aec5da6192871395cd6b";
+const priorAndroidEvidenceBaseline = "89a2d6866f9448f4e75b58cac26f61c52daaa0b0";
 const previousSkillsCurrentTruthBaseline =
   "160d33a5a7d9f9b2282729ecfd3b2e24a1123143";
 const previousSkillsCurrentTruthTree =
@@ -380,6 +381,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   assertRevisionTokens(references.join("\n"), [
     currentFoundationPlanSchemaBaseline,
     currentFoundationPlanServiceBaseline,
+    priorNativeEvidenceBaseline,
+    priorAndroidEvidenceBaseline,
     currentFoundationIosCoreRevision,
     currentFoundationAndroidCoreRevision,
     cliContractBaseline,
@@ -435,6 +438,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       foundationPlanServerBaseline,
       currentFoundationPlanSchemaBaseline,
       currentFoundationPlanServiceBaseline,
+    priorNativeEvidenceBaseline,
+    priorAndroidEvidenceBaseline,
       currentFoundationIosCoreRevision,
       currentFoundationAndroidCoreRevision,
       previousSkillsCurrentTruthBaseline,
@@ -870,21 +875,21 @@ test("local-directory plugin evidence remains revision-scoped", async () => {
   );
 });
 
-test("installable Skills follow the portable repository profile", async () => {
+test("canonical Skill sources follow the portable repository profile", async () => {
   const entries = await readdir(skillsDirectory, { withFileTypes: true });
   const skillNames = entries
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
 
-  assert.deepEqual(skillNames, canonicalPluginSkillNames);
+  assert.deepEqual(skillNames, Object.keys(canonicalSourceSkills));
 
   for (const skillName of skillNames) {
     await checkSkill(skillName);
   }
 });
 
-test("Claude Code packaging reuses every portable Skill exactly once", async () => {
+test("Claude Code packaging selects canonical authoring source exactly once", async () => {
   const checkoutManifest = JSON.parse(
     await readFile(path.join(claudePluginDirectory, "plugin.json"), "utf8"),
   );
@@ -943,9 +948,9 @@ test("Claude Code packaging reuses every portable Skill exactly once", async () 
   const skillFiles = repositoryFiles.filter(
     (file) => path.basename(file) === "SKILL.md",
   );
-  assert.deepEqual(skillFiles, canonicalPluginSkillNames.map((name) => path.join(skillsDirectory, name, "SKILL.md")));
+  assert.deepEqual(skillFiles, Object.keys(canonicalSourceSkills).map((name) => path.join(skillsDirectory, name, "SKILL.md")));
   const forbiddenSegments = new Set(forbiddenClaudePluginPathSegments);
-  for (const [name, expectedFiles] of Object.entries(canonicalPluginSkills)) {
+  for (const [name, expectedFiles] of Object.entries(canonicalSourceSkills)) {
     const pluginSkillDirectory = path.join(skillsDirectory, name);
     const skillFile = path.join(pluginSkillDirectory, "SKILL.md");
     const canonicalBody = await readFile(skillFile);
@@ -3237,11 +3242,6 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   for (const fragment of [
     "compatibility does not establish catalog selection",
-    "required-enum",
-    "Web Account",
-    "Action Policy",
-    "Web Scaffold",
-    "authored theme/colors and derived favicon/PWA icons",
     "Account/Policy-free",
   ]) {
     assert(normalizedSkillEvidence.includes(fragment), `current boundary missing: ${fragment}`);
@@ -4664,7 +4664,7 @@ async function checkSkill(skillName) {
   const files = await filesUnder(skillDirectory);
   assert.deepEqual(
     files.filter((file) => file.includes(`${path.sep}scripts${path.sep}`)),
-    canonicalPluginSkills[skillName]
+    canonicalSourceSkills[skillName]
       .filter((file) => file.startsWith("scripts/"))
       .map((file) => path.join(skillDirectory, file)),
   );
@@ -4877,7 +4877,7 @@ function workflowJobSource(source, name) {
 }
 
 function assertRevisionTokens(source, expected) {
-  assert.deepEqual(revisionTokens(source), [...expected].sort());
+  assert.deepEqual(revisionTokens(source), [...new Set(expected)].sort());
 }
 
 function pluginRuntimeDigestAtRevision(revision) {

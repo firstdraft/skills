@@ -416,7 +416,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       readBack,
       "valid applies to the admitted graph",
-      "Appearance theme, colors, and Rails Web icons are realized",
+      "Appearance theme, native colors, and Rails Web icons are realized",
       "selected-iOS AppIcon remains stock",
       "does not require weakening the Plan",
     ),

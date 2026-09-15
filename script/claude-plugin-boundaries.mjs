@@ -12,7 +12,7 @@ export const canonicalClaudePluginSkillFiles = Object.freeze([
   "scripts/firstdraft.sh",
 ]);
 
-export const canonicalPluginSkills = Object.freeze({
+export const canonicalSourceSkills = Object.freeze({
   "create-full-stack-app": canonicalClaudePluginSkillFiles,
   "extend-app-ui": Object.freeze([
     "LICENSE.txt",
@@ -27,6 +27,10 @@ export const canonicalPluginSkills = Object.freeze({
     "agents/openai.yaml",
     "references/capture.md",
   ]),
+});
+
+export const canonicalPluginSkills = Object.freeze({
+  "create-full-stack-app": canonicalSourceSkills["create-full-stack-app"],
 });
 
 export const canonicalPluginSkillNames = Object.freeze(Object.keys(canonicalPluginSkills));

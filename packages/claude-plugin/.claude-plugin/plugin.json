@@ -3,7 +3,7 @@
   "name": "firstdraft",
   "displayName": "First Draft",
   "version": "0.2.4",
-  "description": "Author a Foundation Plan, compile a bounded Rails, iPhone, and Android application, and extend its UI",
+  "description": "Author a Foundation Plan and compile a bounded Rails, iPhone, and Android application",
   "author": {
     "name": "First Draft",
     "url": "https://github.com/firstdraft"
@@ -14,12 +14,9 @@
   "keywords": [
     "foundation-plan",
     "rails",
-    "application-generation",
-    "ui-development"
+    "application-generation"
   ],
   "skills": [
-    "./skills/create-full-stack-app",
-    "./skills/extend-app-ui",
-    "./skills/review-ui-consistency"
+    "./skills/create-full-stack-app"
   ]
 }

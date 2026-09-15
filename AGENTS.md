@@ -5,7 +5,7 @@
 | Task | Route |
 |---|---|
 | Plan authoring or Compile behavior | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md), then only its routed reference section |
-| UI continuation or review | [`extend-app-ui`](skills/extend-app-ui/SKILL.md) or [`review-ui-consistency`](skills/review-ui-consistency/SKILL.md); the consumer app's `UI.md` owns its design |
+| UI continuation or review | The consumer app's `UI.md`; [UI Skill auditions remain deferred](README.md#ui-continuation) |
 | Release work | [`RELEASING.md`](RELEASING.md) and [`release/compatibility.json`](release/compatibility.json) |
 | Evidence or prior rollout facts | [`evidence/README.md`](evidence/README.md), then one dated record |
 | Behavioral evals | [`evals/README.md`](evals/README.md), then one case and its declared artifacts |
@@ -51,4 +51,5 @@
   for the other.
 - The shared Claude/Codex package is assembled from canonical `skills/` sources during packing. Both clients use
   the existing public catalog; generate client manifests from shared metadata and never commit a second editable
-  Skill. Update the explicit packaging inventory when adding a Skill or packaged reference.
+  Skill. Update the explicit packaging inventory when adding a Skill or packaged reference. Source presence does not
+  authorize packaging the deferred UI Skill auditions.

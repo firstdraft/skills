@@ -32,7 +32,7 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "21f99de8bb27a2645059ba2100ae29c0b9853f2d0ad0f93dab416f6b36b16c44",
+        "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
     },
     requires: {
       api_contract: [">= 0.3.0", "< 0.4.0"],
