@@ -11,7 +11,7 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-Targets plugin 0.2.4, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
+Targets plugin 0.2.5, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
 
 - Bounded generation includes Web Accounts, Policies, Scaffolds, development data, and selected iPhone/Android
   clients. Web uses stock Zinc tokens; Appearance controls theme, native colors, and Web icons. Omitted theme means

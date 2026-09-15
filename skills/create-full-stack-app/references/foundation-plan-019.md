@@ -43,12 +43,13 @@ deployed journey, and an older observation does not define current support.
 **Current design and machine authority**
 
 - The bundled JSON Schema owns v0.19 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/3ab16255b3d03c7e588b5bc95a079e36d9923e03/docs/architecture/targets/rails/profile.md)
-  owns current lowering at reviewed Service source `3ab16255b3d03c7e588b5bc95a079e36d9923e03`.
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/architecture/targets/rails/profile.md)
+  records lowering at reviewed Service source `00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8`.
   A source reference does not establish the deployed service revision.
-- The current analyzer release is
-  `foundation-plan-rails/application-2026-09-14-ui-foundation`; the matching Compiler release is
-  `foundation-plan-rails/compiler-application-2026-09-14-ui-foundation`.
+- Read `analyzer_release` and `compiler_release` from the matching Analysis result; Compilation results carry
+  `compiler_release` only.
+  Those identities belong to the observed result; an installed Skill or a retained historical receipt cannot
+  establish the currently deployed pair.
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
@@ -75,20 +76,20 @@ deployed journey, and an older observation does not define current support.
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/3ab16255b3d03c7e588b5bc95a079e36d9923e03/docs/evidence/status.md)
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/evidence/status.md)
   distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
   [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
   records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
   Rails, but its available device's WebView was too old for a clean preview. These observations do not establish a
   fresh student sign-in, native authentication, service deployment, or arbitrary application support.
 - The September 14
-  [generated UI qualification](https://github.com/firstdraft/firstdraft/blob/3ab16255b3d03c7e588b5bc95a079e36d9923e03/docs/solutions/2026-09-14-generated-ui-integration.md)
+  [generated UI qualification](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/solutions/2026-09-14-generated-ui-integration.md)
   records compiled Oscar, Case, and Equipment foundations, browser checks, and bounded iPhone Revyl interactions.
   Its receipts bind each check to exact inputs; they do not prove this plugin's agent behavior, a fresh student
   journey, physical-device installation, or production deployment.
 - The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
   separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
-  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/3ab16255b3d03c7e588b5bc95a079e36d9923e03/docs/architecture/targets/rails/capabilities/native.md)
+  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/architecture/targets/rails/capabilities/native.md)
   owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
   runtime observations do not qualify iPhone runtime behavior.
 - The September 13
@@ -111,8 +112,8 @@ deployed journey, and an older observation does not define current support.
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`3ab16255b3d03c7e588b5bc95a079e36d9923e03` and has SHA-256
-`5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a`. This is exact contract provenance, not
+`00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8` and has SHA-256
+`c13aff4894073ea88fcf48c1f9900039e8b83966dee90591a7caa71421a5a666`. This is exact contract provenance, not
 release or execution evidence.
 
 The current fixtures and check use reviewed root-output CLI revision
@@ -460,7 +461,8 @@ then author the Account and Policies that represent it. Self-service registratio
 staff membership; preserve required eligibility conditions and ask when they are unspecified.
 
 Current public Web Account realization requires self-service registration, email verification, password-reset
-recovery, lockout, and a successfully admitted Account-self profile. Registration inputs must be one contiguous
+recovery, and lockout. A realized Account derives one Web `/account` destination without requiring an authored
+profile. Registration inputs must be one contiguous
 ordered list of required, unique, emitted Account-owned `short_text` or `time_zone` Fields with compatible defaults;
 they must cover every required emitted Account Field, and the Account Entity may own no required Reference. A
 required enum on that Entity may still emit as Domain storage, but it cannot be a registration input, so that Account
@@ -479,20 +481,28 @@ records a Case Chat result with all 14 authored Policies and their admitted prot
 dependent Scaffold gap. That reviewed application is one exact supported graph, not a general claim that arbitrary
 Policy expressions or protected consumers are realized.
 
-The Account Entity may own the bounded Web-only `profile` surface resolved from `current_account`. Ordinary iPhone and Android
-output stays Account- and Policy-free, omits profile and protected Web navigation, and records the applicable native
-consequence instead of borrowing Web authorization.
+Account details show the signup Fields and normalized email by default. Editing permits only mutable, non-derived
+signup Fields; other Account Fields are not exposed automatically. An authored `scaffold.profile` replaces displayed
+details and collections with its projection and read Policy. An authored `scaffold.update` independently replaces
+edit inputs and their write Policy, including when no profile is authored. Unsupported custom definitions remain
+gaps and never activate permissive defaults. Every Account action resolves `current_account`, never a submitted ID.
+Credential changes use Rodauth: **Change email** verifies the new address before replacing the existing one, and
+**Change password** uses its signed-in password-change flow.
+
+Ordinary iPhone and Android output stays Account- and Policy-free, omits profile and protected Web navigation, and
+records the applicable native consequence instead of borrowing Web authorization.
 
 ### Scaffolds
 
 The schema couples each selected standard `resource_routes` member to its matching `index`, `show`, `create`,
-`update`, or `destroy` definition. `new` requires create and `edit` requires update. Every authored request declares
-public or Policy-controlled authorization; do not infer access from route shape.
+`update`, or `destroy` definition. `new` requires create and `edit` requires update. A custom `profile` requires a
+sibling `update`; an Account may instead author `update` alone for its derived settings routes. Every authored
+request declares public or Policy-controlled authorization; do not infer access from route shape.
 
 The current Web target realizes bounded standard routes, public and Policy-controlled request checks, direct and
 recursive projections, Predicate and Ordering selection, cursor pagination, Field and Association inputs, server
-bindings, associated-create entry points, and optional return overrides. It also realizes the Account Entity's exact
-Web-only profile/update pair. Each consumer still has shape-specific prerequisites. Unsupported children are omitted
+bindings, associated-create entry points, and optional return overrides. Account settings support the default
+signup Fields and bounded authored profile/update customizations described above. Each consumer still has shape-specific prerequisites. Unsupported children are omitted
 or partially generated with exact GapSet records; a supported sibling may survive.
 
 Create and update controls cover the admitted scalar, required-enum, and direct-Association slices. Required
@@ -503,7 +513,7 @@ public create into an authenticated request.
 
 Omit `return_to` when the conventional interaction is intended: standalone New/Edit returns to the saved record,
 scoped associated create returns to its collection, destroy returns to the record's collection, and profile updates
-return to the profile. If a preferred record or collection route is unavailable, Rails uses the admitted collection
+return to Account. If a preferred record or collection route is unavailable, Rails uses the admitted collection
 or home fallback. An explicit override remains authored meaning and must itself be lowerable; it does not silently
 become a default. The browser supplies no destination URL, hidden return input, or history-based redirect.
 

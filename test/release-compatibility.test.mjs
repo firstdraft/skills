@@ -28,11 +28,11 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.2.4",
+    version: "0.2.5",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+        "d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6",
     },
     requires: {
       api_contract: [">= 0.3.1", "< 0.4.0"],
