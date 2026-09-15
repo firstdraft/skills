@@ -507,7 +507,7 @@ return to the profile. If a preferred record or collection route is unavailable,
 or home fallback. An explicit override remains authored meaning and must itself be lowerable; it does not silently
 become a default. The browser supplies no destination URL, hidden return input, or history-based redirect.
 
-Admitted details collections show a bounded preview with a separate paginated View all page. A supported
+Admitted details collections show a bounded preview with a separate paginated full collection page. A supported
 `create_form` selects an Add entry point on that collection page and a dedicated scoped New page, such as
 `/movies/42/credits/new`, posting to `/movies/42/credits`. Rails supplies `params[:movie_id]` from the route; child
 attributes remain under `params[:credit]`. The authorized parent association builds the child, with no hidden
