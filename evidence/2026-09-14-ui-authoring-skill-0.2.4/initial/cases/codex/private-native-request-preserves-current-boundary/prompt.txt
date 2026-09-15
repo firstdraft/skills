@@ -1,0 +1,1 @@
+Use the First Draft Skill for this advisory task. Review how the staged Movies Plan should represent iPhone and Android clients plus index, show, create, update, and delete screens when Movie records must remain private to signed-in staff. Keep this local and do not edit or push it yet.

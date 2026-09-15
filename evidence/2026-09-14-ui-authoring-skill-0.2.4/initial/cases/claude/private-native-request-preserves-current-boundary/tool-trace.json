@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "firstdraft:create-full-stack-app",
+      "args": "Advisory review of staged Movies Plan: iPhone + Android clients, index/show/create/update/delete screens, Movie records private to signed-in staff. Local only, no edits or push."
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/.firstdraft/*"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/*.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/private/tmp/fd-ui-authoring-claude-private-native-request-preserves-current-boundary/work/.firstdraft/foundation-plan.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-019.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "^## ",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/examples.md",
+      "output_mode": "content",
+      "-n": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/examples.md",
+      "offset": 45,
+      "limit": 175
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/examples.md",
+      "offset": 350,
+      "limit": 156
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "gate|\\\"policy\\\"|record_source|authorization",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "output_mode": "content",
+      "-n": true,
+      "-C": 3,
+      "head_limit": 70
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "\"scaffoldAuthorization\"",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "output_mode": "content",
+      "-n": true,
+      "-A": 60
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "\"runtimeRecord\"",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "output_mode": "content",
+      "-n": true,
+      "-A": 30
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "offset": 2607,
+      "limit": 60
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "\"policyExpression\"",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "output_mode": "content",
+      "-n": true,
+      "-A": 45
+    }
+  }
+]

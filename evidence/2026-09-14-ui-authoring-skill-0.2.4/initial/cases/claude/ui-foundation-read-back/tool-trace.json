@@ -1,0 +1,103 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "firstdraft:create-full-stack-app"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/.firstdraft/*.json",
+      "path": "/private/tmp/fd-ui-authoring-claude-ui-foundation-read-back/work"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "return_to|create_form|projection",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-019.md",
+      "output_mode": "content",
+      "-n": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-019.md",
+      "offset": 480,
+      "limit": 60
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "tint_color|background_color|theme|Appearance",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references",
+      "output_mode": "content",
+      "-n": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-019.md",
+      "offset": 265,
+      "limit": 25
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-019.md",
+      "offset": 360,
+      "limit": 30
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "create_form",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references",
+      "output_mode": "content",
+      "-n": true,
+      "-C": 12
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "\"scaffoldCreateForm\"",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "output_mode": "content",
+      "-n": true,
+      "-A": 30
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/examples.md",
+      "offset": 90,
+      "limit": 130
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "offset": 234,
+      "limit": 40
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "\"color\"|hexColor|\\^#",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "output_mode": "content",
+      "-n": true,
+      "-A": 8
+    }
+  }
+]

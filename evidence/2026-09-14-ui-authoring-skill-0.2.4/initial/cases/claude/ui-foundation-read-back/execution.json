@@ -1,0 +1,8 @@
+{
+  "client": "claude",
+  "case": "ui-foundation-read-back",
+  "exit_code": 0,
+  "duration_seconds": 38.12,
+  "inputs_unchanged": true,
+  "work_files": []
+}

@@ -1,0 +1,306 @@
+{
+  "assembled_at_utc": "2026-09-15T03:10:53.454519+00:00",
+  "scope": "Local deterministic package and adapter checks plus fixture-only advisory model evaluations; no hosted release or user journey claims.",
+  "candidate": {
+    "skills_commit": "8f9e3b28d1687432b18afe92550a3305b58136c9",
+    "skills_tree": "e14a083961be2ccdb295ec517f62ffda9162f9fc",
+    "model_execution_skills_commit": "d8e2c40332321ad78638a75cf88659978511d4be",
+    "service_commit": "3ab16255b3d03c7e588b5bc95a079e36d9923e03",
+    "cli_commit": "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "api_contract_minimum": "0.3.1",
+    "foundation_plan_version": "0.19"
+  },
+  "package": {
+    "name": "@firstdraft.com/claude-code",
+    "version": "0.2.4",
+    "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/firstdraft.com-claude-code-0.2.4.tgz",
+    "sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+    "bytes": 134444,
+    "regular_files": 43,
+    "skill_files": 9,
+    "skills": [
+      "create-full-stack-app"
+    ]
+  },
+  "schema": {
+    "path": "skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+    "sha256": "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a",
+    "source_service_commit": "3ab16255b3d03c7e588b5bc95a079e36d9923e03"
+  },
+  "minimum_only_delta": {
+    "changed_paths": [
+      "RELEASING.md",
+      "release/compatibility.json",
+      "script/check-release-compatibility.mjs",
+      "test/release-compatibility.test.mjs"
+    ],
+    "package_bytes_unchanged": true,
+    "model_results_transfer_reason": "The only later change raises the source compatibility minimum and coupled source tests/release guidance. Repacking proves the same exact packaged bytes read by all model cases."
+  },
+  "clients": {
+    "claude": {
+      "version": "2.1.267",
+      "requested_model": "claude-opus-5[1m]",
+      "observed_model": "claude-opus-5"
+    },
+    "codex": {
+      "version": "0.154.0",
+      "requested_model": "gpt-6-astra"
+    }
+  },
+  "checks": {
+    "repository_tests": {
+      "passed": 121,
+      "failed": 0,
+      "skipped": 0
+    },
+    "deterministic_pack": "passed for exact CLI under normal and restrictive umask",
+    "cli_contract": "passed exact CLI 799a184",
+    "installation_adapters": "both installed/discovered one exact Skill and ran bundled CLI 0.2.2 local key generation without global CLI or credentials",
+    "log_sha256": {
+      "checks/fd-ui-authoring-api-min-check.log": "4c03bde05f4871fc5c8d9205f13e16145ca4cd1296fe660b4a748157a8f901dd",
+      "checks/fd-ui-authoring-api-min-package.log": "753e259d25c22780c5796c28bff22677379582a16795e0ab63bacb3b5d86d192",
+      "checks/fd-ui-authoring-codex-install.log": "c95053f84b65724fc564252adbe5104d47b9c1bb2a5bd2d781b5cd331809f099",
+      "checks/fd-ui-authoring-claude-install.log": "24ae0ffa38eab472d7064320ded002ca5be4533ab4284042dd31f14b6d23be41",
+      "checks/fd-ui-authoring-cli-contract.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "checks/fd-ui-authoring-focus.log": "6c8fd030065858353097df6974fb17291db346e45fc9a3fb8e7274464b474fce",
+      "checks/fd-ui-authoring-final-focus.log": "9b03980fc08f40e713a04334003ae59dcdc2667ace4456ca259e86d9ec604ace",
+      "checks/fd-ui-authoring-client-install.log": "3f0ad2cea5b1547929f1c84cfba194f8b5d6b6509317591219b727332a682535"
+    }
+  },
+  "cases": [
+    {
+      "client": "claude",
+      "case": "ui-foundation-read-back",
+      "exit_code": 0,
+      "duration_seconds": 38.12,
+      "inputs_unchanged": true,
+      "work_files": [],
+      "case_dir": "cases/claude/ui-foundation-read-back",
+      "files_sha256": {
+        "prompt.txt": "0f26b3bcda29e5cce40deec094483bcf8172469f38ca4805fead615810df4112",
+        "response.md": "db78d7b129d722fa490b1952f78a004eef443de51c68de39c95f7c331f6fe752",
+        "command.json": "2a61606310916a3a7ea64e846311a5df5f5897225f321374b31f77d631ca52ff",
+        "execution.json": "43deb7b0799a916b764cef37181ff9a65627709169f1dd925b578bfcefc2843c",
+        "input-hashes.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tool-trace.json": "c8c637b138d8f23eddb64a0b853a894f54ceb5de4809b980a8f391b6e01a22b9"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-claude-ui-foundation-read-back/transcript.jsonl",
+      "raw_transcript_sha256": "a2b80380ccb03dc514f16517c036ef13044d363c0bbcb1fe04d68ff202a47126",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "qualified_package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "advisory_observations": [
+        "Core scoped form, redirect, enum, and stock web/native style guidance is correct. Extra advisory prose calls Add a card entrypoint and omits the selected-association fallback when Credit has no show route."
+      ],
+      "web_search_calls": 0
+    },
+    {
+      "client": "claude",
+      "case": "preserve-partially-realized-appearance-intent",
+      "exit_code": 0,
+      "duration_seconds": 27.92,
+      "inputs_unchanged": true,
+      "work_files": [
+        ".firstdraft/foundation-plan.json",
+        ".firstdraft/state.json",
+        "appearance-issues-analysis.json"
+      ],
+      "case_dir": "cases/claude/preserve-partially-realized-appearance-intent",
+      "files_sha256": {
+        "prompt.txt": "35bd8e6d14682c33e9c4c5cc08a58e9c428bdb4ae8e0536f66219d5d1e5143c9",
+        "response.md": "7a359f866febafd2e6ee52867bacee01511e6962576e3d083b36ad4d647511a3",
+        "command.json": "247e7e49d61bc9bcdce25ea454f2a69b90925ac239c554c2220ddd3f99ca57f2",
+        "execution.json": "72013808e60f355c1ecc35b905d1c301bea5561101f5a4fee6c0fb2d466e076d",
+        "input-hashes.json": "258720d0831b455fb5fa0cfa36a38056481fcf1563f48568d86d17cebf12b4b2",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tool-trace.json": "5625e7632caa80d470a5cbefbd43381b0a567dc99cfb0c2aa2c2c11b0d301904"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-claude-preserve-partially-realized-appearance-intent/transcript.jsonl",
+      "raw_transcript_sha256": "8cce57e8dd0220e600aa3b8b9204094dd6ec7994f78098717a3d84f8951ca929",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "qualified_package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "advisory_observations": [
+        "The answer initially describes theme and tint as honored by Rails and iOS, an overbroad current-boundary formulation. It subsequently states explicitly that native tint/background do not replace stock Zinc web tokens."
+      ],
+      "web_search_calls": 0
+    },
+    {
+      "client": "claude",
+      "case": "private-native-request-preserves-current-boundary",
+      "exit_code": 0,
+      "duration_seconds": 45.33,
+      "inputs_unchanged": true,
+      "work_files": [
+        ".firstdraft/foundation-plan.json",
+        ".firstdraft/state.json"
+      ],
+      "case_dir": "cases/claude/private-native-request-preserves-current-boundary",
+      "files_sha256": {
+        "prompt.txt": "4a7e077268ba484b5fed096c3c0eb4c25cfe45c7d91bc22d57fc46477430d6d8",
+        "response.md": "ab4ee5862de1743a770422f785896099d7543e8be7cd7d23fb843e91114789bc",
+        "command.json": "75b0c695e1f135ee127fbe61d33d83a0aa2db1e45c4fb4de28dab9e434d7793e",
+        "execution.json": "7af9838a708caa8f7b6b1c85bd26bcd1c9863689f99bc904545b9fcaa7301096",
+        "input-hashes.json": "c49ad0e36dcca45f2e3cd539c9a1ebcb0e9883b641a391bd1af3ccc83e48dd4e",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tool-trace.json": "8d223db8a061c2096f80ba0f6681c4b154da31dd319aed72ab587f3c9ad390bd"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-claude-private-native-request-preserves-current-boundary/transcript.jsonl",
+      "raw_transcript_sha256": "5843cf1d6770ec7ea2e4f13179fff26b461524fb382ba3e2e33f570287ddba65",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "qualified_package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "advisory_observations": [
+        "Advisory explanation preserves intent; its tentative JSONC policy sketch is not an authored or validated Plan and must not be treated as such."
+      ],
+      "web_search_calls": 0
+    },
+    {
+      "client": "claude",
+      "case": "android-preview-respects-provider-limit",
+      "exit_code": 0,
+      "duration_seconds": 22.38,
+      "inputs_unchanged": true,
+      "work_files": [
+        "ANDROID_PREVIEW.md"
+      ],
+      "case_dir": "cases/claude/android-preview-respects-provider-limit",
+      "files_sha256": {
+        "prompt.txt": "2ded6ec6ae195c6fb8d7ab83fa8a600c6279dec043b41d4a9d9e10546fb7b900",
+        "response.md": "ada948d561bc03a8c4834722a16e3722d062664239b50162ceaf129de4cd7664",
+        "command.json": "0e216582f190096289f5344a5682215e3ff2386615a2f990fa0b916a7f694b70",
+        "execution.json": "2858ad46fafefaa4777b8eaabadff0313f5a3650fbb46756afcd2312262aac3b",
+        "input-hashes.json": "afd73db6137c0b0f521bf98cc38956566e5b3b7d607e388af70cf82070a09f72",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tool-trace.json": "2d196282a07799c1a77dc20748d5d6067edf178af594675185fe07cd39057ff1"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-claude-android-preview-respects-provider-limit/transcript.jsonl",
+      "raw_transcript_sha256": "17af40f4bf5652f3de10a49d15f2baf421d9a4fb2fedc457dbfd52cba79f0ded",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "qualified_package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "advisory_observations": [],
+      "web_search_calls": 0
+    },
+    {
+      "client": "codex",
+      "case": "ui-foundation-read-back",
+      "exit_code": 0,
+      "duration_seconds": 48.1,
+      "inputs_unchanged": true,
+      "work_files": [
+        ".agents/skills/create-full-stack-app"
+      ],
+      "case_dir": "cases/codex/ui-foundation-read-back",
+      "files_sha256": {
+        "prompt.txt": "0f26b3bcda29e5cce40deec094483bcf8172469f38ca4805fead615810df4112",
+        "response.md": "1185acbd945e7e2ca09ce16ecdbbedb4263a005fb5614a13aad07dfd576250a4",
+        "command.json": "9c05a73306396e822337c78b00eb086ecb4daaa67c2046cb579b71793cf2db93",
+        "execution.json": "7a1b7462ba03de5d9576122ce982d5cd1276049b97ab1c7b6757e228ce019653",
+        "input-hashes.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+        "stderr.log": "41a0e83d3ee592b829ed8734ecf88667a7effc603e02ebb8ef89867cbb488b33",
+        "tool-trace.json": "d9622a0d3866c0da746e8a147dc1a9e7084b113292ebebe4e0732122b2e74b80"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-codex-ui-foundation-read-back/transcript.jsonl",
+      "raw_transcript_sha256": "893085459a7315930cb3c8313e696a397a667231c021526bc8f53c1824ff3f54",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "qualified_package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "advisory_observations": [],
+      "web_search_calls": 0
+    },
+    {
+      "client": "codex",
+      "case": "preserve-partially-realized-appearance-intent",
+      "exit_code": 0,
+      "duration_seconds": 38.49,
+      "inputs_unchanged": true,
+      "work_files": [
+        ".agents/skills/create-full-stack-app",
+        ".firstdraft/foundation-plan.json",
+        ".firstdraft/state.json",
+        "appearance-issues-analysis.json"
+      ],
+      "case_dir": "cases/codex/preserve-partially-realized-appearance-intent",
+      "files_sha256": {
+        "prompt.txt": "35bd8e6d14682c33e9c4c5cc08a58e9c428bdb4ae8e0536f66219d5d1e5143c9",
+        "response.md": "16a29e89d746ca3486400d4c939a630b85d03599fcf5c256fa6dc91f7cfe9d89",
+        "command.json": "e891d9ba50da21bff64a10e684bab3b19fdcaab9052fc0b697bbc34afbff5a00",
+        "execution.json": "dd0b1e4889cd571364da0194100a4a90461bd42be3595544fb0b2d3bcb3c4ded",
+        "input-hashes.json": "258720d0831b455fb5fa0cfa36a38056481fcf1563f48568d86d17cebf12b4b2",
+        "stderr.log": "ce073a545cf7a55ecba919ca07f6dfffd67b111bf6044a13b3a802c538cc9156",
+        "tool-trace.json": "8bb62598f119c0a92467f64b69a4216dd46e7795b618ab1ed7e7ae234f1752d7"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-codex-preserve-partially-realized-appearance-intent/transcript.jsonl",
+      "raw_transcript_sha256": "e4ef1f7d06a6d371061ec78bed2a3abe4bc21fd238b893551e0248bea5560803",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "qualified_package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "advisory_observations": [
+        "The answer correctly reports the attached historical analysis and release identity but does not restate the current web/native color boundary. The separate UI read-back does state the current boundary correctly."
+      ],
+      "web_search_calls": 0
+    },
+    {
+      "client": "codex",
+      "case": "private-native-request-preserves-current-boundary",
+      "exit_code": 0,
+      "duration_seconds": 39.64,
+      "inputs_unchanged": true,
+      "work_files": [
+        ".agents/skills/create-full-stack-app",
+        ".firstdraft/foundation-plan.json",
+        ".firstdraft/state.json"
+      ],
+      "case_dir": "cases/codex/private-native-request-preserves-current-boundary",
+      "files_sha256": {
+        "prompt.txt": "4a7e077268ba484b5fed096c3c0eb4c25cfe45c7d91bc22d57fc46477430d6d8",
+        "response.md": "2c8ae1b55814bca08e93c51366bcea9258a17edccacc4b2d1439093cbe860515",
+        "command.json": "ab3ff655064f7b8b6404c9928d7c1085cd02edb7df7386cb9677d415a9227095",
+        "execution.json": "d6ba634e27fb7140c0afe60f95a2f4924b35b8e395676cfd592eca297a048843",
+        "input-hashes.json": "c49ad0e36dcca45f2e3cd539c9a1ebcb0e9883b641a391bd1af3ccc83e48dd4e",
+        "stderr.log": "16500a2515cf9441a4af9e826d4cf0e2d0e40908ad99f68f61e4a420e4a2d557",
+        "tool-trace.json": "f160a2e8dd563c0733dc8a41d36f7a392f178ef6f813b7e86ab3b00c7640d3d7"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-codex-private-native-request-preserves-current-boundary/transcript.jsonl",
+      "raw_transcript_sha256": "e16c09aef2c4418e57c340dd107aa708beb12fd2953b54bacc2e3bbddefc3b3e",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "qualified_package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "advisory_observations": [],
+      "web_search_calls": 0
+    },
+    {
+      "client": "codex",
+      "case": "android-preview-respects-provider-limit",
+      "exit_code": 0,
+      "duration_seconds": 51.61,
+      "inputs_unchanged": true,
+      "work_files": [
+        ".agents/skills/create-full-stack-app",
+        "ANDROID_PREVIEW.md"
+      ],
+      "case_dir": "cases/codex/android-preview-respects-provider-limit",
+      "files_sha256": {
+        "prompt.txt": "2ded6ec6ae195c6fb8d7ab83fa8a600c6279dec043b41d4a9d9e10546fb7b900",
+        "response.md": "cf82fce52f51bfa8503137fb497cab3a3f5b04dc5349e8a8b355fae3028a8831",
+        "command.json": "8789779123c185c556bd20db70286d33c16923c4687e02427bad9798f8b60f19",
+        "execution.json": "64d382bfaccd977478853bca863dbc4a5319795dd8b7fbcd28035901b5493ce0",
+        "input-hashes.json": "afd73db6137c0b0f521bf98cc38956566e5b3b7d607e388af70cf82070a09f72",
+        "stderr.log": "6b388379df3caa30c1898a41787c94842c716ad58f5c559177b8f503f784f9d1",
+        "tool-trace.json": "c1e4ac33f5ad59cab1b5887fba89c71038d778d4810fbb6e1407b39905a8ce1f"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-codex-android-preview-respects-provider-limit/transcript.jsonl",
+      "raw_transcript_sha256": "36ed65e4ea0cf831d8eef07152ceb3d62ac08ffb774bb34bde81e7566527a46c",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "qualified_package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "advisory_observations": [
+        "The answer recommends a local Android Studio Emulator but omits an explicit suitable-local-computer prerequisite. This is the same advisory omission recorded for the prior 0.2.3 release."
+      ],
+      "web_search_calls": 2
+    }
+  ],
+  "explicit_limits": [
+    "Eight completed advisory cases are not eight unqualified all-criteria passes. See observations per case.",
+    "No generated application was compiled or run by this evaluation.",
+    "No hosted installation, Codespace, login, authorization, publication, deployment, catalog, or npm availability was established.",
+    "Approval and Compile-flow paragraphs are byte-identical to published 0.2.3; that unchanged flow was not requalified here.",
+    "No deferred UI Skill was selected, edited, packaged, or model-evaluated.",
+    "Private state contents and fixture work directories are deliberately excluded from this packet. Raw local transcripts retain their original hashes and paths; copied tool traces omit tool output and encrypted assistant blocks."
+  ]
+}

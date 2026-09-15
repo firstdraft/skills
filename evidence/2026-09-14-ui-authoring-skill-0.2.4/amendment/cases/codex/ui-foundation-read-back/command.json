@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/qualification-clients/node_modules/.bin/codex",
+    "exec",
+    "--sandbox",
+    "read-only",
+    "--ephemeral",
+    "--ignore-user-config",
+    "--ignore-rules",
+    "--skip-git-repo-check",
+    "--model",
+    "gpt-6-astra",
+    "--json",
+    "-C",
+    "/private/tmp/fd-ui-authoring-view-more-codex-ui-foundation-read-back/work",
+    "--output-last-message",
+    "/private/tmp/fd-ui-authoring-view-more-codex-ui-foundation-read-back/response.md",
+    "-"
+  ],
+  "cwd": "/private/tmp/fd-ui-authoring-view-more-codex-ui-foundation-read-back/work",
+  "case": "ui-foundation-read-back",
+  "client": "codex",
+  "package_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release-view-more/package",
+  "package_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+  "skills_commit": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+  "omitted_environment_prefixes": [
+    "FIRSTDRAFT_",
+    "CLAUDE_PLUGIN_OPTION_",
+    "REVYL_"
+  ]
+}

@@ -1,0 +1,8 @@
+Use the First Draft Skill for this advisory task. Before compiling Movie Library, help me review these choices. Movie selects index/show/new/create/edit/update/
+destroy with public authorization and title/notes inputs. I omitted every return_to. Movie's credits projection
+has create_form: {}; Credit has the selected create definition and required Movie and Person References, with
+Person and role as its remaining form inputs. Credit role includes key supporting_actress with name Supporting
+actress. Appearance has tint_color #4F46E5 and background_color #F8FAFC, with theme omitted. The app requests web
+and iPhone. What navigation and form behavior should I expect when adding a Credit from a Movie? What colors and
+theme should I see, and how would I rename the displayed role later? Tell me if I need to change any of these Plan
+choices. Do not Compile, publish, install dependencies, or edit files.

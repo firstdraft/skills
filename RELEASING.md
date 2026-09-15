@@ -7,21 +7,21 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 
 | Surface | Current identity |
 |---|---|
-| Package source candidate | `@firstdraft.com/claude-code@0.2.4` (unpublished; future tag `claude-v0.2.4`) |
-| Candidate packed SHA-256 | `7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7` |
-| Public plugin package | `@firstdraft.com/claude-code@0.2.3` |
-| Public catalog | Plugin `0.2.3`, selected by `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.3` / `0.2.3` |
-| Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
+| Released plugin source | `@firstdraft.com/claude-code@0.2.4`, tag `claude-v0.2.4` |
+| Qualified packed SHA-256 | `7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7` |
+| Public plugin package | `@firstdraft.com/claude-code@0.2.4` |
+| Catalog manifest | Plugin `0.2.4` in `.claude-plugin/marketplace.json` |
+| Plugin npm `next` / `latest` | `0.2.4` / `0.2.3` |
+| Compatible CLI | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.1`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
-API 0.3.1 adds optional redirect overrides; CLI still accepts the 0.3 family.
-The [promotion record](evidence/2026-09-13-shared-plugin-0.2.3-default-promotion.md) links publication,
-qualification, and installation receipts. Recheck before mutations.
+API 0.3.1 permits omitted return overrides; CLI accepts 0.3.
+[Publication](evidence/2026-09-15-shared-plugin-0.2.4-publication.md) records registry qualification and staging.
+Catalog merge selects 0.2.4; public installs and `latest` promotion are pending. Recheck before mutations.
 
 [CLI probe and plugin default writes are verified](evidence/2026-09-13-npm-token-write-verification.md).
 CLI default write is unexercised; probes are removed. Follow [setup](docs/npm-promotion.md#initial-setup-and-renewal).
@@ -76,10 +76,10 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-Candidate 0.2.4 packages only `create-full-stack-app`. Run the
-[authoring UI-foundation qualification](evals/create-full-stack-app/ui-foundation-release.md) against its exact digest
-and compatible CLI/Service identities. UI Skill selection and packaging remain deferred. The unchanged
-approval/Publication procedure below records 0.2.2 smokes and is not a new 0.2.4 gate.
+Plugin 0.2.4 packages only `create-full-stack-app`; UI Skills remain deferred.
+[Qualification](evidence/2026-09-14-ui-authoring-skill-0.2.4-qualification.md) records the
+[defined checks](evals/create-full-stack-app/ui-foundation-release.md) and limits.
+The unchanged approval/Publication procedure below records 0.2.2 smokes, not a new 0.2.4 gate.
 
 The 0.2.2 qualification used two human-observed approval smokes in separate continuing sessions:
 
@@ -221,7 +221,7 @@ maintenance window. The maintenance-window approval may include named rollback a
 reports the exact package and service candidates and the approval names affected users, notice, start, rollback,
 and completion criteria.
 
-For API 0.3, CLI 0.2.2 and plugin 0.2.3 are published; their channel state is listed above. The earlier 0.2.1 controlled approval
+For API 0.3.1, CLI 0.2.2 and plugin 0.2.4 are published; their channel state is listed above. The earlier 0.2.1 controlled approval
 smokes passed against service `9f3cdcd9a5966b6d839d6985f398cf8d79f3f1ef`, observed on both staging roles through
 Render deployment listings at `2026-09-10T04:13:47Z`.
 This records staging readiness, not production activation or the full authenticated Codespaces journey. For a new

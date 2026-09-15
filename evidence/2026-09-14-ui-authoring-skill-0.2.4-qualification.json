@@ -1,0 +1,479 @@
+{
+  "format": "firstdraft.skill-qualification-observation/1",
+  "observed_on": "2026-09-14",
+  "boundary": "Local authoring-only package checks, two affected final-digest advisory read-backs, and six retained original-digest advisory cases. Not an all-criteria-passed claim.",
+  "package": {
+    "name": "@firstdraft.com/claude-code",
+    "version": "0.2.4",
+    "sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+    "bytes": 134442,
+    "regular_files": 43,
+    "packaged_skills": [
+      "create-full-stack-app"
+    ],
+    "deferred_ui_skills_packaged": false
+  },
+  "skills": {
+    "integrated_source": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+    "integrated_tree": "da8e7e7632447fc9aa423ab249082644c2fe5a10",
+    "final_model_source": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+    "tree_equivalence_checked": true,
+    "initial_model_source": "d8e2c40332321ad78638a75cf88659978511d4be",
+    "minimum_api_contract": ">=0.3.1,<0.4.0"
+  },
+  "cli": {
+    "source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "version": "0.2.2"
+  },
+  "service": {
+    "schema_source": "3ab16255b3d03c7e588b5bc95a079e36d9923e03",
+    "amended_candidate": "790455f4a4e84a3898e6194dddc5cb7ab5d481e9",
+    "schema_api_core_amendment_inputs_changed": false,
+    "runtime_or_deployment_claimed": false
+  },
+  "schema_sha256": "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a",
+  "canonical_skill_files": {
+    "skills/create-full-stack-app/LICENSE.txt": "76e6c24352bbf1faebee87707bf069d5c5dddbab827b8308e9def44589ed58b0",
+    "skills/create-full-stack-app/SKILL.md": "cbcbe18030d17e7557722a6d34a231992d023d7f165736d0a9974d8d57a90c97",
+    "skills/create-full-stack-app/agents/openai.yaml": "a8c7fdd2a8cfdebec754d77071fc0354ff44e00a5fdd299e3c1c1780b858108f",
+    "skills/create-full-stack-app/references/diagnostics-and-recovery.md": "5afa572d367931e7e485183b4fe351265a4aeaebd718ae351f023da0862b142e",
+    "skills/create-full-stack-app/references/examples.md": "3c2c344d66cba37567ae41b91d43848df76d53073f4ef336f453a38f2501aa3a",
+    "skills/create-full-stack-app/references/foundation-plan-0.19.schema.json": "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a",
+    "skills/create-full-stack-app/references/foundation-plan-019.md": "2b8f7d5a815741d137ae2bc08a06bb546c448a384619881f841d42401baa7f6a",
+    "skills/create-full-stack-app/references/modeling-guide.md": "b61b06829a4bce09b034e7912fa89ff87ff8e0a2e0d5b28935e2a2700a9ed6ac",
+    "skills/create-full-stack-app/scripts/firstdraft.sh": "2866e4e101dd4ba58446ccbb1f212a4ea7025782ede737091683dbced3b0c26e"
+  },
+  "clients": {
+    "claude": {
+      "version": "2.1.267",
+      "requested_model": "claude-opus-5[1m]",
+      "observed_model": "claude-opus-5"
+    },
+    "codex": {
+      "version": "0.154.0",
+      "requested_model": "gpt-6-astra"
+    }
+  },
+  "checks": {
+    "repository_tests": {
+      "passed": 121,
+      "failed": 0,
+      "skipped": 0
+    },
+    "deterministic_pack": "passed against CLI 799a184 under normal and restrictive umask",
+    "isolated_adapters": "Claude 2.1.267 and Codex 0.154.0 passed against new package; bundled CLI 0.2.2 local key generation without credentials/global CLI",
+    "logs_sha256": {
+      "checks/fd-ui-authoring-view-more-check.log": "419221746ff5f76440f8a689d5000a8fc2f9cb7076a3280ffae2e85ff17cef9c",
+      "checks/fd-ui-authoring-view-more-claude-install.log": "24ae0ffa38eab472d7064320ded002ca5be4533ab4284042dd31f14b6d23be41",
+      "checks/fd-ui-authoring-view-more-codex-install.log": "c95053f84b65724fc564252adbe5104d47b9c1bb2a5bd2d781b5cd331809f099",
+      "checks/fd-ui-authoring-view-more-package.log": "753e259d25c22780c5796c28bff22677379582a16795e0ab63bacb3b5d86d192"
+    }
+  },
+  "earlier_exact_cli_contract_check": {
+    "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "passed": true,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cases": [
+    {
+      "client": "claude",
+      "case": "preserve-partially-realized-appearance-intent",
+      "qualification_use": "retained original-digest observation",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "exit_code": 0,
+      "duration_seconds": 27.92,
+      "input_sha256": {
+        "appearance-issues-analysis.json": "f568e3363686bbec7a9b307b7cf2a130fc4579c95cb406a40c62692ef5edc1f4",
+        ".firstdraft/foundation-plan.json": "52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f",
+        ".firstdraft/state.json": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+      },
+      "prompt_sha256": "35bd8e6d14682c33e9c4c5cc08a58e9c428bdb4ae8e0536f66219d5d1e5143c9",
+      "response_sha256": "7a359f866febafd2e6ee52867bacee01511e6962576e3d083b36ad4d647511a3",
+      "transcript_sha256": "8cce57e8dd0220e600aa3b8b9204094dd6ec7994f78098717a3d84f8951ca929",
+      "tool_trace_sha256": "5625e7632caa80d470a5cbefbd43381b0a567dc99cfb0c2aa2c2c11b0d301904",
+      "inputs_unchanged": true,
+      "observations": [
+        "The answer initially describes theme and tint as honored by Rails and iOS, an overbroad current-boundary formulation. It subsequently states explicitly that native tint/background do not replace stock Zinc web tokens."
+      ],
+      "public_web_search_calls": 0,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/tool-trace.json",
+      "declared_fixture_inputs": [
+        {
+          "source": "../evals/create-full-stack-app/fixtures/appearance-issues-analysis.json",
+          "staged_as": "appearance-issues-analysis.json",
+          "sha256": "f568e3363686bbec7a9b307b7cf2a130fc4579c95cb406a40c62692ef5edc1f4"
+        },
+        {
+          "source": "../evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
+          "staged_as": ".firstdraft/foundation-plan.json",
+          "sha256": "52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f"
+        },
+        {
+          "source": "../evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "staged_as": ".firstdraft/state.json",
+          "sha256": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+        }
+      ]
+    },
+    {
+      "client": "claude",
+      "case": "private-native-request-preserves-current-boundary",
+      "qualification_use": "retained original-digest observation",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "exit_code": 0,
+      "duration_seconds": 45.33,
+      "input_sha256": {
+        ".firstdraft/foundation-plan.json": "4e9af785e0805ad4d979294fee6c19be16e13b653bf3e5aa51f0d27901e76ff5",
+        ".firstdraft/state.json": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+      },
+      "prompt_sha256": "4a7e077268ba484b5fed096c3c0eb4c25cfe45c7d91bc22d57fc46477430d6d8",
+      "response_sha256": "ab4ee5862de1743a770422f785896099d7543e8be7cd7d23fb843e91114789bc",
+      "transcript_sha256": "5843cf1d6770ec7ea2e4f13179fff26b461524fb382ba3e2e33f570287ddba65",
+      "tool_trace_sha256": "8d223db8a061c2096f80ba0f6681c4b154da31dd319aed72ab587f3c9ad390bd",
+      "inputs_unchanged": true,
+      "observations": [
+        "Advisory explanation preserves intent; its tentative JSONC policy sketch is not an authored or validated Plan and must not be treated as such."
+      ],
+      "public_web_search_calls": 0,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/tool-trace.json",
+      "declared_fixture_inputs": [
+        {
+          "source": "../evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "staged_as": ".firstdraft/foundation-plan.json",
+          "sha256": "4e9af785e0805ad4d979294fee6c19be16e13b653bf3e5aa51f0d27901e76ff5"
+        },
+        {
+          "source": "../evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "staged_as": ".firstdraft/state.json",
+          "sha256": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+        }
+      ]
+    },
+    {
+      "client": "claude",
+      "case": "android-preview-respects-provider-limit",
+      "qualification_use": "retained original-digest observation",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "exit_code": 0,
+      "duration_seconds": 22.38,
+      "input_sha256": {
+        "ANDROID_PREVIEW.md": "9f0a362af475d14e0ceabb313c31dfd287ac97eb54f9bf4806e04000ff6f95b4"
+      },
+      "prompt_sha256": "2ded6ec6ae195c6fb8d7ab83fa8a600c6279dec043b41d4a9d9e10546fb7b900",
+      "response_sha256": "ada948d561bc03a8c4834722a16e3722d062664239b50162ceaf129de4cd7664",
+      "transcript_sha256": "17af40f4bf5652f3de10a49d15f2baf421d9a4fb2fedc457dbfd52cba79f0ded",
+      "tool_trace_sha256": "2d196282a07799c1a77dc20748d5d6067edf178af594675185fe07cd39057ff1",
+      "inputs_unchanged": true,
+      "observations": [],
+      "public_web_search_calls": 0,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/tool-trace.json",
+      "declared_fixture_inputs": [
+        {
+          "source": "../evals/create-full-stack-app/fixtures/android-preview-instructions.md",
+          "staged_as": "ANDROID_PREVIEW.md",
+          "sha256": "9f0a362af475d14e0ceabb313c31dfd287ac97eb54f9bf4806e04000ff6f95b4"
+        }
+      ]
+    },
+    {
+      "client": "codex",
+      "case": "preserve-partially-realized-appearance-intent",
+      "qualification_use": "retained original-digest observation",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "exit_code": 0,
+      "duration_seconds": 38.49,
+      "input_sha256": {
+        "appearance-issues-analysis.json": "f568e3363686bbec7a9b307b7cf2a130fc4579c95cb406a40c62692ef5edc1f4",
+        ".firstdraft/foundation-plan.json": "52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f",
+        ".firstdraft/state.json": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+      },
+      "prompt_sha256": "35bd8e6d14682c33e9c4c5cc08a58e9c428bdb4ae8e0536f66219d5d1e5143c9",
+      "response_sha256": "16a29e89d746ca3486400d4c939a630b85d03599fcf5c256fa6dc91f7cfe9d89",
+      "transcript_sha256": "e4ef1f7d06a6d371061ec78bed2a3abe4bc21fd238b893551e0248bea5560803",
+      "tool_trace_sha256": "8bb62598f119c0a92467f64b69a4216dd46e7795b618ab1ed7e7ae234f1752d7",
+      "inputs_unchanged": true,
+      "observations": [
+        "The answer correctly reports the attached historical analysis and release identity but does not restate the current web/native color boundary. The separate UI read-back does state the current boundary correctly."
+      ],
+      "public_web_search_calls": 0,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/tool-trace.json",
+      "declared_fixture_inputs": [
+        {
+          "source": "../evals/create-full-stack-app/fixtures/appearance-issues-analysis.json",
+          "staged_as": "appearance-issues-analysis.json",
+          "sha256": "f568e3363686bbec7a9b307b7cf2a130fc4579c95cb406a40c62692ef5edc1f4"
+        },
+        {
+          "source": "../evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
+          "staged_as": ".firstdraft/foundation-plan.json",
+          "sha256": "52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f"
+        },
+        {
+          "source": "../evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "staged_as": ".firstdraft/state.json",
+          "sha256": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+        }
+      ]
+    },
+    {
+      "client": "codex",
+      "case": "private-native-request-preserves-current-boundary",
+      "qualification_use": "retained original-digest observation",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "exit_code": 0,
+      "duration_seconds": 39.64,
+      "input_sha256": {
+        ".firstdraft/foundation-plan.json": "4e9af785e0805ad4d979294fee6c19be16e13b653bf3e5aa51f0d27901e76ff5",
+        ".firstdraft/state.json": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+      },
+      "prompt_sha256": "4a7e077268ba484b5fed096c3c0eb4c25cfe45c7d91bc22d57fc46477430d6d8",
+      "response_sha256": "2c8ae1b55814bca08e93c51366bcea9258a17edccacc4b2d1439093cbe860515",
+      "transcript_sha256": "e16c09aef2c4418e57c340dd107aa708beb12fd2953b54bacc2e3bbddefc3b3e",
+      "tool_trace_sha256": "f160a2e8dd563c0733dc8a41d36f7a392f178ef6f813b7e86ab3b00c7640d3d7",
+      "inputs_unchanged": true,
+      "observations": [],
+      "public_web_search_calls": 0,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/tool-trace.json",
+      "declared_fixture_inputs": [
+        {
+          "source": "../evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+          "staged_as": ".firstdraft/foundation-plan.json",
+          "sha256": "4e9af785e0805ad4d979294fee6c19be16e13b653bf3e5aa51f0d27901e76ff5"
+        },
+        {
+          "source": "../evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "staged_as": ".firstdraft/state.json",
+          "sha256": "5859925107e2c79711ce5a0707d59dcdb8aa2c353afcd415c70e5cb4c7e67feb"
+        }
+      ]
+    },
+    {
+      "client": "codex",
+      "case": "android-preview-respects-provider-limit",
+      "qualification_use": "retained original-digest observation",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "exit_code": 0,
+      "duration_seconds": 51.61,
+      "input_sha256": {
+        "ANDROID_PREVIEW.md": "9f0a362af475d14e0ceabb313c31dfd287ac97eb54f9bf4806e04000ff6f95b4"
+      },
+      "prompt_sha256": "2ded6ec6ae195c6fb8d7ab83fa8a600c6279dec043b41d4a9d9e10546fb7b900",
+      "response_sha256": "cf82fce52f51bfa8503137fb497cab3a3f5b04dc5349e8a8b355fae3028a8831",
+      "transcript_sha256": "36ed65e4ea0cf831d8eef07152ceb3d62ac08ffb774bb34bde81e7566527a46c",
+      "tool_trace_sha256": "c1e4ac33f5ad59cab1b5887fba89c71038d778d4810fbb6e1407b39905a8ce1f",
+      "inputs_unchanged": true,
+      "observations": [
+        "The answer recommends a local Android Studio Emulator but omits an explicit suitable-local-computer prerequisite. This is the same advisory omission recorded for the prior 0.2.3 release."
+      ],
+      "public_web_search_calls": 2,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/tool-trace.json",
+      "declared_fixture_inputs": [
+        {
+          "source": "../evals/create-full-stack-app/fixtures/android-preview-instructions.md",
+          "staged_as": "ANDROID_PREVIEW.md",
+          "sha256": "9f0a362af475d14e0ceabb313c31dfd287ac97eb54f9bf4806e04000ff6f95b4"
+        }
+      ]
+    },
+    {
+      "client": "claude",
+      "case": "ui-foundation-read-back",
+      "qualification_use": "rerun against final digest",
+      "source_at_execution": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+      "package_sha256_at_execution": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+      "exit_code": 0,
+      "duration_seconds": 45.26,
+      "input_sha256": {},
+      "prompt_sha256": "0f26b3bcda29e5cce40deec094483bcf8172469f38ca4805fead615810df4112",
+      "response_sha256": "8699be8c26b145f5c4a20e408fc20c984a8ae60afcab3c96f6d84fcd95b808e8",
+      "transcript_sha256": "89ee4c9d9a420ddab8867cc22778b5fef9942c969b56da1f1a4920bdf432b271",
+      "tool_trace_sha256": "96e865c481499a51c76971902784bdd1aebc189f41fe4f087e71103aaf1c1e41",
+      "inputs_unchanged": true,
+      "observations": [
+        "Correct full collection destination, route-bound parent, nested params, scoped return, enum I18n, native-only colors, stock Zinc web tokens, and light default; no obsolete View all label. Add placement is incorrect: the response says it is absent from the Movie detail, while the Service places Add on both the detail collection card and full collection page, independent of collection size.",
+        "Extra advisory recommendations infer missing Plan details and omit the selected-association fallback when Credit has no show route. This is not a validated Plan or full guarantee of the added recommendations."
+      ],
+      "public_web_search_calls": 0,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/tool-trace.json",
+      "declared_fixture_inputs": []
+    },
+    {
+      "client": "codex",
+      "case": "ui-foundation-read-back",
+      "qualification_use": "rerun against final digest",
+      "source_at_execution": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+      "package_sha256_at_execution": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+      "exit_code": 0,
+      "duration_seconds": 43.35,
+      "input_sha256": {},
+      "prompt_sha256": "0f26b3bcda29e5cce40deec094483bcf8172469f38ca4805fead615810df4112",
+      "response_sha256": "a565229fd0d7fefa6ca4940913c239d114d0e28fb472c3fad40864df79f0dfa0",
+      "transcript_sha256": "c4364731b05f2a9cd8ae047900494f68370a6f7f86f8da906fcfbc1fb0942fb7",
+      "tool_trace_sha256": "fc1794a95d19730fcdfd4ba91f9fd2e46a52354bb39f0bc04bcc7d946cd217e6",
+      "inputs_unchanged": true,
+      "observations": [
+        "Correct full collection/Add/scoped form/scoped return, enum I18n, native-only colors, stock Zinc web tokens, and light default; calls the entry View more.",
+        "The concise answer omits an explicit POST destination, nested child parameter example, and flat child member route distinction. Those details remain explicitly present in the unchanged reference. This is not a literal all-criteria pass."
+      ],
+      "public_web_search_calls": 1,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/tool-trace.json",
+      "declared_fixture_inputs": []
+    }
+  ],
+  "superseded_read_backs": [
+    {
+      "client": "claude",
+      "case": "ui-foundation-read-back",
+      "qualification_use": "superseded by final-digest read-back",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "exit_code": 0,
+      "duration_seconds": 38.12,
+      "input_sha256": {},
+      "prompt_sha256": "0f26b3bcda29e5cce40deec094483bcf8172469f38ca4805fead615810df4112",
+      "response_sha256": "db78d7b129d722fa490b1952f78a004eef443de51c68de39c95f7c331f6fe752",
+      "transcript_sha256": "a2b80380ccb03dc514f16517c036ef13044d363c0bbcb1fe04d68ff202a47126",
+      "tool_trace_sha256": "c8c637b138d8f23eddb64a0b853a894f54ceb5de4809b980a8f391b6e01a22b9",
+      "inputs_unchanged": true,
+      "observations": [
+        "Core scoped form, redirect, enum, and stock web/native style guidance is correct. The card Add entrypoint is correctly described, unlike the final response that incorrectly limits Add to the full collection page. Extra advisory prose omits the selected-association fallback when Credit has no show route."
+      ],
+      "public_web_search_calls": 0,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/tool-trace.json",
+      "declared_fixture_inputs": []
+    },
+    {
+      "client": "codex",
+      "case": "ui-foundation-read-back",
+      "qualification_use": "superseded by final-digest read-back",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "exit_code": 0,
+      "duration_seconds": 48.1,
+      "input_sha256": {},
+      "prompt_sha256": "0f26b3bcda29e5cce40deec094483bcf8172469f38ca4805fead615810df4112",
+      "response_sha256": "1185acbd945e7e2ca09ce16ecdbbedb4263a005fb5614a13aad07dfd576250a4",
+      "transcript_sha256": "893085459a7315930cb3c8313e696a397a667231c021526bc8f53c1824ff3f54",
+      "tool_trace_sha256": "d9622a0d3866c0da746e8a147dc1a9e7084b113292ebebe4e0732122b2e74b80",
+      "inputs_unchanged": true,
+      "observations": [],
+      "public_web_search_calls": 0,
+      "private_state_contents_read": false,
+      "firstdraft_or_revyl_commands_invoked": false,
+      "product_mutations": false,
+      "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back",
+      "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/prompt.txt",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/response.txt",
+      "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/execution.json",
+      "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/tool-trace.json",
+      "declared_fixture_inputs": []
+    }
+  ],
+  "package_amendment": {
+    "original_digest": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+    "final_digest": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+    "changed_file": "skills/create-full-stack-app/references/foundation-plan-019.md",
+    "old_phrase": "separate paginated View all page",
+    "new_phrase": "separate paginated full collection page",
+    "other_packaged_bytes_unchanged": true,
+    "reuse_basis": "The sole packaged diff replaces the control-dependent noun phrase View all page with full collection page. The six retained cases have unchanged prompts, fixtures, and governing Appearance, private-native, and Android-provider sections. Their original package identity and limitations are preserved. Entire package input identity did change; these are reused observations, not fresh runs at the new digest."
+  },
+  "advisory_limits": [
+    "Both historical Appearance answers preserve the exact attached analysis and authored intent; current web/native styling is not consistently distinguished or restated in that fixture. The separate final read-backs both state the current split correctly.",
+    "Claude final read-back incorrectly limits Add to the full collection page: the Service exposes Add there and on the detail collection card. It also adds assumptions about unstated Plan details and omits the selected-association fallback when Credit has no show route. The superseded initial response correctly described the card Add entry.",
+    "Codex final read-back omits explicit POST destination, nested child params, and flat member-route details; the reference includes those unchanged details.",
+    "Codex Android keeps the local Emulator alternative but leaves the suitable-local-computer prerequisite implicit, as in the previous 0.2.3 qualification.",
+    "Private-native cases are advisory intent-preservation checks, not authored-Plan validation or proof of every suggested route/policy."
+  ],
+  "untested_boundaries": [
+    "npm publication or provenance",
+    "registry or public-catalog installation",
+    "catalog or dist-tag promotion",
+    "fresh sign-in",
+    "Codespace or full hosted authoring journey",
+    "Compilation or GitHub Publication",
+    "native runtime or deployment",
+    "deferred UI Skill selection or model evaluation"
+  ],
+  "original_packet_sha256": {
+    "initial_results": "3f09ceb512eb252fe8dc3d07a77b60875b402031ca161ced5079c01043b7c2a2",
+    "amendment_results": "014e732a13bfdb952a8bb0ffd8992021d4bf4f27684db6deee1af6e25da76150",
+    "package_diff": "e0eca369cb442ed1700df3d1b78d8f8a8501bfc7480c7fe8b84a60eee67b721a"
+  },
+  "raw_artifacts": {
+    "availability": "Committed companion packets contain exact prompts/responses, execution and command records, tool-call traces, check logs and hashes. Declared fixtures are linked in this receipt; full original transcripts are locally retained and hashed, not required for the stated advisory claims.",
+    "location": "2026-09-14-ui-authoring-skill-0.2.4/",
+    "retained": [
+      "original prompts, final responses, input hashes, commands, execution records, selected check logs, sanitized tool-call views, original raw-transcript hashes and local paths"
+    ],
+    "source_packets_preserved": true,
+    "reader_index": "2026-09-14-ui-authoring-skill-0.2.4/README.md"
+  }
+}

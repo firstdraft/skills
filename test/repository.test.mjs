@@ -916,11 +916,11 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
   assert.equal(marketplace.name, claudeMarketplaceName);
   assert.equal(marketplace.plugins.length, 1);
   assert.equal(marketplace.plugins[0].name, claudePluginName);
-  assert.equal(marketplace.plugins[0].version, "0.2.3");
+  assert.equal(marketplace.plugins[0].version, "0.2.4");
   assert.deepEqual(marketplace.plugins[0].source, {
     source: "npm",
     package: "@firstdraft.com/claude-code",
-    version: "0.2.3",
+    version: "0.2.4",
     registry: "https://registry.npmjs.org/",
   });
   assert.equal(packageTemplate.version, "0.2.4");

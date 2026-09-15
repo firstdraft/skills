@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-09-15T03:49:32.411Z",
+  "source_sha": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+  "package": "@firstdraft.com/claude-code",
+  "version": "0.2.4",
+  "sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+  "bytes": 134442,
+  "integrity": "sha512-iMXeI9CDzMiON7cYQGkF//gHxTzLYla0ggilGD+u3t3wvbS0Wpe3mQHbym+rCTatAqbwAbznzleldHBTu/qawA==",
+  "signature_and_attestation_command_exit_code": 0,
+  "canonical_skill_files_matched": 9,
+  "both_isolated_adapters_passed": true,
+  "bundled_cli_version": "0.2.2",
+  "provenance_binding_review": "Inspect retained registry metadata/attestation separately for exact protected tag, source, workflow and run binding.",
+  "credentials_supplied": false,
+  "model_or_firstdraft_service_invoked": false,
+  "public_catalog_install": false,
+  "catalog_or_dist_tags_changed": false
+}

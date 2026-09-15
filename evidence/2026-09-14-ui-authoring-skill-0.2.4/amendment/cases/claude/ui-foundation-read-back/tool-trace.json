@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "firstdraft:create-full-stack-app"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release-view-more/package/skills/create-full-stack-app/references/foundation-plan-019.md"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/.firstdraft/*.json"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/*",
+      "path": "/private/tmp/fd-ui-authoring-view-more-claude-ui-foundation-read-back/work"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "create_form|return_to|tint_color|supporting_actress",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release-view-more/package/skills/create-full-stack-app/references/examples.md",
+      "output_mode": "content",
+      "-n": true,
+      "-C": 6
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "on_referenced_deleted|has_many|immutable|associations",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release-view-more/package/skills/create-full-stack-app/references/examples.md",
+      "output_mode": "content",
+      "-n": true,
+      "-C": 10
+    }
+  }
+]
