@@ -54,7 +54,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
-| [`2026-09-15-account-authoring-0.2.5.md`](2026-09-15-account-authoring-0.2.5.md) | Bounded qualification for default Account settings and observed release guidance; [publication receipt](2026-09-15-account-authoring-0.2.5-publication.json) |
+| [`2026-09-15-account-authoring-0.2.5.md`](2026-09-15-account-authoring-0.2.5.md) | Account guidance qualification, publication, public installs, and default promotion; [publication receipt](2026-09-15-account-authoring-0.2.5-publication.json) |
 | [`2026-08-04-fresh-claude-code-evaluations.md`](2026-08-04-fresh-claude-code-evaluations.md) | One opening interview and one pinned local diagnostic-to-Compile journey |
 | [`2026-08-04-home-inventory-opening-response.txt`](2026-08-04-home-inventory-opening-response.txt) | Exact retained opening response used for regrading |
 | [`2026-08-04-movie-catalog-model-rehearsal.json`](2026-08-04-movie-catalog-model-rehearsal.json) | Machine-readable identities and result for the local Movie Catalog rehearsal |

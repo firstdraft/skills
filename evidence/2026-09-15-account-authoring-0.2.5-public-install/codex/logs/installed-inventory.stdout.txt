@@ -1,0 +1,25 @@
+{
+  "installed": [
+    {
+      "pluginId": "firstdraft@firstdraft-skills",
+      "name": "firstdraft",
+      "marketplaceName": "firstdraft-skills",
+      "version": "0.2.5",
+      "installed": true,
+      "enabled": true,
+      "source": {
+        "source": "npm",
+        "package": "@firstdraft.com/claude-code",
+        "version": "0.2.5",
+        "registry": "https://registry.npmjs.org/"
+      },
+      "marketplaceSource": {
+        "sourceType": "git",
+        "source": "https://github.com/firstdraft/skills.git"
+      },
+      "installPolicy": "AVAILABLE",
+      "authPolicy": "ON_INSTALL"
+    }
+  ],
+  "available": []
+}

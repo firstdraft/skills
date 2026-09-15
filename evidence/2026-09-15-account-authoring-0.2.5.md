@@ -46,3 +46,21 @@ Before publication, both staging roles activated Service `653f292252b0f73a6433b6
 matches reviewed `00e92e39`. Health, API 0.3.1, worker source, corrected schema, Account release pair, and all Core
 archives passed read-only checks. Independent review approved the schema and synchronized Skill corrections.
 The catalog and npm latest promotion are separate steps; this observation does not claim public catalog installation.
+
+## Public catalog installation
+
+Catalog [PR #74](https://github.com/firstdraft/skills/pull/74) merged at
+`f8d74d4125d7645f50cf7bf5de9622cd6a3ec851` after both Node CI jobs and release-order rehearsal passed.
+Fresh public installs passed at `2026-09-15T21:52:17.560Z` in Claude Code 2.1.267 and Codex 0.154.0.
+Both fetched that catalog, enabled plugin 0.2.5, matched all nine canonical Skill files, and invoked bundled CLI
+0.2.2 without credentials, model calls, or First Draft traffic. The
+[original companion records](2026-09-15-account-authoring-0.2.5-public-install/README.md) retain commands and logs.
+
+## npm defaults
+
+Protected tag `promote-v0.2.5` at catalog source `f8d74d4125d7645f50cf7bf5de9622cd6a3ec851` triggered
+[the successful promotion workflow](https://github.com/firstdraft/skills/actions/runs/35028066363).
+The [workflow receipt](2026-09-15-account-authoring-0.2.5-public-install/promotion.json) and
+[independent registry read](2026-09-15-account-authoring-0.2.5-public-install/registry-final.json) confirm both
+`next` and `latest` select plugin 0.2.5 and CLI 0.2.2 with unchanged archive hashes. Publication used GitHub OIDC;
+promotion used the existing scoped token. No new npm login or token change was needed.

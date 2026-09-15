@@ -1,0 +1,59 @@
+{
+  "observed_at": "2026-09-15T21:52:17.560Z",
+  "source": "54294d6cf4d1a45f5a21c7d1036b9fddab9d911a",
+  "catalog_commit": "f8d74d4125d7645f50cf7bf5de9622cd6a3ec851",
+  "package_version": "0.2.5",
+  "package_sha256": "d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6",
+  "canonical_skill_files": {
+    "skills/create-full-stack-app/LICENSE.txt": "76e6c24352bbf1faebee87707bf069d5c5dddbab827b8308e9def44589ed58b0",
+    "skills/create-full-stack-app/SKILL.md": "a4ed082a8cd5231edf5db183a9be726f5b15f78c34d358c1279dea044a76c55d",
+    "skills/create-full-stack-app/agents/openai.yaml": "a8c7fdd2a8cfdebec754d77071fc0354ff44e00a5fdd299e3c1c1780b858108f",
+    "skills/create-full-stack-app/references/diagnostics-and-recovery.md": "5afa572d367931e7e485183b4fe351265a4aeaebd718ae351f023da0862b142e",
+    "skills/create-full-stack-app/references/examples.md": "0342590b8dce30a8a0d9c8e0967566b977054b2874b5f5a7dc770e6f2dc4b805",
+    "skills/create-full-stack-app/references/foundation-plan-0.19.schema.json": "c13aff4894073ea88fcf48c1f9900039e8b83966dee90591a7caa71421a5a666",
+    "skills/create-full-stack-app/references/foundation-plan-019.md": "348d2a503a591c9c9ea5e3d32e51008e8d0cb859b737a0f3f79929ee2815db9a",
+    "skills/create-full-stack-app/references/modeling-guide.md": "b61b06829a4bce09b034e7912fa89ff87ff8e0a2e0d5b28935e2a2700a9ed6ac",
+    "skills/create-full-stack-app/scripts/firstdraft.sh": "2866e4e101dd4ba58446ccbb1f212a4ea7025782ede737091683dbced3b0c26e"
+  },
+  "clients": [
+    {
+      "client": "claude",
+      "client_version": "2.1.267 (Claude Code)",
+      "catalog_commit": "f8d74d4125d7645f50cf7bf5de9622cd6a3ec851",
+      "catalog_root": "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/claude/plugins/marketplaces/firstdraft-skills",
+      "plugin_id": "firstdraft@firstdraft-skills",
+      "plugin_version": "0.2.5",
+      "enabled": true,
+      "installed_root": "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.5",
+      "skill_locator": "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.5/skills/create-full-stack-app/SKILL.md",
+      "canonical_files_match": 9,
+      "bundled_cli_version": "0.2.2",
+      "no_global_cli": true,
+      "local_key_generation": true,
+      "credentials_supplied": false,
+      "model_or_firstdraft_service_invoked": false,
+      "public_commands_passed": true
+    },
+    {
+      "client": "codex",
+      "client_version": "codex-cli 0.154.0",
+      "catalog_commit": "f8d74d4125d7645f50cf7bf5de9622cd6a3ec851",
+      "catalog_root": "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/codex/config/.tmp/marketplaces/firstdraft-skills",
+      "plugin_id": "firstdraft@firstdraft-skills",
+      "plugin_version": "0.2.5",
+      "enabled": true,
+      "installed_root": "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/codex/config/plugins/cache/firstdraft-skills/firstdraft/0.2.5",
+      "skill_locator": "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/codex/config/plugins/cache/firstdraft-skills/firstdraft/0.2.5/skills/create-full-stack-app/SKILL.md",
+      "canonical_files_match": 9,
+      "bundled_cli_version": "0.2.2",
+      "no_global_cli": true,
+      "local_key_generation": true,
+      "credentials_supplied": false,
+      "model_or_firstdraft_service_invoked": false,
+      "public_commands_passed": true
+    }
+  ],
+  "credentials_supplied": false,
+  "model_or_firstdraft_service_invoked": false,
+  "scope": "Fresh public installation only; no authentication, model behavior, service journey, existing-install refresh or deployment proof."
+}

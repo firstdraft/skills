@@ -1,0 +1,112 @@
+[
+  {
+    "label": "no-global-cli",
+    "executable": "/bin/sh",
+    "arguments": [
+      "-c",
+      "if command -v firstdraft; then exit 1; else exit 0; fi"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 5
+  },
+  {
+    "label": "client-version",
+    "executable": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/qualification-clients/node_modules/.bin/codex",
+    "arguments": [
+      "--version"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 128
+  },
+  {
+    "label": "public-marketplace-add",
+    "executable": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/qualification-clients/node_modules/.bin/codex",
+    "arguments": [
+      "plugin",
+      "marketplace",
+      "add",
+      "firstdraft/skills"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 933
+  },
+  {
+    "label": "catalog-revision",
+    "executable": "/usr/bin/git",
+    "arguments": [
+      "-C",
+      "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/codex/config/.tmp/marketplaces/firstdraft-skills",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 16
+  },
+  {
+    "label": "public-plugin-install",
+    "executable": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/qualification-clients/node_modules/.bin/codex",
+    "arguments": [
+      "plugin",
+      "add",
+      "firstdraft@firstdraft-skills"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 972
+  },
+  {
+    "label": "installed-inventory",
+    "executable": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/qualification-clients/node_modules/.bin/codex",
+    "arguments": [
+      "plugin",
+      "list",
+      "--marketplace",
+      "firstdraft-skills",
+      "--json"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 59
+  },
+  {
+    "label": "model-free-prompt-input",
+    "executable": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/qualification-clients/node_modules/.bin/codex",
+    "arguments": [
+      "debug",
+      "prompt-input",
+      "Describe the available First Draft workflow."
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 334
+  },
+  {
+    "label": "bundled-helper-version",
+    "executable": "/bin/sh",
+    "arguments": [
+      "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/codex/config/plugins/cache/firstdraft-skills/firstdraft/0.2.5/skills/create-full-stack-app/scripts/firstdraft.sh",
+      "--version"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 281
+  },
+  {
+    "label": "local-key-generation",
+    "executable": "/bin/sh",
+    "arguments": [
+      "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/codex/config/plugins/cache/firstdraft-skills/firstdraft/0.2.5/skills/create-full-stack-app/scripts/firstdraft.sh",
+      "generate",
+      "application-key",
+      "--name",
+      "Public Install Smoke"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 89
+  }
+]

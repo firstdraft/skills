@@ -1,0 +1,3 @@
+Validating plugin manifest: /Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.5/.claude-plugin/plugin.json
+
+✔ Validation passed
