@@ -739,6 +739,41 @@
               }
             }
           }
+        },
+        {
+          "title": "An ordinary resource update requires its route",
+          "if": {
+            "not": {
+              "required": [
+                "account"
+              ]
+            }
+          },
+          "then": {
+            "properties": {
+              "scaffold": {
+                "type": "object",
+                "if": {
+                  "required": [
+                    "update"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "resource_routes"
+                  ],
+                  "properties": {
+                    "resource_routes": {
+                      "type": "array",
+                      "contains": {
+                        "const": "update"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       ]
     },
@@ -3075,18 +3110,6 @@
             "required": [
               "update"
             ]
-          },
-          "else": {
-            "if": {
-              "required": [
-                "update"
-              ]
-            },
-            "then": {
-              "required": [
-                "profile"
-              ]
-            }
           }
         },
         {

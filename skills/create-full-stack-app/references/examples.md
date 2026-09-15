@@ -350,7 +350,7 @@ Do not assume a blanket enum gap; inspect the matching analysis for any unsuppor
 ## Web Account and protected profile
 
 This complete document expresses the current bounded Web Account topology with Field-only self-service registration,
-two self Policies, and a protected `/profile` surface. It requests no native client; adding `native.ios` would not
+two self Policies, and a protected `/account` surface authored through `scaffold.profile`. It requests no native client; adding `native.ios` would not
 make this Account or profile available natively.
 
 ```json

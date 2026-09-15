@@ -73,15 +73,11 @@ const reviewedFixtureAnalyzerRelease =
   "foundation-plan-rails/application-2026-08-28-reviewed-realization";
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
-const currentFoundationPlanAnalyzerRelease =
-  "foundation-plan-rails/application-2026-09-14-ui-foundation";
-const currentFoundationPlanCompilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-14-ui-foundation";
-const currentFoundationPlanServiceBaseline = "3ab16255b3d03c7e588b5bc95a079e36d9923e03";
+const currentFoundationPlanServiceBaseline = "00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8";
 const currentFoundationIosCoreRevision = "7365ba0bf7ea5e6c8e8223d24e54cf685b067950";
 const currentFoundationAndroidCoreRevision = "6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e";
 const foundationPlanSchemaDigest =
-  "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a";
+  "c13aff4894073ea88fcf48c1f9900039e8b83966dee90591a7caa71421a5a666";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
 const currentFoundationPlanSchemaBaseline = currentFoundationPlanServiceBaseline;
@@ -416,8 +412,6 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     assert.match(source, /published under npm `next` with exact source-package parity/);
     assert.match(source, /does not prove plugin(?:\/| or )catalog\s+publication/);
   }
-  assert(foundationPlanReference.includes(currentFoundationPlanAnalyzerRelease));
-  assert(foundationPlanReference.includes(currentFoundationPlanCompilerRelease));
 
   const workflow = (
     await readFile(path.join(repository, ".github", "workflows", "ci.yml"), "utf8")
@@ -923,8 +917,8 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
     version: "0.2.4",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.2.4");
-  assert.equal(installableManifest.version, "0.2.4");
+  assert.equal(packageTemplate.version, "0.2.5");
+  assert.equal(installableManifest.version, "0.2.5");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);
@@ -3259,8 +3253,6 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   for (const fragment of [
     "Current design and machine authority",
     currentFoundationPlanSchemaBaseline,
-    currentFoundationPlanAnalyzerRelease,
-    currentFoundationPlanCompilerRelease,
     "Implementation and observation evidence",
     "implemented, exercised, generated-output, hosted, and observed claims",
     "older observation does not define current support",

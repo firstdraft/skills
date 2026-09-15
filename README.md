@@ -6,7 +6,7 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
 
-Plugin `0.2.4` updates the authoring Skill for the Compiler's UI foundation, with its exact digest in
+Candidate plugin `0.2.5` documents default Account settings and observed service release identities, with its digest in
 [release compatibility](release/compatibility.json). It packages only `create-full-stack-app`. The UI Skill
 auditions remain deferred source.
 

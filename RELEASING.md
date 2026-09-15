@@ -1,7 +1,6 @@
 # Releasing First Draft Skills
 
-Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
-[History](evidence/release-history.md) is separate.
+Coordinate the service, CLI, and Skills. [History](evidence/release-history.md) is separate.
 
 ## Current identities
 
@@ -24,7 +23,7 @@ API 0.3.1 permits omitted return overrides; CLI accepts 0.3.
 reconciled defaults. Recheck before mutations.
 
 [CLI probe and plugin default writes are verified](evidence/2026-09-13-npm-token-write-verification.md).
-CLI default write is unexercised; probes are removed. Follow [setup](docs/npm-promotion.md#initial-setup-and-renewal).
+CLI default write is unexercised; probes are removed. [Setup](docs/npm-promotion.md#initial-setup-and-renewal).
 
 ## Authorization boundaries
 
@@ -76,10 +75,13 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-Plugin 0.2.4 packages only `create-full-stack-app`; UI Skills remain deferred.
-[Qualification](evidence/2026-09-14-ui-authoring-skill-0.2.4-qualification.md) records the
+Candidate `@firstdraft.com/claude-code@0.2.5` has SHA-256
+`d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6`.
+[Qualification](evidence/2026-09-15-account-authoring-0.2.5.md) covers Account guidance; UI Skills stay deferred.
+
+Plugin 0.2.4's [Qualification](evidence/2026-09-14-ui-authoring-skill-0.2.4-qualification.md) records the
 [defined checks](evals/create-full-stack-app/ui-foundation-release.md) and limits.
-The unchanged approval/Publication procedure below records 0.2.2 smokes, not a new 0.2.4 gate.
+The procedure below records 0.2.2 smokes.
 
 The 0.2.2 qualification used two human-observed approval smokes in separate continuing sessions:
 
