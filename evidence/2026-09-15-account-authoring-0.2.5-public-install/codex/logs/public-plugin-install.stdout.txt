@@ -1,0 +1,2 @@
+Added plugin `firstdraft` from marketplace `firstdraft-skills`.
+Installed plugin root: /Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/codex/config/plugins/cache/firstdraft-skills/firstdraft/0.2.5

@@ -1,0 +1,27 @@
+{
+  "name": "@firstdraft.com/claude-code",
+  "version": "0.2.5",
+  "dist": {
+    "shasum": "6e54ca2cf3d0c7cc7c315750a43a2bd6c0143d4f",
+    "tarball": "https://registry.npmjs.org/@firstdraft.com/claude-code/-/claude-code-0.2.5.tgz",
+    "fileCount": 43,
+    "integrity": "sha512-R/gluATf1fjq7U+jIUkAhgvYskFvfFyr6pClvJadrAo8whFR0PL8t8CDGHzxGUlarSZ7uJP+aeSxt1CvYrBTtA==",
+    "signatures": [
+      {
+        "sig": "MEUCIBuEd63bSjnQcs4c67ZQjFwKPQm9iFbOEpNPYymQWEodAiEA9Si+Vl35oLlIaSQfVHJxI+mMlTHpcYYxhRX42A6zdiA=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEUCIQC5xScEWJSbrXLFs6KX12xUN3FZIsXgGOYuJc/1TDW52QIge8ZMhyhrUaubKlC4Qt1zrg83bNDGNc2gOOx8QzPJ1rM=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/@firstdraft.com%2fclaude-code@0.2.5",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 623386
+  }
+}

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "firstdraft@firstdraft-skills",
+    "version": "0.2.5",
+    "scope": "user",
+    "enabled": true,
+    "installPath": "/Users/sandbox2/code/firstdraft/ui-account-release-20260915/public-install/run-2026-09-15T21-52-10-661Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.5",
+    "installedAt": "2026-09-15T21:52:13.440Z",
+    "lastUpdated": "2026-09-15T21:52:13.440Z"
+  }
+]

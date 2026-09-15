@@ -10,7 +10,7 @@ Coordinate the service, CLI, and Skills. [History](evidence/release-history.md) 
 | Qualified packed SHA-256 | `d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.5` |
 | Catalog manifest | Plugin `0.2.5` in `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.5` / `0.2.4` |
+| Plugin npm `next` / `latest` | `0.2.5` / `0.2.5` |
 | Compatible CLI | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.1`, `< 0.4.0` |
