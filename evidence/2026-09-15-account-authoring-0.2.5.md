@@ -31,3 +31,18 @@ Claude Code 2.1.267 and Codex 0.153.4 each installed the staged package in isola
 Skill, and invoked bundled CLI 0.2.2 for local generation without First Draft credentials or a global CLI.
 CI separately exercises its pinned Codex 0.154.0. These adapter observations are local package installs, not public
 catalog installs or agent behavioral evaluations. Schema comparison and the author-context review passed.
+
+## Publication and Service readiness
+
+[GitHub OIDC publication](https://github.com/firstdraft/skills/actions/runs/35027082128) succeeded from
+`54294d6cf4d1a45f5a21c7d1036b9fddab9d911a` under protected tag `claude-v0.2.5`. The
+[publication receipt](2026-09-15-account-authoring-0.2.5-publication.json) verifies the 134,944-byte registry tarball,
+its qualified SHA-256, npm signature/attestation checks, and provenance binding to the exact source and workflow.
+Both clients installed those downloaded bytes and discovered the same sole authoring Skill and bundled CLI.
+npm's exact-version metadata became visible before its package index; a fresh-cache read subsequently installed
+the exact version. Publication was not repeated.
+
+Before publication, both staging roles activated Service `653f292252b0f73a6433b6c49ee3b8534dbd79f7`, whose tree
+matches reviewed `00e92e39`. Health, API 0.3.1, worker source, corrected schema, Account release pair, and all Core
+archives passed read-only checks. Independent review approved the schema and synchronized Skill corrections.
+The catalog and npm latest promotion are separate steps; this observation does not claim public catalog installation.

@@ -6,7 +6,7 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
 
-Candidate plugin `0.2.5` documents default Account settings and observed service release identities, with its digest in
+Plugin `0.2.5` documents default Account settings and observed service release identities, with its digest in
 [release compatibility](release/compatibility.json). It packages only `create-full-stack-app`. The UI Skill
 auditions remain deferred source.
 
@@ -49,9 +49,9 @@ In Drawing Board, the Skill and CLI are already installed. Follow the
 Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
 conversation, run `codex resume` from the same workspace root.
 
-The catalog manifest selects shared plugin `0.2.4`, which includes the compatible CLI and discovers it in either
+The catalog manifest selects shared plugin `0.2.5`, which includes the compatible CLI and discovers it in either
 agent. Drawing Board supplies its own project wrapper and installed CLI. The
-[public-install receipt](evidence/2026-09-15-shared-plugin-0.2.4-public-install.md) records fresh Claude and Codex
+[release evidence](evidence/2026-09-15-account-authoring-0.2.5.md) distinguishes package checks from public catalog
 installation. A fresh authenticated student Codespace journey remains unproved.
 
 Outside Drawing Board, Codex uses the same catalog as Claude. Install it with:

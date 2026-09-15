@@ -6,11 +6,11 @@ Coordinate the service, CLI, and Skills. [History](evidence/release-history.md) 
 
 | Surface | Current identity |
 |---|---|
-| Released plugin source | `@firstdraft.com/claude-code@0.2.4`, tag `claude-v0.2.4` |
-| Qualified packed SHA-256 | `7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7` |
-| Public plugin package | `@firstdraft.com/claude-code@0.2.4` |
-| Catalog manifest | Plugin `0.2.4` in `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.4` / `0.2.4` |
+| Released plugin source | `@firstdraft.com/claude-code@0.2.5`, tag `claude-v0.2.5` |
+| Qualified packed SHA-256 | `d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6` |
+| Public plugin package | `@firstdraft.com/claude-code@0.2.5` |
+| Catalog manifest | Plugin `0.2.5` in `.claude-plugin/marketplace.json` |
+| Plugin npm `next` / `latest` | `0.2.5` / `0.2.4` |
 | Compatible CLI | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.1`, `< 0.4.0` |
@@ -19,8 +19,8 @@ Coordinate the service, CLI, and Skills. [History](evidence/release-history.md) 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
 API 0.3.1 permits omitted return overrides; CLI accepts 0.3.
-[Release evidence](evidence/2026-09-15-shared-plugin-0.2.4-default-promotion.md) records public installs and
-reconciled defaults. Recheck before mutations.
+[Release evidence](evidence/2026-09-15-account-authoring-0.2.5.md) records each completed qualification and
+distribution step. Recheck before mutations.
 
 [CLI probe and plugin default writes are verified](evidence/2026-09-13-npm-token-write-verification.md).
 CLI default write is unexercised; probes are removed. [Setup](docs/npm-promotion.md#initial-setup-and-renewal).
@@ -75,7 +75,7 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-Candidate `@firstdraft.com/claude-code@0.2.5` has SHA-256
+Source `@firstdraft.com/claude-code@0.2.5` has SHA-256
 `d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6`.
 [Qualification](evidence/2026-09-15-account-authoring-0.2.5.md) covers Account guidance; UI Skills stay deferred.
 

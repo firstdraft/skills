@@ -1,0 +1,48 @@
+{
+  "package": "@firstdraft.com/claude-code",
+  "version": "0.2.5",
+  "source": "54294d6cf4d1a45f5a21c7d1036b9fddab9d911a",
+  "sha256": "d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6",
+  "publication_run": "https://github.com/firstdraft/skills/actions/runs/35027082128",
+  "registry": {
+    "observed_at": "2026-09-15T21:45:43.861Z",
+    "name": "@firstdraft.com/claude-code",
+    "version": "0.2.5",
+    "sha256": "d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6",
+    "bytes": 134944,
+    "dist": {
+      "shasum": "6e54ca2cf3d0c7cc7c315750a43a2bd6c0143d4f",
+      "tarball": "https://registry.npmjs.org/@firstdraft.com/claude-code/-/claude-code-0.2.5.tgz",
+      "fileCount": 43,
+      "integrity": "sha512-R/gluATf1fjq7U+jIUkAhgvYskFvfFyr6pClvJadrAo8whFR0PL8t8CDGHzxGUlarSZ7uJP+aeSxt1CvYrBTtA==",
+      "signatures": [
+        {
+          "sig": "MEUCIBuEd63bSjnQcs4c67ZQjFwKPQm9iFbOEpNPYymQWEodAiEA9Si+Vl35oLlIaSQfVHJxI+mMlTHpcYYxhRX42A6zdiA=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        },
+        {
+          "sig": "MEUCIQC5xScEWJSbrXLFs6KX12xUN3FZIsXgGOYuJc/1TDW52QIge8ZMhyhrUaubKlC4Qt1zrg83bNDGNc2gOOx8QzPJ1rM=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "attestations": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@firstdraft.com%2fclaude-code@0.2.5",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "unpackedSize": 623386
+    }
+  },
+  "signature_check": {
+    "invalid": [],
+    "missing": []
+  },
+  "provenance_source_and_subject_verified": true,
+  "adapters": {
+    "claude": "Claude Code 2.1.267: installed First Draft 0.2.5; discovered 1 exact Skills; invoked CLI 0.2.2 and local generation without a global CLI or credentials.",
+    "codex": "codex-cli 0.153.4: installed First Draft 0.2.5; discovered 1 exact Skills; invoked CLI 0.2.2 and local generation without a global CLI or credentials."
+  },
+  "service": "653f292252b0f73a6433b6c49ee3b8534dbd79f7",
+  "boundary": "Exact public package, isolated installation, provenance, and separately observed Service readiness. Public catalog installation and default promotion follow separately."
+}
