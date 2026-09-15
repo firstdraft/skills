@@ -51,8 +51,8 @@ conversation, run `codex resume` from the same workspace root.
 
 The catalog manifest selects shared plugin `0.2.4`, which includes the compatible CLI and discovers it in either
 agent. Drawing Board supplies its own project wrapper and installed CLI. The
-[release receipt](evidence/2026-09-15-shared-plugin-0.2.4-publication.md) distinguishes registry-package and bounded
-advisory checks from public installation and the still-unproved fresh authenticated Codespace journey.
+[public-install receipt](evidence/2026-09-15-shared-plugin-0.2.4-public-install.md) records fresh Claude and Codex
+installation. A fresh authenticated student Codespace journey remains unproved.
 
 Outside Drawing Board, Codex uses the same catalog as Claude. Install it with:
 

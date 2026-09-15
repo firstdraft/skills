@@ -1,0 +1,161 @@
+{
+  "immutable_tag_rules": {
+    "id": 22927207,
+    "name": "Keep npm promotion tags immutable",
+    "target": "tag",
+    "source_type": "Repository",
+    "source": "firstdraft/skills",
+    "enforcement": "active",
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/promote-v*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ],
+    "node_id": "RRS_lACqUmVwb3NpdG9yec5ObCsOzgFd12c",
+    "created_at": "2026-09-11T09:26:06.658-05:00",
+    "updated_at": "2026-09-11T09:26:06.686-05:00",
+    "bypass_actors": [],
+    "current_user_can_bypass": "never",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/firstdraft/skills/rulesets/22927207"
+      },
+      "html": {
+        "href": "https://github.com/firstdraft/skills/rules/22927207"
+      }
+    }
+  },
+  "creation_rules": {
+    "id": 22927208,
+    "name": "Restrict npm promotion tag creation",
+    "target": "tag",
+    "source_type": "Repository",
+    "source": "firstdraft/skills",
+    "enforcement": "active",
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/promote-v*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "creation"
+      }
+    ],
+    "node_id": "RRS_lACqUmVwb3NpdG9yec5ObCsOzgFd12g",
+    "created_at": "2026-09-11T09:26:07.169-05:00",
+    "updated_at": "2026-09-11T09:26:07.192-05:00",
+    "bypass_actors": [
+      {
+        "actor_id": null,
+        "actor_type": "OrganizationAdmin",
+        "bypass_mode": "always"
+      }
+    ],
+    "current_user_can_bypass": "always",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/firstdraft/skills/rulesets/22927208"
+      },
+      "html": {
+        "href": "https://github.com/firstdraft/skills/rules/22927208"
+      }
+    }
+  },
+  "environment": {
+    "id": 21736428901,
+    "node_id": "EN_kwDOTmwrDs8AAAAFD5eVZQ",
+    "name": "npm-promotion",
+    "url": "https://api.github.com/repos/firstdraft/skills/environments/npm-promotion",
+    "html_url": "https://github.com/firstdraft/skills/deployments/activity_log?environments_filter=npm-promotion",
+    "created_at": "2026-09-11T14:26:07Z",
+    "updated_at": "2026-09-11T14:26:07Z",
+    "can_admins_bypass": false,
+    "protection_rules": [
+      {
+        "id": 65275373,
+        "node_id": "GA_kwDOTmwrDs4D5AXt",
+        "type": "required_reviewers",
+        "prevent_self_review": false,
+        "reviewers": [
+          {
+            "type": "User",
+            "reviewer": {
+              "login": "raghubetina",
+              "id": 811217,
+              "node_id": "MDQ6VXNlcjgxMTIxNw==",
+              "avatar_url": "https://avatars.githubusercontent.com/u/811217?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/raghubetina",
+              "html_url": "https://github.com/raghubetina",
+              "followers_url": "https://api.github.com/users/raghubetina/followers",
+              "following_url": "https://api.github.com/users/raghubetina/following{/other_user}",
+              "gists_url": "https://api.github.com/users/raghubetina/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/raghubetina/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/raghubetina/subscriptions",
+              "organizations_url": "https://api.github.com/users/raghubetina/orgs",
+              "repos_url": "https://api.github.com/users/raghubetina/repos",
+              "events_url": "https://api.github.com/users/raghubetina/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/raghubetina/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            }
+          }
+        ]
+      },
+      {
+        "id": 65275374,
+        "node_id": "GA_kwDOTmwrDs4D5AXu",
+        "type": "branch_policy"
+      }
+    ],
+    "deployment_branch_policy": {
+      "protected_branches": false,
+      "custom_branch_policies": true
+    }
+  },
+  "branch_policies": {
+    "total_count": 2,
+    "branch_policies": [
+      {
+        "id": 59715313,
+        "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k1OTcxNTMxMw==",
+        "name": "main",
+        "type": "branch"
+      },
+      {
+        "id": 59715312,
+        "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k1OTcxNTMxMg==",
+        "name": "promote-v*",
+        "type": "tag"
+      }
+    ]
+  },
+  "secret_metadata": {
+    "total_count": 1,
+    "secrets": [
+      {
+        "name": "NPM_PROMOTION_TOKEN",
+        "created_at": "2026-09-13T17:40:50Z",
+        "updated_at": "2026-09-13T17:40:50Z"
+      }
+    ]
+  },
+  "observed_at": "2026-09-15T04:11:19.384912+00:00",
+  "credential_values_read": false
+}

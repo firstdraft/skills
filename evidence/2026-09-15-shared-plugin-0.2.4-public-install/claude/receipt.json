@@ -1,0 +1,18 @@
+{
+  "client": "claude",
+  "client_version": "2.1.267 (Claude Code)",
+  "catalog_commit": "071aa964f3f851e50cf1725f31155e98e97d1d99",
+  "catalog_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/marketplaces/firstdraft-skills",
+  "plugin_id": "firstdraft@firstdraft-skills",
+  "plugin_version": "0.2.4",
+  "enabled": true,
+  "installed_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.4",
+  "skill_locator": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.4/skills/create-full-stack-app/SKILL.md",
+  "canonical_files_match": 9,
+  "bundled_cli_version": "0.2.2",
+  "no_global_cli": true,
+  "local_key_generation": true,
+  "credentials_supplied": false,
+  "model_or_firstdraft_service_invoked": false,
+  "public_commands_passed": true
+}

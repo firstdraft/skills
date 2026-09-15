@@ -1,0 +1,26 @@
+{
+  "credentials": {
+    "digest": "ce5ddeb111be91a32c8d2a395d7a1d6a167434e10c86a8f0660f02e7da24a467",
+    "present": false
+  },
+  "installedPlugins": {
+    "digest": "cbcd0119dbabf7a70a587018bf320cd10309d888ca523fab49d82816b8f2cf9c",
+    "present": true
+  },
+  "knownMarketplaces": {
+    "digest": "1ccbc7178ec77d37ea61fec3e5763a62664631990d48dcee5fc507b0fafcfd71",
+    "present": true
+  },
+  "pluginCatalog": {
+    "digest": "7cef628ee6e17cb123ac84e60b44d913bd7ebaf6e103a138a8ce6d60c9d4953d",
+    "present": true
+  },
+  "settings": {
+    "digest": "e1ef5263f09488860e9e461b463b5deda6e876503c0160a47e72e773a2f64feb",
+    "present": true
+  },
+  "settingsLocal": {
+    "digest": "ce5ddeb111be91a32c8d2a395d7a1d6a167434e10c86a8f0660f02e7da24a467",
+    "present": false
+  }
+}

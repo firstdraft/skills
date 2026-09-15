@@ -67,6 +67,8 @@ not establish a fresh hosted Compilation, authenticated student journey, or
 native session.
 
 At publication, the public catalog still selected 0.2.3. Catalog promotion,
-its subsequent fresh public installations, and npm `latest` promotion remain
-separate pending stages. No existing-install refresh or full student Codespace
-journey is claimed by this record.
+fresh public installations, and npm `latest` promotion were still pending.
+The later [public-install](2026-09-15-shared-plugin-0.2.4-public-install.md) and
+[default-promotion](2026-09-15-shared-plugin-0.2.4-default-promotion.md) records
+own those subsequent boundaries. No existing-install refresh or full student
+Codespace journey is claimed by this record.
