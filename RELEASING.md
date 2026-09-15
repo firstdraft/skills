@@ -14,11 +14,12 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 | Plugin npm `next` / `latest` | `0.2.3` / `0.2.3` |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
-| Service API contract | `>= 0.3.0`, `< 0.4.0` |
+| Service API contract | `>= 0.3.1`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
+API 0.3.1 adds optional redirect overrides; CLI still accepts the 0.3 family.
 The [promotion record](evidence/2026-09-13-shared-plugin-0.2.3-default-promotion.md) links publication,
 qualification, and installation receipts. Recheck before mutations.
 

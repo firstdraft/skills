@@ -35,7 +35,7 @@ test("release compatibility matches the installable plugin manifest", async () =
         "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
     },
     requires: {
-      api_contract: [">= 0.3.0", "< 0.4.0"],
+      api_contract: [">= 0.3.1", "< 0.4.0"],
       cli: [`= ${cliPackageVersion}`],
       foundation_plan_formats: [foundationPlanFormat],
     },
