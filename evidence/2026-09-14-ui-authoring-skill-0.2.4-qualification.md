@@ -68,17 +68,20 @@ sessions. All executions exited zero and preserved staged inputs.
 
 | Case | Claude | Codex |
 | --- | --- | --- |
-| Final UI foundation read-back | Correct core form, route, redirect, enum, and appearance account; extra Plan assumptions and a link-fallback omission remain | Correct core account; explicit POST, nested-parameter, and flat-member-route details are omitted |
+| Final UI foundation read-back | Correct core form, route, redirect, enum, and appearance account; incorrectly limits Add to the full collection page; extra Plan assumptions and a link-fallback omission remain | Correct core account; explicit POST, nested-parameter, and flat-member-route details are omitted |
 | Retained historical Appearance analysis | Preserves attached status, exact gap/digest, and authored intent; one early current-style sentence is overbroad before a correct stock-web-token clarification | Preserves attached historical status, exact gap/digest, and authored intent; does not restate the new web/native style boundary |
 | Retained private-native request | Preserves private staff access and both native requests; tentative JSONC is advisory, not a validated Plan | Preserves private staff access and both native requests; asks about staff eligibility |
 | Retained Android provider limit | Preserves WebView blocker, suitable local Emulator alternative, and GitHub-build/Revyl-device distinction | Preserves the same core boundary; suitable-local-computer wording remains implicit |
 
 The final read-backs both correctly explain the full collection destination,
-Add and the scoped form, scoped success return, editable enum labels without
+the scoped form, scoped success return, editable enum labels without
 changing stored keys, stock Zinc web tokens, native-only colors, and light
 by default. Neither repeats the obsolete “View all” label. Claude explicitly
-explains the POST destination and nested child parameters; its additional
-recommendations infer unstated Plan details and omit the selected-association
+explains the POST destination and nested child parameters, but incorrectly says
+Add is absent from the Movie detail. The Service places Add on both the detail
+collection card and the full collection page, independent of collection size.
+The superseded initial Claude response correctly described the card Add entry.
+The final response also infers unstated Plan details and omits the selected-association
 fallback when Credit has no show route. Codex's concise response omits the
 explicit POST/nested-parameter and flat-member-route distinctions. The reference
 states those details; these answers are not literal all-criteria passes or

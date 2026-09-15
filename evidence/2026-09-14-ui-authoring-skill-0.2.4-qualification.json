@@ -102,7 +102,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/preserve-partially-realized-appearance-intent/tool-trace.json",
       "declared_fixture_inputs": [
@@ -149,7 +149,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/private-native-request-preserves-current-boundary/tool-trace.json",
       "declared_fixture_inputs": [
@@ -188,7 +188,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/android-preview-respects-provider-limit/tool-trace.json",
       "declared_fixture_inputs": [
@@ -226,7 +226,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/preserve-partially-realized-appearance-intent/tool-trace.json",
       "declared_fixture_inputs": [
@@ -271,7 +271,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/private-native-request-preserves-current-boundary/tool-trace.json",
       "declared_fixture_inputs": [
@@ -312,7 +312,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/android-preview-respects-provider-limit/tool-trace.json",
       "declared_fixture_inputs": [
@@ -338,7 +338,7 @@
       "tool_trace_sha256": "96e865c481499a51c76971902784bdd1aebc189f41fe4f087e71103aaf1c1e41",
       "inputs_unchanged": true,
       "observations": [
-        "Correct core navigation, route-bound parent, nested params, scoped return, enum I18n, native-only colors, stock Zinc web tokens, and light default; no obsolete View all label.",
+        "Correct full collection destination, route-bound parent, nested params, scoped return, enum I18n, native-only colors, stock Zinc web tokens, and light default; no obsolete View all label. Add placement is incorrect: the response says it is absent from the Movie detail, while the Service places Add on both the detail collection card and full collection page, independent of collection size.",
         "Extra advisory recommendations infer missing Plan details and omit the selected-association fallback when Credit has no show route. This is not a validated Plan or full guarantee of the added recommendations."
       ],
       "public_web_search_calls": 0,
@@ -346,7 +346,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/claude/ui-foundation-read-back/tool-trace.json",
       "declared_fixture_inputs": []
@@ -374,7 +374,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/amendment/cases/codex/ui-foundation-read-back/tool-trace.json",
       "declared_fixture_inputs": []
@@ -396,7 +396,7 @@
       "tool_trace_sha256": "c8c637b138d8f23eddb64a0b853a894f54ceb5de4809b980a8f391b6e01a22b9",
       "inputs_unchanged": true,
       "observations": [
-        "Core scoped form, redirect, enum, and stock web/native style guidance is correct. Extra advisory prose calls Add a card entrypoint and omits the selected-association fallback when Credit has no show route."
+        "Core scoped form, redirect, enum, and stock web/native style guidance is correct. The card Add entrypoint is correctly described, unlike the final response that incorrectly limits Add to the full collection page. Extra advisory prose omits the selected-association fallback when Credit has no show route."
       ],
       "public_web_search_calls": 0,
       "private_state_contents_read": false,
@@ -404,7 +404,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/claude/ui-foundation-read-back/tool-trace.json",
       "declared_fixture_inputs": []
@@ -430,7 +430,7 @@
       "product_mutations": false,
       "artifact_directory": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back",
       "prompt": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/prompt.txt",
-      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/response.md",
+      "response": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/response.txt",
       "execution": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/execution.json",
       "tool_trace": "2026-09-14-ui-authoring-skill-0.2.4/initial/cases/codex/ui-foundation-read-back/tool-trace.json",
       "declared_fixture_inputs": []
@@ -447,7 +447,7 @@
   },
   "advisory_limits": [
     "Both historical Appearance answers preserve the exact attached analysis and authored intent; current web/native styling is not consistently distinguished or restated in that fixture. The separate final read-backs both state the current split correctly.",
-    "Claude final read-back adds assumptions about unstated Plan details and omits the selected-association fallback when Credit has no show route.",
+    "Claude final read-back incorrectly limits Add to the full collection page: the Service exposes Add there and on the detail collection card. It also adds assumptions about unstated Plan details and omits the selected-association fallback when Credit has no show route. The superseded initial response correctly described the card Add entry.",
     "Codex final read-back omits explicit POST destination, nested child params, and flat member-route details; the reference includes those unchanged details.",
     "Codex Android keeps the local Emulator alternative but leaves the suitable-local-computer prerequisite implicit, as in the previous 0.2.3 qualification.",
     "Private-native cases are advisory intent-preservation checks, not authored-Plan validation or proof of every suggested route/policy."
