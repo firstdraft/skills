@@ -1,0 +1,59 @@
+{
+  "observed_at": "2026-09-15T04:16:05.550Z",
+  "source": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+  "catalog_commit": "071aa964f3f851e50cf1725f31155e98e97d1d99",
+  "package_version": "0.2.4",
+  "package_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+  "canonical_skill_files": {
+    "skills/create-full-stack-app/LICENSE.txt": "76e6c24352bbf1faebee87707bf069d5c5dddbab827b8308e9def44589ed58b0",
+    "skills/create-full-stack-app/SKILL.md": "cbcbe18030d17e7557722a6d34a231992d023d7f165736d0a9974d8d57a90c97",
+    "skills/create-full-stack-app/agents/openai.yaml": "a8c7fdd2a8cfdebec754d77071fc0354ff44e00a5fdd299e3c1c1780b858108f",
+    "skills/create-full-stack-app/references/diagnostics-and-recovery.md": "5afa572d367931e7e485183b4fe351265a4aeaebd718ae351f023da0862b142e",
+    "skills/create-full-stack-app/references/examples.md": "3c2c344d66cba37567ae41b91d43848df76d53073f4ef336f453a38f2501aa3a",
+    "skills/create-full-stack-app/references/foundation-plan-0.19.schema.json": "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a",
+    "skills/create-full-stack-app/references/foundation-plan-019.md": "2b8f7d5a815741d137ae2bc08a06bb546c448a384619881f841d42401baa7f6a",
+    "skills/create-full-stack-app/references/modeling-guide.md": "b61b06829a4bce09b034e7912fa89ff87ff8e0a2e0d5b28935e2a2700a9ed6ac",
+    "skills/create-full-stack-app/scripts/firstdraft.sh": "2866e4e101dd4ba58446ccbb1f212a4ea7025782ede737091683dbced3b0c26e"
+  },
+  "clients": [
+    {
+      "client": "claude",
+      "client_version": "2.1.267 (Claude Code)",
+      "catalog_commit": "071aa964f3f851e50cf1725f31155e98e97d1d99",
+      "catalog_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/marketplaces/firstdraft-skills",
+      "plugin_id": "firstdraft@firstdraft-skills",
+      "plugin_version": "0.2.4",
+      "enabled": true,
+      "installed_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.4",
+      "skill_locator": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.4/skills/create-full-stack-app/SKILL.md",
+      "canonical_files_match": 9,
+      "bundled_cli_version": "0.2.2",
+      "no_global_cli": true,
+      "local_key_generation": true,
+      "credentials_supplied": false,
+      "model_or_firstdraft_service_invoked": false,
+      "public_commands_passed": true
+    },
+    {
+      "client": "codex",
+      "client_version": "codex-cli 0.154.0",
+      "catalog_commit": "071aa964f3f851e50cf1725f31155e98e97d1d99",
+      "catalog_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/codex/config/.tmp/marketplaces/firstdraft-skills",
+      "plugin_id": "firstdraft@firstdraft-skills",
+      "plugin_version": "0.2.4",
+      "enabled": true,
+      "installed_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/codex/config/plugins/cache/firstdraft-skills/firstdraft/0.2.4",
+      "skill_locator": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/codex/config/plugins/cache/firstdraft-skills/firstdraft/0.2.4/skills/create-full-stack-app/SKILL.md",
+      "canonical_files_match": 9,
+      "bundled_cli_version": "0.2.2",
+      "no_global_cli": true,
+      "local_key_generation": true,
+      "credentials_supplied": false,
+      "model_or_firstdraft_service_invoked": false,
+      "public_commands_passed": true
+    }
+  ],
+  "credentials_supplied": false,
+  "model_or_firstdraft_service_invoked": false,
+  "scope": "Fresh public installation only; no authentication, model behavior, service journey, existing-install refresh or deployment proof."
+}

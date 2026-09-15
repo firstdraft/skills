@@ -1,0 +1,111 @@
+[
+  {
+    "label": "no-global-cli",
+    "executable": "/bin/sh",
+    "arguments": [
+      "-c",
+      "if command -v firstdraft; then exit 1; else exit 0; fi"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 6
+  },
+  {
+    "label": "client-version",
+    "executable": "/Users/sandbox2/.local/share/claude/versions/2.1.267",
+    "arguments": [
+      "--version"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 100
+  },
+  {
+    "label": "public-marketplace-add",
+    "executable": "/Users/sandbox2/.local/share/claude/versions/2.1.267",
+    "arguments": [
+      "plugin",
+      "marketplace",
+      "add",
+      "firstdraft/skills"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 1978
+  },
+  {
+    "label": "catalog-revision",
+    "executable": "/usr/bin/git",
+    "arguments": [
+      "-C",
+      "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/marketplaces/firstdraft-skills",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 14
+  },
+  {
+    "label": "public-plugin-install",
+    "executable": "/Users/sandbox2/.local/share/claude/versions/2.1.267",
+    "arguments": [
+      "plugin",
+      "install",
+      "firstdraft@firstdraft-skills"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 1080
+  },
+  {
+    "label": "installed-inventory",
+    "executable": "/Users/sandbox2/.local/share/claude/versions/2.1.267",
+    "arguments": [
+      "plugin",
+      "list",
+      "--json"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 174
+  },
+  {
+    "label": "strict-plugin-validation",
+    "executable": "/Users/sandbox2/.local/share/claude/versions/2.1.267",
+    "arguments": [
+      "plugin",
+      "validate",
+      "--strict",
+      "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.4"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 177
+  },
+  {
+    "label": "bundled-helper-version",
+    "executable": "/bin/sh",
+    "arguments": [
+      "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.4/skills/create-full-stack-app/scripts/firstdraft.sh",
+      "--version"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 336
+  },
+  {
+    "label": "local-key-generation",
+    "executable": "/bin/sh",
+    "arguments": [
+      "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-catalog-release-024/tmp/catalog-preparation/run-2026-09-15T04-15-58-495Z/claude/plugins/cache/firstdraft-skills/firstdraft/0.2.4/skills/create-full-stack-app/scripts/firstdraft.sh",
+      "generate",
+      "application-key",
+      "--name",
+      "Public Install Smoke"
+    ],
+    "exit_code": 0,
+    "signal": null,
+    "duration_ms": 97
+  }
+]

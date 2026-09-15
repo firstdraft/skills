@@ -11,7 +11,7 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 | Qualified packed SHA-256 | `7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.4` |
 | Catalog manifest | Plugin `0.2.4` in `.claude-plugin/marketplace.json` |
-| Plugin npm `next` / `latest` | `0.2.4` / `0.2.3` |
+| Plugin npm `next` / `latest` | `0.2.4` / `0.2.4` |
 | Compatible CLI | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
 | Service API contract | `>= 0.3.1`, `< 0.4.0` |
@@ -20,8 +20,8 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
 API 0.3.1 permits omitted return overrides; CLI accepts 0.3.
-[Publication](evidence/2026-09-15-shared-plugin-0.2.4-publication.md) records registry qualification and staging.
-Catalog merge selects 0.2.4; public installs and `latest` promotion are pending. Recheck before mutations.
+[Release evidence](evidence/2026-09-15-shared-plugin-0.2.4-default-promotion.md) records public installs and
+reconciled defaults. Recheck before mutations.
 
 [CLI probe and plugin default writes are verified](evidence/2026-09-13-npm-token-write-verification.md).
 CLI default write is unexercised; probes are removed. Follow [setup](docs/npm-promotion.md#initial-setup-and-renewal).

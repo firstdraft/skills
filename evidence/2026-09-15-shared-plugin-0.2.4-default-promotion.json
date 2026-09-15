@@ -1,0 +1,60 @@
+{
+  "format": "firstdraft.npm-default-promotion/1",
+  "observed_at": "2026-09-15T04:19:29.762931+00:00",
+  "status": "promoted",
+  "promotion_tag": {
+    "name": "promote-v0.2.4",
+    "object": "403550bb322f43e1c8b020b2f4514620ef5d4073",
+    "commit": "071aa964f3f851e50cf1725f31155e98e97d1d99"
+  },
+  "workflow": "https://github.com/firstdraft/skills/actions/runs/34928251069",
+  "attempt": 1,
+  "catalog_ci": "https://github.com/firstdraft/skills/actions/runs/34928150872",
+  "catalog_commit": "071aa964f3f851e50cf1725f31155e98e97d1d99",
+  "skills_source": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+  "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+  "packages": [
+    {
+      "name": "@firstdraft.com/cli",
+      "version": "0.2.2",
+      "complete_tag_map": {
+        "next": "0.2.2",
+        "latest": "0.2.2"
+      },
+      "tarball_sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+      "tarball_bytes": 72936,
+      "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+    },
+    {
+      "name": "@firstdraft.com/claude-code",
+      "version": "0.2.4",
+      "complete_tag_map": {
+        "latest": "0.2.4",
+        "next": "0.2.4"
+      },
+      "tarball_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+      "tarball_bytes": 134442,
+      "integrity": "sha512-iMXeI9CDzMiON7cYQGkF//gHxTzLYla0ggilGD+u3t3wvbS0Wpe3mQHbym+rCTatAqbwAbznzleldHBTu/qawA=="
+    }
+  ],
+  "operations_summary": "One plugin latest write succeeded. The first readback retained the old latest and the second verified 0.2.4. CLI was already selected and no CLI write occurred.",
+  "npm_login_required": false,
+  "credential_values_read": false,
+  "public_install": "2026-09-15-shared-plugin-0.2.4-public-install.md",
+  "publication": "2026-09-15-shared-plugin-0.2.4-publication.md",
+  "qualification": "2026-09-14-ui-authoring-skill-0.2.4-qualification.md",
+  "companion": "2026-09-15-shared-plugin-0.2.4-default-promotion/README.md",
+  "file_sha256": {
+    "receipt.json": "5c1ac3deef0d3db5e29e960b36f0dba5bac159ff18ca726344704f9101b34cc6",
+    "preflight.json": "1eedb14017aa2c97ecc00a836c574e3f9726703084c3ccba54fdd294f28f6e5f",
+    "controls.json": "0f21b5f7d19d302b79c141cd8d3018bfece08286cb0b8489175baae65ff1717a",
+    "approval.json": "fe5f6ff5820a0870e0c41a049955cc1b92a39d0ea81f9bdfb4761e3e8d0f9e39",
+    "final-reconciliation.json": "53243706ddfb1ce60669b97bbba612bd4b5ba72ab44822e362e98652a6338f53"
+  },
+  "limits": [
+    "Promotion did not publish new package bytes or refresh existing installations.",
+    "Fresh public installation is separate from authentication, Compilation, a student Codespace journey, and native runtime.",
+    "CLI default write remains unexercised because 0.2.2 was already selected.",
+    "UI Skill selection and distribution remain deferred."
+  ]
+}

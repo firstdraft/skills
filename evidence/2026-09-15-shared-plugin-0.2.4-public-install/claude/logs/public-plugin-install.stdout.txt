@@ -1,0 +1,1 @@
+Installing plugin "firstdraft@firstdraft-skills"...✔ Successfully installed plugin: firstdraft@firstdraft-skills (scope: user)

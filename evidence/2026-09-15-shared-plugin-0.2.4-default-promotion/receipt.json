@@ -1,0 +1,95 @@
+{
+  "observed_at": "2026-09-15T04:18:51.483Z",
+  "mode": "promote",
+  "status": "promoted",
+  "operations": [
+    {
+      "package": "@firstdraft.com/cli",
+      "status": "already-selected",
+      "tags": {
+        "next": "0.2.2",
+        "latest": "0.2.2"
+      }
+    },
+    {
+      "package": "@firstdraft.com/claude-code",
+      "before": {
+        "next": "0.2.4",
+        "latest": "0.2.3"
+      },
+      "requested": {
+        "latest": "0.2.4"
+      },
+      "command_status": 0,
+      "readbacks": [
+        {
+          "next": "0.2.4",
+          "latest": "0.2.3"
+        },
+        {
+          "latest": "0.2.4",
+          "next": "0.2.4"
+        }
+      ],
+      "after": {
+        "latest": "0.2.4",
+        "next": "0.2.4"
+      },
+      "readback_status": "verified"
+    }
+  ],
+  "request": {
+    "ref": "refs/tags/promote-v0.2.4",
+    "run_id": "34928251069",
+    "attempt": "1"
+  },
+  "candidate": {
+    "plugin_version": "0.2.4",
+    "skills_source": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+    "cli_source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "catalog_commit": "071aa964f3f851e50cf1725f31155e98e97d1d99",
+    "packages": [
+      {
+        "name": "@firstdraft.com/cli",
+        "version": "0.2.2",
+        "tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2"
+        },
+        "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+        "integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg=="
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "version": "0.2.4",
+        "tags": {
+          "next": "0.2.4",
+          "latest": "0.2.3"
+        },
+        "sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+        "integrity": "sha512-iMXeI9CDzMiON7cYQGkF//gHxTzLYla0ggilGD+u3t3wvbS0Wpe3mQHbym+rCTatAqbwAbznzleldHBTu/qawA=="
+      }
+    ]
+  },
+  "final_verification": {
+    "status": "verified",
+    "packages": [
+      {
+        "name": "@firstdraft.com/cli",
+        "version": "0.2.2",
+        "tags": {
+          "next": "0.2.2",
+          "latest": "0.2.2"
+        }
+      },
+      {
+        "name": "@firstdraft.com/claude-code",
+        "version": "0.2.4",
+        "tags": {
+          "latest": "0.2.4",
+          "next": "0.2.4"
+        }
+      }
+    ]
+  }
+}
