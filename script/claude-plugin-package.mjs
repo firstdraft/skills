@@ -60,13 +60,13 @@ async function stagePortableManifests(target) {
     skills: "./skills/",
     interface: {
       displayName,
-      shortDescription: "Plan, compile, and extend an app with First Draft",
+      shortDescription: "Author and compile an application with First Draft",
       longDescription: identity.description,
       developerName: identity.author.name,
       category: "Developer Tools",
       capabilities: ["Read", "Write"],
       websiteURL: identity.homepage,
-      defaultPrompt: ["Help me plan, build, or extend my app with First Draft."],
+      defaultPrompt: ["Help me plan and build an app with First Draft."],
     },
   };
   await mkdir(path.join(target, ".codex-plugin"), {recursive: true});

@@ -13,9 +13,9 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 Targets plugin 0.2.4, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
 
-- It realizes bounded scalar, required-enum, relationship, Validation, Predicate, Ordering, State Machine,
-  Appearance, Web Account, Action Policy, Web Scaffold, development-data, and selected-iPhone/Android slices. Rails emits
-  authored theme/colors and derived favicon/PWA icons; emitted native launcher icons stay stock.
+- Bounded generation includes Web Accounts, Policies, Scaffolds, development data, and selected iPhone/Android
+  clients. Web uses stock Zinc tokens; Appearance controls theme, native colors, and Web icons. Omitted theme means
+  light; native launcher icons stay stock.
 - Required enums use Rails `enum` with inclusion and presence; scopes and instance methods are disabled.
   Compatible literal defaults work; database membership constraints and general rank behavior remain unsupported.
 - Bounded Account/Policy protects Web Scaffolds. Native clients require an admitted public index, are Account/Policy-free,

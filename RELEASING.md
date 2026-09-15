@@ -8,17 +8,18 @@ Coordinate `firstdraft/firstdraft`, `firstdraft/cli`, and `firstdraft/skills`.
 | Surface | Current identity |
 |---|---|
 | Package source candidate | `@firstdraft.com/claude-code@0.2.4` (unpublished; future tag `claude-v0.2.4`) |
-| Candidate packed SHA-256 | `21f99de8bb27a2645059ba2100ae29c0b9853f2d0ad0f93dab416f6b36b16c44` |
+| Candidate packed SHA-256 | `7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7` |
 | Public plugin package | `@firstdraft.com/claude-code@0.2.3` |
 | Public catalog | Plugin `0.2.3`, selected by `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.3` / `0.2.3` |
 | Compatible CLI candidate | `@firstdraft.com/cli@0.2.2` |
 | CLI npm `next` / `latest` | `0.2.2` / `0.2.2` |
-| Service API contract | `>= 0.3.0`, `< 0.4.0` |
+| Service API contract | `>= 0.3.1`, `< 0.4.0` |
 | Foundation Plan format | `firstdraft.foundation-plan.sketch/0.19` |
 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
+API 0.3.1 adds optional redirect overrides; CLI still accepts the 0.3 family.
 The [promotion record](evidence/2026-09-13-shared-plugin-0.2.3-default-promotion.md) links publication,
 qualification, and installation receipts. Recheck before mutations.
 
@@ -75,10 +76,10 @@ syntax; do not add compatibility aliases.
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
 
-For 0.2.4, run [UI continuation qualification](evals/ui-continuation/README.md),
-`private-native-request-preserves-current-boundary`, and `android-preview-respects-provider-limit` in both clients,
-plus both install checks and the CLI contract. Bind results to the same digest and generated app revisions.
-Keep the Revyl WebView blocker visible. The unchanged approval/Publication procedure below records 0.2.2 smokes.
+Candidate 0.2.4 packages only `create-full-stack-app`. Run the
+[authoring UI-foundation qualification](evals/create-full-stack-app/ui-foundation-release.md) against its exact digest
+and compatible CLI/Service identities. UI Skill selection and packaging remain deferred. The unchanged
+approval/Publication procedure below records 0.2.2 smokes and is not a new 0.2.4 gate.
 
 The 0.2.2 qualification used two human-observed approval smokes in separate continuing sessions:
 

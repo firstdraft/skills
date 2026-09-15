@@ -104,8 +104,9 @@ Scaffold with `native: {}` and may include or omit a domain. The admitted Scaffo
 the web without authentication. Confirm that exposure with the user before adding it; do not add it merely to satisfy
 the iPhone navigation requirement or silently discard private or broader access intent.
 
-Adding `appearance` to this candidate emits the selected theme and colors in generated Rails and selected-iOS
-shells, plus the adaptive SVG and deterministic PNG used by Rails favicon and PWA references. Because this example
+Adding `appearance` to this candidate selects the cross-client theme, native shell colors, and branding for the
+adaptive SVG and deterministic PNG used by Rails favicon and PWA references. Omitted theme means light; web
+components keep stock Zinc tokens. Because this example
 also emits iOS, a matching valid AnalysisRun still records the partial
 `foundation_plan.gap.appearance.icon_assets.not_generated` record at `/application/appearance` solely for the stock
 iOS AppIcon. Preserve the intentional Appearance request and report that precise reviewed delta rather than
@@ -161,7 +162,8 @@ subset. A conditional maximum does not become an unconditional form `maxlength`.
 This Scaffold fragment is one complete supported show-and-destroy shape for a `movie` Entity with owner-local
 `title` and `notes` short-text Fields and a required ordinary `director` Reference. The `movie.director` input names
 the Reference's mechanically derived forward Association. Its route order, public authorizations, nonempty create
-and update inputs, and return destinations are internally coherent; this is not the only admitted route combination.
+and update inputs, and default return destinations are internally coherent; this is not the only admitted route
+combination. Omitted `return_to` sends successful New/Edit to the saved Movie and destroy to the Movie index.
 
 ```jsonc
 {
@@ -190,13 +192,7 @@ and update inputs, and return destinations are internally coherent; this is not 
       { "field": "movie.notes" },
       { "association": "movie.director" }
     ],
-    "authorization": "public",
-    "return_to": {
-      "kind": "resource",
-      "entity": "movie",
-      "route": "show",
-      "record": { "from": "mutation_record" }
-    }
+    "authorization": "public"
   },
   "update": {
     "inputs": [
@@ -204,21 +200,10 @@ and update inputs, and return destinations are internally coherent; this is not 
       { "field": "movie.notes" },
       { "association": "movie.director" }
     ],
-    "authorization": "public",
-    "return_to": {
-      "kind": "resource",
-      "entity": "movie",
-      "route": "show",
-      "record": { "from": "mutation_record" }
-    }
+    "authorization": "public"
   },
   "destroy": {
-    "authorization": "public",
-    "return_to": {
-      "kind": "resource",
-      "entity": "movie",
-      "route": "index"
-    }
+    "authorization": "public"
   }
 }
 ```
@@ -227,6 +212,7 @@ Omit `show.projection` for descriptor-only detail. Without destroy, omit its rou
 Policy-controlled authorization, server bindings, Association or recursive projections, and other route subsets are
 assessed from their own structured prerequisites. This fragment demonstrates one public combination; use the current
 Foundation Plan reference and matching GapSet for any other authored consumer instead of generalizing from it.
+An intentional destination override can still supply `return_to`; ordinary defaults do not need to be repeated.
 
 ## One Entity with required and optional scalar Fields
 
@@ -357,7 +343,8 @@ key. If `medium` is renamed, update the default in the same candidate while pres
 `ordinal` when order is presentational rather than ranked.
 
 The current target emits this required enum as a non-null string with model inclusion and the literal `medium`
-default. It does not emit Rails `enum` helpers, a database membership constraint, or general ordinal-rank behavior.
+default. Supported form and projection labels use its authored names through Rails I18n; stored values remain keys.
+It does not emit Rails `enum` helpers, a database membership constraint, or general ordinal-rank behavior.
 Do not assume a blanket enum gap; inspect the matching analysis for any unsupported consumer.
 
 ## Web Account and protected profile
@@ -489,12 +476,7 @@ make this Account or profile available natively.
               {
                 "field": "user.time_zone"
               }
-            ],
-            "return_to": {
-              "kind": "resource",
-              "entity": "user",
-              "route": "profile"
-            }
+            ]
           },
           "update": {
             "authorization": {

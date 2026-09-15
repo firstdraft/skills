@@ -232,23 +232,24 @@
     },
     "appearance": {
       "title": "Appearance",
-      "description": "Brand values shared by every target. A color accepts a hex string or a light and dark pair.",
+      "description": "Native brand colors and a cross-target theme choice. A color accepts a hex string or a light and dark pair.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "tint_color": {
           "title": "Tint color",
-          "description": "The color of interactive elements such as links, buttons, and native tab selection.",
+          "description": "Native interaction tint and generated icon branding. Web components keep the target theme.",
           "$ref": "#/$defs/color"
         },
         "background_color": {
           "title": "Background color",
-          "description": "The application background, also used for the generated launch screen and icon field.",
+          "description": "The native application and launch background, also used for the generated icon field.",
           "$ref": "#/$defs/color"
         },
         "theme": {
           "title": "Theme",
-          "description": "Light and dark handling. Omission follows the viewer's system setting.",
+          "default": "light",
+          "description": "Light and dark handling across web and native clients. Omission means light; auto explicitly follows the system.",
           "oneOf": [
             {
               "const": "auto",
@@ -2984,24 +2985,6 @@
                 "contains": {
                   "const": "create"
                 }
-              },
-              "create": {
-                "type": "object",
-                "required": [
-                  "return_to"
-                ]
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "create": {
-                "not": {
-                  "type": "object",
-                  "required": [
-                    "return_to"
-                  ]
-                }
               }
             }
           }
@@ -3069,24 +3052,6 @@
                 "type": "array",
                 "contains": {
                   "const": "update"
-                }
-              },
-              "update": {
-                "type": "object",
-                "required": [
-                  "return_to"
-                ]
-              }
-            }
-          },
-          "else": {
-            "properties": {
-              "update": {
-                "not": {
-                  "type": "object",
-                  "required": [
-                    "return_to"
-                  ]
                 }
               }
             }
@@ -3282,8 +3247,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "authorization",
-        "return_to"
+        "authorization"
       ],
       "properties": {
         "projection": {
@@ -3333,7 +3297,7 @@
     },
     "scaffoldCreate": {
       "title": "Scaffold create",
-      "description": "User inputs, server-owned bindings, authorization, and any top-level new form's return destination.",
+      "description": "User inputs, server-owned bindings, authorization, and an optional successful-create return override.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -3364,7 +3328,7 @@
     },
     "scaffoldUpdate": {
       "title": "Scaffold update",
-      "description": "User inputs, authorization, and any top-level edit form's return destination.",
+      "description": "User inputs, authorization, and an optional successful-update return override.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -3388,12 +3352,11 @@
     },
     "scaffoldDestroy": {
       "title": "Scaffold destroy",
-      "description": "Authorization and the required return destination for an authored destroy interaction.",
+      "description": "Authorization and the optional return override for an authored destroy interaction.",
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "authorization",
-        "return_to"
+        "authorization"
       ],
       "properties": {
         "authorization": {
@@ -4794,7 +4757,7 @@
     },
     "returnTo": {
       "title": "Return to",
-      "description": "The one required destination carried by an authored HTML mutation interaction when claimed as realized. It is never a fallback.",
+      "description": "An optional destination override for an authored HTML mutation interaction. Omit it to use the interaction context default.",
       "oneOf": [
         {
           "title": "Current location",
@@ -4945,12 +4908,9 @@
     },
     "scaffoldCreateForm": {
       "title": "Associated create form",
-      "description": "A form that posts to the associated Entity's top-level create route and supplies the inverse Reference through the parent context.",
+      "description": "An associated-create entry point backed by the target Entity's selected create definition. Rails derives scoped New and POST routes and supplies the inverse Reference from the route-bound parent.",
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "return_to"
-      ],
       "properties": {
         "return_to": {
           "$ref": "#/$defs/returnTo"

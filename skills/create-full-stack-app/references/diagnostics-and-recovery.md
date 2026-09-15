@@ -228,12 +228,12 @@ Capabilities, Plan edits, or another Compile.
 #### UI continuation
 
 After the applicable GitHub checkpoint and app setup, continue already requested UI work in generated source.
-Read the app's `UI.md` and use `extend-app-ui` when installed; use `review-ui-consistency` for a requested comparison
-or review. Carry the user's design references into the first scaffold-shaping task. The app owns its theme,
-component contracts, and examples; neither this authoring Skill nor an upstream registry replaces that authority.
+Read the app's `UI.md` and actual shared components. Carry the user's design references into the first
+scaffold-shaping task. The app owns its theme, component contracts, and examples; neither this authoring Skill nor
+an upstream registry replaces that authority. Additional UI Skills are optional and are not included in this package.
 
 For apps using the new Rails UI, ordinary pages/forms remain ERB with Basecoat Vega and selected controls reuse
-shadcn islands through Turbo Mount. Older apps keep their existing stack unless migration is requested. A visual
+shadcn Base UI islands through Turbo Mount. Older apps keep their existing stack unless migration is requested. A visual
 continuation does not need another Plan submission, Compile, publication, or a new external integration. If the
 UI Skills are unavailable, follow the app's guidance directly rather than making installation a prerequisite.
 

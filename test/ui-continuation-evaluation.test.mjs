@@ -4,7 +4,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { canonicalPluginSkillNames } from "../script/claude-plugin-boundaries.mjs";
+import { canonicalSourceSkills } from "../script/claude-plugin-boundaries.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const evaluationRoot = path.join(repository, "evals", "ui-continuation");
@@ -29,7 +29,7 @@ test("offline UI cases supply bounded inputs and distinguish all Skill routes", 
     assert(entry.expectations.every((value) => typeof value === "string" && value.trim().length > 0));
     assert(Array.isArray(entry.expected_skills));
     assert.equal(new Set(entry.expected_skills).size, entry.expected_skills.length);
-    for (const name of entry.expected_skills) assert(canonicalPluginSkillNames.includes(name));
+    for (const name of entry.expected_skills) assert(Object.hasOwn(canonicalSourceSkills, name));
     routes.add(entry.expected_skills.join(","));
     for (const artifact of entry.artifacts) {
       assert.deepEqual(Object.keys(artifact).sort(), ["path", "role"]);
