@@ -1,0 +1,17 @@
+{
+  "observed_at": "2026-09-15T03:42:32.291Z",
+  "origin": "https://staging.firstdraft.com",
+  "source": "b472e310d216e710bc902e4e37e4a84ea2d46158",
+  "responses": [
+    {
+      "path": "/up",
+      "status": 200,
+      "api_contract": null
+    },
+    {
+      "path": "/v1/projects/00000000-0000-0000-0000-000000000000/analysis",
+      "status": 401,
+      "api_contract": "0.3.1"
+    }
+  ]
+}

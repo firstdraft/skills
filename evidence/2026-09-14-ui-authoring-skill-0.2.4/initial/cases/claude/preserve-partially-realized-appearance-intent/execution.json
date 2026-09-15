@@ -1,0 +1,12 @@
+{
+  "client": "claude",
+  "case": "preserve-partially-realized-appearance-intent",
+  "exit_code": 0,
+  "duration_seconds": 27.92,
+  "inputs_unchanged": true,
+  "work_files": [
+    ".firstdraft/foundation-plan.json",
+    ".firstdraft/state.json",
+    "appearance-issues-analysis.json"
+  ]
+}

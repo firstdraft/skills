@@ -1,0 +1,10 @@
+{
+  "client": "claude",
+  "case": "android-preview-respects-provider-limit",
+  "exit_code": 0,
+  "duration_seconds": 22.38,
+  "inputs_unchanged": true,
+  "work_files": [
+    "ANDROID_PREVIEW.md"
+  ]
+}

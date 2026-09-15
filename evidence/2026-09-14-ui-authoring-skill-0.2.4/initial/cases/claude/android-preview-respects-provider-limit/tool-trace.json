@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "firstdraft:create-full-stack-app"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/ANDROID_PREVIEW.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/private/tmp/fd-ui-authoring-claude-android-preview-respects-provider-limit/work/ANDROID_PREVIEW.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "ui-continuation|## UI continuation",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/diagnostics-and-recovery.md",
+      "output_mode": "content",
+      "-n": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/diagnostics-and-recovery.md",
+      "offset": 220,
+      "limit": 45
+    }
+  }
+]

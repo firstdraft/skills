@@ -1,0 +1,154 @@
+{
+  "format": "firstdraft.plugin-publication-observation/1",
+  "observed_at": "2026-09-15T03:49:32.411Z",
+  "package": "@firstdraft.com/claude-code",
+  "version": "0.2.4",
+  "source_sha": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+  "protected_tag": "claude-v0.2.4",
+  "protected_tag_object": "b1732f329516212b928e52682d729a47dc3c708c",
+  "publication_run": {
+    "id": 34926132617,
+    "url": "https://github.com/firstdraft/skills/actions/runs/34926132617",
+    "result": "success"
+  },
+  "sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+  "bytes": 134442,
+  "integrity": "sha512-iMXeI9CDzMiON7cYQGkF//gHxTzLYla0ggilGD+u3t3wvbS0Wpe3mQHbym+rCTatAqbwAbznzleldHBTu/qawA==",
+  "npm_processing": {
+    "accepted_at": "2026-09-15T03:45:41.5271311Z",
+    "notice": "Your package is being processed and may take a few minutes to become available.",
+    "initial_readbacks": [
+      {
+        "exact_version_http_status": 404,
+        "full_metadata_version_present": false
+      },
+      {
+        "at": "2026-09-15T03:47:22.680Z",
+        "full_metadata_http_status": 200,
+        "cache_status": "MISS",
+        "dist_tags": {
+          "latest": "0.2.3",
+          "next": "0.2.3"
+        },
+        "version_present": false
+      }
+    ],
+    "publication_invocations": 1,
+    "republish_attempted": false,
+    "registry_success_observed_at": "2026-09-15T03:49:28.565Z"
+  },
+  "dist_tags": {
+    "next": "0.2.4",
+    "latest": "0.2.3"
+  },
+  "catalog_at_publication": {
+    "source": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+    "version": "0.2.3"
+  },
+  "signature_and_provenance": {
+    "npm_audit_signatures_exit_code": 0,
+    "verified_package_registry_signatures": 1,
+    "verified_package_attestations": 1,
+    "predicate_type": "https://slsa.dev/provenance/v1",
+    "workflow": {
+      "ref": "refs/tags/claude-v0.2.4",
+      "repository": "https://github.com/firstdraft/skills",
+      "path": ".github/workflows/publish.yml"
+    },
+    "source_commit": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+    "builder": "https://github.com/actions/runner/github-hosted",
+    "invocation": "https://github.com/firstdraft/skills/actions/runs/34926132617/attempts/1",
+    "subject_sha512": "88c5de23d083ccc88e37b718406905fff807c53ccb6256b48208a5183faededdf0bdb4b45a97b79901dbca6fab0936ad02a6f001bce7ce57a5747053bbfa9ac0",
+    "subject_matches_download": true
+  },
+  "registry_install": {
+    "client_versions": {
+      "claude": "2.1.267",
+      "codex": "0.154.0"
+    },
+    "both_isolated_adapters_passed": true,
+    "canonical_skill_files_matched": 9,
+    "bundled_cli_version": "0.2.2",
+    "credentials_supplied": false,
+    "model_or_firstdraft_service_invoked": false,
+    "public_catalog_install": false
+  },
+  "cli": {
+    "source": "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "version": "0.2.2",
+    "sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+    "dist_tags": {
+      "next": "0.2.2",
+      "latest": "0.2.2"
+    },
+    "published_archive_matches_exact_source": {
+      "result": "equal",
+      "dimensions": [
+        "sorted member paths",
+        "member types",
+        "file bytes",
+        "every member mode"
+      ],
+      "member_count": 27,
+      "file_count": 27,
+      "gzip_bytes_equal": true
+    }
+  },
+  "staging": {
+    "revision": "b472e310d216e710bc902e4e37e4a84ea2d46158",
+    "both_deployments_live": true,
+    "api_contract": "0.3.1",
+    "web_health_observed_at": "2026-09-15T03:42:32.291Z",
+    "worker_observed_at": "2026-09-15T03:44:20.512234+00:00",
+    "analyzer_release": "foundation-plan-rails/application-2026-09-14-ui-foundation",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-14-ui-foundation",
+    "cores": {
+      "CorePackage": {
+        "revision": "6aa1793006adf4acc6c2e5ac41ff564adbb89005",
+        "sha256": "39df13eb56466005f539abe561ae00e276405372f4bc0fca6164f931ea2188c5",
+        "files": 210
+      },
+      "IosCorePackage": {
+        "revision": "7365ba0bf7ea5e6c8e8223d24e54cf685b067950",
+        "sha256": "11f6cfaf804eb153a38a82b16d1e915090fd871f13c2a2bdf3c46038528c44b7",
+        "files": 35
+      },
+      "AndroidCorePackage": {
+        "revision": "6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e",
+        "sha256": "858fcf1e55d39c09bfeb66c7cf0de9e0ae5e41c0833effdafc68d0db57522f1a",
+        "files": 84
+      }
+    },
+    "new_hosted_compile_or_authenticated_journey_claimed": false
+  },
+  "qualification": "2026-09-14-ui-authoring-skill-0.2.4-qualification.md",
+  "pending_at_observation": [
+    "catalog promotion and its exact merge receipt",
+    "fresh two-client public marketplace installation",
+    "npm latest promotion",
+    "fresh authenticated student Codespace journey"
+  ],
+  "companion_directory": "2026-09-15-shared-plugin-0.2.4-publication",
+  "companion_file_sha256": {
+    "commands.json": "09eff47c06f6f47966bdff8c0e6575694030a9e6376bbf2b0300e4903067ef95",
+    "deployment/live-deployments.json": "0430b9aeda9df6b09751a58a82ddf049f8f43543e9b1f40e7f82342fe90d61a6",
+    "deployment/web-health.json": "bd17f7ff13a85d807d4457064cc6c37f713562020f7b2140b8459f0c543c62fd",
+    "deployment/worker-runtime.json": "e0005a6e42a11b69a9141ea41e460c0cf5c10f0c5ba8d76f30c3ca353a00538a",
+    "environment-keys.json": "e3f639316d09157c5b109b61175da27e0d3b0ccfc186a9745ce52bb2f6e0fe0e",
+    "logs/claude-adapter.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "logs/claude-adapter.stdout.txt": "24ae0ffa38eab472d7064320ded002ca5be4533ab4284042dd31f14b6d23be41",
+    "logs/codex-adapter.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "logs/codex-adapter.stdout.txt": "c95053f84b65724fc564252adbe5104d47b9c1bb2a5bd2d781b5cd331809f099",
+    "logs/exact-registry-npm-install.stderr.txt": "28d8cd21b009ccb3704b4ea8b0ec52030110de6b30a214fefac8e5b3f5a68a82",
+    "logs/exact-registry-npm-install.stdout.txt": "d8ec9368443e8bac0208fec7940652a2f01896b66dcf47ec8c93675594ca780e",
+    "logs/extract-qualified-tarball.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "logs/extract-qualified-tarball.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "logs/registry-signature-and-attestation-verification.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "logs/registry-signature-and-attestation-verification.stdout.txt": "d6c98d41303a1d4376e2bcaae38fbf34cdd05591f0902f99a4f485ac18f70c70",
+    "publication-accepted.json": "dd32f3ddc0eb663246b1434e706293e96e5b0c0bd3eba7d0ebe13997eb107bdb",
+    "receipt.json": "6c8f10ac8ea411cdaad30b47e99751e7e4a2af999e5c4c1ce099b8c0445ae4e1",
+    "registry-attestations.json": "2fbf9e8cdb821097fdd1ee953560be1e6844eb926a45a1c598610a80139300c7",
+    "registry-package-proof.json": "eb13bed4acab227d49bf6d84714ca3d39d0f15570057898f4b14513a412cba78",
+    "registry-version.json": "97ea5a1ce3803fd481cbf0eb7df87fa624c31ded3bb9ac96de518714480db383"
+  }
+}

@@ -1,0 +1,2 @@
+Use the First Draft Skill for this advisory task. The staged Plan's Appearance, domain, selected iPhone client, and public-index Scaffold are intentional. It was accepted by plan push, and plan status --wait printed the attached valid analysis. Review every support gap, but do not compile it.
+Attached input files are available in the working directory: appearance-issues-analysis.json.

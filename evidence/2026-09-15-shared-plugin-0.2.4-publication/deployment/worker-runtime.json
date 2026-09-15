@@ -1,0 +1,37 @@
+{
+  "recorded_at": "2026-09-15T03:44:20.512234+00:00",
+  "capture_method": "Read-only Rails runner displayed in authenticated Render worker shell; Core .pinned validates archive digests",
+  "revision": "b472e310d216e710bc902e4e37e4a84ea2d46158",
+  "api": "0.3.1",
+  "analyzer": "foundation-plan-rails/application-2026-09-14-ui-foundation",
+  "compiler": "foundation-plan-rails/compiler-application-2026-09-14-ui-foundation",
+  "cores": {
+    "CorePackage": {
+      "revision": "6aa1793006adf4acc6c2e5ac41ff564adbb89005",
+      "sha256": "39df13eb56466005f539abe561ae00e276405372f4bc0fca6164f931ea2188c5",
+      "files": 210
+    },
+    "IosCorePackage": {
+      "revision": "7365ba0bf7ea5e6c8e8223d24e54cf685b067950",
+      "sha256": "11f6cfaf804eb153a38a82b16d1e915090fd871f13c2a2bdf3c46038528c44b7",
+      "files": 35
+    },
+    "AndroidCorePackage": {
+      "revision": "6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e",
+      "sha256": "858fcf1e55d39c09bfeb66c7cf0de9e0ae5e41c0833effdafc68d0db57522f1a",
+      "files": 84
+    }
+  },
+  "analyses_processing": 0,
+  "compilations_active": {},
+  "publications_nonterminal": {},
+  "claimed_jobs": 0,
+  "processes": {
+    "Worker": 3,
+    "Dispatcher": 1,
+    "Scheduler": 1,
+    "Supervisor(fork)": 1
+  },
+  "last_heartbeat": "2026-09-15 03:43:05 UTC",
+  "unproved": "No fresh hosted Compilation, authentication journey, or native session"
+}

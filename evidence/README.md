@@ -10,6 +10,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-14-ui-authoring-skill-0.2.4-qualification.md`](2026-09-14-ui-authoring-skill-0.2.4-qualification.md) | Local authoring-only package and client adapters, two final-digest advisory read-backs, and six retained original-digest cases with explicit limitations; [machine receipt](2026-09-14-ui-authoring-skill-0.2.4-qualification.json) |
 | [`2026-09-13-shared-plugin-0.2.3-public-install.md`](2026-09-13-shared-plugin-0.2.3-public-install.md) | Fresh public installation in Claude and Codex from exact catalog 0.2.3; [machine receipt](2026-09-13-shared-plugin-0.2.3-public-install.json) |
 | [`2026-09-13-native-preview-skill-0.2.3-qualification.md`](2026-09-13-native-preview-skill-0.2.3-qualification.md) | Local Android preview guidance, exact shared-package adapters, four scoped advisory cases, and retained failed attempts; [machine receipt](2026-09-13-native-preview-skill-0.2.3-qualification.json) |
 | [`2026-09-12-android-skill-0.2.3-final-qualification.md`](2026-09-12-android-skill-0.2.3-final-qualification.md) | Revised exact package, native reference reconciliation, deterministic permissions, and four fresh advisory cases; [machine receipt](2026-09-12-android-skill-0.2.3-final-qualification.json) |
@@ -31,6 +32,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-15-shared-plugin-0.2.4-publication.md`](2026-09-15-shared-plugin-0.2.4-publication.md) | Protected publication, delayed registry visibility, verified provenance, exact registry-package adapters, and observed staging readiness; public catalog installation and default promotion pending; [machine receipt](2026-09-15-shared-plugin-0.2.4-publication.json) |
 | [`2026-09-13-npm-token-write-verification.md`](2026-09-13-npm-token-write-verification.md) | CLI probe and plugin default writes verified; CLI default move unexercised; token DELETE returned 403 and interactive cleanup restored clean maps; [machine receipt](2026-09-13-npm-token-write-verification.json) |
 | [`2026-09-13-npm-token-cleanup.md`](2026-09-13-npm-token-cleanup.md) | Token cleanup still failed after cache revalidation; retained probe and diagnostic recovery boundary; [machine receipt](2026-09-13-npm-token-cleanup.json) |
 | [`2026-09-13-npm-promotion-cache-repair.md`](2026-09-13-npm-promotion-cache-repair.md) | Saved CLI policy, successful token addition, failed cleanup and manual reconciliation, plus an isolated npm cache regression; [machine receipt](2026-09-13-npm-promotion-cache-repair.json) |

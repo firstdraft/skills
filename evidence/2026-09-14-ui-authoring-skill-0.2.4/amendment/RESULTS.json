@@ -1,0 +1,218 @@
+{
+  "assembled_at_utc": "2026-09-15T03:28:41.477636+00:00",
+  "scope": "Bounded pre-publication collection-control wording amendment; local package and adapter checks plus two affected advisory reruns.",
+  "candidate": {
+    "skills_commit": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+    "skills_tree": "da8e7e7632447fc9aa423ab249082644c2fe5a10",
+    "service_commit": "790455f4a4e84a3898e6194dddc5cb7ab5d481e9",
+    "service_schema_source_commit": "3ab16255b3d03c7e588b5bc95a079e36d9923e03",
+    "cli_commit": "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "api_contract_minimum": "0.3.1",
+    "foundation_plan_version": "0.19"
+  },
+  "package": {
+    "name": "@firstdraft.com/claude-code",
+    "version": "0.2.4",
+    "source": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+    "tree": "da8e7e7632447fc9aa423ab249082644c2fe5a10",
+    "package_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+    "bytes": 134442,
+    "regular_files": 43,
+    "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release-view-more/firstdraft.com-claude-code-0.2.4.tgz",
+    "skills": [
+      "create-full-stack-app"
+    ]
+  },
+  "package_diff_record": "package-diff.json",
+  "schema_sha256": "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a",
+  "service_amendment_paths": [
+    "docs/architecture/design/foundation-plan-explorer/guide-content.js",
+    "docs/architecture/design/foundation-plan-explorer/rails-output.js",
+    "docs/architecture/design/screens.md",
+    "docs/architecture/targets/rails/profile.md",
+    "lib/foundation_plan/rails_target/compiler/web_scaffold_collections.rb",
+    "lib/foundation_plan/rails_target/compiler/web_scaffold_files.rb",
+    "script/support/compiler_associated_collections_runtime_smoke.rb",
+    "test/foundation_plan/rails_target/compiler/compile_captured_project_test.rb",
+    "test/foundation_plan/rails_target/compiler/web_scaffold_files_test.rb"
+  ],
+  "checks": {
+    "repository_tests": {
+      "passed": 121,
+      "failed": 0,
+      "skipped": 0
+    },
+    "deterministic_pack": "passed against CLI 799a184 under normal and restrictive umask",
+    "isolated_adapters": "Claude 2.1.267 and Codex 0.154.0 passed against new package; bundled CLI 0.2.2 local key generation without credentials/global CLI",
+    "logs_sha256": {
+      "checks/fd-ui-authoring-view-more-check.log": "419221746ff5f76440f8a689d5000a8fc2f9cb7076a3280ffae2e85ff17cef9c",
+      "checks/fd-ui-authoring-view-more-claude-install.log": "24ae0ffa38eab472d7064320ded002ca5be4533ab4284042dd31f14b6d23be41",
+      "checks/fd-ui-authoring-view-more-codex-install.log": "c95053f84b65724fc564252adbe5104d47b9c1bb2a5bd2d781b5cd331809f099",
+      "checks/fd-ui-authoring-view-more-package.log": "753e259d25c22780c5796c28bff22677379582a16795e0ab63bacb3b5d86d192"
+    }
+  },
+  "rerun_cases": [
+    {
+      "client": "claude",
+      "case": "ui-foundation-read-back",
+      "exit_code": 0,
+      "duration_seconds": 45.26,
+      "inputs_unchanged": true,
+      "work_files": [],
+      "package_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+      "source": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+      "prompt_unchanged": true,
+      "case_dir": "cases/claude/ui-foundation-read-back",
+      "files_sha256": {
+        "prompt.txt": "0f26b3bcda29e5cce40deec094483bcf8172469f38ca4805fead615810df4112",
+        "response.md": "8699be8c26b145f5c4a20e408fc20c984a8ae60afcab3c96f6d84fcd95b808e8",
+        "command.json": "9311b426532f1915786f8d7d00a492c934175a28233ba17cb66037aa6cd1a156",
+        "execution.json": "49d5397955b0d9074eaab6e4be80af53812ba723d85c04fe8c3947a683047975",
+        "input-hashes.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tool-trace.json": "96e865c481499a51c76971902784bdd1aebc189f41fe4f087e71103aaf1c1e41"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-view-more-claude-ui-foundation-read-back/transcript.jsonl",
+      "raw_transcript_sha256": "89ee4c9d9a420ddab8867cc22778b5fef9942c969b56da1f1a4920bdf432b271",
+      "observations": [
+        "Correct core navigation, route-bound parent, nested params, scoped return, enum I18n, native-only colors, stock Zinc web tokens, and light default; no obsolete View all label.",
+        "Extra advisory recommendations infer missing Plan details and omit the selected-association fallback when Credit has no show route. This is not a validated Plan or full guarantee of the added recommendations."
+      ],
+      "tool_call_counts": {
+        "Glob": 2,
+        "Grep": 2,
+        "Read": 1,
+        "Skill": 1
+      }
+    },
+    {
+      "client": "codex",
+      "case": "ui-foundation-read-back",
+      "exit_code": 0,
+      "duration_seconds": 43.35,
+      "inputs_unchanged": true,
+      "work_files": [
+        ".agents/skills/create-full-stack-app"
+      ],
+      "package_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+      "source": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+      "prompt_unchanged": true,
+      "case_dir": "cases/codex/ui-foundation-read-back",
+      "files_sha256": {
+        "prompt.txt": "0f26b3bcda29e5cce40deec094483bcf8172469f38ca4805fead615810df4112",
+        "response.md": "a565229fd0d7fefa6ca4940913c239d114d0e28fb472c3fad40864df79f0dfa0",
+        "command.json": "1a645326d8d9a105384a991319beb6c1bff0c79739990c405f934b68437c1efa",
+        "execution.json": "d65b2c7b72bbd379f02f0c62c1b4148f007cf55fc7e630745a70e5ba806a43d4",
+        "input-hashes.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+        "stderr.log": "95ee8df197522e33192b9c7a2402f1e3d3f12a71c239110ce9c37d25084baa96",
+        "tool-trace.json": "fc1794a95d19730fcdfd4ba91f9fd2e46a52354bb39f0bc04bcc7d946cd217e6"
+      },
+      "raw_transcript_path": "/private/tmp/fd-ui-authoring-view-more-codex-ui-foundation-read-back/transcript.jsonl",
+      "raw_transcript_sha256": "c4364731b05f2a9cd8ae047900494f68370a6f7f86f8da906fcfbc1fb0942fb7",
+      "observations": [
+        "Correct full collection/Add/scoped form/scoped return, enum I18n, native-only colors, stock Zinc web tokens, and light default; calls the entry View more.",
+        "The concise answer omits an explicit POST destination, nested child parameter example, and flat child member route distinction. Those details remain explicitly present in the unchanged reference. This is not a literal all-criteria pass."
+      ],
+      "tool_call_counts": {
+        "command_execution": 5,
+        "web_search": 1
+      }
+    }
+  ],
+  "reused_cases": [
+    {
+      "client": "claude",
+      "case": "preserve-partially-realized-appearance-intent",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "result_packet": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/RESULTS.json",
+      "case_dir": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/cases/claude/preserve-partially-realized-appearance-intent",
+      "response_sha256": "7a359f866febafd2e6ee52867bacee01511e6962576e3d083b36ad4d647511a3",
+      "input_hashes_sha256": "258720d0831b455fb5fa0cfa36a38056481fcf1563f48568d86d17cebf12b4b2",
+      "original_observations": [
+        "The answer initially describes theme and tint as honored by Rails and iOS, an overbroad current-boundary formulation. It subsequently states explicitly that native tint/background do not replace stock Zinc web tokens."
+      ],
+      "executed_again": false
+    },
+    {
+      "client": "claude",
+      "case": "private-native-request-preserves-current-boundary",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "result_packet": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/RESULTS.json",
+      "case_dir": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/cases/claude/private-native-request-preserves-current-boundary",
+      "response_sha256": "ab4ee5862de1743a770422f785896099d7543e8be7cd7d23fb843e91114789bc",
+      "input_hashes_sha256": "c49ad0e36dcca45f2e3cd539c9a1ebcb0e9883b641a391bd1af3ccc83e48dd4e",
+      "original_observations": [
+        "Advisory explanation preserves intent; its tentative JSONC policy sketch is not an authored or validated Plan and must not be treated as such."
+      ],
+      "executed_again": false
+    },
+    {
+      "client": "claude",
+      "case": "android-preview-respects-provider-limit",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "result_packet": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/RESULTS.json",
+      "case_dir": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/cases/claude/android-preview-respects-provider-limit",
+      "response_sha256": "ada948d561bc03a8c4834722a16e3722d062664239b50162ceaf129de4cd7664",
+      "input_hashes_sha256": "afd73db6137c0b0f521bf98cc38956566e5b3b7d607e388af70cf82070a09f72",
+      "original_observations": [],
+      "executed_again": false
+    },
+    {
+      "client": "codex",
+      "case": "preserve-partially-realized-appearance-intent",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "result_packet": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/RESULTS.json",
+      "case_dir": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/cases/codex/preserve-partially-realized-appearance-intent",
+      "response_sha256": "16a29e89d746ca3486400d4c939a630b85d03599fcf5c256fa6dc91f7cfe9d89",
+      "input_hashes_sha256": "258720d0831b455fb5fa0cfa36a38056481fcf1563f48568d86d17cebf12b4b2",
+      "original_observations": [
+        "The answer correctly reports the attached historical analysis and release identity but does not restate the current web/native color boundary. The separate UI read-back does state the current boundary correctly."
+      ],
+      "executed_again": false
+    },
+    {
+      "client": "codex",
+      "case": "private-native-request-preserves-current-boundary",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "result_packet": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/RESULTS.json",
+      "case_dir": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/cases/codex/private-native-request-preserves-current-boundary",
+      "response_sha256": "2c8ae1b55814bca08e93c51366bcea9258a17edccacc4b2d1439093cbe860515",
+      "input_hashes_sha256": "c49ad0e36dcca45f2e3cd539c9a1ebcb0e9883b641a391bd1af3ccc83e48dd4e",
+      "original_observations": [],
+      "executed_again": false
+    },
+    {
+      "client": "codex",
+      "case": "android-preview-respects-provider-limit",
+      "source_at_execution": "d8e2c40332321ad78638a75cf88659978511d4be",
+      "package_sha256_at_execution": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+      "result_packet": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/RESULTS.json",
+      "case_dir": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-evaluation/evidence/cases/codex/android-preview-respects-provider-limit",
+      "response_sha256": "cf82fce52f51bfa8503137fb497cab3a3f5b04dc5349e8a8b355fae3028a8831",
+      "input_hashes_sha256": "afd73db6137c0b0f521bf98cc38956566e5b3b7d607e388af70cf82070a09f72",
+      "original_observations": [
+        "The answer recommends a local Android Studio Emulator but omits an explicit suitable-local-computer prerequisite. This is the same advisory omission recorded for the prior 0.2.3 release."
+      ],
+      "executed_again": false
+    }
+  ],
+  "reuse_basis": "The sole packaged diff replaces the control-dependent noun phrase View all page with full collection page. The six retained cases have unchanged prompts, fixtures, and governing Appearance, private-native, and Android-provider sections. Their original package identity and limitations are preserved. Entire package input identity did change; these are reused observations, not fresh runs at the new digest.",
+  "limitations": [
+    "Both reruns completed without changing inputs; neither advisory response is claimed as an unqualified literal all-criteria pass.",
+    "No new hosted installation, Codespace, fresh sign-in, Compilation, native runtime, publication, catalog, or deployment proof.",
+    "No deferred UI Skill selection, editing, packaging, or model evaluation."
+  ],
+  "integrated_source_equivalence": {
+    "local_qualified_commit": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+    "merged_release_commit": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+    "shared_tree": "da8e7e7632447fc9aa423ab249082644c2fe5a10",
+    "git_diff_empty": true,
+    "qualification_reuse": "The merged source tree exactly equals the qualified local tree; package bytes and both fresh advisory inputs are unchanged."
+  },
+  "rerun_tool_scope": "Claude used Skill, Read, Glob, and Grep. Codex used five read-only shell commands and one web lookup of the exact Service profile URL. No First Draft API, Revyl, authentication, installation, Compile, or product mutation command was run."
+}

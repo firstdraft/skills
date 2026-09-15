@@ -1,0 +1,34 @@
+{
+  "recorded_at": "2026-09-15T03:48:17.588720+00:00",
+  "workflow_run": 34926132617,
+  "workflow_url": "https://github.com/firstdraft/skills/actions/runs/34926132617",
+  "workflow_result": "success",
+  "tag": "claude-v0.2.4",
+  "tag_object": "b1732f329516212b928e52682d729a47dc3c708c",
+  "source": "66eeb1ab330646e6d998ba1448c26c8b366ef806",
+  "package": "@firstdraft.com/claude-code",
+  "version": "0.2.4",
+  "expected_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+  "npm_accepted_at": "2026-09-15T03:45:41.5271311Z",
+  "npm_processing_notice": "Your package is being processed and may take a few minutes to become available.",
+  "sigstore_log_index": 2839040857,
+  "initial_readbacks": [
+    {
+      "exact_version_http_status": 404,
+      "full_metadata_version_present": false
+    },
+    {
+      "at": "2026-09-15T03:47:22.680Z",
+      "full_metadata_http_status": 200,
+      "cache_status": "MISS",
+      "dist_tags": {
+        "latest": "0.2.3",
+        "next": "0.2.3"
+      },
+      "version_present": false
+    }
+  ],
+  "publication_invocations": 1,
+  "republish_attempted": false,
+  "availability": "not yet observed in these initial reads"
+}

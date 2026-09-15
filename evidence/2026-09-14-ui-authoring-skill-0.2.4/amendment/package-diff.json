@@ -1,0 +1,17 @@
+{
+  "previous": {
+    "source": "8f9e3b28d1687432b18afe92550a3305b58136c9",
+    "package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407"
+  },
+  "candidate": {
+    "source": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+    "tree": "da8e7e7632447fc9aa423ab249082644c2fe5a10",
+    "package_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+    "bytes": 134442,
+    "regular_files": 43
+  },
+  "changed_packaged_files": {
+    "package/skills/create-full-stack-app/references/foundation-plan-019.md": "--- previous/package/skills/create-full-stack-app/references/foundation-plan-019.md\n\n+++ candidate/package/skills/create-full-stack-app/references/foundation-plan-019.md\n\n@@ -507,7 +507,7 @@\n\n or home fallback. An explicit override remains authored meaning and must itself be lowerable; it does not silently\n become a default. The browser supplies no destination URL, hidden return input, or history-based redirect.\n \n-Admitted details collections show a bounded preview with a separate paginated View all page. A supported\n+Admitted details collections show a bounded preview with a separate paginated full collection page. A supported\n `create_form` selects an Add entry point on that collection page and a dedicated scoped New page, such as\n `/movies/42/credits/new`, posting to `/movies/42/credits`. Rails supplies `params[:movie_id]` from the route; child\n attributes remain under `params[:credit]`. The authorized parent association builds the child, with no hidden\n"
+  },
+  "schema_sha256": "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a"
+}

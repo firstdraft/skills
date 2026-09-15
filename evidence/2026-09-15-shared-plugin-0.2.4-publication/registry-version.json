@@ -1,0 +1,80 @@
+{
+  "bin": {
+    "firstdraft": "bin/firstdraft"
+  },
+  "bugs": {
+    "url": "https://github.com/firstdraft/skills/issues"
+  },
+  "dist": {
+    "shasum": "c578bd4acf081c16db081639bb232d20ba183537",
+    "tarball": "https://registry.npmjs.org/@firstdraft.com/claude-code/-/claude-code-0.2.4.tgz",
+    "fileCount": 43,
+    "integrity": "sha512-iMXeI9CDzMiON7cYQGkF//gHxTzLYla0ggilGD+u3t3wvbS0Wpe3mQHbym+rCTatAqbwAbznzleldHBTu/qawA==",
+    "signatures": [
+      {
+        "sig": "MEUCIFZBuUHAMCw5HHqrRa/NYImxEkqLEeSrV6Iy2mDXo/Q4AiEAoKVO76YGyk5lhdFli1if7OZ8E3daU8aUdH9gY3z6mRI=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEUCIQCbAJiD7mvCRn2GRqpNVxM+Dy39+S0xlTwRhiwcu0ockAIgRgl583nh0j1eRscNhlMC8SMTQUFQiuZ+nLc/4IQ/L8U=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/@firstdraft.com%2fclaude-code@0.2.4",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 621752
+  },
+  "name": "@firstdraft.com/claude-code",
+  "type": "module",
+  "_from": "file:/home/runner/work/_temp/plugin/firstdraft.com-claude-code-0.2.4.tgz",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "MIT",
+  "_npmUser": {
+    "name": "GitHub Actions",
+    "email": "npm-oidc-no-reply@github.com",
+    "trustedPublisher": {
+      "id": "github",
+      "oidcConfigId": "oidc:dde159e8-1969-4d72-b7a6-43d7dd9531aa"
+    }
+  },
+  "homepage": "https://github.com/firstdraft/skills#readme",
+  "_resolved": "/home/runner/work/_temp/plugin/firstdraft.com-claude-code-0.2.4.tgz",
+  "_integrity": "sha512-iMXeI9CDzMiON7cYQGkF//gHxTzLYla0ggilGD+u3t3wvbS0Wpe3mQHbym+rCTatAqbwAbznzleldHBTu/qawA==",
+  "repository": {
+    "url": "git+https://github.com/firstdraft/skills.git",
+    "type": "git"
+  },
+  "_npmVersion": "11.16.0",
+  "description": "First Draft Foundation Plan authoring and UI development for Claude Code and Codex",
+  "directories": {},
+  "maintainers": [
+    {
+      "name": "raghubetina",
+      "email": "raghu@firstdraft.com"
+    },
+    {
+      "name": "bpurinton",
+      "email": "ben@firstdraft.com"
+    }
+  ],
+  "_nodeVersion": "24.18.0",
+  "publishConfig": {
+    "tag": "next",
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
+  },
+  "_hasShrinkwrap": false,
+  "_npmOperationalInternal": {
+    "tmp": "tmp/claude-code_0.2.4_1789444128317_0.8053638526695752",
+    "host": "s3://npm-registry-packages-npm-production"
+  },
+  "_id": "@firstdraft.com/claude-code@0.2.4",
+  "version": "0.2.4"
+}

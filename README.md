@@ -3,12 +3,12 @@
 This repository packages the portable agent instructions that turn a product conversation into a reviewed
 [Foundation Plan](https://github.com/firstdraft/firstdraft) and drive the First Draft authoring workflow. The
 canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI continuation follows the generated
-app's own design and components. Package contents in this checkout are a source candidate; the public catalog and
-Drawing Board pins determine what an installed workspace actually receives.
+app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
+actually receives.
 
-Candidate `0.2.4` updates the authoring Skill for the Compiler's UI foundation, with its exact digest in
+Plugin `0.2.4` updates the authoring Skill for the Compiler's UI foundation, with its exact digest in
 [release compatibility](release/compatibility.json). It packages only `create-full-stack-app`. The UI Skill
-auditions remain deferred source; the public catalog still selects published `0.2.3`.
+auditions remain deferred source.
 
 Trying First Draft as a tester? Start with the
 [Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
@@ -49,10 +49,10 @@ In Drawing Board, the Skill and CLI are already installed. Follow the
 Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
 conversation, run `codex resume` from the same workspace root.
 
-The public catalog selects shared plugin `0.2.3`, which includes the compatible CLI and discovers it in either
+The catalog manifest selects shared plugin `0.2.4`, which includes the compatible CLI and discovers it in either
 agent. Drawing Board supplies its own project wrapper and installed CLI. The
-[release receipt](evidence/2026-09-13-shared-plugin-0.2.3-publication.md) distinguishes package and controlled behavioral
-checks from the still-unproved fresh authenticated Codespace journey.
+[release receipt](evidence/2026-09-15-shared-plugin-0.2.4-publication.md) distinguishes registry-package and bounded
+advisory checks from public installation and the still-unproved fresh authenticated Codespace journey.
 
 Outside Drawing Board, Codex uses the same catalog as Claude. Install it with:
 

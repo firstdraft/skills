@@ -1,0 +1,42 @@
+{
+  "command": [
+    "/Users/sandbox2/.local/bin/claude",
+    "--print",
+    "--verbose",
+    "--output-format",
+    "stream-json",
+    "--no-session-persistence",
+    "--plugin-dir",
+    "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package",
+    "--add-dir",
+    "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package",
+    "--model",
+    "claude-opus-5[1m]",
+    "--restricted",
+    "--strict-mcp-config",
+    "--mcp-config",
+    "{\"mcpServers\":{}}",
+    "--setting-sources",
+    "",
+    "--no-chrome",
+    "--tools",
+    "Read,Glob,Grep,Skill",
+    "--allowedTools",
+    "Read,Glob,Grep,Skill",
+    "--permission-mode",
+    "dontAsk",
+    "--permission-prompts",
+    "none"
+  ],
+  "cwd": "/private/tmp/fd-ui-authoring-claude-private-native-request-preserves-current-boundary/work",
+  "case": "private-native-request-preserves-current-boundary",
+  "client": "claude",
+  "package_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package",
+  "package_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+  "skills_commit": "d8e2c40332321ad78638a75cf88659978511d4be",
+  "omitted_environment_prefixes": [
+    "FIRSTDRAFT_",
+    "CLAUDE_PLUGIN_OPTION_",
+    "REVYL_"
+  ]
+}

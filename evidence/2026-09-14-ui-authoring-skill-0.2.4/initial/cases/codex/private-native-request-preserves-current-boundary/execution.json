@@ -1,0 +1,12 @@
+{
+  "client": "codex",
+  "case": "private-native-request-preserves-current-boundary",
+  "exit_code": 0,
+  "duration_seconds": 39.64,
+  "inputs_unchanged": true,
+  "work_files": [
+    ".agents/skills/create-full-stack-app",
+    ".firstdraft/foundation-plan.json",
+    ".firstdraft/state.json"
+  ]
+}

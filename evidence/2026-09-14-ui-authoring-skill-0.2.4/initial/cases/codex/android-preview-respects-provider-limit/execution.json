@@ -1,0 +1,11 @@
+{
+  "client": "codex",
+  "case": "android-preview-respects-provider-limit",
+  "exit_code": 0,
+  "duration_seconds": 51.61,
+  "inputs_unchanged": true,
+  "work_files": [
+    ".agents/skills/create-full-stack-app",
+    "ANDROID_PREVIEW.md"
+  ]
+}

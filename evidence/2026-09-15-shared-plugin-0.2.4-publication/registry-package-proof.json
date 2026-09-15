@@ -1,0 +1,292 @@
+{
+  "observed_at": "2026-09-15T03:49:28.565Z",
+  "operation": "read-only registry and exact-source CLI archive reconciliation",
+  "source": {
+    "repository": "firstdraft/cli",
+    "revision": "799a184cb2453ceadf5575f7b46ba975e084f192",
+    "clean": true
+  },
+  "toolchain": {
+    "node": "v24.18.0",
+    "npm": "11.16.0"
+  },
+  "packages": {
+    "cli": {
+      "name": "@firstdraft.com/cli",
+      "version": "0.2.2",
+      "tarball_path": "/Users/sandbox2/code/firstdraft/ui-release-20260914/registry-published-024-visible/cli-published-0.2.2.tgz",
+      "tarball_sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+      "tarball_bytes": 72936,
+      "registry_tarball": "https://registry.npmjs.org/@firstdraft.com/cli/-/cli-0.2.2.tgz",
+      "registry_integrity": "sha512-Opdm+2+4k0qHE0tE2YStaEKn3LLdc4p8XBKWwjJCg1cO3LUWmY9MthbzTKsr/rU+PjOqSPZ94a9siBYAp92yBg==",
+      "registry_shasum": "70d88312205f0fcc503c342f86470600a9e3d680",
+      "dist_tags": {
+        "next": "0.2.2",
+        "latest": "0.2.2"
+      },
+      "repository": {
+        "url": "git+https://github.com/firstdraft/cli.git",
+        "type": "git"
+      },
+      "git_head": "799a184cb2453ceadf5575f7b46ba975e084f192",
+      "published_at": "2026-08-30T04:40:13.459Z",
+      "signatures": [
+        {
+          "sig": "MEQCIEpmkROFV38Md3MCC/jhKkkpD++b68+S/sYEv++cPhg1AiBt1ytc/oSGM8i+pGrxZMWjDGK7xSpTzAF7qw8mnDOcEA==",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        }
+      ],
+      "attestations": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@firstdraft.com%2fcli@0.2.2",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "candidate_024_published": false
+    },
+    "plugin": {
+      "name": "@firstdraft.com/claude-code",
+      "version": "0.2.4",
+      "tarball_path": "/Users/sandbox2/code/firstdraft/ui-release-20260914/registry-published-024-visible/plugin-published-0.2.4.tgz",
+      "tarball_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+      "tarball_bytes": 134442,
+      "registry_tarball": "https://registry.npmjs.org/@firstdraft.com/claude-code/-/claude-code-0.2.4.tgz",
+      "registry_integrity": "sha512-iMXeI9CDzMiON7cYQGkF//gHxTzLYla0ggilGD+u3t3wvbS0Wpe3mQHbym+rCTatAqbwAbznzleldHBTu/qawA==",
+      "registry_shasum": "c578bd4acf081c16db081639bb232d20ba183537",
+      "dist_tags": {
+        "next": "0.2.4",
+        "latest": "0.2.3"
+      },
+      "repository": {
+        "url": "git+https://github.com/firstdraft/skills.git",
+        "type": "git"
+      },
+      "published_at": "2026-09-15T03:48:48.408Z",
+      "signatures": [
+        {
+          "sig": "MEUCIFZBuUHAMCw5HHqrRa/NYImxEkqLEeSrV6Iy2mDXo/Q4AiEAoKVO76YGyk5lhdFli1if7OZ8E3daU8aUdH9gY3z6mRI=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQCbAJiD7mvCRn2GRqpNVxM+Dy39+S0xlTwRhiwcu0ockAIgRgl583nh0j1eRscNhlMC8SMTQUFQiuZ+nLc/4IQ/L8U="
+        }
+      ],
+      "attestations": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@firstdraft.com%2fclaude-code@0.2.4",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "candidate_024_published": true
+    }
+  },
+  "local_cli": {
+    "tarball_path": "/Users/sandbox2/code/firstdraft/ui-release-20260914/registry-published-024-visible/cli-local-pack/firstdraft.com-cli-0.2.2.tgz",
+    "tarball_sha256": "42814e22249da7f46a186814cbfcb883c62f081b6c25bd8951f54cb43bc1902a",
+    "tarball_bytes": 72936
+  },
+  "cli_comparison": {
+    "result": "equal",
+    "dimensions": [
+      "sorted member paths",
+      "member types",
+      "file bytes",
+      "every member mode"
+    ],
+    "member_count": 27,
+    "file_count": 27,
+    "gzip_bytes_equal": true
+  },
+  "cli_inventory": [
+    {
+      "path": "LICENSE",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 1081,
+      "sha256": "9c3808f57a6b972ee9aaae764631a24182517aad2b58fee91e2ea157cc0ee387"
+    },
+    {
+      "path": "README.md",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 5255,
+      "sha256": "36db4c3cbc5233f27e9133db664c4b40ab887e6c0e8faf8a287ae04f464ba72d"
+    },
+    {
+      "path": "RELEASING.md",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 14196,
+      "sha256": "d4bec3d734b0e497e4efc11ff69ee600818bf1791034cf5a1883b2c9ed895e36"
+    },
+    {
+      "path": "SECURITY.md",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 1100,
+      "sha256": "72957702132c9d8bc29fb88bc1daf1b3073a6e0b3682ed40d732ba96f5413e5c"
+    },
+    {
+      "path": "bin/firstdraft.js",
+      "type": "file",
+      "mode": "755",
+      "byte_size": 412,
+      "sha256": "fb4b86dd5f2b98a4b94c734b0624c7562ca3f0b1a931b0e7020e3113cea6e76b"
+    },
+    {
+      "path": "docs/README.md",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 4035,
+      "sha256": "8e837081dd5f1ce2dc75842b543b0e30235f858fe150199135a52b4f6bcc2327"
+    },
+    {
+      "path": "docs/commands.md",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 24211,
+      "sha256": "b90dd59cd106692103512be0ae64a36d3f2386d5ea6de19fbe66fa37e61c97c9"
+    },
+    {
+      "path": "docs/errors.md",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 14831,
+      "sha256": "e47fba9134b049c3e4a885307563d15e39c98ef7da0f1e85091360658cd89d2e"
+    },
+    {
+      "path": "docs/release-history.md",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 3375,
+      "sha256": "24e6e6dfcf12b06603363ed530ae355ba8709405b767fb9266d8402c664a6e60"
+    },
+    {
+      "path": "package.json",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 1334,
+      "sha256": "efed5ceea8a9c898876cfed568f2af187a31e2e542181fe617e7aaa7449e9501"
+    },
+    {
+      "path": "src/api-authentication.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 1029,
+      "sha256": "bb5a4f09e4ce9ac1da2e8c2518b06428e6de16ba1bc60b5842c8f6e40c1c0450"
+    },
+    {
+      "path": "src/api-response.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 4111,
+      "sha256": "be3e28db20a37dfdf478618f97251af6eb9fa458580541759918bce558c2ad39"
+    },
+    {
+      "path": "src/application-identity.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 3928,
+      "sha256": "0e64aa8a31c25c340382387c190bdbfd752f05ee45bc601901d47f2eca186a2d"
+    },
+    {
+      "path": "src/cli.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 67937,
+      "sha256": "ee2f44a27478fe2bd41750a46b3927d73f536504e910850ae4b05d24d98d0766"
+    },
+    {
+      "path": "src/commands/compilation.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 36212,
+      "sha256": "a41c8cbdeac20de1e5d9942451e060813bc3940402fb9ca79bbe9b91ab65d961"
+    },
+    {
+      "path": "src/commands/plan-compile.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 7407,
+      "sha256": "6654c3cd693a030e5cd5a34b817d39a975400e79581f63c2a450f37d86514cb6"
+    },
+    {
+      "path": "src/commands/plan-init.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 1918,
+      "sha256": "a9facc4f75bc3216a226ab3bb8d33f772c890540e79de84a5877405edac3dd50"
+    },
+    {
+      "path": "src/commands/plan-publish.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 35733,
+      "sha256": "4e6854069737f6a330d1ee3ce10800ab7ee0a5fcbea14183eed54c8ba87649a8"
+    },
+    {
+      "path": "src/commands/plan-push.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 8530,
+      "sha256": "709229d9e876f5cef1e3f8bd4d78f2506c7456f50cca6433ae60045d5f000c2a"
+    },
+    {
+      "path": "src/commands/plan-status.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 24093,
+      "sha256": "a0b816a26bcd7b3c82eff5337ec9da46e339e9db279bd2b11e3d89350efd2495"
+    },
+    {
+      "path": "src/compilation-artifact.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 24730,
+      "sha256": "010629aef25c554d8bb66d09994c00fede43d2337111cc17b02596b8f3b728ee"
+    },
+    {
+      "path": "src/file-system.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 307,
+      "sha256": "d32260635a2ed01cdc234e8ac47f8891660c4886f064311e46ee14d50f888c81"
+    },
+    {
+      "path": "src/plan-compile-progress.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 3959,
+      "sha256": "00521a6e2a7f1f8616c0dd8e38877a0786292ec37691e2615ffde776b9c997cb"
+    },
+    {
+      "path": "src/plan-state.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 5916,
+      "sha256": "63da7ebc0d4be0149eabe6780ab045d78d3a6dac6539e1d9ab2fe12528513e1b"
+    },
+    {
+      "path": "src/root-output.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 43766,
+      "sha256": "5cd7f410132c7dc66a8446bea59cb5b45884390c0d5cb1d2a51f66e49948bfaa"
+    },
+    {
+      "path": "src/uuid-v7.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 1561,
+      "sha256": "54bcd2042ece14c4a3465e58fd2ac62fa2e120bb3d3c78450adcac62a7239ea2"
+    },
+    {
+      "path": "src/version.js",
+      "type": "file",
+      "mode": "644",
+      "byte_size": 321,
+      "sha256": "3aa4e0918dea34379d4c3e89fd5c519a047b0a34de3b369e7a17e68d93ba4a75"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "purpose": "Resolve original Markdown response links without rewriting the recorded response bytes.",
+  "plans": "Copies of the declared repository fixture Plans; no private runtime state copied.",
+  "authoring_skill_archive_sha256": "90df9cd3cf21d15f39c667106be997c29358ddc8a58c20eb3159896ef9344407",
+  "authoring_skill_scope": "Only the three original authoring reference files needed by the retained response link; no additional Skill entrypoint or executable.",
+  "files": [
+    {
+      "path": "initial/cases/codex/preserve-partially-realized-appearance-intent/.firstdraft/foundation-plan.json",
+      "sha256": "52cdb2900607023ad9a10456af35231369bd27c3bf32786297fe3d3eea017a3f"
+    },
+    {
+      "path": "initial/cases/codex/private-native-request-preserves-current-boundary/.agents/skills/create-full-stack-app/references/examples.md",
+      "sha256": "3c2c344d66cba37567ae41b91d43848df76d53073f4ef336f453a38f2501aa3a"
+    },
+    {
+      "path": "initial/cases/codex/private-native-request-preserves-current-boundary/.agents/skills/create-full-stack-app/references/foundation-plan-0.19.schema.json",
+      "sha256": "5494a81d41d78bdedabfa58602c520da252201d0ec6fdf314be5eb6d4685805a"
+    },
+    {
+      "path": "initial/cases/codex/private-native-request-preserves-current-boundary/.agents/skills/create-full-stack-app/references/foundation-plan-019.md",
+      "sha256": "020221b8b46685d1d37f4546106a04af585d8865891eaf0a9ecf114ee882b638"
+    },
+    {
+      "path": "initial/cases/codex/private-native-request-preserves-current-boundary/.firstdraft/foundation-plan.json",
+      "sha256": "4e9af785e0805ad4d979294fee6c19be16e13b653bf3e5aa51f0d27901e76ff5"
+    }
+  ]
+}

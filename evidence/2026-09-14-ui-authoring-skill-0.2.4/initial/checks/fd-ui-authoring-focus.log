@@ -1,0 +1,44 @@
+✔ candidate protocol defines interview coverage and complete-candidate readiness (4.459334ms)
+✔ home-inventory corpus case probes consequential ambiguity without invented answers (1.649333ms)
+✔ packaged interview guidance keeps the opening turn focused on one product candidate (1.248125ms)
+✔ packaged workflow requires one exact semantic approval before remote Compile work (0.946667ms)
+✔ pre-Compile evals separate approval, diagnostics, and execution (2.32825ms)
+✔ evaluation harness exposes the representative Movie Catalog fixture (0.541541ms)
+✔ stagedInputs selects only staged input artifacts (0.1445ms)
+✔ evaluationCaseById rejects a missing case (0.244ms)
+✔ documentation roles are routed and retrieval-sized (37.622ms)
+✔ revision pins remain exhaustive across coordination surfaces (6.804375ms)
+✔ historical plugin receipts stay separate from current availability (32.507583ms)
+✔ fresh Claude Code evidence is exact and bounded (103.942416ms)
+✔ local-directory plugin evidence remains revision-scoped (1.301417ms)
+✔ canonical Skill sources follow the portable repository profile (17.636292ms)
+✔ Claude Code packaging selects canonical authoring source exactly once (65.057791ms)
+✔ repository inventory traverses .git directories and rejects unsafe .git entries (1.037875ms)
+✔ CI checks the exact modular CLI contract (2.961ms)
+✔ behavioral eval cases are well-formed and reference real fixtures (3.434083ms)
+✔ authored JSON examples parse and retain the pinned Plan contract (8.362708ms)
+✔ bounded importer prose remains bound to the exact allowlists (6.405667ms)
+✔ validator routing preserves validation boundaries (1.976417ms)
+✔ complete examples and eval Plans validate against the bundled exact schema (152.515084ms)
+✔ revision evals stage existing Plan identity and private state (1.004333ms)
+✔ subject identity evals use the public UUID generator (0.864417ms)
+✔ bounded import evals bind supported and unsupported Plan state (23.679875ms)
+✔ local capability check uses the shared helper for version and help probes (2.227917ms)
+✔ analysis status guidance follows the pinned CLI contract (3.734917ms)
+✔ product Compile and retained Compilation evals match the CLI contract (3.639334ms)
+✔ recovery evals stage and preserve existing Plan state (1.122375ms)
+✔ initialization recovery consumes the prepared CLI error envelope (0.789084ms)
+✔ malformed source fixture is bound to its coordinate diagnostic (0.703792ms)
+✔ every independently installed Skill retains the repository license (0.465375ms)
+✔ offline UI cases supply bounded inputs and distinguish all Skill routes (6.629375ms)
+✔ authoring release excludes the deferred UI Skill auditions (0.814792ms)
+✔ ordinary form routes validate without return overrides (91.273416ms)
+✔ default returns retain route coupling and closed authored context (0.43625ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 567.65075

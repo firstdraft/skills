@@ -1,0 +1,42 @@
+{
+  "command": [
+    "/Users/sandbox2/.local/bin/claude",
+    "--print",
+    "--verbose",
+    "--output-format",
+    "stream-json",
+    "--no-session-persistence",
+    "--plugin-dir",
+    "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release-view-more/package",
+    "--add-dir",
+    "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release-view-more/package",
+    "--model",
+    "claude-opus-5[1m]",
+    "--restricted",
+    "--strict-mcp-config",
+    "--mcp-config",
+    "{\"mcpServers\":{}}",
+    "--setting-sources",
+    "",
+    "--no-chrome",
+    "--tools",
+    "Read,Glob,Grep,Skill",
+    "--allowedTools",
+    "Read,Glob,Grep,Skill",
+    "--permission-mode",
+    "dontAsk",
+    "--permission-prompts",
+    "none"
+  ],
+  "cwd": "/private/tmp/fd-ui-authoring-view-more-claude-ui-foundation-read-back/work",
+  "case": "ui-foundation-read-back",
+  "client": "claude",
+  "package_root": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release-view-more/package",
+  "package_sha256": "7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7",
+  "skills_commit": "702f90e5dd7a30131b8291e28b2f4b8827d0cdd9",
+  "omitted_environment_prefixes": [
+    "FIRSTDRAFT_",
+    "CLAUDE_PLUGIN_OPTION_",
+    "REVYL_"
+  ]
+}

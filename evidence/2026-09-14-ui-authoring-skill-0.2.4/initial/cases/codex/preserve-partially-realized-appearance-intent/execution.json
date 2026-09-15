@@ -1,0 +1,13 @@
+{
+  "client": "codex",
+  "case": "preserve-partially-realized-appearance-intent",
+  "exit_code": 0,
+  "duration_seconds": 38.49,
+  "inputs_unchanged": true,
+  "work_files": [
+    ".agents/skills/create-full-stack-app",
+    ".firstdraft/foundation-plan.json",
+    ".firstdraft/state.json",
+    "appearance-issues-analysis.json"
+  ]
+}

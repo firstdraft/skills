@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "firstdraft:create-full-stack-app"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/private/tmp/fd-ui-authoring-claude-preserve-partially-realized-appearance-intent/work/appearance-issues-analysis.json"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/*",
+      "path": "/private/tmp/fd-ui-authoring-claude-preserve-partially-realized-appearance-intent/work"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/private/tmp/fd-ui-authoring-claude-preserve-partially-realized-appearance-intent/work/.firstdraft/foundation-plan.json"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "Appearance|appearance|icon",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-019.md",
+      "output_mode": "content",
+      "-n": true,
+      "-C": 3,
+      "head_limit": 120
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "ui-continuation|UI continuation",
+      "path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/diagnostics-and-recovery.md",
+      "output_mode": "content",
+      "-n": true,
+      "-i": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/diagnostics-and-recovery.md",
+      "offset": 222,
+      "limit": 30
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/Users/sandbox2/code/firstdraft/ui-migration-20260914/skills-authoring-release/tmp/authoring-release/package/skills/create-full-stack-app/references/foundation-plan-019.md",
+      "offset": 256,
+      "limit": 40
+    }
+  }
+]

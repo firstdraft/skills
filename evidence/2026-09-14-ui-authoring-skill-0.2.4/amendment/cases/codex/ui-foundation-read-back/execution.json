@@ -1,0 +1,10 @@
+{
+  "client": "codex",
+  "case": "ui-foundation-read-back",
+  "exit_code": 0,
+  "duration_seconds": 43.35,
+  "inputs_unchanged": true,
+  "work_files": [
+    ".agents/skills/create-full-stack-app"
+  ]
+}
