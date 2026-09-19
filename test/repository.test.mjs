@@ -106,9 +106,9 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "799a184cb2453ceadf5575f7b46ba975e084f192";
+  "137ef9ceff7469e43f072009e3bba941abc6cd4c";
 const cliContractRuntimeDigest =
-  "e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72";
+  "7e9fdcf42dd887a6e8f6d9f17755600aa3b841a282f7fcdfaff638fe4467cb28";
 const previousPublicCliContractBaseline =
   "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
 const previousPublicCliContractRuntimeDigest =
@@ -143,7 +143,7 @@ const freshModelPublicationTree =
   "5815d094e204f8b3928ff5b5467ef85e2551d109";
 const freshModelPublicationCommit =
   "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead";
-const preparedCliPackage = "@firstdraft.com/cli@0.2.2";
+const preparedCliPackage = "@firstdraft.com/cli@0.3.0";
 const previousPreparedCliPackage = "@firstdraft.com/cli@0.2.1";
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
@@ -408,9 +408,12 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     /CLI contract check requires a checkout at the exact reviewed revision/,
   );
   for (const source of [foundationPlanReference, diagnosticsReference]) {
-    assert(source.includes(`\`${preparedCliPackage}\``));
-    assert.match(source, /published under npm `next` with exact source-package parity/);
-    assert.match(source, /does not prove plugin(?:\/| or )catalog\s+publication/);
+    const packageParagraph = source.split(/\n\s*\n/).find((paragraph) =>
+      paragraph.includes(`\`${preparedCliPackage}\``),
+    );
+    assert(packageParagraph, "the reference must identify the prepared CLI package");
+    assert.match(packageParagraph, /\bunpublished\b/);
+    assert.match(source, /do not prove plugin(?:\/| or )catalog\s+publication/);
   }
 
   const workflow = (
@@ -538,7 +541,8 @@ test("historical plugin receipts stay separate from current availability", async
   for (const source of [candidateSkill, candidateModelingGuide]) {
     assert.doesNotMatch(source, /live [Pp]ublication remains unproved/);
   }
-  assert.match(candidateSkill, /published CLI 0\.2\.2/);
+  assert.match(candidateSkill, /CLI 0\.3\.0/);
+  assert.match(candidateSkill, /source candidate is unreleased/);
   assert.match(
     candidateSkill,
     /compatibility does not establish catalog selection/,
@@ -917,8 +921,8 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
     version: "0.2.5",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.2.5");
-  assert.equal(installableManifest.version, "0.2.5");
+  assert.equal(packageTemplate.version, "0.3.0");
+  assert.equal(installableManifest.version, "0.3.0");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);
@@ -3024,7 +3028,7 @@ test("local capability check uses the shared helper for version and help probes"
   );
   assert.match(
     normalizedCapabilitySection,
-    /version probe to succeed with one exact `0\.2\.2` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
+    /version probe to succeed with one exact `0\.3\.0` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
   );
   assert.match(
     normalizedCapabilitySection,
@@ -4065,8 +4069,8 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   hasExpectation(
     root,
-    "Plan and private CLI state moved to design/.firstdraft",
-    "later First Draft plan or compilation command from design",
+    "Plan and private CLI state moved to .firstdraft/design/.firstdraft",
+    "later First Draft plan or compilation command from .firstdraft/design",
     "never initializes a replacement Project",
   );
   hasExpectation(

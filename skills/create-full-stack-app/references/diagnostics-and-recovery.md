@@ -8,12 +8,12 @@ JSON object. An unrecognized prefixed line, a progress line after the envelope, 
 interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
 human-readable `detail` or broad process exit status.
 
-The reviewed CLI contract in this stack is revision
-`799a184cb2453ceadf5575f7b46ba975e084f192`, with JavaScript-source runtime digest
-`e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`. Its source package is
-`@firstdraft.com/cli@0.2.2`, published under npm `next` with exact source-package parity. Check the command surface
-rather than assuming the version alone establishes compatibility. CLI availability does not prove plugin/catalog
-publication, service authentication, staging compatibility, or a complete user journey.
+The reviewed source-candidate CLI is revision
+`137ef9ceff7469e43f072009e3bba941abc6cd4c`, with JavaScript-source runtime digest
+`7e9fdcf42dd887a6e8f6d9f17755600aa3b841a282f7fcdfaff638fe4467cb28`. Its source package is
+`@firstdraft.com/cli@0.3.0` and is unpublished. Check the command surface rather than assuming the version alone
+establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
+staging compatibility, or a complete user journey.
 
 ## Contents
 
@@ -131,6 +131,11 @@ is unclear, ask before the mutation rather than treating a generic Compile reque
 
 ### Direct local output
 
+CLI 0.3.0 archives the original workspace under `.firstdraft/design/`. This coordinated candidate is unpublished;
+published CLI 0.2.2 still uses top-level `design/`. Use an explicitly identified compatible source candidate for this
+flow; otherwise stop before root adoption and report the mismatch. Preserve the actual layout of an already
+materialized application; this change does not migrate it.
+
 `plan compile --output` accepts an absent destination or a spelling that resolves to the physical current directory.
 It validates the destination before Plan mutation, then starts one direct conditional Compilation. An absent path is
 checked again after analysis. Current-root adoption instead holds one owned transaction lock, rechecks the original
@@ -141,33 +146,41 @@ a retained download shortcut, or archive tooling.
 The ordinary `./application` path must remain absent. Current-root adoption is selected only by `.`, `./`, an absolute
 current-directory spelling, or another spelling resolving to the same physical directory. It is POSIX-only, applies
 to any eligible real directory rather than a Drawing Board-specific shape, and requires a writable directory other
-than the filesystem root with no top-level `design` or `.firstdraft-root-output`. Entries other than `.git` must be regular files
-or real same-filesystem directories. A Git root must have a clean tracked worktree and index, no unmerged or sparse
-state or in-progress Git operation, and no submodule metadata; untracked and ignored design material may remain.
-A directory nested inside another worktree is ineligible.
+than the filesystem root with no `.firstdraft/design` or top-level `.firstdraft-root-output`. Entries other than
+`.git` must be regular files or real same-filesystem directories. A Git root must have a clean tracked worktree and
+index, no unmerged or sparse state or in-progress Git operation, and no submodule metadata; untracked and ignored
+design material may remain. A directory nested inside another worktree is ineligible.
 
-On success, root adoption creates `design`, moves every preexisting non-Git top-level entry beneath it, installs the
-artifact at the root, and reports `root_adoption`. It preserves an existing root `.git` and history, prepares an index
-that stages tracked paths beneath `design` plus exact generated paths, and does not stage previously untracked or
-ignored files. A non-Git root stays non-Git. Inspect and commit the staged transformation before destructive Git
-restoration. The CLI never creates a repository in either direct mode. The existing `.firstdraft` Plan and private
-state move to `design/.firstdraft`; after success, run later First Draft `plan` and `compilation` commands from
-`design/`, never initialize a replacement Project in the generated application root. Use the generated root for
-ordinary application development.
+On success, root adoption preserves every preexisting non-Git top-level entry directly beneath `.firstdraft/design/`,
+installs the artifact at the root, and reports `root_adoption`. It preserves an existing root `.git` and history,
+prepares an index that stages tracked paths beneath `.firstdraft/design/` plus exact generated paths, and does not
+stage previously untracked or ignored files. A non-Git root stays non-Git. Inspect and commit the staged
+transformation before destructive Git restoration. The CLI never creates a repository in either direct mode.
+The existing `.firstdraft` Plan and private state move to `.firstdraft/design/.firstdraft/`; they remain separate from
+the generated root's
+`.firstdraft/submitted-foundation-plan.json` and `.firstdraft/gaps.json`, whose exact artifact bytes the CLI still
+verifies. After success, run later First Draft `plan` and `compilation` commands from `.firstdraft/design/`, never
+initialize a replacement Project in the generated application root. Use the generated root for ordinary application
+development; setup, preview, and tests do not require the archive. Retain it for later planning when useful.
 
 An `invalid_output_path` preflight makes no request. For an absent destination that appears during analysis, the
 second check may follow an accepted Plan push and analysis reads but still prevents Compilation. For root adoption,
 correct only the reported precondition or select an absent output; do not delete or overwrite owner material. A
 `materialization_failed` result with `reason: "root_rollback_incomplete"` retains the private
-`.firstdraft-root-output` journal. Do not delete it or run Git restoration commands: inspect the journal and restore
-its named index and paths to the recorded original identities before removing the transaction. Do not repeat an
+`.firstdraft-root-output` journal. Do not delete it or run Git restoration commands. Reconcile the journal with the
+current path identities; some moves may already have been reversed. Restore the exact original index through Git's
+index lock when applicable. Reverse the remaining `artifact_moves` in reverse recorded order, moving each
+destination back to its source, before reversing the remaining `design_moves` in reverse recorded order. Design
+destinations are inside transaction staging: reversing the generated `.firstdraft` artifact move returns the
+archive there before the original planning `.firstdraft` can return to the root. Never merge or overwrite either
+`.firstdraft` directory. Verify the recorded original snapshot before removing the transaction. Do not repeat an
 outcome-unknown push.
 
 Direct mode never starts GitHub Publication. Success writes one validated JSON object containing the Project,
 Compilation, absolute output path, file count, and manifest digest. Absent output contains only artifact files and
-creates no repository or `.git`. Root adoption additionally contains preserved `design` and existing `.git` paths
-and reports the move/index facts above. The CLI runs no formatter and repairs nothing. When absent output is nested
-in Drawing Board or another Git worktree, leave nested-Git initialization to that workspace's own workflow.
+creates no repository or `.git`. Root adoption additionally contains preserved `.firstdraft/design/` and existing
+`.git` paths and reports the move/index facts above. The CLI runs no formatter and repairs nothing. When absent
+output is nested in Drawing Board or another Git worktree, leave nested-Git initialization to that workspace's own workflow.
 
 Progress contains only the analysis and Compilation messages from the stable table below. Direct Compile itself
 creates no Publication or repository; report later GitHub publication or pushes separately. A direct wait timeout
@@ -182,9 +195,10 @@ output, then stop until First Draft or an operator reconciles the Project. Do no
 #### Root-adoption handoff
 
 After current-root adoption, the generated Rails application is the workspace root and the original design material
-is under `design/`. Keep the existing root `.git`, history, and remotes when present. With an existing Git root,
-inspect and commit the staged baseline before setup or feature work, keeping credentials such as `design/.env` and
-private CLI state ignored. Make **Create GitHub repository**, or **Push** when a remote exists, an early checkpoint.
+is under `.firstdraft/design/`. Keep the existing root `.git`, history, and remotes when present. With an existing Git
+root, inspect and commit the staged baseline before setup or feature work, keeping credentials such as
+`.firstdraft/design/.env` and private CLI state ignored. Make **Create GitHub repository**, or **Push** when a remote
+exists, an early checkpoint.
 Confirm that the destination and applicable remote writes are authorized; approval of direct Compile alone does
 not authorize them.
 If the user declines, report that the baseline remains local and continue their requested local work without asking again.
@@ -213,17 +227,18 @@ returned repository URL from the generated application's Git root:
 git remote add origin https://github.com/OWNER/REPO.git && git push -u origin HEAD
 ```
 
-Verify private visibility, the remote baseline commit, and the retained `design/` files before reporting the source
-published to GitHub. Report its URL and commit; send later commits with `git push`. After an ambiguous creation
-result, inspect the Codespace's repository association and the approved repository read-only before any retry.
+Verify private visibility, the remote baseline commit, and the retained `.firstdraft/design/` files before reporting
+the source published to GitHub. Report its URL and commit; send later commits with `git push`. After an ambiguous
+creation result, inspect the Codespace's repository association and the approved repository read-only before any retry.
 If creation succeeded but pushing failed, retain the repository and resolve the push failure without creating
 another one. This publishes the existing Git history; do not invoke zero-flag Compile or First Draft Publication
 to publish an already-compiled workspace.
 
 Follow the generated root's README for setup and boot, then continue requested feature work in ordinary Rails source.
-Do not run Drawing Board's moved `design/script/initialize-application` or `design/script/application-smoke`: those
-helpers belong to the optional nested `./application` mode. Adding application features does not require First Draft
-Capabilities, Plan edits, or another Compile.
+Do not run Drawing Board's moved `.firstdraft/design/script/initialize-application` or
+`.firstdraft/design/script/application-smoke`: those helpers belong to the optional nested `./application` mode.
+Use ordinary generated application and platform commands for preview and tests rather than archived helpers.
+Adding application features does not require First Draft Capabilities, Plan edits, or another Compile.
 
 #### UI continuation
 
@@ -362,8 +377,8 @@ or provenance-changing response requires reconciling the CLI and service contrac
    `compilation.head_source_sha256`;
 5. verifies transport metadata and exact bytes against the retained artifact digest, then validates the canonical
    Foundation Plan digest, envelope, manifest, paths, modes, Base64 contents, and file digests; and
-6. installs an absent private sibling tree with one atomic rename, or applies the same current-root transaction used
-   by direct Compile.
+6. installs an absent private sibling tree with one atomic rename, or applies direct Compile's
+   [current-root transaction and CLI compatibility boundary](#direct-local-output).
 
 `invalid_output_path` is safe to correct because no request was made. Preserve an existing destination; choose
 another absent path or correct only a named current-root precondition. Artifact or materialization errors are not a

@@ -22,9 +22,11 @@ import {
   storedApiUrl,
 } from "./config.mjs";
 import {
+  artifactFile,
   artifactResponse,
   compilationArtifact,
   compilationProjection,
+  gapSetDocument,
   jsonResponse,
 } from "./fixtures.mjs";
 import {
@@ -192,7 +194,14 @@ export async function verifyPackedExecutable(context) {
 
 async function verifyPackedDownload(context, project) {
   const retainedHead = "1".repeat(64);
-  const artifact = compilationArtifact(retainedHead);
+  const submittedPlan = readFileSync(path.join(project, ".firstdraft", "foundation-plan.json"));
+  const gapsSource = `${JSON.stringify(gapSetDocument({ headSourceSha256: retainedHead, graphVersion: 7 }), null, 2)}\n`;
+  const artifact = compilationArtifact(retainedHead, {
+    additionalFiles: [
+      artifactFile(".firstdraft/submitted-foundation-plan.json", submittedPlan, "compiler:context"),
+      artifactFile(".firstdraft/gaps.json", gapsSource, "compiler:context"),
+    ],
+  });
   const envelope = JSON.parse(artifact.source.toString("utf8"));
   assert.equal(envelope.provenance.head_source_sha256, retainedHead);
   assert.notEqual(envelope.provenance.foundation_plan.sha256, retainedHead);
@@ -270,7 +279,7 @@ async function verifyPackedDownload(context, project) {
       );
       assert.equal(
         readFileSync(
-          path.join(rootProject, "design", "product-notes.md"),
+          path.join(rootProject, ".firstdraft", "design", "product-notes.md"),
           "utf8",
         ),
         "Design notes\n",
@@ -278,11 +287,17 @@ async function verifyPackedDownload(context, project) {
       const rootBody = JSON.parse(rootResult.stdout);
       assert.equal(rootBody.output.path, realpathSync(rootProject));
       assert.deepEqual(rootBody.output.root_adoption, {
-        design_path: path.join(realpathSync(rootProject), "design"),
+        design_path: path.join(realpathSync(rootProject), ".firstdraft", "design"),
         moved_entry_count: 2,
         git_repository_preserved: false,
         git_index_replaced: false,
       });
+      assert.deepEqual(
+        readFileSync(path.join(rootProject, ".firstdraft", "submitted-foundation-plan.json")),
+        submittedPlan,
+      );
+      assert.equal(readFileSync(path.join(rootProject, ".firstdraft", "gaps.json"), "utf8"), gapsSource);
+      assert.equal(existsSync(path.join(rootProject, "design")), false);
       assert.deepEqual(requests.slice(2), [
         ["GET", `/v1/projects/${projectId}/compilations/${compilationId}`],
         [
@@ -331,6 +346,8 @@ async function verifyPackedGitRootDownload({
   git(root, ["init", "--quiet"]);
   git(root, ["config", "user.name", "First Draft Contract"]);
   git(root, ["config", "user.email", "contract@firstdraft.test"]);
+  const originalRemote = "https://github.com/firstdraft-contract/planning.git";
+  git(root, ["remote", "add", "origin", originalRemote]);
   const initialized = invokeExecutable(
     context.executable,
     ["plan", "init", "--name", "Movie Catalog"],
@@ -338,18 +355,22 @@ async function verifyPackedGitRootDownload({
   );
   assert.equal(initialized.status, 0);
   pinRemoteState(root, { apiUrl, projectIdentifier: projectId });
+  const originalState = readFileSync(path.join(root, ".firstdraft", "state.json"));
   writeFileSync(path.join(root, ".gitignore"), ".env\n");
   writeFileSync(path.join(root, "README.md"), "Design README\n");
   writeFileSync(path.join(root, ".env"), "SECRET=value\n");
   writeFileSync(path.join(root, "notes.md"), "Untracked notes\n");
   mkdirSync(path.join(root, "wireframes"));
   writeFileSync(path.join(root, "wireframes", "home.md"), "Home sketch\n");
-  git(root, ["add", ".gitignore", "README.md", ".firstdraft", "wireframes"]);
+  mkdirSync(path.join(root, "design"));
+  writeFileSync(path.join(root, "design", "sketch.md"), "Earlier design folder\n");
+  git(root, ["add", ".gitignore", "README.md", ".firstdraft", "wireframes", "design"]);
   git(root, ["commit", "--quiet", "-m", "Design application"]);
   const originalHead = git(root, ["rev-parse", "HEAD"]).trim();
   assert.deepEqual(git(root, ["ls-files"]).trim().split("\n").sort(), [
     ".gitignore",
     "README.md",
+    "design/sketch.md",
     "wireframes/home.md",
   ]);
   const requestCount = requests.length;
@@ -362,34 +383,38 @@ async function verifyPackedGitRootDownload({
   assert.equal(result.status, 0, result.stderr);
   const body = JSON.parse(result.stdout);
   assert.deepEqual(body.output.root_adoption, {
-    design_path: path.join(realpathSync(root), "design"),
-    moved_entry_count: 6,
+    design_path: path.join(realpathSync(root), ".firstdraft", "design"),
+    moved_entry_count: 7,
     git_repository_preserved: true,
     git_index_replaced: true,
   });
   assert.equal(git(root, ["rev-parse", "HEAD"]).trim(), originalHead);
+  assert.equal(git(root, ["remote", "get-url", "origin"]).trim(), originalRemote);
   assert.deepEqual(git(root, ["ls-files"]).trim().split("\n").sort(), [
+    ".firstdraft/design/.gitignore",
+    ".firstdraft/design/README.md",
+    ".firstdraft/design/design/sketch.md",
+    ".firstdraft/design/wireframes/home.md",
+    ".firstdraft/gaps.json",
+    ".firstdraft/submitted-foundation-plan.json",
     "app/models/movie.rb",
-    "design/.gitignore",
-    "design/README.md",
-    "design/wireframes/home.md",
     "ios/bin/ios",
   ]);
-  assert.equal(gitStatus(root, ["check-ignore", "design/.env"]), 0);
+  assert.equal(gitStatus(root, ["check-ignore", ".firstdraft/design/.env"]), 0);
   assert.equal(
-    gitStatus(root, ["check-ignore", "design/.firstdraft/state.json"]),
+    gitStatus(root, ["check-ignore", ".firstdraft/design/.firstdraft/state.json"]),
     0,
   );
   assert.equal(
-    gitStatus(root, ["ls-files", "--error-unmatch", "design/.firstdraft"]),
+    gitStatus(root, ["ls-files", "--error-unmatch", ".firstdraft/design/.firstdraft"]),
     1,
   );
   assert.equal(
-    gitStatus(root, ["ls-files", "--error-unmatch", "design/.env"]),
+    gitStatus(root, ["ls-files", "--error-unmatch", ".firstdraft/design/.env"]),
     1,
   );
   assert.equal(
-    gitStatus(root, ["ls-files", "--error-unmatch", "design/notes.md"]),
+    gitStatus(root, ["ls-files", "--error-unmatch", ".firstdraft/design/notes.md"]),
     1,
   );
   assert.equal(
@@ -397,18 +422,19 @@ async function verifyPackedGitRootDownload({
     false,
   );
   assert.equal(requests.length, requestCount + 2);
-  assert.equal(
-    readFileSync(
-      path.join(root, "design", ".firstdraft", "state.json"),
-      "utf8",
-    ).includes(projectId),
-    true,
+  assert.deepEqual(
+    readFileSync(path.join(root, ".firstdraft", "design", ".firstdraft", "state.json")),
+    originalState,
   );
   assert.equal(
     readFileSync(path.join(root, "app", "models", "movie.rb"), "utf8"),
     "class Movie < ApplicationRecord\nend\n",
   );
-  assert.equal(JSON.parse(artifact.source).files.length, 2);
+  for (const file of JSON.parse(artifact.source).files) {
+    assert.deepEqual(readFileSync(path.join(root, file.path)), Buffer.from(file.contents_base64, "base64"));
+  }
+  assert.equal(existsSync(path.join(root, "design")), false);
+  assert.equal(JSON.parse(artifact.source).files.length, 4);
 }
 
 function verifyPackedRootRefusals({ apiUrl, context, requests }) {
@@ -426,7 +452,7 @@ function verifyPackedRootRefusals({ apiUrl, context, requests }) {
     0,
   );
   pinRemoteState(reserved, { apiUrl, projectIdentifier: projectId });
-  mkdirSync(path.join(reserved, "design"));
+  mkdirSync(path.join(reserved, ".firstdraft", "design"));
   const reservedRequests = requests.length;
   const reservedResult = invokeExecutable(
     context.executable,
