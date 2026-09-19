@@ -324,6 +324,7 @@ export function compilationArtifact(
     provenanceAnalysisId = compilationAnalysisId,
     provenanceCompilerRelease = compilerRelease,
     provenanceTarget = compilationTarget,
+    additionalFiles = [],
   } = {},
 ) {
   const modelFile = artifactFile(
@@ -336,7 +337,8 @@ export function compilationArtifact(
   const files = [
     modelFile,
     artifactFile("ios/bin/ios", "#!/bin/sh\nexit 0\n", "core:ios", 0o755),
-  ];
+    ...additionalFiles,
+  ].sort((left, right) => left.path < right.path ? -1 : left.path > right.path ? 1 : 0);
   const metadata = {
     files: files.map(
       ({ path, sha256, mode, owner, source_subject_uuids }) => ({
@@ -422,7 +424,7 @@ export function problemResponse(
   );
 }
 
-function artifactFile(path, contents, owner, mode = 0o644) {
+export function artifactFile(path, contents, owner, mode = 0o644) {
   const source = Buffer.from(contents);
   return {
     path,

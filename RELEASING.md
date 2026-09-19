@@ -8,7 +8,6 @@ Coordinate the service, CLI, and Skills. [History](evidence/release-history.md) 
 |---|---|
 | Released plugin source | `@firstdraft.com/claude-code@0.2.5`, tag `claude-v0.2.5` |
 | Qualified packed SHA-256 | `d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6` |
-| Public plugin package | `@firstdraft.com/claude-code@0.2.5` |
 | Catalog manifest | Plugin `0.2.5` in `.claude-plugin/marketplace.json` |
 | Plugin npm `next` / `latest` | `0.2.5` / `0.2.5` |
 | Compatible CLI | `@firstdraft.com/cli@0.2.2` |
@@ -18,7 +17,12 @@ Coordinate the service, CLI, and Skills. [History](evidence/release-history.md) 
 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
-API 0.3.1 permits omitted return overrides; CLI accepts 0.3.
+
+Unpublished candidate `@firstdraft.com/claude-code@0.3.0` requires `@firstdraft.com/cli@0.3.0` for `.firstdraft/design/`.
+The breaking root-adoption contract needs both minor bumps; API/Plan ranges and public selections stay unchanged.
+Packed SHA-256 `9648469aea9a3f0959e1e4eabde6626edc381d2f3b24ac3cb99be26176edf41b` does not prove registry parity
+or hosted root adoption.
+
 [Release evidence](evidence/2026-09-15-account-authoring-0.2.5.md) records each completed qualification and
 distribution step. Recheck before mutations.
 
@@ -74,10 +78,6 @@ syntax; do not add compatibility aliases.
 6. Define the release-specific qualification before publication. Bind it to the packed digest and compatible CLI
    and service identities. Candidate compatibility and local validation never prove authentication, service
    compatibility, a fresh public install, a successful Compile, or GitHub Publication.
-
-Source `@firstdraft.com/claude-code@0.2.5` has SHA-256
-`d9f466076a05e867019bc3e20c35b89076cc83195e781d9203c039d166becde6`.
-[Qualification](evidence/2026-09-15-account-authoring-0.2.5.md) covers Account guidance; UI Skills stay deferred.
 
 Plugin 0.2.4's [Qualification](evidence/2026-09-14-ui-authoring-skill-0.2.4-qualification.md) records the
 [defined checks](evals/create-full-stack-app/ui-foundation-release.md) and limits.

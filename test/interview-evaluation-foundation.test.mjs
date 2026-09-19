@@ -655,8 +655,8 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert(
     expectationIncludes(
       root,
-      "Plan and private CLI state moved to design/.firstdraft",
-      "later First Draft plan or compilation command from design",
+      "Plan and private CLI state moved to .firstdraft/design/.firstdraft",
+      "later First Draft plan or compilation command from .firstdraft/design",
       "never initializes a replacement Project",
     ),
   );

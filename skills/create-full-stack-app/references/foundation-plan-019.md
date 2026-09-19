@@ -116,17 +116,18 @@ The bundled schema was copied byte-for-byte from
 `c13aff4894073ea88fcf48c1f9900039e8b83966dee90591a7caa71421a5a666`. This is exact contract provenance, not
 release or execution evidence.
 
-The current fixtures and check use reviewed root-output CLI revision
-`799a184cb2453ceadf5575f7b46ba975e084f192`, with JavaScript-source runtime digest
-`e48e4b583e6f06a1d7a50aa19a87da2b24b225eaa5806f3130b9ad4ba6c43a72`, as contract provenance rather than release
+The source candidate and pinned contract check use reviewed root-output CLI revision
+`137ef9ceff7469e43f072009e3bba941abc6cd4c`, with JavaScript-source runtime digest
+`7e9fdcf42dd887a6e8f6d9f17755600aa3b841a282f7fcdfaff638fe4467cb28`, as contract provenance rather than release
 or execution evidence. It exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, zero-flag `plan compile`, direct `plan compile --output`, `compilation status`, and
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-experimental `@firstdraft.com/cli@0.2.2` package. Direct output accepts the ordinary absent destination and, on
-POSIX, explicit current-root adoption with `--output .`; the recovery reference owns its preconditions. CLI 0.2.2 is
-published under npm `next` with exact source-package parity. Check commands rather than inferring compatibility from
-a version number. CLI availability does not prove plugin/catalog publication, authentication, staging compatibility,
-or a complete user journey.
+unpublished `@firstdraft.com/cli@0.3.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
+explicit current-root adoption with `--output .`; the recovery reference owns its preconditions. Check commands
+rather than inferring compatibility from a version number. These source checks do not prove plugin/catalog
+publication, authentication, staging compatibility, or a complete user journey.
+CLI 0.3.0 uses `.firstdraft/design/`; published CLI 0.2.2 still uses top-level `design/`. See the
+[direct-output compatibility boundary](diagnostics-and-recovery.md#direct-local-output).
 
 Selected native projects compose separate pinned Cores under `ios/` and `android/`. Each emitted
 `FOUNDATION_PROVENANCE.json` records the exact revision, archive digest, and replaced application seams. Use the

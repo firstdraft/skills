@@ -19,9 +19,11 @@ import {
 import {
   acceptedPlanResponse,
   analysisProjection,
+  artifactFile,
   artifactResponse,
   compilationArtifact,
   compilationProjection,
+  gapSetDocument,
   jsonResponse,
   problemResponse,
   publicationProjection,
@@ -56,10 +58,15 @@ async function verifyHappyRootCompile(context, planSource) {
   });
   writeFileSync(path.join(cwd, "product-notes.md"), "Design notes\n");
   const digest = sha256(planSource);
+  const gapsSource = `${JSON.stringify(gapSetDocument({ headSourceSha256: digest }), null, 2)}\n`;
   const artifact = compilationArtifact(digest, {
     foundationPlanSha256: digest,
     provenanceGraphVersion: 1,
     provenanceAnalysisId: analysisId,
+    additionalFiles: [
+      artifactFile(".firstdraft/submitted-foundation-plan.json", planSource, "compiler:context"),
+      artifactFile(".firstdraft/gaps.json", gapsSource, "compiler:context"),
+    ],
   });
   const queued = compilationProjection("queued", {
     headSourceSha256: digest,
@@ -100,10 +107,10 @@ async function verifyHappyRootCompile(context, planSource) {
     compilation: succeeded.compilation,
     output: {
       path: realpathSync(cwd),
-      file_count: 2,
+      file_count: 4,
       manifest_sha256: artifact.manifestSha256,
       root_adoption: {
-        design_path: path.join(realpathSync(cwd), "design"),
+        design_path: path.join(realpathSync(cwd), ".firstdraft", "design"),
         moved_entry_count: 2,
         git_repository_preserved: false,
         git_index_replaced: false,
@@ -122,15 +129,22 @@ async function verifyHappyRootCompile(context, planSource) {
     "class Movie < ApplicationRecord\nend\n",
   );
   assert.equal(
-    readFileSync(path.join(cwd, "design", "product-notes.md"), "utf8"),
+    readFileSync(path.join(cwd, ".firstdraft", "design", "product-notes.md"), "utf8"),
     "Design notes\n",
   );
   assert.equal(
     readFileSync(
-      path.join(cwd, "design", ".firstdraft", "foundation-plan.json"),
+      path.join(cwd, ".firstdraft", "design", ".firstdraft", "foundation-plan.json"),
     ).equals(planSource),
     true,
   );
+  assert.deepEqual(
+    readFileSync(path.join(cwd, ".firstdraft", "submitted-foundation-plan.json")),
+    planSource,
+  );
+  assert.equal(readFileSync(path.join(cwd, ".firstdraft", "gaps.json"), "utf8"), gapsSource);
+  assert.equal(existsSync(path.join(cwd, ".firstdraft", "design", ".firstdraft", "state.json")), true);
+  assert.equal(existsSync(path.join(cwd, "design")), false);
   assert.equal(existsSync(path.join(cwd, ".firstdraft-root-output")), false);
   assert.equal(existsSync(path.join(cwd, ".git")), false);
   assert.deepEqual(

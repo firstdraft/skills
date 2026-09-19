@@ -6,9 +6,10 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
 
-Plugin `0.2.5` documents default Account settings and observed service release identities, with its digest in
-[release compatibility](release/compatibility.json). It packages only `create-full-stack-app`. The UI Skill
-auditions remain deferred source.
+Source candidate `0.3.0` requires CLI `0.3.0` and preserves the planning workspace under `.firstdraft/design/` after
+root adoption. Its identities belong in [release compatibility](release/compatibility.json); it is unpublished.
+The public catalog remains on plugin `0.2.5`. Only `create-full-stack-app` is packaged; the UI Skill auditions remain
+deferred source.
 
 Trying First Draft as a tester? Start with the
 [Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).

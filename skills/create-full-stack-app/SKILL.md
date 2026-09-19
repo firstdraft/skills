@@ -11,7 +11,8 @@ workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
 ## Current boundary
 
-Targets plugin 0.2.5, published CLI 0.2.2, and service contract 0.3; compatibility does not establish catalog selection.
+Targets plugin 0.3.0, CLI 0.3.0, and service contract 0.3; compatibility does not establish catalog selection.
+This source candidate is unreleased.
 
 - Bounded generation includes Web Accounts, Policies, Scaffolds, development data, and selected iPhone/Android
   clients. Web uses stock Zinc tokens; Appearance controls theme, native colors, and Web icons. Omitted theme means
@@ -87,7 +88,7 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.2.2` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.3.0` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Existing cross-repository contract tests own the exhaustive leaf-command
 matrix, including separate stdout and stderr assertions; startup should not rediscover it through a synthesized
 shell loop. The compatible CLI supplies these public commands:
@@ -108,8 +109,7 @@ the already requested CLI operation without asking them to authorize it again.
 
 ## Initialize or resume the local Plan
 
-After root adoption, run later First Draft commands from `design/`, where `.firstdraft/` moved; never initialize the
-generated root.
+After root adoption, run later First Draft commands from `.firstdraft/design/`; never initialize the generated root.
 
 If `.firstdraft/` does not exist, establish or propose the application name, then initialize:
 
@@ -235,7 +235,8 @@ After the exact candidate's semantic read-back is approved, read
   ```
 
   For POSIX root adoption, read the recovery preconditions and use `.`. It preserves a root `.git`, stages
-  the move to `design`, and creates no repository; absent output creates no `.git`. Neither mode starts Publication.
+  the move directly to `.firstdraft/design/`, and creates no repository; absent output creates no `.git`. Neither
+  mode starts Publication.
 - For selected Publication, run zero-flag mode:
 
   ```sh
