@@ -10,6 +10,8 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-19-api-0.4-landed-source-amendment.md`](2026-09-19-api-0.4-landed-source-amendment.md) | Landed Service/CLI pins, reproduced 0.3.0 package, both Node suites, and isolated Codex/Claude package discovery; terminal review and PR78 CI remain separate gates |
+| [`2026-09-19-api-0.4-source-companion.md`](2026-09-19-api-0.4-source-companion.md) | Initial 0.3.0 source composition and local reviews; its Service/CLI pins and packed digest are superseded by the [landed-source amendment](2026-09-19-api-0.4-landed-source-amendment.md) |
 | [`2026-09-15-shared-plugin-0.2.4-public-install.md`](2026-09-15-shared-plugin-0.2.4-public-install.md) | Fresh public Claude/Codex installation from exact catalog 0.2.4, original logs and helper; [machine receipt](2026-09-15-shared-plugin-0.2.4-public-install.json) |
 | [`2026-09-14-ui-authoring-skill-0.2.4-qualification.md`](2026-09-14-ui-authoring-skill-0.2.4-qualification.md) | Local authoring-only package and client adapters, two final-digest advisory read-backs, and six retained original-digest cases with explicit limitations; [machine receipt](2026-09-14-ui-authoring-skill-0.2.4-qualification.json) |
 | [`2026-09-13-shared-plugin-0.2.3-public-install.md`](2026-09-13-shared-plugin-0.2.3-public-install.md) | Fresh public installation in Claude and Codex from exact catalog 0.2.3; [machine receipt](2026-09-13-shared-plugin-0.2.3-public-install.json) |
@@ -54,6 +56,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-19-implementation-notes-source.md`](2026-09-19-implementation-notes-source.md) | Five fresh source-context exercises and two local CLI regressions; local preservation does not prove live Publication handoff. Its schema and validation-support follow-ups were completed in `fe474a3`, with coordinated qualification still separate |
 | [`2026-09-15-account-authoring-0.2.5.md`](2026-09-15-account-authoring-0.2.5.md) | Account guidance qualification, publication, public installs, and default promotion; [publication receipt](2026-09-15-account-authoring-0.2.5-publication.json) |
 | [`2026-08-04-fresh-claude-code-evaluations.md`](2026-08-04-fresh-claude-code-evaluations.md) | One opening interview and one pinned local diagnostic-to-Compile journey |
 | [`2026-08-04-home-inventory-opening-response.txt`](2026-08-04-home-inventory-opening-response.txt) | Exact retained opening response used for regrading |

@@ -4,7 +4,11 @@
 
 - [Start from product meaning](#start-from-product-meaning)
 - [Interview toward one coherent candidate](#interview-toward-one-coherent-candidate)
+- [Retain implementation requirements](#retain-implementation-requirements)
+- [Choose Home independently of navigation](#choose-home-independently-of-navigation)
 - [Model Entities and Fields](#model-entities-and-fields)
+  - [Choose text normalization](#choose-text-normalization)
+- [Choose validations](#choose-validations)
 - [Model relationships](#model-relationships)
 - [Add behavior deliberately](#add-behavior-deliberately)
 - [Preserve intent during diagnostics](#preserve-intent-during-diagnostics)
@@ -22,7 +26,8 @@ Use these distinctions:
 - **Reference:** a stored relationship fact owned by the referencing Entity.
 - **Association:** a named traversal over a Reference or other Associations.
 - **Predicate:** a reusable named Boolean definition.
-- **Validation:** a structured invariant whose error belongs to a Field, Reference, or Entity.
+- **Validation:** a structured invariant owned by a Field, Reference, or Entity; ownership and the input receiving
+  its error are separate choices.
 - **Scaffold:** the standard generated routes and surfaces explicitly requested for one Entity.
 
 Ask whether a concept needs independent records, merely describes another record, or is derivable. Prefer the
@@ -76,6 +81,45 @@ deferred. Read back delegated choices, exclusions, open questions, and capabilit
 resolving every imaginable future product decision, and it does not prohibit earlier local edits or diagnostic
 submissions.
 
+## Retain implementation requirements
+
+Maintain `implementation-notes.md` at the planning workspace root as the conversation establishes behavior that the
+Plan cannot express. Write the product requirement, relevant Entities or interactions, useful rationale, and a few
+acceptance examples. Separate agreed requirements from unresolved questions and proposals. Keep it concise and
+revise it when the user's decisions change; it is not a transcript, task database, or second structured Plan.
+
+For example, an agreed CSV import may need to preview all row errors before saving anything and save a valid file
+as one transaction. Record examples such as "one invalid row leaves all records unchanged" and "a valid file saves
+every row." Whether duplicate rows should be rejected can remain an explicit open question. Do not invent an
+`import_valid` Field, callback JSON, or a custom Validation kind to encode that workflow.
+
+Keep three outcomes distinct:
+
+| Requirement | Where it belongs |
+| --- | --- |
+| Structured meaning realized by the compatible Compiler | Author it in the Plan and verify the matching analysis and generated result. |
+| Structured meaning not supported by the service or target | Preserve it in the Plan and review the actual GapSet; do not move it into notes to suppress a gap. |
+| Behavior outside the vocabulary | Retain it in implementation notes for ordinary source development; analysis cannot promise a gap for meaning it never received. |
+
+Notes may refer to a structured subject or its gap, but do not duplicate the Plan or maintain another gap inventory.
+Before Compile, summarize outstanding agreed behavior and open questions during the existing semantic read-back.
+Use the [output-mode handoff](diagnostics-and-recovery.md#implementation-notes-handoff) to preserve and discover the
+notes in the application repository. The implementation agent may have neither this conversation nor the original
+planning workspace. The Compiler does not interpret the notes, and app setup, runtime, and tests must remain
+independent of removable `.firstdraft/` context.
+
+## Choose Home independently of navigation
+
+Home may keep the default welcome or show an existing Web index. For a selected index, set
+`application.home_index` to its Entity's current local key, such as `"movie"`; the Entity must already select its
+Scaffold index. Do not infer Home from Entity order or navigation order. Omission keeps the default welcome page.
+
+Selecting an index preserves its resource URL, query, and authorization. A protected index stays protected at Home.
+A missing Entity or an Entity without a selected index is invalid. If the selected index is genuinely unsupported,
+keep that intended choice in the Plan and review the dependent Home gap; the residual app uses the welcome page.
+Do not substitute another index or weaken access. See the
+[Application reference](foundation-plan-020.md#application-and-clients) for the serialized choice.
+
 ## Model Entities and Fields
 
 For each Entity:
@@ -92,17 +136,70 @@ matter.
 
 Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
 order carries semantic rank rather than presentation order alone. The current Compiler emits required enum string
-storage using Rails `enum` with inclusion and presence validation, with scopes and instance methods disabled.
+storage using Rails `enum` with inclusion and presence validation plus native scopes and instance methods. The
+Compiler selects Rails prefix or suffix options when helper names would collide.
 Compatible in-domain literal-key defaults work regardless of whether the order has semantic rank. Database
 membership constraints, general rank semantics, optional enums, and unsupported consumers remain gaps. Preserve
-product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-019.md#enums)
+product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-020.md#enums)
 owns the exact lowering.
 
-The current Compiler admits bounded integer-literal range comparisons, text length, positive short-text format,
-conditional text or ordinary-Reference presence and absence, and selected unconditional Entity uniqueness with a
-matching index. A condition is limited to total direct same-record Field null tests and Boolean combinations. Treat
-the broader schema menu as product meaning that may exceed current target support; see the Foundation Plan reference
-before promising Compilation.
+### Choose text normalization
+
+Select a `normalizations` pipeline for each Field whose content needs it. `short_text` becomes Rails `string` with a
+single-line input; `long_text` becomes `text` with a textarea. Those types guide the choice but set no normalization
+default. Omit `normalizations` when no general-purpose cleanup is intended.
+
+- Names and titles can use `["collapse_whitespace", "blank_to_null"]` when internal whitespace has no meaning.
+- Ordinary multiline prose can use `["trim", "blank_to_null"]` to retain interior paragraphs and repeated spaces.
+- Code, Markdown, and other format-sensitive content can omit normalization or use only `["blank_to_null"]`.
+  Whole-value trimming removes first-line indentation and trailing newlines, so it can change those formats.
+
+Identifiers and URLs retain their own constraints. URL Fields permit only `trim` and `blank_to_null`; do not
+infer downcasing from a URL or identifier label. Request `blank_to_null` only when empty or whitespace-only input
+should become null. Requiredness is a separate choice, and null stays null through every operation.
+
+Preserve the authored array order. Do not combine `trim` with `collapse_whitespace`. When `blank_to_null` accompanies
+either cleanup operation, put it after that operation so repeated normalization produces the same result. This
+also applies when `downcase` occurs between them: `["trim", "downcase", "blank_to_null"]` is valid, while
+`["blank_to_null", "downcase", "trim"]` and `["blank_to_null", "downcase", "collapse_whitespace"]` are invalid.
+This rule gives `downcase` no fixed position. Do not silently reorder an existing pipeline or repeat it until stable.
+
+`trim` also removes invisible edge characters that `collapse_whitespace` preserves; both preserve interior joiners.
+The Service's [Field catalog](https://github.com/firstdraft/firstdraft/blob/ee38cafcff43d70fdb9f28626f25ebaecb257b0c/docs/architecture/design/field-catalog.md#normalization-and-comparison)
+owns the exact character policies and operation semantics. These are authoring choices, not automatic Compiler
+defaults; include consequential choices in the semantic read-back.
+
+## Choose validations
+
+Choose the Field's type and unconditional `required` first. An integer's numeric meaning, a URL's basic shape, and
+an enum's closed domain belong to the type; do not repeat them as generic validations. Normalization is a separate
+decision about stored meaning, not a substitute for a rule. Use the standard closed Validation families when they
+express the product requirement:
+
+| Product rule | Authoring choice |
+| --- | --- |
+| A retirement reason is needed only after `retired_at` is set | Optional text plus conditional `presence`; conditional `absence` expresses that a value must be missing in a particular condition. |
+| A title must contain at most 80 characters | `length`; use minimum, maximum, or exact length according to the actual rule. |
+| A product code contains only uppercase letters and digits | `format` on appropriate text; use the compatible pattern grammar, not arbitrary validation code. |
+| Usernames may not be `admin` or `support` | `exclusion` of a fixed typed literal set; this expresses meaning even when the current target reports a gap. |
+| A rating is at least one, an end date follows a start date, or two selected people must differ | `comparison` with compatible values; use Entity ownership for a cross-value rule and select the input that should receive the error. |
+| A title and release date must be unique together | One Entity-owned `uniqueness` tuple, with an explicit participating Field or Reference as its error target and the intended null policy. |
+
+Select a useful Field or Reference for Entity-owned feedback; for example, attach an invalid end-date comparison
+to the end-date input. Plan error targets do not include the whole record. A complete sentence does not require a
+custom validator: ordinary Rails I18n can customize application error copy after Compilation. Ownership of
+comparison or uniqueness remains on the Entity when appropriate, independently of that error target.
+
+These examples explain kind selection, not a promise that every shape emits today. Read the compatible
+[Validation support reference](foundation-plan-020.md#validations), use the bundled schema for exact syntax, and
+inspect the real analysis result. Schema-valid cross-field comparisons, conditions, and exclusions can still be
+service or target gaps. No general Rails `validates` option or custom Ruby callback becomes Plan syntax merely
+because Rails supports it.
+
+Operation-specific checks and bespoke rules outside the grammar belong in
+[implementation notes](#retain-implementation-requirements), with behavior and acceptance examples for the agent
+to implement and test in ordinary application code. Do not invent stored Fields to force them into the Plan or
+use notes to bypass supported structured meaning.
 
 ## Model relationships
 
@@ -149,7 +246,7 @@ silently narrow a broader requested Scaffold or make it public merely to obtain 
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
 Compilation emits each with at least one admitted public navigation entry and an identity that fits its
-[platform limits](foundation-plan-019.md#application-and-clients); otherwise the valid run records an unrealized-client
+[platform limits](foundation-plan-020.md#application-and-clients); otherwise the valid run records an unrealized-client
 target gap. Domain supplies a native HTTPS origin and platform identifier;
 it also configures the Rails production mailer host. It does not provision DNS, deployment, TLS, or mail delivery.
 Without a domain the native identifiers are explicit placeholders. Semantic icons inform Web, SF Symbol, and
@@ -161,12 +258,13 @@ target support alone is not that decision.
 Appearance sets the cross-client theme, native colors, and Web icon branding. Omitted theme means light; explicit
 `auto` follows the system. Web components retain the stock Zinc theme, and native launcher icons remain stock. Android shows
 one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, follow the
-emitted platform preview guide and the [native preview boundary](foundation-plan-019.md#preview-generated-native-apps).
+emitted platform preview guide and the [native preview boundary](foundation-plan-020.md#preview-generated-native-apps).
 Use local Android Studio Emulator for Android checks while Revyl's tested WebView image remains incompatible.
 iPhone browser preview retains its separate Revyl path. Ordinary Rails iteration stays in the web browser.
 Nonempty delivery, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
-v0.19 shape, including notification trigger/template definitions, deployment, and iPad, remain in the decision ledger
-and semantic read-back as currently unplannable rather than being invented as Plan JSON or promised a GapSet record.
+v0.20 shape, including notification trigger/template definitions, deployment, and iPad, remain in
+[implementation notes](#retain-implementation-requirements) and the semantic read-back as currently unplannable
+rather than being invented as Plan JSON or promised a GapSet record.
 The authored `delivery` channel block itself remains in the Plan and receives its expected service-support gap.
 
 ## Preserve intent during diagnostics
@@ -183,7 +281,8 @@ Immediately before the first Compile that could start direct retained work or re
 local Plan and give a compact plain-language semantic summary. Cover the project-relative Plan path and SHA-256; the
 application scope; Entities and their material Fields, relationships, rules, behavior, and data; surfaces, access,
 and clients; and material
-assumptions and exclusions. Show the matching valid AnalysisRun's GapSet digest and every ordered record, including
+assumptions and exclusions. Summarize outstanding implementation notes and open questions, and disclose any
+remaining carry-forward step for the selected output mode. Show the matching valid AnalysisRun's GapSet digest and every ordered record, including
 its classification, code, kind, status, reason, consequence, location, and cause when present. Explain that
 the CLI validated that run's attached digest against its GapSet; never substitute a fixture, historical, or another
 Project's digest. Explain that service-support gaps were skipped before semantic analysis and target-support gaps were

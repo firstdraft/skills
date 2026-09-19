@@ -9,8 +9,8 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 The reviewed source-candidate CLI is revision
-`137ef9ceff7469e43f072009e3bba941abc6cd4c`, with JavaScript-source runtime digest
-`7e9fdcf42dd887a6e8f6d9f17755600aa3b841a282f7fcdfaff638fe4467cb28`. Its source package is
+`20153726ba20f968af55ec4291eb76de8f03e9d5`, with JavaScript-source runtime digest
+`43c74adba22419d054562c1688c088a1c78e3729e65dae608d4021641dbfdaee`. Its source package is
 `@firstdraft.com/cli@0.3.0` and is unpublished. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -240,6 +240,53 @@ Do not run Drawing Board's moved `.firstdraft/design/script/initialize-applicati
 Use ordinary generated application and platform commands for preview and tests rather than archived helpers.
 Adding application features does not require First Draft Capabilities, Plan edits, or another Compile.
 
+### Application handoff
+
+After verified local materialization, or after opening the successfully published repository, inspect the reviewed
+gaps and replace the short product-description placeholder near the top of `README.md`. Use the agreed product
+decisions, retained Plan, and implementation notes to describe its purpose, intended users, and main workflows.
+Check those claims against the actual emitted source and reviewed gaps. Distinguish the generated starting point
+from behavior still to implement; do not turn Plan subjects into an automatic feature catalogue. Preserve applicable
+setup, run, test, and preview instructions. This step creates no new Plan field or separate description artifact.
+
+This is ordinary application documentation after Compile. Keep the generated baseline checkpoint reviewable and
+follow the existing Git workflow for later commits and authorized pushes. Preserve optional planning context and
+immutable Plan/GapSet provenance. Then follow the [notes handoff](#implementation-notes-handoff) and
+[UI continuation](#ui-continuation) for the requested work.
+
+### Implementation notes handoff
+
+The planning workspace owns `implementation-notes.md`. Before handing off an application, make its current copy
+available at `.firstdraft/design/implementation-notes.md` inside that application and add a concise discovery line
+to the app's root `AGENTS.md` if one is missing: read that file when present before continuing feature work. Read
+the notes and `.firstdraft/gaps.json` as separate sources; never edit the retained GapSet to mark ordinary work done.
+
+| Output mode | What carries the notes |
+| --- | --- |
+| Current-root adoption (`plan compile --output .` or `compilation download <id> --output .`) | The CLI moves the planning-root file into `.firstdraft/design/`. Verify it arrived and describes the selected Plan. Only previously tracked archived files are staged; explicitly include untracked notes in the authorized application commit. |
+| Absent direct output (`plan compile --output ./application`) | The directory contains only artifact files. After verified materialization, copy the notes into the app location above and add discovery guidance. |
+| Retained Compilation download to an absent directory | The artifact does not contain workspace notes. Recover the matching planning notes separately and carry them into the downloaded app; a download alone cannot recover missing notes. |
+| Server GitHub Publication (zero-flag Compile) | First Draft publishes the retained artifact and never receives this workspace file. After Publication, carry the notes and discovery guidance into the resulting repository through an ordinary authorized follow-up commit and push. Until that succeeds, a different agent receiving only the repository will not have them. |
+
+For a manual transfer, inspect any existing destination and reconcile it instead of overwriting it. Compare the
+copied contents with the reviewed notes. Continue maintaining the app copy; a retained planning copy is a handoff
+snapshot, not a second editable authority. On a later download, confirm the notes describe that retained Plan and
+identify later requirements separately rather than silently pairing the artifact with unrelated current notes.
+Copy only the notes, not private CLI state. A manually added `.firstdraft/design/` notes directory does not establish
+a resumable planning workspace.
+
+Use the user's already authorized repository and Git workflow. Direct Compile alone does not authorize a remote
+write. Verify the notes and discovery line in the actual commit before reporting a repository handoff complete;
+for a remote handoff, verify that commit reached the selected repository. If the notes or the authorized transfer
+path are unavailable, report the missing context and remaining step. Do not add a Plan prose key or modify retained
+artifact bytes or their manifest to make the notes appear Compiler-owned. Local preservation does not prove that
+server Publication carried the notes.
+
+During continuation, read the app's `AGENTS.md`, README, and retained implementation notes before selecting work.
+Implement the agreed behavior and its acceptance examples in ordinary source; keep unresolved product questions
+open. Existing app feature work does not require another Plan submission, Compile, or CLI capability probe. Update
+the notes to reflect remaining behavior without making app setup, runtime, or tests depend on them.
+
 #### UI continuation
 
 After the applicable GitHub checkpoint and app setup, continue already requested UI work in generated source.
@@ -375,14 +422,19 @@ or provenance-changing response requires reconciling the CLI and service contrac
 3. makes one artifact read without polling or starting work;
 4. requires the envelope's `head_source_sha256` to equal the retained
    `compilation.head_source_sha256`;
-5. verifies transport metadata and exact bytes against the retained artifact digest, then validates the canonical
-   Foundation Plan digest, envelope, manifest, paths, modes, Base64 contents, and file digests; and
+5. verifies transport metadata and exact bytes against the retained artifact digest, then validates Plan format
+   `firstdraft.foundation-plan.sketch/0.20`, target profile `rails-sketch/2026-09`, the canonical Foundation Plan
+   digest, envelope, manifest, paths, modes, Base64 contents, and file digests; and
 6. installs an absent private sibling tree with one atomic rename, or applies direct Compile's
    [current-root transaction and CLI compatibility boundary](#direct-local-output).
 
 `invalid_output_path` is safe to correct because no request was made. Preserve an existing destination; choose
 another absent path or correct only a named current-root precondition. Artifact or materialization errors are not a
 reason to weaken validation or use a partial tree.
+
+An earlier Plan format or target profile is rejected before installation, even when the retained status names that
+profile. Retrying the download or editing the local Plan cannot upgrade that retained artifact. Preserve its Plan
+bytes and private state; create replacement work only within the user's authorized candidate and Compile workflow.
 
 ## Stable error families
 
@@ -415,7 +467,7 @@ reason to weaken validation or use a partial tree.
 | `compilation status`, `compilation download` | `compilation_status_unavailable`, `invalid_compilation_status` | The retained status could not be verified. |
 | `compilation status --wait` | `compilation_changed`, `compilation_wait_timed_out` | Retained identity/provenance changed or the wait ended. |
 | `compilation download` | `compilation_not_succeeded` | No artifact request was made. |
-| `compilation download` | `artifact_unavailable`, `invalid_artifact` | Artifact transport or integrity failed before installation. |
+| `compilation download` | `artifact_unavailable`, `invalid_artifact` | Artifact transport, provenance, Plan/profile compatibility, or integrity failed before installation. An older artifact cannot be upgraded by retry. |
 | `compilation download` | `invalid_output_path` | No network request was made; correct only a reported root precondition or choose another absent path. |
 | `compilation download` | `materialization_failed` | The verified tree could not be atomically installed. |
 

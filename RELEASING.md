@@ -18,10 +18,10 @@ Coordinate the service, CLI, and Skills. [History](evidence/release-history.md) 
 [`release/compatibility.json`](release/compatibility.json) owns candidate compatibility; the shared
 marketplace manifest owns public catalog selection. Drawing Board's source-Skill pin is separate.
 
-Unpublished candidate `@firstdraft.com/claude-code@0.3.0` requires `@firstdraft.com/cli@0.3.0` for `.firstdraft/design/`.
-The breaking root-adoption contract needs both minor bumps; API/Plan ranges and public selections stay unchanged.
-Packed SHA-256 `9648469aea9a3f0959e1e4eabde6626edc381d2f3b24ac3cb99be26176edf41b` does not prove registry parity
-or hosted root adoption.
+Unpublished `@firstdraft.com/claude-code@0.3.0` requires CLI `0.3.0`, API `>= 0.4.0`, `< 0.5.0`, and Plan `sketch/0.20` with
+`rails-sketch/2026-09`. This minor candidate combines the breaking root-adoption and authoring changes.
+Public selections above retain their released compatibility line.
+The candidate digest proves neither registry parity nor hosted root adoption.
 
 [Release evidence](evidence/2026-09-15-account-authoring-0.2.5.md) records each completed qualification and
 distribution step. Recheck before mutations.

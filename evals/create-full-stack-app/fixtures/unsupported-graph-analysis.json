@@ -6,31 +6,31 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000908",
     "graph_version": 1,
-    "head_source_sha256": "289cdf0cafdf6eb4ff0990fa079317ff6ccebca647a3eea0714561e0a655904a",
-    "analyzer_release": "foundation-plan-rails/application-2026-08-28-reviewed-realization",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization",
+    "head_source_sha256": "e633470f4d220e85717778016a2b362a0e2ec01696e5108fdfdb330b4c6a123c",
+    "analyzer_release": "foundation-plan-rails/application-2026-09-19-conventions",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
     "target": {
       "id": "rails",
-      "profile": "rails-sketch/2026-08"
+      "profile": "rails-sketch/2026-09"
     },
     "status": "valid",
     "diagnostics": [],
     "gap_set": {
       "format": "firstdraft.foundation-gaps/2",
       "source": {
-        "sha256": "289cdf0cafdf6eb4ff0990fa079317ff6ccebca647a3eea0714561e0a655904a"
+        "sha256": "e633470f4d220e85717778016a2b362a0e2ec01696e5108fdfdb330b4c6a123c"
       },
       "project": {
         "id": "01900000-0000-7000-8000-000000000023",
         "graph_version": 1
       },
       "analysis": {
-        "release": "foundation-plan-rails/application-2026-08-28-reviewed-realization"
+        "release": "foundation-plan-rails/application-2026-09-19-conventions"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
       "target": {
         "id": "rails",
-        "profile": "rails-sketch/2026-08"
+        "profile": "rails-sketch/2026-09"
       },
       "gaps": [
         {
@@ -55,7 +55,7 @@
         }
       ]
     },
-    "gap_set_sha256": "fa9422b61c1c176343c6ca9bd8fb79aeeea8ca89c3cd37b3f9b55a490c1380b1",
+    "gap_set_sha256": "9382abe451f62e52e4d7565ecbe458f74294cc81cc372f99115e4921210b90f5",
     "started_at": "2026-07-30T12:04:00.000Z",
     "completed_at": "2026-07-30T12:04:01.000Z"
   }

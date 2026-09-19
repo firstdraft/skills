@@ -6,35 +6,35 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000905",
     "graph_version": 1,
-    "head_source_sha256": "d8ecce5f4029058bae0c72e235bb671eeb8b065aba2d2800c15dd4bea269ecd4",
-    "analyzer_release": "foundation-plan-rails/application-2026-08-28-reviewed-realization",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization",
+    "head_source_sha256": "90a75b609cf65c05d0f003d907ac0092d845843c6570f222236e4c1a64b01086",
+    "analyzer_release": "foundation-plan-rails/application-2026-09-19-conventions",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
     "target": {
       "id": "rails",
-      "profile": "rails-sketch/2026-08"
+      "profile": "rails-sketch/2026-09"
     },
     "status": "valid",
     "diagnostics": [],
     "gap_set": {
       "format": "firstdraft.foundation-gaps/2",
       "source": {
-        "sha256": "d8ecce5f4029058bae0c72e235bb671eeb8b065aba2d2800c15dd4bea269ecd4"
+        "sha256": "90a75b609cf65c05d0f003d907ac0092d845843c6570f222236e4c1a64b01086"
       },
       "project": {
         "id": "01900000-0000-7000-8000-000000000020",
         "graph_version": 1
       },
       "analysis": {
-        "release": "foundation-plan-rails/application-2026-08-28-reviewed-realization"
+        "release": "foundation-plan-rails/application-2026-09-19-conventions"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
       "target": {
         "id": "rails",
-        "profile": "rails-sketch/2026-08"
+        "profile": "rails-sketch/2026-09"
       },
       "gaps": []
     },
-    "gap_set_sha256": "3326e75714d1a2724b05fcf8146977a788247b92d5335cd588aeff64a6e18bff",
+    "gap_set_sha256": "c9b1e28edd428ebeff5306c6cf27ebf5e619b301c134b95baa581b72044facff",
     "started_at": "2026-07-30T12:02:00.000Z",
     "completed_at": "2026-07-30T12:02:01.000Z"
   }

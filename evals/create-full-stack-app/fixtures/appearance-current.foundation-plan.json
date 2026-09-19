@@ -31,7 +31,7 @@
             "key": "title",
             "name": "Title",
             "type": "short_text",
-            "required": false
+            "required": true
           }
         ],
         "scaffold": {

@@ -12,10 +12,10 @@
     "entities": [
       {
         "subject_uuid": "01900000-0000-7000-8000-000000000001",
-        "key": "string",
-        "name": "String",
+        "key": "movie",
+        "name": "Movie",
         "primary_descriptor": {
-          "field": "string.title"
+          "field": "movie.title"
         },
         "fields": [
           {

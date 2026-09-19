@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://firstdraft.com/schemas/foundation-plan/sketch-0.19",
+  "$id": "https://firstdraft.com/schemas/foundation-plan/sketch-0.20",
   "title": "Foundation Plan",
-  "description": "The working sketch/0.19 JSON import and export representation for one First Draft Project graph.",
+  "description": "The working sketch/0.20 JSON import and export representation for one First Draft Project graph.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,7 +14,7 @@
     "format": {
       "title": "Format",
       "description": "Names the Foundation Plan serialization vocabulary and its version.",
-      "const": "firstdraft.foundation-plan.sketch/0.19"
+      "const": "firstdraft.foundation-plan.sketch/0.20"
     },
     "target": {
       "$ref": "#/$defs/target"
@@ -99,7 +99,7 @@
         "profile": {
           "title": "Target profile",
           "description": "Pins the release of target defaults, supported lowerings, and verification expectations.",
-          "const": "rails-sketch/2026-08"
+          "const": "rails-sketch/2026-09"
         }
       }
     },
@@ -133,6 +133,11 @@
           "examples": [
             "example.com"
           ]
+        },
+        "home_index": {
+          "title": "Home index",
+          "description": "The Entity whose selected Web index is the home page. Omission uses the target's welcome page. The index retains its authored authorization.",
+          "$ref": "#/$defs/localKey"
         },
         "appearance": {
           "title": "Appearance",
@@ -2542,24 +2547,8 @@
     },
     "validationErrorTarget": {
       "title": "Validation error target",
-      "description": "The Field, Reference, or owning record that receives an Entity Validation error.",
-      "oneOf": [
-        {
-          "$ref": "#/$defs/locator"
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "record"
-          ],
-          "properties": {
-            "record": {
-              "const": "self"
-            }
-          }
-        }
-      ]
+      "description": "The Field or Reference that receives an Entity Validation error.",
+      "$ref": "#/$defs/locator"
     },
     "transition": {
       "title": "State transition",
@@ -4460,14 +4449,14 @@
         },
         "normalizations": {
           "title": "Normalizations",
-          "description": "Ordered cleanup. Null stays null. Omit when unused; collapse_whitespace includes trim.",
+          "description": "Ordered cleanup. Null stays null. Omit when unused. Do not combine trim and collapse_whitespace; place blank_to_null after either cleanup operation.",
           "type": "array",
           "items": {
             "oneOf": [
               {
                 "const": "trim",
                 "title": "Trim",
-                "description": "Remove leading and trailing Unicode whitespace."
+                "description": "Remove Unicode whitespace and U+180E, U+200B, U+200C, U+200D, U+2060, and U+FEFF from both edges. Preserve interior characters and NUL."
               },
               {
                 "const": "blank_to_null",
@@ -4477,7 +4466,7 @@
               {
                 "const": "collapse_whitespace",
                 "title": "Collapse whitespace",
-                "description": "Trim Unicode whitespace and replace each internal whitespace run with U+0020."
+                "description": "Collapse each Unicode whitespace run to U+0020, then remove edge spaces and NUL. Preserve interior NUL and invisible non-whitespace characters."
               },
               {
                 "const": "downcase",
@@ -4487,7 +4476,15 @@
             ]
           },
           "minItems": 1,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "allOf": [
+            {
+              "$ref": "#/$defs/normalizationTrimOrder"
+            },
+            {
+              "$ref": "#/$defs/normalizationCollapseOrder"
+            }
+          ]
         },
         "encrypted_at_rest": {
           "title": "Encrypted at rest",
@@ -4938,6 +4935,58 @@
         "return_to": {
           "$ref": "#/$defs/returnTo"
         }
+      }
+    },
+    "normalizationTrimOrder": {
+      "description": "Place blank_to_null after trim, including when downcase is also present.",
+      "not": {
+        "enum": [
+          [
+            "blank_to_null",
+            "trim"
+          ],
+          [
+            "blank_to_null",
+            "trim",
+            "downcase"
+          ],
+          [
+            "blank_to_null",
+            "downcase",
+            "trim"
+          ],
+          [
+            "downcase",
+            "blank_to_null",
+            "trim"
+          ]
+        ]
+      }
+    },
+    "normalizationCollapseOrder": {
+      "description": "Place blank_to_null after collapse_whitespace, including when downcase is also present.",
+      "not": {
+        "enum": [
+          [
+            "blank_to_null",
+            "collapse_whitespace"
+          ],
+          [
+            "blank_to_null",
+            "collapse_whitespace",
+            "downcase"
+          ],
+          [
+            "blank_to_null",
+            "downcase",
+            "collapse_whitespace"
+          ],
+          [
+            "downcase",
+            "blank_to_null",
+            "collapse_whitespace"
+          ]
+        ]
       }
     }
   }

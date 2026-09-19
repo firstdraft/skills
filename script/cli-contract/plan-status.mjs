@@ -246,7 +246,7 @@ async function verifyAnalysisFixtures(context) {
   pinRemoteState(cwd);
   for (const name of [
     "analysis-failed-analysis.json",
-    "appearance-issues-analysis.json",
+    "appearance-current-analysis.json",
     "application-intent-valid-analysis.json",
     "issues-found-analysis.json",
     "mixed-application-issues-analysis.json",
