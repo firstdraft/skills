@@ -1,6 +1,6 @@
 # Examples
 
-These examples teach `sketch/0.19` structure. UUIDs are fixed documentation data. Never choose them when authoring
+These examples teach `sketch/0.20` structure. UUIDs are fixed documentation data. Never choose them when authoring
 new subjects in a real Project. Once an exact staged or resumed candidate already contains subject UUIDs, preserve
 them during read-back and diagnostics unless a user correction or demonstrated identity diagnostic requires a
 change.
@@ -25,10 +25,10 @@ smallest subset accepted by the reviewed conditional PUT.
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "format": "firstdraft.foundation-plan.sketch/0.20",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-08"
+    "profile": "rails-sketch/2026-09"
   },
   "application": {
     "key": "oscar_party",
@@ -44,7 +44,7 @@ An empty Plan is preferable to a fake Entity. Tell the user that the application
 
 ## Bounded web and iPhone application
 
-This complete document is the smallest canonical `rails-sketch/2026-08` web-and-iPhone success candidate. It
+This complete document is the smallest canonical `rails-sketch/2026-09` web-and-iPhone success candidate. It
 requests one read-only public web index and one selected iPhone project with the same navigation label and semantic
 icon. The domain supplies the native HTTPS origin and identifier prefix, plus the Rails production mailer host.
 The required title Field supplies the human-facing Primary Descriptor. The prepared analyzer is designed to
@@ -52,10 +52,10 @@ return `valid`; that result is still only the Compilation gate, not proof that o
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "format": "firstdraft.foundation-plan.sketch/0.20",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-08"
+    "profile": "rails-sketch/2026-09"
   },
   "application": {
     "key": "movie_catalog",
@@ -97,7 +97,7 @@ return `valid`; that result is still only the Compilation gate, not proof that o
 
 This example requests iPhone. Add `"android": {}` beside `"ios": {}` to request both, or replace the iOS member
 to request Android alone. Each client requires an admitted public-index Scaffold and an identity within its
-[platform limits](foundation-plan-019.md#application-and-clients); otherwise a valid analysis records an unrealized-client
+[platform limits](foundation-plan-020.md#application-and-clients); otherwise a valid analysis records an unrealized-client
 target gap. iPad remains outside this boundary. Domain configures
 the native origin/identifier and Rails production mailer host; it does not provision DNS, TLS, or deployment. Web-only plans may use the same exact
 Scaffold with `native: {}` and may include or omit a domain. The admitted Scaffold makes Movie records readable on
@@ -216,16 +216,16 @@ An intentional destination override can still supply `return_to`; ordinary defau
 
 ## One Entity with required and optional scalar Fields
 
-This complete document is structurally valid v0.19 and accepted by the reviewed bounded importer. That does not
+This complete document is structurally valid v0.20 and accepted by the reviewed bounded importer. That does not
 prove complete semantic analysis, target support, Compilation, or generated output. `required` is mandatory even
 when the value is `false`; omitting it from the optional Details Field would be structurally invalid.
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "format": "firstdraft.foundation-plan.sketch/0.20",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-08"
+    "profile": "rails-sketch/2026-09"
   },
   "application": {
     "key": "tasks",
@@ -268,15 +268,15 @@ UUID. The reviewed importer also accepts `boolean`, `date`, `datetime`, `decimal
 
 ## Ordinal enum Field
 
-Use an enum for a closed set of named choices. This complete document is structurally valid v0.19 and accepted by
+Use an enum for a closed set of named choices. This complete document is structurally valid v0.20 and accepted by
 the reviewed bounded importer. Here, priority order carries semantic rank, so `ordinal` is `true`.
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "format": "firstdraft.foundation-plan.sketch/0.20",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-08"
+    "profile": "rails-sketch/2026-09"
   },
   "application": {
     "key": "ranked_tasks",
@@ -344,7 +344,8 @@ key. If `medium` is renamed, update the default in the same candidate while pres
 
 The current target emits this required enum as a non-null string with model inclusion and the literal `medium`
 default. Supported form and projection labels use its authored names through Rails I18n; stored values remain keys.
-It does not emit Rails `enum` helpers, a database membership constraint, or general ordinal-rank behavior.
+It emits native Rails enum helpers with collision-aware naming; it emits no database membership constraint or
+general ordinal-rank behavior.
 Do not assume a blanket enum gap; inspect the matching analysis for any unsupported consumer.
 
 ## Web Account and protected profile
@@ -355,10 +356,10 @@ make this Account or profile available natively.
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "format": "firstdraft.foundation-plan.sketch/0.20",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-08"
+    "profile": "rails-sketch/2026-09"
   },
   "application": {
     "key": "member_directory",
@@ -505,16 +506,16 @@ GapSet consequences.
 
 ## Stored and reverse relationship
 
-This complete document is structurally valid v0.19 and lies within the current ordinary Reference and direct inverse
+This complete document is structurally valid v0.20 and lies within the current ordinary Reference and direct inverse
 Compiler subset. `Task` owns the stored `project` Reference. `Project` owns the meaningful reverse `tasks`
 Association. The forward `task.project` Association is derived and therefore omitted.
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "format": "firstdraft.foundation-plan.sketch/0.20",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-08"
+    "profile": "rails-sketch/2026-09"
   },
   "application": {
     "key": "project_tasks",
@@ -604,5 +605,5 @@ The generated collection is distinct. In this example, the `through` step is an 
 inverse, the `source` is an admitted mechanically derived forward Association, and both underlying References have
 `one_to_one: false`. This is one supported shape, not the current boundary statement: the reviewed Case Chat result
 also realizes selected predicated sources, several first-level indirect Associations, and one nested-through form.
-Use [the exact Association reference](foundation-plan-019.md#references-and-associations) and the reviewed GapSet to decide whether
+Use [the exact Association reference](foundation-plan-020.md#references-and-associations) and the reviewed GapSet to decide whether
 another authored path is realized.

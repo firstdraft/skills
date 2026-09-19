@@ -9,16 +9,25 @@ license: "MIT"
 Author a coherent Foundation Plan and obtain approval of its exact semantic read-back. Then Compile into the
 workspace or **Compile and publish through First Draft**. Neither mode deploys.
 
+## Preserve implementation requirements
+
+Maintain planning-root `implementation-notes.md` for behavior outside the Plan vocabulary, separating agreed
+requirements and acceptance examples from open questions. Review outstanding notes alongside the Plan and its
+gaps; structured requests stay in the Plan even when unsupported. Notes are not Compiler input.
+
+Carry them into the resulting repository for an implementation agent without this conversation; locate and read
+them on continuation. Root adoption preserves `.firstdraft/design/implementation-notes.md`; other modes need an
+explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-implementation-requirements) and the
+[mode-specific handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff).
+
 ## Current boundary
 
-Targets plugin 0.3.0, CLI 0.3.0, and service contract 0.3; compatibility does not establish catalog selection.
+Targets plugin 0.3.0, CLI 0.3.0, and API 0.4 with Plan 0.20; compatibility does not establish catalog selection.
 This source candidate is unreleased.
 
 - Bounded generation includes Web Accounts, Policies, Scaffolds, development data, and selected iPhone/Android
   clients. Web uses stock Zinc tokens; Appearance controls theme, native colors, and Web icons. Omitted theme means
   light; native launcher icons stay stock.
-- Required enums use Rails `enum` with inclusion and presence; scopes and instance methods are disabled.
-  Compatible literal defaults work; database membership constraints and general rank behavior remain unsupported.
 - Bounded Account/Policy protects Web Scaffolds. Native clients require an admitted public index, are Account/Policy-free,
   and do not inherit Web privacy.
 - Preserve unsupported requests; report gaps. Never drop clients or weaken access to get `valid`.
@@ -26,35 +35,31 @@ This source candidate is unreleased.
 - For Android preview, recommend Android Studio's local Emulator while Revyl is incompatible. It requires a suitable
   local computer; follow emitted `ANDROID_PREVIEW.md`.
 
-Before support claims, read [current evidence](references/foundation-plan-019.md#current-evidence-boundary).
+Before support claims, read [current evidence](references/foundation-plan-020.md#current-evidence-boundary).
 
 ## Load references only when needed
 
 For authoring, read the relevant section:
 
-- Plan structure or identity: [closed envelope](references/foundation-plan-019.md#closed-envelope),
-  [subject identity](references/foundation-plan-019.md#subject-identity),
-  [ownership](references/foundation-plan-019.md#ownership), or [presence](references/foundation-plan-019.md#presence).
+- Plan structure or identity: [closed envelope](references/foundation-plan-020.md#closed-envelope),
+  [subject identity](references/foundation-plan-020.md#subject-identity),
+  [ownership](references/foundation-plan-020.md#ownership), or [presence](references/foundation-plan-020.md#presence).
 - Product modeling: [interview](references/modeling-guide.md#interview-toward-one-coherent-candidate),
   [Entities and Fields](references/modeling-guide.md#model-entities-and-fields),
+  [validation choices](references/modeling-guide.md#choose-validations),
   [relationships](references/modeling-guide.md#model-relationships), or
   [behavior](references/modeling-guide.md#add-behavior-deliberately). Read the
   [semantic read-back](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back) immediately before
   approval.
-- Target support: [current evidence](references/foundation-plan-019.md#current-evidence-boundary), then the relevant
-  subsection for [Application and clients](references/foundation-plan-019.md#application-and-clients),
-  [Fields](references/foundation-plan-019.md#entities-descriptors-and-fields),
-  [References and Associations](references/foundation-plan-019.md#references-and-associations),
-  [Validations](references/foundation-plan-019.md#validations),
-  [Accounts and Policies](references/foundation-plan-019.md#accounts-and-policies), or
-  [Scaffolds](references/foundation-plan-019.md#scaffolds).
-- A concrete shape: the matching [example](references/examples.md), such as the
-  [bounded web/iPhone candidate](references/examples.md#bounded-web-and-iphone-application),
-  [mutation Scaffold](references/examples.md#public-mutation-show-projection-returns-and-destroy),
-  [scalar Fields](references/examples.md#one-entity-with-required-and-optional-scalar-fields),
-  [enum](references/examples.md#ordinal-enum-field),
-  [Web Account and protected profile](references/examples.md#web-account-and-protected-profile), or
-  [relationship](references/examples.md#stored-and-reverse-relationship).
+- Target support: [current evidence](references/foundation-plan-020.md#current-evidence-boundary), then the relevant
+  subsection for [Application and clients](references/foundation-plan-020.md#application-and-clients),
+  [Fields](references/foundation-plan-020.md#entities-descriptors-and-fields),
+  [References and Associations](references/foundation-plan-020.md#references-and-associations),
+  [Validations](references/foundation-plan-020.md#validations),
+  [Accounts and Policies](references/foundation-plan-020.md#accounts-and-policies), or
+  [Scaffolds](references/foundation-plan-020.md#scaffolds).
+- A concrete shape: select the matching section in [examples](references/examples.md) for Application, scalar
+  Fields, enum, Account/Policy, Scaffold, or relationship syntax.
 
 For CLI work:
 
@@ -66,7 +71,7 @@ For CLI work:
   read [ambiguous mutations](references/diagnostics-and-recovery.md#ambiguous-mutations) only when the named error
   requires it.
 
-The bundled [JSON Schema](references/foundation-plan-0.19.schema.json) is machine-readable validator input, not prose.
+The bundled [JSON Schema](references/foundation-plan-0.20.schema.json) is machine-readable validator input, not prose.
 Use a compatible JSON Schema 2020-12 command named by the user, exposed by the project, or found through a
 straightforward check of existing local commands. Pass only its path; never read it end to end. Do not install
 dependencies or add validation/build plumbing solely for this workflow. Otherwise rely on First Draft exact-byte
@@ -89,9 +94,8 @@ firstdraft_cli --help
 ```
 
 Require the version probe to succeed with one exact `0.3.0` output line and no other output, and top-level help that
-lists `generate`, `plan`, and `compilation`. Existing cross-repository contract tests own the exhaustive leaf-command
-matrix, including separate stdout and stderr assertions; startup should not rediscover it through a synthesized
-shell loop. The compatible CLI supplies these public commands:
+lists `generate`, `plan`, and `compilation`. Contract tests own separate stdout and stderr assertions for leaf
+commands; do not repeat them in a startup shell loop. The compatible CLI supplies these public commands:
 
 - `generate uuid` and `generate application-key`;
 - `plan init`, `plan push`, `plan status`, and `plan compile` with either zero flags or `--output`; and
@@ -202,7 +206,8 @@ valid status so the complete GapSet can be reviewed. `plan compile` later repeat
 Before the first `plan compile`, reread the exact current
 `.firstdraft/foundation-plan.json`. Give a compact semantic summary covering its path and SHA-256; application scope;
 Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
-and exclusions. Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Use only that attached
+and exclusions. Summarize outstanding implementation notes and how the selected mode will carry them forward.
+Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Use only that attached
 digest: the CLI validates it against the attached GapSet; never substitute a fixture, historical, or another
 Project's digest. Explain that service gaps were skipped before semantic analysis, target gaps were not fully
 realized, and `valid` applies only to the admitted graph. Select absent `./application` for direct requests, `.` only for explicit current-root adoption, and
@@ -267,7 +272,8 @@ firstdraft_cli compilation status <compilation-id> --wait
 Status is read-only. Without `--wait` it reads once; with it, it follows the same retained Compilation for up to
 ten minutes. Branch on `compilation.status`; `failed` and `cancelled` are successfully read terminal states.
 
-For local source, choose an absent destination beneath an existing real directory, then read
+For local source, choose an absent destination beneath an existing real directory or explicitly selected
+current-root adoption, then read
 [Retained Compilation download](references/diagnostics-and-recovery.md#retained-compilation-download):
 
 ```sh
@@ -276,7 +282,8 @@ firstdraft_cli compilation download <compilation-id> --output <absent-path>
 ```
 
 Download reads one succeeded Compilation, verifies retained provenance, transport, manifest, paths, modes, and file
-digests, then installs atomically. It never starts or polls work. Preserve an existing destination.
+digests, then installs atomically. It never starts or polls work. `--output .` uses the same current-root transaction
+and preconditions as direct Compile; preserve every other existing destination.
 
 ## Recover from failures
 
@@ -286,20 +293,10 @@ leading contiguous block of recognized `First Draft: ` progress lines. After rem
 exactly one JSON object. Any unrecognized, additional, or interleaved output fails closed.
 
 Branch on its stable `error` and structured fields, not the human-readable `detail`, elapsed time, or HTTP status.
-In particular:
-
-- treat a diagnostic `422 server_rejected`, or `plan_not_valid` whose status is `issues_found`, as feedback about
-  the submitted snapshot that may lead to edits, dialogue, another push, or another Compile attempt;
-- stop after an outcome-unknown push because an accepted Head may exist without recoverable local state;
-- stop after an outcome-unknown direct Compilation start because repeating either Compile mode could start competing
-  retained work;
-- preserve exact bytes and avoid concurrent work for ambiguous Publication outcomes, following only the documented
-  unchanged-byte singleton replay;
-- treat `invalid_publication_status` as a contract mismatch that replay cannot repair;
-- distinguish a failed Compilation from a later failed Publication by validated statuses;
-- keep `local_state_not_saved.recovery_state` private; and
-- for `invalid_output_path`, correct the root precondition or use an absent path. Preflight and retained download make
-  no request; a post-analysis recheck may follow an accepted push but starts no Compilation.
+Use the linked reference for phase-specific recovery. Preserve exact bytes and private state after ambiguous mutations: an
+outcome-unknown push or direct start stops; only the documented unchanged-byte Publication singleton permits
+replay. Never Compile concurrently or use `invalid_publication_status` as a reason to retry. Distinguish a failed
+Compilation from later Publication failure, and let the CLI own output preflight, installation, and rollback.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.
@@ -311,6 +308,8 @@ Report:
 - the Plan path and the latest boundary actually demonstrated: JSON parsing, local schema validation, server import,
   or whole-graph analysis;
 - material choices, delegated decisions, exclusions, open questions, warnings, and capability gaps;
+- the implementation-notes location, outstanding agreed behavior, and whether the resulting repository actually
+  contains them; follow the [notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff);
 - observed analyzer release, graph version, Head SHA, and complete valid GapSet and digest;
 - mode and distinct Compilation/Publication statuses when Publication was requested;
 - zero-flag mode's private URL after Publication success; direct output's path, file count, manifest digest, and
@@ -320,4 +319,4 @@ Report:
 - any recovery blocker or external prerequisite.
 
 Distinguish verified materialization, First Draft Publication, and GitHub pushes. None proves deployment or
-production readiness. For UI work, follow [UI continuation](references/diagnostics-and-recovery.md#ui-continuation).
+production readiness. Begin [application handoff](references/diagnostics-and-recovery.md#application-handoff).

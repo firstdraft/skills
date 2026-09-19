@@ -4,18 +4,18 @@
   "version": "0.3.0",
   "plugin_source": {
     "package": "@firstdraft.com/claude-code",
-    "tarball_sha256": "9648469aea9a3f0959e1e4eabde6626edc381d2f3b24ac3cb99be26176edf41b"
+    "tarball_sha256": "939358e204795582c459d21ecb811822a70d867e985b3b63290b848a5e9c35b9"
   },
   "requires": {
     "api_contract": [
-      ">= 0.3.1",
-      "< 0.4.0"
+      ">= 0.4.0",
+      "< 0.5.0"
     ],
     "cli": [
       "= 0.3.0"
     ],
     "foundation_plan_formats": [
-      "firstdraft.foundation-plan.sketch/0.19"
+      "firstdraft.foundation-plan.sketch/0.20"
     ]
   }
 }

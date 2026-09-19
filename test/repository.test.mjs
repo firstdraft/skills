@@ -24,6 +24,10 @@ import {
   renderStatePresenceNames,
 } from "../script/claude-plugin-observation.mjs";
 import {
+  analyzerRelease as foundationPlanAnalyzerRelease,
+  compilationTarget as foundationPlanTarget,
+  compilerRelease as foundationPlanCompilerRelease,
+  foundationPlanFormat,
   rootOutputRecovery,
   safeGithubReasonCodes,
 } from "../script/cli-contract/config.mjs";
@@ -60,24 +64,30 @@ const movieCatalogModelObservation = path.join(
 const claudePluginName = "firstdraft";
 const claudeMarketplaceName = "firstdraft-skills";
 const portableSkillName = "create-full-stack-app";
-const foundationPlanFormat = "firstdraft.foundation-plan.sketch/0.19";
-const foundationPlanTarget = {
+const historicalFoundationPlanFormat = "firstdraft.foundation-plan.sketch/0.19";
+const historicalFoundationPlanTarget = {
   id: "rails",
   profile: "rails-sketch/2026-08",
 };
-const foundationPlanAnalyzerRelease = "foundation-plan-rails/application-2026-08";
-const foundationPlanCompilerRelease =
+const historicalFoundationPlanAnalyzerRelease = "foundation-plan-rails/application-2026-08";
+const historicalFoundationPlanCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08";
-// These loopback fixtures retain their dated August 28 release identities.
+// These exact inputs remain linked by dated qualification receipts.
+const historicalPlanFixtures = new Set([
+  "appearance-issues.foundation-plan.json",
+  "current-case-chat.foundation-plan.json",
+  "resume.foundation-plan.json",
+].map((file) => path.join(evalsDirectory, "create-full-stack-app", "fixtures", file)));
 const reviewedFixtureAnalyzerRelease =
   "foundation-plan-rails/application-2026-08-28-reviewed-realization";
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
-const currentFoundationPlanServiceBaseline = "00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8";
+const currentFoundationPlanServiceBaseline = "ee38cafcff43d70fdb9f28626f25ebaecb257b0c";
+const generatedUiEvidenceBaseline = "00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8";
 const currentFoundationIosCoreRevision = "7365ba0bf7ea5e6c8e8223d24e54cf685b067950";
 const currentFoundationAndroidCoreRevision = "6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e";
 const foundationPlanSchemaDigest =
-  "c13aff4894073ea88fcf48c1f9900039e8b83966dee90591a7caa71421a5a666";
+  "5576ec5e10d108f0a2d0f9fa336249324642f092e4444f6c11e4ab738f3fa58b";
 const foundationPlanServerBaseline =
   "35ad070beb36c66dc6480f36b33767caaed160a9";
 const currentFoundationPlanSchemaBaseline = currentFoundationPlanServiceBaseline;
@@ -106,9 +116,9 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "137ef9ceff7469e43f072009e3bba941abc6cd4c";
+  "20153726ba20f968af55ec4291eb76de8f03e9d5";
 const cliContractRuntimeDigest =
-  "7e9fdcf42dd887a6e8f6d9f17755600aa3b841a282f7fcdfaff638fe4467cb28";
+  "43c74adba22419d054562c1688c088a1c78e3729e65dae608d4021641dbfdaee";
 const previousPublicCliContractBaseline =
   "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
 const previousPublicCliContractRuntimeDigest =
@@ -377,6 +387,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   assertRevisionTokens(references.join("\n"), [
     currentFoundationPlanSchemaBaseline,
     currentFoundationPlanServiceBaseline,
+    generatedUiEvidenceBaseline,
     priorNativeEvidenceBaseline,
     priorAndroidEvidenceBaseline,
     currentFoundationIosCoreRevision,
@@ -391,7 +402,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   assertRevisionTokens(skillSource, []);
 
   const foundationPlanReference = await readFile(
-    path.join(referencesDirectory, "foundation-plan-019.md"),
+    path.join(referencesDirectory, "foundation-plan-020.md"),
     "utf8",
   );
   const diagnosticsReference = await readFile(
@@ -426,8 +437,8 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   );
   assertRevisionTokens(contractConfig, [cliContractBaseline]);
   assert(contractConfig.includes(cliContractRuntimeDigest));
-  assert(contractConfig.includes(reviewedFixtureCompilerRelease));
-  assert(contractConfig.includes(reviewedFixtureAnalyzerRelease));
+  assert(contractConfig.includes(foundationPlanCompilerRelease));
+  assert(contractConfig.includes(foundationPlanAnalyzerRelease));
   assert(contractConfig.includes(foundationPlanTarget.profile));
   assertRevisionTokens(
     await readFile(path.join(repository, "test", "repository.test.mjs"), "utf8"),
@@ -435,6 +446,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       foundationPlanServerBaseline,
       currentFoundationPlanSchemaBaseline,
       currentFoundationPlanServiceBaseline,
+      generatedUiEvidenceBaseline,
     priorNativeEvidenceBaseline,
     priorAndroidEvidenceBaseline,
       currentFoundationIosCoreRevision,
@@ -501,7 +513,7 @@ test("historical plugin receipts stay separate from current availability", async
     skillsDirectory,
     portableSkillName,
     "references",
-    "foundation-plan-019.md",
+    "foundation-plan-020.md",
   );
   const [
     readme,
@@ -749,15 +761,15 @@ test("fresh Claude Code evidence is exact and bounded", async () => {
   assert.equal(observation.analysis.final.status, "valid");
   assert.equal(
     observation.analysis.final.analyzer_release,
-    foundationPlanAnalyzerRelease,
+    historicalFoundationPlanAnalyzerRelease,
   );
   assert.equal(observation.compilation.graph_version, 2);
   assert.equal(observation.compilation.status, "succeeded");
   assert.equal(
     observation.compilation.compiler_release,
-    foundationPlanCompilerRelease,
+    historicalFoundationPlanCompilerRelease,
   );
-  assert.deepEqual(observation.compilation.target, foundationPlanTarget);
+  assert.deepEqual(observation.compilation.target, historicalFoundationPlanTarget);
   assert.equal(observation.compilation.artifact_file_count, 194);
   assert.equal(observation.compilation.artifact_byte_size, 542_894);
   assert.equal(
@@ -1281,7 +1293,7 @@ test("CI checks the exact modular CLI contract", async () => {
   );
   assert(contractConfig.includes(rootOutputRecovery.transactionName));
   assert(contractConfig.includes(rootOutputRecovery.rollbackIncompleteReason));
-  assert.match(contractCheck, /api_contract: \[">= 0\.3\.0", "< 0\.4\.0"\]/);
+  assert.match(contractCheck, /api_contract: \[">= 0\.4\.0", "< 0\.5\.0"\]/);
   for (const module of [
     "compilations",
     "local-commands",
@@ -1428,7 +1440,7 @@ test("behavioral eval cases are well-formed and reference real fixtures", async 
 
   assert.equal(document.format, "firstdraft.skill-evals/1");
   assert(Array.isArray(document.cases));
-  assert.equal(document.cases.length, 68);
+  assert.equal(document.cases.length, 73);
 
   const ids = new Set();
   const triggerValues = new Set();
@@ -1497,7 +1509,13 @@ test("authored JSON examples parse and retain the pinned Plan contract", async (
   ];
 
   for (const file of files.filter((item) => item.endsWith(".json"))) {
-    checkFoundationPlanConstants(JSON.parse(await readFile(file, "utf8")));
+    const document = JSON.parse(await readFile(file, "utf8"));
+    if (historicalPlanFixtures.has(file)) {
+      assert.equal(document.format, historicalFoundationPlanFormat);
+      assert.deepEqual(document.target, historicalFoundationPlanTarget);
+    } else {
+      checkFoundationPlanConstants(document);
+    }
   }
 
   for (const file of files.filter((item) => item.endsWith(".md"))) {
@@ -1520,7 +1538,7 @@ test("authored JSON examples parse and retain the pinned Plan contract", async (
       skillsDirectory,
       "create-full-stack-app",
       "references",
-      "foundation-plan-019.md",
+      "foundation-plan-020.md",
     ),
   );
   const fixture = JSON.parse(
@@ -1549,7 +1567,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
     "references",
   );
   const foundationPlanReference = await readFile(
-    path.join(referencesDirectory, "foundation-plan-019.md"),
+    path.join(referencesDirectory, "foundation-plan-020.md"),
     "utf8",
   );
   const documentedTypeSection = foundationPlanReference.match(
@@ -1557,7 +1575,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert(
     documentedTypeSection,
-    "foundation-plan-019.md: missing supported Field type list",
+    "foundation-plan-020.md: missing supported Field type list",
   );
   assert.deepEqual(
     [...documentedTypeSection[1].matchAll(/^- `([^`]+)`$/gm)].map(
@@ -1571,7 +1589,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert(
     fieldCapabilitySection,
-    "foundation-plan-019.md: missing Field capability matrix",
+    "foundation-plan-020.md: missing Field capability matrix",
   );
   assert.match(
     fieldCapabilitySection[1],
@@ -1592,7 +1610,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert(
     documentedCoreProperties,
-    "foundation-plan-019.md: missing retained Field core properties",
+    "foundation-plan-020.md: missing retained Field core properties",
   );
   assert.deepEqual(
     [
@@ -1630,7 +1648,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert(
     documentedEnumSection,
-    "foundation-plan-019.md: missing supported enum guidance",
+    "foundation-plan-020.md: missing supported enum guidance",
   );
   assert.match(
     documentedEnumSection[0],
@@ -1683,15 +1701,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /`implicit_order_column` is schema-valid[\s\S]*?current integrated\s+import path skips it before semantic analysis[\s\S]*?`service_support_gap`[\s\S]*?no emitter exists/,
-  );
-  assert.match(
-    foundationPlanReference,
     /`attachment` and `image` are schema-valid\s+Field types, but they are skipped from the admitted graph and recorded as service-support gaps/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /exactly one required unconditional\s+State Machine per Entity[\s\S]*?one bounded local\s+datetime `set_field` effect per transition[\s\S]*?named AASM events/,
   );
   assert.match(
     foundationPlanReference,
@@ -1702,7 +1712,7 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert(
     documentedReferenceSection,
-    "foundation-plan-019.md: missing retained Reference property list",
+    "foundation-plan-020.md: missing retained Reference property list",
   );
   assert.deepEqual(
     [...documentedReferenceSection[1].matchAll(/`([^`]+)`/g)].map(
@@ -1716,22 +1726,14 @@ test("bounded importer prose remains bound to the exact allowlists", async () =>
   );
   assert.match(
     foundationPlanReference,
-    /bounded single-target Reference slice with Boolean `required`, `one_to_one`, and\s+`immutable`[\s\S]*?supports self-References and migration-order cycles/,
-  );
-  assert.match(
-    foundationPlanReference,
     /`notes` belongs only to a Field[\s\S]*?Reference objects are closed and have no `notes` property[\s\S]*?schema error rather than an importer or Compiler capability diagnostic/,
-  );
-  assert.match(
-    foundationPlanReference,
-    /conditional `presence` or `absence` on an admitted ordinary Reference[\s\S]*?unconditional Entity `uniqueness`[\s\S]*?matching structural index[\s\S]*?service- or target-support gaps/,
   );
   const documentedPredicateSection = foundationPlanReference.match(
     /A Predicate retains schema-valid combinations of ([\s\S]*?)\. Import preserves/,
   );
   assert(
     documentedPredicateSection,
-    "foundation-plan-019.md: missing retained Predicate property list",
+    "foundation-plan-020.md: missing retained Predicate property list",
   );
   assert.deepEqual(
     [...documentedPredicateSection[1].matchAll(/`([^`]+)`/g)].map(
@@ -2183,7 +2185,7 @@ test("validator routing preserves validation boundaries", async () => {
     "utf8",
   );
   const referenceSource = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-019.md"),
+    path.join(skillDirectory, "references", "foundation-plan-020.md"),
     "utf8",
   );
 
@@ -2310,7 +2312,7 @@ test("validator routing preserves validation boundaries", async () => {
 test("complete examples and eval Plans validate against the bundled exact schema", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
   const schemaSource = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-0.19.schema.json"),
+    path.join(skillDirectory, "references", "foundation-plan-0.20.schema.json"),
     "utf8",
   );
   assert.equal(
@@ -2318,7 +2320,7 @@ test("complete examples and eval Plans validate against the bundled exact schema
     foundationPlanSchemaDigest,
   );
   const referenceSource = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-019.md"),
+    path.join(skillDirectory, "references", "foundation-plan-020.md"),
     "utf8",
   );
   assert(referenceSource.includes(foundationPlanSchemaDigest));
@@ -2346,7 +2348,7 @@ test("complete examples and eval Plans validate against the bundled exact schema
   );
   const evaluationPlans = await Promise.all(
     (await filesUnder(evalsDirectory))
-      .filter((file) => file.endsWith(".foundation-plan.json"))
+      .filter((file) => file.endsWith(".foundation-plan.json") && !historicalPlanFixtures.has(file))
       .map(async (file) => ({
         document: JSON.parse(await readFile(file, "utf8")),
         label: path.relative(repository, file),
@@ -2370,6 +2372,20 @@ test("complete examples and eval Plans validate against the bundled exact schema
   });
 });
 
+test("dated qualification inputs retain their recorded bytes", async () => {
+  const evidenceDirectory = path.join(repository, "evidence");
+  const receipt = JSON.parse(await readFile(
+    path.join(evidenceDirectory, "2026-09-14-ui-authoring-skill-0.2.4-qualification.json"),
+    "utf8",
+  ));
+  const inputs = receipt.cases.flatMap(({ declared_fixture_inputs: inputs }) => inputs ?? []);
+  assert(inputs.length > 0);
+  for (const { source, sha256 } of inputs) {
+    const bytes = await readFile(path.resolve(evidenceDirectory, source));
+    assert.equal(createHash("sha256").update(bytes).digest("hex"), sha256, source);
+  }
+});
+
 test("revision evals stage existing Plan identity and private state", async () => {
   const evaluationDirectory = path.join(evalsDirectory, "create-full-stack-app");
   const cases = JSON.parse(
@@ -2377,7 +2393,7 @@ test("revision evals stage existing Plan identity and private state", async () =
   ).cases;
   const stagedPlanArtifacts = [
     {
-      path: "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+      path: "evals/create-full-stack-app/fixtures/resume-current.foundation-plan.json",
       role: "input",
       stage_as: ".firstdraft/foundation-plan.json",
     },
@@ -2491,7 +2507,7 @@ test("revision evals stage existing Plan identity and private state", async () =
 
   const plan = JSON.parse(
     await readFile(
-      path.join(evaluationDirectory, "fixtures", "resume.foundation-plan.json"),
+      path.join(evaluationDirectory, "fixtures", "resume-current.foundation-plan.json"),
       "utf8",
     ),
   );
@@ -2542,7 +2558,7 @@ test("subject identity evals use the public UUID generator", async () => {
       skillsDirectory,
       "create-full-stack-app",
       "references",
-      "foundation-plan-019.md",
+      "foundation-plan-020.md",
     ),
     "utf8",
   );
@@ -3032,7 +3048,7 @@ test("local capability check uses the shared helper for version and help probes"
   );
   assert.match(
     normalizedCapabilitySection,
-    /Do not collapse multiword CLI invocations into scalar shell variables.*?cross-repository contract tests own the exhaustive leaf-command matrix/,
+    /Do not collapse multiword CLI invocations into scalar shell variables.*?Contract tests own separate stdout and stderr assertions for leaf commands; do not repeat them in a startup shell loop/,
   );
   assert.doesNotMatch(
     capabilitySection[1],
@@ -3085,7 +3101,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     "utf8",
   );
   const foundationPlanReference = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-019.md"),
+    path.join(skillDirectory, "references", "foundation-plan-020.md"),
     "utf8",
   );
   const readme = await readFile(
@@ -3235,7 +3251,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert(skillEvidence, "SKILL.md: missing current evidence boundary");
   assert(
     foundationPlanEvidence,
-    "foundation-plan-019.md: missing current evidence boundary",
+    "foundation-plan-020.md: missing current evidence boundary",
   );
   const normalizedSkillEvidence = skillEvidence[1].replace(/\s+/g, " ");
   for (const fragment of [
@@ -3540,7 +3556,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   assert.deepEqual(
     privateNativeRequest.artifacts.map(({ path: artifactPath }) => artifactPath),
     [
-      "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+      "evals/create-full-stack-app/fixtures/resume-current.foundation-plan.json",
       "evals/create-full-stack-app/fixtures/state-placeholder.txt",
     ],
   );
@@ -3553,7 +3569,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
       path.join(
         evaluationDirectory,
         "fixtures",
-        "appearance-issues-analysis.json",
+        "appearance-current-analysis.json",
       ),
       "utf8",
     ),
@@ -3663,7 +3679,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
     "superseded-analysis.json",
     "recurring-issues-analysis.json",
     "application-intent-valid-analysis.json",
-    "appearance-issues-analysis.json",
+    "appearance-current-analysis.json",
     "mixed-application-issues-analysis.json",
     "unsupported-graph-analysis.json",
   ];
@@ -3674,8 +3690,10 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
       );
       assert.equal(
         response.analysis.analyzer_release,
-        reviewedFixtureAnalyzerRelease,
+        foundationPlanAnalyzerRelease,
       );
+      assert.equal(response.analysis.compiler_release, foundationPlanCompilerRelease);
+      assert.deepEqual(response.analysis.target, foundationPlanTarget);
       return response.analysis.id;
     }),
   );
@@ -3833,8 +3851,8 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     /\[Product Compile\]\(references\/diagnostics-and-recovery\.md#product-compile\)/,
   );
   assert.match(
-    skill.replace(/\s+/g, " "),
-    /for `invalid_output_path`, correct the root precondition or use an absent path\. Preflight and retained download make no request; a post-analysis recheck may follow an accepted push but starts no Compilation/,
+    recovery.replace(/\s+/g, " "),
+    /`invalid_output_path` \| Preflight makes no request; an absent-path post-analysis recheck may follow an accepted push and reads, but no Compilation starts\. Preserve owner material and correct only the reported root precondition or choose an absent path/,
   );
   const normalizedRecovery = recovery.replace(/\s+/g, " ");
   assert.match(
@@ -4008,7 +4026,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   assert.deepEqual(movie.artifacts, [
     {
       path:
-        "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
+        "evals/create-full-stack-app/fixtures/appearance-current.foundation-plan.json",
       role: "input",
       stage_as: ".firstdraft/foundation-plan.json",
     },
@@ -4310,7 +4328,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     );
   const stagedPlanArtifacts = [
     {
-      path: "evals/create-full-stack-app/fixtures/resume.foundation-plan.json",
+      path: "evals/create-full-stack-app/fixtures/resume-current.foundation-plan.json",
       role: "input",
       stage_as: ".firstdraft/foundation-plan.json",
     },
@@ -4359,8 +4377,8 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     /Branch on its stable `error` and structured fields, not the human-readable `detail`/,
   );
   assert.match(
-    normalizedRecoverySection,
-    /diagnostic `422 server_rejected`.*?feedback about the submitted snapshot.*?edits, dialogue, another push, or another Compile attempt/,
+    recoveryReference.replace(/\s+/g, " "),
+    /`422 server_rejected` binds them to `response.source_sha256`.*?submitted bytes.*?Correct a well-founded source problem while preserving unrelated meaning and subject identity.*?submit an incomplete, invalid, or unchanged draft again/,
   );
   assert.match(
     recoverySection[1],

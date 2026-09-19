@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+import Ajv2020 from "ajv/dist/2020.js";
+
 import {
   compilationTarget,
   configuredApiUrl,
@@ -14,6 +16,15 @@ import {
   invokeRunner,
   pinRemoteState,
 } from "./harness.mjs";
+
+const planSchema = JSON.parse(
+  readFileSync(
+    new URL("../../skills/create-full-stack-app/references/foundation-plan-0.20.schema.json", import.meta.url),
+    "utf8",
+  ),
+);
+const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false });
+const validatePlan = ajv.compile(planSchema);
 
 export async function verifyLocalCommands(context) {
   await verifyLocalFailureBoundaries(context);
@@ -206,6 +217,7 @@ function assertPlanIdentity(directory, key, name) {
   );
   assert.equal(plan.format, foundationPlanFormat);
   assert.deepEqual(plan.target, compilationTarget);
+  assert(validatePlan(plan), ajv.errorsText(validatePlan.errors));
   assert.deepEqual(
     { key: plan.application.key, name: plan.application.name },
     { key, name },

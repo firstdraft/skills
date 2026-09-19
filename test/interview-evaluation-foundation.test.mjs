@@ -141,7 +141,7 @@ test("candidate protocol defines interview coverage and complete-candidate readi
 test("home-inventory corpus case probes consequential ambiguity without invented answers", async () => {
   const document = await loadEvaluationDocument();
   assert.equal(document.format, "firstdraft.skill-evals/1");
-  assert.equal(document.cases.length, 68);
+  assert.equal(document.cases.length, 73);
 
   const cases = await loadEvaluationCases();
   const evaluation = evaluationCaseById(
@@ -367,7 +367,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     })),
     [
       {
-        path: "evals/create-full-stack-app/fixtures/appearance-issues.foundation-plan.json",
+        path: "evals/create-full-stack-app/fixtures/appearance-current.foundation-plan.json",
         stageAs: ".firstdraft/foundation-plan.json",
       },
       {
@@ -461,7 +461,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
       "evals",
       "create-full-stack-app",
       "fixtures",
-      "appearance-issues-analysis.json",
+      "appearance-current-analysis.json",
     ),
   );
   const expectedAppearanceGapSetDigest =
@@ -696,7 +696,7 @@ test("evaluation harness exposes the representative Movie Catalog fixture", asyn
       "evals",
       "create-full-stack-app",
       "fixtures",
-      "appearance-issues.foundation-plan.json",
+      "appearance-current.foundation-plan.json",
     ),
   );
   const fixture = await readEvaluationJson(movieCatalogFixturePath);

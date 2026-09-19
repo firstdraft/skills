@@ -1,8 +1,16 @@
 # Behavioral evaluation index
 
-`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 68 fresh-context cases. Cases and
+`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 73 fresh-context cases. Cases and
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
+
+Current authoring cases use Foundation Plan `firstdraft.foundation-plan.sketch/0.20` and target
+`rails-sketch/2026-09`. The `appearance-current` Plan/analysis and `resume-current` Plan fixtures replace their older
+inputs for new evaluations. The original `appearance-issues` Plan/analysis and `resume` Plan retain the exact bytes
+declared by the [September 14 qualification receipt](../evidence/2026-09-14-ui-authoring-skill-0.2.4-qualification.json).
+The `current-case-chat` Plan/GapSet retains its eval-case and repository-test digest bindings, including the GapSet's
+source digest. Its review case reads the attached August 28 result as dated evidence; it does not claim the current
+Compiler produced that result.
 
 For existing-app UI work, use the separate [UI continuation corpus](ui-continuation/README.md). Its nine offline
 source cases cover normal screens, forms, component reuse, themes, unavailable discovery, an older app, source-only
@@ -16,6 +24,11 @@ specifically prepared server-backed run. Never print or commit private `.firstdr
 
 - `initialize-empty-plan`
 - `local-only-draft`
+- `choose-conventional-validations`
+- `preserve-structured-validation-gap`
+- `retain-outside-vocabulary-requirement`
+- `continue-from-retained-implementation-notes`
+- `publication-notes-require-follow-up`
 - `interview-home-inventory-consequential-ambiguity`
 - `invalid-init-arguments`
 - `local-initialization-failed`

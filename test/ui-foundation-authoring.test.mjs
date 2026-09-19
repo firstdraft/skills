@@ -7,7 +7,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import { canonicalPluginSkillNames } from "../script/claude-plugin-boundaries.mjs";
 
 const schema = JSON.parse(await readFile(
-  new URL("../skills/create-full-stack-app/references/foundation-plan-0.19.schema.json", import.meta.url),
+  new URL("../skills/create-full-stack-app/references/foundation-plan-0.20.schema.json", import.meta.url),
   "utf8",
 ));
 const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false });
@@ -44,4 +44,24 @@ test("default returns retain route coupling and closed authored context", () => 
   assert(!validate("scaffoldDestroy", {}));
   assert(!validate("scaffoldCreateForm", { movie_id: "42" }));
   assert(!validate("scaffoldCreateForm", { return_to: "/movies/42" }));
+});
+
+test("Entity validation errors belong to a Field or Reference", () => {
+  const uniqueness = {
+    subject_uuid: "01900000-0000-7000-8000-000000000001",
+    key: "unique_title",
+    kind: "uniqueness",
+    targets: [{ field: "movie.title" }],
+    nulls: "distinct",
+    error_target: { field: "movie.title" },
+  };
+  assert(validate("entityValidation", uniqueness));
+  assert(validate("entityValidation", {
+    ...uniqueness,
+    error_target: { reference: "movie.director" },
+  }));
+  assert(!validate("entityValidation", {
+    ...uniqueness,
+    error_target: { record: "self" },
+  }));
 });

@@ -47,7 +47,7 @@ assert.deepEqual(
     component: "cli",
     version: cliPackageVersion,
     requires: {
-      api_contract: [">= 0.3.0", "< 0.4.0"],
+      api_contract: [">= 0.4.0", "< 0.5.0"],
       foundation_plan_formats: [foundationPlanFormat],
     },
   },

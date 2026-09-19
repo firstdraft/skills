@@ -1,6 +1,6 @@
-export const cliRevision = "137ef9ceff7469e43f072009e3bba941abc6cd4c";
+export const cliRevision = "20153726ba20f968af55ec4291eb76de8f03e9d5";
 export const cliRuntimeSha256 =
-  "7e9fdcf42dd887a6e8f6d9f17755600aa3b841a282f7fcdfaff638fe4467cb28";
+  "43c74adba22419d054562c1688c088a1c78e3729e65dae608d4021641dbfdaee";
 export const cliPackageName = "@firstdraft.com/cli";
 export const cliPackageVersion = "0.3.0";
 
@@ -40,14 +40,14 @@ export const storedApiUrl = "http://127.0.0.1:1";
 export const configuredApiUrl = "http://127.0.0.1:2";
 export const apiToken = "canary-private-api-token";
 export const foundationPlanFormat =
-  "firstdraft.foundation-plan.sketch/0.19";
+  "firstdraft.foundation-plan.sketch/0.20";
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-08-28-reviewed-realization";
+  "foundation-plan-rails/application-2026-09-19-conventions";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
+  "foundation-plan-rails/compiler-application-2026-09-19-conventions";
 export const compilationTarget = {
   id: "rails",
-  profile: "rails-sketch/2026-08",
+  profile: "rails-sketch/2026-09",
 };
 export const artifactMediaType =
   "application/vnd.firstdraft.compilation-artifact+json";

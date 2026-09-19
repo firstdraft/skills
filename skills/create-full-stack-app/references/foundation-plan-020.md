@@ -1,8 +1,8 @@
-# Foundation Plan 0.19
+# Foundation Plan 0.20
 
 This reference and [Examples](examples.md) guide authoring for the experimental
-`firstdraft.foundation-plan.sketch/0.19` boundary. The bundled
-[exact JSON Schema](foundation-plan-0.19.schema.json) is the machine-readable structural contract. Never read it
+`firstdraft.foundation-plan.sketch/0.20` boundary. The bundled
+[exact JSON Schema](foundation-plan-0.20.schema.json) is the machine-readable structural contract. Never read it
 end to end. Use a compatible JSON Schema 2020-12 validator when the user names its command, the project exposes a
 specific validation command, or a straightforward check finds an existing compatible local command. Confirm that
 command is available, then pass the schema file to it without loading its contents into context. A declared library
@@ -42,9 +42,9 @@ deployed journey, and an older observation does not define current support.
 
 **Current design and machine authority**
 
-- The bundled JSON Schema owns v0.19 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/architecture/targets/rails/profile.md)
-  records lowering at reviewed Service source `00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8`.
+- The bundled JSON Schema owns v0.20 transport shape. The Service's
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/ee38cafcff43d70fdb9f28626f25ebaecb257b0c/docs/architecture/targets/rails/profile.md)
+  records lowering at selected Service source `ee38cafcff43d70fdb9f28626f25ebaecb257b0c`.
   A source reference does not establish the deployed service revision.
 - Read `analyzer_release` and `compiler_release` from the matching Analysis result; Compilation results carry
   `compiler_release` only.
@@ -53,7 +53,7 @@ deployed journey, and an older observation does not define current support.
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
-- Service API 0.3 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
+- Service API 0.4 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
   AnalysisRun, including an empty `gaps` array. `valid` applies only to the admitted graph; it is not proof of
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
@@ -61,10 +61,9 @@ deployed journey, and an older observation does not define current support.
   development-data, and selected-iPhone/Android slices. Their prerequisites matter: unsupported children and consumers
   remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
   retain one named partial gap for their stock launcher icons.
-- Required enums emit string storage with ordinary Rails enum inclusion and presence validation in authored key order. Any admitted required enum accepts
-  its compatible in-domain literal-key default. Optional enums,
-  Rails-enum helper behavior, database membership constraints, general rank behavior, and broader enum consumers
-  remain unsupported.
+- Required enums emit string storage with Rails enum inclusion, presence validation, and native helpers. An admitted
+  required enum accepts its compatible in-domain literal-key default. Optional enums, database membership
+  constraints, general rank behavior, and broader enum consumers remain unsupported.
 - Web Account realization requires the exact email/password/self-service registration, verification, recovery,
   lockout, Account-self, and Field-only input topology described below. Bounded Account-backed Policies and protected
   Web Scaffolds are supported. Ordinary iPhone and Android output remains Account- and Policy-free and consumes public-only
@@ -76,7 +75,7 @@ deployed journey, and an older observation does not define current support.
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/evidence/status.md)
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/ee38cafcff43d70fdb9f28626f25ebaecb257b0c/docs/evidence/status.md)
   distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
   [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
   records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
@@ -89,7 +88,7 @@ deployed journey, and an older observation does not define current support.
   journey, physical-device installation, or production deployment.
 - The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
   separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
-  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/architecture/targets/rails/capabilities/native.md)
+  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/ee38cafcff43d70fdb9f28626f25ebaecb257b0c/docs/architecture/targets/rails/capabilities/native.md)
   owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
   runtime observations do not qualify iPhone runtime behavior.
 - The September 13
@@ -100,8 +99,8 @@ deployed journey, and an older observation does not define current support.
   keyboard behavior. These local observations do not repeat the earlier Revyl journey or qualify a fresh student.
 - The Android receipt also records the required-enum presence correction and its generated schema-check failure.
   The [model renderer](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/lib/foundation_plan/rails_target/compiler/renderers/model.rb)
-  emits `enum` with `validate: true`, `scopes: false`, `instance_methods: false`, and separate presence validation.
-  Those options disable predicate/bang helpers and enum scopes; do not infer them from the macro name.
+  at that historical revision emitted `enum` with `validate: true`, `scopes: false`, `instance_methods: false`, and
+  separate presence validation. Current helper behavior follows the [enum reference](#enums) below.
 - A dated
   [staging discovery smoke](https://github.com/firstdraft/skills/blob/e0212cad0a89a8b0e38678e371389085f6ddc254/evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
   records one older OAuth/App-backed private-repository Publication at its named identities. It is not deployment
@@ -112,13 +111,13 @@ deployed journey, and an older observation does not define current support.
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8` and has SHA-256
-`c13aff4894073ea88fcf48c1f9900039e8b83966dee90591a7caa71421a5a666`. This is exact contract provenance, not
+`ee38cafcff43d70fdb9f28626f25ebaecb257b0c` and has SHA-256
+`5576ec5e10d108f0a2d0f9fa336249324642f092e4444f6c11e4ab738f3fa58b`. This is exact contract provenance, not
 release or execution evidence.
 
-The source candidate and pinned contract check use reviewed root-output CLI revision
-`137ef9ceff7469e43f072009e3bba941abc6cd4c`, with JavaScript-source runtime digest
-`7e9fdcf42dd887a6e8f6d9f17755600aa3b841a282f7fcdfaff638fe4467cb28`, as contract provenance rather than release
+The source candidate and pinned contract check use reviewed CLI revision
+`20153726ba20f968af55ec4291eb76de8f03e9d5`, with JavaScript-source runtime digest
+`43c74adba22419d054562c1688c088a1c78e3729e65dae608d4021641dbfdaee`, as contract provenance rather than release
 or execution evidence. It exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, zero-flag `plan compile`, direct `plan compile --output`, `compilation status`, and
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
@@ -132,7 +131,7 @@ CLI 0.3.0 uses `.firstdraft/design/`; published CLI 0.2.2 still uses top-level `
 Selected native projects compose separate pinned Cores under `ios/` and `android/`. Each emitted
 `FOUNDATION_PROVENANCE.json` records the exact revision, archive digest, and replaced application seams. Use the
 Service's native evidence record for exercised versions; pins alone do not establish device behavior.
-This release composes iOS Core `7365ba0bf7ea5e6c8e8223d24e54cf685b067950` and Android Core
+Selected Service source composes iOS Core `7365ba0bf7ea5e6c8e8223d24e54cf685b067950` and Android Core
 `6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e`. Older receipts retain their own source pins and observed scope.
 Public native navigation stays Account-free. Both clients use one stack, up to five direct tabs, or four direct
 tabs plus More for additional destinations. Follow the [preview guidance](#preview-generated-native-apps) after
@@ -168,17 +167,17 @@ The root contains exactly three required properties:
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.19",
+  "format": "firstdraft.foundation-plan.sketch/0.20",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-08"
+    "profile": "rails-sketch/2026-09"
   },
   "application": {}
 }
 ```
 
 The Application must contain `key`, `name`, `native`, `delivery`, and `entities`. It may also contain the optional
-v0.19 properties `domain`, `appearance`, and `development_data`. Objects are closed; do not add explanatory or
+properties `domain`, `home_index`, `appearance`, and `development_data`. Objects are closed; do not add explanatory or
 tool-specific keys.
 
 The Project route and `.firstdraft/state.json` own Project identity and concurrency. Do not place `id`,
@@ -251,10 +250,21 @@ App Schema artifact.
 ### Application and clients
 
 The reviewed importer accepts the required Application properties `key`, `name`, `native`, `delivery`, and
-`entities`, plus optional `domain`, `appearance`, and `development_data`. Nonempty delivery remains in the exact Head
-and appears as a service-support gap instead of being silently discarded. Development data is admitted record by
-record when its assignments and dependencies are realizable; unsupported assignments remain precise gaps rather
+`entities`, plus optional `domain`, `home_index`, `appearance`, and `development_data`. Nonempty delivery remains
+in the exact Head and appears as a service-support gap instead of being silently discarded. Development data is
+admitted record by record when its assignments and dependencies are realizable; unsupported assignments remain precise gaps rather
 than causing the whole development-data graph to disappear.
+
+Optional `application.home_index` is a typed Entity link, written with the current local key, for example
+`"home_index": "movie"`. The Entity must select `index` in `scaffold.resource_routes` and define `scaffold.index`.
+The link retains Entity identity through rename; export uses its current key. Omission keeps the default welcome
+page. Entity order and navigation order do not choose Home.
+
+The selected index keeps its resource URL and the same action, query, and authorization at the Web root; selecting
+a protected index does not make it public. An originally missing Entity or unselected index rejects import. A valid
+selection lost to service or target support limits keeps a dependent Home gap and the default welcome root.
+Preserve the authored choice when reviewing that gap. This choice does not reorder native navigation. The
+[modeling guide](modeling-guide.md#choose-home-independently-of-navigation) owns the product decision.
 
 The prepared Compiler uses an admitted `domain` for the native HTTPS origin and reversed identifier prefix, and
 for the Rails production mailer host independently of native-client selection. It provisions no DNS, deployment,
@@ -264,7 +274,7 @@ an explicit `.invalid` origin and `invalid.firstdraft` identifier prefix.
 Each selected client is emitted only when it has an admitted public-index Scaffold and its generated identity
 fits platform rules. Structurally valid long names can exceed those rules: the application key must form one
 DNS-safe label of at most 63 ASCII bytes, and Android application IDs must fit 223 bytes after domain conversion.
-The [native target](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/architecture/targets/rails/capabilities/native.md)
+The [native target](https://github.com/firstdraft/firstdraft/blob/ee38cafcff43d70fdb9f28626f25ebaecb257b0c/docs/architecture/targets/rails/capabilities/native.md)
 owns the full rules. A missing public entry or unusable identity omits that client and records
 `foundation_plan.gap.native_client.not_generated`; a missing domain alone does not. Preserve the user's requested
 clients and access rather than changing product meaning to avoid that gap.
@@ -292,8 +302,9 @@ partial.
 The importer retains Entity `orderings`, and the current target emits a bounded named-Ordering slice when its terms,
 stability, nullability, and consumers meet the profile. Unsupported Orderings remain exact gaps with a deterministic
 fallback where the consumer can remain coherent. `implicit_order_column` is schema-valid, but the current integrated
-import path skips it before semantic analysis and records a `service_support_gap`; no emitter exists. Do not promise
-that every authored order changes list order; use the matching GapSet.
+target realizes only the captured Case Chat `message.sent_at, id` authored shape. Ordered finders otherwise use the
+profile's `created_at, id` default. This fallback affects `first` and `last`, not ordinary Relation or Association
+loading or Scaffold list order; use the matching GapSet for other authored shapes.
 
 The smallest accepted Application remains:
 
@@ -331,9 +342,16 @@ or otherwise unsupported Association descriptors remain exact gaps. A Field may 
 That is the conditional import list, not the complete schema vocabulary. A State Machine Field retains its states,
 initial state, transitions, and transition effects. The current target realizes exactly one required unconditional
 State Machine per Entity when the AASM helper surface is safe, with effect-free transitions or one bounded local
-datetime `set_field` effect per transition. It emits string storage, the initial-state default, closed-domain
-validation, named AASM events, and the admitted effects. Optional, conditional, multiple-per-Entity, guarded,
-cross-Entity, multi-effect, helper-colliding, and broader effect shapes remain exact gaps.
+datetime `set_field` effect per transition. AASM owns initialization, validation, named events, state scopes, and the
+admitted effects; behavior-emitted state columns keep `NOT NULL` without a SQL default. Native naming options
+resolve supported helper collisions. Required storage-only states retain the initial-state SQL default and
+inclusion validation; optional machines keep nullable storage without a default. Optional, conditional,
+multiple-per-Entity, guarded, cross-Entity, multi-effect, unresolved helper collisions, and broader effect shapes
+retain storage with behavior gaps. Failed transitions retain ordinary AASM/Rails object and transaction behavior;
+an application may need to reload or reset a failed object before reusing it.
+AASM 6.0.0 namespaced state scopes can query a prefixed value instead of the stored state. Consult the selected
+Service's [automatic state scopes](https://github.com/firstdraft/firstdraft/blob/ee38cafcff43d70fdb9f28626f25ebaecb257b0c/docs/architecture/design/state-machines.md#automatic-state-scopes)
+guidance before using them in application work.
 `attachment` and `image` are schema-valid
 Field types, but they are skipped from the admitted graph and recorded as service-support gaps; they cannot reach
 the current Compiler. Active Storage and image-delivery prose describes target direction, not emitted support.
@@ -351,7 +369,7 @@ one target release into machine syntax.
 | `notes` | Optional nonempty string on Fields only. Retained as review context. | Emits no application behavior. |
 | `immutable` | Optional Boolean; omission means `false`. Retained. | Realized for admitted emitted scalar and required-enum Fields; otherwise the owning Field or modifier remains a gap. |
 | `comparison` | `case_insensitive` on `short_text` only. Retained. | Lowering and downstream query use are profile-dependent; inspect the matching GapSet. |
-| `normalizations` | Ordered pipeline on text or URL Fields, with URL restrictions. Retained. | Lowering is Field- and pipeline-specific; inspect the matching GapSet. |
+| `normalizations` | Explicit ordered pipeline on selected text or URL Fields, with URL restrictions. Retained. | Follow the [content and operation-order guidance](modeling-guide.md#choose-text-normalization); inspect the matching GapSet. |
 | `encrypted_at_rest` | Optional Boolean; omission means `false`. Retained. | Lowering and consumer support are Field-specific; inspect the matching GapSet. |
 | `redact_from_logs` | Optional Boolean; omission means `false`. Retained. | An admitted emitted ordinary scalar or required enum adds model-qualified request and inspection filtering; other shapes keep an exact gap. |
 
@@ -371,12 +389,13 @@ selected value's owner-local `key`, not its UUID. Update that literal in the sam
 while preserving the value's UUID.
 
 The current Compiler emits a required enum as a non-null string column and a Rails `enum` mapping stable keys to
-themselves in authored order. `validate: true` supplies inclusion; a separate presence declaration handles requiredness.
-`scopes: false` and `instance_methods: false` disable enum scopes and predicate/bang methods. Compatible in-domain
-literal-key defaults work. Admitted form options and read-only projections use Rails I18n entries under
+themselves in authored order. `validate: true` supplies inclusion; a separate presence declaration handles
+requiredness. Native scopes and predicate/bang methods keep ordinary names when safe; the Compiler uses Rails
+prefix or suffix options when needed to avoid collisions. Compatible in-domain literal-key defaults use the enum
+declaration and matching database default. Admitted form options and read-only projections use Rails I18n entries under
 `enums.<model>.<field>.<key>` in `config/locales/foundation_domain.en.yml`, seeded from the authored value names.
 Forms submit stable keys in authored order. Edit the locale to change labels after Compile; general ordinal rank
-semantics, a native PostgreSQL enum, database `CHECK`, and enum instance or scope helpers are not emitted. Optional
+semantics, a native PostgreSQL enum, and database membership `CHECK` are not emitted. Optional
 enums and unsupported defaults or consumers remain precise gaps. Preserve the enum and report only the reviewed
 consequences rather than assuming either blanket support or blanket failure.
 
@@ -414,8 +433,13 @@ The current target emits a bounded single-target Reference slice with Boolean `r
 `immutable`, no Reference default or realization, and one of the three deletion outcomes: `restrict`,
 `nullify_reference`, or `delete_referencing_record`. It emits the same-key forward traversal, UUID foreign-key
 storage, matching nullability, an index, and a post-table foreign key. `one_to_one: true` makes that index unique and
-adds logical Association uniqueness. The post-table migration supports self-References and migration-order cycles;
-the database foreign key, not generated Association `dependent` behavior, owns target deletion.
+adds logical Association uniqueness. The post-table migration supports self-References and migration-order cycles.
+An eligible unpredicated inverse carries authored deletion through Rails `dependent:` options: restriction gives
+model errors, nullification clears the Reference, and deleting referencing records uses ordinary deletion or destroy
+according to emitted callbacks and downstream Associations. Plain `NO ACTION` foreign keys preserve integrity.
+Missing or ambiguous inverse carriers and destructive cascade cycles can leave the authored deletion consequence
+as a partial gap; the Compiler does not synthesize an inverse or callback scheduler. A lone `restrict` can still be
+realized by the foreign-key backstop. Callback-bypassing writes do not establish Rails lifecycle behavior.
 
 The current Association catalog includes supported mutable direct inverses, the exact required-immutable `has_many`
 inverse, selected predicated direct Associations, several first-level indirect collections, and one nested-through
@@ -428,24 +452,31 @@ from Reference storage. Preserve the authored relationship meaning and review th
 
 The current Rails Validation subset admits:
 
-- unconditional or bounded conditional ordered integer-literal comparisons on stored integer Fields, using `greater_than`,
-  `greater_than_or_equal_to`, `less_than`, or `less_than_or_equal_to`;
+- unconditional or bounded conditional ordered literal comparisons on stored integer or date Fields, using
+  `greater_than`, `greater_than_or_equal_to`, `less_than`, or `less_than_or_equal_to`; date bounds start at
+  `1582-10-15` because earlier Gregorian values differ from ordinary Rails casting;
+- an unconditional Entity `comparison` with one `not_equals` clause between distinct required ordinary References
+  to the same record type, with a participating Reference as its error target;
 - unconditional or conditional `length` on `short_text` or `long_text`, using `minimum`, `maximum`, or
   `exact_length`;
 - unconditional positive `format` on stored `short_text` in the bounded whole-value printable-ASCII grammar;
-- conditional `presence` or `absence` on text Fields; and
+- conditional `presence` or `absence` on text Fields;
 - conditional `presence` or `absence` on an admitted ordinary Reference;
 - unconditional Entity `uniqueness` over one or two required emitted `short_text` or `date` Fields or ordinary
-  one-column References, with a supported Field or logical-Reference error target; and
+  one-column References, with a supported Field error target, or a logical-Reference target for a composite tuple; and
 - the exact three-member tuple of two required ordinary References plus one emitted required non-ordinal enum Field,
   with a Reference error target.
 
-Conditions are limited to total, direct same-record Field null tests, `not`, and `and` or `or` groups. Comparison
-and length rules allow nil so requiredness owns the missing-value error. Required scalar Fields separately derive
-ordinary Rails presence, except Boolean Fields use inclusion in `[true, false]`. Admitted uniqueness emits model
-validation and a matching structural index. Broader comparisons, patterns, presence/absence, uniqueness tuples,
-conditions, owners, or error targets and `exclusion` can produce service- or target-support gaps. They remain invalid
-only when the admitted meaning itself violates semantic rules.
+Conditions allow total direct same-record Field null tests and, for Reference presence or absence, equality to a
+required non-ordinal enum literal; `not`, `and`, and `or` combine the admitted atoms. Direct enum equality reuses
+the emitted predicate. Required numeric input uses Rails numericality, Boolean Fields use inclusion in
+`[true, false]`, and other required scalars use presence. Optional numeric input allows nil; unconditional integer
+bounds share numericality with requiredness. Date comparison and length rules leave missing-value feedback to
+requiredness. Admitted uniqueness uses a native Rails validator and a matching unique index, including logical
+Reference targets. Entity errors must target a Field or Reference; this Plan has no record-wide custom error target.
+Ordinary Rails application code can still use `errors[:base]` after Compilation. Broader comparisons, patterns,
+presence/absence, uniqueness tuples, conditions, owners, and `exclusion` can produce service- or target-support gaps.
+They remain invalid only when the admitted meaning itself violates semantic rules.
 
 ### Predicates
 

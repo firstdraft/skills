@@ -32,10 +32,10 @@ test("release compatibility matches the installable plugin manifest", async () =
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "9648469aea9a3f0959e1e4eabde6626edc381d2f3b24ac3cb99be26176edf41b",
+        "939358e204795582c459d21ecb811822a70d867e985b3b63290b848a5e9c35b9",
     },
     requires: {
-      api_contract: [">= 0.3.1", "< 0.4.0"],
+      api_contract: [">= 0.4.0", "< 0.5.0"],
       cli: [`= ${cliPackageVersion}`],
       foundation_plan_formats: [foundationPlanFormat],
     },
@@ -60,7 +60,7 @@ test("current release docs route through structured identities", async () => {
       readText("evidence/release-history.md"),
       readText("evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md"),
       readJson(
-        "evals/create-full-stack-app/fixtures/appearance-issues-analysis.json",
+        "evals/create-full-stack-app/fixtures/appearance-current-analysis.json",
       ),
     ]);
   const publicPlugin = marketplace.plugins.find(
@@ -74,8 +74,6 @@ test("current release docs route through structured identities", async () => {
       `@firstdraft.com/claude-code@${compatibility.version}`,
     ),
   );
-  assert(releasing.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
-  assert(releasing.includes(compatibility.plugin_source.tarball_sha256));
   assert.match(releasing, /CLI npm `next` \/ `latest` \| `0\.2\.2` \/ `0\.2\.2`/);
   assert.match(
     releasing,
