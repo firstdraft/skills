@@ -126,8 +126,9 @@ Both `plan compile` modes submit the exact Plan bytes again and wait for the ana
 digest came from that accepted submission. Only `valid` analysis proceeds. Each mode uses the accepted exact Head
 condition; do not add a gap digest, acknowledgment field, or Plan edit.
 
-Use current-folder local output for ordinary Compile requests. Use `--output <path>` for another requested directory
-and `--github` only for an explicit private GitHub repository request. The two flags are mutually exclusive.
+Use current-folder local output by default. Use `--output <path>` for another requested directory, an ineligible
+root, or model-only originals when root output was not explicitly requested. Use `--github` only for an explicit
+private GitHub repository request. The two flags are mutually exclusive.
 Compilation runs on the First Draft service; the output and app runtime are local. Codespaces is a fallback when
 local development is unsuitable, not a prerequisite.
 
@@ -152,6 +153,12 @@ than the filesystem root with no `.firstdraft/design` or top-level `.firstdraft-
 index, no unmerged or sparse state or in-progress Git operation, and no submodule metadata; untracked and ignored
 design material may remain. A directory nested inside another worktree is ineligible. On Windows, select an absent
 `--output <path>` because current-root adoption is POSIX-only.
+
+Before invoking root adoption, inspect the workspace for source examples and apply the
+[artifact guidance](modeling-guide.md#learn-from-examples-and-artifacts). Resolve model-only originals before they
+enter the generated archive. Use already agreed handling. When current-root output is only the default, an absent
+`--output <path>` can leave originals untouched while satisfying the request. Ask only if a necessary move,
+destination or retention decision remains unsettled; preserve originals rather than deleting them.
 
 On success, root adoption preserves every preexisting non-Git top-level entry directly beneath `.firstdraft/design/`,
 installs the artifact at the root, and reports `root_adoption`. It preserves an existing root `.git` and history,
@@ -199,8 +206,12 @@ output, then stop until First Draft or an operator reconciles the Project. Do no
 After current-root adoption, the generated Rails application is the workspace root and the original design material
 is under `.firstdraft/design/`. Keep the existing root `.git`, history, and remotes when present. With an existing Git
 root, inspect and commit the staged baseline before setup or feature work, keeping credentials such as
-`.firstdraft/design/.env` and private CLI state ignored. Make **Create GitHub repository**, or **Push** when a remote
-exists, an optional checkpoint when the user wants a remote. Local setup, boot, and iteration need no GitHub push.
+`.firstdraft/design/.env` and private CLI state ignored. Inspect archived and staged source examples too: model-only
+permission does not authorize retaining raw private artifacts in this archive or commit. If an unintended original
+is already archived, preserve it, keep it unstaged, and resolve its destination through the
+[artifact guidance](modeling-guide.md#learn-from-examples-and-artifacts) before committing. Make **Create GitHub
+repository**, or **Push** when a remote exists, an optional checkpoint when the user wants a remote. Local setup,
+boot, and iteration need no GitHub push.
 Confirm that the destination and applicable remote writes are already authorized before making them; an existing
 authorization is sufficient. Continue local work without prompting for an unnecessary remote.
 
@@ -253,7 +264,29 @@ setup, run, test, and preview instructions. This step creates no new Plan field 
 This is ordinary application documentation after Compile. Keep the generated baseline checkpoint reviewable and
 follow the existing Git workflow for later commits and authorized pushes. Preserve optional planning context and
 immutable Plan/GapSet provenance. Then follow the [notes handoff](#implementation-notes-handoff) and
-[UI continuation](#ui-continuation) for the requested work.
+[first-preview verification](#verify-the-first-preview), followed by [UI continuation](#ui-continuation) for the
+requested work.
+
+### Verify the first preview
+
+Follow the generated README's local setup and boot commands. Compare the approved data with the reviewed gaps and
+actual `db/seeds/development.rb`; report omitted records or dependencies instead of fabricating replacements.
+`bin/setup` prepares the database and seeds a newly initialized development database. An existing database may
+need an explicit development `bin/rails db:seed` to load added samples. Do not reset a database to hide missing data.
+Inspect the existing data first: ordinary seeds match their generated attribute tuples, so changing those values
+can make a later seed run recreate the original sample. Reseeding does not reconcile customized records.
+
+Open the running app in a browser and check representative visible records, their relationships, and relevant
+states in the intended flow. For an explicit empty start, check the empty state and appropriate create flow. For
+Account-free output, do not invent a login. If a supported Account and its data actually emitted, use the initial
+disposable login documented in README or the emitted seed to sign in and exercise the intended flow. Do not claim
+that file presence, Compilation, or setup success proves login or a populated UI.
+
+Demo credentials are deliberately public development values and may be documented. Keep real owner/provider
+secrets, First Draft tokens, and production passwords out of documentation. The seed preserves an existing local
+password; initial credentials may no longer work after it changes. Do not reset it merely to match the README.
+Keep the development preview private and demo data development-only. Report which setup, browser, and sign-in
+steps actually ran, plus any remaining gaps or unavailable verification.
 
 ### Implementation notes handoff
 

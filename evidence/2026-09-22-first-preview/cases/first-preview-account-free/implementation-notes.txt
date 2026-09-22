@@ -1,0 +1,11 @@
+# Implementation notes
+
+Agreed behavior outside the Foundation Plan vocabulary: none at present.
+The requested model, public surfaces, and synthetic development records are in
+`.firstdraft/foundation-plan.json`. These notes are not Compiler input.
+
+Open questions outside the Plan vocabulary: none blocking this local review.
+No scheduling, reminders, streak calculations, or custom workflows are promised.
+
+No application repository has been generated. Keep these notes with the planning
+material if development continues; any later output needs the Skill's notes handoff.

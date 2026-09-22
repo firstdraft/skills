@@ -1,0 +1,35 @@
+# Workshop Equipment Loans — review notes
+
+## Confirmed scope and data handling
+
+- Prepare a local Foundation Plan and sample proposal for review; do not submit or Compile.
+- Public local workshop demo with no Accounts. Borrowers are ordinary domain records, not login identities.
+- The preview may use fully synthetic data while retaining repeated borrowers, repeated equipment, and returned and outstanding Loans.
+- Keep supplied originals and any re-identification mapping out of this planning root, later design archives, seeds, and repositories. The supplied artifact remains outside this root; it was not copied or altered. No mapping was created.
+
+## Proposed choices awaiting model review
+
+- One Equipment record represents one tagged physical item; one Borrower record represents one person; one Loan represents one borrowing episode. This candidate has no quantity inventory.
+- Require Equipment tag/name, Borrower name, Loan equipment/borrower, and checkout date. Email, due date, return date, and workshop note are optional. These are proposed rules, not deductions from populated or blank cells.
+- Restrict deleting an Equipment or Borrower referenced by a Loan, to preserve its history. No uniqueness, identity matching, or immutability rule is asserted from this small artifact.
+- Start the demo on Loans, with public list/detail pages for all three Entities and related Loans on Equipment/Borrower detail. Editing, checkout, and return actions are deferred pending workflow choices.
+- The existing staff-note concept is presented as a Workshop note containing only invented, harmless demo text. It has no private staff-only access in this public demo.
+- All development records are disposable examples, not all-environment reference data. The dates are fixed historical examples. A missing return date represents an outstanding sample Loan; it is not a dynamic claim about today.
+
+## Open product questions
+
+- Must Equipment tags be unique? May Borrowers share a name or email, and what identifies a person when creating a later Loan?
+- Is a due date always required? What date-ordering rules should be enforced?
+- May an item have overlapping outstanding Loans, and are editing, returning, and deleting Loans required for the workshop?
+
+## Requirements outside the Plan vocabulary
+
+No custom import workflow, automated reminder, or other application behavior outside the Plan vocabulary has been agreed. The CSV is a modeling example, not a request for an importer. Data-handling constraints above must be carried into any later implementation handoff.
+
+## Verification and handoff
+
+This is an unsubmitted proposal. Local JSON parsing and explicit sample-graph integrity checks do not establish whole-graph analysis or generated behavior. No AnalysisRun, GapSet, Compilation, or running application exists for this candidate.
+
+The available CLI reported 0.3.0; this Skill expects 0.4.0. It was used only for local initialization and UUID generation. No compatible JSON Schema validator was found in the checked local commands, so schema validation was not performed. The bundled 0.20 reference and narrowly relevant schema definitions informed the authoring.
+
+These notes are at the planning root beside `.firstdraft/`. No generated repository yet exists to contain them. Any later root adoption must start here, with the original artifact still outside the adoption root, and retain these requirements in the resulting design archive.

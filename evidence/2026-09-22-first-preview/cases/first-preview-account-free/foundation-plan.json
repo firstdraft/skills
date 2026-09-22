@@ -1,0 +1,626 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.20",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "application": {
+    "key": "workshop_habits",
+    "name": "Workshop Habits",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf8-094e-7b40-b2c8-8828097617e7",
+        "key": "goal",
+        "name": "Goal",
+        "primary_descriptor": {
+          "field": "goal.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf8-094e-7555-9ca5-b528a7fe7dce",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "collapse_whitespace",
+              "blank_to_null"
+            ]
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf8-094e-7f78-93a6-88dd5e6dc9c9",
+            "key": "habits",
+            "kind": "direct",
+            "name": "Habits",
+            "reference": "habit.goal",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "goal.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "goal.name"
+              },
+              {
+                "association": "goal.habits",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "habit.name"
+                  },
+                  {
+                    "field": "habit.status"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "goal.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "goal.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf8-094e-7ff1-a06f-9bda595b8634",
+        "key": "habit",
+        "name": "Habit",
+        "primary_descriptor": {
+          "field": "habit.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf8-094e-7bec-9073-1789bc15e660",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "collapse_whitespace",
+              "blank_to_null"
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf8-094e-75ca-b214-50c983a57b9a",
+            "key": "status",
+            "name": "Status",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "active"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf8-094e-7845-91aa-4f50c7c0be16",
+                  "key": "active",
+                  "name": "Active"
+                },
+                {
+                  "subject_uuid": "01a0caf8-094e-7e94-a285-a75a7a87a9a5",
+                  "key": "paused",
+                  "name": "Paused"
+                }
+              ]
+            }
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf8-094e-7f87-aa94-b3b248fcf2f5",
+            "key": "goal",
+            "name": "Goal",
+            "targets": [
+              "goal"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf8-094e-7ed3-8a3a-9ec9c294661f",
+            "key": "logs",
+            "kind": "direct",
+            "name": "Logs",
+            "reference": "habit_log.habit",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "habit.name"
+              },
+              {
+                "field": "habit.status"
+              },
+              {
+                "association": "habit.goal",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "habit.name"
+              },
+              {
+                "field": "habit.status"
+              },
+              {
+                "association": "habit.goal",
+                "authorization": "public"
+              },
+              {
+                "association": "habit.logs",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "habit_log.logged_on"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "habit.name"
+              },
+              {
+                "field": "habit.status"
+              },
+              {
+                "association": "habit.goal"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "habit.name"
+              },
+              {
+                "field": "habit.status"
+              },
+              {
+                "association": "habit.goal"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf8-094e-749a-aa9a-5e45901886e1",
+        "key": "habit_log",
+        "name": "Log",
+        "primary_descriptor": {
+          "field": "habit_log.logged_on"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf8-094e-78a6-888e-f8f6a41dcfc0",
+            "key": "logged_on",
+            "name": "Date",
+            "type": "date",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf8-094e-7662-988a-e2bc917a687e",
+            "key": "habit",
+            "name": "Habit",
+            "targets": [
+              "habit"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "habit_log.logged_on"
+              },
+              {
+                "association": "habit_log.habit",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "habit_log.logged_on"
+              },
+              {
+                "association": "habit_log.habit",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "habit_log.logged_on"
+              },
+              {
+                "association": "habit_log.habit"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "habit_log.logged_on"
+              },
+              {
+                "association": "habit_log.habit"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "home_index": "goal",
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf8-094e-7873-9887-9223471efdc5",
+        "key": "energy",
+        "entity": "goal",
+        "fields": [
+          {
+            "field": "goal.name",
+            "value": {
+              "kind": "literal",
+              "value": "Feel more energetic"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094e-78b6-8a98-c2a8adc6bedd",
+        "key": "learning",
+        "entity": "goal",
+        "fields": [
+          {
+            "field": "goal.name",
+            "value": {
+              "kind": "literal",
+              "value": "Make time to learn"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-729e-8daa-df6940f21d3e",
+        "key": "creativity",
+        "entity": "goal",
+        "fields": [
+          {
+            "field": "goal.name",
+            "value": {
+              "kind": "literal",
+              "value": "Try something creative"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-77cd-8f69-c0e9985c25ff",
+        "key": "lunchtime_walk",
+        "entity": "habit",
+        "fields": [
+          {
+            "field": "habit.name",
+            "value": {
+              "kind": "literal",
+              "value": "Walk after lunch"
+            }
+          },
+          {
+            "field": "habit.status",
+            "value": {
+              "kind": "literal",
+              "value": "active"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit.goal",
+            "value": {
+              "kind": "reference_record",
+              "record": "goal.energy"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-787f-b17d-cdd47b22bf54",
+        "key": "evening_stretch",
+        "entity": "habit",
+        "fields": [
+          {
+            "field": "habit.name",
+            "value": {
+              "kind": "literal",
+              "value": "Stretch before bed"
+            }
+          },
+          {
+            "field": "habit.status",
+            "value": {
+              "kind": "literal",
+              "value": "paused"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit.goal",
+            "value": {
+              "kind": "reference_record",
+              "record": "goal.energy"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-713d-9a09-ce629441cd3e",
+        "key": "daily_reading",
+        "entity": "habit",
+        "fields": [
+          {
+            "field": "habit.name",
+            "value": {
+              "kind": "literal",
+              "value": "Read for 10 minutes"
+            }
+          },
+          {
+            "field": "habit.status",
+            "value": {
+              "kind": "literal",
+              "value": "active"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit.goal",
+            "value": {
+              "kind": "reference_record",
+              "record": "goal.learning"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-7db6-b844-e74aacd7349d",
+        "key": "reflection",
+        "entity": "habit",
+        "fields": [
+          {
+            "field": "habit.name",
+            "value": {
+              "kind": "literal",
+              "value": "Write a short reflection"
+            }
+          },
+          {
+            "field": "habit.status",
+            "value": {
+              "kind": "literal",
+              "value": "active"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit.goal",
+            "value": {
+              "kind": "reference_record",
+              "record": "goal.learning"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-7c76-8b8c-2f8f6f25f049",
+        "key": "walk_september_14",
+        "entity": "habit_log",
+        "fields": [
+          {
+            "field": "habit_log.logged_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-09-14"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit_log.habit",
+            "value": {
+              "kind": "reference_record",
+              "record": "habit.lunchtime_walk"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-75e2-88ef-8c45860cf20c",
+        "key": "walk_september_15",
+        "entity": "habit_log",
+        "fields": [
+          {
+            "field": "habit_log.logged_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-09-15"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit_log.habit",
+            "value": {
+              "kind": "reference_record",
+              "record": "habit.lunchtime_walk"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-7ab4-9bf7-b656a733952b",
+        "key": "stretch_september_08",
+        "entity": "habit_log",
+        "fields": [
+          {
+            "field": "habit_log.logged_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-09-08"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit_log.habit",
+            "value": {
+              "kind": "reference_record",
+              "record": "habit.evening_stretch"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-7554-8e38-09b1219d30ea",
+        "key": "reading_september_13",
+        "entity": "habit_log",
+        "fields": [
+          {
+            "field": "habit_log.logged_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-09-13"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit_log.habit",
+            "value": {
+              "kind": "reference_record",
+              "record": "habit.daily_reading"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf8-094f-7f8e-b51a-3ade4964dc85",
+        "key": "reading_september_15",
+        "entity": "habit_log",
+        "fields": [
+          {
+            "field": "habit_log.logged_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-09-15"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "habit_log.habit",
+            "value": {
+              "kind": "reference_record",
+              "record": "habit.daily_reading"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

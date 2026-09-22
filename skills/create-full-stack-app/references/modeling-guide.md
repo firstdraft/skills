@@ -4,6 +4,8 @@
 
 - [Start from product meaning](#start-from-product-meaning)
 - [Interview toward one coherent candidate](#interview-toward-one-coherent-candidate)
+- [Learn from examples and artifacts](#learn-from-examples-and-artifacts)
+- [Prepare data for the first preview](#prepare-data-for-the-first-preview)
 - [Retain implementation requirements](#retain-implementation-requirements)
 - [Choose Home independently of navigation](#choose-home-independently-of-navigation)
 - [Model Entities and Fields](#model-entities-and-fields)
@@ -80,6 +82,62 @@ requested-client choices that change the slice are explicit; and remaining unkno
 deferred. Read back delegated choices, exclusions, open questions, and capability gaps. Readiness does not require
 resolving every imaginable future product decision, and it does not prohibit earlier local edits or diagnostic
 submissions.
+
+## Learn from examples and artifacts
+
+After understanding the rough goal and before settling detailed modeling, ask once whether the user has a
+representative spreadsheet, CSV, form, photo, report, or export. The purpose is to understand the work; sample-data
+reuse is secondary. An example already supplied satisfies this invitation. If none is available or sharing is
+declined, continue from the description or a synthetic example.
+
+Have the user explain a representative item and how it is used. Inspect relevant material with available tools;
+say when a format could not be read. Use it to clarify vocabulary, record boundaries, relationships, units, dates,
+allowed values, attachments, and workflows. An equipment sheet repeating borrower details across loans may suggest
+Equipment, Borrower, and Checkout records. A form with several photo slots may mean a collection of attachments,
+not one Field per slot. Columns, blanks, and duplicates alone do not establish requiredness or uniqueness.
+Distinguish current workarounds from desired behavior and ask about consequential ambiguity.
+
+Sharing a private example for modeling does not authorize copying it into the Plan, notes, seeds, design archive,
+or repository. Use authorization already given; clarify reuse only when it is unclear. Prefer a small synthetic
+or appropriately transformed sample, preserving relationships and relevant variety with consistent replacements.
+Changing names alone does not anonymize free text, dates, identifiers, photos, or metadata. Use permission-cleared
+media or substitutes. Retain useful model decisions and unresolved needs in the existing notes, without raw private
+contents or a re-identification mapping unless their inclusion is authorized.
+
+Before root adoption, inspect the planning workspace for supplied originals and derived files: the CLI archives
+workspace files under `.firstdraft/design/`, and hidden files can still be committed. Keep model-only originals
+outside the workspace being adopted and out of its Git index, preserving the user's source rather than deleting
+it. Inspect the archive and staged changes before a baseline commit or remote handoff.
+
+## Prepare data for the first preview
+
+Normally propose a small realistic `application.development_data` graph even when the user did not ask for data.
+Choose enough related records and relevant states to exercise the intended first flow, plus a useful empty state
+where appropriate. For a movie app, a few movies, one demo viewer, and related watched/watchlist records make the
+relationships explorable. For a habit app without Accounts, related goals, active and paused habits, and historical
+logs can demonstrate the flow without inventing authentication. Do not require a universal row count or add
+Entities solely to seed them.
+
+Make the dataset and any source reuse visible in the existing semantic read-back. Approve it with the Plan, not
+row by row. Honor an explicit empty-data choice, omitting `development_data` when there are no records. An already
+approved Plan with no data is not permission to silently add records during handoff.
+
+Keep Entity `reference_data` for facts the app needs in every environment and `development_data` for disposable
+development exploration. Reference-data Rails emission remains incomplete. Use supported typed literal Field
+assignments and `reference_record` links, not Faker, Ruby, file paths disguised as uploads, or new runtime-value
+syntax. Label historical dates honestly; a fixed literal does not remain “today.” Preserve structured requests and
+review actual data/dependency gaps. Keep outside-grammar media or import work in implementation notes rather than
+inventing an ingestion feature or promising those records will emit.
+
+Where the app needs an Account, propose an explicitly disposable email/password record only within the supported
+Account slice. Use intentionally public demo values, never owner, provider, or production credentials. No Account
+is needed for an Account-free app; unsupported Account or data behavior needs an honest gap, not a promised login
+or weakened access. Inspect the retained seed result before claiming sign-in works.
+
+After Compilation, follow [first-preview verification](diagnostics-and-recovery.md#verify-the-first-preview):
+load the selected development records, inspect visible relationships and states, and actually sign in where
+applicable. A seed file or successful setup alone does not prove a useful first preview. Later UI examples normally
+extend `db/seeds/development.rb`; keep demo Accounts out of all-environment seeds and preserve changed passwords.
 
 ## Retain implementation requirements
 

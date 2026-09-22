@@ -1,0 +1,1 @@
+Use First Draft to model our returns from equipment-return-form.md. It is for understanding the workflow only. Staff can return individual items on different days and attach any number of damage photos, with captions. Do not retain the filled-in private contents. Keep this local and tell me what should be structured versus left for implementation.

@@ -130,6 +130,10 @@ related questions about choices changing Entity boundaries, record granularity, 
 could mean unique objects, interchangeable goods, or both, offer one record per unique object, one record carrying a
 quantity, or both with distinct meaning. Alternatives are proposals, not answers.
 
+Ask early for examples and propose preview data through the
+[artifact and data guidance](references/modeling-guide.md#learn-from-examples-and-artifacts),
+within ordinary Plan review.
+
 For an underspecified opening request, ask only about product meaning and deferred areas. Wait for the user's reply
 before discussing target support unless feasibility was requested. Later, state the current access boundary
 precisely: Web Scaffolds may be public or may use the bounded Account and Policy slices, while ordinary iPhone and Android
@@ -199,11 +203,11 @@ and exclusions. Summarize outstanding implementation notes and how the selected 
 Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Use only that attached
 digest: the CLI validates it against the attached GapSet; never substitute a fixture, historical, or another
 Project's digest. Explain that service gaps were skipped before semantic analysis, target gaps were not fully
-realized, and `valid` applies only to the admitted graph. Use the current folder by default; select an absent
-`--output <path>` only when the user wants another directory or the current root is ineligible. Select `--github`
+realized, and `valid` applies only to the admitted graph. Use current-folder output by default. Select an absent
+`--output <path>` for a requested destination, an ineligible root, or model-only originals when root output was not
+explicitly requested. Select `--github`
 only for an explicit private GitHub repository request. Generic compile or build language selects local output.
-Direct output creates only a verified local directory, successful Publication creates one private GitHub repository,
-and neither deploys.
+Direct output creates a verified local directory; Publication creates one private GitHub repository. Neither deploys.
 Do not enumerate absent subject families or immaterial properties. Ask the user to correct or explicitly approve the
 candidate and reviewed gaps only when those decisions are still unresolved; require no digest echo or
 gap-acknowledgment field. Existing authorization carries forward: if the user has already approved the candidate and
@@ -235,7 +239,7 @@ After the exact candidate's semantic read-back is approved, read
 
   This is equivalent to `plan compile --output .`. Read the root-adoption preconditions before invoking it. The CLI
   preserves an existing root `.git` and archives planning material under `.firstdraft/design/`. Use an absent path
-  such as `firstdraft_cli plan compile --output ./application` only when another directory is desired. Root adoption
+  such as `firstdraft_cli plan compile --output ./application`, when those rules require it. Root adoption
   is POSIX-only; Windows requires an absent output path. Both local forms use the service Compiler and create no
   GitHub repository.
 - For selected Publication, run explicit GitHub mode:

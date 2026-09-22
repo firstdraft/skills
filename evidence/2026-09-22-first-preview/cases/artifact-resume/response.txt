@@ -1,0 +1,5 @@
+The next action is to agree on a location outside the planning workspace for the original `equipment-loans.csv`. Current-folder Compile archives planning files under `.firstdraft/design/`, so it would retain this modeling-only CSV in the generated app.
+
+Where outside the planning workspace should I preserve the original? I’ll leave it untouched until that destination is agreed. Your approval of the exact Plan, reviewed gaps, and current-folder Compile remains valid.
+
+This clarification is required by the [create-full-stack-app Skill](/Users/sandbox2/.codex/worktrees/8079/skills/skills/create-full-stack-app/SKILL.md). Its [root-adoption guidance](/Users/sandbox2/.codex/worktrees/8079/skills/skills/create-full-stack-app/references/diagnostics-and-recovery.md) says: “if their destination is unresolved, clarify it before moving the originals or adopting the root.”

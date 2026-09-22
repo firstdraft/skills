@@ -1,0 +1,1 @@
+Use First Draft to help me plan a lending app for our workshop's equipment. Members borrow cameras and microphones and staff record returns. Let's start with the model; keep this local.

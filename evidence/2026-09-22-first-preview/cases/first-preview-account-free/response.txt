@@ -1,0 +1,14 @@
+Prepared [Workshop Habits](</Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/first-preview-account-free/.firstdraft/foundation-plan.json>) for local review.
+
+- **Confirmed:** public habit tracking for your workshop, with Goals → Habits → dated Logs and no accounts or sign-in.
+- **Chosen for review:** Goals as Home; public list, detail, create, edit, and delete screens for all three record types. Anyone reaching the preview can make changes. Goal and habit names are required and whitespace-normalized; log dates and parent relationships are required. Habits default to Active and may be Paused. Parents cannot be deleted while related records remain.
+- **Simple behavior:** pausing preserves logs and does not block new entries. Multiple logs on the same date are allowed; there are no streak or scheduling rules.
+- **Proposed preview data:** three goals, four habits (three Active and one Paused), and five linked logs dated September 8–15, 2026. These are synthetic, disposable development records, not “today” values. “Try something creative” has no habits; “Write a short reflection” has no logs, so both empty states can be explored.
+
+The [implementation notes](</Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/first-preview-account-free/implementation-notes.md>) record that no agreed custom behavior or blocking questions remain outside the Plan. This candidate is web-only; reminders and streak calculations are outside its scope.
+
+JSON parsing and targeted identity, relationship, and sample-data checks passed. Full schema validation was not performed because no compatible local validator was found. The installed CLI is **0.3.0**, while this Skill expects **0.4.0**; its local initialization and UUID commands succeeded, but service compatibility is unverified.
+
+Plan SHA-256: `89f89abda01b452afc31e94ec83a1b706e0c1814121d80449296e62eef1d187c`.
+
+Everything remains local. Nothing was submitted or Compiled, no database was touched, and no running preview or generated seed behavior was verified. There is no observed AnalysisRun or GapSet yet.

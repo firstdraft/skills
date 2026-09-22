@@ -1,0 +1,4 @@
+equipment_tag,equipment_name,borrower_name,borrower_email,checked_out_on,due_on,returned_on,staff_note
+CAM-101,Mirrorless camera,Rowan Example,rowan.private@example.test,2026-09-01,2026-09-08,2026-09-07,Private control: needs accessible pickup
+MIC-202,Shotgun microphone,Rowan Example,rowan.private@example.test,2026-09-01,2026-09-08,,Private control: prefers home delivery
+CAM-101,Mirrorless camera,Casey Example,casey.private@example.test,2026-09-15,2026-09-29,,

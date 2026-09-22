@@ -1,6 +1,6 @@
 # Behavioral evaluation index
 
-`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for 73 fresh-context cases. Cases and
+`create-full-stack-app/cases.json` is the harness-neutral behavioral contract for fresh-context cases. Cases and
 fixtures are review inputs, not execution evidence. Each case declares whether the Skill should trigger and which
 artifacts are attached, staged into the project, or retained only as expected output.
 
@@ -24,6 +24,13 @@ specifically prepared server-backed run. Never print or commit private `.firstdr
 
 - `initialize-empty-plan`
 - `local-only-draft`
+- `first-preview-movie-proposal`
+- `first-preview-empty-choice`
+- `first-preview-account-free`
+- `artifact-invitation`
+- `artifact-model-only-csv`
+- `artifact-derived-samples`
+- `artifact-return-form`
 - `choose-conventional-validations`
 - `preserve-structured-validation-gap`
 - `retain-outside-vocabulary-requirement`
@@ -45,6 +52,18 @@ specifically prepared server-backed run. Never print or commit private `.firstdr
 The interview case attaches
 [`create-full-stack-app/references/candidate-interview-protocol.md`](create-full-stack-app/references/candidate-interview-protocol.md).
 The protocol is evaluator-facing and is not packaged with the Skill.
+
+The first-preview and artifact cases exercise planning before a user explicitly asks for sample data, explicit
+empty-data and Account-free choices, source examples used only for modeling, and authorized synthetic reuse. The
+CSV and filled form are fictional privacy controls. Give the executing agent only its prompt, Skill, and input
+artifacts, not these expectations. Stage model-only artifacts outside the workspace that root adoption will archive.
+
+For runtime follow-through, use the movie case's actual authored Plan in an isolated local service/CLI workspace,
+review its matching analysis and all gaps, then Compile into the local root. Follow setup through visible movies,
+related bookmarks and actual sign-in. Check an Account-free and an empty-data result separately. Record the exact
+Plan/source identities, approved data, emitted residual, browser observations and any gap; case definitions or
+source-only responses do not prove this journey. Reuse the historical Movie v2 empty-data and Habit trial 2 populated
+comparisons linked from Skills #83 as context, never as a fresh current-source run.
 
 ## Push, analysis, and diagnostics
 

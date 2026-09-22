@@ -1,0 +1,532 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.20",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "application": {
+    "key": "workshop_equipment_loans",
+    "name": "Workshop Equipment Loans",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0cafb-8687-7a0e-bf86-26323af64816",
+        "key": "equipment",
+        "name": "Equipment",
+        "primary_descriptor": {
+          "field": "equipment.tag"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0cafb-8688-72d7-b21d-8016ebe5612e",
+            "key": "tag",
+            "name": "Equipment tag",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0cafb-8688-708e-89ed-13aa70c9238b",
+            "key": "name",
+            "name": "Equipment name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0cafb-8688-7b4b-bc90-837f3b513390",
+            "key": "loans",
+            "name": "Loans",
+            "kind": "direct",
+            "reference": "loan.equipment",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "equipment.tag"
+              },
+              {
+                "field": "equipment.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "equipment.tag"
+              },
+              {
+                "field": "equipment.name"
+              },
+              {
+                "association": "equipment.loans",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "association": "loan.borrower",
+                    "authorization": "public"
+                  },
+                  {
+                    "field": "loan.checked_out_on"
+                  },
+                  {
+                    "field": "loan.due_on"
+                  },
+                  {
+                    "field": "loan.returned_on"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0cafb-8688-7902-96f6-5538d630cf13",
+        "key": "borrower",
+        "name": "Borrower",
+        "primary_descriptor": {
+          "field": "borrower.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0cafb-8688-71e9-b2d1-9c3e3fb31a69",
+            "key": "name",
+            "name": "Borrower name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0cafb-8688-706d-b960-605fff3e1506",
+            "key": "email",
+            "name": "Borrower email",
+            "type": "short_text",
+            "required": false
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0cafb-8688-727a-a17f-61719ad24424",
+            "key": "loans",
+            "name": "Loans",
+            "kind": "direct",
+            "reference": "loan.borrower",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "borrower.name"
+              },
+              {
+                "field": "borrower.email"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "borrower.name"
+              },
+              {
+                "field": "borrower.email"
+              },
+              {
+                "association": "borrower.loans",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "association": "loan.equipment",
+                    "authorization": "public"
+                  },
+                  {
+                    "field": "loan.checked_out_on"
+                  },
+                  {
+                    "field": "loan.due_on"
+                  },
+                  {
+                    "field": "loan.returned_on"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0cafb-8688-758f-9651-3f11785a6028",
+        "key": "loan",
+        "name": "Loan",
+        "primary_descriptor": {
+          "association": "loan.equipment"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0cafb-8688-7fa1-83a4-0523f742a7cc",
+            "key": "checked_out_on",
+            "name": "Checked out on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0cafb-8688-7627-af9e-695f43a3c743",
+            "key": "due_on",
+            "name": "Due on",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0cafb-8688-719c-8e1b-cc441f7c305f",
+            "key": "returned_on",
+            "name": "Returned on",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0cafb-8688-7628-ae58-18e3e375f7a7",
+            "key": "staff_note",
+            "name": "Workshop note",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0cafb-8688-7a28-acea-a7948bcd43d9",
+            "key": "equipment",
+            "name": "Equipment",
+            "targets": [
+              "equipment"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          },
+          {
+            "subject_uuid": "01a0cafb-8688-78fa-8624-76b516b52b83",
+            "key": "borrower",
+            "name": "Borrower",
+            "targets": [
+              "borrower"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "association": "loan.equipment",
+                "authorization": "public"
+              },
+              {
+                "association": "loan.borrower",
+                "authorization": "public"
+              },
+              {
+                "field": "loan.checked_out_on"
+              },
+              {
+                "field": "loan.due_on"
+              },
+              {
+                "field": "loan.returned_on"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "association": "loan.equipment",
+                "authorization": "public"
+              },
+              {
+                "association": "loan.borrower",
+                "authorization": "public"
+              },
+              {
+                "field": "loan.checked_out_on"
+              },
+              {
+                "field": "loan.due_on"
+              },
+              {
+                "field": "loan.returned_on"
+              },
+              {
+                "field": "loan.staff_note"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "home_index": "loan",
+    "development_data": [
+      {
+        "subject_uuid": "01a0cafb-8688-7167-93dc-65d22f31b98d",
+        "key": "projector",
+        "entity": "equipment",
+        "fields": [
+          {
+            "field": "equipment.tag",
+            "value": {
+              "kind": "literal",
+              "value": "KIT-730"
+            }
+          },
+          {
+            "field": "equipment.name",
+            "value": {
+              "kind": "literal",
+              "value": "Portable projector"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafb-8688-7855-9005-e1af96594df5",
+        "key": "screen",
+        "entity": "equipment",
+        "fields": [
+          {
+            "field": "equipment.tag",
+            "value": {
+              "kind": "literal",
+              "value": "KIT-845"
+            }
+          },
+          {
+            "field": "equipment.name",
+            "value": {
+              "kind": "literal",
+              "value": "Collapsible screen"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafb-8688-7278-9248-15c895d41e5a",
+        "key": "cedar",
+        "entity": "borrower",
+        "fields": [
+          {
+            "field": "borrower.name",
+            "value": {
+              "kind": "literal",
+              "value": "Demo Cedar"
+            }
+          },
+          {
+            "field": "borrower.email",
+            "value": {
+              "kind": "literal",
+              "value": "cedar@demo.invalid"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafb-8688-7453-a872-b67b8137f617",
+        "key": "juniper",
+        "entity": "borrower",
+        "fields": [
+          {
+            "field": "borrower.name",
+            "value": {
+              "kind": "literal",
+              "value": "Demo Juniper"
+            }
+          },
+          {
+            "field": "borrower.email",
+            "value": {
+              "kind": "literal",
+              "value": "juniper@demo.invalid"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafb-8688-7517-9aca-f1040d906cb8",
+        "key": "returned_projector",
+        "entity": "loan",
+        "fields": [
+          {
+            "field": "loan.checked_out_on",
+            "value": {
+              "kind": "literal",
+              "value": "2024-04-08"
+            }
+          },
+          {
+            "field": "loan.due_on",
+            "value": {
+              "kind": "literal",
+              "value": "2024-04-15"
+            }
+          },
+          {
+            "field": "loan.returned_on",
+            "value": {
+              "kind": "literal",
+              "value": "2024-04-12"
+            }
+          },
+          {
+            "field": "loan.staff_note",
+            "value": {
+              "kind": "literal",
+              "value": "Lens cap included."
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "loan.equipment",
+            "value": {
+              "kind": "reference_record",
+              "record": "equipment.projector"
+            }
+          },
+          {
+            "reference": "loan.borrower",
+            "value": {
+              "kind": "reference_record",
+              "record": "borrower.cedar"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafb-8688-7094-ba55-9e485f757b1a",
+        "key": "outstanding_screen",
+        "entity": "loan",
+        "fields": [
+          {
+            "field": "loan.checked_out_on",
+            "value": {
+              "kind": "literal",
+              "value": "2024-04-09"
+            }
+          },
+          {
+            "field": "loan.due_on",
+            "value": {
+              "kind": "literal",
+              "value": "2024-04-16"
+            }
+          },
+          {
+            "field": "loan.returned_on",
+            "value": {
+              "kind": "literal",
+              "value": null
+            }
+          },
+          {
+            "field": "loan.staff_note",
+            "value": {
+              "kind": "literal",
+              "value": "Packed in blue workshop case."
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "loan.equipment",
+            "value": {
+              "kind": "reference_record",
+              "record": "equipment.screen"
+            }
+          },
+          {
+            "reference": "loan.borrower",
+            "value": {
+              "kind": "reference_record",
+              "record": "borrower.cedar"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafb-8688-7f2d-b083-f06a961c7acc",
+        "key": "outstanding_projector",
+        "entity": "loan",
+        "fields": [
+          {
+            "field": "loan.checked_out_on",
+            "value": {
+              "kind": "literal",
+              "value": "2024-04-22"
+            }
+          },
+          {
+            "field": "loan.due_on",
+            "value": {
+              "kind": "literal",
+              "value": "2024-04-29"
+            }
+          },
+          {
+            "field": "loan.returned_on",
+            "value": {
+              "kind": "literal",
+              "value": null
+            }
+          },
+          {
+            "field": "loan.staff_note",
+            "value": {
+              "kind": "literal",
+              "value": null
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "loan.equipment",
+            "value": {
+              "kind": "reference_record",
+              "record": "equipment.projector"
+            }
+          },
+          {
+            "reference": "loan.borrower",
+            "value": {
+              "kind": "reference_record",
+              "record": "borrower.juniper"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+I propose three Entities, with **one Loan per item per borrowing episode**:
+
+| Entity | Proposed stored facts |
+| --- | --- |
+| Equipment | Equipment tag and name |
+| Member | Name and contact email |
+| Loan | Equipment, Member, checkout date, due date, optional return date, optional staff note |
+
+A Member can have many Loans, and Equipment can have many Loans over time. Returning equipment closes that Loan; borrowing it again creates another. A blank return date means **outstanding**, derived directly from the date rather than maintained as a separate status. Member names and email addresses are not assumed unique.
+
+The main clarifications are:
+
+1. **Inventory and identity:** Does a tag identify one physical item, do you also lend interchangeable stock by quantity, or both? How should staff distinguish members with the same name or changed email?
+2. **Loan rules:** Is only one outstanding Loan allowed per item, and must every Loan have a due date? Calendar dates, renewals, and correction of history also need agreement.
+3. **Access:** Is this staff-only, or can members manage their own loans? Who may see contact details and staff notes, and which clients do you want?
+
+I saved a [local draft Plan](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/artifact-model-only-csv/.firstdraft/foundation-plan.json) and [implementation notes](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/artifact-model-only-csv/implementation-notes.md). Required fields, deletion restrictions, and the placement of staff notes are explicitly provisional. No public screens or Accounts were assumed.
+
+No source record values were copied into these artifacts, and no data records were added. The original CSV is untouched. Verification covers JSON parsing and local identity/link checks only; no compatible local schema validator was found. The installed CLI is 0.3.0 versus the Skill's required 0.4.0. Nothing was submitted or Compiled, and target support has not been assessed.

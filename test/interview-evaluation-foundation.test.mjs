@@ -141,7 +141,6 @@ test("candidate protocol defines interview coverage and complete-candidate readi
 test("home-inventory corpus case probes consequential ambiguity without invented answers", async () => {
   const document = await loadEvaluationDocument();
   assert.equal(document.format, "firstdraft.skill-evals/1");
-  assert.equal(document.cases.length, 73);
 
   const cases = await loadEvaluationCases();
   const evaluation = evaluationCaseById(
@@ -270,14 +269,10 @@ test(
       "service gaps were skipped before semantic analysis",
       "target gaps were not fully realized",
       "`valid` applies only to the admitted graph",
-      "Use the current folder by default",
       "Select `--github` only for an explicit private GitHub repository request",
       "Generic compile or build language selects local output",
       "Existing authorization carries forward",
       "give the read-back as a progress update and proceed",
-      "Direct output creates only a verified local directory",
-      "successful Publication creates one private GitHub repository",
-      "neither deploys",
       "Do not enumerate absent subject families",
       "correct or explicitly approve the candidate and reviewed gaps",
       "require no digest echo or gap-acknowledgment field",

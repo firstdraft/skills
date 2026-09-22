@@ -1,0 +1,1 @@
+Continue our local First Draft planning for a movie catalog with private per-user bookmarks and a watched checkbox. The staged Plan captures the agreed scope; choose reasonable remaining details and prepare it for my review. I want to browse movies and my bookmarks in the first local preview. I have no existing files to share. Do not submit or Compile yet.

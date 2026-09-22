@@ -1,0 +1,18 @@
+Prepared the [Plan](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/first-preview-empty-choice/.firstdraft/foundation-plan.json) for local review. It remains byte-for-byte unchanged, including all 10 subject identities. The first preview is explicitly empty: no sample movies, users, bookmarks, or demo credentials. `development_data` remains omitted.
+
+The staged model retains:
+
+- A public movie catalog, with the movie list as Home and required titles limited to 200 characters.
+- User Accounts with required names, email/password registration, email verification, password recovery, and lockout.
+- Private bookmarks linking one User and one Movie, with `watched` defaulting to `false`. Ownership and movie links are immutable; deleting either linked record deletes the bookmark.
+- Movie and bookmark list/detail surfaces. Bookmark access is restricted to the owning Account. No movie or bookmark create/edit surfaces were added.
+
+The empty-preview requirement and acceptance examples are retained in [implementation-notes.md](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/first-preview-empty-choice/implementation-notes.md). No product questions remain for this review.
+
+Plan SHA-256: `e8477d823eda3e49503bfbcebbe7907a5876d4c535ad7ad58a38b53a52305127`.
+
+Verification reached JSON parsing and local checks for unique subject identities and omitted development/reference records. No compatible schema-validation command was found, so local schema validation was not performed. The installed CLI reports `0.3.0`; this Skill expects `0.4.0`. No service submission, analysis, GapSet, Compilation, database work, or runtime verification occurred. Missing CLI state was left untouched.
+
+Files created: `implementation-notes.md` and this `response.md`. The Plan and Skill were not changed.
+
+Commands used included the Skill resolver's `--version` and `--help`, `command -v check-jsonschema jsonschema ajv ajv-cli`, and Python JSON/SHA-256/identity/data checks. All authoring stayed within this case directory.

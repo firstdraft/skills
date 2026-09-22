@@ -1,0 +1,214 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.20",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "application": {
+    "key": "equipment_returns",
+    "name": "Equipment Returns",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0cafc-6c7b-7e79-9293-05d671f029fc",
+        "key": "borrower",
+        "name": "Borrower",
+        "primary_descriptor": {"field": "borrower.name"},
+        "fields": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7990-9053-59c05d92e3bd",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0cafc-6c7c-70ad-b049-44dae4f37227",
+            "key": "email",
+            "name": "Email",
+            "type": "short_text",
+            "required": false
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7677-8ecc-bd1e015d8102",
+            "key": "loans",
+            "name": "Loans",
+            "kind": "direct",
+            "reference": "loan.borrower",
+            "side": "referenced"
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafc-6c7c-7ef0-a181-e261e297f0ed",
+        "key": "equipment",
+        "name": "Equipment",
+        "primary_descriptor": {"field": "equipment.name"},
+        "fields": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-710f-8fce-6fcb24a3d379",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0cafc-6c7c-7f94-aae3-86b6419ec77d",
+            "key": "asset_tag",
+            "name": "Asset tag",
+            "type": "short_text",
+            "required": false
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7040-a4a3-64670cd191f4",
+            "key": "loan_items",
+            "name": "Loan items",
+            "kind": "direct",
+            "reference": "loan_item.equipment",
+            "side": "referenced"
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafc-6c7c-76e7-942d-05eac87f656f",
+        "key": "loan",
+        "name": "Loan",
+        "primary_descriptor": {"field": "loan.reference_code"},
+        "fields": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7fc6-b042-faff94d24fac",
+            "key": "reference_code",
+            "name": "Loan reference",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0cafc-6c7c-7c71-9850-cb17e00e5f5b",
+            "key": "checked_out_on",
+            "name": "Checked out on",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0cafc-6c7c-7581-9ecb-18beffb4073a",
+            "key": "staff_note",
+            "name": "Staff note",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7973-8ae9-12b7dd384777",
+            "key": "borrower",
+            "name": "Borrower",
+            "targets": ["borrower"],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7390-a980-7db6bfea07d6",
+            "key": "items",
+            "name": "Items",
+            "kind": "direct",
+            "reference": "loan_item.loan",
+            "side": "referenced"
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafc-6c7c-7e28-983b-2f599ca6aed6",
+        "key": "loan_item",
+        "name": "Loan item",
+        "primary_descriptor": {"association": "loan_item.equipment"},
+        "fields": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7e8e-9282-67aeecd1d4af",
+            "key": "returned_on",
+            "name": "Returned on",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0cafc-6c7c-7f6b-bfaa-994cb9b33bb9",
+            "key": "return_condition",
+            "name": "Return condition",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7095-a287-a18c0e10c8fd",
+            "key": "loan",
+            "name": "Loan",
+            "targets": ["loan"],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          },
+          {
+            "subject_uuid": "01a0cafc-6c7c-7e7c-8388-37b4963ad858",
+            "key": "equipment",
+            "name": "Equipment",
+            "targets": ["equipment"],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7445-b17b-c8c578930bd5",
+            "key": "damage_photos",
+            "name": "Damage photos",
+            "kind": "direct",
+            "reference": "damage_photo.loan_item",
+            "side": "referenced"
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0cafc-6c7c-7e52-af45-e6572a73f314",
+        "key": "damage_photo",
+        "name": "Damage photo",
+        "primary_descriptor": {"system_field": "id"},
+        "fields": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-701d-9683-6212470dfe5b",
+            "key": "image",
+            "name": "Image",
+            "type": "image",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0cafc-6c7c-7c83-8c2b-da884ccd7c76",
+            "key": "caption",
+            "name": "Caption",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0cafc-6c7c-7070-a0ea-4237f11d546b",
+            "key": "loan_item",
+            "name": "Loan item",
+            "targets": ["loan_item"],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ]
+      }
+    ]
+  }
+}

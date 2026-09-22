@@ -1,0 +1,11 @@
+I’m using the First Draft Skill to shape a local model. My starting proposal is **Equipment**, **Member**, and **Loan** records, with staff recording returns. Before settling those record boundaries:
+
+1. Do you track each camera and microphone individually by an asset tag or serial number, track a quantity of interchangeable items, or need both?
+2. Does a loan cover one item, or can a checkout include several items that come back separately? Walk me through one typical borrowing and return.
+3. Do you have a representative inventory spreadsheet, checkout form, photo, or export that would help explain your current workflow? Sharing an example is optional; we can continue from your description.
+
+I suggest a small synthetic preview dataset for review with the model: a few pieces of equipment, fictional members, an active loan, and a completed return. Any supplied example would first help us understand the work; reusing its contents as app data would be a separate choice.
+
+We can address access, screens, and client choices after these modeling decisions.
+
+Verification boundary: this is a local modeling proposal. No Plan JSON has been authored or validated, and nothing has been submitted, analyzed, or Compiled.

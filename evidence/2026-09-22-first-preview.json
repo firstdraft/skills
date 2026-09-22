@@ -1,0 +1,154 @@
+{
+  "format": "firstdraft.first-preview-source-observation/1",
+  "observed_on": "2026-09-22",
+  "boundary": "Seven fresh-context local source evaluations; parent-led local API/CLI and browser follow-through is separately recorded. Not installed-client, release or deployment proof.",
+  "skill_source_at_evaluation": "6eb11be06d9e741b1435602dc5996336ad845340",
+  "model": "Inherited Codex subagent model; exact model identity not attested by the collaboration tool.",
+  "inputs": "Each agent received only the source Skill, its case prompt and declared fictional fixtures; no rubric or sibling conversation. Responses are retained verbatim with original local links. CLI state and tokens are excluded.",
+  "cases": [
+    {
+      "id": "first-preview-movie-proposal",
+      "artifacts": "2026-09-22-first-preview/cases/first-preview-movie-proposal",
+      "sha256": {
+        "prompt.txt": "183385cc39766c26670eac88d0a343b55d1af3d1008133d76da003576cdbcab8",
+        "response.txt": "c8a23449cec79f3988dfeea73fa29bab365dfcf2477867e2496883ae24834121",
+        "foundation-plan.json": "8769d58e7ed4dd6818dd967c6769cf0f46ee8d871d9d510111f3ffe2b8dcd7c2"
+      },
+      "observed": "Proposed three connected movies, two disposable Accounts, watched/unwatched bookmarks, and an empty second viewer without being asked for samples. Preserved existing subject identities; added the intended owner-only watched edit.",
+      "schema_validation": "passed independently with bundled Plan 0.20 schema"
+    },
+    {
+      "id": "first-preview-empty-choice",
+      "artifacts": "2026-09-22-first-preview/cases/first-preview-empty-choice",
+      "sha256": {
+        "prompt.txt": "9f1673e5d7458becbfaf42ca39f12422bf435625e2e269df07757d3f2a3b8144",
+        "response.txt": "676586e7adca99e33d781bd25f52bf6b07cb4101bd4679deedc3ad52051f78dc",
+        "foundation-plan.json": "e8477d823eda3e49503bfbcebbe7907a5876d4c535ad7ad58a38b53a52305127",
+        "implementation-notes.txt": "ba91f694a23d961983339cde4a01d21b892e9f2fe1577fdbd4c1ede3092204f9"
+      },
+      "observed": "Preserved the exact input Plan and omitted development records and credentials after an explicit empty-start choice.",
+      "schema_validation": "passed independently with bundled Plan 0.20 schema"
+    },
+    {
+      "id": "first-preview-account-free",
+      "artifacts": "2026-09-22-first-preview/cases/first-preview-account-free",
+      "sha256": {
+        "prompt.txt": "99361c6d5c80a0b875bda8f70af391d691d10b831915773d82a71806499b58c3",
+        "response.txt": "00cf7d3f543dfba78e78e1c75e24339c1149a436a0ad5ba63167f5521ad91e43",
+        "foundation-plan.json": "89f89abda01b452afc31e94ec83a1b706e0c1814121d80449296e62eef1d187c",
+        "implementation-notes.txt": "23f7acf196b3accb902f9ad352954289f501970503eb8d5af4272350a7b077e4"
+      },
+      "observed": "Authored Goals, Habits and Logs with 12 connected synthetic records, active/paused and empty states, and no Account.",
+      "schema_validation": "passed independently with bundled Plan 0.20 schema"
+    },
+    {
+      "id": "artifact-invitation",
+      "artifacts": "2026-09-22-first-preview/cases/artifact-invitation",
+      "sha256": {
+        "prompt.txt": "734a8e15a32f46466a11330b60d1945acb17c57e4cfef2c296a252e0e1d38247",
+        "response.txt": "e80b59427e11a4706c22b9f931d4947f229f4ea818b420a88f1f2eb98c62fa5f"
+      },
+      "observed": "Asked one optional artifact question within three consequential opening questions; proposed synthetic examples without making an upload a gate.",
+      "schema_validation": "no Plan authored"
+    },
+    {
+      "id": "artifact-model-only-csv",
+      "artifacts": "2026-09-22-first-preview/cases/artifact-model-only-csv",
+      "sha256": {
+        "prompt.txt": "5404341469f1c3ea4d5030ef50d6736b624ec92cba2cdc17bb730b072a7377ee",
+        "response.txt": "2bbd67dc8ab44943ed838a7cd36869b0f16e253a06f1602f9f99afc8d0188aed",
+        "foundation-plan.json": "d9c6d634a2d84995ca63b66f55cada288a5f3837f98b5755a369f5d59b974030",
+        "implementation-notes.txt": "c416fbbc6b174b764726c7885578749b6ea1e4ce0208798384b8c404f8c49ae3"
+      },
+      "observed": "Proposed separate Equipment, Member and Loan records, asked consequential questions, and copied no original cells into Plan or notes.",
+      "schema_validation": "passed independently with bundled Plan 0.20 schema"
+    },
+    {
+      "id": "artifact-derived-samples",
+      "artifacts": "2026-09-22-first-preview/cases/artifact-derived-samples",
+      "sha256": {
+        "prompt.txt": "9598aa8eea634ea02dbcc57b211557ded85723fdcfeefc385e03de8f085fe632",
+        "response.txt": "5e8d7c212d166926a71150cdf33a9b19368b5d310655dcbe844afbecc8cc235b",
+        "foundation-plan.json": "e8cfa9c27e51017f32a0fbf1417af831051326f9b9069272d92d2aa8cf1d3cbe",
+        "implementation-notes.txt": "8045b409089589a42ef308a2cb0272e0573f4df0265918729df9850a9a9a3bc3"
+      },
+      "observed": "Kept the original outside a separate planning root; proposed seven invented records preserving repeated borrowers/equipment and returned/outstanding states.",
+      "schema_validation": "passed independently with bundled Plan 0.20 schema"
+    },
+    {
+      "id": "artifact-return-form",
+      "artifacts": "2026-09-22-first-preview/cases/artifact-return-form",
+      "sha256": {
+        "prompt.txt": "9d4a22003ba18a0e8620ae83160c4089f35d720f9b5f2c6da2e813545f01fef3",
+        "response.txt": "5976c3395d70e008a7b2710795a34e2af421f060019b9c5d3ee66879f0837ee1",
+        "foundation-plan.json": "c299b839cf89f6bb3ca61cd6eb893b0373b325cc8f1f736de94dcc47790159ad",
+        "implementation-notes.txt": "6767768810aa823d2dbf66db88fc4172247380300a51b68e97d5df0c7c623fa1"
+      },
+      "observed": "Modeled item-level returns and an unbounded damage-photo collection, retained image as structured meaning, disclosed its service-support gap, and kept private filled values out of Plan and notes.",
+      "schema_validation": "passed independently with bundled Plan 0.20 schema"
+    }
+  ],
+  "post_evaluation_amendments": [
+    "Corrected the form rubric from target gap to service-support gap.",
+    "Added the original-artifact check to pre-adoption routing and preservation guidance for an already archived original.",
+    "Explained that reseeding can recreate an edited ordinary lookup tuple.",
+    "Aligned entrypoint mode selection with the safe separate-output exception; no new filesystem or approval mechanism."
+  ],
+  "package": {
+    "version": "0.4.0",
+    "cli_source": "660c02e46cdf36ec76dd556de8c96ef67ed3b035",
+    "status": "unpublished source candidate",
+    "sha256": "1ce60acd0d344ac51a7e060a173ebda7ff2f8912da78ef7abfc7fb5d683a83a2",
+    "boundary": "Final unpublished source candidate; the initial seven evaluations used 6eb11be and its 5f24f7e81cf5b63548f62fb3336fe16368db77fecabc7f025e3991ffc507022f package-equivalent Skill bytes, not this final package."
+  },
+  "limitations": [
+    "No claim that source-agent execution proves installation or discovery in Claude/Codex clients.",
+    "The global CLI available to evaluators was 0.3.0; they correctly limited it to local initialization/UUID operations. Parent follow-through used exact CLI 0.4.0 source.",
+    "Original source fixtures contain fictional private-data controls, not actual private user data.",
+    "The form example is a readable document, not an image or PDF extraction test.",
+    "The empty movie candidate has no movie/bookmark create routes; their absence was preserved."
+  ],
+  "followups": [
+    {
+      "id": "artifact-resume",
+      "artifacts": "2026-09-22-first-preview/cases/artifact-resume",
+      "sha256": {
+        "response.txt": "9eb180875ae997d3c47922cfaad4b49b36ffc0d6c4dc8f2589350058c7bcfc7c",
+        "prompt.txt": "ef1e95c7e2793d1b3db17a45859ed0d209358ca4c2c1a8d4ada3152b582dcf29"
+      },
+      "observed": "Paused to resolve the original destination before explicitly requested root adoption; preserved prior Plan/Compile approval and did not touch the original.",
+      "boundary": "Fresh read-only source context; no actual file movement, service work or Compilation.",
+      "skill_source": {
+        "base": "6eb11be06d9e741b1435602dc5996336ad845340",
+        "state": "uncommitted pre-cdddec1 amendment draft",
+        "difference_from_cdddec1": "The pre-adoption paragraph said to clarify an unresolved original destination before moving originals or adopting the root; the later separate-output exception was absent.",
+        "diagnostics_sha256": "3160d364257dd3e2e6e7f52d372d06f0df4104853759c7fdd42d8559f538d73f",
+        "identity_method": "Reconstructed from the recorded pre-commit paragraph and unchanged remainder of cdddec1 diagnostics; the retained response quotes this draft."
+      }
+    },
+    {
+      "id": "artifact-default-output",
+      "artifacts": "2026-09-22-first-preview/cases/artifact-default-output",
+      "sha256": {
+        "response.txt": "9db5b64929e4722621cfddd186dc3a6fc2148c2b723c15f0c9d2b5e3bf04d9c9",
+        "prompt.txt": "1be896d4f5e5a8548abbdb318d978716ee791a0c1fee797fe2aa5c992a9f580b"
+      },
+      "observed": "Chose plan compile --output ./application, leaving the original untouched without an unnecessary question; preserved separate notes handoff.",
+      "boundary": "Fresh read-only source context; no actual file movement, service work or Compilation.",
+      "skill_source": {
+        "base": "6eb11be06d9e741b1435602dc5996336ad845340",
+        "state": "uncommitted pre-cdddec1 amendment draft",
+        "difference_from_cdddec1": "Packaged Skill bytes match cdddec1; the draft was committed after this evaluation.",
+        "equivalent_revision": "cdddec1e11ef2d90b0fc859aeee13f1c556fb381",
+        "diagnostics_sha256": "decc2d14629efcac0cecdb07123913ee2a684bbacfd6b8f2af961c686862561b"
+      }
+    }
+  ],
+  "service_companion": {
+    "base": "03163b80e2fac0ac820a18ba1bde9a4427413e9d",
+    "head": "ece840d74cadf1db47ace677d150250ad76f6606",
+    "pr": "https://github.com/firstdraft/firstdraft/pull/770",
+    "receipt": "https://github.com/firstdraft/firstdraft/blob/ece840d74cadf1db47ace677d150250ad76f6606/docs/solutions/2026-09-22-first-preview.json",
+    "boundary": "Runtime used base plus the retained README renderer/template source snapshots. The later README-only amendment distinguishes ordinary sample lookup from Account mutable setup and renders credentials literally in Markdown; runtime commands, admitted credentials and seed/auth behavior are unchanged."
+  }
+}

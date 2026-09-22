@@ -1,0 +1,9 @@
+I’d choose the absent `./application` directory. After checking CLI compatibility and confirming the approved Plan bytes are unchanged, I would run this once from the planning root:
+
+```sh
+sh "/Users/sandbox2/.codex/worktrees/8079/skills/skills/create-full-stack-app/scripts/firstdraft.sh" plan compile --output ./application
+```
+
+First Draft would Compile the Plan and write the verified application locally. The original `equipment-loans.csv` would stay untouched in the planning root, outside the generated app and its design archive. I would not copy its private contents into the Plan, notes, or sample data. Any agreed implementation notes would be carried over separately after successful materialization.
+
+This is only the proposed next action; I haven’t executed it.
