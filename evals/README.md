@@ -101,8 +101,9 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-`RELEASING.md` owns the cases required for each release. When it selects the two human-observed approval smokes,
-run each in its own fresh continuing agent session:
+`RELEASING.md` uses local compile and boot as the ordinary release smoke only when needed. The cases here are
+focused behavioral regressions for authoring or authorization changes, not a mandatory release sequence. When testing
+the two-turn approval behavior specifically, use these continuing-session pairs:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
 - Direct output pairs `precompile-drawing-board-read-back` with
@@ -116,7 +117,7 @@ exercises a valid candidate with a nonempty GapSet.
 
 The second prompt approves that semantic model, reviewed support result, selected mode, and Plan SHA-256 without
 echoing the GapSet digest or records. The same session must reread unchanged Plan bytes and invoke exactly one selected
-command without another confirmation. Publication uses zero-flag `plan compile` and reports terminal Compilation and
+command without another confirmation. Publication uses `plan compile --github` and reports terminal Compilation and
 Publication. Direct output uses `plan compile --output ./application`, reports the retained Compilation plus validated
 path, file count, and manifest digest, and claims no Publication, repository, or `.git`. Use a controlled local service;
 Publication also uses strict fake GitHub transport unless a live journey is explicitly approved.
@@ -138,8 +139,8 @@ follow-up is report-only; never edit, push, or Compile the replacement.
 
 The paired Drawing Board cases select and then invoke `plan compile --output ./application` for an explicit
 same-workspace request without a Publication or repository claim. The ambiguous-direct-start companion stops without
-repeating that command or switching to zero-flag Publication. The prepared Movie Catalog Publication pair selects one
-zero-flag Compile.
+repeating that command or switching to explicit --github Publication. The prepared Movie Catalog Publication pair selects one
+explicit --github Compile.
 
 `create-full-stack-app/cases.json` remains the harness-neutral behavioral contract. It declares prompts,
 expectations, and artifact roles; it does not grant capabilities or configure a sandbox or transport. Omit
@@ -166,7 +167,8 @@ that a server produced them during an eval.
 
 ## Shared client qualification
 
-Use the same cases and exact assembled package in Claude and Codex. Record each client's version and the actual
+When changing client integration or packaging, use the affected cases and exact assembled package in the affected
+client. Ordinary releases do not require a fresh session in both Claude and Codex. Record each client's version and the actual
 model. For the Codex 0.2.2 candidate, exercise installed Skill discovery, bundled CLI use without a global
 `firstdraft`, project-wrapper precedence, local-only initialization, authentication pause/resume, the continuing
 two-turn direct-Compile pair, and both non-trigger controls. The automatic install check is model-free; running it

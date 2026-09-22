@@ -9,9 +9,9 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 The reviewed source-candidate CLI is revision
-`20153726ba20f968af55ec4291eb76de8f03e9d5`, with JavaScript-source runtime digest
-`43c74adba22419d054562c1688c088a1c78e3729e65dae608d4021641dbfdaee`. Its source package is
-`@firstdraft.com/cli@0.3.0` and is unpublished. Check the command surface rather than assuming the version alone
+`660c02e46cdf36ec76dd556de8c96ef67ed3b035`, with JavaScript-source runtime digest
+`ddd9b8ee4d83135a668b7a97e2522ba23b9478339662c1f6115e5273851abf81`. Its source package is
+`@firstdraft.com/cli@0.4.0`. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
 
@@ -113,7 +113,8 @@ Use these terms when explaining the workflow:
 | Push | Send Git commits to an existing remote repository with `git push`. |
 | Deploy | Make the application run on a hosting service. GitHub publication does not deploy it. |
 
-Zero-flag mode selects **Compile and publish through First Draft**. Its internal **Publication** record tracks
+Zero-flag mode selects local output in the current folder, equivalent to `--output .`. Explicit `--github` selects
+**Compile and publish through First Draft**. Its internal **Publication** record tracks
 server-managed repository creation and artifact delivery. Publishing an existing workspace through GitHub creates
 no First Draft Publication record. **Materialization** means writing the verified artifact into a local directory;
 use "write the generated application into this workspace" when explaining that mechanic to the user.
@@ -125,31 +126,32 @@ Both `plan compile` modes submit the exact Plan bytes again and wait for the ana
 digest came from that accepted submission. Only `valid` analysis proceeds. Each mode uses the accepted exact Head
 condition; do not add a gap digest, acknowledgment field, or Plan edit.
 
-Choose the completion mode from the user's requested result. `--output` is for Drawing Board, same-workspace work,
-or another explicit local-directory request. Zero flags are for an explicit private GitHub repository. If the result
-is unclear, ask before the mutation rather than treating a generic Compile request as Publication authorization.
+Use current-folder local output for ordinary Compile requests. Use `--output <path>` for another requested directory
+and `--github` only for an explicit private GitHub repository request. The two flags are mutually exclusive.
+Compilation runs on the First Draft service; the output and app runtime are local. Codespaces is a fallback when
+local development is unsuitable, not a prerequisite.
 
 ### Direct local output
 
-CLI 0.3.0 archives the original workspace under `.firstdraft/design/`. This coordinated candidate is unpublished;
-published CLI 0.2.2 still uses top-level `design/`. Use an explicitly identified compatible source candidate for this
-flow; otherwise stop before root adoption and report the mismatch. Preserve the actual layout of an already
-materialized application; this change does not migrate it.
+CLI 0.4.0 defaults to current-root adoption and archives the original workspace under `.firstdraft/design/`.
+CLI 0.3.0 supports the same archive via explicit `--output .`; older 0.2.2 uses top-level `design/`. Preserve the actual
+layout of an already materialized application; this change does not migrate it.
 
-`plan compile --output` accepts an absent destination or a spelling that resolves to the physical current directory.
+`plan compile` defaults to the physical current directory. Explicit `--output` accepts an absent destination or a spelling that resolves to the physical current directory.
 It validates the destination before Plan mutation, then starts one direct conditional Compilation. An absent path is
 checked again after analysis. Current-root adoption instead holds one owned transaction lock, rechecks the original
 top-level identities immediately before moving anything, verifies the artifact inside the root, and installs through
 same-filesystem renames. The CLI owns those transport and installation mechanics; do not reimplement them with HTTP,
 a retained download shortcut, or archive tooling.
 
-The ordinary `./application` path must remain absent. Current-root adoption is selected only by `.`, `./`, an absolute
-current-directory spelling, or another spelling resolving to the same physical directory. It is POSIX-only, applies
+An explicit destination such as `./application` must remain absent. Current-root adoption is selected by default,
+or by `.`, `./`, an absolute current-directory spelling, or another spelling resolving to the same physical directory. It is POSIX-only, applies
 to any eligible real directory rather than a Drawing Board-specific shape, and requires a writable directory other
 than the filesystem root with no `.firstdraft/design` or top-level `.firstdraft-root-output`. Entries other than
 `.git` must be regular files or real same-filesystem directories. A Git root must have a clean tracked worktree and
 index, no unmerged or sparse state or in-progress Git operation, and no submodule metadata; untracked and ignored
-design material may remain. A directory nested inside another worktree is ineligible.
+design material may remain. A directory nested inside another worktree is ineligible. On Windows, select an absent
+`--output <path>` because current-root adoption is POSIX-only.
 
 On success, root adoption preserves every preexisting non-Git top-level entry directly beneath `.firstdraft/design/`,
 installs the artifact at the root, and reports `root_adoption`. It preserves an existing root `.git` and history,
@@ -198,10 +200,9 @@ After current-root adoption, the generated Rails application is the workspace ro
 is under `.firstdraft/design/`. Keep the existing root `.git`, history, and remotes when present. With an existing Git
 root, inspect and commit the staged baseline before setup or feature work, keeping credentials such as
 `.firstdraft/design/.env` and private CLI state ignored. Make **Create GitHub repository**, or **Push** when a remote
-exists, an early checkpoint.
-Confirm that the destination and applicable remote writes are authorized; approval of direct Compile alone does
-not authorize them.
-If the user declines, report that the baseline remains local and continue their requested local work without asking again.
+exists, an optional checkpoint when the user wants a remote. Local setup, boot, and iteration need no GitHub push.
+Confirm that the destination and applicable remote writes are already authorized before making them; an existing
+authorization is sufficient. Continue local work without prompting for an unnecessary remote.
 
 If a remote already exists, use that approved destination and an ordinary push; do not create another repository or
 replace its remote. The following creation route applies only to an unpublished template Codespace with an existing
@@ -231,7 +232,7 @@ Verify private visibility, the remote baseline commit, and the retained `.firstd
 the source published to GitHub. Report its URL and commit; send later commits with `git push`. After an ambiguous
 creation result, inspect the Codespace's repository association and the approved repository read-only before any retry.
 If creation succeeded but pushing failed, retain the repository and resolve the push failure without creating
-another one. This publishes the existing Git history; do not invoke zero-flag Compile or First Draft Publication
+another one. This publishes the existing Git history; do not invoke `plan compile --github` or First Draft Publication
 to publish an already-compiled workspace.
 
 Follow the generated root's README for setup and boot, then continue requested feature work in ordinary Rails source.
@@ -263,10 +264,10 @@ the notes and `.firstdraft/gaps.json` as separate sources; never edit the retain
 
 | Output mode | What carries the notes |
 | --- | --- |
-| Current-root adoption (`plan compile --output .` or `compilation download <id> --output .`) | The CLI moves the planning-root file into `.firstdraft/design/`. Verify it arrived and describes the selected Plan. Only previously tracked archived files are staged; explicitly include untracked notes in the authorized application commit. |
+| Current-root adoption (`plan compile`, `plan compile --output .`, or `compilation download <id> --output .`) | The CLI moves the planning-root file into `.firstdraft/design/`. Verify it arrived and describes the selected Plan. Only previously tracked archived files are staged; explicitly include untracked notes in the authorized application commit. |
 | Absent direct output (`plan compile --output ./application`) | The directory contains only artifact files. After verified materialization, copy the notes into the app location above and add discovery guidance. |
 | Retained Compilation download to an absent directory | The artifact does not contain workspace notes. Recover the matching planning notes separately and carry them into the downloaded app; a download alone cannot recover missing notes. |
-| Server GitHub Publication (zero-flag Compile) | First Draft publishes the retained artifact and never receives this workspace file. After Publication, carry the notes and discovery guidance into the resulting repository through an ordinary authorized follow-up commit and push. Until that succeeds, a different agent receiving only the repository will not have them. |
+| Server GitHub Publication (`plan compile --github`) | First Draft publishes the retained artifact and never receives this workspace file. After Publication, carry the notes and discovery guidance into the resulting repository through an ordinary authorized follow-up commit and push. Until that succeeds, a different agent receiving only the repository will not have them. |
 
 For a manual transfer, inspect any existing destination and reconcile it instead of overwriting it. Compare the
 copied contents with the reviewed notes. Continue maintaining the app copy; a retained planning copy is a handoff
@@ -301,7 +302,7 @@ UI Skills are unavailable, follow the app's guidance directly rather than making
 
 ### Private GitHub Publication
 
-Zero-flag `plan compile` requests the internal singleton GitHub Publication after valid analysis. It remains a
+`plan compile --github` requests the internal singleton GitHub Publication after valid analysis. It remains a
 separate explicit completion mode from direct local output.
 
 The command reserves standard output for one validated private GitHub repository URL on success. While waiting, its
@@ -385,13 +386,13 @@ projections paired with a queued or running Compilation instead of rendering an 
 `analysis_failed` as an analyzer failure and `superseded` as a concurrency outcome rather than making a speculative
 source correction. `local_plan_changed` means the bytes changed after acceptance or analysis and before the
 selected mutation. If the current bytes are intended, present their new SHA-256 and semantic delta, obtain approval
-of that changed candidate, and only then invoke the deliberately selected Compile mode for its own analysis.
+of that changed candidate only when it exceeds existing authorization, and invoke the deliberately selected Compile mode for its own analysis.
 
 The first accepted Publication request establishes this release's Project singleton, whether it later succeeds,
 parks, or ends in another terminal state. While one `plan compile` invocation polls it, do not launch a concurrent
 Compile or another start request. If an invocation that reached that retained Publication exits with a
 Publication-phase outcome unknown, status unavailable, wait timeout, or interruption, wait for it to exit and rerun
-the same zero-flag `plan compile` through the Skill resolver with exact unchanged Plan bytes. Its conditional
+the same `plan compile --github` through the Skill resolver with exact unchanged Plan bytes. Its conditional
 singleton PUT is the documented reconciliation path and resumes or reconciles the retained Publication without
 creating another Compilation, repository, or push. This exception does not apply to an outcome-unknown Plan push or
 Compile `phase: "push"`, which must stop because there is no Plan GET. There is no separate public Publication
@@ -455,15 +456,15 @@ bytes and private state; create replacement work only within the user's authoriz
 | `plan compile` | `analysis_status_unavailable`, `invalid_analysis_status`, `analysis_status_rejected` | Compile's analysis read failed or was rejected. |
 | `plan compile` | `plan_not_valid` | The accepted graph did not reach `valid`; inspect `current`. |
 | `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before the selected mutation. |
-| `plan compile --output` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | Direct Compilation start or status did not complete its validated contract. Do not infer Publication. |
-| `plan compile --output` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned direct Compilation changed, remained nonterminal, or reached a non-success terminal state. |
-| `plan compile --output` | `invalid_output_path` | Preflight makes no request; an absent-path post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve owner material and correct only the reported root precondition or choose an absent path. |
-| `plan compile --output`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `materialization_failed` | No verified local tree was installed. |
-| Zero-flag `plan compile` | `publication_start_rejected` | First Draft returned a validated non-timeout 4xx rejection; Publication success was not verified. |
-| Zero-flag `plan compile` | `publication_status_unavailable` | The retained Publication status read failed. |
-| Zero-flag `plan compile` | `invalid_publication_status` | The response did not satisfy the coordinated Publication protocol. |
-| Zero-flag `plan compile` | `publication_changed`, `publication_wait_timed_out` | The pinned singleton changed or remained nonterminal. |
-| Zero-flag `plan compile` | `publication_failed`, `publication_cancelled` | The retained singleton reached a non-success terminal state. |
+| local `plan compile` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | Direct Compilation start or status did not complete its validated contract. Do not infer Publication. |
+| local `plan compile` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned direct Compilation changed, remained nonterminal, or reached a non-success terminal state. |
+| local `plan compile` | `invalid_output_path` | Preflight makes no request; an absent-path post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve owner material and correct only the reported root precondition or choose an absent path. |
+| local `plan compile`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `materialization_failed` | No verified local tree was installed. |
+| `plan compile --github` | `publication_start_rejected` | First Draft returned a validated non-timeout 4xx rejection; Publication success was not verified. |
+| `plan compile --github` | `publication_status_unavailable` | The retained Publication status read failed. |
+| `plan compile --github` | `invalid_publication_status` | The response did not satisfy the coordinated Publication protocol. |
+| `plan compile --github` | `publication_changed`, `publication_wait_timed_out` | The pinned singleton changed or remained nonterminal. |
+| `plan compile --github` | `publication_failed`, `publication_cancelled` | The retained singleton reached a non-success terminal state. |
 | `compilation status`, `compilation download` | `compilation_status_unavailable`, `invalid_compilation_status` | The retained status could not be verified. |
 | `compilation status --wait` | `compilation_changed`, `compilation_wait_timed_out` | Retained identity/provenance changed or the wait ended. |
 | `compilation download` | `compilation_not_succeeded` | No artifact request was made. |
@@ -489,7 +490,7 @@ so preserve the local files and stop rather than repeating that mutation or manu
 `request_outcome_unknown` with `phase: "compilation"` means direct mode sent its conditional start but could not
 verify a retained Compilation identity. Unlike Publication, direct Compilation has no Project singleton or safe
 same-command reconciliation path. Preserve the approved exact Plan, CLI state, and selected output. Do not rerun
-`plan compile --output`, switch to zero-flag Publication, or issue a direct request. Stop until First Draft or an
+`plan compile --output`, switch to `--github` Publication, or issue a direct request. Stop until First Draft or an
 operator identifies the retained work and supplies a trustworthy recovery boundary.
 
 After a validated `202` start, act only on an error envelope carrying validated `current.compilation.id`.
@@ -503,13 +504,13 @@ repeat the direct start because polling, artifact retrieval, authentication, or 
 endpoint is a Project singleton, and the CLI already attempted one read-only reconciliation. The singleton may
 already exist even though the response is unknown. Do not start a concurrent Compile, preserve the retained Head
 boundary, and do not infer whether repository creation ran. After the current invocation exits, wait and rerun the
-same zero-flag `plan compile` through the Skill resolver with unchanged Plan bytes to reconcile or resume that
+same `plan compile --github` through the Skill resolver with unchanged Plan bytes to reconcile or resume that
 singleton.
 
 `publication_status_unavailable` and `publication_wait_timed_out` leave the retained
 singleton possibly running, scheduled for retry, parked, or otherwise unknown. Report only the last validated
 progress fields when present. Do not call it failed, succeeded, or published, and do not run concurrent Compile
-commands. After the current invocation exits, wait and rerun the same zero-flag Compile with unchanged Plan bytes
+commands. After the current invocation exits, wait and rerun the same `plan compile --github` with unchanged Plan bytes
 to resume the singleton.
 `invalid_publication_status` also leaves the singleton result unverified, but retrying unchanged cannot repair a
 protocol mismatch. Preserve the bytes and local state, reconcile compatible CLI/service versions, and do not start

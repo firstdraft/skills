@@ -213,7 +213,7 @@ test("packaged interview guidance keeps the opening turn focused on one product 
 });
 
 test(
-  "packaged workflow requires one exact semantic approval before remote Compile work",
+  "packaged workflow reviews the candidate and reuses existing authorization",
   async () => {
     const skill = await readFile(
       path.join(repository, "skills", "create-full-stack-app", "SKILL.md"),
@@ -270,10 +270,11 @@ test(
       "service gaps were skipped before semantic analysis",
       "target gaps were not fully realized",
       "`valid` applies only to the admitted graph",
-      "Select absent `./application` for direct requests",
-      "`.` only for explicit current-root adoption",
-      "zero-flag Publication only for an explicit private GitHub repository",
-      "Ask if unclear: generic compile or build language does not authorize Publication",
+      "Use the current folder by default",
+      "Select `--github` only for an explicit private GitHub repository request",
+      "Generic compile or build language selects local output",
+      "Existing authorization carries forward",
+      "give the read-back as a progress update and proceed",
       "Direct output creates only a verified local directory",
       "successful Publication creates one private GitHub repository",
       "neither deploys",
@@ -303,7 +304,7 @@ test(
     );
     assert(compile.includes("request the already selected mode"));
     assert(compile.includes("firstdraft_cli plan compile --output ./application"));
-    assert(compile.includes("For selected Publication, run zero-flag mode"));
+    assert(compile.includes("For selected Publication, run explicit GitHub mode"));
     assert(compile.includes("Invoke it exactly once"));
     assert(compile.includes("without another confirmation or gap field"));
 
@@ -424,7 +425,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   assert(
     expectationIncludes(
       readBack,
-      "zero-flag Publication mode",
+      "explicit --github Publication mode",
       "one private GitHub repository",
       "validated terminal success",
     ),
@@ -446,7 +447,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   );
   assert.equal(
     readBack.expectations.filter((expectation) =>
-      expectation.includes("zero-flag Publication mode"),
+      expectation.includes("explicit --github Publication mode"),
     ).length,
     1,
   );
@@ -560,7 +561,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       compile,
       "explicitly requested one private GitHub repository",
-      "exactly one zero-flag plan compile",
+      "exactly one plan compile --github",
       "does not add --output",
     ),
   );
@@ -613,7 +614,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
       direct,
       "After approval",
       "exactly one firstdraft plan compile --output ./application",
-      "does not also run zero-flag plan compile",
+      "does not also run plan compile --github",
     ),
   );
   assert(
@@ -635,13 +636,13 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
   );
 
   const root = evaluationCaseById(cases, "compile-prepared-current-root");
-  assert.match(root.prompt, /current workspace root/);
-  assert(root.prompt.includes(`SHA-256 ${movieCatalogSha256}`));
+  assert.match(root.prompt, /run it locally/);
+  assert.match(root.prompt, /Plan, its semantic read-back, and attached valid analysis gaps are approved/);
   assert(
     expectationIncludes(
       root,
-      "explicit current-root request",
-      "firstdraft plan compile --output .",
+      "ordinary local request",
+      "firstdraft plan compile",
       "never substitutes",
     ),
   );
@@ -683,7 +684,7 @@ test("pre-Compile evals separate approval, diagnostics, and execution", async ()
     expectationIncludes(
       ambiguousDirect,
       "Does not rerun plan compile --output",
-      "switch to zero-flag plan compile",
+      "switch to plan compile --github",
       "without a trustworthy Compilation ID",
     ),
   );

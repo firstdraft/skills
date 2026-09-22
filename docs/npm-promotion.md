@@ -1,15 +1,16 @@
-# Promote npm defaults through GitHub
+# Repair npm defaults through GitHub
 
-After the [release gates](../RELEASING.md) pass, push an immutable `promote-v<plugin-version>` tag in
-`firstdraft/skills` and approve its `npm-promotion` environment job. The workflow promotes the exact compatible
-`@firstdraft.com/cli` and `@firstdraft.com/claude-code` versions to npm `latest`, in that order. It does not publish
-package bytes, move `next`, select the catalog, or deploy the service. One operator still serializes the whole release.
+Ordinary releases publish directly to `latest` through OIDC; follow [RELEASING.md](../RELEASING.md). This legacy
+workflow is only for an explicitly requested repair of an already-published compatible pair. It is not a publication
+prerequisite and does not justify a token setup, credential probe, or separate approval during a normal release.
 
-This keeps publication under `next`, qualification, public catalog installation, and default promotion as separate
-steps. npm's [trusted publishing](https://docs.npmjs.com/trusted-publishers/#limitations-and-future-improvements)
-does not support `dist-tag`. A scoped [stage-only token](https://docs.npmjs.com/about-access-tokens/#about-stage-only-tokens)
-allows tag changes without allowing direct publication of a new version. GitHub OIDC remains the authentication for
-the existing publication workflows. Token creation and renewal require npm authentication; normal promotion does not.
+The retained `promote-v<plugin-version>` workflow changes the compatible CLI and plugin `latest` tags in that order.
+It requires its own configured `npm-promotion` environment. It neither publishes package bytes nor deploys the
+service. The historical helper expects the matching `next` tags and catalog; use it only when those preconditions
+already hold. Do not move `next` merely to make an ordinary release fit this retired sequence.
+
+npm trusted publishing authenticates new-version publication. Existing-version dist-tag repair may require npm
+authentication or the retained scoped token. Keep one operator and reconcile ambiguous writes read-only.
 
 ## Initial setup and renewal
 
@@ -61,11 +62,11 @@ follow [recovery](#partial-results-and-recovery) and retain that limitation sepa
 never reached remains unexercised until a separately approved tag write supplies that proof. Repeating the same
 rejected cleanup or broadening the token solely to make the probe pass is not required for promotion.
 
-## Promote a qualified release
+## Repair a qualified release
 
 Obtain release approval; an existing approval for the named release sequence is sufficient. Reconcile the exact
-source revisions, package hashes, compatibility, deployed service, release-specific qualification, public catalog
-installation, and current registry selections as required by `RELEASING.md`. The workflow verifies immutable package
+source revisions, package hashes, compatibility, deployed service, and current registry selections. Reuse the
+existing qualification and CI for unchanged inputs; this repair does not require another live journey. The workflow verifies immutable package
 identities and distribution state, but cannot establish that a human approved the release or that qualification ran.
 
 Use a clean, reviewed `main` checkout containing the promotion workflow. The promotion tag points at that reviewed

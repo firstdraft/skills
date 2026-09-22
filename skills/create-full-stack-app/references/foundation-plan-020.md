@@ -116,16 +116,17 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 The source candidate and pinned contract check use reviewed CLI revision
-`20153726ba20f968af55ec4291eb76de8f03e9d5`, with JavaScript-source runtime digest
-`43c74adba22419d054562c1688c088a1c78e3729e65dae608d4021641dbfdaee`, as contract provenance rather than release
+`660c02e46cdf36ec76dd556de8c96ef67ed3b035`, with JavaScript-source runtime digest
+`ddd9b8ee4d83135a668b7a97e2522ba23b9478339662c1f6115e5273851abf81`, as contract provenance rather than release
 or execution evidence. It exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
-`plan status`, zero-flag `plan compile`, direct `plan compile --output`, `compilation status`, and
+`plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
+`plan compile --output`, `compilation status`, and
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-unpublished `@firstdraft.com/cli@0.3.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
-explicit current-root adoption with `--output .`; the recovery reference owns its preconditions. Check commands
+`@firstdraft.com/cli@0.4.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
+current-root adoption by default or with `--output .`; the recovery reference owns its preconditions. Check commands
 rather than inferring compatibility from a version number. These source checks do not prove plugin/catalog
 publication, authentication, staging compatibility, or a complete user journey.
-CLI 0.3.0 uses `.firstdraft/design/`; published CLI 0.2.2 still uses top-level `design/`. See the
+CLI 0.3.0 and later use `.firstdraft/design/`; older CLI 0.2.2 used top-level `design/`. See the
 [direct-output compatibility boundary](diagnostics-and-recovery.md#direct-local-output).
 
 Selected native projects compose separate pinned Cores under `ios/` and `android/`. Each emitted
@@ -139,27 +140,20 @@ verified materialization.
 
 ## Preview generated native apps
 
-Keep ordinary Rails iteration in the web preview. For Android checks, the current path is **Android Studio Emulator
-on the user's computer**. Read the emitted `ANDROID_PREVIEW.md`; `android/README.md` covers the local build. Clone the
-saved private repository, open `android/` in Studio, select a compatible phone image, and launch the Debug variant.
-The guide owns the SDK/JDK versions, private Codespace SSH tunnel, and `APP_ROOT_URL` launch flags. The emulator's
-[`10.0.2.2` host alias](https://developer.android.com/studio/run/emulator-networking-address) reaches that computer,
-not the Codespace. Local Rails is a separate supported origin. This path uses local compute and no Revyl device
-hours; it requires a computer capable of running the emulator and is not an all-browser preview.
+Keep ordinary Rails iteration in the local web app. Native preview is optional: use iOS Simulator on a Mac or
+Android Studio Emulator on a suitable local computer. Follow the emitted platform guides for SDK/JDK versions,
+project setup, and `APP_ROOT_URL`. The Android emulator's
+[`10.0.2.2` host alias](https://developer.android.com/studio/run/emulator-networking-address) reaches the host
+computer; a device elsewhere needs a reachable origin such as a Cloudflare Tunnel.
 
-Android requires **System WebView 120 or newer**. The September 12 Revyl Pixel 7 / Android 14 image had 113; its
-Update button opened Google Play sign-in. Revyl Android preview remains blocked on a compatible provider image.
-Do not weaken that requirement, route students through Google Play sign-in, or spend more device time retrying the
-tested image. If a Revyl session is already running, stop it with `bin/android preview revyl stop`. A student without
-a suitable local computer can continue Rails work in the web preview while the native-provider gap remains open.
+The [local development guide](https://gist.github.com/raghubetina/3d424a97a1eaa6de8c406e67f32a237e) covers
+local Rails, local native builds, and optional Revyl uploads without a GitHub push. A Codespace and its GitHub build
+wrappers are fallback options when local development is unsuitable. Most Rails edits need only a refresh; native
+changes need a new artifact. Neither native builds nor Revyl are required for ordinary release smoke tests.
 
-For iPhone browser preview, follow `IOS_PREVIEW.md`. Publish the useful compiled baseline to a private repository
-first; GitHub builds the iPhone Simulator artifact on a Mac runner. The optional Android GitHub build produces a
-debug APK on an Ubuntu runner. Revyl consumes device usage for an uploaded artifact; this path uses no Revyl remote
-build compute. Most Rails edits need only a refresh, while native changes require a new artifact. Stop Revyl and
-restore any exposed Codespace port to Private when finished. The earlier iPhone Revyl receipt proves index/refresh
-only; local iOS Simulator improvements do not establish new Revyl form, Back, or sign-in proof. Preview does not
-install the app on a phone or publish it to a store.
+Android requires **System WebView 120 or newer**. The September 12 Revyl image observation is historical, not a
+claim about every current device. Check the actual device compatibility when Revyl is requested. Stop owned Revyl
+sessions and tunnels when finished. Preview does not install the app on a physical phone or publish it to a store.
 
 ## Closed envelope
 

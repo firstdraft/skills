@@ -259,8 +259,8 @@ Appearance sets the cross-client theme, native colors, and Web icon branding. Om
 `auto` follows the system. Web components retain the stock Zinc theme, and native launcher icons remain stock. Android shows
 one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, follow the
 emitted platform preview guide and the [native preview boundary](foundation-plan-020.md#preview-generated-native-apps).
-Use local Android Studio Emulator for Android checks while Revyl's tested WebView image remains incompatible.
-iPhone browser preview retains its separate Revyl path. Ordinary Rails iteration stays in the web browser.
+Use local Android Studio Emulator or iOS Simulator for native checks when available. Ordinary Rails iteration uses
+the local web app. Revyl is an optional preview destination, not a release or development prerequisite.
 Nonempty delivery, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
 v0.20 shape, including notification trigger/template definitions, deployment, and iPad, remain in
 [implementation notes](#retain-implementation-requirements) and the semantic read-back as currently unplannable
@@ -291,12 +291,14 @@ state the deliberately selected completion mode: direct output creates only a ve
 terminal successful Publication is intended to create one private GitHub repository. Neither deploys. Use the order
 that best communicates this candidate. Do not enumerate absent subject families or recite immaterial defaults and
 empty categories. Ask the user to correct or explicitly approve the exact model and reviewed support delta without
-requiring a digest echo or gap-specific field.
+requiring a digest echo or gap-specific field. If the existing request already authorizes the candidate and reviewed
+gaps, or delegates these choices, present this as a progress update and continue. Ask only for new material decisions
+outside that scope; do not turn an already approved Compile into another confirmation.
 
 The read-back reviews the staged candidate; it is not a last-minute authoring pass. Preserve existing subject
 identity and present concerns as warnings. Do not require a candidate edit without a user correction, a confirmed
 product decision, or a demonstrated diagnostic. If the Plan bytes change afterward, present the new SHA-256 and the
-semantic delta, then obtain approval of that changed candidate.
+semantic delta, then obtain approval of that changed candidate only if it exceeds the existing authorization.
 
 Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning to make import or analysis
 green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a

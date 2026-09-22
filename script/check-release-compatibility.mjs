@@ -171,7 +171,7 @@ export function assertSkillsReleaseCompatibility({
     access: "public",
     provenance: true,
     registry: "https://registry.npmjs.org/",
-    tag: "next",
+    tag: "latest",
   });
 
   assert.equal(

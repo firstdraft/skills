@@ -28,11 +28,11 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.3.0",
+    version: "0.4.0",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256:
-        "939358e204795582c459d21ecb811822a70d867e985b3b63290b848a5e9c35b9",
+        "b0fff5ea999c03d8f54ed56844afee65b2855e4596cdb68b13a03720daa41524",
     },
     requires: {
       api_contract: [">= 0.4.0", "< 0.5.0"],
@@ -74,12 +74,10 @@ test("current release docs route through structured identities", async () => {
       `@firstdraft.com/claude-code@${compatibility.version}`,
     ),
   );
-  assert.match(releasing, /CLI npm `next` \/ `latest` \| `0\.2\.2` \/ `0\.2\.2`/);
-  assert.match(
-    releasing,
-    /Synthetic fixture GapSets are not universal digest oracles[\s\S]*?live GapSet digests include Project identity[\s\S]*?Every[\s\S]*?attached-analysis evaluation and smoke[\s\S]*?attached `analysis\.gap_set_sha256`[\s\S]*?CLI validates[\s\S]*?attached complete GapSet[\s\S]*?never a fixture, history, or another Project[\s\S]*?derived Web icons are generated/i,
-  );
-  assert.match(releasing, /evidence\/2026-09-10-shared-plugin-0\.2\.2-release\.md/);
+  assert.match(releasing, /Publish directly to npm `latest`/);
+  assert.match(releasing, /Reuse successful hosted CI for the exact release commit/);
+  assert.match(releasing, /attached `analysis\.gap_set_sha256`.*live GapSet digests include Project identity/s);
+  assert.match(releasing, /Never copy a fixture or a\s+prior Project's digest/);
   const publicationGapSetDigest =
     "19a65129ae87823366a9d83c99d82bcd9bd7af901312a7aed79253b33f662c85";
   const directGapSetDigest =
@@ -124,45 +122,14 @@ test("current release docs route through structured identities", async () => {
     candidateSmokeEvidence,
     /controlled Service revision is a descendant of the pinned current-truth Service revision[\s\S]*?cc72dad5b26b887f3f21496b568b80678ceac47f[\s\S]*?does not repin the packaged[\s\S]*?current-authority source/,
   );
-  assert(
-    releasing.includes(
-      `@firstdraft.com/claude-code@${publicPlugin.version}`,
-    ),
-  );
-  assert.match(releasing, /release\/compatibility\.json.*owns candidate/s);
-  assert.match(releasing, /marketplace manifest owns public catalog selection/);
-  assert.match(
-    releasing,
-    /## Outstanding authenticated journey[\s\S]*?explicit approval for one[\s\S]*?serialized qualification journey[\s\S]*?plugin installation[\s\S]*?token onboarding[\s\S]*?repository and Codespace creation[\s\S]*?billed Compilation[\s\S]*?GitHub Publication[\s\S]*?operator resolves and reports[\s\S]*?exact candidate identities[\s\S]*?user need not recite/,
-  );
-  assert.match(
-    releasing,
-    /setup failure before external mutation may be corrected and retried within that scope[\s\S]*?ambiguous[\s\S]*?reconcile retained and provider state read-only before resuming[\s\S]*?new authorization only to[\s\S]*?expand the approved effects or targets[\s\S]*?Destructive cleanup must identify its exact repositories, Codespaces, or[\s\S]*?retained First Draft records unless those exact targets were already included in the approval/i,
-  );
-  assert.match(
-    releasing,
-    /one explicit approval may cover any named sequence[\s\S]*?operator resolves and reports the exact immutable identities[\s\S]*?user[\s\S]*?need not recite SHAs or digests[\s\S]*?Completing an approved step does not add an unnamed later step/,
-  );
-  assert.match(
-    releasing,
-    /Bind it to the packed digest and compatible CLI[\s\S]*?and service identities/,
-  );
-  assert.match(
-    releasing,
-    /setup, harness, or local failure[\s\S]*?before any Compile invocation[\s\S]*?before any external mutation[\s\S]*?same smoke rerun within[\s\S]*?already approved scope[\s\S]*?known successful external effect[\s\S]*?does not make a whole-smoke rerun safe/i,
-  );
-  assert.match(
-    releasing,
-    /ambiguous mutation[\s\S]*?read-only and do not repeat it[\s\S]*?documented unchanged-byte[\s\S]*?Publication-singleton replay[\s\S]*?prior invocation exits[\s\S]*?reconciliation path[\s\S]*?never applies to an[\s\S]*?ambiguous Plan push/i,
-  );
-  assert.match(
-    releasing,
-    /final-head[\s\S]*?changes only non-packaged documentation, tests, or workflows[\s\S]*?final-head hosted CI[\s\S]*?reproduction[\s\S]*?same packed digest[\s\S]*?do not repeat the product smoke/,
-  );
-  assert.match(
-    releasing,
-    /maintenance-window approval may include named rollback actions[\s\S]*?Use rollback actions already named[\s\S]*?obtain new authorization only for a recovery[\s\S]*?beyond that scope/,
-  );
+  assert.equal(publicPlugin.version, "0.2.5", "do not promote an unpublished candidate");
+  assert.match(releasing, /release\/compatibility\.json.*owns the candidate/s);
+  assert.match(releasing, /One user approval may cover the complete coordinated release/);
+  assert.match(releasing, /without asking again at\s+every step/);
+  assert.match(releasing, /ambiguous tag push or npm publication.*read-only before attempting another mutation/s);
+  assert.match(releasing, /same-singleton Publication replay.*never applies to an ambiguous Plan push or direct Compilation start/s);
+  assert.match(releasing, /Documentation-only or workflow-only changes.*not another product\s+journey/s);
+
   assert.doesNotMatch(releasing, /^## (?:Current 0\.1\.1|Completed)/m);
   assert.doesNotMatch(releasing, /firstdraft-package-first\.XXXXXX/);
   assert.match(
@@ -172,85 +139,18 @@ test("current release docs route through structured identities", async () => {
   assert.doesNotMatch(releaseHistory, /current source-candidate version/);
 });
 
-test("approval-flow docs define the lightweight human-observed smoke", async () => {
+test("release smokes use the local path only when needed", async () => {
   const [releasing, evalIndex] = await Promise.all([
     readText("RELEASING.md"),
     readText("evals/README.md"),
   ]);
-  const candidatePreparation = markdownSection(
-    releasing,
-    "1. Prepare one exact candidate",
-  );
-  const semanticApproval = markdownSection(
-    evalIndex,
-    "Semantic approval and product Compile",
-  );
-
-  const candidate = candidatePreparation.replace(/\s+/g, " ");
-  const evaluation = semanticApproval.replace(/\s+/g, " ");
-
-  for (const source of [candidate, evaluation]) {
-    for (const expected of [
-      "human-observed",
-      "two-turn",
-      "Plan SHA-256",
-      "pre-approval Compile count zero",
-      "post-approval Compile count exactly one",
-      "mode-specific outcome",
-    ]) {
-      assert(
-        source.includes(expected) ||
-          source.toLowerCase().includes(expected.toLowerCase()),
-        `approval smoke missing: ${expected}`,
-      );
-    }
-  }
-
-  assert.match(
-    candidate,
-    /`precompile-semantic-read-back`.*?`compile-prepared-movie-catalog`.*?`precompile-drawing-board-read-back`.*?`compile-prepared-drawing-board-application`.*?selected mode.*?complete semantic read-back.*?stops for approval.*?same continuing session.*?exactly one selected command/,
-  );
-  assert.match(
-    evaluation,
-    /`precompile-semantic-read-back`.*?`compile-prepared-movie-catalog`.*?`precompile-drawing-board-read-back`.*?`compile-prepared-drawing-board-application`.*?first response must present the complete semantic model.*?stop for explicit approval.*?second prompt approves that semantic model, reviewed support result, selected mode, and Plan SHA-256.*?reread unchanged Plan bytes.*?exactly one selected command/,
-  );
-  assert.match(
-    candidate,
-    /exact Skills commit, package version and tarball SHA-256.*?compatible CLI and service identities.*?each two-turn transcript.*?explicit approval.*?pre-approval Compile count zero.*?post-approval Compile count exactly one.*?final mode-specific outcome/,
-  );
-  assert.match(
-    evaluation,
-    /exact candidate\/package identities and digest.*?Plan SHA-256.*?each two-turn transcript.*?explicit approval.*?pre-approval Compile count zero.*?post-approval Compile count exactly one.*?final mode-specific outcome/,
-  );
-  for (const source of [candidate, evaluation]) {
-    assert.match(
-      source,
-      /Do(?:es)? not require an exhaustive tool or effect ledger, shell-command classification, workspace snapshots, or proof of generic no-network, no-write, or environmental inactivity/i,
-    );
-    assert.doesNotMatch(source, /tool and capability classification/);
-    assert.doesNotMatch(source, /permission-denied/);
-    assert.doesNotMatch(source, /workspace-tree SHA-256/);
-    assert.match(
-      source,
-      /setup, harness, or local failure.*?before any Compile invocation.*?before any external mutation.*?same smoke rerun.*?known successful external effect.*?not.*?(?:retry-safe|whole-smoke rerun safe)/i,
-    );
-    assert.match(
-      source,
-      /Publication-phase.*?(?:unknown|outcome unknown).*?status timeout/i,
-    );
-    assert.match(
-      source,
-      /unchanged-byte.*?same-singleton.*?replay/i,
-    );
-    assert.match(
-      source,
-      /never applies to an ambiguous Plan push/i,
-    );
-    assert.match(
-      source,
-      /direct start without a retained ID.*?stop.*?(?:no retry or mode switch|without retry or mode switch)/i,
-    );
-  }
+  const smoke = markdownSection(releasing, "2. Smoke the local path only when useful").replace(/\s+/g, " ");
+  assert.match(smoke, /Compilation runs on the service; the output and runtime stay local/);
+  assert.match(smoke, /firstdraft plan compile.*--output \./);
+  assert.match(smoke, /Verify materialization.*boot Rails.*open one primary page/);
+  assert.match(smoke, /no GitHub Publication, Codespace, multi-session interview, dual-client install, native build, or Revyl session is required/);
+  assert.match(smoke, /existing approval of the candidate and gaps is sufficient/i);
+  assert.match(evalIndex, /focused behavioral regressions.*not a mandatory release sequence/s);
 });
 
 test("dated release-state observation retains its recorded facts", async () => {
@@ -353,10 +253,10 @@ test("release compatibility rejects shape and manifest drift", async () => {
     /Expected values to be strictly deep-equal/,
   );
 
-  const withLatestChannel = structuredClone(documents);
-  withLatestChannel.packageTemplate.publishConfig.tag = "latest";
+  const withNextChannel = structuredClone(documents);
+  withNextChannel.packageTemplate.publishConfig.tag = "next";
   assert.throws(
-    () => assertSkillsReleaseCompatibility(withLatestChannel),
+    () => assertSkillsReleaseCompatibility(withNextChannel),
     /Expected values to be strictly deep-equal/,
   );
 
@@ -655,18 +555,9 @@ test("archived release chronology retains exact observed facts", async () => {
     releasing,
     /staging Movie Catalog discovery smoke[\s\S]*?plugin 0\.1\.0[\s\S]*?human explicitly selected[\s\S]*?bounded PAT-less smoke as the pre-catalog[\s\S]*?does\s+not constitute full v14 qualification/,
   );
-  assert.match(
-    agents,
-    /change to\s+`\.claude-plugin\/marketplace\.json` is the exception[\s\S]*?merging it changes the public catalog[\s\S]*?package,[\s\S]*?service,[\s\S]*?qualification gates/,
-  );
-  assert.match(
-    agents,
-    /exact promotion head's Node 24\.18\.0 CI job[\s\S]*?release-order rehearsal[\s\S]*?repository settings do not enforce it as a required check[\s\S]*?Do not use an\s+administrative merge to bypass that gate/,
-  );
-  assert.match(
-    agents,
-    /For plugin 0\.1\.0 only[\s\S]*?human-selected PAT-less discovery smoke[\s\S]*?stricter qualification boundaries[\s\S]*?Do not silently substitute either boundary/,
-  );
+  assert.match(agents, /A marketplace merge changes the live catalog/);
+  assert.match(agents, /normal passing PR checks/);
+  assert.match(agents, /Do not bypass the protected environment or CI/);
   assert(releasing.includes("claude-v$package_version"));
   assert.match(
     releasing,
@@ -907,34 +798,13 @@ test("archived release chronology retains exact observed facts", async () => {
     /Publishing changed bytes for an existing npm, protected-tag, or catalog\s+release identity is forbidden[\s\S]*?new SemVer[\s\S]*?Repointing the catalog to a prior immutable package for\s+rollback is allowed[\s\S]*?unpublished and unpromoted candidate may instead be revised/,
   );
 
-  assert.match(
-    agents,
-    /Never reuse a published npm version, protected release tag, or marketplace SemVer with different package bytes/,
-  );
-  assert.match(
-    agents,
-    /Before 1\.0[\s\S]*?minor bump for a breaking compatibility-line change[\s\S]*?patch bump for an otherwise\s+backward-compatible change[\s\S]*?do not add compatibility\s+aliases/,
-  );
-  assert.match(
-    agents,
-    /Reconcile an ambiguous mutation read-only and do not repeat it[\s\S]*?only current exception[\s\S]*?unchanged-byte, same-singleton `plan compile` replay[\s\S]*?prior[\s\S]*?invocation exits[\s\S]*?never applies to an ambiguous Plan push/,
-  );
-  assert.match(
-    agents,
-    /Do not publish npm packages, move npm dist-tags,[\s\S]*?without explicit user[\s\S]*?approval/,
-  );
-  assert.match(
-    agents,
-    /current request already authorizes candidate coordination or a named promotion sequence[\s\S]*?continue within that scope; otherwise ask/,
-  );
-  assert.match(
-    agents,
-    /One approval may cover a named release sequence[\s\S]*?Resolve and report its[\s\S]*?immutable identities before mutation[\s\S]*?do not require the user to recite them[\s\S]*?Completing one approved step does[\s\S]*?not expand the remaining scope/,
-  );
-  assert.match(
-    agents,
-    /serialized through one operator[\s\S]*?publish and reconcile the compatible plugin[\s\S]*?under `next` before opening the maintenance window[\s\S]*?leave `latest` and the public catalog unchanged until the exact[\s\S]*?web and worker revisions are active and the required release-specific qualification passes[\s\S]*?Do not call a stable[\s\S]*?plugin release complete until the exact qualified version is selected by the public catalog and by both npm `next`[\s\S]*?and `latest`[\s\S]*?reconciled read-only/,
-  );
+  assert.match(agents, /Never reuse a published npm version, protected release tag, or marketplace version for different package bytes/);
+  assert.match(agents, /Before 1\.0 use a minor bump for a breaking\s+compatibility change, otherwise a patch/);
+  assert.match(agents, /read-only reconciliation of ambiguous external effects/);
+  assert.match(agents, /require release authorization/);
+  assert.match(agents, /one approved coordinated sequence covers its named steps without repeated prompts/);
+  assert.match(agents, /Publish new packages directly to npm `latest`/);
+
 });
 
 function assertTextOrder(source, fragments) {

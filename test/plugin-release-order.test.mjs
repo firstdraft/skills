@@ -181,7 +181,7 @@ test("unpublished candidate reconciliation reads npm, fetched tags, and the cata
     },
   });
 
-  assert.equal(result.candidateVersion, "0.3.0");
+  assert.equal(result.candidateVersion, "0.4.0");
   assert.deepEqual(result.catalogVersions, ["0.2.5"]);
   assert.deepEqual(result.taggedVersions, ["0.1.0-alpha.3", "0.1.0", "0.1.1", "0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4", "0.2.5"]);
   assert.equal(result.releaseState, "prospective");

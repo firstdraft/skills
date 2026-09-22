@@ -82,7 +82,7 @@ async function verifyHappyRootCompile(context, planSource) {
   const calls = [];
   const result = await invokeRunner(
     context.runCli,
-    ["plan", "compile", "--output", "."],
+    ["plan", "compile"],
     cwd,
     {
       fetchFunction: sequenceFetch(
@@ -291,7 +291,7 @@ async function verifySameGenerationDifferentHead(context, planSource) {
   });
   const replacementHeadSourceSha256 = "f".repeat(64);
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -321,7 +321,7 @@ async function verifyHappyCompile(context, planSource) {
   const digest = sha256(planSource);
   const published = publicationProjection(digest);
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -371,7 +371,7 @@ async function verifyStaleAnalysisGeneration(context, planSource) {
   });
   const digest = sha256(planSource);
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource, 2),
@@ -400,7 +400,7 @@ async function verifyStaleLocalBytes(context, planSource) {
     planSource,
   });
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -423,7 +423,7 @@ async function verifyAmbiguousPhases(context, planSource) {
   const pushCalls = [];
   const push = await invokeRunner(
     context.runCli,
-    ["plan", "compile"],
+    ["plan", "compile", "--github"],
     pushCwd,
     {
       fetchFunction: sequenceFetch(
@@ -535,7 +535,7 @@ async function verifyAmbiguousPhases(context, planSource) {
   const calls = [];
   const publication = await invokeRunner(
     context.runCli,
-    ["plan", "compile"],
+    ["plan", "compile", "--github"],
     publicationCwd,
     {
       fetchFunction: sequenceFetch(
@@ -585,7 +585,7 @@ async function verifyDiagnosticsStopPublication(context, planSource) {
   const rejectedCalls = [];
   const rejected = await invokeRunner(
     context.runCli,
-    ["plan", "compile"],
+    ["plan", "compile", "--github"],
     rejectedCwd,
     {
       fetchFunction: sequenceFetch(
@@ -612,7 +612,7 @@ async function verifyDiagnosticsStopPublication(context, planSource) {
     planSource,
   });
   const issuesCalls = [];
-  const issues = await invokeRunner(context.runCli, ["plan", "compile"], issuesCwd, {
+  const issues = await invokeRunner(context.runCli, ["plan", "compile", "--github"], issuesCwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -629,7 +629,7 @@ async function verifyDiagnosticsStopPublication(context, planSource) {
     planSource,
   });
   const failedCalls = [];
-  const failed = await invokeRunner(context.runCli, ["plan", "compile"], failedCwd, {
+  const failed = await invokeRunner(context.runCli, ["plan", "compile", "--github"], failedCwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -648,7 +648,7 @@ async function verifyDiagnosticsStopPublication(context, planSource) {
   let now = 0;
   const timeout = await invokeRunner(
     context.runCli,
-    ["plan", "compile"],
+    ["plan", "compile", "--github"],
     timeoutCwd,
     {
       fetchFunction: sequenceFetch([

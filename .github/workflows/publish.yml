@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+      actions: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -49,21 +50,16 @@ jobs:
           test "$GITHUB_REF_NAME" = "claude-v$package_version"
           git rev-list --first-parent refs/remotes/origin/main > "$RUNNER_TEMP/main-first-parent"
           grep -Fqx "$release_sha" "$RUNNER_TEMP/main-first-parent"
-      - run: npm ci --ignore-scripts
-      - run: npm audit
-      - run: npm run check
+      - name: Reuse successful main CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          release_sha="$(git rev-parse 'HEAD^{commit}')"
+          ci_url="$(gh run list --workflow ci.yml --branch main --event push --commit "$release_sha" --status success --limit 1 --json url --jq '.[0].url // empty')"
+          test -n "$ci_url" || { echo "No successful main CI run for $release_sha" >&2; exit 1; }
+          echo "Reusing $ci_url"
       - run: node script/check-plugin-release-order.mjs
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: firstdraft/cli
-          ref: main
-          fetch-depth: 0
-          path: tmp/firstdraft-cli
-          persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 20153726ba20f968af55ec4291eb76de8f03e9d5 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach 20153726ba20f968af55ec4291eb76de8f03e9d5
-      - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
-      - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli
 
   publish:
     name: Publish to npm
@@ -118,8 +114,8 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 20153726ba20f968af55ec4291eb76de8f03e9d5 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach 20153726ba20f968af55ec4291eb76de8f03e9d5
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 660c02e46cdf36ec76dd556de8c96ef67ed3b035 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach 660c02e46cdf36ec76dd556de8c96ef67ed3b035
       - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
       - run: node script/claude-plugin-package.mjs pack "$RUNNER_TEMP/plugin" --cli-root tmp/firstdraft-cli
       - name: Verify publication bytes
@@ -135,4 +131,4 @@ jobs:
           set -euo pipefail
           test -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}"
           test -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"
-          npm publish "$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz" --access public --tag next --provenance --ignore-scripts
+          npm publish "$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz" --access public --tag latest --provenance --ignore-scripts

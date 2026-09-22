@@ -13,43 +13,19 @@
 
 ## Release coordination
 
-- Treat a merge to `main` as integration, not release authorization. A change to
-  `.claude-plugin/marketplace.json` is the exception: merging it changes the public catalog, so require the package,
-  service, and qualification gates in [`RELEASING.md`](RELEASING.md) first. After any other merge, report the exact
-  merged SHA. If the current request already authorizes candidate coordination or a named promotion sequence,
-  continue within that scope; otherwise ask whether to coordinate a candidate across `firstdraft`, `cli`, and
-  `skills` and promote it.
-- SemVer compatibility establishes candidate eligibility only. Record the exact SHA of every repository and the
-  packed Claude plugin SHA-256, then follow [`RELEASING.md`](RELEASING.md).
-- Do not publish npm packages, move npm dist-tags, deploy First Draft, create protected release tags, or release the
-  plugin without explicit user approval. One approval may cover a named release sequence. Resolve and report its
-  immutable identities before mutation; do not require the user to recite them. Completing one approved step does
-  not expand the remaining scope. If the user declines promotion, identify the merged SHA as unpromoted.
-- Never reuse a published npm version, protected release tag, or marketplace SemVer with different package bytes.
-  An unpublished and unpromoted candidate is identified by its exact commit and digest and may be revised before
-  release without consuming another SemVer. Revisions after any release identity exists use a new version.
-- Before 1.0, use a minor bump for a breaking compatibility-line change and a patch bump for an otherwise
-  backward-compatible change. Current candidates use ordinary `0.MINOR.PATCH` versions; do not add compatibility
-  aliases or treat an npm dist-tag as version semantics.
-- Keep deployment, package publication, marketplace promotion, npm `latest` promotion, and replay mutations
-  serialized through one operator. For a breaking service transition, publish and reconcile the compatible plugin
-  under `next` before opening the maintenance window; leave `latest` and the public catalog unchanged until the exact
-  web and worker revisions are active and the required release-specific qualification passes. Do not call a stable
-  plugin release complete until the exact qualified version is selected by the public catalog and by both npm `next`
-  and `latest`, with that state reconciled read-only. Reconcile an ambiguous mutation read-only and do not repeat it.
-  The only current exception is the documented unchanged-byte, same-singleton `plan compile` replay after a prior
-  invocation exits with a Publication-phase unknown or status timeout; that replay is itself the reconciliation path
-  and never applies to an ambiguous Plan push.
-- Before pushing a `claude-v*` publication tag, verify its protection ruleset, the `npm` environment's required
-  reviewers, the deliberately enabled `NPM_RELEASE_ENABLED` gate, and monotonic version order against npm,
-  protected release tags, and the marketplace catalog.
-- Before merging a marketplace-catalog change, require the exact promotion head's Node 24.18.0 CI job, including its
-  release-order rehearsal, to pass even when repository settings do not enforce it as a required check. Do not use an
-  administrative merge to bypass that gate.
-- For plugin 0.1.0 only, `RELEASING.md` records the human-selected PAT-less discovery smoke that gates catalog
-  promotion and the stricter qualification boundaries it does not prove. Do not silently substitute either boundary
-  for the other.
-- The shared Claude/Codex package is assembled from canonical `skills/` sources during packing. Both clients use
-  the existing public catalog; generate client manifests from shared metadata and never commit a second editable
-  Skill. Update the explicit packaging inventory when adding a Skill or packaged reference. Source presence does not
-  authorize packaging the deferred UI Skill auditions.
+- A merge integrates source. Publication, service deployment, and a catalog change require release authorization;
+  one approved coordinated sequence covers its named steps without repeated prompts. Resolve and report the exact
+  versions and commits, then continue within that scope. A marketplace merge changes the live catalog.
+- Publish new packages directly to npm `latest`. Reuse successful CI for the exact `main` commit instead of rerunning
+  tests at publication. A product smoke, when the change warrants one, uses service Compilation into a local folder
+  and local Rails boot. Codespaces, GitHub Publication, dual-client installs, and Revyl are not ordinary release gates.
+- Keep one release operator. Preserve protected tags, the actual GitHub environment reviewers, OIDC/provenance, exact
+  package bytes, compatible service/CLI identities, and read-only reconciliation of ambiguous external effects.
+- Never reuse a published npm version, protected release tag, or marketplace version for different package bytes.
+  Unpublished, unpromoted candidates may be revised before release. Before 1.0 use a minor bump for a breaking
+  compatibility change, otherwise a patch. Dist-tags are selections, not version semantics.
+- The marketplace must select an already-published package. Keep the existing selection while preparing a candidate;
+  after publication, update it through normal passing PR checks. Do not bypass the protected environment or CI.
+- The shared Claude/Codex package is assembled from canonical `skills/` sources. Both clients use the same public
+  catalog; generate manifests from shared metadata and never maintain a second editable Skill. Update the explicit
+  packaging inventory when adding a Skill or reference. Source presence does not authorize packaging deferred UI Skills.

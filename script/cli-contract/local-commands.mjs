@@ -72,8 +72,11 @@ export async function verifyLocalCommands(context) {
   );
   assert.match(
     compileHelp.stdout,
-    /With --output, it starts one direct Compilation/,
+    /By default it materializes the\s+verified application in the current directory/,
   );
+
+  assert.match(compileHelp.stdout, /firstdraft plan compile --github/);
+  assert.match(compileHelp.stdout, /cannot be combined with --output/);
 
   const uuids = await invokeRunner(
     context.runCli,
