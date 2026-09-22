@@ -1,0 +1,15 @@
+# Implementation notes
+
+## Agreed first-preview requirement
+
+The first preview intentionally starts empty: no sample Movies, Users, or Bookmarks. Do not add demo Accounts, synthetic records, or seed records during setup or handoff unless the user changes this choice. No examples were supplied or reused.
+
+Acceptance examples:
+
+- A fresh first preview contains zero Movies, Users, and Bookmarks.
+- The Plan omits `application.development_data` rather than declaring an empty collection.
+- No demo sign-in credentials are created or promised.
+
+## Open questions
+
+None for this local review. Preserve the agreed staged model.

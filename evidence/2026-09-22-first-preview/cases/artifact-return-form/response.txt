@@ -1,0 +1,23 @@
+Created a local [Foundation Plan draft](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/artifact-return-form/.firstdraft/foundation-plan.json) and [implementation notes](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/artifact-return-form/implementation-notes.md). No filled-in private values or media were copied into either file or into sample data. Your supplied original remains untouched.
+
+The structured model is:
+
+| Record | What it represents |
+| --- | --- |
+| Borrower | A person and optional contact email; reusing this record across loans is a proposal. |
+| Equipment | One individual physical item, with a name and optional asset tag. |
+| Loan | One borrowing transaction, linked to its borrower, with a reference, checkout date, and optional staff note. |
+| Loan item | One particular item on one loan, with its own optional return date and condition. Other items can remain outstanding. |
+| Damage photo | One image and its caption, linked to a loan item. A collection allows any number of photos, including more than the paper form's four boxes. |
+
+The return interaction and upload interface belong in implementation work: staff select one item, save its return details without changing other items, and add photos while preserving each caption's pairing. The notes retain acceptance examples for staggered returns, an outstanding item, and a fifth photo.
+
+The image itself **stays structured in the Plan**. The Skill documents image Fields as valid vocabulary with a service support gap; that does not establish working upload generation. No actual analysis or GapSet was obtained here.
+
+This draft provisionally requires readable borrower/equipment names and a loan reference, links photos to individual loan items, allows optional captions, and restricts deletion of referenced records. Those are reviewable choices, not rules established by the filled form. Staff access, screens, caption requiredness, and correction/deletion policy remain open. No public screens or native clients were requested.
+
+No development records were added. A future preview could use a wholly invented loan with three items in different return states and five permission-cleared images. The original form should stay out of any future design archive, seed data, commit, or application handoff.
+
+Verification: JSON parsing and the bundled Plan 0.20 JSON Schema passed locally, along with subject-identity, relationship-link, and source-value-copy checks. The installed CLI is 0.3.0, below the Skill's required 0.4.0; it was used only for local initialization and UUID generation. Nothing was submitted, compiled, or run as an application.
+
+Plan SHA-256: `c299b839cf89f6bb3ca61cd6eb893b0373b325cc8f1f736de94dcc47790159ad`.

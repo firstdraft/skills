@@ -1,0 +1,17 @@
+Prepared the [Plan](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/first-preview-movie-proposal/.firstdraft/foundation-plan.json) for review, preserving all existing subject identities.
+
+- Movies remain public, with the movie index as Home. Email/password accounts own private bookmarks; each bookmark retains its fixed user and movie links, and Watched defaults to false.
+- I added an owner-only bookmark edit form containing the Watched checkbox. Bookmark creation/deletion and movie editing remain unselected.
+- Proposed development data: three fictional movies, two disposable viewers, and two bookmarks. Demo Viewer has **The Last Lantern** marked watched and **Signal from Tomorrow** unwatched. **Summer at the Harbor** is unbookmarked. Empty Viewer starts with no bookmarks, providing an empty state and a privacy check for the eventual preview. No source files or real personal data were reused.
+
+The proposed demo accounts are `viewer@movie-preview.example` and `empty@movie-preview.example`, both using the deliberately public, development-only password `MoviePreview-Demo-Only-2026!`. These sample records are in `application.development_data`, not all-environment reference data. Review them together with the Plan.
+
+JSON parsing and focused identity/reference checks passed: 17 unique UUIDv7 subjects and four resolving sample-record links. Local schema validation was **not performed** because no compatible validator was available. Nothing was submitted or Compiled; there is no service analysis, GapSet, generated application, or verified sign-in/preview yet.
+
+The installed CLI reports **0.3.0**; the Skill requires **0.4.0** for remote work. The staged folder also lacks `.firstdraft/state.json`; I preserved the existing Plan without reinitializing. Both facts need resolution before a later service operation.
+
+Plan SHA-256: `8769d58e7ed4dd6818dd967c6769cf0f46ee8d871d9d510111f3ffe2b8dcd7c2`.
+
+Changed files: the Plan and [this review response](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/first-preview-movie-proposal/response.md). No additional behavior outside the Plan vocabulary was identified, so no implementation-notes file was needed.
+
+Commands used: the Skill's `scripts/firstdraft.sh` resolver with `--version`, `--help`, and `generate uuid --count 7`; `command -v check-jsonschema ajv jsonschema python3`; `python3 -m jsonschema --help` (module unavailable); and local Python JSON authoring and consistency checks. All writes stayed in this case directory.

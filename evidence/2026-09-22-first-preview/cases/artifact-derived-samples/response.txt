@@ -1,0 +1,31 @@
+Prepared **Workshop Equipment Loans** as a local proposal for review. Nothing was submitted or Compiled.
+
+The [Foundation Plan](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/artifact-derived-samples/workshop-demo/.firstdraft/foundation-plan.json) models:
+
+- **Equipment:** one tagged physical item, with its tag and name.
+- **Borrower:** one person, with a name and optional email. Borrowers are ordinary records; there are no Accounts.
+- **Loan:** one borrowing episode connecting Equipment and Borrower, with checkout, due and return dates and an optional workshop note. Equipment and Borrower each expose their Loan history.
+
+The proposed Web demo opens on Loans and provides public list/detail pages for all three Entities. The candidate uses Equipment tags, Borrower names, and a Loan's Equipment as record labels. The proposed required values are Equipment tag/name, Borrower name, and each Loan's Equipment, Borrower and checkout date. A missing return date represents an outstanding Loan. Due dates remain optional pending review.
+
+The sample is seven disposable `application.development_data` records: two equipment items, two borrowers and three loans. Every identifier, name, email, date and note is invented. It preserves relationship variety without copying source records.
+
+| Equipment | Borrower | Checked out | Due | Returned |
+| --- | --- | --- | --- | --- |
+| KIT-730 — Portable projector | Demo Cedar | 2024-04-08 | 2024-04-15 | 2024-04-12 |
+| KIT-845 — Collapsible screen | Demo Cedar | 2024-04-09 | 2024-04-16 | Outstanding |
+| KIT-730 — Portable projector | Demo Juniper | 2024-04-22 | 2024-04-29 | Outstanding |
+
+The invented emails are `cedar@demo.invalid` and `juniper@demo.invalid`. The first two Loans contain the harmless notes “Lens cap included.” and “Packed in blue workshop case.”; the third has no note. These are fixed historical examples, not dates that track today. Notes and emails are public demo content.
+
+Choices still proposed for review are one record per physical item, browsing without editing, and restricting deletion of Equipment or Borrowers that have Loans. Tag uniqueness, borrower matching, mandatory due dates, date-ordering rules, overlapping Loans, and checkout/return editing remain open. None was inferred as an enforced rule merely from the CSV. There is no CSV-import feature in this candidate.
+
+The supplied CSV remains untouched **outside** the `workshop-demo` planning root. It was not copied into that project, and no re-identification mapping was created. [Implementation notes](/Users/sandbox2/.codex/worktrees/8079/skills/tmp/preview-evals/artifact-derived-samples/workshop-demo/implementation-notes.md) retain the data-handling requirements and open decisions for a later handoff.
+
+Verification passed for JSON parsing, 22 distinct UUIDv7 subjects, Field/Reference and projection links, required sample assignments, repeated Equipment/Borrower links, and the one-returned/two-outstanding sample split. A content check found no original nonempty cell values in the authored Plan or notes. Local schema validation was not performed: no compatible validator was found in the checked commands. No service analysis, GapSet, generated app, runtime preview, or deployment is claimed.
+
+The available CLI reported **0.3.0**, while the Skill requires **0.4.0** for compatible service work. Only local initialization and UUID generation were used; private CLI state was not read.
+
+Plan SHA-256: `e8cfa9c27e51017f32a0fbf1417af831051326f9b9069272d92d2aa8cf1d3cbe`.
+
+Created files are this response, the Plan and implementation notes, plus the CLI's local initialization metadata under `workshop-demo/.firstdraft/`. No generated repository exists yet.

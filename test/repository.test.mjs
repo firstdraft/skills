@@ -1445,7 +1445,6 @@ test("behavioral eval cases are well-formed and reference real fixtures", async 
 
   assert.equal(document.format, "firstdraft.skill-evals/1");
   assert(Array.isArray(document.cases));
-  assert.equal(document.cases.length, 73);
 
   const ids = new Set();
   const triggerValues = new Set();

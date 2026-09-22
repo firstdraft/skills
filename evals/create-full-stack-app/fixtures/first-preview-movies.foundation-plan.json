@@ -1,0 +1,213 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.20",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "application": {
+    "key": "movie_preview",
+    "name": "Movie Preview",
+    "native": {},
+    "delivery": {},
+    "home_index": "movie",
+    "entities": [
+      {
+        "subject_uuid": "019f9425-5412-79bb-8fc2-312a33953f68",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "verification": {
+            "kind": "email"
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "fields": [
+          {
+            "subject_uuid": "019f9425-5412-7796-9840-8fdf45b7a859",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "collapse_whitespace",
+              "blank_to_null"
+            ]
+          }
+        ]
+      },
+      {
+        "subject_uuid": "019f9425-5412-7e8b-bba7-780ec0465bdf",
+        "key": "movie",
+        "name": "Movie",
+        "primary_descriptor": {
+          "field": "movie.title"
+        },
+        "icon": "film",
+        "fields": [
+          {
+            "subject_uuid": "019f9425-5412-7264-8cba-369484359fcb",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "collapse_whitespace",
+              "blank_to_null"
+            ],
+            "validations": [
+              {
+                "subject_uuid": "019f9425-5412-70af-8d25-97594f94f0aa",
+                "key": "title_reasonable_length",
+                "kind": "length",
+                "maximum": 200
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "movie.title"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "019f9425-5412-76e7-ba35-92b4a3b3b617",
+        "key": "bookmark",
+        "name": "Bookmark",
+        "primary_descriptor": {
+          "association": "bookmark.movie"
+        },
+        "icon": "bookmark",
+        "references": [
+          {
+            "subject_uuid": "019f9425-5412-7aa0-ad36-378b9fd20dae",
+            "key": "user",
+            "name": "User",
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          },
+          {
+            "subject_uuid": "019f9425-5412-7f83-9776-1473ff0e8f01",
+            "key": "movie",
+            "name": "Movie",
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "movie"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "019f9425-5412-75f1-8277-4b4dbe85ec0a",
+            "key": "manage_by_user",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "bookmark.user"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "fields": [
+          {
+            "subject_uuid": "01a0ca00-0000-7000-8000-000000000001",
+            "key": "watched",
+            "name": "Watched",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "bookmark.manage_by_user"
+            },
+            "projection": [
+              {
+                "association": "bookmark.movie",
+                "authorization": "public"
+              },
+              {
+                "field": "bookmark.watched"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "bookmark.manage_by_user"
+            },
+            "projection": [
+              {
+                "association": "bookmark.movie",
+                "authorization": "public"
+              },
+              {
+                "field": "bookmark.watched"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

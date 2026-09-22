@@ -1,0 +1,160 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.20",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "application": {
+    "key": "equipment_loans",
+    "name": "Equipment Loans",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf9-5a76-7690-b954-418d18299903",
+        "key": "equipment",
+        "name": "Equipment",
+        "primary_descriptor": {
+          "field": "equipment.tag"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf9-5a77-7ad8-a0b5-242d1f26bcb8",
+            "key": "tag",
+            "name": "Equipment tag",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf9-5a77-7738-88a4-70506809524c",
+            "key": "name",
+            "name": "Equipment name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf9-5a77-7127-81f2-faafc71ddfda",
+            "key": "loans",
+            "kind": "direct",
+            "name": "Loans",
+            "reference": "loan.equipment",
+            "side": "referenced"
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf9-5a77-7a07-aac5-436d84f5d1fa",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "field": "member.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf9-5a77-7ce5-9dbc-e6dd64d2ae7a",
+            "key": "name",
+            "name": "Member name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf9-5a77-7ef4-9047-898c68f97bcc",
+            "key": "email",
+            "name": "Email",
+            "type": "short_text",
+            "required": false
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf9-5a77-7fc7-9f5e-4a036bab3a93",
+            "key": "loans",
+            "kind": "direct",
+            "name": "Loans",
+            "reference": "loan.member",
+            "side": "referenced"
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf9-5a77-7b62-b953-995cf959e0c4",
+        "key": "loan",
+        "name": "Loan",
+        "primary_descriptor": {
+          "system_field": "id"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf9-5a77-7823-b306-f5020fad480a",
+            "key": "checked_out_on",
+            "name": "Checked out on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf9-5a77-76f5-b7fc-b48c3d2bdb86",
+            "key": "due_on",
+            "name": "Due on",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf9-5a77-7f8e-a236-02469085248e",
+            "key": "returned_on",
+            "name": "Returned on",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf9-5a77-7ecb-820d-881297c62e1c",
+            "key": "staff_note",
+            "name": "Staff note",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf9-5a77-712c-a60b-772c830fb7ea",
+            "key": "equipment",
+            "name": "Equipment",
+            "targets": [
+              "equipment"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          },
+          {
+            "subject_uuid": "01a0caf9-5a77-7b86-8d50-39bdb6ddbe22",
+            "key": "member",
+            "name": "Member",
+            "targets": [
+              "member"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf9-5a77-7d1d-949c-fed6d0e956b1",
+            "key": "outstanding",
+            "name": "Outstanding",
+            "expression": {
+              "kind": "is_null",
+              "operand": {
+                "target": {
+                  "field": "loan.returned_on"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

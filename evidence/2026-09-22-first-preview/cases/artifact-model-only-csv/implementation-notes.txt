@@ -1,0 +1,33 @@
+# Equipment Loans modeling notes
+
+## Confirmed requirements
+
+- This is local modeling only. No submission, Compilation, deployment, or import workflow is authorized.
+- A member may have several loans. Equipment can be borrowed again after return; earlier loans remain separate history.
+- An absent return date means the loan is still outstanding.
+- The supplied example is authorized only for understanding the work. Do not copy its record values into the Plan, notes, seeds, design archive, repository, or later application. The original remains untouched in the input directory.
+- Before any future root adoption or repository handoff, keep the supplied original outside the workspace being archived and out of its Git index, preserving the user's source. No such adoption or handoff occurred here.
+
+## Proposal assumptions requiring confirmation
+
+- One Equipment record represents a tagged physical item; one Member represents a person; one Loan represents one borrowing episode for one item and one member.
+- The candidate uses calendar dates. Equipment tag/name, member name, checkout date, and both Loan relationships are required in this proposal. Email and due date remain optional pending a decision; their presence in an example does not establish requiredness.
+- Equipment tag and member name are provisional display labels. A Loan uses its system ID provisionally; a useful human-facing loan label remains undecided. Neither names nor emails are assumed unique, and no equipment-tag uniqueness rule has been asserted.
+- Restrict deletion of Equipment or Members with Loan history as a proposed history-preserving choice. Deletion, retirement, correction, and retention policies remain open.
+- The optional staff note is provisionally per Loan. Its audience and whether some notes instead belong to Member or Equipment remain open. No example note text is retained.
+- No Accounts, public surfaces, clients, or seed data are selected in this model-only candidate. Access and client choices remain open, rather than inferred from the example. A later preview should use wholly synthetic records, identifiers, dates, and text if data is approved.
+
+## Open decisions
+
+- Inventory and identity: individually tagged objects, interchangeable goods tracked by quantity, or both; tag uniqueness and mutability; member identification and duplicate handling without assuming email is a permanent unique identifier.
+- Loan rules: whether an item may have only one outstanding loan, mandatory due dates, calendar dates versus timestamps, date-order rules, renewals, and historical corrections.
+- Access and workflow: staff-only operation versus member self-service, who may see or edit contact details and staff notes, and the desired web or native clients.
+- History: whether names and contact details on an old loan should show their current Member values or preserve checkout-time facts; no duplicated historical snapshots have been assumed.
+
+## Acceptance examples for agreed meaning
+
+- One member can borrow two different items in separate Loans without duplicating the Member record.
+- Recording a return closes that Loan; a later checkout of the same item creates a new Loan and preserves the previous one.
+- A Loan with no return date is outstanding; adding a return date makes it no longer outstanding. No separate editable status is needed for this distinction.
+
+These notes preserve product decisions outside the structured draft and pending choices. They are not Compiler input and do not establish target support.

@@ -1,0 +1,47 @@
+# Equipment returns: local modeling notes
+
+This is a reviewable domain candidate for understanding the workflow, not an approved application build. The current structured candidate is `.firstdraft/foundation-plan.json`.
+
+## Confirmed requirements
+
+- Staff can return individual equipment items from the same loan on different days.
+- Damage evidence supports any number of photos, each with its own caption. The paper form's fixed boxes and extra sheet are a workaround, not a limit.
+- The supplied filled form is for understanding the workflow only. None of its names, contact values, identifiers, dates, condition text, free text, or media may be copied into new planning artifacts, data, or application output.
+- All work stays local. Service submission, Compilation, and deployment are outside this exercise.
+
+## Candidate choices and open decisions
+
+- The candidate treats Equipment as individual physical items, Loan as one borrowing transaction, and LoanItem as one item on that loan. A later loan creates another LoanItem for the same Equipment. Quantity-based supplies are not inferred from this example.
+- Borrower is proposed as a reusable record across loans. Confirm whether that directory is wanted or borrower details should instead be a historical snapshot per loan.
+- A LoanItem owns its return date and condition. An absent date means no return has been recorded. It is not stored on Equipment or once on the whole loan. Condition remains free text; the example does not establish a closed condition vocabulary.
+- DamagePhoto is proposed to belong to the specific LoanItem whose damage it documents. Confirm whether a photo may instead concern the whole loan or several items. The image stays a structured Field even if generation is unsupported.
+- Borrower name, equipment name, and loan reference are provisionally required for readable descriptors. Required parent References and a required image define the child records. Other scalar Fields, including captions, remain optional pending a rule decision. In particular, supporting captions does not yet mean every caption must be filled in. Photo records use a system ID descriptor so no artificial title or mandatory caption is introduced.
+- No uniqueness, date-ordering, same-day restrictions, immutability, automatic return-date default, or automatic deletion was inferred from the completed form. References provisionally use `restrict` to preserve related records; deletion and correction policy remain open. All scalar Fields and References are currently mutable.
+- Staff identity, access rules, requested clients, and specific screens remain open. No public Scaffold, Account, native client, or delivery channel is requested by this modeling-only candidate. The required empty native and delivery maps are not an approval of a future access design.
+
+## Behavior to implement in ordinary application code
+
+The facts and relationships above belong in the Plan. The end-to-end staff return interaction and its bespoke presentation need implementation and verification after an application is built; these notes are not Compiler input.
+
+- Staff choose the particular loan item being returned and enter its return date and condition. Saving that return must leave the other items' return details unchanged.
+- Staff add further damage photos and edit the caption associated with each photo without a fixed four-photo limit. The application must preserve each photo-to-item and caption-to-photo pairing.
+
+Acceptance examples use invented roles and relative days only:
+
+1. A loan has three items. Returning the first on day one, the second on day two, and leaving the third outstanding preserves three independent return states.
+2. A fifth damage photo can be attached to one item with its own caption; the original four remain attached to the same item with their captions unchanged.
+3. Two separate loans involving the same equipment retain separate return dates, conditions, and photo collections.
+
+Upload presentation, camera capture, caption-required rules, permitted media formats and sizes, correction history, and partial-upload failure behavior have not been specified. These are open decisions, not agreed requirements. Any later rule expressible in the Plan should be added there rather than hidden in these notes.
+
+## Data and source handling
+
+No development or reference records are included. A future preview could use one wholly invented borrower and loan, three invented equipment items with staggered returns and an outstanding item, and five permission-cleared images. That is a proposal, not an imported dataset or a claim that media seeding is supported. No replacements are mapped to the supplied private records.
+
+The original `equipment-return-form.md` remains the user's supplied source and is not copied into the Plan or these notes. Before any future root adoption, move that model-only original outside the workspace being archived, under the user's control. Exclude it from design archives, seeds, Git staging, and remote handoffs; do not delete the user's source. A later application handoff must carry these implementation notes explicitly and verify that they are present.
+
+## Capability and verification boundary
+
+The loaded Skill's reference says `image` Fields are valid Plan vocabulary but skipped by its documented service slice. Keep `damage_photo.image` structured and inspect the actual GapSet if service analysis is later requested. No GapSet has been observed here, and an upload interface has not been generated or exercised.
+
+The available CLI reports 0.3.0 while the Skill requires 0.4.0 for remote work. Only local initialization and UUID generation were used. The Plan passed JSON parsing and the bundled Plan 0.20 schema using the already available Ajv Draft 2020-12 validator. Additional local checks found 24 distinct UUIDv7 subject identities, resolved the authored Reference and inverse Association links, and found no copied filled source values in the Plan or notes. No service release, import, whole-graph analysis, Compilation, application runtime, or upload behavior has been verified.

@@ -50,6 +50,114 @@
       ]
     },
     {
+      "id": "first-preview-movie-proposal",
+      "should_trigger": true,
+      "prompt": "Continue our local First Draft planning for a movie catalog with private per-user bookmarks and a watched checkbox. The staged Plan captures the agreed scope; choose reasonable remaining details and prepare it for my review. I want to browse movies and my bookmarks in the first local preview. I have no existing files to share. Do not submit or Compile yet.",
+      "expectations": [
+        "Proposes a small connected development dataset visibly despite no explicit request for data, with a disposable supported Account, movies and related bookmarks in watched and unwatched states.",
+        "Keeps the agreed access model, subject identities and no-native scope; authors valid typed literals and reference_record links rather than a parallel Plan or seed script.",
+        "Includes the data proposal and intentionally public initial demo values in the ordinary Plan review without demanding per-row approval or requesting real credentials.",
+        "Does not ask again for unavailable artifacts; describes actual setup, visible-content and sign-in checks without claiming they have run.",
+        "Makes no service request, Compile or remote write."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/first-preview-movies.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        }
+      ]
+    },
+    {
+      "id": "first-preview-empty-choice",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a movie catalog with private bookmarks. Keep the agreed staged model. I explicitly want an empty first preview: no sample movies, users, or bookmarks. I have no examples to share. Keep this local and prepare the Plan for review; do not submit or Compile.",
+      "expectations": [
+        "Honors the explicit empty choice with no development records or demo Account data while retaining the requested Account model and private access.",
+        "Does not repeatedly ask about artifacts or data, invent login credentials, or weaken authentication to make the empty preview usable.",
+        "Includes empty-state and ordinary registration/create verification in the handoff without claiming runtime success."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/first-preview-movies.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        }
+      ]
+    },
+    {
+      "id": "first-preview-account-free",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a simple public habit tracker for my workshop. A goal has a name; a habit belongs to a goal, has a name and an active or paused status; each dated log belongs to a habit. No accounts or sign-in. I'd like to explore goals, habits and logs in the first local preview. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Proposes representative connected goals, active and paused habits, and historical dated logs without an explicit sample-data request.",
+        "Respects Account-free public scope and never adds an Account or advertises a demo login.",
+        "Keeps fixed dates historical rather than promising they remain today, distinguishes development data from all-environment reference data, and includes the dataset in ordinary review.",
+        "Does not stall on absent artifacts or claim schema, Compilation or runtime proof it has not obtained."
+      ]
+    },
+    {
+      "id": "artifact-invitation",
+      "should_trigger": true,
+      "prompt": "Use First Draft to help me plan a lending app for our workshop's equipment. Members borrow cameras and microphones and staff record returns. Let's start with the model; keep this local.",
+      "expectations": [
+        "Invites a representative existing example early to understand actual work, with a small coherent question batch rather than a comprehensive questionnaire.",
+        "Does not make uploads or a full dataset a planning prerequisite and does not silently choose consequential record granularity or access.",
+        "Treats potential sample-data reuse as secondary to understanding the domain."
+      ]
+    },
+    {
+      "id": "artifact-model-only-csv",
+      "should_trigger": true,
+      "prompt": "Use First Draft to help model the attached equipment-loans.csv. This example is only to explain how we work; do not copy its contents into the app or retained project material. The same member can borrow several items and an item can be borrowed again after return. The blank return date means it is still out. What model would you propose, and what still needs clarification? Keep this local; no submission or Compilation.",
+      "expectations": [
+        "Uses the supplied example without asking for it again, identifies repeat borrower/equipment relationships and per-loan return state instead of reproducing one flat table.",
+        "Distinguishes observed values from confirmed cardinality, requiredness and uniqueness; asks only about consequential ambiguity.",
+        "Does not copy identifying values or staff notes into Plan, notes, seeds, archive or repository; proposes synthetic samples if useful and does not claim name replacement anonymizes the original.",
+        "Makes no remote request or unsupported file-reading claim."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/equipment-loans.csv",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "id": "artifact-derived-samples",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan from equipment-loans.csv. You may use a small fully synthetic substitute for the first preview, preserving repeated borrowers, repeated equipment and returned/outstanding loans. Replace all identifying and private content; do not retain the original or a mapping in the project. No Accounts; this is a public local workshop demo. Prepare the model and sample proposal for review without submitting or Compiling.",
+      "expectations": [
+        "Uses the already authorized transformed reuse without another permission ceremony, preserving source relationships and state variety with consistent synthetic replacements.",
+        "Keeps raw identifying data, staff notes and re-identification mappings out of Plan, notes, seeds and archive; does not claim changing names alone provides anonymity.",
+        "Includes the selected development dataset in the normal Plan read-back, with supported assignments and honest ungenerated requirements.",
+        "Respects Account-free scope, development-only samples and local-only execution."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/equipment-loans.csv",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "id": "artifact-return-form",
+      "should_trigger": true,
+      "prompt": "Use First Draft to model our returns from equipment-return-form.md. It is for understanding the workflow only. Staff can return individual items on different days and attach any number of damage photos, with captions. Do not retain the filled-in private contents. Keep this local and tell me what should be structured versus left for implementation.",
+      "expectations": [
+        "Uses the supplied document without a redundant artifact invitation and models item-level return facts independently of the whole loan.",
+        "Does not turn four printed photo boxes into four fixed Fields or infer a fixed attachment limit.",
+        "Preserves attachment intent as structured meaning whose image or attachment Fields become service-support gaps skipped at import, separate from outside-grammar media/import work in notes; does not encode file paths as supported uploaded seed values.",
+        "Does not retain private filled-in content in Plan, notes, seed, archive or repository."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/equipment-return-form.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
       "id": "choose-conventional-validations",
       "should_trigger": true,
       "prompt": "Use First Draft to help me model these local-only product rules before we edit JSON: every movie has a title of at most 80 characters; a product code uses uppercase letters and digits; a retirement reason is needed only once retired_at is set; usernames cannot be admin or support; end date must follow start date; and title plus release date identifies a unique movie. Which kinds fit, where should errors go, and what can I expect the current Compiler to generate? Do not contact the service.",
