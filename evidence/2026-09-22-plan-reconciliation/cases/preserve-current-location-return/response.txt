@@ -1,0 +1,7 @@
+Updated the [local Plan](/Users/sandbox2/.codex/worktrees/8079/skills-reconciliation/tmp/reconciliation-evals/author-deliberate-return-overrides/.firstdraft/foundation-plan.json): the associated Add Rating flow now has `"return_to": {"kind": "current_location"}`, preserving your requested internal interaction location.
+
+Standalone creation still returns to Ratings, and editing still opens the saved Rating’s Movie. Other choices remain unchanged.
+
+The skill’s documented current Rails target omits this unsupported return override and the associated Add Rating interaction that depends on it. Your request remains structured in the Plan for future implementation. Cancel’s intended scoped-collection destination is unchanged, but this affected flow is not currently generated.
+
+Local Foundation Plan 0.20 schema validation passes. Nothing was submitted or Compiled, and no server Analysis or exact GapSet was observed.

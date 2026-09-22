@@ -1,0 +1,6 @@
+Updated the [Plan](/Users/sandbox2/.codex/worktrees/8079/skills-reconciliation/tmp/reconciliation-evals/reconcile-habit-requirements/.firstdraft/foundation-plan.json) and added [implementation notes](/Users/sandbox2/.codex/worktrees/8079/skills-reconciliation/tmp/reconciliation-evals/reconcile-habit-requirements/implementation-notes.md).
+
+- Removed the every-save validation. Recorded the revised requirement: only new HabitLogs require an active Habit; existing logs remain editable after pausing.
+- Recorded CSV import requirements: show all row errors before saving; save valid files in one transaction; allow no partial saves. Included acceptance examples and left unspecified CSV mapping and duplicate handling open.
+
+These behaviors require later application implementation because Plan 0.20 cannot express their timing and workflow. The local Plan passes schema validation. Previous choices, including removal of all notes fields, remain intact. Nothing was submitted or compiled.

@@ -1,0 +1,207 @@
+{
+  "format": "firstdraft.skills.source-evaluation/1",
+  "observed_date": "2026-09-22",
+  "boundary": "Three fresh Codex source contexts and two continuing revisions; separate parent in-process Service analysis/lowering. No API AnalysisRun, Compile, boot, browser, installed-client, publication or release claim.",
+  "source": {
+    "repository": "firstdraft/skills",
+    "base": "4c4dab13309478983433fc4805955e7dd2c769d5",
+    "commit": "90b0c7385dd96551ba7729a1310eb9222557fd34",
+    "tree": "f8187948712d06ce3f2c7afefad479b3291b0ed9",
+    "package_version": "0.4.0",
+    "package_sha256": "a09786608db0452fcaff6c8f42cfd28148ced16834f94a03493fbff0edd1e223",
+    "publication": "unpublished candidate"
+  },
+  "cli": {
+    "commit": "660c02e46cdf36ec76dd556de8c96ef67ed3b035",
+    "tree": "83b26b6e413eca02195f7672aaf1a5e07e43e8a9",
+    "version": "0.4.0"
+  },
+  "service": {
+    "repository": "firstdraft/firstdraft",
+    "commit": "ece840d74cadf1db47ace677d150250ad76f6606",
+    "database": "task-private test database fd_8079_preview_service_20260922; every import rolled back"
+  },
+  "runtimes": {
+    "node": "24.18.0",
+    "ruby": "4.0.6"
+  },
+  "agents": {
+    "runtime": "Codex collaboration subagents",
+    "model": "not independently exposed or attested",
+    "inherit_parent_conversation": false,
+    "expected_outcomes_supplied": false,
+    "service_source_supplied": false,
+    "remote_operations": false
+  },
+  "cases": [
+    {
+      "id": "reconcile-habit-requirements",
+      "context": "fresh",
+      "artifacts": "2026-09-22-plan-reconciliation/cases/reconcile-habit-requirements",
+      "sha256": {
+        "analysis.json": "6baee72e1e7e398d2be98d72ac396065824c1fefc090d1de93cbb9899eccf6e7",
+        "commands-summary.txt": "7bce7ec1ceba4a5265ce1964fc769436487111ca58afb6d00cb7b3c96e969623",
+        "foundation-plan.json": "45e3c6fbf39a203c9dd4d3710f1f6deab025b364305c992595cf2ecb30581901",
+        "gap-set.json": "d1dee45dc358f4dc99481ad13e1ba010ad4b0dba3f53e6ba5f6372f67b6d9f22",
+        "prompt.txt": "29d049127800b5f2455580c016d81439bdc1ae3c83b84d7500c02f145a67395e",
+        "response.txt": "2605ec038035161123af0dd5a2468e5ccaaf965439a12ce31284be2e3369b628"
+      },
+      "schema_validation": "passed independently with bundled Plan 0.20 schema",
+      "observed": "Removed three rejected Fields and twelve consumers; added the active-Habit every-save comparison without changing unrelated meaning.",
+      "parent_analysis": {
+        "valid": true,
+        "plan_sha256": "45e3c6fbf39a203c9dd4d3710f1f6deab025b364305c992595cf2ecb30581901",
+        "gap_set_sha256": "d1dee45dc358f4dc99481ad13e1ba010ad4b0dba3f53e6ba5f6372f67b6d9f22",
+        "warning_count": 4,
+        "gaps": [
+          {
+            "code": "foundation_plan.gap.validation.not_generated",
+            "pointer": "/application/entities/2/validations/0",
+            "consequence": "The generated model does not enforce this Validation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "reconcile-habit-creation-only-revision",
+      "context": "continued reconcile-habit-requirements",
+      "artifacts": "2026-09-22-plan-reconciliation/cases/reconcile-habit-creation-only-revision",
+      "sha256": {
+        "analysis.json": "7e3447b43483e349c7d4aa2c2e57b2a01833832aa1cc5dd316704fbefa21f5b4",
+        "commands-summary.txt": "8c7abd39cdaaba6a84354348069e305c6fc98f0f94b6b452c35cabc9b5a80f84",
+        "foundation-plan.json": "be962f08a9f4d7e80b0ba9d5267d47700b6f6e3ef5bd2f5974aed23954222a56",
+        "gap-set.json": "34b2cbe2463bb7e00212054ff960c223aeece1f2cf2deca56dc689462bcbc4de",
+        "implementation-notes.txt": "1170c5b3888887efa6b48f43062c165fbc0e2a1ad32b7a38b6b766e569632108",
+        "prompt.txt": "ecd4b345ffebf2f0e82ecb528888fd27fef9912b6cba046f25586c7419e0a90e",
+        "response.txt": "813fc88c64e334d77f899d8fd6d35376ffadf350560210b76547936534809d3e"
+      },
+      "schema_validation": "passed independently with bundled Plan 0.20 schema",
+      "observed": "Removed only the superseded comparison and retained creation-only and atomic CSV behavior with acceptance examples in implementation notes.",
+      "parent_analysis": {
+        "valid": true,
+        "plan_sha256": "be962f08a9f4d7e80b0ba9d5267d47700b6f6e3ef5bd2f5974aed23954222a56",
+        "gap_set_sha256": "34b2cbe2463bb7e00212054ff960c223aeece1f2cf2deca56dc689462bcbc4de",
+        "warning_count": 3,
+        "gaps": []
+      }
+    },
+    {
+      "id": "reconcile-optional-field-origin",
+      "context": "fresh",
+      "artifacts": "2026-09-22-plan-reconciliation/cases/reconcile-optional-field-origin",
+      "sha256": {
+        "commands-summary.txt": "574097ec15f8863af8487b6882d5ab6b3e3562afd4629ce68da3332557647ef0",
+        "foundation-plan.json": "2986d76bc10f33b7e1bb07aef2a59de8b8debaa6689aafac4f92519ceef1ab4d",
+        "prompt.txt": "e0841ada3542b5966ccf9c37b2a6ba7690dcdbf8b244cd3c6520f02e993c41e3",
+        "response.txt": "a047915abe4bc78f187617239168bf1f0e7c0c1a0add5898ae67af8dbd7d3c05"
+      },
+      "schema_validation": "passed independently with bundled Plan 0.20 schema",
+      "observed": "Surfaced optional Notes with unknown history, delegated routine defaults, and kept the Plan byte-identical."
+    },
+    {
+      "id": "author-deliberate-return-overrides",
+      "context": "fresh",
+      "artifacts": "2026-09-22-plan-reconciliation/cases/author-deliberate-return-overrides",
+      "sha256": {
+        "analysis.json": "5ebc03ba61ee2513e90c70b79cf80fe63d656b5f6eaefeff2088c6133a3d8abd",
+        "commands-summary.txt": "45e1c21089f2ddfb81643e84496f9c9e4f04506be35692c66794905164db9a45",
+        "foundation-plan.json": "559f16584d1f5030d0330f442a758fd58efc9e54e3fa84cad3ecdbe8d1e7802d",
+        "gap-set.json": "b746fccbd84dde9ee36a08e1182b3aa59857b94f01c9eb1197a0ecd8c2bdb9c3",
+        "prompt.txt": "1e589240ead5218581237f51ab5bb36b253bc2df75db5193fca473dd46323234",
+        "response.txt": "311d4a9bcdb0f0e39730cafb2124c2ccff41c9e977e16163dfbfed809a7eb9d7"
+      },
+      "schema_validation": "passed independently with bundled Plan 0.20 schema",
+      "observed": "Authored only the two requested success overrides and preserved independent standalone create and associated Cancel semantics.",
+      "parent_analysis": {
+        "valid": true,
+        "plan_sha256": "559f16584d1f5030d0330f442a758fd58efc9e54e3fa84cad3ecdbe8d1e7802d",
+        "gap_set_sha256": "b746fccbd84dde9ee36a08e1182b3aa59857b94f01c9eb1197a0ecd8c2bdb9c3",
+        "warning_count": 2,
+        "gaps": []
+      }
+    },
+    {
+      "id": "preserve-current-location-return",
+      "context": "continued author-deliberate-return-overrides",
+      "artifacts": "2026-09-22-plan-reconciliation/cases/preserve-current-location-return",
+      "sha256": {
+        "analysis.json": "49b5f7f200f73cc7aa6792389e2d3b137779b59a2582934b7d2ac041803e4caf",
+        "commands-summary.txt": "91ec36281433a7f011ac91ea77454a944983482a4daac3241a6fd06c57245499",
+        "foundation-plan.json": "d5b089ffe5cf2b7932fd800d968bf97fc4cc00d06309181f08617899cbeca732",
+        "gap-set.json": "b197cd30f1ec8be154a757f6ed5a0c928509e0696c106332852052de03561a1c",
+        "prompt.txt": "3431df89a2fcab8b9985fce01ce3e56002b8b9beb9264d54ff1d630b067c09b8",
+        "response.txt": "c52c966f31a256eb9ef65780ffb03024052e0ba4b51e68ca457c8fbb996ee31c"
+      },
+      "schema_validation": "passed independently with bundled Plan 0.20 schema",
+      "observed": "Changed only associated success to current_location and disclosed its dependent interaction omission.",
+      "parent_analysis": {
+        "valid": true,
+        "plan_sha256": "d5b089ffe5cf2b7932fd800d968bf97fc4cc00d06309181f08617899cbeca732",
+        "gap_set_sha256": "b197cd30f1ec8be154a757f6ed5a0c928509e0696c106332852052de03561a1c",
+        "warning_count": 3,
+        "gaps": [
+          {
+            "code": "foundation_plan.gap.scaffold.associated_create.not_generated",
+            "pointer": "/application/entities/0/scaffold/show/projection/1/create_form",
+            "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+          },
+          {
+            "code": "foundation_plan.gap.scaffold.return.not_generated",
+            "pointer": "/application/entities/0/scaffold/show/projection/1/create_form/return_to",
+            "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+          }
+        ]
+      }
+    }
+  ],
+  "invariants": {
+    "habit_initial": {
+      "removed_fields": 3,
+      "removed_screen_consumers": 12,
+      "only_addition": "habit_log.habit_must_be_active entity comparison"
+    },
+    "habit_revision": {
+      "only_plan_delta": "removed superseded every-save validation",
+      "all_other_bytes_or_semantics": "unchanged",
+      "notes_fields_absent": true
+    },
+    "return_initial": {
+      "only_plan_delta": "two requested success overrides"
+    },
+    "return_revision": {
+      "only_plan_delta": "associated current_location success override"
+    },
+    "origin_review": {
+      "plan_bytes": "unchanged"
+    }
+  },
+  "checks": {
+    "repository": "123 passed at source commit and again with retained evidence",
+    "real_cli_package": "deterministic and valid at source commit",
+    "schema": "all five retained Plans passed independent Ajv validation",
+    "plan_delta": "only requested changes; unrelated subject UUIDs retained",
+    "script": "analyze-plan.rb",
+    "script_sha256": "35a0d6432b6e2dcb1889ebfc42664693e0e5b85b2914d1ace21639890b8b84d7",
+    "scoped_new_cancel_renderer": "1 test, 38 assertions passed at Service ece840d74cadf1db47ace677d150250ad76f6606",
+    "analysis_script_standardrb": "passed"
+  },
+  "commands": {
+    "repository": "PATH=\"$HOME/.asdf/shims:$PATH\" npm run check",
+    "package": "PATH=\"$HOME/.asdf/shims:$PATH\" node script/check-claude-plugin-package.mjs --cli-root /Users/sandbox2/.codex/worktrees/8079/skills/tmp/firstdraft-cli",
+    "analysis": "From the exact Service checkout: PATH=\"$HOME/.asdf/shims:$PATH\" RAILS_ENV=test DATABASE_URL=postgresql:///fd_8079_preview_service_20260922 bin/rails runner ABSOLUTE_PATH_TO/analyze-plan.rb ABSOLUTE_PATH_TO/foundation-plan.json ABSOLUTE_OUTPUT_DIRECTORY",
+    "scoped_new_cancel_renderer": "From the exact Service checkout: PATH=\"$HOME/.asdf/shims:$PATH\" RAILS_ENV=test PARALLEL_WORKERS=1 DATABASE_URL=postgresql:///fd_8079_preview_service_20260922 bin/rails test test/foundation_plan/rails_target/compiler/web_scaffold_files_test.rb --name /derives_route.bound_associated_new_and_create_without_parent_forms/"
+  },
+  "limitations": [
+    "Source guidance use only; no installed-plugin discovery or model-specific qualification.",
+    "The readable form exercise under #84 is prior evidence; this packet does not qualify PDF/image extraction.",
+    "Implementation notes were saved locally; live GitHub Publication transport was not exercised.",
+    "A valid or gap-free Plan does not implement requirements retained only in notes.",
+    "Existing public-index projection warning diagnostics are retained; valid does not mean warning-free.",
+    "The initial scratch analyzer harness failed on nested transaction isolation; the retained script matches graph capture repeatable-read and all reported results used it."
+  ],
+  "retained_checks": {
+    "repository-check.log": "f31e2746147d1a8f20084f00a2aec6a3e2e9c7fd77613286c1548896076618fa",
+    "package-check.log": "753e259d25c22780c5796c28bff22677379582a16795e0ab63bacb3b5d86d192",
+    "cancel-renderer-check.log": "b3c07210f08fa30b47e060fd323435153729247e2ce3545b244a464ffa0d90a6"
+  }
+}

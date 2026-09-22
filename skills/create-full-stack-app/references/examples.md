@@ -11,6 +11,7 @@ change.
 - [Bounded web and iPhone application](#bounded-web-and-iphone-application)
 - [Conditional text length](#conditional-text-length)
 - [Public mutation, show projection, returns, and destroy](#public-mutation-show-projection-returns-and-destroy)
+- [Deliberate return overrides](#deliberate-return-overrides)
 - [One Entity with required and optional scalar Fields](#one-entity-with-required-and-optional-scalar-fields)
 - [Ordinal enum Field](#ordinal-enum-field)
 - [Web Account and protected profile](#web-account-and-protected-profile)
@@ -213,6 +214,59 @@ Policy-controlled authorization, server bindings, Association or recursive proje
 assessed from their own structured prerequisites. This fragment demonstrates one public combination; use the current
 Foundation Plan reference and matching GapSet for any other authored consumer instead of generalizing from it.
 An intentional destination override can still supply `return_to`; ordinary defaults do not need to be repeated.
+
+## Deliberate return overrides
+
+If saving an edited Rating should open its Movie, set the Rating Scaffold's `update.return_to` to this value.
+The Movie must have an admitted `show` route, and `rating.movie` must be a singular, guaranteed-present Association:
+
+```jsonc
+{
+  "kind": "resource",
+  "entity": "movie",
+  "route": "show",
+  "record": {
+    "from": "mutation_record",
+    "through": [
+      {
+        "association": "rating.movie"
+      }
+    ]
+  }
+}
+```
+
+This follows the saved Rating's Movie; it is not a URL or navigation history. The same shape on `destroy` resolves
+the Movie before deletion. The mutated record's own show destination uses `{"from":"mutation_record"}` without
+`through`; destroy cannot return to the deleted record itself. Index/profile destinations omit `record`.
+The current target does not emit a top-level create return that traverses from the new `mutation_record`, or an
+associated-create return with any `through` path. Preserve such requests and review their actual gaps.
+
+Suppose a Movie's projected `movie.ratings` collection offers scoped New. Its ordinary successful return is that
+scoped collection. If product intent instead calls for the Movie details after adding a Rating, set that
+Association projection's `create_form` to:
+
+```jsonc
+{
+  "return_to": {
+    "kind": "resource",
+    "entity": "movie",
+    "route": "show",
+    "record": {
+      "from": "scaffold_record"
+    }
+  }
+}
+```
+
+Here `scaffold_record` is the route-bound Movie parent. This changes successful associated creation only: Cancel
+still returns to the scoped collection, and standalone Rating creation keeps its own default or explicit override.
+Conversely, a standalone create override does not choose the associated form's destination. Use `"create_form": {}`
+when the ordinary scoped-collection return is intended; do not interview the user about routine defaults.
+
+`{"kind":"current_location"}` is valid modeled return syntax, but the current renderer omits the override and its
+dependent interaction with a reviewed target gap. Preserve that explicit request and explain the actual consequence;
+do not claim it works or silently replace it with a resource/default destination.
 
 ## One Entity with required and optional scalar Fields
 

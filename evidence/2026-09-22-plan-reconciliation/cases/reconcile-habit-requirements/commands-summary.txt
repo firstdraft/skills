@@ -1,0 +1,3 @@
+This is the evaluator's command summary, not a raw tool transcript.
+
+Evaluator reported local cat/rg/sed reads of the Skill, routed references, selected schema definitions, prompt and Plan; ls and regular/readable-file metadata checks; the Skill resolver with --version, --help and generate uuid; inline Node inspection/edit of the staged Plan; the supplied Ajv validator; shasum -a 256; apply_patch for response.txt. It removed three notes Fields and twelve screen references. The private state file was absent and was not created. No remote command ran.

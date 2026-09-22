@@ -1,0 +1,19 @@
+{
+  "format": "firstdraft.foundation-gaps/2",
+  "source": {
+    "sha256": "559f16584d1f5030d0330f442a758fd58efc9e54e3fa84cad3ecdbe8d1e7802d"
+  },
+  "project": {
+    "id": "01a0cb41-5c36-7864-9f1d-c097289fa77a",
+    "graph_version": 1
+  },
+  "analysis": {
+    "release": "foundation-plan-rails/application-2026-09-19-conventions"
+  },
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "gaps": []
+}

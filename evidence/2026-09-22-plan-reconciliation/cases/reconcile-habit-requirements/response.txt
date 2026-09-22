@@ -1,0 +1,7 @@
+Updated the [local Plan](/Users/sandbox2/.codex/worktrees/8079/skills-reconciliation/tmp/reconciliation-evals/reconcile-habit-requirements/.firstdraft/foundation-plan.json).
+
+- Removed every notes field, including optional log notes, and their screen inputs and displays.
+- Added a structured rule requiring an active Habit whenever a HabitLog is created or saved after editing. Errors belong to the Habit selection.
+- Preserved Goals, Habits, dated logs, active/paused status, relationships, ordinary public web screens, no Accounts, and an empty initial database.
+
+Local Plan 0.20 schema validation passed. The related-record comparison is outside the documented generated-validation subset; its exact support gap and runtime enforcement remain unverified. Nothing was submitted or compiled.

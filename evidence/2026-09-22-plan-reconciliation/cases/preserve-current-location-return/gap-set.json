@@ -1,0 +1,40 @@
+{
+  "format": "firstdraft.foundation-gaps/2",
+  "source": {
+    "sha256": "d5b089ffe5cf2b7932fd800d968bf97fc4cc00d06309181f08617899cbeca732"
+  },
+  "project": {
+    "id": "01a0cb44-aac5-78d0-a25f-aedac445b877",
+    "graph_version": 1
+  },
+  "analysis": {
+    "release": "foundation-plan-rails/application-2026-09-19-conventions"
+  },
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "gaps": [
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.associated_create.not_generated",
+      "kind": "scaffold_associated_create_form",
+      "status": "not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1/create_form",
+      "readable_path": "scaffold.associated_create_form",
+      "reason": "The associated create return destination is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.scaffold.return.not_generated",
+      "kind": "scaffold_return",
+      "status": "not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1/create_form/return_to",
+      "readable_path": "scaffold.return_to",
+      "reason": "Current-location returns are not in the bounded renderer contract.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ]
+}

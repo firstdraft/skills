@@ -1,0 +1,9 @@
+Updated the [local Plan](/Users/sandbox2/.codex/worktrees/8079/skills-reconciliation/tmp/reconciliation-evals/author-deliberate-return-overrides/.firstdraft/foundation-plan.json) with these deliberate exceptions:
+
+- Standalone Rating creation still returns to the Ratings list.
+- Saving an edited Rating opens its saved Movie, following `rating.movie` from the updated Rating.
+- Saving a Rating from a Movie’s ratings collection opens that route-bound Movie’s details. Cancel still returns to the scoped ratings collection.
+
+Other navigation retains ordinary defaults. The model, existing subject identities, public access, empty initial data, and no-Account choice are preserved.
+
+The Plan passes local Foundation Plan 0.20 schema validation. Nothing was submitted or Compiled; server Analysis and generated behavior have not been verified.

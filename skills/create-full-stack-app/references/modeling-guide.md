@@ -151,13 +151,14 @@ as one transaction. Record examples such as "one invalid row leaves all records 
 every row." Whether duplicate rows should be rejected can remain an explicit open question. Do not invent an
 `import_valid` Field, callback JSON, or a custom Validation kind to encode that workflow.
 
-Keep three outcomes distinct:
+Keep these outcomes distinct:
 
 | Requirement | Where it belongs |
 | --- | --- |
 | Structured meaning realized by the compatible Compiler | Author it in the Plan and verify the matching analysis and generated result. |
 | Structured meaning not supported by the service or target | Preserve it in the Plan and review the actual GapSet; do not move it into notes to suppress a gap. |
 | Behavior outside the vocabulary | Retain it in implementation notes for ordinary source development; analysis cannot promise a gap for meaning it never received. |
+| Explicit user exclusion | Honor the agreed scope and retain the exclusion in the existing decisions/read-back; do not reintroduce it during a later revision. |
 
 Notes may refer to a structured subject or its gap, but do not duplicate the Plan or maintain another gap inventory.
 Before Compile, summarize outstanding agreed behavior and open questions during the existing semantic read-back.
@@ -259,6 +260,12 @@ Operation-specific checks and bespoke rules outside the grammar belong in
 to implement and test in ordinary application code. Do not invent stored Fields to force them into the Plan or
 use notes to bypass supported structured meaning.
 
+For example, an Entity comparison can express that a HabitLog's related Habit must be active whenever the log is
+saved. Preserve that structured rule and its actual reviewed target gap; a generation limitation does not make it
+unrepresentable. If the user means creation only, that every-save comparison is a different rule. Retain the
+creation-only requirement and acceptance examples in implementation notes when the grammar cannot express it.
+Clarify timing only when it is unresolved; do not ask again after the user has settled it.
+
 ## Model relationships
 
 Put a Reference on the Entity that stores the relationship fact. Ask:
@@ -295,8 +302,10 @@ Capabilities or prerequisites as authored lists.
 
 Current Web Scaffolds may select standard resource routes, direct or recursive projections, Predicate and Ordering
 consumers, cursor pagination, Field and Association inputs, server bindings, associated-create entry points, and
-optional return overrides. Omit `return_to` for conventional interaction defaults; author it only for a product
-choice. A supported associated `create_form` supplies a scoped New page, not an inline form in the details card.
+optional return overrides. Omit `return_to` for conventional interaction defaults; discuss navigation only when
+product intent needs an exception. The [worked return examples](examples.md#deliberate-return-overrides) show the
+complete record operand and independent associated-success override. A supported associated `create_form` supplies
+a scoped New page, not an inline form in the details card.
 Every request and displayed Association declares public access or a Policy binding. The exact
 Web Account/Policy slice can protect supported surfaces and provide a Web-only Account profile; unsupported Policies
 and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
@@ -334,6 +343,20 @@ In particular, do not remove or weaken modeled content solely because the review
 `service_support_gap` or `target_support_gap`. Preserve the local Plan and report the exact pointer and consequence.
 
 ## Prepare the pre-Compile semantic read-back
+
+First reconcile the exact candidate with the user's requests, decisions, explicit revisions, exclusions and
+implementation notes. Inspect every authored Entity and Field, including optional Fields, and the relationships,
+rules and interactions that implement requested behavior; the compact user summary is not the internal check.
+For each explicit requirement, locate its structured meaning, precise reviewed gap, existing outside-grammar note,
+or explicit exclusion using the [outcomes above](#retain-implementation-requirements). Check that removed Fields
+stay removed, new requirements appear in one of those outcomes, and revisions have not weakened earlier decisions.
+
+Repair contradictions with already confirmed choices before the read-back, preserving unrelated subject identity,
+then obtain matching analysis for the changed bytes. Surface a consequential addition or unresolved choice in
+plain language, asking only if it exceeds existing authorization. State unknown history when it matters to that
+decision; do not invent provenance or require a separate origin/approval for ordinary derived defaults. Use the
+existing Plan, gaps and notes, without a requirements registry, technical review artifact or per-Field approval.
+Reconcile again after a revision, carrying settled decisions forward rather than repeating the interview.
 
 Immediately before the first Compile that could start direct retained work or reach Publication, reread the exact
 local Plan and give a compact plain-language semantic summary. Cover the project-relative Plan path and SHA-256; the

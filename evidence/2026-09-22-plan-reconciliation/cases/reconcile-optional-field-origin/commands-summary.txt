@@ -1,0 +1,3 @@
+This is the evaluator's command summary, not a raw tool transcript.
+
+Evaluator reported cat of Skill, prompt and Plan; ls metadata for Plan/state; rg headings and workspace file inventory; Skill resolver --version and --help; bounded sed reads of modeling-guide.md and foundation-plan-020.md; supplied Ajv validator; shasum before/after; rg for implementation-notes.md; apply_patch for response.txt. No Plan edit, notes creation or remote command occurred.

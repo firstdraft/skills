@@ -1,0 +1,30 @@
+{
+  "format": "firstdraft.foundation-gaps/2",
+  "source": {
+    "sha256": "45e3c6fbf39a203c9dd4d3710f1f6deab025b364305c992595cf2ecb30581901"
+  },
+  "project": {
+    "id": "01a0cb41-9dee-754b-a07f-f55f4bd34884",
+    "graph_version": 1
+  },
+  "analysis": {
+    "release": "foundation-plan-rails/application-2026-09-19-conventions"
+  },
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "gaps": [
+    {
+      "classification": "target_support_gap",
+      "code": "foundation_plan.gap.validation.not_generated",
+      "kind": "validation",
+      "status": "not_generated",
+      "pointer": "/application/entities/2/validations/0",
+      "readable_path": "habit_log.habit_must_be_active",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model does not enforce this Validation."
+    }
+  ]
+}

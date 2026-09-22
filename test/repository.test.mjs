@@ -2363,7 +2363,7 @@ test("complete examples and eval Plans validate against the bundled exact schema
     assert(validate(document), `${label}: ${ajvErrors(validate.errors)}`);
   }
 
-  const fragmentDefinitions = ["field", "scaffold", "association"];
+  const fragmentDefinitions = ["field", "scaffold", "scaffoldMutationReturnTo", "scaffoldCreateForm", "association"];
   const fragments = await markdownJsoncDocuments(examplesPath);
   assert.equal(fragments.length, fragmentDefinitions.length);
   fragmentDefinitions.forEach((definition, index) => {
