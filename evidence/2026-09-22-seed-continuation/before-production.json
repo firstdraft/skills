@@ -1,0 +1,9 @@
+{
+  "database": "fd_8079_seed_edit_prod_20260922",
+  "rails_environment": "production",
+  "users": [],
+  "movies": [],
+  "bookmarks": [],
+  "password_fingerprints": {},
+  "broken_bookmarks": 0
+}

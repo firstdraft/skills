@@ -1,0 +1,8 @@
+W, [2026-09-22T18:05:09.094222 #39777]  WARN -- Skylight: [SKYLIGHT] [7.1.1] Running Skylight in development mode. No data will be reported until you deploy your app.
+(To disable this message for all local apps, run `skylight disable_dev_warning`.)
+{"database":"fd_8079_seed_edit_dev_20260922","users":2,"movies":5,"bookmarks":4,"broken_bookmarks":0}
+W, [2026-09-22T18:05:10.186841 #39834]  WARN -- Skylight: [SKYLIGHT] [7.1.1] Running Skylight in development mode. No data will be reported until you deploy your app.
+(To disable this message for all local apps, run `skylight disable_dev_warning`.)
+W, [2026-09-22T18:05:11.110963 #39852]  WARN -- Skylight: [SKYLIGHT] [7.1.1] Running Skylight in development mode. No data will be reported until you deploy your app.
+(To disable this message for all local apps, run `skylight disable_dev_warning`.)
+{"database":"fd_8079_seed_edit_dev_20260922","users":2,"movies":5,"bookmarks":4,"broken_bookmarks":0}

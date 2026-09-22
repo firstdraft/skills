@@ -1,0 +1,71 @@
+{
+  "database": "fd_8079_seed_edit_dev_20260922",
+  "rails_environment": "development",
+  "users": [
+    [
+      "01a0cb05-9f31-7451-9302-3b53db9a72e6",
+      "empty@movie-preview.example",
+      "Empty Viewer",
+      2
+    ],
+    [
+      "01a0cb05-9e2a-7b86-8fca-3f0dcb110a98",
+      "viewer@movie-preview.example",
+      "Demo Viewer",
+      2
+    ]
+  ],
+  "movies": [
+    [
+      "01a0cb5a-6642-773e-948e-fe352609335a",
+      "City of Kites"
+    ],
+    [
+      "01a0cb05-9ca5-77ba-9399-58dc7800111d",
+      "Signal from Tomorrow"
+    ],
+    [
+      "01a0cb05-9ca9-724c-ab5a-daecd168ed6e",
+      "Summer at the Harbor"
+    ],
+    [
+      "01a0cb05-9c9b-7c99-aaf4-83f1d2970798",
+      "The Last Lantern"
+    ],
+    [
+      "01a0cb5a-6646-71d8-aa6d-40e2e696f58e",
+      "Winter Observatory"
+    ]
+  ],
+  "bookmarks": [
+    [
+      "01a0cb5a-66bb-7d5d-b061-68b606de8263",
+      "viewer@movie-preview.example",
+      "City of Kites",
+      true
+    ],
+    [
+      "01a0cb05-9f4b-73a1-84b3-c87321ad750c",
+      "viewer@movie-preview.example",
+      "Signal from Tomorrow",
+      false
+    ],
+    [
+      "01a0cb05-9f3c-7ce4-881e-1ef592debd0c",
+      "viewer@movie-preview.example",
+      "The Last Lantern",
+      true
+    ],
+    [
+      "01a0cb5a-66bf-7ae2-b802-5732abac9fb8",
+      "viewer@movie-preview.example",
+      "Winter Observatory",
+      false
+    ]
+  ],
+  "password_fingerprints": {
+    "01a0cb05-9e2a-7b86-8fca-3f0dcb110a98": "365b8635e9feac560ce6ebded5edf063d3835853bd32409e88385dfba3c6835c",
+    "01a0cb05-9f31-7451-9302-3b53db9a72e6": "cb99f665aafdffb02a7c7eeef8ffc852288d666eab5fc21f406aa4b40db4fe66"
+  },
+  "broken_bookmarks": 0
+}

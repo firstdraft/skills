@@ -1,0 +1,121 @@
+{
+  "format": "firstdraft.seed-continuation-observation/1",
+  "observed_on": "2026-09-22",
+  "boundary": "One fresh source-context post-Compile continuation on an already-qualified copied app; parent runtime and browser controls are separate. No installed-client, fresh Compilation, production deployment, release or publication proof.",
+  "related_issue": "https://github.com/firstdraft/skills/issues/83",
+  "evaluation": {
+    "skills_source": "4c4dab13309478983433fc4805955e7dd2c769d5",
+    "unpublished_package_sha256_at_source": "1ce60acd0d344ac51a7e060a173ebda7ff2f8912da78ef7abfc7fb5d683a83a2",
+    "package_execution": "Source files were read directly; the package was not installed or executed for this evaluation.",
+    "source_inputs_sha256": {
+      "skills/create-full-stack-app/SKILL.md": "759bd637c49047c36ad7580b188f90f3ffdf349cb0e2f4c85d47d5ced8634381",
+      "skills/create-full-stack-app/references/diagnostics-and-recovery.md": "1bc274c62f69e08a14650c57cfdd5795b4d04bce77bbbee9540fd9ed22eb6f4c"
+    },
+    "model": "Fresh Codex subagent context; exact model not attested by the collaboration tool.",
+    "agent_task": "seed_edit_continuation_eval",
+    "history": "No inherited conversation, expected rubric or sibling evaluation. Supplied the prompt, source Skill, prepared app path, Ruby pin, exact allowed development database and no-reset/no-regeneration constraints.",
+    "followup": "After completion, the same evaluator was asked only to save its already-observed commands/outputs; no app commands were rerun.",
+    "result": "Two fictional movies and two correctly owned bookmarks added through the existing development seed file. Two normal seed runs retained original queried IDs/values and created no duplicates. The README description and sample totals were updated. No browser check by the evaluator.",
+    "commands": "agent-observations.txt",
+    "failures": [
+      "Absent optional implementation notes",
+      "App had no Git repository",
+      "Initial heading query had no matches"
+    ],
+    "source_changed": [
+      "README.md",
+      "db/seeds/development.rb"
+    ],
+    "isolation": "Fresh conversation with explicit read boundaries, not filesystem sandbox enforcement. The evaluator command receipt is self-reported; parent controls independently checked files and rows."
+  },
+  "followup_branch_base": "a5983304ebb918431740d4f7ba7069de3adb8fd7",
+  "base_reconciliation": "The two actual Skill files read by the evaluator are byte-identical at evaluation source 4c4dab and follow-up base a5983304. Other #88 source changes were not evaluated by this continuation; the original source identity is retained.",
+  "application_provenance": {
+    "baseline_identity": "baseline-identity.json",
+    "qualification_receipt_url": "https://github.com/firstdraft/firstdraft/blob/ece840d74cadf1db47ace677d150250ad76f6606/docs/solutions/2026-09-22-first-preview.json",
+    "access": "Private Service repository",
+    "actual_runtime_source": "Service base 03163b80e2fac0ac820a18ba1bde9a4427413e9d with the initial README delta retained by the qualifying receipt; Core d3e646e7018419f65b6a29a82edce09d3ce5a86e; original CLI source 660c02e46cdf36ec76dd556de8c96ef67ed3b035. Not regenerated at ece840d.",
+    "matched_qualified_inputs": {
+      "submitted-foundation-plan.json": "8769d58e7ed4dd6818dd967c6769cf0f46ee8d871d9d510111f3ffe2b8dcd7c2",
+      "gaps.json": "0cda1691f82840bce752e5fda5685edc3f6d668e42ccd9f6e669c1bc3bd17cf4",
+      "README.txt": "c8998c866abf3da671efca5c4ec2dc6fab1a8890a6e4fee7005bcd517b0657f8",
+      "development-seeds.rb.txt": "efa66dc92dc9892dd4f9ae33c57b25b6fe4dc9a920c41590ff97dfda31b26496"
+    },
+    "runtime": "Ruby 4.0.5, Rails 8.1.3.1, Puma 8.0.2, local PostgreSQL; already-built browser assets. Skills repository checks use Node 24.18.0.",
+    "source_inventory": "source-before.json",
+    "source_delta": "source-changes.json",
+    "full_diff": "source.diff",
+    "original_app_and_databases": "Original application source bytes and database contents were preserved; continuation used a separate app copy and cloned databases. No claim about unchanged filesystem timestamps.",
+    "source_after_inventory": "source-after.json"
+  },
+  "parent_controls": {
+    "development_database": "fd_8079_seed_edit_dev_20260922",
+    "production_configuration_database": "fd_8079_seed_edit_prod_20260922",
+    "baseline_counts": {
+      "users": 2,
+      "movies": 3,
+      "bookmarks": 2
+    },
+    "final_counts": {
+      "users": 2,
+      "movies": 5,
+      "bookmarks": 4
+    },
+    "production_before_and_after_counts": {
+      "users": 0,
+      "movies": 0,
+      "bookmarks": 0,
+      "password_rows": 0
+    },
+    "repeated_seed": "Parent third development db:seed produced identical selected rows and IDs to the state after two evaluator runs.",
+    "passwords": "The development clone inherited Empty Viewer’s deliberately changed password from the earlier first-preview repeat control. Parent changed Demo Viewer to a deliberately public local test password before delegation. Both account password fingerprints were unchanged after all three seed runs. Raw password hashes are not retained.",
+    "relationships": "Every original selected tuple remains; City of Kites watched=true and Winter Observatory watched=false belong to Demo Viewer; Empty Viewer has zero bookmarks; zero orphaned bookmarks.",
+    "all_environment_lookup_data": "This app has none. Root dispatcher bytes remained unchanged; nonempty lookup-data coexistence was not exercised.",
+    "browser": "Parent signed in with Demo Viewer’s changed password and observed all five movies plus four correct bookmark Yes/No states. Screenshot inspected, not retained.",
+    "second_login_limitation": "The initial Empty Viewer README password was rejected once, as expected: the earlier repeat control deliberately changed that account’s password before cloning. The redacted provenance excerpt identifies the account by UUID. Read-only BCrypt comparison returned false and before/after fingerprints were identical. No password reset; its empty state is database-only evidence here.",
+    "cleanup": "Temporary browser tab closed; loopback server stopped gracefully.",
+    "receipt": "parent-observations.txt",
+    "harness_correction": "A first inventory comparison included existing storage/.keep despite the baseline excluding runtime storage; correcting the same directory scope passed without modifying the app.",
+    "earlier_password_provenance": "empty-password-provenance.txt",
+    "post_snapshot_browser_effect": "The failed Empty Viewer login inserted a user_login_failures row after the selected Domain/password snapshots; they do not cover all authentication tables."
+  },
+  "artifacts_sha256": {
+    "after/README.md.txt": "6e07c05a08a26b307af3ed74400d147d701a6b2c9c3ac4e8b0cca058e046e995",
+    "after/development-seeds.rb.txt": "8c1c97ce4c2b733cf4d079b07b357b0f7a10c775844469ee6cb1bf83fbf683ab",
+    "after/seeds.rb.txt": "6d1d4b267e14301745501f9db3bf462e30ed0c024fd61d138218ef029e94a716",
+    "after-agent-development.json": "a3717630ebc98afaf7c67d374068374431624dee63eff59750e8ed41c257b3fb",
+    "after-production.json": "244c42f95a70ccee539c6c5c520913b8020310356f2af17f2426e6b4974c047b",
+    "after-repeat-development.json": "a3717630ebc98afaf7c67d374068374431624dee63eff59750e8ed41c257b3fb",
+    "agent-observations.txt": "7a63923b3ce684cc662a17d5b935b4b2080ec73dc9c7c4e79837b8560eff1e68",
+    "baseline-identity.json": "e154c2bfadd209780a7bd593764fbde0b2ac78091265868c6d1f1445a75f00e0",
+    "before/README.md.txt": "c8998c866abf3da671efca5c4ec2dc6fab1a8890a6e4fee7005bcd517b0657f8",
+    "before/development-seeds.rb.txt": "efa66dc92dc9892dd4f9ae33c57b25b6fe4dc9a920c41590ff97dfda31b26496",
+    "before/seeds.rb.txt": "6d1d4b267e14301745501f9db3bf462e30ed0c024fd61d138218ef029e94a716",
+    "before-development.json": "ccf1125596d628bc9ab6afa7edd8f025e94e898faeffb4e3edb829ff6f2f8077",
+    "before-production.json": "244c42f95a70ccee539c6c5c520913b8020310356f2af17f2426e6b4974c047b",
+    "capture-state.rb": "b7d746e6e884e3c08a3b9c34e90cb6b9e2b2695f731aae07dfc473c7fe447afb",
+    "empty-password-control.log": "204bcf4035fb3298b6a5fe159dc975e60b678e7510aeabb2ad6d27decd37cddb",
+    "empty-password-provenance.txt": "5a33c911ff038b25b3d9c8ef14d8ddc8b72fb79d722734e122ad3fd36c40d6af",
+    "parent-development.log": "dc941c08d32c157ad92c7790bbd36ceaf24da6c9792595b0eba2bbaa641af37d",
+    "parent-observations.txt": "51958c52699c861378c8587cc06d1ffba87957a713980c948f5304821b62af32",
+    "parent-production.log": "0153f5e87d82f60d0efca18ecf302c7727842e40947f8ffe020fd13e45f96f3a",
+    "prepare-password.rb": "e3112f555e6e984bc62e59aac076a24317b3a5d1fa1053023292f8fd104eb387",
+    "prompt.txt": "a6781ee8dd8e6e6ebb1c8a7137e27e04b714baa18e105f2aa0a7b1cb1a434e18",
+    "response.txt": "21d99f1801b2849010c55bf7f331b305230457237a6f6fc3821a6b26953ab6c6",
+    "source-after.json": "1b35fd462eb239e16ee826f7da9d2ca63a289191491193a334d47c3d86862a7d",
+    "source-before.json": "69a0c949466cd4a5e20105a354ea9973483d3957b26f3d204d6b47fd73ae6fa3",
+    "source-changes.json": "095a929721abda3333806a6d47d29e11d4c0b97a7ae35f3e406e6effc86210b6",
+    "source.diff": "8365a1f772d55e5c6c02c60081c67a0a3199b6675b56995f3bf98f991a10683b",
+    "verify.py": "588d640bb84add7d5fd295cee6895d9aca15348fa94f8c40c65c38d7325839d9"
+  },
+  "limitations": [
+    "One fresh source-context evaluation; instructed isolation was not sandbox-enforced; command receipt is self-reported; model identity unattested; no installed discovery or other client/model qualification.",
+    "Existing prepared app/database, not new-database setup or a new Compile.",
+    "Source manifest excludes runtime directories; record snapshots cover selected columns, not all tables or timestamps.",
+    "No generated full CI, native or hosted environment, deployment, publication, catalog change or live gist update.",
+    "No all-environment lookup records existed; preservation of a nonempty lookup dataset was not exercised.",
+    "Empty Viewer’s inherited deliberately changed password was preserved, so its initial-password login was expected to fail; its empty state is established by rows only.",
+    "Browser notes are parent observations; screenshot and full agent transcript are not retained.",
+    "Original local links in the response refer to the disposable source workspace."
+  ]
+}
