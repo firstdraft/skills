@@ -1,0 +1,150 @@
+{
+  "plan_sha256": "559f16584d1f5030d0330f442a758fd58efc9e54e3fa84cad3ecdbe8d1e7802d",
+  "boundary": "Local import, in-process Analyzer, and target lowering; no API, Compile operation, boot or browser",
+  "import_diagnostics": [],
+  "valid": true,
+  "diagnostics": [
+    {
+      "code": "foundation_plan.rails_target.public_index.definition_projection",
+      "severity": "warning",
+      "message": "This Entity's public index definition does not yet support projection items; found 1.",
+      "location": {
+        "source_pointer": "/application/entities/0/scaffold/index/projection"
+      },
+      "subject": {
+        "kind": "entity",
+        "readable_path": "movie",
+        "subject_uuid": "01a0cb36-1db1-7635-a64d-d011c13e8a17"
+      },
+      "related_locations": [],
+      "suggestions": []
+    },
+    {
+      "code": "foundation_plan.rails_target.public_index.definition_projection",
+      "severity": "warning",
+      "message": "This Entity's public index definition does not yet support projection items; found 2.",
+      "location": {
+        "source_pointer": "/application/entities/1/scaffold/index/projection"
+      },
+      "subject": {
+        "kind": "entity",
+        "readable_path": "rating",
+        "subject_uuid": "01a0cb36-1db1-7d42-85c0-c19a1fb78f2f"
+      },
+      "related_locations": [],
+      "suggestions": []
+    }
+  ],
+  "gap_set_sha256": "b746fccbd84dde9ee36a08e1182b3aa59857b94f01c9eb1197a0ecd8c2bdb9c3",
+  "scaffold_lowering": [
+    {
+      "entity": "movie",
+      "routes": [
+        "index",
+        "show",
+        "new",
+        "create",
+        "edit",
+        "update",
+        "destroy"
+      ],
+      "definitions": [
+        {
+          "kind": "create",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "destroy",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "index",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "show",
+          "return_to": null,
+          "associated_create_forms": [
+            {
+              "source_pointer": "/application/entities/0/scaffold/show/projection/1/create_form",
+              "return_to": {
+                "kind": "resource",
+                "entity": "movie",
+                "route": "show",
+                "from": "scaffold_record",
+                "through": [],
+                "static_path": null,
+                "source_pointer": "/application/entities/0/scaffold/show/projection/1/create_form/return_to"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "update",
+          "return_to": null,
+          "associated_create_forms": []
+        }
+      ]
+    },
+    {
+      "entity": "rating",
+      "routes": [
+        "index",
+        "show",
+        "new",
+        "create",
+        "edit",
+        "update",
+        "destroy"
+      ],
+      "definitions": [
+        {
+          "kind": "create",
+          "return_to": {
+            "kind": "resource",
+            "entity": "rating",
+            "route": "index",
+            "from": null,
+            "through": [],
+            "static_path": "/ratings",
+            "source_pointer": "/application/entities/1/scaffold/create/return_to"
+          },
+          "associated_create_forms": []
+        },
+        {
+          "kind": "destroy",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "index",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "show",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "update",
+          "return_to": {
+            "kind": "resource",
+            "entity": "movie",
+            "route": "show",
+            "from": "mutation_record",
+            "through": [
+              "movie"
+            ],
+            "static_path": null,
+            "source_pointer": "/application/entities/1/scaffold/update/return_to"
+          },
+          "associated_create_forms": []
+        }
+      ]
+    }
+  ]
+}

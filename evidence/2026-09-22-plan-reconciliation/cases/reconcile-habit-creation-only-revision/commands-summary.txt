@@ -1,0 +1,3 @@
+This is the evaluator's command summary, not a raw tool transcript.
+
+Continuing evaluator reported cat of continuation prompt and current Plan; checking for existing implementation-notes.md; pinned Node removal of the identified validation; the supplied Ajv validator; cat and shasum of Plan/notes; apply_patch for implementation notes and response.txt. No Analysis or remote command occurred.

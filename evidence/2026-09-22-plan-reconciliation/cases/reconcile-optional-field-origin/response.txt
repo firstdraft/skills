@@ -1,0 +1,9 @@
+The main unresolved scope choice is **Notes on Goals, Habits, and Logs**. These optional free-text fields appear in public lists, details, and forms. Your saved decisions do not mention them, and without the earlier conversation I cannot tell whether they were requested. **Keep notes, or keep this version focused on names, status, and dated logs?**
+
+The draft includes your saved choices: a public web app, named Goals and Habits, Active/Paused habit status, dated Logs, no Accounts, and no sample data. I would retain routine defaults such as starting new habits Active and cleaning up whitespace in names.
+
+Its other material choices are that any visitor can create, edit, and delete records; every Habit belongs to one Goal and every Log to one Habit; and deleting a Goal or Habit is blocked while its children remain. The Plan allows multiple logs for the same habit and date, and does not prevent logging a paused habit.
+
+The [Plan](/Users/sandbox2/.codex/worktrees/8079/skills-reconciliation/tmp/reconciliation-evals/reconcile-optional-field-origin/.firstdraft/foundation-plan.json) is unchanged. Local Foundation Plan 0.20 schema validation passed. No implementation notes were present, and no submission, server Analysis, or Compilation was performed, so there is no observed GapSet or generated-app proof.
+
+Reviewed SHA-256: `2986d76bc10f33b7e1bb07aef2a59de8b8debaa6689aafac4f92519ceef1ab4d`.

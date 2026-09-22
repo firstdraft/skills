@@ -56,6 +56,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-22-plan-reconciliation.md`](2026-09-22-plan-reconciliation.md) | Three fresh source exercises, two continuing revisions, and separate local Analyzer/lowering checks; [machine receipt](2026-09-22-plan-reconciliation.json) |
 | [`2026-09-22-first-preview.md`](2026-09-22-first-preview.md) | Seven fresh source evaluations, two pre-adoption follow-ups, and local generated previews; [machine receipt](2026-09-22-first-preview.json) |
 | [`2026-09-19-implementation-notes-source.md`](2026-09-19-implementation-notes-source.md) | Five fresh source-context exercises and two local CLI regressions; local preservation does not prove live Publication handoff. Its schema and validation-support follow-ups were completed in `fe474a3`, with coordinated qualification still separate |
 | [`2026-09-15-account-authoring-0.2.5.md`](2026-09-15-account-authoring-0.2.5.md) | Account guidance qualification, publication, public installs, and default promotion; [publication receipt](2026-09-15-account-authoring-0.2.5-publication.json) |

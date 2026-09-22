@@ -16,8 +16,8 @@ For existing-app UI work, use the separate [UI continuation corpus](ui-continuat
 source cases cover normal screens, forms, component reuse, themes, unavailable discovery, an older app, source-only
 review, and routing controls. They are evaluation inputs, not evidence that a client completed those tasks.
 
-Except for the two paired release qualifications below, run one case in a fresh agent context and record the agent,
-model, Skill revision, commands, resulting file changes, and external effects. Replace synthetic state only for a
+Run independent cases in fresh agent contexts; continue a session only for a pair explicitly identified below.
+Record the agent, model, Skill revision, commands, resulting file changes, and external effects. Replace synthetic state only for a
 specifically prepared server-backed run. Never print or commit private `.firstdraft/state.json` contents.
 
 ## Initialization, interview, and authoring
@@ -31,6 +31,11 @@ specifically prepared server-backed run. Never print or commit private `.firstdr
 - `artifact-model-only-csv`
 - `artifact-derived-samples`
 - `artifact-return-form`
+- `reconcile-habit-requirements`
+- `reconcile-habit-creation-only-revision`
+- `reconcile-optional-field-origin`
+- `author-deliberate-return-overrides`
+- `preserve-current-location-return`
 - `choose-conventional-validations`
 - `preserve-structured-validation-gap`
 - `retain-outside-vocabulary-requirement`
@@ -64,6 +69,15 @@ related bookmarks and actual sign-in. Check an Account-free and an empty-data re
 Plan/source identities, approved data, emitted residual, browser observations and any gap; case definitions or
 source-only responses do not prove this journey. Reuse the historical Movie v2 empty-data and Habit trial 2 populated
 comparisons linked from Skills #83 as context, never as a fresh current-source run.
+
+For requirement reconciliation, continue `reconcile-habit-requirements` with
+`reconcile-habit-creation-only-revision` in the same session and exact output workspace. Preserve the first output
+before the second turn; compare requested meaning and unaffected subject identities, not preferred wording.
+Run `reconcile-optional-field-origin` separately with only its saved decisions and staged Plan, without inventing
+the previous conversation. For returns, continue `author-deliberate-return-overrides` with
+`preserve-current-location-return` in the same session. Validate actual authored Plans and inspect their current
+analysis/lowering when claiming target support. These local source cases do not establish installed-client behavior
+or live transport of implementation notes through GitHub Publication.
 
 ## Push, analysis, and diagnostics
 

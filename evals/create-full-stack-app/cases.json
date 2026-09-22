@@ -158,6 +158,85 @@
       ]
     },
     {
+      "id": "reconcile-habit-requirements",
+      "should_trigger": true,
+      "prompt": "Continue our First Draft habit tracker from the staged Plan. We settled on a public web app with Goals, Habits and dated HabitLogs, active/paused habit status, no Accounts and an empty initial database; I already declined examples and sample data. Remove all notes fields, including any optional ones on logs. A HabitLog must reference an active Habit whenever the log is created or edited. Keep the remaining model and ordinary screens. Revise the local Plan and give me a concise review; do not submit or Compile.",
+      "expectations": [
+        "Removes all user-rejected notes Fields and their form/projection consumers without changing unrelated subject UUIDs or restoring them later.",
+        "Retains the active-Habit-on-every-save rule as structured Entity comparison with a meaningful Reference error target, and distinguishes likely current target limits from an observed Analysis result.",
+        "Preserves settled public access, no Account, empty data and declined artifacts without repeating those questions.",
+        "Uses the existing Plan, notes if needed and compact read-back, without another requirements registry, technical-review artifact or per-field approval."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/reconcile-habits.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        }
+      ]
+    },
+    {
+      "id": "reconcile-habit-creation-only-revision",
+      "should_trigger": true,
+      "prompt": "Continue the same local habit draft. Change that last rule: only creating a new HabitLog requires an active Habit; existing logs must remain editable after the Habit is paused. Also record that CSV imports must show all row errors first and save a valid file in one transaction, with no partial saves. All previous choices, especially no notes fields, stay settled. Update the local draft and summarize only the meaningful changes. Do not submit or Compile.",
+      "expectations": [
+        "Runs in the continuing session from reconcile-habit-requirements and preserves its output as the starting candidate.",
+        "Does not claim the every-save comparison expresses creation-only behavior; removes or revises the now-contradicted rule because the user changed its meaning, and preserves the new intent in existing implementation notes when the grammar lacks the needed phase.",
+        "Records the agreed transactional CSV behavior and concrete acceptance examples in implementation-notes.md rather than fake Plan syntax or an invented Analyzer gap.",
+        "Keeps rejected notes Fields absent and all unrelated identities stable; does not repeat settled questions or require separate approval of the authorized revision.",
+        "Discloses the selected handoff boundary if discussing another implementation agent, without treating local notes as proof of GitHub Publication transport."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "reconcile-optional-field-origin",
+      "should_trigger": true,
+      "prompt": "Another agent left this First Draft habit-tracker Plan. My saved decisions are a public web app, named Goals and Habits, active/paused habit status and dated logs, no Accounts and no sample data. I do not have the earlier conversation. Review this exact draft before we move on and tell me any consequential unresolved choice in plain language. Routine defaults are delegated. Do not edit, submit or Compile.",
+      "expectations": [
+        "Inspects optional Fields as well as the compact material summary, and makes the authored Notes/Note additions visible rather than silently treating them as requested.",
+        "States missing history honestly when discussing those additions; does not invent that the user or earlier agent specifically requested them.",
+        "Keeps any necessary clarification focused and avoids per-field permission or questions about ordinary derived defaults.",
+        "Does not claim Analysis or Compilation occurred and does not create another candidate/review representation."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/reconcile-habits.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        }
+      ]
+    },
+    {
+      "id": "author-deliberate-return-overrides",
+      "should_trigger": true,
+      "prompt": "For this public movie-rating app, keep standalone Rating creation returning to the Ratings list as already modeled. After editing a Rating, open its Movie details. When adding a Rating from a Movie’s ratings collection, successful Save should also open the Movie details; Cancel should still go back to that scoped collection. Other navigation uses the ordinary defaults. Preserve the model, empty initial data and no Account choice. Update the local First Draft Plan and explain the exceptions; do not submit or Compile.",
+      "expectations": [
+        "Authors the Rating update resource/show return with record.from mutation_record and through rating.movie.",
+        "Authors the collection create_form resource/show return with record.from scaffold_record and no through path.",
+        "Keeps the standalone Rating create/index override independent, and explains that the associated success override leaves Cancel at the scoped collection.",
+        "Preserves ordinary defaults elsewhere without asking about every redirect, adding a raw URL/history mechanism or changing unrelated identities."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/redirect-movies.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        }
+      ]
+    },
+    {
+      "id": "preserve-current-location-return",
+      "should_trigger": true,
+      "prompt": "Continue the same local movie-rating draft. For the associated Add Rating flow, replace its successful return with current_location: I want the internal location that rendered that interaction. Keep the standalone create and update destinations we settled. If this is modeled but not generated today, preserve my request and explain what the current target omits; do not substitute a different destination. Keep this local and do not Compile.",
+      "expectations": [
+        "Runs in the continuing session from author-deliberate-return-overrides.",
+        "Retains the requested current_location override in the associated create_form and preserves the separately settled standalone create and update returns.",
+        "Explains the current target omits the override and dependent associated interaction with a reviewed target gap, without claiming a fresh Analysis result before one exists.",
+        "Does not silently fall back to the scoped collection, a resource override, Referer/session history or a second permission ceremony."
+      ],
+      "artifacts": []
+    },
+    {
       "id": "choose-conventional-validations",
       "should_trigger": true,
       "prompt": "Use First Draft to help me model these local-only product rules before we edit JSON: every movie has a title of at most 80 characters; a product code uses uppercase letters and digits; a retirement reason is needed only once retired_at is set; usernames cannot be admin or support; end date must follow start date; and title plus release date identifies a unique movie. Which kinds fit, where should errors go, and what can I expect the current Compiler to generate? Do not contact the service.",

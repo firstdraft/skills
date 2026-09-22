@@ -1,0 +1,198 @@
+{
+  "plan_sha256": "45e3c6fbf39a203c9dd4d3710f1f6deab025b364305c992595cf2ecb30581901",
+  "boundary": "Local import, in-process Analyzer, and target lowering; no API, Compile operation, boot or browser",
+  "import_diagnostics": [],
+  "valid": true,
+  "diagnostics": [
+    {
+      "code": "foundation_plan.rails_target.public_index.definition_projection",
+      "severity": "warning",
+      "message": "This Entity's public index definition does not yet support projection items; found 1.",
+      "location": {
+        "source_pointer": "/application/entities/0/scaffold/index/projection"
+      },
+      "subject": {
+        "kind": "entity",
+        "readable_path": "goal",
+        "subject_uuid": "01a0caf8-094e-7b40-b2c8-8828097617e7"
+      },
+      "related_locations": [],
+      "suggestions": []
+    },
+    {
+      "code": "foundation_plan.rails_target.public_index.definition_projection",
+      "severity": "warning",
+      "message": "This Entity's public index definition does not yet support projection items; found 3.",
+      "location": {
+        "source_pointer": "/application/entities/1/scaffold/index/projection"
+      },
+      "subject": {
+        "kind": "entity",
+        "readable_path": "habit",
+        "subject_uuid": "01a0caf8-094e-7ff1-a06f-9bda595b8634"
+      },
+      "related_locations": [],
+      "suggestions": []
+    },
+    {
+      "code": "foundation_plan.rails_target.public_index.definition_projection",
+      "severity": "warning",
+      "message": "This Entity's public index definition does not yet support projection items; found 2.",
+      "location": {
+        "source_pointer": "/application/entities/2/scaffold/index/projection"
+      },
+      "subject": {
+        "kind": "entity",
+        "readable_path": "habit_log",
+        "subject_uuid": "01a0caf8-094e-749a-aa9a-5e45901886e1"
+      },
+      "related_locations": [],
+      "suggestions": []
+    },
+    {
+      "code": "foundation_plan.rails_target.validation.owner_unsupported",
+      "severity": "warning",
+      "message": "This Rails profile release lowers only Field- and Reference-owned Validations, plus the bounded Entity Reference comparison.",
+      "location": {
+        "source_pointer": "/application/entities/2/validations/0"
+      },
+      "subject": {
+        "kind": "validation",
+        "readable_path": "habit_log.habit_must_be_active",
+        "subject_uuid": "01a0cb3f-1393-7929-a96d-3d0a0ffbb3c0"
+      },
+      "related_locations": [],
+      "suggestions": []
+    }
+  ],
+  "gap_set_sha256": "d1dee45dc358f4dc99481ad13e1ba010ad4b0dba3f53e6ba5f6372f67b6d9f22",
+  "scaffold_lowering": [
+    {
+      "entity": "goal",
+      "routes": [
+        "index",
+        "show",
+        "new",
+        "create",
+        "edit",
+        "update",
+        "destroy"
+      ],
+      "definitions": [
+        {
+          "kind": "create",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "destroy",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "index",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "show",
+          "return_to": null,
+          "associated_create_forms": [
+            {
+              "source_pointer": "/application/entities/0/scaffold/show/projection/1/create_form",
+              "return_to": null
+            }
+          ]
+        },
+        {
+          "kind": "update",
+          "return_to": null,
+          "associated_create_forms": []
+        }
+      ]
+    },
+    {
+      "entity": "habit",
+      "routes": [
+        "index",
+        "show",
+        "new",
+        "create",
+        "edit",
+        "update",
+        "destroy"
+      ],
+      "definitions": [
+        {
+          "kind": "create",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "destroy",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "index",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "show",
+          "return_to": null,
+          "associated_create_forms": [
+            {
+              "source_pointer": "/application/entities/1/scaffold/show/projection/3/create_form",
+              "return_to": null
+            }
+          ]
+        },
+        {
+          "kind": "update",
+          "return_to": null,
+          "associated_create_forms": []
+        }
+      ]
+    },
+    {
+      "entity": "habit_log",
+      "routes": [
+        "index",
+        "show",
+        "new",
+        "create",
+        "edit",
+        "update",
+        "destroy"
+      ],
+      "definitions": [
+        {
+          "kind": "create",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "destroy",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "index",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "show",
+          "return_to": null,
+          "associated_create_forms": []
+        },
+        {
+          "kind": "update",
+          "return_to": null,
+          "associated_create_forms": []
+        }
+      ]
+    }
+  ]
+}

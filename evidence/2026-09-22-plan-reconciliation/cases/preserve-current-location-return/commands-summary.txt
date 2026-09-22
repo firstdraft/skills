@@ -1,0 +1,3 @@
+This is the evaluator's command summary, not a raw tool transcript.
+
+Continuing evaluator reported cat of continuation prompt and current Plan; bounded sed of the same foundation-plan-020.md; apply_patch of the associated return and response.txt; supplied Ajv validator; inline Node invariant check showing restoration of the previous associated return reproduced the prior exact SHA-256. No remote command ran.

@@ -1,0 +1,211 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.20",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "application": {
+    "key": "rating_returns",
+    "name": "Rating Returns",
+    "native": {},
+    "delivery": {},
+    "home_index": "movie",
+    "entities": [
+      {
+        "subject_uuid": "01a0cb36-1db1-7635-a64d-d011c13e8a17",
+        "key": "movie",
+        "name": "Movie",
+        "primary_descriptor": {
+          "field": "movie.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0cb36-1db1-7e9c-8b46-c0de36aa61a4",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0cb36-1db1-70af-80d1-45a3aebf5949",
+            "key": "ratings",
+            "kind": "direct",
+            "name": "Ratings",
+            "reference": "rating.movie",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "movie.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "movie.title"
+              },
+              {
+                "association": "movie.ratings",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "rating.score"
+                  }
+                ],
+                "create_form": {
+                  "return_to": {
+                    "kind": "current_location"
+                  }
+                }
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "movie.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "movie.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0cb36-1db1-7d42-85c0-c19a1fb78f2f",
+        "key": "rating",
+        "name": "Rating",
+        "primary_descriptor": {
+          "field": "rating.score"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0cb36-1db1-7a73-9162-a83acbe2cbc2",
+            "key": "score",
+            "name": "Score",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0cb36-1db1-7012-b3e1-c7b237a83b85",
+            "key": "movie",
+            "name": "Movie",
+            "targets": [
+              "movie"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "rating.score"
+              },
+              {
+                "association": "rating.movie",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "rating.score"
+              },
+              {
+                "association": "rating.movie",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "rating.score"
+              },
+              {
+                "association": "rating.movie"
+              }
+            ],
+            "return_to": {
+              "kind": "resource",
+              "entity": "rating",
+              "route": "index"
+            }
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "rating.score"
+              },
+              {
+                "association": "rating.movie"
+              }
+            ],
+            "return_to": {
+              "kind": "resource",
+              "entity": "movie",
+              "route": "show",
+              "record": {
+                "from": "mutation_record",
+                "through": [
+                  {
+                    "association": "rating.movie"
+                  }
+                ]
+              }
+            }
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

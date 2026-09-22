@@ -1,0 +1,36 @@
+# Implementation notes
+
+These agreed behaviors are outside Foundation Plan 0.20's vocabulary. They require
+implementation and verification in the application; the Compiler does not read
+this file.
+
+## Agreed requirements
+
+### Active Habit required only when creating a HabitLog
+
+Creating a new HabitLog requires its referenced Habit to be active. Existing logs
+remain editable after their Habit is paused. Do not reinstate an every-save
+active-Habit validation: that would block the agreed editing behavior.
+
+Acceptance examples:
+
+- Creating a log for an active Habit succeeds when the remaining inputs are valid.
+- Creating a log for a paused Habit fails without saving a new log.
+- After a Habit is paused, editing an existing log's date succeeds when the
+  remaining inputs are valid.
+
+### CSV import validates the whole file and saves atomically
+
+Show all row errors before saving any records. If any row is invalid, save nothing.
+Save a valid file in one transaction, with no partial saves.
+
+Acceptance examples:
+
+- A file with errors on several rows reports all those row errors and leaves all
+  records unchanged, including records represented by valid rows.
+- A valid file saves every row together.
+- A failure while saving rolls back the whole import, leaving no partial saves.
+
+## Open questions
+
+CSV target Entities, column mapping, and duplicate handling have not been specified.

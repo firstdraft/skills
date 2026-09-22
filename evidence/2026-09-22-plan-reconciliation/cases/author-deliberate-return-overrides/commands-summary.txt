@@ -1,0 +1,3 @@
+This is the evaluator's command summary, not a raw tool transcript.
+
+Evaluator reported cat of Skill, prompt and Plan; rg headings and return terms; bounded sed reads of foundation-plan-020.md, modeling-guide.md and examples.md; test/stat file metadata and rg workspace inventory; Skill resolver --version and --help; apply_patch for the two requested returns and response.txt; supplied Ajv validator; inline Node inspection of returns, identities, Account/data absence and SHA-256. Private state was absent and not created. No remote command ran.
