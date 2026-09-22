@@ -1,0 +1,11 @@
+Added **City of Kites** (watched) and **Winter Observatory** (unwatched) to Demo Viewer’s development samples. The original films and bookmarks remain, and Empty Viewer still has no bookmarks.
+
+Changed [development seeds](/private/tmp/fd8079-seed-continuation/movies/db/seeds/development.rb) and updated the [README](/private/tmp/fd8079-seed-continuation/movies/README.md) description and sample summary.
+
+Verified against `fd_8079_seed_edit_dev_20260922`:
+
+- Ran `bin/rails db:seed` twice: five movies, four bookmarks, no duplicates.
+- Ran `bin/rails runner` before and after seeding to check relationships, watched states, and preserved record IDs.
+- `bundle exec standardrb db/seeds/development.rb` passed.
+
+Rails commands used development mode and Ruby 4.0.5. Browser verification was not performed.

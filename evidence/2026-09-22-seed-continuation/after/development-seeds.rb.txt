@@ -1,0 +1,31 @@
+require "bigdecimal"
+require "date"
+require "time"
+
+last_lantern = Movie.find_or_create_by!(title: "The Last Lantern")
+
+signal_from_tomorrow = Movie.find_or_create_by!(title: "Signal from Tomorrow")
+
+Movie.find_or_create_by!(title: "Summer at the Harbor")
+
+city_of_kites = Movie.find_or_create_by!(title: "City of Kites")
+
+winter_observatory = Movie.find_or_create_by!(title: "Winter Observatory")
+
+demo_viewer = User.find_or_initialize_by(email: "viewer@movie-preview.example")
+demo_viewer.assign_attributes(name: "Demo Viewer", account_status: 2)
+demo_viewer.password = "MoviePreview-Demo-Only-2026!" if demo_viewer.new_record? || !demo_viewer.password?
+demo_viewer.save!
+
+empty_viewer = User.find_or_initialize_by(email: "empty@movie-preview.example")
+empty_viewer.assign_attributes(name: "Empty Viewer", account_status: 2)
+empty_viewer.password = "MoviePreview-Demo-Only-2026!" if empty_viewer.new_record? || !empty_viewer.password?
+empty_viewer.save!
+
+Bookmark.find_or_create_by!(watched: true, user: demo_viewer, movie: last_lantern)
+
+Bookmark.find_or_create_by!(watched: false, user: demo_viewer, movie: signal_from_tomorrow)
+
+Bookmark.find_or_create_by!(watched: true, user: demo_viewer, movie: city_of_kites)
+
+Bookmark.find_or_create_by!(watched: false, user: demo_viewer, movie: winter_observatory)

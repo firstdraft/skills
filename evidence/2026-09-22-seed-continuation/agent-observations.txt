@@ -1,0 +1,103 @@
+Fresh continuation receipt
+
+Scope
+- App: /private/tmp/fd8079-seed-continuation/movies
+- Request: add City of Kites and Winter Observatory to development samples; add Demo Viewer bookmarks with watched=true and watched=false respectively; retain existing records and Empty Viewer's empty state.
+- Source edits: db/seeds/development.rb (two movies and two bookmarks); README.md (replaced product-description placeholder and added sample totals).
+- UI edits: none. No server, browser, RSpec suite, dependency installation, First Draft operation, publication, deployment, or database reset was run.
+- Response capture: /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/tmp/seed-continuation/response.txt
+- This receipt uses only previously observed commands and outputs; no app command was rerun to create it.
+
+Files actually read
+- App AGENTS.md, README.md, .firstdraft/gaps.json, db/seeds.rb, db/seeds/development.rb, app/models/movie.rb, app/models/user.rb, app/models/bookmark.rb, .ruby-version, Gemfile, config/routes.rb, app/controllers/movies_controller.rb, app/controllers/bookmarks_controller.rb, app/policies/bookmark_policy.rb.
+- Attempted app .firstdraft/design/implementation-notes.md: absent.
+- Shared Skill: /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/skills/create-full-stack-app/SKILL.md (entire file).
+- Routed reference: references/diagnostics-and-recovery.md. First searched headings and handoff/seed/sample matches; then read lines 255-335: Application handoff, Verify the first preview, Implementation notes handoff, and UI continuation. The initial heading search for those names at level two returned no matches.
+- User request: /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/tmp/seed-continuation/prompt.txt.
+- The app/model/db/spec filenames returned by rg --files were an inventory only; spec contents were not read.
+- No sibling workspace, evaluation rubric, parent control/evidence file, previous conversation, private CLI state, or production configuration was read.
+
+Exact shell command log
+Commands sharing a batch were invoked independently; numbering below is listing order.
+App commands used cwd=/private/tmp/fd8079-seed-continuation/movies. Absolute-path Skill/prompt reads did not depend on cwd.
+
+1. exit 0
+cat AGENTS.md
+
+2. exit 0
+cat /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/skills/create-full-stack-app/SKILL.md
+
+3. exit 0
+cat /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/tmp/seed-continuation/prompt.txt
+
+4. exit 1; README and gaps JSON were printed; missing notes produced:
+cat: .firstdraft/design/implementation-notes.md: No such file or directory
+Exact command:
+cat README.md .firstdraft/design/implementation-notes.md .firstdraft/gaps.json
+
+5. exit 128; rg after && did not execute.
+fatal: not a git repository (or any of the parent directories): .git
+Exact command:
+git status --short && rg --files -g 'AGENTS.md' -g '.tool-versions' -g 'Gemfile*' -g '*seed*' -g '*.rb' app/models db spec | head -100
+
+6. exit 1; no output (heading pattern did not match).
+rg -n -A 90 '^## (Application handoff|Root adoption handoff|Implementation.notes handoff)' /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/skills/create-full-stack-app/references/diagnostics-and-recovery.md
+
+7. exit 0
+rg --files -g 'AGENTS.md' -g '.tool-versions' -g '.ruby-version' -g 'Gemfile*' -g '*seed*' -g '*.rb' app/models db spec
+
+8. exit 0
+cat db/seeds.rb db/seeds/development.rb app/models/movie.rb app/models/user.rb app/models/bookmark.rb .ruby-version Gemfile
+
+9. exit 0
+rg -n -i 'handoff|seed|sample|^#' /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/skills/create-full-stack-app/references/diagnostics-and-recovery.md
+
+10. exit 0
+sed -n '255,335p' /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/skills/create-full-stack-app/references/diagnostics-and-recovery.md
+
+11. exit 0; baseline snapshot
+PATH="$HOME/.asdf/shims:$PATH" ASDF_RUBY_VERSION=4.0.5 RAILS_ENV=development DATABASE_URL=postgresql:///fd_8079_seed_edit_dev_20260922 bin/rails runner 'raise "Wrong Rails environment" unless Rails.env.development?; raise "Wrong database" unless ApplicationRecord.connection.select_value("SELECT current_database()") == "fd_8079_seed_edit_dev_20260922"; puts JSON.generate(movies: Movie.order(:title).pluck(:id, :title), users: User.order(:email).pluck(:id, :email, :name), bookmarks: Bookmark.joins(:user, :movie).order("users.email", "movies.title").pluck("bookmarks.id", "users.email", "movies.title", "bookmarks.watched"))'
+
+12. exit 0
+cat config/routes.rb app/controllers/movies_controller.rb app/controllers/bookmarks_controller.rb app/policies/bookmark_policy.rb
+
+Source mutation at this point: apply_patch updated only db/seeds/development.rb and README.md as described above.
+
+13. exit 0; first seed load
+PATH="$HOME/.asdf/shims:$PATH" ASDF_RUBY_VERSION=4.0.5 RAILS_ENV=development DATABASE_URL=postgresql:///fd_8079_seed_edit_dev_20260922 bin/rails db:seed
+
+14. exit 0; after-first-seed snapshot
+PATH="$HOME/.asdf/shims:$PATH" ASDF_RUBY_VERSION=4.0.5 RAILS_ENV=development DATABASE_URL=postgresql:///fd_8079_seed_edit_dev_20260922 bin/rails runner 'raise "Wrong Rails environment" unless Rails.env.development?; raise "Wrong database" unless ApplicationRecord.connection.select_value("SELECT current_database()") == "fd_8079_seed_edit_dev_20260922"; puts JSON.generate(movies: Movie.order(:title).pluck(:id, :title), users: User.order(:email).pluck(:id, :email, :name), bookmarks: Bookmark.joins(:user, :movie).order("users.email", "movies.title").pluck("bookmarks.id", "users.email", "movies.title", "bookmarks.watched"))'
+
+15. exit 0; no output
+PATH="$HOME/.asdf/shims:$PATH" ASDF_RUBY_VERSION=4.0.5 RAILS_ENV=development DATABASE_URL=postgresql:///fd_8079_seed_edit_dev_20260922 bundle exec standardrb db/seeds/development.rb
+
+16. exit 0; second seed load
+PATH="$HOME/.asdf/shims:$PATH" ASDF_RUBY_VERSION=4.0.5 RAILS_ENV=development DATABASE_URL=postgresql:///fd_8079_seed_edit_dev_20260922 bin/rails db:seed
+
+17. exit 0; after-second-seed snapshot
+PATH="$HOME/.asdf/shims:$PATH" ASDF_RUBY_VERSION=4.0.5 RAILS_ENV=development DATABASE_URL=postgresql:///fd_8079_seed_edit_dev_20260922 bin/rails runner 'raise "Wrong Rails environment" unless Rails.env.development?; raise "Wrong database" unless ApplicationRecord.connection.select_value("SELECT current_database()") == "fd_8079_seed_edit_dev_20260922"; puts JSON.generate(movies: Movie.order(:title).pluck(:id, :title), users: User.order(:email).pluck(:id, :email, :name), bookmarks: Bookmark.joins(:user, :movie).order("users.email", "movies.title").pluck("bookmarks.id", "users.email", "movies.title", "bookmarks.watched"))'
+
+Response capture at this point: apply_patch created the requested response.txt.
+
+18. exit 0; final source read
+sed -n '1,75p' db/seeds/development.rb && sed -n '1,55p' README.md
+
+Observed Rails warning
+Each Rails command printed Skylight's development-mode warning, including: "No data will be reported until you deploy your app." The five commands exited 0.
+
+Exact observed JSON lines
+
+Baseline:
+{"movies":[["01a0cb05-9ca5-77ba-9399-58dc7800111d","Signal from Tomorrow"],["01a0cb05-9ca9-724c-ab5a-daecd168ed6e","Summer at the Harbor"],["01a0cb05-9c9b-7c99-aaf4-83f1d2970798","The Last Lantern"]],"users":[["01a0cb05-9f31-7451-9302-3b53db9a72e6","empty@movie-preview.example","Empty Viewer"],["01a0cb05-9e2a-7b86-8fca-3f0dcb110a98","viewer@movie-preview.example","Demo Viewer"]],"bookmarks":[["01a0cb05-9f4b-73a1-84b3-c87321ad750c","viewer@movie-preview.example","Signal from Tomorrow",false],["01a0cb05-9f3c-7ce4-881e-1ef592debd0c","viewer@movie-preview.example","The Last Lantern",true]]}
+
+After first seed:
+{"movies":[["01a0cb5a-6642-773e-948e-fe352609335a","City of Kites"],["01a0cb05-9ca5-77ba-9399-58dc7800111d","Signal from Tomorrow"],["01a0cb05-9ca9-724c-ab5a-daecd168ed6e","Summer at the Harbor"],["01a0cb05-9c9b-7c99-aaf4-83f1d2970798","The Last Lantern"],["01a0cb5a-6646-71d8-aa6d-40e2e696f58e","Winter Observatory"]],"users":[["01a0cb05-9f31-7451-9302-3b53db9a72e6","empty@movie-preview.example","Empty Viewer"],["01a0cb05-9e2a-7b86-8fca-3f0dcb110a98","viewer@movie-preview.example","Demo Viewer"]],"bookmarks":[["01a0cb5a-66bb-7d5d-b061-68b606de8263","viewer@movie-preview.example","City of Kites",true],["01a0cb05-9f4b-73a1-84b3-c87321ad750c","viewer@movie-preview.example","Signal from Tomorrow",false],["01a0cb05-9f3c-7ce4-881e-1ef592debd0c","viewer@movie-preview.example","The Last Lantern",true],["01a0cb5a-66bf-7ae2-b802-5732abac9fb8","viewer@movie-preview.example","Winter Observatory",false]]}
+
+After second seed:
+{"movies":[["01a0cb5a-6642-773e-948e-fe352609335a","City of Kites"],["01a0cb05-9ca5-77ba-9399-58dc7800111d","Signal from Tomorrow"],["01a0cb05-9ca9-724c-ab5a-daecd168ed6e","Summer at the Harbor"],["01a0cb05-9c9b-7c99-aaf4-83f1d2970798","The Last Lantern"],["01a0cb5a-6646-71d8-aa6d-40e2e696f58e","Winter Observatory"]],"users":[["01a0cb05-9f31-7451-9302-3b53db9a72e6","empty@movie-preview.example","Empty Viewer"],["01a0cb05-9e2a-7b86-8fca-3f0dcb110a98","viewer@movie-preview.example","Demo Viewer"]],"bookmarks":[["01a0cb5a-66bb-7d5d-b061-68b606de8263","viewer@movie-preview.example","City of Kites",true],["01a0cb05-9f4b-73a1-84b3-c87321ad750c","viewer@movie-preview.example","Signal from Tomorrow",false],["01a0cb05-9f3c-7ce4-881e-1ef592debd0c","viewer@movie-preview.example","The Last Lantern",true],["01a0cb5a-66bf-7ae2-b802-5732abac9fb8","viewer@movie-preview.example","Winter Observatory",false]]}
+
+Actual in-memory comparisons performed after the queries
+- After first load: every baseline movie/user/bookmark tuple was present unchanged; movie and bookmark counts each increased by two; user tuples were unchanged; each requested title existed exactly once; Demo Viewer owned exactly one bookmark for each new movie with the requested watched state; Empty Viewer owned no bookmark.
+- After second load: JSON.stringify(second snapshot) exactly equaled JSON.stringify(first snapshot), covering every queried row and ID.
+- These checks covered the selected columns shown above, not all database columns, authentication, browser presentation, or production behavior.

@@ -1,0 +1,23 @@
+{
+  "baseline_file_count": 276,
+  "changed": {
+    "README.md": {
+      "before": "c8998c866abf3da671efca5c4ec2dc6fab1a8890a6e4fee7005bcd517b0657f8",
+      "after": "6e07c05a08a26b307af3ed74400d147d701a6b2c9c3ac4e8b0cca058e046e995"
+    },
+    "db/seeds/development.rb": {
+      "before": "efa66dc92dc9892dd4f9ae33c57b25b6fe4dc9a920c41590ff97dfda31b26496",
+      "after": "8c1c97ce4c2b733cf4d079b07b357b0f7a10c775844469ee6cb1bf83fbf683ab"
+    }
+  },
+  "unchanged_file_count": 274,
+  "added": [],
+  "removed": [],
+  "excluded_runtime_directories": [
+    ".git",
+    "log",
+    "node_modules",
+    "storage",
+    "tmp"
+  ]
+}

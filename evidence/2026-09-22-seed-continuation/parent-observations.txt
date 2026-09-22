@@ -1,0 +1,52 @@
+Parent controls, 2026-09-22
+
+This is a compact receipt assembled from the actual command and browser observations, not a full transcript.
+The fresh evaluator's actions are recorded independently in agent-observations.txt.
+
+Setup
+- Copied /private/tmp/fd8079-preview-apps/movies to /private/tmp/fd8079-seed-continuation/movies.
+- Excluded .firstdraft/design, environment overrides, .git, node_modules, vendor/bundle, tmp and log; retained .env.example and already-built assets.
+- Cloned fd_8079_movies_repeat_20260922 as fd_8079_seed_edit_dev_20260922.
+- That repeat control had deliberately changed Empty Viewer's password; the development clone inherited it. See empty-password-provenance.txt for the later reconciliation against the earlier receipt and a redacted log excerpt.
+- Cloned fd_8079_movies_prodcheck_20260922 as fd_8079_seed_edit_prod_20260922.
+- Original application source bytes and database contents were preserved; no database was reset. This is a content claim, not a claim that no file timestamp ever changed.
+- Ran bundle check with ASDF_RUBY_VERSION=4.0.5; dependencies were available.
+- Ran prepare-password.rb on the copied development database before taking before-development.json. Only Demo Viewer's disposable password was changed, using User#password= and save!.
+- Captured before-development.json (2/3/2) and before-production.json (0/0/0) with capture-state.rb before delegation.
+
+All Rails commands ran from /private/tmp/fd8079-seed-continuation/movies with PATH="$HOME/.asdf/shims:$PATH" and ASDF_RUBY_VERSION=4.0.5.
+Development commands used RAILS_ENV=development and DATABASE_URL=postgresql:///fd_8079_seed_edit_dev_20260922.
+Production commands used RAILS_ENV=production, SECRET_KEY_BASE_DUMMY=1 and DATABASE_URL=postgresql:///fd_8079_seed_edit_prod_20260922.
+The helper/output absolute prefix below is /Users/sandbox2/.codex/worktrees/8079/skills-seed-followup/tmp/seed-continuation/.
+
+After the evaluator completed, exit 0 for each command:
+1. bin/rails runner <prefix>/capture-state.rb fd_8079_seed_edit_dev_20260922 <prefix>/after-agent-development.json
+2. bin/rails db:seed
+3. bin/rails runner <prefix>/capture-state.rb fd_8079_seed_edit_dev_20260922 <prefix>/after-repeat-development.json
+The actual combined output is parent-development.log. Both snapshots were 2 users / 5 movies / 4 bookmarks / 0 broken bookmarks.
+
+Independent production-configuration control, exit 0 for each command:
+1. bin/rails db:seed
+2. bin/rails runner <prefix>/capture-state.rb fd_8079_seed_edit_prod_20260922 <prefix>/after-production.json
+The actual combined output is parent-production.log: 0 users / 0 movies / 0 bookmarks / 0 broken bookmarks.
+
+Browser observation
+- Started bin/rails server -b 127.0.0.1 -p 3925 using the copied development database. Rails 8.1.3.1, Ruby 4.0.5 and Puma 8.0.2 reported; already-built assets were used.
+- Used the Codex in-app browser, in a background temporary tab.
+- Opened http://127.0.0.1:3925/login and signed in with viewer@movie-preview.example and the already-prepared MoviePreview-Continuation-Local-2026! password.
+- The returned Movies page listed The Last Lantern, Signal from Tomorrow, Summer at the Harbor, City of Kites and Winter Observatory.
+- Opened the visible Bookmarks navigation link. AX state and an inspected screenshot showed The Last Lantern / Yes, Signal from Tomorrow / No, City of Kites / Yes and Winter Observatory / No. No screenshot is retained in this evidence packet.
+- Signed out. A single attempt with empty@movie-preview.example and MoviePreview-Demo-Only-2026! returned: There was an error logging in; invalid password. No password was reset or changed in the browser.
+- A read-only Rails runner checked that account's hash through BCrypt::Password.new(hash) == "MoviePreview-Demo-Only-2026!" and returned false; see empty-password-control.log. The retained before/after fingerprint was unchanged. Subsequent reconciliation with the earlier repeat control identified its deliberate Empty Viewer password change, so rejecting the README's initial value was expected. No prior password plaintext was recovered. The failed login added a user_login_failures row after the last snapshot; selected Domain/password snapshots do not cover all authentication tables.
+- Closed the tab and sent Ctrl-C to the server; Puma reported graceful shutdown and exited 0.
+
+Parent comparison
+- Compared after-agent-development.json with after-repeat-development.json: identical selected rows and password fingerprints.
+- Compared all baseline rows with the final selected rows: original IDs/values retained.
+- Checked every bookmark's owner/movie/watched tuple, all counts, and broken_bookmarks=0; Empty Viewer has no bookmarks.
+- Compared before-production.json with after-production.json: identical and empty.
+- Compared hashes of the 276 inventoried source files: only README.md and db/seeds/development.rb changed; no source file added or removed.
+- Initial file-set comparison incorrectly included storage/.keep, excluded by the baseline inventory. It pre-existed in both copied and original app with the same timestamp and zero-byte size. Corrected comparison excludes the same runtime directories and passes. No app change was made to repair the harness comparison.
+- Compared Skills 4c4dab13309478983433fc4805955e7dd2c769d5 with follow-up base a5983304ebb918431740d4f7ba7069de3adb8fd7: SKILL.md and references/diagnostics-and-recovery.md have no diff. Actual evaluation identity remains 4c4dab.
+
+No First Draft API/CLI operation, regeneration, deployment, publication, GitHub application mutation, database reset, or live gist/catalog update occurred in this continuation evaluation.

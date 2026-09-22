@@ -56,6 +56,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-22-seed-continuation.md`](2026-09-22-seed-continuation.md) | One fresh source-context edit to an already-generated app, repeated development seeding, password preservation, and isolated production-configuration control; [machine receipt](2026-09-22-seed-continuation.json) |
 | [`2026-09-22-plan-reconciliation.md`](2026-09-22-plan-reconciliation.md) | Three fresh source exercises, two continuing revisions, and separate local Analyzer/lowering checks; [machine receipt](2026-09-22-plan-reconciliation.json) |
 | [`2026-09-22-first-preview.md`](2026-09-22-first-preview.md) | Seven fresh source evaluations, two pre-adoption follow-ups, and local generated previews; [machine receipt](2026-09-22-first-preview.json) |
 | [`2026-09-19-implementation-notes-source.md`](2026-09-19-implementation-notes-source.md) | Five fresh source-context exercises and two local CLI regressions; local preservation does not prove live Publication handoff. Its schema and validation-support follow-ups were completed in `fe474a3`, with coordinated qualification still separate |

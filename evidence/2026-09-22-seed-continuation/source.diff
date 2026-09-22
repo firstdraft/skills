@@ -1,0 +1,22 @@
+--- before/README.md
++++ after/README.md
+@@ -3 +3,2 @@
+-This app started with First Draft. Replace this paragraph with a description of the product, who uses it, and its main workflows.
++Movie Preview is a film catalog for viewers to browse movies and track watched status on their existing bookmarks.
++Bookmark views and updates are limited to the signed-in viewer.
+@@ -39,0 +41,3 @@
++
++The samples include five fictional movies. Demo Viewer has two watched and two unwatched bookmarks, while
++Empty Viewer has none.
+--- before/db/seeds/development.rb
++++ after/db/seeds/development.rb
+@@ -9,0 +10,4 @@
++
++city_of_kites = Movie.find_or_create_by!(title: "City of Kites")
++
++winter_observatory = Movie.find_or_create_by!(title: "Winter Observatory")
+@@ -23,0 +28,4 @@
++
++Bookmark.find_or_create_by!(watched: true, user: demo_viewer, movie: city_of_kites)
++
++Bookmark.find_or_create_by!(watched: false, user: demo_viewer, movie: winter_observatory)
