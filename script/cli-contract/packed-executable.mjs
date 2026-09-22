@@ -99,8 +99,10 @@ export async function verifyPackedExecutable(context) {
   );
   assert.match(
     compileHelp.stdout,
-    /--output <absent-directory\|\.>\s+Materialize the generated application here/,
+    /--output <absent-directory\|\.>\s+Materialize here \(default: \.\)/,
   );
+
+  assert.match(compileHelp.stdout, /firstdraft plan compile --github/);
 
   const generated = invokeExecutable(
     context.executable,

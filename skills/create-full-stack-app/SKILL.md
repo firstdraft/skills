@@ -6,8 +6,9 @@ license: "MIT"
 
 # Create a Full-Stack App with First Draft
 
-Author a coherent Foundation Plan and obtain approval of its exact semantic read-back. Then Compile into the
-workspace or **Compile and publish through First Draft**. Neither mode deploys.
+Author and review a coherent Foundation Plan, then Compile through the First Draft service into the current local
+folder. Run and develop the generated app locally. A Codespace is an optional fallback; GitHub publication and native
+preview are optional follow-ups. Compilation does not deploy.
 
 ## Preserve implementation requirements
 
@@ -22,8 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.3.0, CLI 0.3.0, and API 0.4 with Plan 0.20; compatibility does not establish catalog selection.
-This source candidate is unreleased.
+Targets plugin 0.4.0, CLI 0.4.0, and API 0.4 with Plan 0.20; compatibility does not establish catalog selection.
 
 - Bounded generation includes Web Accounts, Policies, Scaffolds, development data, and selected iPhone/Android
   clients. Web uses stock Zinc tokens; Appearance controls theme, native colors, and Web icons. Omitted theme means
@@ -32,34 +32,23 @@ This source candidate is unreleased.
   and do not inherit Web privacy.
 - Preserve unsupported requests; report gaps. Never drop clients or weaken access to get `valid`.
   Artifacts retain the submitted Plan and GapSet.
-- For Android preview, recommend Android Studio's local Emulator while Revyl is incompatible. It requires a suitable
-  local computer; follow emitted `ANDROID_PREVIEW.md`.
+- For native preview, use local iOS Simulator or Android Studio Emulator when available. Follow the generated app's
+  guides; native builds and Revyl are not prerequisites for ordinary local Rails development.
 
 Before support claims, read [current evidence](references/foundation-plan-020.md#current-evidence-boundary).
 
 ## Load references only when needed
 
-For authoring, read the relevant section:
+For authoring, choose the relevant section:
 
-- Plan structure or identity: [closed envelope](references/foundation-plan-020.md#closed-envelope),
-  [subject identity](references/foundation-plan-020.md#subject-identity),
-  [ownership](references/foundation-plan-020.md#ownership), or [presence](references/foundation-plan-020.md#presence).
-- Product modeling: [interview](references/modeling-guide.md#interview-toward-one-coherent-candidate),
-  [Entities and Fields](references/modeling-guide.md#model-entities-and-fields),
-  [validation choices](references/modeling-guide.md#choose-validations),
-  [relationships](references/modeling-guide.md#model-relationships), or
-  [behavior](references/modeling-guide.md#add-behavior-deliberately). Read the
-  [semantic read-back](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back) immediately before
-  approval.
-- Target support: [current evidence](references/foundation-plan-020.md#current-evidence-boundary), then the relevant
-  subsection for [Application and clients](references/foundation-plan-020.md#application-and-clients),
-  [Fields](references/foundation-plan-020.md#entities-descriptors-and-fields),
-  [References and Associations](references/foundation-plan-020.md#references-and-associations),
-  [Validations](references/foundation-plan-020.md#validations),
-  [Accounts and Policies](references/foundation-plan-020.md#accounts-and-policies), or
-  [Scaffolds](references/foundation-plan-020.md#scaffolds).
-- A concrete shape: select the matching section in [examples](references/examples.md) for Application, scalar
-  Fields, enum, Account/Policy, Scaffold, or relationship syntax.
+- [Foundation Plan reference](references/foundation-plan-020.md): exact envelope, identity, ownership, presence,
+  current evidence, and target support for Application/clients, Fields, relationships, Validations, Accounts/Policies,
+  and Scaffolds.
+- [Modeling guide](references/modeling-guide.md): interview, Entities/Fields, validations, relationships, and
+  behavior. Read its [semantic read-back](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back)
+  before Compile.
+- [Examples](references/examples.md): concrete Application, scalar Field, enum, Account/Policy, Scaffold, and
+  relationship shapes.
 
 For CLI work:
 
@@ -93,12 +82,12 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.3.0` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.4.0` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Contract tests own separate stdout and stderr assertions for leaf
 commands; do not repeat them in a startup shell loop. The compatible CLI supplies these public commands:
 
 - `generate uuid` and `generate application-key`;
-- `plan init`, `plan push`, `plan status`, and `plan compile` with either zero flags or `--output`; and
+- `plan init`, `plan push`, `plan status`, and `plan compile` (local `--output .` by default), optional `--output <path>`, or explicit `--github`; and
 - `compilation status` and `compilation download`.
 
 There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.
@@ -210,14 +199,19 @@ and exclusions. Summarize outstanding implementation notes and how the selected 
 Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Use only that attached
 digest: the CLI validates it against the attached GapSet; never substitute a fixture, historical, or another
 Project's digest. Explain that service gaps were skipped before semantic analysis, target gaps were not fully
-realized, and `valid` applies only to the admitted graph. Select absent `./application` for direct requests, `.` only for explicit current-root adoption, and
-zero-flag Publication only for an explicit private GitHub repository. Ask if unclear: generic compile or build
-language does not authorize Publication. Direct output creates only a verified local
-directory, successful Publication creates one private GitHub repository, and neither deploys.
+realized, and `valid` applies only to the admitted graph. Use the current folder by default; select an absent
+`--output <path>` only when the user wants another directory or the current root is ineligible. Select `--github`
+only for an explicit private GitHub repository request. Generic compile or build language selects local output.
+Direct output creates only a verified local directory, successful Publication creates one private GitHub repository,
+and neither deploys.
 Do not enumerate absent subject families or immaterial properties. Ask the user to correct or explicitly approve the
-candidate and reviewed gaps; require no digest echo or gap-acknowledgment field.
+candidate and reviewed gaps only when those decisions are still unresolved; require no digest echo or
+gap-acknowledgment field. Existing authorization carries forward: if the user has already approved the candidate and
+reviewed gaps, or requested the complete app with these choices delegated, give the read-back as a progress update
+and proceed. Ask only when new material scope or gap consequences need a user decision.
 
-If the Plan bytes change, show the new SHA-256 and the semantic delta, then obtain approval of the changed candidate.
+If the Plan bytes change, show the new SHA-256 and the semantic delta. Obtain approval of the changed candidate only
+when the delta exceeds the existing request or delegated choices.
 In the same continuing conversation, after unambiguous approval, reread the Plan, confirm its SHA-256 is unchanged,
 and make the initial request with exactly one invocation in the selected mode. Do not ask for a second command-level
 confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
@@ -232,34 +226,38 @@ analysis with gaps can; do not require removal of the corresponding Plan fields.
 After the exact candidate's semantic read-back is approved, read
 [Product Compile](references/diagnostics-and-recovery.md#product-compile) and request the already selected mode:
 
-- For direct output, use absent `./application` unless the approved request selects current-root adoption. Run:
-
-  ```sh
-  firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-  firstdraft_cli plan compile --output ./application
-  ```
-
-  For POSIX root adoption, read the recovery preconditions and use `.`. It preserves a root `.git`, stages
-  the move directly to `.firstdraft/design/`, and creates no repository; absent output creates no `.git`. Neither
-  mode starts Publication.
-- For selected Publication, run zero-flag mode:
+- For the ordinary local journey, use the current folder:
 
   ```sh
   firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
   firstdraft_cli plan compile
   ```
 
+  This is equivalent to `plan compile --output .`. Read the root-adoption preconditions before invoking it. The CLI
+  preserves an existing root `.git` and archives planning material under `.firstdraft/design/`. Use an absent path
+  such as `firstdraft_cli plan compile --output ./application` only when another directory is desired. Root adoption
+  is POSIX-only; Windows requires an absent output path. Both local forms use the service Compiler and create no
+  GitHub repository.
+- For selected Publication, run explicit GitHub mode:
+
+  ```sh
+  firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
+  firstdraft_cli plan compile --github
+  ```
+
+  `--github` and `--output` are mutually exclusive.
+
 Invoke it exactly once without another confirmation or gap field; do not reimplement CLI internals.
 
 Report direct output only after materialization verifies. On `request_outcome_unknown` with `phase: "compilation"`,
 preserve Plan, private state, and the selected output; do not retry or switch modes. A validated retained ID permits
-status and, after success, download. In zero-flag mode, require terminal Publication success and its validated URL;
+status and, after success, download. In `--github` mode, require terminal Publication success and its validated URL;
 Compilation success alone is insufficient. Never Compile concurrently. Publication-singleton replay
 never applies to an ambiguous push or direct start.
 
 ## Inspect or download the retained Compilation
 
-Zero-flag success prints only the repository URL. Use retained commands only with an exact ID
+`--github` success prints only the repository URL. Use retained commands only with an exact ID
 supplied by the user or a validated structured projection; never recover one from private state or unvalidated
 output.
 
@@ -312,10 +310,10 @@ Report:
   contains them; follow the [notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff);
 - observed analyzer release, graph version, Head SHA, and complete valid GapSet and digest;
 - mode and distinct Compilation/Publication statuses when Publication was requested;
-- zero-flag mode's private URL after Publication success; direct output's path, file count, manifest digest, and
+- `--github` mode's private URL after Publication success; direct output's path, file count, manifest digest, and
   any `root_adoption` after materialization;
 - that direct Compile created no Publication or repository; after root adoption, use the
-  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for the GitHub checkpoint before setup; and
+  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for local setup and an optional Git checkpoint; and
 - any recovery blocker or external prerequisite.
 
 Distinguish verified materialization, First Draft Publication, and GitHub pushes. None proves deployment or

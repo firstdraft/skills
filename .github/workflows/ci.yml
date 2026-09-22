@@ -32,6 +32,9 @@ jobs:
           test "$(node --version)" = "v24.18.0"
           test "$(npm --version)" = "11.16.0"
       - run: npm ci --ignore-scripts
+      - name: Audit dependencies
+        if: matrix.node == '24.18.0'
+        run: npm audit
       - run: sh script/check
       - name: Rehearse release ordering
         if: matrix.node == '24.18.0'
@@ -46,8 +49,8 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 20153726ba20f968af55ec4291eb76de8f03e9d5 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach 20153726ba20f968af55ec4291eb76de8f03e9d5
+      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 660c02e46cdf36ec76dd556de8c96ef67ed3b035 HEAD
+      - run: git -C tmp/firstdraft-cli checkout --detach 660c02e46cdf36ec76dd556de8c96ef67ed3b035
       - run: node script/check-cli-contract.mjs tmp/firstdraft-cli
       - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli
       - name: Check Codex installation and Skill discovery

@@ -243,7 +243,7 @@ async function assertInvalidPublication(
   const cwd = await initializedProject(context, label, { planSource });
   const digest = sha256(planSource);
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -273,7 +273,7 @@ async function verifyObservationRegression(context, planSource, digest) {
     digest,
     "provisioning_repository",
   );
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch([
       acceptedPlanResponse(planSource),
       jsonResponse(analysisProjection("valid")),
@@ -299,7 +299,7 @@ async function verifyGenerationReplacement(context, planSource, digest) {
     "provisioning_repository",
     { graphVersion: 2 },
   );
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch([
       acceptedPlanResponse(planSource),
       jsonResponse(analysisProjection("valid")),
@@ -379,7 +379,7 @@ async function verifyTerminalOutcomes(context, planSource, digest) {
     const calls = [];
     const result = await invokeRunner(
       context.runCli,
-      ["plan", "compile"],
+      ["plan", "compile", "--github"],
       cwd,
       {
         fetchFunction: sequenceFetch(
@@ -419,7 +419,7 @@ async function verifyStartRejected(context, planSource) {
     planSource,
   });
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -456,7 +456,7 @@ async function verifyServerStartOutcomeUnknown(context, planSource) {
     { planSource },
   );
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -494,7 +494,7 @@ async function verifyWaitAndUnavailable(context, planSource, digest) {
   const timeoutCalls = [];
   const timeout = await invokeRunner(
     context.runCli,
-    ["plan", "compile"],
+    ["plan", "compile", "--github"],
     timeoutCwd,
     {
       fetchFunction: sequenceFetch(
@@ -530,7 +530,7 @@ async function verifyWaitAndUnavailable(context, planSource, digest) {
   const calls = [];
   const unavailable = await invokeRunner(
     context.runCli,
-    ["plan", "compile"],
+    ["plan", "compile", "--github"],
     unavailableCwd,
     {
       fetchFunction: sequenceFetch(
@@ -619,7 +619,7 @@ async function verifyProgressRendering(context, planSource, digest) {
   ];
   const expectedStatusReads = responses.length - 3;
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
     fetchFunction: sequenceFetch(responses, calls),
     planPublishSleep: async () => {},
   });

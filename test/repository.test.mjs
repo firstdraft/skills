@@ -116,9 +116,9 @@ const compilationEvidenceCliBaseline =
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
 const cliContractBaseline =
-  "20153726ba20f968af55ec4291eb76de8f03e9d5";
+  "660c02e46cdf36ec76dd556de8c96ef67ed3b035";
 const cliContractRuntimeDigest =
-  "43c74adba22419d054562c1688c088a1c78e3729e65dae608d4021641dbfdaee";
+  "ddd9b8ee4d83135a668b7a97e2522ba23b9478339662c1f6115e5273851abf81";
 const previousPublicCliContractBaseline =
   "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
 const previousPublicCliContractRuntimeDigest =
@@ -153,7 +153,7 @@ const freshModelPublicationTree =
   "5815d094e204f8b3928ff5b5467ef85e2551d109";
 const freshModelPublicationCommit =
   "37cc23d7cf7a1448fb7dfd4be8aee27c6e389ead";
-const preparedCliPackage = "@firstdraft.com/cli@0.3.0";
+const preparedCliPackage = "@firstdraft.com/cli@0.4.0";
 const previousPreparedCliPackage = "@firstdraft.com/cli@0.2.1";
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
@@ -423,7 +423,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       paragraph.includes(`\`${preparedCliPackage}\``),
     );
     assert(packageParagraph, "the reference must identify the prepared CLI package");
-    assert.match(packageParagraph, /\bunpublished\b/);
+    assert.doesNotMatch(packageParagraph, /\bis unpublished\b|^unpublished /m);
     assert.match(source, /do not prove plugin(?:\/| or )catalog\s+publication/);
   }
 
@@ -553,8 +553,8 @@ test("historical plugin receipts stay separate from current availability", async
   for (const source of [candidateSkill, candidateModelingGuide]) {
     assert.doesNotMatch(source, /live [Pp]ublication remains unproved/);
   }
-  assert.match(candidateSkill, /CLI 0\.3\.0/);
-  assert.match(candidateSkill, /source candidate is unreleased/);
+  assert.match(candidateSkill, /CLI 0\.4\.0/);
+  assert.doesNotMatch(candidateSkill, /This source candidate is unreleased/);
   assert.match(
     candidateSkill,
     /compatibility does not establish catalog selection/,
@@ -933,8 +933,8 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
     version: "0.2.5",
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.3.0");
-  assert.equal(installableManifest.version, "0.3.0");
+  assert.equal(packageTemplate.version, "0.4.0");
+  assert.equal(installableManifest.version, "0.4.0");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);
@@ -1091,7 +1091,7 @@ test("CI checks the exact modular CLI contract", async () => {
     [...publishWorkflow.matchAll(/[0-9a-f]{40}/g)].filter(
       ([revision]) => revision === cliContractBaseline,
     ).length,
-    4,
+    2,
   );
   assert.doesNotMatch(
     publishWorkflow
@@ -1101,9 +1101,14 @@ test("CI checks the exact modular CLI contract", async () => {
   );
   assert.doesNotMatch(
     publishWorkflow,
-    /secrets|auth[_-]?token|NODE_AUTH_TOKEN|NPM_TOKEN/i,
+    /secrets|NODE_AUTH_TOKEN|NPM_TOKEN/i,
   );
-  assert.doesNotMatch(publishWorkflow, /npm dist-tag|--tag latest/);
+  assert.doesNotMatch(publishWorkflow, /npm dist-tag|--tag next/);
+  assert.doesNotMatch(publishWorkflow, /npm ci|npm audit|npm run check|sh script\/check/);
+  assert.match(publishWorkflow, /actions: read/);
+  assert.match(publishWorkflow, /GH_TOKEN: \$\{\{ github\.token \}\}/);
+  assert.match(publishWorkflow, /gh run list --workflow ci\.yml --branch main --event push --commit "\$release_sha" --status success/);
+  assert.match(publishWorkflow, /test -n "\$ci_url"/);
   assert.deepEqual(
     publishWorkflow.match(
       /^      - run: node script\/check-plugin-release-order\.mjs.*$/gm,
@@ -1137,7 +1142,7 @@ test("CI checks the exact modular CLI contract", async () => {
     publishWorkflow.match(
       /node script\/check-cli-registry-package\.mjs --cli-root tmp\/firstdraft-cli/g,
     )?.length,
-    2,
+    1,
   );
   const publishVerification = workflowJobSource(publishWorkflow, "verify");
   const publishApproval = workflowJobSource(publishWorkflow, "publish");
@@ -1231,7 +1236,7 @@ test("CI checks the exact modular CLI contract", async () => {
   for (const job of [publishVerification, publishApproval]) {
     assert.deepEqual(
       [...job.matchAll(/^      - uses: (\S+)/gm)].map(([, action]) => action),
-      [checkoutAction, setupNodeAction, checkoutAction],
+      job === publishApproval ? [checkoutAction, setupNodeAction, checkoutAction] : [checkoutAction, setupNodeAction],
       "release jobs may use only the reviewed checkout and setup-node actions",
     );
   }
@@ -1242,12 +1247,12 @@ test("CI checks the exact modular CLI contract", async () => {
   assert.deepEqual(
     publishWorkflow.match(/^\s+npm publish .*$/gm),
     [
-      "          npm publish \"$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz\" --access public --tag next --provenance --ignore-scripts",
+      "          npm publish \"$RUNNER_TEMP/plugin/firstdraft.com-claude-code-${GITHUB_REF_NAME#claude-v}.tgz\" --access public --tag latest --provenance --ignore-scripts",
     ],
   );
   assert.match(
     publishVerification,
-    /node script\/check-cli-registry-package\.mjs --cli-root tmp\/firstdraft-cli[\s\S]*?node script\/check-claude-plugin-package\.mjs --cli-root tmp\/firstdraft-cli/,
+    /Reuse successful main CI/,
   );
   assert.match(
     publishApproval,
@@ -3044,7 +3049,7 @@ test("local capability check uses the shared helper for version and help probes"
   );
   assert.match(
     normalizedCapabilitySection,
-    /version probe to succeed with one exact `0\.3\.0` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
+    /version probe to succeed with one exact `0\.4\.0` output line and no other output.*?top-level help that lists `generate`, `plan`, and `compilation`.*?separate stdout and stderr assertions/,
   );
   assert.match(
     normalizedCapabilitySection,
@@ -3118,7 +3123,7 @@ test("analysis status guidance follows the pinned CLI contract", async () => {
   const normalizedPushSection = pushSection[1].replace(/\s+/g, " ");
   assert.match(
     skillSource,
-    /The compatible CLI supplies these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and `plan compile` with either zero flags or `--output`/,
+    /The compatible CLI supplies these public commands:[\s\S]*?`plan init`, `plan push`, `plan status`, and `plan compile` \(local `--output \.` by default\), optional `--output <path>`, or explicit `--github`/,
   );
   assert.match(
     normalizedPushSection,
@@ -3844,7 +3849,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     skill,
-    /Compile into the\s+workspace or \*\*Compile and publish through First Draft\*\*[\s\S]*?In zero-flag mode, require terminal Publication success and its validated URL[\s\S]*?Compilation success alone is insufficient/,
+    /Compile through the First Draft service into the current local\s+folder[\s\S]*?In `--github` mode, require terminal Publication success and its validated URL[\s\S]*?Compilation success alone is insufficient/,
   );
   assert.match(
     skill,
@@ -3885,7 +3890,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   assert.match(
     skill.replace(/\s+/g, " "),
-    /Zero-flag success prints only the repository URL.*?never recover one from private state or unvalidated output/,
+    /`--github` success prints only the repository URL.*?never recover one from private state or unvalidated output/,
   );
   assert.match(
     recovery,
@@ -4011,7 +4016,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
 
   const movie = evaluation("compile-prepared-movie-catalog");
   hasExpectation(movie, "both plan compile completion modes", "no public plan publish");
-  hasExpectation(movie, "explicitly requested one private GitHub repository", "zero-flag plan compile");
+  hasExpectation(movie, "explicitly requested one private GitHub repository", "plan compile --github");
   hasExpectation(movie, "pushes the exact whole file", "accepted exact Head's analysis");
   hasExpectation(movie, "progress as nonterminal observational output");
   hasExpectation(movie, "stdout", "validated private GitHub repository URL");
@@ -4061,7 +4066,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     direct,
     "After approval",
     "exactly one firstdraft plan compile --output ./application",
-    "does not also run zero-flag plan compile",
+    "does not also run plan compile --github",
   );
   hasExpectation(
     direct,
@@ -4071,8 +4076,8 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   const root = evaluation("compile-prepared-current-root");
   hasExpectation(
     root,
-    "explicit current-root request",
-    "firstdraft plan compile --output .",
+    "ordinary local request",
+    "firstdraft plan compile",
     "never substitutes",
   );
   hasExpectation(
@@ -4220,7 +4225,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     staleBytes,
     "new SHA-256 and semantic delta",
     "obtains approval of that changed candidate",
-    "before invoking zero-flag plan compile",
+    "before invoking plan compile --github",
   );
 
   const ambiguousPush = evaluation("compile-ambiguous-push-outcome");
@@ -4243,7 +4248,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   );
   hasExpectation(
     ambiguousPublication,
-    "same zero-flag plan compile",
+    "same plan compile --github",
     "Skill resolver",
     "unchanged Plan bytes",
     "conditional PUT",

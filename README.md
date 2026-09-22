@@ -6,14 +6,17 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
 
-Source candidate `0.3.0` requires CLI `0.3.0`, Service API `0.4`, and Foundation Plan `0.20`. It preserves the planning
-workspace under `.firstdraft/design/` after root adoption. Its identities belong in
+Source candidate `0.4.0` requires CLI `0.4.0`, Service API `0.4`, and Foundation Plan `0.20`. It preserves the planning
+workspace under `.firstdraft/design/` and defaults to current-folder local output. Use explicit `--github` for server
+Publication. Its identities belong in
 [release compatibility](release/compatibility.json); it is unpublished.
 The public catalog remains on plugin `0.2.5`. Only `create-full-stack-app` is packaged; the UI Skill auditions remain
 deferred source.
 
 Trying First Draft as a tester? Start with the
-[Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
+[local development guide](https://gist.github.com/raghubetina/3d424a97a1eaa6de8c406e67f32a237e). Start in an empty
+local folder; a Drawing Board clone and GitHub push are unnecessary. The
+[Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft) is the Codespaces fallback.
 
 ## What this repository owns
 
@@ -46,17 +49,12 @@ Historical pins and release chronology in the evidence archive are receipts, not
 
 ## Using Codex
 
-In Drawing Board, the Skill and CLI are already installed. Follow the
-[workspace sign-in and start instructions](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
-Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
-conversation, run `codex resume` from the same workspace root.
-
 The catalog manifest selects shared plugin `0.2.5`, which includes the compatible CLI and discovers it in either
 agent. Drawing Board supplies its own project wrapper and installed CLI. The
 [release evidence](evidence/2026-09-15-account-authoring-0.2.5.md) distinguishes package checks from public catalog
 installation. A fresh authenticated student Codespace journey remains unproved.
 
-Outside Drawing Board, Codex uses the same catalog as Claude. Install it with:
+Start in a local folder. Codex uses the same catalog as Claude. Install it with:
 
 ~~~sh
 codex plugin marketplace add firstdraft/skills
@@ -72,6 +70,11 @@ documented setup. For desktop sessions, use a project credential wrapper: a sepa
 terminal exports. A plugin install does not sign you into First Draft. If authentication interrupts an already
 requested operation, configure it and tell the same conversation to continue. Approve the specific CLI command when
 Codex requests network access; its tool permission is separate from approval of the Plan and Compile mode.
+
+For the Codespaces fallback, Drawing Board already has the Skill and CLI installed. Follow the
+[workspace sign-in and start instructions](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
+Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
+conversation, run `codex resume` from the same workspace root.
 
 ## Repository layout
 
