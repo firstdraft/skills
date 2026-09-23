@@ -8,7 +8,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import { canonicalPluginSkillNames } from "../script/claude-plugin-boundaries.mjs";
 
 const schema = JSON.parse(await readFile(
-  new URL("../skills/create-full-stack-app/references/foundation-plan-0.21.schema.json", import.meta.url),
+  new URL("../skills/create-full-stack-app/references/foundation-plan-0.22.schema.json", import.meta.url),
   "utf8",
 ));
 const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false });
@@ -81,12 +81,33 @@ test("Appearance offers only the authored theme choices", () => {
 test("the bundled Plan contract replaces the previous input identity", () => {
   const validatePlan = ajv.getSchema(schema.$id);
   const plan = {
-    format: "firstdraft.foundation-plan.sketch/0.21",
+    format: "firstdraft.foundation-plan.sketch/0.22",
     target: { id: "rails", profile: "rails-sketch/2026-09" },
     application: { key: "theme_app", name: "Theme App", native: {}, delivery: {}, entities: [], appearance: { theme: "toggle" } },
   };
   assert(validatePlan(plan));
-  assert(!validatePlan({ ...plan, format: "firstdraft.foundation-plan.sketch/0.20" }));
+  assert(!validatePlan({ ...plan, format: "firstdraft.foundation-plan.sketch/0.21" }));
+});
+
+test("Application PWA selection is optional, boolean, and independent of other choices", () => {
+  const base = {
+    key: "movie_catalog",
+    name: "Movie Catalog",
+    native: {},
+    delivery: {},
+    entities: [],
+  };
+  for (const selection of [{}, { pwa: true }, { pwa: false }]) {
+    for (const configuration of [{}, { appearance: { theme: "toggle" }, native: { ios: {}, android: {} } }]) {
+      const application = { ...base, ...configuration, ...selection };
+      const original = structuredClone(application);
+      assert(validate("application", application));
+      assert.deepEqual(application, original);
+    }
+  }
+  for (const pwa of [null, "true", "false", 0, 1, {}, []]) {
+    assert(!validate("application", { ...base, pwa }));
+  }
 });
 
 

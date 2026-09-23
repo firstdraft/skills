@@ -1,8 +1,8 @@
-export const cliRevision = "013581baa91c1eff0bffafd6e9e20eccb1f24643";
+export const cliRevision = "38528f4402bc0a75ac855f0226569fbbc92488e3";
 export const cliRuntimeSha256 =
-  "6386712548a9eb5d3d7c8dbdd031482e66af270cae45838056f72533979cae40";
+  "648cc0b32520d11c36d2c434fd078c56ca7e60e3e7770c7bd9349d7b331c128d";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.5.0";
+export const cliPackageVersion = "0.6.0";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
@@ -40,11 +40,11 @@ export const storedApiUrl = "http://127.0.0.1:1";
 export const configuredApiUrl = "http://127.0.0.1:2";
 export const apiToken = "canary-private-api-token";
 export const foundationPlanFormat =
-  "firstdraft.foundation-plan.sketch/0.21";
+  "firstdraft.foundation-plan.sketch/0.22";
 export const analyzerRelease =
   "foundation-plan-rails/application-2026-09-22-theme";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-22-theme";
+  "foundation-plan-rails/compiler-application-2026-09-23-pwa";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-09",

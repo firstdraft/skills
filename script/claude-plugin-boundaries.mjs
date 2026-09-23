@@ -6,8 +6,8 @@ export const canonicalClaudePluginSkillFiles = Object.freeze([
   "agents/openai.yaml",
   "references/diagnostics-and-recovery.md",
   "references/examples.md",
-  "references/foundation-plan-0.21.schema.json",
-  "references/foundation-plan-021.md",
+  "references/foundation-plan-0.22.schema.json",
+  "references/foundation-plan-022.md",
   "references/modeling-guide.md",
   "scripts/firstdraft.sh",
 ]);

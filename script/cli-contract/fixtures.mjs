@@ -39,7 +39,7 @@ export function analysisProjection(
     graphVersion = 1,
     identifier = analysisId,
     headSourceSha256 =
-      "25f888477e4ecbbcdcdb8bc32314dab579fb4fe7218e2e4f9915a42ff5f4dc33",
+      "36c076540a7d0bfa7a78c315de44ca3f708bddd65957e93c125f061433886d7e",
     gaps = [],
   } = {},
 ) {

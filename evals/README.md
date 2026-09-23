@@ -5,7 +5,7 @@ fixtures are review inputs, not execution evidence. Each case declares whether t
 artifacts are attached, staged into the project, or retained only as expected output.
 
 The current Plan/analysis fixtures below are synthetic contract inputs, not new Service observations.
-Current authoring cases use Foundation Plan `firstdraft.foundation-plan.sketch/0.21` and target
+Current authoring cases use Foundation Plan `firstdraft.foundation-plan.sketch/0.22` and target
 `rails-sketch/2026-09`. The `appearance-current` Plan/analysis and `resume-current` Plan fixtures replace their older
 inputs for new evaluations. The original `appearance-issues` Plan/analysis and `resume` Plan retain the exact bytes
 declared by the [September 14 qualification receipt](../evidence/2026-09-14-ui-authoring-skill-0.2.4-qualification.json).
@@ -89,6 +89,8 @@ or live transport of implementation notes through GitHub Publication.
 - `android-preview-respects-provider-limit`
 - `preserve-partially-realized-appearance-intent`
 - `preserve-browser-theme-and-native-residual`
+- `explain-default-browser-installation`
+- `preserve-browser-installation-opt-out`
 - `correct-source-issue-alongside-capability-gap`
 - `analysis-failed-stop`
 - `standalone-status-binds-accepted-generation`

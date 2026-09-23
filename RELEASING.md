@@ -8,14 +8,15 @@ longer part of an ordinary release. Coordinate the service, CLI, and Skills thro
 
 [`release/compatibility.json`](release/compatibility.json) owns the candidate version, compatible CLI/API/Plan
 identities, and deterministic package SHA-256. The current source candidate is
-`@firstdraft.com/claude-code@0.5.0` with CLI `0.5.0`, API `>= 0.5.0`, `< 0.6.0`, and Plan `sketch/0.21`.
+`@firstdraft.com/claude-code@0.6.0` with CLI `0.6.0`, API `>= 0.6.0`, `< 0.7.0`, and Plan `sketch/0.22`.
 The [marketplace manifest](.claude-plugin/marketplace.json) independently selects a published plugin version;
 retain its selection until the intended new version is actually published. Source compatibility is not public
 catalog selection. Query npm when releasing rather than treating a dated distribution snapshot as current.
 
-Plan `0.21` adds `appearance.theme: "toggle"` and replaces the sole accepted `0.20` input format. API, CLI, and
-plugin `0.5.0` record that input and artifact compatibility break. Target `rails-sketch/2026-09`, local-output
-defaults, and `.firstdraft/design/` stay the same. There is no retained-Project migration or compatibility bridge.
+Plan `0.22` adds optional `application.pwa` and replaces the sole accepted `0.21` input format. Omission and `true`
+enable ordinary online installation metadata; `false` omits it. API, CLI, and plugin `0.6.0` record that input and
+artifact compatibility break. Target `rails-sketch/2026-09`, local-output defaults, and `.firstdraft/design/` stay
+the same. There is no retained-Project migration or compatibility bridge.
 
 Use an ordinary pre-1.0 minor bump for a breaking compatibility change and a patch bump for a compatible change.
 Never reuse a published npm version, protected release tag, or marketplace version for different package bytes.
