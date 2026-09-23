@@ -116,8 +116,7 @@ of Compilation, builds, or CI. A registry page example does not change the Rails
 
 ## Development
 
-Use Node.js 22 or newer and a real, non-shallow Git checkout. Checks inspect the repository index, historical
-evidence objects, and the complete Skill tree.
+Use Node.js 22 or newer and a Git checkout. Checks inspect the repository index and complete Skill tree.
 
 ~~~sh
 npm ci --ignore-scripts
@@ -133,8 +132,9 @@ The check covers:
 - deterministic plugin packaging with a stub CLI; and
 - release compatibility.
 
-CI separately checks the exact pinned CLI contract and candidate package digest. The release runbook owns the
-commands for reproducing that check against a local exact CLI checkout.
+CI checks consumer commands against the exact pinned CLI and verifies the candidate package digest. CLI-owned tests
+cover the complete Publication protocol matrix; Skills retains representative recovery cases, compatible fixtures,
+and packaged-executable integration. The release runbook owns the commands for reproducing these checks.
 
 Preview the plugin directly from a checkout:
 
@@ -152,8 +152,7 @@ node script/check-packaged-claude-plugin-install.mjs --claude /absolute/path/to/
 
 These install checks use temporary client state, discover every Skill through the real client, compare all Skill
 files with the candidate, and exercise the bundled CLI without a global `firstdraft`. They need no agent login or
-First Draft service. The old `check-claude-plugin-install.mjs` is a retired historical recording path, not the
-assembled-package check. Behavioral cases remain shared across clients; [the eval guide](evals/README.md) describes
+First Draft service. Behavioral cases remain shared across clients; [the eval guide](evals/README.md) describes
 the separate agent-session checks.
 
 If the installed GitHub CLI supports Skill preview:
