@@ -35,6 +35,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-22-plugin-0.4.0-release.md`](2026-09-22-plugin-0.4.0-release.md) | GitHub publication directly to latest, exact registry bytes and provenance, catalog selection, and one local compile-and-boot smoke |
 | [`2026-09-22-npm-promotion-retirement.md`](2026-09-22-npm-promotion-retirement.md) | Revoked the promotion token, removed its GitHub secret and environment, disabled the legacy workflow, and restored the CLI's restrictive publishing policy while preserving GitHub trusted publishing |
 | [`2026-09-15-shared-plugin-0.2.4-default-promotion.md`](2026-09-15-shared-plugin-0.2.4-default-promotion.md) | Protected-tag promotion, one plugin write with bounded stale-read reconciliation, and independent final tags/archive hashes; [machine receipt](2026-09-15-shared-plugin-0.2.4-default-promotion.json) |
 | [`2026-09-15-shared-plugin-0.2.4-publication.md`](2026-09-15-shared-plugin-0.2.4-publication.md) | Protected publication, delayed registry visibility, verified provenance, exact registry-package adapters, and observed staging readiness before catalog/default promotion; [machine receipt](2026-09-15-shared-plugin-0.2.4-publication.json) |
