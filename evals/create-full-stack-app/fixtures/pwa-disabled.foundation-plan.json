@@ -9,11 +9,12 @@
     "name": "Movie Catalog",
     "domain": "movies.example.com",
     "appearance": {
-      "theme": "auto",
+      "theme": "toggle",
       "tint_color": "#4F46E5"
     },
     "native": {
-      "ios": {}
+      "ios": {},
+      "android": {}
     },
     "delivery": {},
     "entities": [
@@ -35,12 +36,16 @@
           }
         ],
         "scaffold": {
-          "resource_routes": ["index"],
+          "resource_routes": [
+            "index"
+          ],
           "index": {
             "authorization": "public"
           }
         }
       }
-    ]
+    ],
+    "pwa": false,
+    "home_index": "movie"
   }
 }

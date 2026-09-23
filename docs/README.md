@@ -13,8 +13,8 @@ historical observations intentionally have different owners.
 | How do I repair an existing npm default? | [npm default repair](npm-promotion.md) |
 | What does the agent execute? | [`SKILL.md`](../skills/create-full-stack-app/SKILL.md) |
 | How does an agent extend or review generated UI? | The app's `UI.md`; [deferred Skill status](../README.md#ui-continuation) |
-| What is exact Plan syntax? | [JSON Schema](../skills/create-full-stack-app/references/foundation-plan-0.21.schema.json) |
-| What capability is currently described? | [Foundation Plan reference](../skills/create-full-stack-app/references/foundation-plan-021.md) |
+| What is exact Plan syntax? | [JSON Schema](../skills/create-full-stack-app/references/foundation-plan-0.22.schema.json) |
+| What capability is currently described? | [Foundation Plan reference](../skills/create-full-stack-app/references/foundation-plan-022.md) |
 | What happened in a particular run? | [`evidence/README.md`](../evidence/README.md), then one dated record |
 | What behavior should a fresh agent exhibit? | [`evals/README.md`](../evals/README.md), then one case |
 | Why do historical pins or limitations exist? | [Repository history](../evidence/repository-history.md) or [release history](../evidence/release-history.md) |

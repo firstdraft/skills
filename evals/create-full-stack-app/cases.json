@@ -608,6 +608,44 @@
       ]
     },
     {
+      "id": "explain-default-browser-installation",
+      "should_trigger": true,
+      "prompt": "Before I decide whether to compile the staged Plan, explain its Add to Home Screen behavior on iPhone Safari and Android Chrome. I have not asked for offline access or a custom install prompt. Review only; do not edit or submit the Plan.",
+      "expectations": [
+        "Recognizes omitted application.pwa as the target default of enabled online installation metadata and leaves that authored omission unchanged.",
+        "Explains application identity, suitable icons, the root start URL, and standalone display through the ordinary browser installation flow; keeps Home and its authentication/authorization behavior unchanged.",
+        "Does not add offline cache, a service worker, Web Push, a custom installation prompt, or a native client. Existing native selection is independent.",
+        "Separates metadata/HTTP checks, browser installation promotion, actual Add to Home Screen, standalone launch/navigation, and sign-in/relaunch. Says actual iPhone Safari and Android Chrome qualification is pending rather than treating source support or desktop emulation as device proof.",
+        "Leaves the staged Plan and subject UUIDs unchanged and runs no plan init, plan push, plan status, or plan compile."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        }
+      ]
+    },
+    {
+      "id": "preserve-browser-installation-opt-out",
+      "should_trigger": true,
+      "prompt": "The staged Plan deliberately sets application.pwa to false. Explain exactly what that choice changes before I decide whether to compile. Keep my selected Home, browser theme, and both native clients. Does the opt-out stop someone from saving the site to their phone? Review only; do not edit or submit it.",
+      "expectations": [
+        "Preserves explicit application.pwa false and explains that it omits the generated manifest route/template/link, installation-capable metadata, manifest request spec, and 192px installation icon together.",
+        "Explains that favicons, the Apple touch icon, ordinary theme metadata, legal pages, and signup acceptance remain. Does not promise that the opt-out prevents a browser from saving an ordinary site.",
+        "Keeps home_index movie, appearance.theme toggle, and both selected native clients unchanged; the PWA choice does not replace Home, relax authentication/authorization, remove Appearance, or select/drop a native client.",
+        "Does not invent offline/cache/push/prompt support or native launcher icon realization. No supplied analysis or compiled output means no current GapSet, generation, browser, or device execution result is claimed.",
+        "Leaves the complete staged Plan and subject UUIDs unchanged and runs no plan init, plan push, plan status, or plan compile."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/pwa-disabled.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        }
+      ]
+    },
+    {
       "id": "correct-source-issue-alongside-capability-gap",
       "should_trigger": true,
       "prompt": "The staged Plan's Appearance and every other product choice are intentional. It was accepted by plan push, and plan status --wait printed the attached issues_found analysis. The optional Primary Descriptor Field looks easy to correct, so fix every issue and keep pushing until valid.",
@@ -848,7 +886,7 @@
       "should_trigger": true,
       "prompt": "Use First Draft to create and send a Foundation Plan for Scalar Showcase, application key scalar_showcase. Model one Movie Entity with one Field of each currently importable scalar type, using a required short_text title as its Primary Descriptor and a decimal rating defaulting to 7.5. The compatible firstdraft CLI is installed, but no JSON Schema 2020-12 validator is available. Do not install or implement one.",
       "expectations": [
-        "Uses Foundation Plan 0.21, the Modeling guide, and Examples for authoring without opening the complete bundled schema.",
+        "Uses Foundation Plan 0.22, the Modeling guide, and Examples for authoring without opening the complete bundled schema.",
         "Runs plan init with the provided application key and name, then runs generate uuid --count 11 through the Skill resolver exactly once for one Entity and ten Fields.",
         "Authors one Movie Entity with exactly one Field of each supported scalar type and a required movie.title Field Primary Descriptor.",
         "Authors movie.rating as a decimal with literal default value \"7.5\" as a canonical string, never the JSON number 7.5.",
@@ -1268,7 +1306,7 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 025c7021ad31bdd64b01eb007632c000f96a84273d1a53ea41ab5f342d11aa3c. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 e8191ce54fb8827c3ae3d58f8ab9d9fff95a25d640c931a2113115ec4fc4d279. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
       "expectations": [
         "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, rereads the exact local Plan, verifies its SHA-256 and semantic model are unchanged, and does not ask for a second confirmation or repeat the unchanged read-back.",
@@ -1294,7 +1332,7 @@
     {
       "id": "compile-prepared-drawing-board-application",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 025c7021ad31bdd64b01eb007632c000f96a84273d1a53ea41ab5f342d11aa3c. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
+      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 e8191ce54fb8827c3ae3d58f8ab9d9fff95a25d640c931a2113115ec4fc4d279. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
       "expectations": [
         "Requires the installed CLI to expose plan compile --output as a direct local completion mode while retaining plan compile --github as the separate GitHub Publication mode.",
         "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; rereads the Plan, verifies its SHA-256 is unchanged, and asks for no second confirmation.",

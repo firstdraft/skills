@@ -1,8 +1,8 @@
-# Foundation Plan 0.21
+# Foundation Plan 0.22
 
 This reference and [Examples](examples.md) guide authoring for the experimental
-`firstdraft.foundation-plan.sketch/0.21` boundary. The bundled
-[exact JSON Schema](foundation-plan-0.21.schema.json) is the machine-readable structural contract. Never read it
+`firstdraft.foundation-plan.sketch/0.22` boundary. The bundled
+[exact JSON Schema](foundation-plan-0.22.schema.json) is the machine-readable structural contract. Never read it
 end to end. Use a compatible JSON Schema 2020-12 validator when the user names its command, the project exposes a
 specific validation command, or a straightforward check finds an existing compatible local command. Confirm that
 command is available, then pass the schema file to it without loading its contents into context. A declared library
@@ -25,6 +25,7 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
 - [Presence](#presence)
 - [Current conditional PUT boundary](#current-conditional-put-boundary)
   - [Application and clients](#application-and-clients)
+  - [Add to Home Screen](#add-to-home-screen)
   - [Entities, descriptors, and Fields](#entities-descriptors-and-fields)
   - [Enums](#enums)
   - [Defaults](#defaults)
@@ -42,9 +43,9 @@ deployed journey, and an older observation does not define current support.
 
 **Current design and machine authority**
 
-- The bundled JSON Schema owns v0.21 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/87760d2717d914b69a7bbf7e5d372ffe8aac50d2/docs/architecture/targets/rails/profile.md)
-  records lowering at selected Service source `87760d2717d914b69a7bbf7e5d372ffe8aac50d2`.
+- The bundled JSON Schema owns v0.22 transport shape. The Service's
+  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/targets/rails/profile.md)
+  records lowering at selected Service source `4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0`.
   A source reference does not establish the deployed service revision.
 - Read `analyzer_release` and `compiler_release` from the matching Analysis result; Compilation results carry
   `compiler_release` only.
@@ -53,11 +54,11 @@ deployed journey, and an older observation does not define current support.
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
-- Service API 0.5 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
+- Service API 0.6 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
   AnalysisRun, including an empty `gaps` array. `valid` applies only to the admitted graph; it is not proof of
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
-  State Machine, Appearance theme/native-color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
+  State Machine, online browser installation, Appearance theme/native-color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
   development-data, and selected-iPhone/Android slices. Their prerequisites matter: unsupported children and consumers
   remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
   retain a named partial gap for their stock launcher icons; `toggle` also records the absent native preference control.
@@ -75,7 +76,7 @@ deployed journey, and an older observation does not define current support.
 **Implementation and observation evidence**
 
 - The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/87760d2717d914b69a7bbf7e5d372ffe8aac50d2/docs/evidence/status.md)
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/evidence/status.md)
   distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
   [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
   records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
@@ -88,7 +89,7 @@ deployed journey, and an older observation does not define current support.
   journey, physical-device installation, or production deployment.
 - The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
   separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
-  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/87760d2717d914b69a7bbf7e5d372ffe8aac50d2/docs/architecture/targets/rails/capabilities/native.md)
+  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/targets/rails/capabilities/native.md)
   owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
   runtime observations do not qualify iPhone runtime behavior.
 - The September 13
@@ -111,18 +112,18 @@ deployed journey, and an older observation does not define current support.
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`87760d2717d914b69a7bbf7e5d372ffe8aac50d2` and has SHA-256
-`bef23a55f7d09509f0beab14df7620a49660908d7fb6c4435c99489a0dc9553d`. This is exact contract provenance, not
+`4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0` and has SHA-256
+`fcd0123860d4f4a35bdfb9b97b17b6aa220bf5396fb471cf2e5f65d444c9843a`. This is exact contract provenance, not
 release or execution evidence.
 
 The source candidate and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.5.0/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.6.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
 `plan compile --output`, `compilation status`, and
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-`@firstdraft.com/cli@0.5.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
+`@firstdraft.com/cli@0.6.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
 current-root adoption by default or with `--output .`; the recovery reference owns its preconditions. Check commands
 rather than inferring compatibility from a version number. These source checks do not prove plugin/catalog
 publication, authentication, staging compatibility, or a complete user journey.
@@ -161,7 +162,7 @@ The root contains exactly three required properties:
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.21",
+  "format": "firstdraft.foundation-plan.sketch/0.22",
   "target": {
     "id": "rails",
     "profile": "rails-sketch/2026-09"
@@ -171,7 +172,7 @@ The root contains exactly three required properties:
 ```
 
 The Application must contain `key`, `name`, `native`, `delivery`, and `entities`. It may also contain the optional
-properties `domain`, `home_index`, `appearance`, and `development_data`. Objects are closed; do not add explanatory or
+properties `domain`, `pwa`, `home_index`, `appearance`, and `development_data`. Objects are closed; do not add explanatory or
 tool-specific keys.
 
 The Project route and `.firstdraft/state.json` own Project identity and concurrency. Do not place `id`,
@@ -244,7 +245,7 @@ App Schema artifact.
 ### Application and clients
 
 The reviewed importer accepts the required Application properties `key`, `name`, `native`, `delivery`, and
-`entities`, plus optional `domain`, `home_index`, `appearance`, and `development_data`. Nonempty delivery remains
+`entities`, plus optional `domain`, `pwa`, `home_index`, `appearance`, and `development_data`. Nonempty delivery remains
 in the exact Head and appears as a service-support gap instead of being silently discarded. Development data is
 admitted record by record when its assignments and dependencies are realizable; unsupported assignments remain precise gaps rather
 than causing the whole development-data graph to disappear.
@@ -268,7 +269,7 @@ an explicit `.invalid` origin and `invalid.firstdraft` identifier prefix.
 Each selected client is emitted only when it has an admitted public-index Scaffold and its generated identity
 fits platform rules. Structurally valid long names can exceed those rules: the application key must form one
 DNS-safe label of at most 63 ASCII bytes, and Android application IDs must fit 223 bytes after domain conversion.
-The [native target](https://github.com/firstdraft/firstdraft/blob/87760d2717d914b69a7bbf7e5d372ffe8aac50d2/docs/architecture/targets/rails/capabilities/native.md)
+The [native target](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/targets/rails/capabilities/native.md)
 owns the full rules. A missing public entry or unusable identity omits that client and records
 `foundation_plan.gap.native_client.not_generated`; a missing domain alone does not. Preserve the user's requested
 clients and access rather than changing product meaning to avoid that gap.
@@ -294,9 +295,10 @@ the browser selector/storage, and disclose the missing native preference control
 `partially_generated` status, naming the affected emitted targets. Preserve the authored choice and selected
 clients; no native settings bridge is generated. This source mapping does not establish native runtime qualification.
 
-Native tint and background colors do not replace the stock Zinc web component tokens. Rails derives the adaptive
-SVG and deterministic PNG used by its favicon and PWA references from the authored branding. When native clients
-are emitted, their stock launcher icons are the reason for the precise
+Native tint and background colors do not replace the stock Zinc web component tokens. Rails derives an adaptive
+SVG and deterministic 512px PNG from the authored branding for favicon and touch-icon use. Enabled PWA output also
+adds a real 192px PNG and declares both PNG sizes and the SVG in its manifest. The opt-out retains the favicon and
+touch-icon assets. When native clients are emitted, their stock launcher icons are the reason for the precise
 `foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Web-only output has no Appearance
 icon-assets gap. Other admitted but unconsumed Application configuration remains a target gap.
 
@@ -328,6 +330,25 @@ The smallest accepted Application remains:
   "entities": []
 }
 ```
+
+### Add to Home Screen
+
+Optional `application.pwa` is a boolean. Omission and `true` enable ordinary online browser installation metadata;
+`false` opts out. Preserve omission versus an explicit boolean when revising a Plan. This choice is independent of
+Home, Accounts, Appearance, and `native`; do not select a native client or change access to enable installation.
+
+Enabled output keeps Rails' manifest controller and template, application name, actual 192px and 512px icons,
+`start_url: "/"`, `scope: "/"`, and standalone display. The launch URL reaches the selected Home with its existing
+authentication and authorization. Authored Appearance supplies derived Web icons; the default uses Core artwork.
+The opt-out omits the manifest route/template/link, installation-capable metadata, related request spec, and 192px
+installation icon together. Favicons, Apple touch icons, ordinary theme metadata, legal pages, and signup acceptance
+remain. Browsers may still save an ordinary site, so `false` is not a way to prohibit Add to Home Screen.
+
+Use the browser's normal installation flow. This support adds no offline cache, service worker, Web Push, custom
+installation prompt, or native build. Manifest/HTTP checks and browser promotion are separate from an actual
+installation, standalone launch/navigation, or sign-in/relaunch. Identified physical iPhone Safari and Android
+Chrome qualification remains pending under [Issue #661](https://github.com/firstdraft/firstdraft/issues/661);
+desktop emulation is not device proof. Native launcher icons remain a separate support gap.
 
 ### Entities, descriptors, and Fields
 
@@ -361,7 +382,7 @@ multiple-per-Entity, guarded, cross-Entity, multi-effect, unresolved helper coll
 retain storage with behavior gaps. Failed transitions retain ordinary AASM/Rails object and transaction behavior;
 an application may need to reload or reset a failed object before reusing it.
 AASM 6.0.0 namespaced state scopes can query a prefixed value instead of the stored state. Consult the selected
-Service's [automatic state scopes](https://github.com/firstdraft/firstdraft/blob/87760d2717d914b69a7bbf7e5d372ffe8aac50d2/docs/architecture/design/state-machines.md#automatic-state-scopes)
+Service's [automatic state scopes](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/design/state-machines.md#automatic-state-scopes)
 guidance before using them in application work.
 `attachment` and `image` are schema-valid
 Field types, but they are skipped from the admitted graph and recorded as service-support gaps; they cannot reach
