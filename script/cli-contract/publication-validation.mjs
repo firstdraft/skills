@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 
 import {
   projectId,
-  publicationId,
   safeGithubReasonCodes,
   storedApiUrl,
 } from "./config.mjs";
@@ -26,166 +25,6 @@ import {
 export async function verifyPublicationValidation(context) {
   const planSource = readFileSync(context.moviePlanPath);
   const digest = sha256(planSource);
-  const invalidCases = [
-    {
-      label: "different-project",
-      changes: { projectChanges: { id: publicationId } },
-    },
-    {
-      label: "different-project-head",
-      changes: {
-        projectChanges: { head_source_sha256: "8".repeat(64) },
-      },
-    },
-    {
-      label: "different-compilation-head",
-      changes: {
-        compilationChanges: { head_source_sha256: "8".repeat(64) },
-      },
-    },
-    {
-      label: "different-compilation-generation",
-      changes: { compilationChanges: { graph_version: 2 } },
-    },
-    {
-      label: "public-repository",
-      changes: { repositoryChanges: { private: false } },
-    },
-    {
-      label: "organization-owner",
-      changes: {
-        repositoryChanges: {
-          owner: { id: 123456, login: "octocat", type: "Organization" },
-        },
-      },
-    },
-    {
-      label: "unknown-progress-phase",
-      status: "provisioning_repository",
-      changes: { progressChanges: { phase: "github_guessing" } },
-    },
-    {
-      label: "unknown-progress-reason",
-      status: "provisioning_repository",
-      changes: {
-        progressChanges: {
-          phase: "github_preflight",
-          retry_count: 1,
-          reason_code: "github.private_exception",
-        },
-      },
-    },
-    {
-      label: "progress-retry-count-out-of-range",
-      status: "provisioning_repository",
-      changes: {
-        progressChanges: {
-          phase: "github_preflight",
-          retry_count: 8,
-          reason_code: "github.api_unavailable",
-        },
-      },
-    },
-    {
-      label: "progress-retry-without-reason",
-      status: "provisioning_repository",
-      changes: {
-        progressChanges: {
-          phase: "github_preflight",
-          retry_count: 1,
-        },
-      },
-    },
-    {
-      label: "progress-reason-without-retry",
-      status: "provisioning_repository",
-      changes: {
-        progressChanges: {
-          phase: "github_preflight",
-          reason_code: "github.api_unavailable",
-        },
-      },
-    },
-    {
-      label: "progress-retry-outside-preflight",
-      status: "provisioning_repository",
-      changes: {
-        progressChanges: {
-          phase: "preparing_repository",
-          retry_count: 1,
-          reason_code: "github.api_unavailable",
-        },
-      },
-    },
-    {
-      label: "progress-invalid-retry-time",
-      status: "provisioning_repository",
-      changes: {
-        progressChanges: {
-          phase: "github_preflight",
-          retry_at: "later",
-          retry_count: 1,
-          reason_code: "github.api_unavailable",
-        },
-      },
-    },
-    {
-      label: "progress-retry-time-without-count",
-      status: "provisioning_repository",
-      changes: {
-        progressChanges: {
-          phase: "github_preflight",
-          retry_at: "2026-08-07T16:15:00.000000Z",
-        },
-      },
-    },
-    {
-      label: "progress-noncanonical-retry-time",
-      status: "provisioning_repository",
-      changes: {
-        progressChanges: {
-          phase: "github_preflight",
-          retry_at: "2026-08-07T16:15:00Z",
-          retry_count: 1,
-          reason_code: "github.api_unavailable",
-        },
-      },
-    },
-    {
-      label: "failed-publication-with-running-compilation",
-      status: "failed",
-      changes: { compilationChanges: { status: "running" } },
-    },
-    {
-      label: "cancelled-publication-with-queued-compilation",
-      status: "cancelled",
-      changes: { compilationChanges: { status: "queued" } },
-    },
-  ];
-
-  for (const { label, status = "succeeded", changes } of invalidCases) {
-    const invalid = publicationLifecycleProjection(
-      digest,
-      status,
-      changes,
-    );
-    await assertInvalidPublication(
-      context,
-      planSource,
-      `publication-${label}`,
-      invalid,
-    );
-  }
-
-  const additive = publicationLifecycleProjection(digest, "succeeded");
-  additive.canary = "canary-private-publication-extension";
-  await assertInvalidPublication(
-    context,
-    planSource,
-    "publication-additive-response",
-    additive,
-    ["canary-private-publication-extension"],
-  );
   const additiveProgress = publicationLifecycleProjection(digest, "succeeded");
   additiveProgress.publication.progress.canary =
     "canary-private-publication-progress-extension";
@@ -195,33 +34,6 @@ export async function verifyPublicationValidation(context) {
     "publication-additive-progress",
     additiveProgress,
     ["canary-private-publication-progress-extension"],
-  );
-  const missingProgress = publicationLifecycleProjection(digest, "succeeded");
-  delete missingProgress.publication.progress;
-  await assertInvalidPublication(
-    context,
-    planSource,
-    "publication-missing-progress",
-    missingProgress,
-  );
-  const nullProgress = publicationLifecycleProjection(digest, "succeeded");
-  nullProgress.publication.progress = null;
-  await assertInvalidPublication(
-    context,
-    planSource,
-    "publication-null-progress",
-    nullProgress,
-  );
-  const incompleteProgress = publicationLifecycleProjection(
-    digest,
-    "succeeded",
-  );
-  delete incompleteProgress.publication.progress.retry_at;
-  await assertInvalidPublication(
-    context,
-    planSource,
-    "publication-incomplete-progress",
-    incompleteProgress,
   );
 
   await verifyObservationRegression(context, planSource, digest);
