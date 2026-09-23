@@ -1,8 +1,8 @@
-export const cliRevision = "a555f8d39862109b8c28b392c0439470e88f4ba8";
+export const cliRevision = "013581baa91c1eff0bffafd6e9e20eccb1f24643";
 export const cliRuntimeSha256 =
-  "ddd9b8ee4d83135a668b7a97e2522ba23b9478339662c1f6115e5273851abf81";
+  "6386712548a9eb5d3d7c8dbdd031482e66af270cae45838056f72533979cae40";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.4.0";
+export const cliPackageVersion = "0.5.0";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
@@ -40,11 +40,11 @@ export const storedApiUrl = "http://127.0.0.1:1";
 export const configuredApiUrl = "http://127.0.0.1:2";
 export const apiToken = "canary-private-api-token";
 export const foundationPlanFormat =
-  "firstdraft.foundation-plan.sketch/0.20";
+  "firstdraft.foundation-plan.sketch/0.21";
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-09-19-conventions";
+  "foundation-plan-rails/application-2026-09-22-theme";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-19-conventions";
+  "foundation-plan-rails/compiler-application-2026-09-22-theme";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-09",

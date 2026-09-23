@@ -502,7 +502,7 @@
       "should_trigger": true,
       "prompt": "The staged Plan's domain, selected iPhone client, Movie icon and Field, and public-index Scaffold are intentional. A successful plan push was followed by plan status --wait, which printed the attached valid analysis. Review the result, but do not compile it.",
       "expectations": [
-        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-09-19-conventions, graph version 1, and the absence of diagnostics.",
+        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-09-22-theme, graph version 1, and the absence of diagnostics.",
         "Reports the complete empty firstdraft.foundation-gaps/2 object and exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, rather than omitting the reviewed support result; never substitutes a fixture, historical, or other Project's digest.",
         "Preserves the complete staged Plan unchanged, including its domain, native.ios request, semantic icon, required title Field, and exact public-index Scaffold.",
         "Recognizes that the prepared 2026-09 boundary admits this bounded web public-index and selected iPhone request, while analysis alone does not prove generated output.",
@@ -557,7 +557,7 @@
       "expectations": [
         "Branches on analysis.status valid while explaining that valid applies to the admitted graph and Compilation is not proved.",
         "Reports the complete GapSet and the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes; does not substitute a fixture, historical, or other Project's digest; and includes the partially_generated target_support_gap foundation_plan.gap.appearance.icon_assets.not_generated record at /application/appearance with its reason and consequence.",
-        "Distinguishes the attached historical analysis from current target behavior: the authored theme applies across clients, tint and background colors style native shells and Web icon branding, web components retain stock Zinc tokens, and the selected-iOS AppIcon remains stock.",
+        "Distinguishes the attached analysis from generated or runtime proof: the authored auto theme applies across clients, tint and background colors style native shells and Web icon branding, web components retain stock Zinc tokens, and the selected-iOS AppIcon remains stock.",
         "Preserves the complete Appearance request and every otherwise admitted Application and Entity member without editing, removing, or weakening them.",
         "Does not run plan push or plan status again, compile, or claim generated Appearance, web, or iPhone output."
       ],
@@ -568,6 +568,35 @@
         },
         {
           "path": "evals/create-full-stack-app/fixtures/appearance-current.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "preserve-browser-theme-and-native-residual",
+      "should_trigger": true,
+      "prompt": "The staged Plan intentionally offers a Light/Dark/System selector in the browser and requests both iPhone and Android clients. The attached valid analysis came back from plan status --wait. Explain the default, persistence, and every gap before I decide whether to compile. Do not edit or submit the Plan.",
+      "expectations": [
+        "Explains that appearance.theme toggle offers Light, Dark, and System in the browser, initially System, persists only a browser-local preference across visits, and follows operating-system changes only while System is selected.",
+        "Reports both ordered GapSet records and the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes; does not substitute a fixture, historical, or other Project's digest.",
+        "Explains the partially_generated target_support_gap foundation_plan.gap.appearance.native_theme_preference.not_generated at /application/appearance/theme: emitted iOS and Android clients and their embedded Rails responses use automatic appearance; browser selector and stored browser preferences cannot control native shells, and no native preference UI or bridge is generated.",
+        "Reports the separate stock native launcher icon residual, while retaining the authored tint and generated Web icon meaning.",
+        "Preserves toggle and both requested native clients without changing the choice to auto, dropping a client, inventing preference synchronization, or promising native runtime qualification. Valid applies only to the admitted graph and the attached result does not prove Compilation or device behavior.",
+        "Leaves the complete staged Plan and subject UUIDs unchanged, leaves private state unopened, and does not run plan init, plan push, plan status, or plan compile."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/theme-toggle-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/theme-toggle.foundation-plan.json",
           "role": "input",
           "stage_as": ".firstdraft/foundation-plan.json"
         },
@@ -819,7 +848,7 @@
       "should_trigger": true,
       "prompt": "Use First Draft to create and send a Foundation Plan for Scalar Showcase, application key scalar_showcase. Model one Movie Entity with one Field of each currently importable scalar type, using a required short_text title as its Primary Descriptor and a decimal rating defaulting to 7.5. The compatible firstdraft CLI is installed, but no JSON Schema 2020-12 validator is available. Do not install or implement one.",
       "expectations": [
-        "Uses Foundation Plan 0.20, the Modeling guide, and Examples for authoring without opening the complete bundled schema.",
+        "Uses Foundation Plan 0.21, the Modeling guide, and Examples for authoring without opening the complete bundled schema.",
         "Runs plan init with the provided application key and name, then runs generate uuid --count 11 through the Skill resolver exactly once for one Entity and ten Fields.",
         "Authors one Movie Entity with exactly one Field of each supported scalar type and a required movie.title Field Primary Descriptor.",
         "Authors movie.rating as a decimal with literal default value \"7.5\" as a canonical string, never the JSON number 7.5.",
@@ -1239,7 +1268,7 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 33b267693040b49b527cea77c4c60fcb490e035f9a52e55df5981d6c25a43dd8. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 025c7021ad31bdd64b01eb007632c000f96a84273d1a53ea41ab5f342d11aa3c. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
       "expectations": [
         "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, rereads the exact local Plan, verifies its SHA-256 and semantic model are unchanged, and does not ask for a second confirmation or repeat the unchanged read-back.",
@@ -1265,7 +1294,7 @@
     {
       "id": "compile-prepared-drawing-board-application",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 33b267693040b49b527cea77c4c60fcb490e035f9a52e55df5981d6c25a43dd8. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
+      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 025c7021ad31bdd64b01eb007632c000f96a84273d1a53ea41ab5f342d11aa3c. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
       "expectations": [
         "Requires the installed CLI to expose plan compile --output as a direct local completion mode while retaining plan compile --github as the separate GitHub Publication mode.",
         "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; rereads the Plan, verifies its SHA-256 is unchanged, and asks for no second confirmation.",

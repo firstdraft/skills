@@ -44,9 +44,9 @@ const reviewedFixtureAnalyzerRelease =
   "foundation-plan-rails/application-2026-08-28-reviewed-realization";
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
-const currentFoundationPlanServiceBaseline = "ee38cafcff43d70fdb9f28626f25ebaecb257b0c";
+const currentFoundationPlanServiceBaseline = "87760d2717d914b69a7bbf7e5d372ffe8aac50d2";
 const foundationPlanSchemaDigest =
-  "5576ec5e10d108f0a2d0f9fa336249324642f092e4444f6c11e4ab738f3fa58b";
+  "bef23a55f7d09509f0beab14df7620a49660908d7fb6c4435c99489a0dc9553d";
 const currentFoundationPlanSchemaBaseline = currentFoundationPlanServiceBaseline;
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
@@ -215,8 +215,8 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
     version: marketplace.plugins[0].version,
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.4.0");
-  assert.equal(installableManifest.version, "0.4.0");
+  assert.equal(packageTemplate.version, "0.5.0");
+  assert.equal(installableManifest.version, "0.5.0");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);
@@ -648,7 +648,7 @@ test("authored JSON examples parse and retain the pinned Plan contract", async (
       skillsDirectory,
       "create-full-stack-app",
       "references",
-      "foundation-plan-020.md",
+      "foundation-plan-021.md",
     ),
   );
   const fixture = JSON.parse(
@@ -1122,7 +1122,7 @@ test("validator evals stage the required Plan and private state", async () => {
 test("complete examples and eval Plans validate against the bundled exact schema", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
   const schemaSource = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-0.20.schema.json"),
+    path.join(skillDirectory, "references", "foundation-plan-0.21.schema.json"),
     "utf8",
   );
   assert.equal(
@@ -1130,7 +1130,7 @@ test("complete examples and eval Plans validate against the bundled exact schema
     foundationPlanSchemaDigest,
   );
   const referenceSource = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-020.md"),
+    path.join(skillDirectory, "references", "foundation-plan-021.md"),
     "utf8",
   );
   assert(referenceSource.includes(foundationPlanSchemaDigest));
@@ -2141,6 +2141,7 @@ test("analysis evals preserve fixture identity and recovery expectations", async
     "recurring-issues-analysis.json",
     "application-intent-valid-analysis.json",
     "appearance-current-analysis.json",
+    "theme-toggle-analysis.json",
     "mixed-application-issues-analysis.json",
     "unsupported-graph-analysis.json",
   ];

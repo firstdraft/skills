@@ -177,7 +177,7 @@ Selecting an index preserves its resource URL, query, and authorization. A prote
 A missing Entity or an Entity without a selected index is invalid. If the selected index is genuinely unsupported,
 keep that intended choice in the Plan and review the dependent Home gap; the residual app uses the welcome page.
 Do not substitute another index or weaken access. See the
-[Application reference](foundation-plan-020.md#application-and-clients) for the serialized choice.
+[Application reference](foundation-plan-021.md#application-and-clients) for the serialized choice.
 
 ## Model Entities and Fields
 
@@ -199,7 +199,7 @@ storage using Rails `enum` with inclusion and presence validation plus native sc
 Compiler selects Rails prefix or suffix options when helper names would collide.
 Compatible in-domain literal-key defaults work regardless of whether the order has semantic rank. Database
 membership constraints, general rank semantics, optional enums, and unsupported consumers remain gaps. Preserve
-product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-020.md#enums)
+product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-021.md#enums)
 owns the exact lowering.
 
 ### Choose text normalization
@@ -224,7 +224,7 @@ also applies when `downcase` occurs between them: `["trim", "downcase", "blank_t
 This rule gives `downcase` no fixed position. Do not silently reorder an existing pipeline or repeat it until stable.
 
 `trim` also removes invisible edge characters that `collapse_whitespace` preserves; both preserve interior joiners.
-The Service's [Field catalog](https://github.com/firstdraft/firstdraft/blob/ee38cafcff43d70fdb9f28626f25ebaecb257b0c/docs/architecture/design/field-catalog.md#normalization-and-comparison)
+The Service's [Field catalog](https://github.com/firstdraft/firstdraft/blob/87760d2717d914b69a7bbf7e5d372ffe8aac50d2/docs/architecture/design/field-catalog.md#normalization-and-comparison)
 owns the exact character policies and operation semantics. These are authoring choices, not automatic Compiler
 defaults; include consequential choices in the semantic read-back.
 
@@ -250,7 +250,7 @@ custom validator: ordinary Rails I18n can customize application error copy after
 comparison or uniqueness remains on the Entity when appropriate, independently of that error target.
 
 These examples explain kind selection, not a promise that every shape emits today. Read the compatible
-[Validation support reference](foundation-plan-020.md#validations), use the bundled schema for exact syntax, and
+[Validation support reference](foundation-plan-021.md#validations), use the bundled schema for exact syntax, and
 inspect the real analysis result. Schema-valid cross-field comparisons, conditions, and exclusions can still be
 service or target gaps. No general Rails `validates` option or custom Ruby callback becomes Plan syntax merely
 because Rails supports it.
@@ -313,7 +313,7 @@ silently narrow a broader requested Scaffold or make it public merely to obtain 
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
 Compilation emits each with at least one admitted public navigation entry and an identity that fits its
-[platform limits](foundation-plan-020.md#application-and-clients); otherwise the valid run records an unrealized-client
+[platform limits](foundation-plan-021.md#application-and-clients); otherwise the valid run records an unrealized-client
 target gap. Domain supplies a native HTTPS origin and platform identifier;
 it also configures the Rails production mailer host. It does not provision DNS, deployment, TLS, or mail delivery.
 Without a domain the native identifiers are explicit placeholders. Semantic icons inform Web, SF Symbol, and
@@ -322,14 +322,19 @@ does not establish native authentication or protected navigation. Confirm public
 private requirements and requested clients, then review the support gap. Do not recommend removing a requested
 client to quiet gaps, or adding public indexes to satisfy native prerequisites. The user may change product scope;
 target support alone is not that decision.
-Appearance sets the cross-client theme, native colors, and Web icon branding. Omitted theme means light; explicit
-`auto` follows the system. Web components retain the stock Zinc theme, and native launcher icons remain stock. Android shows
+Appearance sets the theme, native colors, and Web icon branding. Omitted theme or `light` means fixed light;
+`dark` means fixed dark, and `auto` follows the system with no manual control or saved preference. Use `toggle`
+when the user wants Light, Dark, and System choices: the browser starts at System and remembers only its local
+preference, following OS changes only while System is selected. Fixed modes ignore old saved preferences.
+Native `toggle` output stays automatic with one reviewed gap for the absent native preference control; preserve
+the authored choice and requested clients instead of replacing `toggle` with `auto` or dropping a client.
+Web components retain the stock Zinc theme, and native launcher icons remain stock. Android shows
 one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, follow the
-emitted platform preview guide and the [native preview boundary](foundation-plan-020.md#preview-generated-native-apps).
+emitted platform preview guide and the [native preview boundary](foundation-plan-021.md#preview-generated-native-apps).
 Use local Android Studio Emulator or iOS Simulator for native checks when available. Ordinary Rails iteration uses
 the local web app. Revyl is an optional preview destination, not a release or development prerequisite.
 Nonempty delivery, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
-v0.20 shape, including notification trigger/template definitions, deployment, and iPad, remain in
+v0.21 shape, including notification trigger/template definitions, deployment, and iPad, remain in
 [implementation notes](#retain-implementation-requirements) and the semantic read-back as currently unplannable
 rather than being invented as Plan JSON or promised a GapSet record.
 The authored `delivery` channel block itself remains in the Plan and receives its expected service-support gap.

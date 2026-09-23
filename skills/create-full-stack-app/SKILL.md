@@ -23,11 +23,11 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.4.0, CLI 0.4.0, and API 0.4 with Plan 0.20; compatibility does not establish catalog selection.
+Targets plugin 0.5.0, CLI 0.5.0, API 0.5, and Plan 0.21; catalog selection is separate.
 
 - Bounded generation includes Web Accounts, Policies, Scaffolds, development data, and selected iPhone/Android
-  clients. Web uses stock Zinc tokens; Appearance controls theme, native colors, and Web icons. Omitted theme means
-  light; native launcher icons stay stock.
+  clients. [Appearance](references/foundation-plan-021.md#application-and-clients) selects theme, native colors,
+  and Web icons; browser preferences and native gaps differ.
 - Bounded Account/Policy protects Web Scaffolds. Native clients require an admitted public index, are Account/Policy-free,
   and do not inherit Web privacy.
 - Preserve unsupported requests; report gaps. Never drop clients or weaken access to get `valid`.
@@ -35,13 +35,13 @@ Targets plugin 0.4.0, CLI 0.4.0, and API 0.4 with Plan 0.20; compatibility does 
 - For native preview, use local iOS Simulator or Android Studio Emulator when available. Follow the generated app's
   guides; native builds and Revyl are not prerequisites for ordinary local Rails development.
 
-Before support claims, read [current evidence](references/foundation-plan-020.md#current-evidence-boundary).
+Before support claims, read [current evidence](references/foundation-plan-021.md#current-evidence-boundary).
 
 ## Load references only when needed
 
 For authoring, choose the relevant section:
 
-- [Foundation Plan reference](references/foundation-plan-020.md): exact envelope, identity, ownership, presence,
+- [Foundation Plan reference](references/foundation-plan-021.md): exact envelope, identity, ownership, presence,
   current evidence, and target support for Application/clients, Fields, relationships, Validations, Accounts/Policies,
   and Scaffolds.
 - [Modeling guide](references/modeling-guide.md): interview, Entities/Fields, validations, relationships, and
@@ -60,7 +60,7 @@ For CLI work:
   read [ambiguous mutations](references/diagnostics-and-recovery.md#ambiguous-mutations) only when the named error
   requires it.
 
-The bundled [JSON Schema](references/foundation-plan-0.20.schema.json) is machine-readable validator input, not prose.
+The bundled [JSON Schema](references/foundation-plan-0.21.schema.json) is machine-readable validator input, not prose.
 Use a compatible JSON Schema 2020-12 command named by the user, exposed by the project, or found through a
 straightforward check of existing local commands. Pass only its path; never read it end to end. Do not install
 dependencies or add validation/build plumbing solely for this workflow. Otherwise rely on First Draft exact-byte
@@ -82,7 +82,7 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.4.0` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.5.0` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Contract tests own separate stdout and stderr assertions for leaf
 commands; do not repeat them in a startup shell loop. The compatible CLI supplies these public commands:
 
