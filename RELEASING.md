@@ -9,8 +9,8 @@ longer part of an ordinary release. Coordinate the service, CLI, and Skills thro
 [`release/compatibility.json`](release/compatibility.json) owns the candidate version, compatible CLI/API/Plan
 identities, and deterministic package SHA-256. The current source candidate is
 `@firstdraft.com/claude-code@0.4.0` with CLI `0.4.0`, API `>= 0.4.0`, `< 0.5.0`, and Plan `sketch/0.20`.
-It is unpublished. The [marketplace manifest](.claude-plugin/marketplace.json) still selects the published plugin
-`0.2.5`; keep it there until the intended new version is actually published. Source compatibility is not public
+The [marketplace manifest](.claude-plugin/marketplace.json) independently selects a published plugin version;
+retain its selection until the intended new version is actually published. Source compatibility is not public
 catalog selection. Query npm when releasing rather than treating a dated distribution snapshot as current.
 
 Use an ordinary pre-1.0 minor bump for a breaking compatibility change and a patch bump for a compatible change.
@@ -28,7 +28,8 @@ The real GitHub `npm` environment protection still applies; do not bypass it or 
 ## 1. Use the checks already completed
 
 1. Resolve the candidate commits for the service, CLI, and Skills. Confirm the Skills commit is on `main`, and the
-   CLI pin and compatibility metadata match the intended release.
+   CLI pin and compatibility metadata match the intended release. `script/cli-contract/config.mjs` owns the exact
+   CLI revision and runtime digest; workflows read that configuration rather than copying its values.
 2. Reuse successful hosted CI for the exact release commit. CI already runs repository tests, the pinned CLI
    contract, deterministic package checks, and Codex discovery. Do not rerun that suite, dependency audit, both
    client installations, or behavioral evaluation sessions merely because the release is about to publish.
@@ -40,9 +41,8 @@ For development or a failed check, the relevant reproduction commands are:
 
 ```sh
 npm ci --ignore-scripts
-sh script/check
+sh script/check --cli-root /path/to/exact/cli
 node script/check-cli-contract.mjs /path/to/exact/cli
-node script/check-claude-plugin-package.mjs --cli-root /path/to/exact/cli
 ```
 
 These are troubleshooting and pre-merge commands, not a second post-merge release checklist.
@@ -92,7 +92,8 @@ A public package verification is a read-only reconciliation, not another live ap
 ## 4. Select the published version in the catalog
 
 Update `.claude-plugin/marketplace.json` to the exact published version. Keep its version and npm source version
-aligned, run normal PR checks, and merge under the already authorized release scope. Never point the live catalog
+aligned and merge under the already authorized release scope. A version-selection-only change uses the catalog
+metadata and published-version checks; any other change runs the full CI matrix. Never point the live catalog
 at an unpublished candidate. Catalog CI validates this small change; do not add a second product smoke.
 
 A normal package release does not require installing both Claude and Codex again after the catalog merge. Verify a
@@ -111,6 +112,6 @@ start again without reconciliation. A validated retained Compilation ID permits 
 `plan compile --github`, the documented unchanged-byte, same-singleton Publication replay remains available after
 the prior invocation exits; it never applies to an ambiguous Plan push or direct Compilation start.
 
-The [npm-default repair workflow](docs/npm-promotion.md) remains available for explicitly requested repairs of
-already-published versions. It is not part of the ordinary release. Record new release observations in
-[`evidence/`](evidence/README.md) without rewriting historical receipts.
+Use the short [npm-default repair procedure](docs/npm-promotion.md) for an approved change to an already-published
+version. It uses standard npm dist-tags, without a separate promotion workflow or credential probe. Record new
+release observations in [`evidence/`](evidence/README.md) without rewriting historical receipts.

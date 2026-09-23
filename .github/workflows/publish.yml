@@ -114,8 +114,11 @@ jobs:
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 660c02e46cdf36ec76dd556de8c96ef67ed3b035 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach 660c02e46cdf36ec76dd556de8c96ef67ed3b035
+      - name: Select the pinned CLI
+        run: |
+          cli_revision="$(node --input-type=module -e 'import { cliRevision } from "./script/cli-contract/config.mjs"; console.log(cliRevision)')"
+          git -C tmp/firstdraft-cli merge-base --is-ancestor "$cli_revision" HEAD
+          git -C tmp/firstdraft-cli checkout --detach "$cli_revision"
       - run: node script/check-cli-registry-package.mjs --cli-root tmp/firstdraft-cli
       - run: node script/claude-plugin-package.mjs pack "$RUNNER_TEMP/plugin" --cli-root tmp/firstdraft-cli
       - name: Verify publication bytes

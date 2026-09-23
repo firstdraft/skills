@@ -9,9 +9,9 @@ actually receives.
 Source candidate `0.4.0` requires CLI `0.4.0`, Service API `0.4`, and Foundation Plan `0.20`. It preserves the planning
 workspace under `.firstdraft/design/` and defaults to current-folder local output. Use explicit `--github` for server
 Publication. Its identities belong in
-[release compatibility](release/compatibility.json); it is unpublished.
-The public catalog remains on plugin `0.2.5`. Only `create-full-stack-app` is packaged; the UI Skill auditions remain
-deferred source.
+[release compatibility](release/compatibility.json). The [public catalog](.claude-plugin/marketplace.json) owns the
+installed version; source compatibility does not establish publication. Only `create-full-stack-app` is packaged;
+the UI Skill auditions remain deferred source.
 
 Trying First Draft as a tester? Start with the
 [local development guide](https://gist.github.com/raghubetina/3d424a97a1eaa6de8c406e67f32a237e). Start in an empty
@@ -49,8 +49,8 @@ Historical pins and release chronology in the evidence archive are receipts, not
 
 ## Using Codex
 
-The catalog manifest selects shared plugin `0.2.5`, which includes the compatible CLI and discovers it in either
-agent. Drawing Board supplies its own project wrapper and installed CLI. The
+The [catalog manifest](.claude-plugin/marketplace.json) selects the shared plugin, which includes the compatible CLI
+and discovers it in either agent. Drawing Board supplies its own project wrapper and installed CLI. The
 [release evidence](evidence/2026-09-15-account-authoring-0.2.5.md) distinguishes package checks from public catalog
 installation. A fresh authenticated student Codespace journey remains unproved.
 

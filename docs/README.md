@@ -10,7 +10,7 @@ historical observations intentionally have different owners.
 | What package is the source candidate compatible with? | [`release/compatibility.json`](../release/compatibility.json) |
 | What does the shared Claude/Codex catalog select? | [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) |
 | What is the current release procedure? | [`RELEASING.md`](../RELEASING.md) |
-| How do I repair an existing npm default? | [npm promotion](npm-promotion.md) |
+| How do I repair an existing npm default? | [npm default repair](npm-promotion.md) |
 | What does the agent execute? | [`SKILL.md`](../skills/create-full-stack-app/SKILL.md) |
 | How does an agent extend or review generated UI? | The app's `UI.md`; [deferred Skill status](../README.md#ui-continuation) |
 | What is exact Plan syntax? | [JSON Schema](../skills/create-full-stack-app/references/foundation-plan-0.20.schema.json) |
