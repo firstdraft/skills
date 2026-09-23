@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -149,11 +148,22 @@ test("prospective release order rejects incoherent current identities", () => {
   );
 });
 
-test("unpublished candidate reconciliation reads npm, fetched tags, and the catalog", async () => {
+test("unpublished candidate reconciliation reads npm, fetched tags, and the catalog", async (t) => {
+  const root = await mkdtemp(path.join(tmpdir(), "firstdraft-unpublished-candidate-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await mkdir(path.join(root, "release"));
+  await mkdir(path.join(root, ".claude-plugin"));
+  await writeFile(path.join(root, "release", "compatibility.json"), JSON.stringify({
+    version: "0.4.0",
+    plugin_source: { package: "@firstdraft.com/claude-code" },
+  }));
+  await writeFile(path.join(root, ".claude-plugin", "marketplace.json"), JSON.stringify({
+    plugins: [{ version: "0.2.5", source: { package: "@firstdraft.com/claude-code" } }],
+  }));
   const invocations = [];
   const result = await checkPluginReleaseOrder({
     requireCurrentTag: false,
-    root: fileURLToPath(new URL("../", import.meta.url)),
+    root,
     spawn(command, arguments_, options) {
       invocations.push([command, arguments_, options]);
       if (command === "git") {
