@@ -8,10 +8,9 @@ JSON object. An unrecognized prefixed line, a progress line after the envelope, 
 interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
 human-readable `detail` or broad process exit status.
 
-The reviewed source-candidate CLI is revision
-`660c02e46cdf36ec76dd556de8c96ef67ed3b035`, with JavaScript-source runtime digest
-`ddd9b8ee4d83135a668b7a97e2522ba23b9478339662c1f6115e5273851abf81`. Its source package is
-`@firstdraft.com/cli@0.4.0`. Check the command surface rather than assuming the version alone
+The source candidate uses `@firstdraft.com/cli@0.4.0`. Its exact reviewed revision and runtime digest are owned by
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.4.0/script/cli-contract/config.mjs)
+at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
 

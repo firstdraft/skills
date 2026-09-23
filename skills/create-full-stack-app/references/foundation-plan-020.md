@@ -115,10 +115,10 @@ The bundled schema was copied byte-for-byte from
 `5576ec5e10d108f0a2d0f9fa336249324642f092e4444f6c11e4ab738f3fa58b`. This is exact contract provenance, not
 release or execution evidence.
 
-The source candidate and pinned contract check use reviewed CLI revision
-`660c02e46cdf36ec76dd556de8c96ef67ed3b035`, with JavaScript-source runtime digest
-`ddd9b8ee4d83135a668b7a97e2522ba23b9478339662c1f6115e5273851abf81`, as contract provenance rather than release
-or execution evidence. It exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
+The source candidate and pinned contract check use the exact reviewed CLI revision and runtime digest in
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.4.0/script/cli-contract/config.mjs)
+at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
+exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
 `plan compile --output`, `compilation status`, and
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the

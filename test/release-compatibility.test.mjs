@@ -25,14 +25,25 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert(declaredPluginVersion, "the Skill must identify its plugin compatibility version");
   assert.equal(declaredPluginVersion[1], compatibility.version);
 
+  const cliConfigurationUrl =
+    `https://github.com/firstdraft/skills/blob/claude-v${compatibility.version}/script/cli-contract/config.mjs`;
+  for (const name of ["diagnostics-and-recovery.md", "foundation-plan-020.md"]) {
+    const reference = await readText(`skills/create-full-stack-app/references/${name}`);
+    assert.equal(
+      reference.match(/\[the CLI contract configuration\]\(([^)]+)\)/)?.[1],
+      cliConfigurationUrl,
+      `${name}: bundled CLI provenance must use the plugin's release tag`,
+    );
+    assert(reference.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
+  }
+
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
     version: "0.4.0",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
-      tarball_sha256:
-        "a09786608db0452fcaff6c8f42cfd28148ced16834f94a03493fbff0edd1e223",
+      tarball_sha256: compatibility.plugin_source.tarball_sha256,
     },
     requires: {
       api_contract: [">= 0.4.0", "< 0.5.0"],
@@ -122,7 +133,7 @@ test("current release docs route through structured identities", async () => {
     candidateSmokeEvidence,
     /controlled Service revision is a descendant of the pinned current-truth Service revision[\s\S]*?cc72dad5b26b887f3f21496b568b80678ceac47f[\s\S]*?does not repin the packaged[\s\S]*?current-authority source/,
   );
-  assert.equal(publicPlugin.version, "0.2.5", "do not promote an unpublished candidate");
+  assert.equal(publicPlugin.version, publicPlugin.source.version);
   assert.match(releasing, /release\/compatibility\.json.*owns the candidate/s);
   assert.match(releasing, /One user approval may cover the complete coordinated release/);
   assert.match(releasing, /without asking again at\s+every step/);

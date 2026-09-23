@@ -1,153 +1,35 @@
-# Repair npm defaults through GitHub
+# Repairing an npm default
 
-Ordinary releases publish directly to `latest` through OIDC; follow [RELEASING.md](../RELEASING.md). This legacy
-workflow is only for an explicitly requested repair of an already-published compatible pair. It is not a publication
-prerequisite and does not justify a token setup, credential probe, or separate approval during a normal release.
+Ordinary releases publish directly to `latest`. Use this procedure only to repair a dist-tag on an
+already-published version, including an explicitly approved rollback. The former `next` promotion workflow and
+credential probes are retired; their [credential cleanup is complete](../evidence/2026-09-22-npm-promotion-retirement.md).
+Ordinary publication uses GitHub Actions trusted publishing, without a local npm login.
 
-The retained `promote-v<plugin-version>` workflow changes the compatible CLI and plugin `latest` tags in that order.
-It requires its own configured `npm-promotion` environment. It neither publishes package bytes nor deploys the
-service. The historical helper expects the matching `next` tags and catalog; use it only when those preconditions
-already hold. Do not move `next` merely to make an ordinary release fit this retired sequence.
-
-npm trusted publishing authenticates new-version publication. Existing-version dist-tag repair may require npm
-authentication or the retained scoped token. Keep one operator and reconcile ambiguous writes read-only.
-
-## Initial setup and renewal
-
-Configure these controls before using [the workflow](../.github/workflows/promote.yml):
-
-- Active tag rulesets cover `refs/tags/promote-v*`. Restrict creation to organization administrators; disallow
-  updates and deletion without a bypass actor. Keep the existing `claude-v*` publication protections.
-- The `npm-promotion` environment requires the release owner's review, with administrator bypass disabled. Its
-  deployment policies permit `promote-v*` tags and the `main` branch for the credential check. A self-review is
-  allowed, matching the existing single-operator publication environment.
-- Create one granular npm token restricted to **only** `@firstdraft.com/cli` and `@firstdraft.com/claude-code`,
-  with **stage-only** access and **Bypass two-factor authentication** enabled. Grant no organization-management
-  access. Choose an expiry and arrange renewal before it expires. The stage-only token UI also lists staging,
-  deprecation, and unpublishing; npm does not offer a dist-tag-only permission.
-- Store it only as `NPM_PROMOTION_TOKEN` in that environment. Pass the secret through stdin or the GitHub UI;
-  never put it in a command argument, receipt, repository file, or log. Do not add it to the publication environment.
-- Verify both packages permit granular tokens with bypass 2FA. The npm setting
-  [“Require two-factor authentication and disallow tokens”](https://docs.npmjs.com/requiring-2fa-for-package-publishing-and-settings-modification/)
-  blocks this workflow. If a package uses that setting, its owner must explicitly allow scoped token operations.
-  Trusted publication remains configured separately.
-
-Before a new credential check, reconcile and remove any retained `promotion-check-*` tags from either package using
-the [cleanup procedure](#partial-results-and-recovery). Supply `cleanup_run_id` for that recovery dispatch; leaving it
-blank creates a new probe. The check rejects retained probes on either package before adding another.
-
-First check existing write receipts against the proof requirements below. The
-[current token's CLI probe deletion returned 403](../evidence/2026-09-13-npm-token-write-verification.md#deletion-boundary).
-Its writes are already proved; do not repeat that rejected probe. A full check with that behavior stops before the
-plugin and leaves a CLI probe requiring [interactive cleanup](#partial-results-and-recovery).
-
-When new write proof is needed, after setup or renewal and any cleanup, dispatch `Promote npm defaults` on current
-`main` with `cleanup_run_id` blank and be prepared for interactive cleanup if the rejection persists.
-This is a credential check, not a release promotion. It requires `next`, `latest`, and the catalog to select the
-qualified pair already. For each package it
-adds `promotion-check-<run-id>` selecting that same version, verifies the result, removes that tag, and verifies the
-original tags are restored. Approve the environment job after inspecting its verification job. A successful no-op
-release promotion alone would not prove token write access.
-This probe does not prove least privilege. At creation and each renewal, inspect the token's two-package list,
-stage-only permission, lack of organization access, and expiry in npm; retain its name and expiry in setup evidence.
-
-Promotion needs a successful tag write on each package with the configured token, with the resulting selections
-independently verified. A no-op does not count. Receipts from separate runs may establish those writes if secret
-metadata confirms the token was not replaced between them. Recheck its current npm permissions and both packages'
-token policies; each package's write must postdate the latest relevant policy or credential change. A new token
-cannot inherit the old token's write proof. All probes must also be reconciled and removed before
-declaring setup ready. Record that combined proof explicitly; never relabel a failed credential-check run as passed.
-The full check additionally exercises tag deletion, which normal promotion does not use. If deletion is rejected,
-follow [recovery](#partial-results-and-recovery) and retain that limitation separately. A package the failed check
-never reached remains unexercised until a separately approved tag write supplies that proof. Repeating the same
-rejected cleanup or broadening the token solely to make the probe pass is not required for promotion.
-
-## Repair a qualified release
-
-Obtain release approval; an existing approval for the named release sequence is sufficient. Reconcile the exact
-source revisions, package hashes, compatibility, deployed service, and current registry selections. Reuse the
-existing qualification and CI for unchanged inputs; this repair does not require another live journey. The workflow verifies immutable package
-identities and distribution state, but cannot establish that a human approved the release or that qualification ran.
-
-Use a clean, reviewed `main` checkout containing the promotion workflow. The promotion tag points at that reviewed
-commit, which may be newer than the `claude-v<version>` package-source tag. Do not tag the older source commit merely
-because it built the package: it may not contain the promotion workflow. No new package version is needed when only
-release tooling or maintainer documentation changed.
+Use the existing release approval when it covers the intended package and version. Keep one operator across CLI
+and plugin registry changes. Identify the exact package version and compare its registry integrity with the
+successful publication or retained release evidence before changing a tag:
 
 ```sh
-git fetch origin main --tags
-git switch main
-git merge --ff-only origin/main
-node script/npm-promotion.mjs inspect
-version=$(node -p 'JSON.parse(require("fs").readFileSync("release/compatibility.json")).version')
-git tag -a "promote-v$version" -m "Promote qualified npm defaults for plugin $version"
-git push origin "refs/tags/promote-v$version"
+package='@firstdraft.com/cli' # or @firstdraft.com/claude-code
+version='0.4.0' # the approved, already-published version
+npm view "$package@$version" name version dist --json --prefer-online --registry=https://registry.npmjs.org/
+npm dist-tag ls "$package" --prefer-online --registry=https://registry.npmjs.org/
 ```
 
-Before pushing, verify the tag rulesets, environment restrictions, current exact-head CI, and the tag target. A tag
-name is unique and immutable. Its plugin version and the canonical CLI pin select the pair; there is no arbitrary
-package, registry, or version input. The helper checks that the tag target belongs to first-parent `main` history,
-the publication tag has the same compatibility bytes, the CLI publication tag matches its source pin, and both the
-tagged and current-main catalogs select the qualified plugin.
-The CLI's existing `v<cli-version>` publication tag must resolve to the canonical CLI revision; the local inspection
-checks this precondition before a promotion tag is created.
+If `latest` already selects the intended version, no write is needed. Otherwise use the standard
+[npm dist-tag command](https://docs.npmjs.com/cli/v11/commands/npm-dist-tag/):
 
-It downloads both public npm tarballs, verifies their registry integrity, matches the plugin's qualified SHA-256,
-and compares all bundled CLI file bytes and modes with the standalone package. It rejects a changed `next`, a newer
-`latest`, an unprotected promotion tag, or an unexpected registry URL. An already-selected version is a read-only
-success. The secret-bearing job repeats verification after environment approval.
+```sh
+npm dist-tag add "$package@$version" latest --prefer-online --registry=https://registry.npmjs.org/
+npm dist-tag ls "$package" --prefer-online --registry=https://registry.npmjs.org/
+npm view "$package@latest" name version dist --json --prefer-online --registry=https://registry.npmjs.org/
+```
 
-Approve the environment job in GitHub, then inspect its receipt and independently reconcile both packages' tags and
-integrity. Retain the run URL and receipt in release evidence. `next` remains unchanged. This operation does not
-upgrade an installed CLI/plugin or change Drawing Board's exact source pin.
+Complete npm's maintainer authentication or second-factor prompt if requested. This authentication is for a
+registry mutation, not installation or use. Do not create a long-lived CI token or temporary tags to rehearse it.
 
-## Partial results and recovery
-
-The two npm writes are sequential, not atomic. The workflow shares the publication workflow's concurrency group
-within Skills; it cannot serialize a CLI-repository publication or a manual npm mutation. Keep those operations with
-the same release operator. It rereads both packages before each promotion write and never automatically rolls back.
-An approval waiting in the shared group blocks another publication. Cancel an abandoned run instead of leaving it
-pending; reconcile any started mutation before cancellation or another release.
-
-Each invocation attempts a needed write once, with npm transport retries disabled. The pinned
-[npm command](https://github.com/npm/cli/blob/v11.16.0/lib/commands/dist-tag.js) waits for the PUT or DELETE response
-without verifying a subsequent read. `--prefer-online` revalidates npm's own cached tag metadata before each
-command, so probe cleanup can see the preceding addition. This is separate from the helper's anonymous readbacks:
-after a successful command, it makes up to six of those reads,
-waiting two seconds between them only while the **complete tag map exactly matches its pre-write state**. It proceeds
-only when the complete map equals the requested result. Any other tag change or read error stops immediately.
-This adds at most ten seconds of waiting per write, excluding request time; it is a bounded verification window,
-not a guarantee about npm propagation. Exhausting it requires read-only reconciliation, never another automatic write.
-
-A failed command receives one immediate readback and stops, subject to the observed-probe cleanup below. Its
-`npm-promotion-<run-id>-<attempt>` artifact and job summary record requested changes, exit status, every successful
-readback in order, and `readback_status` without credentials. Failed commands also retain `command_error`: npm stderr
-with terminal controls removed, the configured token and npm token-shaped strings redacted, then limited to 4,096
-characters. Older receipts have exit status only. `after` is the last observed tag map, so an earlier
-sample can remain there when a later read fails; it does not establish the final outcome. Runner loss or cancellation
-can also prevent receipt upload: query the registry before any further mutation.
-
-Before declaring promotion complete, a strict final pair check rereads each package once. `final_verification`
-retains its `incomplete` or `verified` status and returned tag maps, including partial observations if a read fails.
-Verified writes with an incomplete closing check require read-only reconciliation; never retry already-observed writes.
-
-Do not blindly rerun a failed job. A promotion rerun is read-only: it can confirm both defaults already moved, but
-refuses to finish a partial promotion. Inspect the registry and receipt, repair the cause, and obtain authorization
-for the concrete remaining mutation. Push a new protected `promote-v<plugin-version>-retry-<positive-integer>` tag
-from the reviewed main commit; for example, `promote-v0.2.2-retry-1`. This requests another environment-reviewed run
-without reusing the original tag. It repeats all candidate checks, skips already-selected versions, and writes only
-the remaining defaults. This also handles a first attempt that changed nothing, such as an expired token. Never
-move/delete/reuse either tag. After recovery, a rerun of the original job may record completion without another write.
-
-A credential-check rerun refuses writes. If a probe remains, verify its run ID and exact selected version, reconcile
-both permanent tags, and remove only that observed probe under the original cleanup authorization. Dispatch the
-workflow on passing current `main` with `cleanup_run_id` set to that prior run ID. After package verification,
-approve its protected environment job. This mode creates no probe: it removes only the named `promotion-check-*`
-tag from the two qualified packages, rejects changed versions or maps, and verifies the final maps. An absent tag
-needs no write. A cleanup rerun refuses writes; inspect the receipt and registry before any further attempt.
-If token cleanup fails, an authorized operator can remove that exact observed tag through interactive npm. For an
-already reconciled 403, use that interactive path directly; do not repeat the same token deletion without a repair.
-Do not dispatch
-another check to evade an uncertain outcome. If the add command reported failure but the exact probe is observed,
-the original invocation removes its own probe once before stopping; an ambiguous add or cleanup requires operator
-reconciliation. A new dispatch after a reconciled token repair gets a new run ID.
+After an error, timeout, or interruption, inspect the registry read-only before another write. An observed
+successful change needs no retry. Record the exact version, integrity, and resulting `latest` selection. CLI and
+plugin changes are separate writes; reconcile each and continue only the still-needed approved change. `next`
+need not move. Dist-tags do not change the public catalog or update existing installations; any intended catalog
+change follows [RELEASING.md](../RELEASING.md#4-select-the-published-version-in-the-catalog).

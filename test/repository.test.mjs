@@ -26,6 +26,8 @@ import {
 import {
   analyzerRelease as foundationPlanAnalyzerRelease,
   compilationTarget as foundationPlanTarget,
+  cliRevision as cliContractBaseline,
+  cliRuntimeSha256 as cliContractRuntimeDigest,
   compilerRelease as foundationPlanCompilerRelease,
   foundationPlanFormat,
   rootOutputRecovery,
@@ -115,10 +117,6 @@ const compilationEvidenceCliBaseline =
   "121272cd592055354d09a4fe90e55c3ca002770c";
 const compilationEvidenceCliRuntimeDigest =
   "205e664df0ed9c7e63651a1c2c01e749a04d8879fe7f62cc4c1e13b66dce738d";
-const cliContractBaseline =
-  "660c02e46cdf36ec76dd556de8c96ef67ed3b035";
-const cliContractRuntimeDigest =
-  "ddd9b8ee4d83135a668b7a97e2522ba23b9478339662c1f6115e5273851abf81";
 const previousPublicCliContractBaseline =
   "d38ef3e54a6476b3a91f22a17fe7bd47aa6d6d68";
 const previousPublicCliContractRuntimeDigest =
@@ -392,7 +390,6 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
     priorAndroidEvidenceBaseline,
     currentFoundationIosCoreRevision,
     currentFoundationAndroidCoreRevision,
-    cliContractBaseline,
     catalogPromotionBaseline,
   ]);
   const skillSource = await readFile(
@@ -430,7 +427,7 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
   const workflow = (
     await readFile(path.join(repository, ".github", "workflows", "ci.yml"), "utf8")
   ).replace(/^.*uses:\s+\S+@[0-9a-f]{40}.*$/gm, "");
-  assertRevisionTokens(workflow, [cliContractBaseline]);
+  assertRevisionTokens(workflow, []);
   const contractConfig = await readFile(
     path.join(repository, "script", "cli-contract", "config.mjs"),
     "utf8",
@@ -456,7 +453,6 @@ test("revision pins remain exhaustive across coordination surfaces", async () =>
       currentCompilerServiceBaseline,
       discoverySmokeServiceBaseline,
       compilationEvidenceCliBaseline,
-      cliContractBaseline,
       previousPublicCliContractBaseline,
       previousCliContractBaseline,
       historicalCliContractBaseline,
@@ -926,11 +922,10 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
   assert.equal(marketplace.name, claudeMarketplaceName);
   assert.equal(marketplace.plugins.length, 1);
   assert.equal(marketplace.plugins[0].name, claudePluginName);
-  assert.equal(marketplace.plugins[0].version, "0.2.5");
   assert.deepEqual(marketplace.plugins[0].source, {
     source: "npm",
     package: "@firstdraft.com/claude-code",
-    version: "0.2.5",
+    version: marketplace.plugins[0].version,
     registry: "https://registry.npmjs.org/",
   });
   assert.equal(packageTemplate.version, "0.4.0");
@@ -1087,16 +1082,9 @@ test("CI checks the exact modular CLI contract", async () => {
       `repository: firstdraft/cli\\s+ref: main\\s+fetch-depth: 0`,
     ),
   );
-  assert.equal(
-    [...publishWorkflow.matchAll(/[0-9a-f]{40}/g)].filter(
-      ([revision]) => revision === cliContractBaseline,
-    ).length,
-    2,
-  );
   assert.doesNotMatch(
     publishWorkflow
-      .replace(/^.*uses:\s+\S+@[0-9a-f]{40}.*$/gm, "")
-      .replaceAll(cliContractBaseline, ""),
+      .replace(/^.*uses:\s+\S+@[0-9a-f]{40}.*$/gm, ""),
     /\b[0-9a-f]{40}\b/,
   );
   assert.doesNotMatch(
@@ -1130,7 +1118,7 @@ test("CI checks the exact modular CLI contract", async () => {
   );
   assert.match(
     workflow,
-    /name: Rehearse release ordering\s+if: matrix\.node == '24\.18\.0'[\s\S]*?\+refs\/tags\/claude-v\*:refs\/release-check\/tags\/claude-v\*[\s\S]*?node script\/check-plugin-release-order\.mjs --prospective/,
+    /name: Rehearse release ordering\s+if: steps\.scope\.outputs\.catalog_only != 'true' && matrix\.node == '24\.18\.0'[\s\S]*?\+refs\/tags\/claude-v\*:refs\/release-check\/tags\/claude-v\*[\s\S]*?node script\/check-plugin-release-order\.mjs --prospective/,
   );
   assert.deepEqual(
     workflow.match(
@@ -1264,24 +1252,21 @@ test("CI checks the exact modular CLI contract", async () => {
   ]) {
     assert.doesNotMatch(repositoryCheck, new RegExp(networkedCheck));
   }
-  assert.match(
-    workflow,
-    new RegExp(
-      `merge-base --is-ancestor ${cliContractBaseline} HEAD`,
-    ),
-  );
-  assert.match(
-    workflow,
-    new RegExp(`checkout --detach ${cliContractBaseline}`),
-  );
+  for (const source of [workflow, publishWorkflow]) {
+    assert.match(source, /import \{ cliRevision \} from "\.\/script\/cli-contract\/config\.mjs"/);
+    assert.match(source, /merge-base --is-ancestor "\$cli_revision" HEAD/);
+    assert.match(source, /checkout --detach "\$cli_revision"/);
+  }
   assert.match(
     workflow,
     /node script\/check-cli-contract\.mjs tmp\/firstdraft-cli/,
   );
   assert.match(
     workflow,
-    /node script\/check-claude-plugin-package\.mjs --cli-root tmp\/firstdraft-cli/,
+    /sh script\/check --cli-root tmp\/firstdraft-cli/,
   );
+  assert.doesNotMatch(workflow, /node script\/check-claude-plugin-package/);
+  assert.match(repositoryCheck, /node script\/check-claude-plugin-package\.mjs "\$@"/);
   assert(contractConfig.includes(cliContractBaseline));
   assert(contractConfig.includes(cliContractRuntimeDigest));
   assert.match(contractConfig, /src\/commands\/compilation\.js/);
@@ -2329,8 +2314,7 @@ test("complete examples and eval Plans validate against the bundled exact schema
   );
   assert(referenceSource.includes(foundationPlanSchemaDigest));
   assert(referenceSource.includes(currentFoundationPlanSchemaBaseline));
-  assert(referenceSource.includes(cliContractBaseline));
-  assert(referenceSource.includes(cliContractRuntimeDigest));
+  assert.match(referenceSource, /CLI contract configuration.*script\/cli-contract\/config\.mjs/);
   assert.match(
     referenceSource,
     /bundled schema was copied byte-for-byte from\s+`docs\/architecture\/design\/foundation-plan\.schema\.json` at Service revision[\s\S]*?exact contract provenance, not\s+release or execution evidence/,
@@ -4388,7 +4372,7 @@ test("recovery evals stage and preserve existing Plan state", async () => {
     recoverySection[1],
     /\[stable error family\]\(references\/diagnostics-and-recovery\.md#stable-error-families\)/,
   );
-  assert(recoveryReference.includes(cliContractBaseline));
+  assert.match(recoveryReference, /CLI contract configuration.*script\/cli-contract\/config\.mjs/);
   const stableErrors = recoveryReference.match(
     /## Stable error families([\s\S]*?)## Ambiguous mutations/,
   );

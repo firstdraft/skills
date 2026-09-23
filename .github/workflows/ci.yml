@@ -31,30 +31,48 @@ jobs:
         run: |
           test "$(node --version)" = "v24.18.0"
           test "$(npm --version)" = "11.16.0"
+      - name: Select CI scope
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node script/ci-scope.mjs "$BASE_SHA" >> "$GITHUB_OUTPUT"
+      - name: Validate catalog metadata
+        if: steps.scope.outputs.catalog_only == 'true' && matrix.node == '22.0.0'
+        run: node script/check-release-compatibility.mjs
+      - name: Verify published catalog selection
+        if: steps.scope.outputs.catalog_only == 'true' && matrix.node == '24.18.0'
+        run: node script/check-catalog.mjs
       - run: npm ci --ignore-scripts
+        if: steps.scope.outputs.catalog_only != 'true'
       - name: Audit dependencies
-        if: matrix.node == '24.18.0'
+        if: steps.scope.outputs.catalog_only != 'true' && matrix.node == '24.18.0'
         run: npm audit
-      - run: sh script/check
       - name: Rehearse release ordering
-        if: matrix.node == '24.18.0'
+        if: steps.scope.outputs.catalog_only != 'true' && matrix.node == '24.18.0'
         run: |
           git fetch --force --no-tags origin \
             "+refs/tags/claude-v*:refs/release-check/tags/claude-v*"
           node script/check-plugin-release-order.mjs --prospective
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.scope.outputs.catalog_only != 'true'
         with:
           repository: firstdraft/cli
           ref: main
           fetch-depth: 0
           path: tmp/firstdraft-cli
           persist-credentials: false
-      - run: git -C tmp/firstdraft-cli merge-base --is-ancestor 660c02e46cdf36ec76dd556de8c96ef67ed3b035 HEAD
-      - run: git -C tmp/firstdraft-cli checkout --detach 660c02e46cdf36ec76dd556de8c96ef67ed3b035
+      - name: Select the pinned CLI
+        if: steps.scope.outputs.catalog_only != 'true'
+        run: |
+          cli_revision="$(node --input-type=module -e 'import { cliRevision } from "./script/cli-contract/config.mjs"; console.log(cliRevision)')"
+          git -C tmp/firstdraft-cli merge-base --is-ancestor "$cli_revision" HEAD
+          git -C tmp/firstdraft-cli checkout --detach "$cli_revision"
+      - run: sh script/check --cli-root tmp/firstdraft-cli
+        if: steps.scope.outputs.catalog_only != 'true'
       - run: node script/check-cli-contract.mjs tmp/firstdraft-cli
-      - run: node script/check-claude-plugin-package.mjs --cli-root tmp/firstdraft-cli
+        if: steps.scope.outputs.catalog_only != 'true'
       - name: Check Codex installation and Skill discovery
-        if: matrix.node == '24.18.0'
+        if: steps.scope.outputs.catalog_only != 'true' && matrix.node == '24.18.0'
         run: |
           npm install --prefix "$RUNNER_TEMP/codex" --ignore-scripts --no-audit --no-fund @openai/codex@0.154.0
           node script/claude-plugin-package.mjs stage "$RUNNER_TEMP/firstdraft" --cli-root tmp/firstdraft-cli
