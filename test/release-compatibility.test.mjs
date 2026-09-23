@@ -27,7 +27,7 @@ test("release compatibility matches the installable plugin manifest", async () =
 
   const cliConfigurationUrl =
     `https://github.com/firstdraft/skills/blob/claude-v${compatibility.version}/script/cli-contract/config.mjs`;
-  for (const name of ["diagnostics-and-recovery.md", "foundation-plan-020.md"]) {
+  for (const name of ["diagnostics-and-recovery.md", "foundation-plan-021.md"]) {
     const reference = await readText(`skills/create-full-stack-app/references/${name}`);
     assert.equal(
       [...reference.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)]
@@ -42,13 +42,13 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.4.0",
+    version: "0.5.0",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256: compatibility.plugin_source.tarball_sha256,
     },
     requires: {
-      api_contract: [">= 0.4.0", "< 0.5.0"],
+      api_contract: [">= 0.5.0", "< 0.6.0"],
       cli: [`= ${cliPackageVersion}`],
       foundation_plan_formats: [foundationPlanFormat],
     },

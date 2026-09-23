@@ -6,9 +6,9 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000906",
     "graph_version": 1,
-    "head_source_sha256": "33b267693040b49b527cea77c4c60fcb490e035f9a52e55df5981d6c25a43dd8",
-    "analyzer_release": "foundation-plan-rails/application-2026-09-19-conventions",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
+    "head_source_sha256": "025c7021ad31bdd64b01eb007632c000f96a84273d1a53ea41ab5f342d11aa3c",
+    "analyzer_release": "foundation-plan-rails/application-2026-09-22-theme",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-22-theme",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-09"
@@ -18,16 +18,16 @@
     "gap_set": {
       "format": "firstdraft.foundation-gaps/2",
       "source": {
-        "sha256": "33b267693040b49b527cea77c4c60fcb490e035f9a52e55df5981d6c25a43dd8"
+        "sha256": "025c7021ad31bdd64b01eb007632c000f96a84273d1a53ea41ab5f342d11aa3c"
       },
       "project": {
         "id": "01900000-0000-7000-8000-000000000021",
         "graph_version": 1
       },
       "analysis": {
-        "release": "foundation-plan-rails/application-2026-09-19-conventions"
+        "release": "foundation-plan-rails/application-2026-09-22-theme"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-19-conventions",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-22-theme",
       "target": {
         "id": "rails",
         "profile": "rails-sketch/2026-09"
@@ -45,7 +45,7 @@
         }
       ]
     },
-    "gap_set_sha256": "1828d17230eb549098229bb0ae479e8abea8909058767daa1d82f73fee9cde1d",
+    "gap_set_sha256": "73a0f23d81563e4ea932874fb8af8b6ad4d819304b5917a9798086878a85c03c",
     "started_at": "2026-07-30T12:03:00.000Z",
     "completed_at": "2026-07-30T12:03:01.000Z"
   }

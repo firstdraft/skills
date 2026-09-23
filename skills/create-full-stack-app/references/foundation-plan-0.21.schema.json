@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://firstdraft.com/schemas/foundation-plan/sketch-0.20",
+  "$id": "https://firstdraft.com/schemas/foundation-plan/sketch-0.21",
   "title": "Foundation Plan",
-  "description": "The working sketch/0.20 JSON import and export representation for one First Draft Project graph.",
+  "description": "The working sketch/0.21 JSON import and export representation for one First Draft Project graph.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,7 +14,7 @@
     "format": {
       "title": "Format",
       "description": "Names the Foundation Plan serialization vocabulary and its version.",
-      "const": "firstdraft.foundation-plan.sketch/0.20"
+      "const": "firstdraft.foundation-plan.sketch/0.21"
     },
     "target": {
       "$ref": "#/$defs/target"
@@ -254,7 +254,7 @@
         "theme": {
           "title": "Theme",
           "default": "light",
-          "description": "Light and dark handling across web and native clients. Omission means light; auto explicitly follows the system.",
+          "description": "Omission means fixed light. Auto follows the system. Toggle offers Light, Dark, and System, initially System, with a browser-local preference; native support is target-specific.",
           "oneOf": [
             {
               "const": "auto",
@@ -267,6 +267,10 @@
             {
               "const": "dark",
               "title": "Always dark"
+            },
+            {
+              "const": "toggle",
+              "title": "Let users choose Light, Dark, or System"
             }
           ]
         }

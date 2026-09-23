@@ -5,11 +5,16 @@
     "profile": "rails-sketch/2026-09"
   },
   "application": {
-    "key": "Movie Catalog",
+    "key": "movie_catalog",
     "name": "Movie Catalog",
     "domain": "movies.example.com",
+    "appearance": {
+      "theme": "toggle",
+      "tint_color": "#4F46E5"
+    },
     "native": {
-      "ios": {}
+      "ios": {},
+      "android": {}
     },
     "delivery": {},
     "entities": [

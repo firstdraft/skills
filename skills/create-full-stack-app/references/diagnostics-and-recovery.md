@@ -8,8 +8,8 @@ JSON object. An unrecognized prefixed line, a progress line after the envelope, 
 interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
 human-readable `detail` or broad process exit status.
 
-The source candidate uses `@firstdraft.com/cli@0.4.0`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.4.0/script/cli-contract/config.mjs)
+The source candidate uses `@firstdraft.com/cli@0.5.0`. Its exact reviewed revision and runtime digest are owned by
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.5.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -133,7 +133,7 @@ local development is unsuitable, not a prerequisite.
 
 ### Direct local output
 
-CLI 0.4.0 defaults to current-root adoption and archives the original workspace under `.firstdraft/design/`.
+CLI 0.5.0 defaults to current-root adoption and archives the original workspace under `.firstdraft/design/`.
 CLI 0.3.0 supports the same archive via explicit `--output .`; older 0.2.2 uses top-level `design/`. Preserve the actual
 layout of an already materialized application; this change does not migrate it.
 
@@ -456,7 +456,7 @@ or provenance-changing response requires reconciling the CLI and service contrac
 4. requires the envelope's `head_source_sha256` to equal the retained
    `compilation.head_source_sha256`;
 5. verifies transport metadata and exact bytes against the retained artifact digest, then validates Plan format
-   `firstdraft.foundation-plan.sketch/0.20`, target profile `rails-sketch/2026-09`, the canonical Foundation Plan
+   `firstdraft.foundation-plan.sketch/0.21`, target profile `rails-sketch/2026-09`, the canonical Foundation Plan
    digest, envelope, manifest, paths, modes, Base64 contents, and file digests; and
 6. installs an absent private sibling tree with one atomic rename, or applies direct Compile's
    [current-root transaction and CLI compatibility boundary](#direct-local-output).
