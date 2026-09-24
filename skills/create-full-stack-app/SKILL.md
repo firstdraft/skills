@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.6.0, CLI 0.6.0, API 0.6, Plan 0.22; catalog selection is separate.
+Targets plugin 0.7.0, CLI 0.7.0, API 0.6, Plan 0.22; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-022.md#application-and-clients) controls theme, native colors,
@@ -82,7 +82,7 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.6.0` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.7.0` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Contract tests own separate stdout and stderr assertions for leaf
 commands; do not repeat them in a startup shell loop. The compatible CLI supplies these public commands:
 
@@ -94,11 +94,12 @@ There is no public `plan publish` or `plan subject-id`. Never replace the CLI au
 If its version or help differs, report it and stop remote work instead of using HTTP directly; local Plan work
 may continue. Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased.
 
-Treat `.firstdraft/state.json` as private CLI-owned concurrency state. Never print, paste, commit, or treat it as
-Plan content. Let the user configure `FIRSTDRAFT_API_TOKEN` and any initial `FIRSTDRAFT_API_URL` outside the
-conversation. Never request or expose a token. Follow a project wrapper's documented credential bootstrap without
-reading or bypassing its ignored environment files. After the user confirms authentication is configured, resume
-the already requested CLI operation without asking them to authorize it again.
+New remote work uses `https://firstdraft.com`; for requested staging use `firstdraft_cli --staging plan push`.
+Read [environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) before remote work.
+
+`.firstdraft/state.json` is private CLI-owned state: never print, paste, commit, or treat it as Plan content.
+Never request or expose tokens. Follow a wrapper's credential bootstrap without reading ignored environment files.
+Once configured, resume the requested operation without fresh authorization.
 
 ## Initialize or resume the local Plan
 

@@ -117,13 +117,13 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 The source candidate and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.6.0/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.7.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
 `plan compile --output`, `compilation status`, and
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-`@firstdraft.com/cli@0.6.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
+`@firstdraft.com/cli@0.7.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
 current-root adoption by default or with `--output .`; the recovery reference owns its preconditions. Check commands
 rather than inferring compatibility from a version number. These source checks do not prove plugin/catalog
 publication, authentication, staging compatibility, or a complete user journey.

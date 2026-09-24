@@ -215,8 +215,8 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
     version: marketplace.plugins[0].version,
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.6.0");
-  assert.equal(installableManifest.version, "0.6.0");
+  assert.equal(packageTemplate.version, "0.7.0");
+  assert.equal(installableManifest.version, "0.7.0");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);

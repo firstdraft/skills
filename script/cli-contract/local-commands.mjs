@@ -5,16 +5,21 @@ import path from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 
 import {
+  apiToken,
   compilationTarget,
   configuredApiUrl,
   foundationPlanFormat,
   storedApiUrl,
 } from "./config.mjs";
+import { acceptedPlanResponse } from "./fixtures.mjs";
 import {
   assertErrorEnvelope,
   initializedProject,
   invokeRunner,
   pinRemoteState,
+  planPath,
+  sequenceFetch,
+  statePath,
 } from "./harness.mjs";
 
 const planSchema = JSON.parse(
@@ -28,6 +33,7 @@ const validatePlan = ajv.compile(planSchema);
 
 export async function verifyLocalCommands(context) {
   await verifyLocalFailureBoundaries(context);
+  await verifyStagingCredentials(context);
 
   const rootHelp = await invokeRunner(
     context.runCli,
@@ -138,6 +144,44 @@ export async function verifyLocalCommands(context) {
     context.temporaryDirectory,
   );
   assertErrorEnvelope(protectedOutput, "invalid_output_path", { status: 2 });
+}
+
+async function verifyStagingCredentials(context) {
+  const cwd = await initializedProject(context, "staging-credentials");
+  const apiUrl = "https://staging.firstdraft.com";
+  const stagingApiToken = "canary-private-staging-token";
+  const missing = await invokeRunner(
+    context.runCli,
+    ["--staging", "plan", "push"],
+    cwd,
+    {
+      apiUrl,
+      stagingApiToken: "",
+      fetchFunction: async () => assert.fail("production credentials must not reach staging"),
+    },
+  );
+  assertErrorEnvelope(missing, "authentication_required", {
+    privateValues: [apiToken, stagingApiToken],
+  });
+
+  const calls = [];
+  const result = await invokeRunner(
+    context.runCli,
+    ["--staging", "plan", "push"],
+    cwd,
+    {
+      apiUrl,
+      stagingApiToken,
+      fetchFunction: sequenceFetch([acceptedPlanResponse(readFileSync(planPath(cwd)))], calls),
+    },
+  );
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  assert(!result.stdout.includes(stagingApiToken));
+  assert.equal(calls.length, 1);
+  assert.equal(new URL(calls[0].input).origin, apiUrl);
+  assert.equal(calls[0].init.headers.Authorization, `Bearer ${stagingApiToken}`);
+  assert.equal(JSON.parse(readFileSync(statePath(cwd), "utf8")).api_url, apiUrl);
 }
 
 async function verifyLocalFailureBoundaries(context) {

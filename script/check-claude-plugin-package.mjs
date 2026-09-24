@@ -59,6 +59,7 @@ const cleanEnvironment = {...process.env};
 for (const name of [
   "FIRSTDRAFT_API_URL",
   "FIRSTDRAFT_API_TOKEN",
+  "FIRSTDRAFT_STAGING_API_TOKEN",
   "CLAUDE_PLUGIN_OPTION_api_url",
   "CLAUDE_PLUGIN_OPTION_api_token",
   "CLAUDE_PLUGIN_OPTION_API_URL",
@@ -151,22 +152,23 @@ try {
     );
   }
   const canaryToken = `fd_${"a".repeat(43)}`;
+  const stagingCanaryToken = `fd_${"s".repeat(43)}`;
   const execution = run(
     pluginExecutable(fakeInstallation),
-    ["probe"],
+    ["--staging", "probe"],
     fakeInstallation,
     {
       ...cleanEnvironment,
       CLAUDE_PLUGIN_OPTION_API_URL: "https://wrong.example.com",
       CLAUDE_PLUGIN_OPTION_API_TOKEN: `fd_${"b".repeat(43)}`,
-      FIRSTDRAFT_API_URL: "https://staging.firstdraft.com",
       FIRSTDRAFT_API_TOKEN: canaryToken,
+      FIRSTDRAFT_STAGING_API_TOKEN: stagingCanaryToken,
     },
   );
   assert.deepEqual(JSON.parse(execution.stdout), {
     apiToken: canaryToken,
-    apiUrl: "https://staging.firstdraft.com",
-    arguments: ["probe"],
+    stagingApiToken: stagingCanaryToken,
+    arguments: ["--staging", "probe"],
     lowercasePluginApiTokenPresent: false,
     lowercasePluginApiUrlPresent: false,
     uppercasePluginApiTokenPresent: true,
@@ -221,6 +223,35 @@ try {
     );
     assert.equal(version.stdout, `${cliPackageVersion}\n`);
     assert.equal(version.stderr, "");
+
+    const project = path.join(actualInstallation, "environment-check");
+    mkdirSync(project);
+    run(
+      pluginExecutable(actualInstallation),
+      ["plan", "init", "--name", "Environment check"],
+      project,
+      cleanEnvironment,
+    );
+    const conflictingEnvironment = spawnSync(
+      pluginExecutable(actualInstallation),
+      ["--staging", "plan", "push"],
+      {
+        cwd: project,
+        encoding: "utf8",
+        env: {
+          ...cleanEnvironment,
+          FIRSTDRAFT_API_URL: "http://127.0.0.1:1",
+          FIRSTDRAFT_API_TOKEN: canaryToken,
+          FIRSTDRAFT_STAGING_API_TOKEN: stagingCanaryToken,
+        },
+      },
+    );
+    assert.equal(conflictingEnvironment.status, 2);
+    assert.equal(conflictingEnvironment.stdout, "");
+    assert.equal(JSON.parse(conflictingEnvironment.stderr).error, "invalid_configuration");
+    for (const token of [canaryToken, stagingCanaryToken]) {
+      assert(!`${conflictingEnvironment.stdout}${conflictingEnvironment.stderr}`.includes(token));
+    }
   }
 } finally {
   rmSync(temporaryDirectory, {recursive: true, force: true});
@@ -246,6 +277,7 @@ function createFakeCli(directory) {
     `#!/usr/bin/env node
 process.stdout.write(JSON.stringify({
   apiToken: process.env.FIRSTDRAFT_API_TOKEN,
+  stagingApiToken: process.env.FIRSTDRAFT_STAGING_API_TOKEN,
   apiUrl: process.env.FIRSTDRAFT_API_URL,
   arguments: process.argv.slice(2),
   lowercasePluginApiTokenPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_api_token"),

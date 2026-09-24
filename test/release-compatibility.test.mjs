@@ -42,7 +42,7 @@ test("release compatibility matches the installable plugin manifest", async () =
   assert.deepEqual(compatibility, {
     format: "firstdraft.release-compatibility/1",
     component: "skills",
-    version: "0.6.0",
+    version: "0.7.0",
     plugin_source: {
       package: "@firstdraft.com/claude-code",
       tarball_sha256: compatibility.plugin_source.tarball_sha256,
