@@ -6,8 +6,10 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
 
-Source candidate `0.6.0` requires CLI `0.6.0`, Service API `0.6`, and Foundation Plan `0.22`. It preserves the planning
-workspace under `.firstdraft/design/` and defaults to current-folder local output. Use explicit `--github` for server
+Source candidate `0.7.0` requires CLI `0.7.0`, Service API `0.6`, and Foundation Plan `0.22`. New remote work uses production
+at `https://firstdraft.com`; staging is explicit with `firstdraft --staging ...` and a separate staging token.
+It preserves the planning workspace under `.firstdraft/design/` and defaults to current-folder local output.
+Use explicit `--github` for server
 Publication. Its identities belong in
 [release compatibility](release/compatibility.json). The [public catalog](.claude-plugin/marketplace.json) owns the
 installed version; source compatibility does not establish publication. Only `create-full-stack-app` is packaged;
@@ -173,8 +175,12 @@ Those actions follow the machine-owned [compatibility record](release/compatibil
 
 ## Credential boundary
 
-The Skill expects FIRSTDRAFT_API_URL and FIRSTDRAFT_API_TOKEN to be supplied by its workspace. Its shared helper
-prefers the project's `bin/firstdraft` credential wrapper, then the bundled CLI, then an installed CLI on PATH.
+The workspace supplies `FIRSTDRAFT_API_TOKEN` for production at `https://firstdraft.com`. For staging, use
+`firstdraft --staging ...` and `FIRSTDRAFT_STAGING_API_TOKEN` from `https://staging.firstdraft.com`; the CLI never
+falls back to the production token for staging. Existing Plans keep their saved origin. `FIRSTDRAFT_API_URL` is an
+advanced custom-server override; a conflicting URL cannot be combined with `--staging` or redirect an existing Project.
+The shared helper prefers the project's `bin/firstdraft` credential wrapper, then the bundled CLI, then an
+installed CLI on PATH.
 It preserves the working directory and arguments. The adapter forwards ambient credentials; it does not read
 ignored credential files or provide an authentication UI. Claude Code does not deliver plugin `userConfig` to
 `bin/` executables; a secure bridge is tracked in [issue #27](https://github.com/firstdraft/skills/issues/27).
