@@ -608,44 +608,6 @@
       ]
     },
     {
-      "id": "explain-default-browser-installation",
-      "should_trigger": true,
-      "prompt": "Before I decide whether to compile the staged Plan, explain its Add to Home Screen behavior on iPhone Safari and Android Chrome. I have not asked for offline access or a custom install prompt. Review only; do not edit or submit the Plan.",
-      "expectations": [
-        "Recognizes omitted application.pwa as the target default of enabled online installation metadata and leaves that authored omission unchanged.",
-        "Explains application identity, suitable icons, the root start URL, and standalone display through the ordinary browser installation flow; keeps Home and its authentication/authorization behavior unchanged.",
-        "Does not add offline cache, a service worker, Web Push, a custom installation prompt, or a native client. Existing native selection is independent.",
-        "Separates metadata/HTTP checks, browser installation promotion, actual Add to Home Screen, standalone launch/navigation, and sign-in/relaunch. Says actual iPhone Safari and Android Chrome qualification is pending rather than treating source support or desktop emulation as device proof.",
-        "Leaves the staged Plan and subject UUIDs unchanged and runs no plan init, plan push, plan status, or plan compile."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/application-intent.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        }
-      ]
-    },
-    {
-      "id": "preserve-browser-installation-opt-out",
-      "should_trigger": true,
-      "prompt": "The staged Plan deliberately sets application.pwa to false. Explain exactly what that choice changes before I decide whether to compile. Keep my selected Home, browser theme, and both native clients. Does the opt-out stop someone from saving the site to their phone? Review only; do not edit or submit it.",
-      "expectations": [
-        "Preserves explicit application.pwa false and explains that it omits the generated manifest route/template/link, installation-capable metadata, manifest request spec, and 192px installation icon together.",
-        "Explains that favicons, the Apple touch icon, ordinary theme metadata, legal pages, and signup acceptance remain. Does not promise that the opt-out prevents a browser from saving an ordinary site.",
-        "Keeps home_index movie, appearance.theme toggle, and both selected native clients unchanged; the PWA choice does not replace Home, relax authentication/authorization, remove Appearance, or select/drop a native client.",
-        "Does not invent offline/cache/push/prompt support or native launcher icon realization. No supplied analysis or compiled output means no current GapSet, generation, browser, or device execution result is claimed.",
-        "Leaves the complete staged Plan and subject UUIDs unchanged and runs no plan init, plan push, plan status, or plan compile."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/pwa-disabled.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        }
-      ]
-    },
-    {
       "id": "correct-source-issue-alongside-capability-gap",
       "should_trigger": true,
       "prompt": "The staged Plan's Appearance and every other product choice are intentional. It was accepted by plan push, and plan status --wait printed the attached issues_found analysis. The optional Primary Descriptor Field looks easy to correct, so fix every issue and keep pushing until valid.",

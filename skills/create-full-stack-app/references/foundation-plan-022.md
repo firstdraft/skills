@@ -25,7 +25,7 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
 - [Presence](#presence)
 - [Current conditional PUT boundary](#current-conditional-put-boundary)
   - [Application and clients](#application-and-clients)
-  - [Add to Home Screen](#add-to-home-screen)
+  - [Bookmark assets and current metadata option](#bookmark-assets-and-current-metadata-option)
   - [Entities, descriptors, and Fields](#entities-descriptors-and-fields)
   - [Enums](#enums)
   - [Defaults](#defaults)
@@ -59,7 +59,7 @@ generated output, not observed application behavior, device installation, or dep
   AnalysisRun, including an empty `gaps` array. `valid` applies only to the admitted graph; it is not proof of
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
-  State Machine, online browser installation, Appearance theme/native-color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
+  State Machine, bookmark assets and metadata, Appearance theme/native-color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
   development-data, and selected-iPhone/Android slices. Their prerequisites matter: unsupported children and consumers
   remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
   retain a named partial gap for their stock launcher icons; `toggle` also records the absent native preference control.
@@ -303,24 +303,17 @@ The smallest accepted Application remains:
 }
 ```
 
-### Add to Home Screen
+### Bookmark assets and current metadata option
 
-Optional `application.pwa` is a boolean. Omission and `true` enable ordinary online browser installation metadata;
-`false` opts out. Preserve omission versus an explicit boolean when revising a Plan. This choice is independent of
-Home, Accounts, Appearance, and `native`; do not select a native client or change access to enable installation.
+Generated bookmark artwork is ordinary source: follow the app's `UI.md` when replacing `public/icon.svg`,
+`public/icon.png`, and any manifest icon assets. Keep layout and manifest references consistent with the files and
+application name. These assets do not establish installed-device behavior or provide offline or push features.
 
-Enabled output keeps Rails' manifest controller and template, application name, actual 192px and 512px icons,
-`start_url: "/"`, `scope: "/"`, and standalone display. The launch URL reaches the selected Home with its existing
-authentication and authorization. Authored Appearance supplies derived Web icons; the default uses Core artwork.
-The opt-out omits the manifest route/template/link, installation-capable metadata, related request spec, and 192px
-installation icon together. Favicons, Apple touch icons, ordinary theme metadata, legal pages, and signup acceptance
-remain. Browsers may still save an ordinary site, so `false` is not a way to prohibit Add to Home Screen.
-
-Use the browser's normal installation flow. This support adds no offline cache, service worker, Web Push, custom
-installation prompt, or native build. Manifest/HTTP checks and browser promotion are separate from an actual
-installation, standalone launch/navigation, or sign-in/relaunch. Identified physical iPhone Safari and Android
-Chrome qualification remains pending; desktop emulation is not device proof. Native launcher icons remain a
-separate support gap.
+The current v0.22 contract still accepts optional boolean `application.pwa`. Preserve an existing omission or
+explicit value: omission and `true` emit the manifest route/template/link, related metadata and request spec, and
+192px icon; `false` omits them while retaining favicons, the Apple touch icon, ordinary theme metadata, legal pages,
+and signup acceptance. This is independent of Home, access, Appearance, and native clients. Do not add a PWA
+interview choice or installation checklist to ordinary planning.
 
 ### Entities, descriptors, and Fields
 
