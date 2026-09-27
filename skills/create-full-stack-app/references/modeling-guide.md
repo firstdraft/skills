@@ -312,12 +312,6 @@ Web Account/Policy slice can protect supported surfaces and provide a Web-only A
 and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
 silently narrow a broader requested Scaffold or make it public merely to obtain a gap-free result.
 
-Online Add to Home Screen metadata is on by default. Leave `application.pwa` omitted for that default, preserve an
-explicit boolean in a revised Plan, and use `false` when the user wants to omit generated installation support.
-This does not prevent a browser from saving the site, and does not request offline behavior, push, or native output.
-Home, access rules, and Appearance remain independent. See [the installation boundary](foundation-plan-022.md#add-to-home-screen)
-before promising browser promotion, installed-device behavior, or sign-in persistence.
-
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
 Compilation emits each with at least one admitted public navigation entry and an identity that fits its
 [platform limits](foundation-plan-022.md#application-and-clients); otherwise the valid run records an unrealized-client
@@ -370,30 +364,8 @@ decision; do not invent provenance or require a separate origin/approval for ord
 existing Plan, gaps and notes, without a requirements registry, technical review artifact or per-Field approval.
 Reconcile again after a revision, carrying settled decisions forward rather than repeating the interview.
 
-Immediately before the first Compile that could start direct retained work or reach Publication, reread the exact
-local Plan and give a compact plain-language semantic summary. Cover the project-relative Plan path and SHA-256; the
-application scope; Entities and their material Fields, relationships, rules, behavior, and data; surfaces, access,
-and clients; and material
-assumptions and exclusions. Summarize outstanding implementation notes and open questions, and disclose any
-remaining carry-forward step for the selected output mode. Show the matching valid AnalysisRun's GapSet digest and every ordered record, including
-its classification, code, kind, status, reason, consequence, location, and cause when present. Explain that
-the CLI validated that run's attached digest against its GapSet; never substitute a fixture, historical, or another
-Project's digest. Explain that service-support gaps were skipped before semantic analysis and target-support gaps were
-not fully realized. Also
-state the deliberately selected completion mode: direct output creates only a verified local directory, while
-terminal successful Publication is intended to create one private GitHub repository. Neither deploys. Use the order
-that best communicates this candidate. Do not enumerate absent subject families or recite immaterial defaults and
-empty categories. Ask the user to correct or explicitly approve the exact model and reviewed support delta without
-requiring a digest echo or gap-specific field. If the existing request already authorizes the candidate and reviewed
-gaps, or delegates these choices, present this as a progress update and continue. Ask only for new material decisions
-outside that scope; do not turn an already approved Compile into another confirmation.
-
-The read-back reviews the staged candidate; it is not a last-minute authoring pass. Preserve existing subject
-identity and present concerns as warnings. Do not require a candidate edit without a user correction, a confirmed
-product decision, or a demonstrated diagnostic. If the Plan bytes change afterward, present the new SHA-256 and the
-semantic delta, then obtain approval of that changed candidate only if it exceeds the existing authorization.
-
-Do not silently delete, loosen, flatten, relabel, or substitute intended product meaning to make import or analysis
-green. The user may explicitly move a feature out of this release after seeing the consequence; record that as a
-product-scope decision. Otherwise preserve the meaning and, after approval, use the existing supplied Compile
-mode without adding ceremony.
+The read-back reviews the reconciled candidate; it is not a last-minute authoring pass. Preserve existing subject
+identity and present remaining concerns as warnings. Do not require a candidate edit without a user correction,
+a confirmed product decision, or a demonstrated diagnostic. Follow the Skill's
+[read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the exact
+candidate, complete GapSet, selected output mode, and authorization checkpoint.

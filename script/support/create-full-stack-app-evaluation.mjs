@@ -10,11 +10,6 @@ export const evaluationDirectory = path.join(
   "evals",
   "create-full-stack-app",
 );
-export const candidateInterviewProtocolPath = path.join(
-  evaluationDirectory,
-  "references",
-  "candidate-interview-protocol.md",
-);
 export const movieCatalogFixturePath = path.join(
   evaluationDirectory,
   "fixtures",
@@ -35,11 +30,6 @@ export const evaluationCaseById = (cases, id) => {
 
   return evaluation;
 };
-
-export const expectationIncludes = (evaluation, ...fragments) =>
-  evaluation.expectations.some((expectation) =>
-    fragments.every((fragment) => expectation.includes(fragment)),
-  );
 
 export const stagedInputs = (evaluation) =>
   (evaluation.artifacts ?? []).filter(

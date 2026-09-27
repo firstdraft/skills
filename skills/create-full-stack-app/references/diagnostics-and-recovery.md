@@ -281,6 +281,9 @@ immutable Plan/GapSet provenance. Then follow the [notes handoff](#implementatio
 [first-preview verification](#verify-the-first-preview), followed by [UI continuation](#ui-continuation) for the
 requested work.
 
+For later improvements, the public [First Draft changelog](https://github.com/firstdraft/skills/blob/main/CHANGELOG.md)
+provides an ordinary review prompt and an optional reading checkpoint at `.firstdraft/updates.md`.
+
 ### Verify the first preview
 
 Follow the generated README's local setup and boot commands. Compare the approved data with the reviewed gaps and

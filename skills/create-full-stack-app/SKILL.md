@@ -28,8 +28,6 @@ Targets plugin 0.7.1, CLI 0.7.0, API 0.6, Plan 0.22; catalog selection is separa
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-022.md#application-and-clients) controls theme, native colors,
   and Web icons with explicit native gaps.
-- [Add to Home Screen](references/foundation-plan-022.md#add-to-home-screen) metadata is on by default;
-  `application.pwa: false` opts out.
 - Account/Policy protection applies to Web Scaffolds. Native clients require a public index and do not inherit Web privacy.
 - Preserve unsupported requests and their gaps, including selected clients and access. Artifacts retain the Plan and GapSet.
 - Native preview follows generated guides and local iOS Simulator or Android Studio Emulator; native builds and Revyl
@@ -44,9 +42,8 @@ For authoring, choose the relevant section:
 - [Foundation Plan reference](references/foundation-plan-022.md): exact envelope, identity, ownership, presence,
   current evidence, and target support for Application/clients, Fields, relationships, Validations, Accounts/Policies,
   and Scaffolds.
-- [Modeling guide](references/modeling-guide.md): interview, Entities/Fields, validations, relationships, and
-  behavior. Read its [semantic read-back](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back)
-  before Compile.
+- [Modeling guide](references/modeling-guide.md): interview, Entities/Fields, validations, relationships, behavior,
+  and [candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back).
 - [Examples](references/examples.md): concrete Application, scalar Field, enum, Account/Policy, Scaffold, and
   relationship shapes.
 
@@ -197,11 +194,13 @@ valid status so the complete GapSet can be reviewed. `plan compile` later repeat
 
 ## Read back and approve the candidate before Compile
 
-Before the first `plan compile`, reread the exact current
+Before the first `plan compile`, complete the modeling guide's
+[candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back), then reread the exact current
 `.firstdraft/foundation-plan.json`. Give a compact semantic summary covering its path and SHA-256; application scope;
 Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
 and exclusions. Summarize outstanding implementation notes and how the selected mode will carry them forward.
-Show the matching valid run's `gap_set_sha256` and every ordered GapSet record. Use only that attached
+Show the matching valid run's `gap_set_sha256` and every ordered GapSet record, including classification, code,
+kind, status, reason, consequence, location, and cause when present. Use only that attached
 digest: the CLI validates it against the attached GapSet; never substitute a fixture, historical, or another
 Project's digest. Explain that service gaps were skipped before semantic analysis, target gaps were not fully
 realized, and `valid` applies only to the admitted graph. Use current-folder output by default. Select an absent
@@ -290,16 +289,13 @@ and preconditions as direct Compile; preserve every other existing destination.
 
 ## Recover from failures
 
-Read the matching [stable error family](references/diagnostics-and-recovery.md#stable-error-families) before acting.
-Handled leaf-command failures end standard error with one JSON object; `plan compile` may precede it with one
-leading contiguous block of recognized `First Draft: ` progress lines. After removing only that block, require
-exactly one JSON object. Any unrecognized, additional, or interleaved output fails closed.
+Read the [error-envelope rules](references/diagnostics-and-recovery.md#diagnostics-and-recovery) and matching
+[stable error family](references/diagnostics-and-recovery.md#stable-error-families) before acting. Unrecognized
+output stops recovery. Branch on the stable `error` and structured fields, not `detail`, elapsed time, or HTTP status.
 
-Branch on its stable `error` and structured fields, not the human-readable `detail`, elapsed time, or HTTP status.
-Use the linked reference for phase-specific recovery. Preserve exact bytes and private state after ambiguous mutations: an
-outcome-unknown push or direct start stops; only the documented unchanged-byte Publication singleton permits
-replay. Never Compile concurrently or use `invalid_publication_status` as a reason to retry. Distinguish a failed
-Compilation from later Publication failure, and let the CLI own output preflight, installation, and rollback.
+Preserve exact bytes and private state after ambiguous mutations. An outcome-unknown push or direct start stops;
+only the documented unchanged-byte Publication singleton permits replay. Never use `invalid_publication_status`
+as a reason to retry. Follow the reference for phase-specific recovery and let the CLI own output rollback.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.

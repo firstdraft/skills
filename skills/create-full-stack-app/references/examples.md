@@ -42,10 +42,6 @@ smallest subset accepted by the reviewed conditional PUT.
 ```
 
 An empty Plan is preferable to a fake Entity. Tell the user that the application model is still empty.
-The omitted `application.pwa` keeps the default online Add to Home Screen metadata. An explicit `true` has the
-same selected behavior; set `"pwa": false` inside `application` only for an intentional opt-out. This preserves
-favicons and touch icons and does not stop a browser from saving the site. See the
-[installation boundary](foundation-plan-022.md#add-to-home-screen) for the scope and device-qualification limits.
 
 ## Bounded web and iPhone application
 
@@ -110,9 +106,9 @@ the web without authentication. Confirm that exposure with the user before addin
 the iPhone navigation requirement or silently discard private or broader access intent.
 
 Adding `appearance` to this candidate selects the theme, native shell colors, and branding for the adaptive SVG
-and deterministic 512px PNG used by Rails favicons and touch icons. Enabled PWA output adds a real 192px PNG; its
-manifest declares both PNG sizes and the SVG. Setting `application.pwa` to `false` retains the favicon and touch-icon
-assets. Omitted theme means fixed light; web components keep stock Zinc tokens. Because this example also emits
+and deterministic 512px PNG used by Rails favicons and touch icons. The current
+[metadata option](foundation-plan-022.md#bookmark-assets-and-current-metadata-option) controls the additional
+manifest and 192px icon. Omitted theme means fixed light; web components keep stock Zinc tokens. Because this example also emits
 iOS, a matching valid AnalysisRun records the partial
 `foundation_plan.gap.appearance.icon_assets.not_generated` record at `/application/appearance` for the stock
 AppIcon. With `toggle`, the browser offers Light/Dark/System while the iOS shell and embedded Rails responses stay

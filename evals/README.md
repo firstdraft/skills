@@ -89,8 +89,6 @@ or live transport of implementation notes through GitHub Publication.
 - `android-preview-respects-provider-limit`
 - `preserve-partially-realized-appearance-intent`
 - `preserve-browser-theme-and-native-residual`
-- `explain-default-browser-installation`
-- `preserve-browser-installation-opt-out`
 - `correct-source-issue-alongside-capability-gap`
 - `analysis-failed-stop`
 - `standalone-status-binds-accepted-generation`
