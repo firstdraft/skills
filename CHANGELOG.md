@@ -15,7 +15,8 @@ Use the saved entry link to find unread entries, then consider those entries fro
 no checkpoint, or its entry cannot be found, review the entries for applicability. Follow the owner's requested
 scope and ordinary app tests for any edits. A changelog review does not authorize deployment.
 
-The checkpoint is optional local context. After considering all entries through a point, record its newest entry:
+The checkpoint is optional local context. If `.firstdraft/` is absent, use existing owner notes instead of creating
+that directory only for this file. After considering all entries through a point, record its newest entry:
 
 ```markdown
 Last reviewed: [2026-09-27: Public Plan authoring references](https://github.com/firstdraft/skills/blob/main/CHANGELOG.md#2026-09-27-public-plan-authoring-references)

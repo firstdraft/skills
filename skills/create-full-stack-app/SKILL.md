@@ -194,7 +194,8 @@ valid status so the complete GapSet can be reviewed. `plan compile` later repeat
 
 ## Read back and approve the candidate before Compile
 
-Before the first `plan compile`, reread the exact current
+Before the first `plan compile`, complete the modeling guide's
+[candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back), then reread the exact current
 `.firstdraft/foundation-plan.json`. Give a compact semantic summary covering its path and SHA-256; application scope;
 Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
 and exclusions. Summarize outstanding implementation notes and how the selected mode will carry them forward.
