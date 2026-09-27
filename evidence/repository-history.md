@@ -420,3 +420,64 @@ staging Publication, generated-application execution, representative user operat
 readiness. The 2026-08-04 report establishes one pinned fresh Claude Code operation of that local fixture, not a
 published or representative-user journey. The older dated observation separately records generated-app execution
 but does not widen those journey claims beyond the independent-scalar-Entity and public-index slice it exercised.
+
+## Packaged reference evidence archived on 2026-09-27
+
+The following receipts and source-composition pins previously appeared in the ordinary authoring path of
+`foundation-plan-022.md` at Skills `5e28b667ebeb76846ad4857e6d195ed01a5a8fa1` (plugin 0.7.0). They are retained
+here for maintainers, not as current support authority. Service repository links below require repository access;
+public authors do not need them to use the packaged Skill. Moving these summaries adds no execution evidence.
+The packaged reference continues to distinguish accepted syntax, supported meaning, generated source, and
+observed behavior, using the matching Analysis result and reviewed GapSet for the submitted Plan.
+
+**Implementation and observation evidence**
+
+- The Service's generated
+  [evidence index](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/evidence/status.md)
+  distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
+  [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
+  records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
+  Rails, but its available device's WebView was too old for a clean preview. These observations do not establish a
+  fresh student sign-in, native authentication, service deployment, or arbitrary application support.
+- The September 14
+  [generated UI qualification](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/solutions/2026-09-14-generated-ui-integration.md)
+  records compiled Oscar, Case, and Equipment foundations, browser checks, and bounded iPhone Revyl interactions.
+  Its receipts bind each check to exact inputs; they do not prove this plugin's agent behavior, a fresh student
+  journey, physical-device installation, or production deployment.
+- The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
+  separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
+  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/targets/rails/capabilities/native.md)
+  owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
+  runtime observations do not qualify iPhone runtime behavior.
+- The September 13
+  [Android usability report](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/solutions/2026-09-13-native-screen-usability.md)
+  records local Android Emulator interaction and browser checks; Android Studio UI steps were not executed. The
+  separate [iOS interaction report](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/solutions/2026-09-13-ios-interaction-polish.md)
+  records ordinary Compilation and local Simulator checks for More, forms, Cancel, text sizing, and landscape
+  keyboard behavior. These local observations do not repeat the earlier Revyl journey or qualify a fresh student.
+- The Android receipt also records the required-enum presence correction and its generated schema-check failure.
+  The [model renderer](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/lib/foundation_plan/rails_target/compiler/renderers/model.rb)
+  at that historical revision emitted `enum` with `validate: true`, `scopes: false`, `instance_methods: false`, and
+  separate presence validation. Current helper behavior follows the [packaged enum reference](../skills/create-full-stack-app/references/foundation-plan-022.md#enums).
+- A dated
+  [staging discovery smoke](https://github.com/firstdraft/skills/blob/e0212cad0a89a8b0e38678e371389085f6ddc254/evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
+  records one older OAuth/App-backed private-repository Publication at its named identities. It is not deployment
+  evidence: Publication created a repository but did not deploy an application. The observation binds only that
+  invocation and is not current capability authority.
+- Older controlled smokes and the 2026-07-31 fresh-agent field report remain historical receipts in the source
+  repository's evidence archive. They must not be used to narrow or widen the current profile.
+
+**Native source composition at the archived reference**
+
+The reference selected Service `4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0`, composing iOS Core
+`7365ba0bf7ea5e6c8e8223d24e54cf685b067950` and Android Core `6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e`.
+These are source pins, not device observations. Each generated application's `FOUNDATION_PROVENANCE.json`
+records its own composition.
+
+**Bounded Policy qualification**
+
+The
+[dated reviewed-realization qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-08-28-reviewed-realization-local-qualification.md)
+records a Case Chat result with all 14 authored Policies and their admitted protected Web consumers and no Policy or
+dependent Scaffold gap. That reviewed application is one exact supported graph, not a general claim that arbitrary
+Policy expressions or protected consumers are realized.

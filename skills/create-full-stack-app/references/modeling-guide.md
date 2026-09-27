@@ -224,9 +224,10 @@ also applies when `downcase` occurs between them: `["trim", "downcase", "blank_t
 This rule gives `downcase` no fixed position. Do not silently reorder an existing pipeline or repeat it until stable.
 
 `trim` also removes invisible edge characters that `collapse_whitespace` preserves; both preserve interior joiners.
-The Service's [Field catalog](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/design/field-catalog.md#normalization-and-comparison)
-owns the exact character policies and operation semantics. These are authoring choices, not automatic Compiler
-defaults; include consequential choices in the semantic read-back.
+The public [normalization and comparison reference](https://firstdraft.github.io/firstdraft/docs/architecture/design/field-catalog.html#normalization-and-comparison)
+specifies the exact Unicode whitespace, invisible-character, edge-NUL, and lowercase policies. Read it when those
+character distinctions affect the user's content. These are authoring choices, not automatic Compiler defaults;
+include consequential choices in the semantic read-back.
 
 ## Choose validations
 

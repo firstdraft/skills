@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.7.0, CLI 0.7.0, API 0.6, Plan 0.22; catalog selection is separate.
+Targets plugin 0.7.1, CLI 0.7.0, API 0.6, Plan 0.22; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-022.md#application-and-clients) controls theme, native colors,

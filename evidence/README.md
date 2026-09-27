@@ -76,7 +76,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Purpose |
 |---|---|
-| [`repository-history.md`](repository-history.md) | Exact cross-repository pins, old README evidence summaries, and eval notes |
+| [`repository-history.md`](repository-history.md) | Exact cross-repository pins, old README evidence summaries, eval notes, and [archived packaged-reference receipts](repository-history.md#packaged-reference-evidence-archived-on-2026-09-27) |
 | [`release-history.md`](release-history.md) | Completed 0.1.0/0.1.1 chronology and historical package-first command; archived 2026-08-13 |
 
 Historical narratives preserve facts that no longer belong in entry pages or the current runbook. When they conflict

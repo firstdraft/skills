@@ -6,7 +6,7 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
 
-Source candidate `0.7.0` requires CLI `0.7.0`, Service API `0.6`, and Foundation Plan `0.22`. New remote work uses production
+Source candidate `0.7.1` requires CLI `0.7.0`, Service API `0.6`, and Foundation Plan `0.22`. New remote work uses production
 at `https://firstdraft.com`; staging is explicit with `firstdraft --staging ...` and a separate staging token.
 It preserves the planning workspace under `.firstdraft/design/` and defaults to current-folder local output.
 Use explicit `--github` for server

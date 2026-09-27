@@ -39,14 +39,15 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
 ## Current evidence boundary
 
 Use the layers below separately. A schema-valid document is not implementation proof, an implementation is not a
-deployed journey, and an older observation does not define current support.
+deployed journey, and an older observation does not define current support. Successful Compilation establishes
+generated output, not observed application behavior, device installation, or deployment.
 
 **Current design and machine authority**
 
-- The bundled JSON Schema owns v0.22 transport shape. The Service's
-  [Rails target profile](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/targets/rails/profile.md)
-  records lowering at selected Service source `4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0`.
-  A source reference does not establish the deployed service revision.
+- The bundled JSON Schema owns v0.22 transport shape. This reference describes the bounded
+  `rails-sketch/2026-09` behavior; the public [Rails target profile](https://firstdraft.github.io/firstdraft/docs/architecture/targets/rails/profile.html)
+  gives lowering details. The public guide can advance beyond an installed Skill, and neither establishes the
+  deployed service revision. Use the matching results for the submitted Plan.
 - Read `analyzer_release` and `compiler_release` from the matching Analysis result; Compilation results carry
   `compiler_release` only.
   Those identities belong to the observed result; an installed Skill or a retained historical receipt cannot
@@ -73,43 +74,6 @@ deployed journey, and an older observation does not define current support.
   output, or complete support for the Foundation Plan vocabulary. Preserve intended meaning and let the reviewed
   GapSet name the current delta.
 
-**Implementation and observation evidence**
-
-- The Service's generated
-  [evidence index](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/evidence/status.md)
-  distinguishes implemented, exercised, generated-output, hosted, and observed claims. The September 12
-  [Android qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-generated-android-preview.md)
-  records GitHub APK delivery and local Android public navigation, forms, theme, and layout checks. Revyl loaded
-  Rails, but its available device's WebView was too old for a clean preview. These observations do not establish a
-  fresh student sign-in, native authentication, service deployment, or arbitrary application support.
-- The September 14
-  [generated UI qualification](https://github.com/firstdraft/firstdraft/blob/00e92e397dfbb5bc4dfda69f0d1cf48c5e7beff8/docs/solutions/2026-09-14-generated-ui-integration.md)
-  records compiled Oscar, Case, and Equipment foundations, browser checks, and bounded iPhone Revyl interactions.
-  Its receipts bind each check to exact inputs; they do not prove this plugin's agent behavior, a fresh student
-  journey, physical-device installation, or production deployment.
-- The [iPhone Revyl receipt](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-09-12-revyl-preview-release.md)
-  separately records an emitted iPhone index and live Rails refresh. It did not exercise native forms or Back in
-  Revyl. The [native target](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/targets/rails/capabilities/native.md)
-  owns generated iPhone detail/form routing and its separate source, Simulator, and browser evidence. Android
-  runtime observations do not qualify iPhone runtime behavior.
-- The September 13
-  [Android usability report](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/solutions/2026-09-13-native-screen-usability.md)
-  records local Android Emulator interaction and browser checks; Android Studio UI steps were not executed. The
-  separate [iOS interaction report](https://github.com/firstdraft/firstdraft/blob/9ff77985c821501f0174aec5da6192871395cd6b/docs/solutions/2026-09-13-ios-interaction-polish.md)
-  records ordinary Compilation and local Simulator checks for More, forms, Cancel, text sizing, and landscape
-  keyboard behavior. These local observations do not repeat the earlier Revyl journey or qualify a fresh student.
-- The Android receipt also records the required-enum presence correction and its generated schema-check failure.
-  The [model renderer](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/lib/foundation_plan/rails_target/compiler/renderers/model.rb)
-  at that historical revision emitted `enum` with `validate: true`, `scopes: false`, `instance_methods: false`, and
-  separate presence validation. Current helper behavior follows the [enum reference](#enums) below.
-- A dated
-  [staging discovery smoke](https://github.com/firstdraft/skills/blob/e0212cad0a89a8b0e38678e371389085f6ddc254/evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
-  records one older OAuth/App-backed private-repository Publication at its named identities. It is not deployment
-  evidence: Publication created a repository but did not deploy an application. The observation binds only that
-  invocation and is not current capability authority.
-- Older controlled smokes and the 2026-07-31 fresh-agent field report remain historical receipts in the source
-  repository's evidence archive. They must not be used to narrow or widen the current profile.
-
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
 `4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0` and has SHA-256
@@ -117,7 +81,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 The source candidate and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.7.0/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.7.1/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -131,13 +95,10 @@ CLI 0.3.0 and later use `.firstdraft/design/`; older CLI 0.2.2 used top-level `d
 [direct-output compatibility boundary](diagnostics-and-recovery.md#direct-local-output).
 
 Selected native projects compose separate pinned Cores under `ios/` and `android/`. Each emitted
-`FOUNDATION_PROVENANCE.json` records the exact revision, archive digest, and replaced application seams. Use the
-Service's native evidence record for exercised versions; pins alone do not establish device behavior.
-Selected Service source composes iOS Core `7365ba0bf7ea5e6c8e8223d24e54cf685b067950` and Android Core
-`6a07e79197f2acbcaab9d15eb4dc61aa9ca5c94e`. Older receipts retain their own source pins and observed scope.
-Public native navigation stays Account-free. Both clients use one stack, up to five direct tabs, or four direct
-tabs plus More for additional destinations. Follow the [preview guidance](#preview-generated-native-apps) after
-verified materialization.
+`FOUNDATION_PROVENANCE.json` records the exact revision, archive digest, and replaced application seams.
+Those pins identify source, not exercised devices or runtime behavior. Public native navigation stays Account-free.
+Both clients use one stack, up to five direct tabs, or four direct tabs plus More for additional destinations.
+Follow the [preview guidance](#preview-generated-native-apps) after verified materialization.
 
 ## Preview generated native apps
 
@@ -152,9 +113,9 @@ local Rails, local native builds, and optional Revyl uploads without a GitHub pu
 wrappers are fallback options when local development is unsuitable. Most Rails edits need only a refresh; native
 changes need a new artifact. Neither native builds nor Revyl are required for ordinary release smoke tests.
 
-Android requires **System WebView 120 or newer**. The September 12 Revyl image observation is historical, not a
-claim about every current device. Check the actual device compatibility when Revyl is requested. Stop owned Revyl
-sessions and tunnels when finished. Preview does not install the app on a physical phone or publish it to a store.
+Android requires **System WebView 120 or newer**. Check the actual device compatibility when Revyl is requested.
+Stop owned Revyl sessions and tunnels when finished. Preview does not install the app on a physical phone or
+publish it to a store.
 
 ## Closed envelope
 
@@ -266,13 +227,24 @@ for the Rails production mailer host independently of native-client selection. I
 host authorization, TLS, sender identity, or email provider. A domain is optional: without one, native clients use
 an explicit `.invalid` origin and `invalid.firstdraft` identifier prefix.
 
-Each selected client is emitted only when it has an admitted public-index Scaffold and its generated identity
-fits platform rules. Structurally valid long names can exceed those rules: the application key must form one
-DNS-safe label of at most 63 ASCII bytes, and Android application IDs must fit 223 bytes after domain conversion.
-The [native target](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/targets/rails/capabilities/native.md)
-owns the full rules. A missing public entry or unusable identity omits that client and records
-`foundation_plan.gap.native_client.not_generated`; a missing domain alone does not. Preserve the user's requested
-clients and access rather than changing product meaning to avoid that gap.
+Each selected client needs an admitted public-index Scaffold and an identity that fits its platform:
+
+- iOS replaces underscores in `application.key` with hyphens. That component must be one DNS-safe label of at most
+  63 ASCII bytes, beginning with a letter and ending with a letter or digit. An authored domain must have at least
+  two lowercase DNS labels, at most 253 ASCII bytes total and 63 per label, a final label beginning with a letter,
+  and no `.invalid` suffix. Labels contain only letters, digits, and interior hyphens. The bundle identifier uses
+  the reversed domain followed by the converted key; without a domain it uses `invalid.firstdraft` as the prefix.
+  The display name must fit one line, contain non-whitespace text, and have no control characters or backslashes.
+- Android uses the authored domain for its HTTPS origin, or `<key-with-hyphens>.invalid` when omitted. The host must
+  fit 253 ASCII bytes with DNS labels of at most 63 bytes. Its application ID reverses the domain labels, replaces
+  each hyphen with `_h`, prefixes numeric-leading labels with `d_`, and appends the unchanged application key.
+  Without a domain its prefix is `invalid.firstdraft`. The resulting application ID must fit 223 ASCII bytes.
+
+For example, key `oscar_party` with domain `2-app.example.com` produces iOS identifier
+`com.example.2-app.oscar-party` and Android ID `com.example.d_2_happ.oscar_party`.
+Structurally valid values can still exceed these target limits. A missing public entry or unusable identity omits
+that client and records `foundation_plan.gap.native_client.not_generated`; a missing domain alone does not.
+Preserve the user's requested clients and access rather than changing product meaning to avoid that gap.
 
 Public detail and form links use Hotwire; Web Account and Policy support does not implement native sign-in,
 profile, or protected navigation. Confirm that public native access is intentional.
@@ -347,8 +319,8 @@ remain. Browsers may still save an ordinary site, so `false` is not a way to pro
 Use the browser's normal installation flow. This support adds no offline cache, service worker, Web Push, custom
 installation prompt, or native build. Manifest/HTTP checks and browser promotion are separate from an actual
 installation, standalone launch/navigation, or sign-in/relaunch. Identified physical iPhone Safari and Android
-Chrome qualification remains pending under [Issue #661](https://github.com/firstdraft/firstdraft/issues/661);
-desktop emulation is not device proof. Native launcher icons remain a separate support gap.
+Chrome qualification remains pending; desktop emulation is not device proof. Native launcher icons remain a
+separate support gap.
 
 ### Entities, descriptors, and Fields
 
@@ -381,9 +353,11 @@ inclusion validation; optional machines keep nullable storage without a default.
 multiple-per-Entity, guarded, cross-Entity, multi-effect, unresolved helper collisions, and broader effect shapes
 retain storage with behavior gaps. Failed transitions retain ordinary AASM/Rails object and transaction behavior;
 an application may need to reload or reset a failed object before reusing it.
-AASM 6.0.0 namespaced state scopes can query a prefixed value instead of the stored state. Consult the selected
-Service's [automatic state scopes](https://github.com/firstdraft/firstdraft/blob/4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0/docs/architecture/design/state-machines.md#automatic-state-scopes)
-guidance before using them in application work.
+AASM 6.0.0 namespaced state scopes can query a prefixed value instead of the stored state: `status_active` can
+query `status_active` when the stored state is `active`. Check an affected application query against its stored
+state; no generated workaround or namespace-based scope suppression is supplied. With `no_direct_assignment: true`,
+a scoped builder can also raise even for the initial state. Use ordinary creation followed by the named event
+when a transition is intended; constructing its destination state directly would bypass the event's effects.
 `attachment` and `image` are schema-valid
 Field types, but they are skipped from the admitted graph and recorded as service-support gaps; they cannot reach
 the current Compiler. Active Storage and image-delivery prose describes target direction, not emitted support.
@@ -538,12 +512,6 @@ record or an explicit `environment/current_account` gate record. The current tar
 algebra and the relation scopes demanded by supported consumers. Unsupported Policy meaning remains a Policy gap,
 and every dependent Scaffold or projection remains an exact child gap. Do not infer that all Policies are supported
 or that all Scaffolds are public; inspect the whole matching GapSet.
-
-The
-[dated reviewed-realization qualification](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/docs/solutions/2026-08-28-reviewed-realization-local-qualification.md)
-records a Case Chat result with all 14 authored Policies and their admitted protected Web consumers and no Policy or
-dependent Scaffold gap. That reviewed application is one exact supported graph, not a general claim that arbitrary
-Policy expressions or protected consumers are realized.
 
 Account details show the signup Fields and normalized email by default. Editing permits only mutable, non-derived
 signup Fields; other Account Fields are not exposed automatically. An authored `scaffold.profile` replaces displayed

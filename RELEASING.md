@@ -8,7 +8,7 @@ longer part of an ordinary release. Coordinate the service, CLI, and Skills thro
 
 [`release/compatibility.json`](release/compatibility.json) owns the candidate version, compatible CLI/API/Plan
 identities, and deterministic package SHA-256. The current source candidate is
-`@firstdraft.com/claude-code@0.7.0` with CLI `0.7.0`, API `>= 0.6.0`, `< 0.7.0`, and Plan `sketch/0.22`.
+`@firstdraft.com/claude-code@0.7.1` with CLI `0.7.0`, API `>= 0.6.0`, `< 0.7.0`, and Plan `sketch/0.22`.
 The [marketplace manifest](.claude-plugin/marketplace.json) independently selects a published plugin version;
 retain its selection until the intended new version is actually published. Source compatibility is not public
 catalog selection. Query npm when releasing rather than treating a dated distribution snapshot as current.
