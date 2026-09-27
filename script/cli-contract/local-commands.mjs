@@ -24,7 +24,7 @@ import {
 
 const planSchema = JSON.parse(
   readFileSync(
-    new URL("../../skills/create-full-stack-app/references/foundation-plan-0.22.schema.json", import.meta.url),
+    new URL("../../skills/create-full-stack-app/references/foundation-plan-0.23.schema.json", import.meta.url),
     "utf8",
   ),
 );

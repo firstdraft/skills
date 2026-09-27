@@ -8,16 +8,16 @@ longer part of an ordinary release. Coordinate the service, CLI, and Skills thro
 
 [`release/compatibility.json`](release/compatibility.json) owns the candidate version, compatible CLI/API/Plan
 identities, and deterministic package SHA-256. The current source candidate is
-`@firstdraft.com/claude-code@0.7.1` with CLI `0.7.0`, API `>= 0.6.0`, `< 0.7.0`, and Plan `sketch/0.22`.
+`@firstdraft.com/claude-code@0.8.0` with CLI `0.8.0`, API `>= 0.7.0`, `< 0.8.0`, and Plan `sketch/0.23`.
 The [marketplace manifest](.claude-plugin/marketplace.json) independently selects a published plugin version;
 retain its selection until the intended new version is actually published. Source compatibility is not public
 catalog selection. Query npm when releasing rather than treating a dated distribution snapshot as current.
 
-CLI and plugin `0.7.0` require `FIRSTDRAFT_STAGING_API_TOKEN` for the staging origin, including existing staging
-Plans that previously used `FIRSTDRAFT_API_TOKEN`. The separate credential is a breaking CLI configuration change;
-API `0.6` and Plan `0.22` are unchanged. New remote work defaults to production and root `--staging` selects staging.
-Saved Project origins, target `rails-sketch/2026-09`, local-output defaults, and `.firstdraft/design/` stay the same.
-There is no retained-Project migration or compatibility bridge.
+This breaking candidate retires the authored `application.pwa` choice and uses target
+`rails-sketch/2026-09-bookmark-assets`; bookmark assets are part of every generated web app. It requires the matching
+API contract and CLI rather than accepting the replaced Plan format. There is no retained-Project migration or
+compatibility bridge. Production/staging credential separation, saved Project origins, local-output defaults, and
+`.firstdraft/design/` are unchanged.
 
 Use an ordinary pre-1.0 minor bump for a breaking compatibility change and a patch bump for a compatible change.
 Never reuse a published npm version, protected release tag, or marketplace version for different package bytes.

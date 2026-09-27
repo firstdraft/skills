@@ -29,6 +29,18 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-09-27: Bookmark assets without a planning option
+
+**Compiler and authoring contract — coordinated source candidate, unreleased.** The next Plan contract includes
+favicon and home-screen bookmark assets for every web app, removing the `application.pwa` option. Prepared
+black-on-white artwork uses the app name's first trimmed character when it is an ASCII letter or digit, or a neutral
+circle otherwise. Appearance still controls theme and native colors. This supplies a useful starting point without
+another planning question. Broader installed-app behavior remains outside this change.
+
+The source Skills and CLI 0.8.0 candidates require Plan 0.23, API 0.7, and the bookmark-assets target profile. These
+source identities do not change the published catalog. Existing application owners can keep their current artwork
+or replace the public icon files using their app's `UI.md`; no new Compilation is needed for that edit.
+
 ## 2026-09-27: Public Plan authoring references
 
 **Skills — merged source, unreleased 0.7.1 candidate.** The packaged authoring references now route to the existing

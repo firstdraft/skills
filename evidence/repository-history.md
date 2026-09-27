@@ -458,7 +458,7 @@ observed behavior, using the matching Analysis result and reviewed GapSet for th
 - The Android receipt also records the required-enum presence correction and its generated schema-check failure.
   The [model renderer](https://github.com/firstdraft/firstdraft/blob/89a2d6866f9448f4e75b58cac26f61c52daaa0b0/lib/foundation_plan/rails_target/compiler/renderers/model.rb)
   at that historical revision emitted `enum` with `validate: true`, `scopes: false`, `instance_methods: false`, and
-  separate presence validation. Current helper behavior follows the [packaged enum reference](../skills/create-full-stack-app/references/foundation-plan-022.md#enums).
+  separate presence validation. Current helper behavior follows the [packaged enum reference](../skills/create-full-stack-app/references/foundation-plan-023.md#enums).
 - A dated
   [staging discovery smoke](https://github.com/firstdraft/skills/blob/e0212cad0a89a8b0e38678e371389085f6ddc254/evidence/2026-08-10-staging-movie-catalog-discovery-smoke.md)
   records one older OAuth/App-backed private-repository Publication at its named identities. It is not deployment

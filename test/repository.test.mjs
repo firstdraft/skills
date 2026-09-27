@@ -44,9 +44,9 @@ const reviewedFixtureAnalyzerRelease =
   "foundation-plan-rails/application-2026-08-28-reviewed-realization";
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
-const currentFoundationPlanServiceBaseline = "4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0";
+const currentFoundationPlanServiceBaseline = "ff0b6ac9cc6fab5aa2a63c455d3da73469211c43";
 const foundationPlanSchemaDigest =
-  "fcd0123860d4f4a35bdfb9b97b17b6aa220bf5396fb471cf2e5f65d444c9843a";
+  "6dd98b424fd1744d1e5d3a40fb51f0a22f89e77b58a175b08e29e6c8e3aed7ba";
 const currentFoundationPlanSchemaBaseline = currentFoundationPlanServiceBaseline;
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
@@ -215,8 +215,8 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
     version: marketplace.plugins[0].version,
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.7.1");
-  assert.equal(installableManifest.version, "0.7.1");
+  assert.equal(packageTemplate.version, "0.8.0");
+  assert.equal(installableManifest.version, "0.8.0");
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);
@@ -648,7 +648,7 @@ test("authored JSON examples parse and retain the pinned Plan contract", async (
       skillsDirectory,
       "create-full-stack-app",
       "references",
-      "foundation-plan-022.md",
+      "foundation-plan-023.md",
     ),
   );
   const fixture = JSON.parse(
@@ -1122,7 +1122,7 @@ test("validator evals stage the required Plan and private state", async () => {
 test("complete examples and eval Plans validate against the bundled exact schema", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
   const schemaSource = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-0.22.schema.json"),
+    path.join(skillDirectory, "references", "foundation-plan-0.23.schema.json"),
     "utf8",
   );
   assert.equal(
@@ -1130,7 +1130,7 @@ test("complete examples and eval Plans validate against the bundled exact schema
     foundationPlanSchemaDigest,
   );
   const referenceSource = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-022.md"),
+    path.join(skillDirectory, "references", "foundation-plan-023.md"),
     "utf8",
   );
   assert(referenceSource.includes(foundationPlanSchemaDigest));
@@ -2082,9 +2082,9 @@ test("analysis evals preserve fixture identity and recovery expectations", async
     pointer: "/application/appearance",
     readable_path: "application.appearance",
     reason:
-      "Application shell colors, theme, and derived Web icon assets are generated, but the emitted iOS client still uses its stock AppIcon.",
+      "Application shell colors, theme, and name-derived black-on-white bookmark icons are generated, but the emitted iOS client still uses its stock AppIcon.",
     consequence:
-      "The generated Rails shell and emitted selected iOS shell honor Appearance, and favicon and PWA icons use the derived pair; only the emitted iOS AppIcon remains a stock Core asset.",
+      "The generated Rails shell and emitted selected iOS shell honor Appearance. Bookmark icons use fixed black-on-white artwork; only the emitted iOS AppIcon remains a stock Core asset.",
   });
   const mixedIntent = cases.find(
     ({ id }) => id === "correct-source-issue-alongside-capability-gap",

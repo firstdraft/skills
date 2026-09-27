@@ -1,8 +1,8 @@
-export const cliRevision = "fb45245c9030e1898f81fcafe108d877116bd752";
+export const cliRevision = "269dcaff9beb8369235f25b62fdb9d4a845e56c6";
 export const cliRuntimeSha256 =
-  "cb07b7e35938662383979dfd497d4d056ed2d1d2c2d871236454730cc5f9a8b2";
+  "9c74b4073a6b884bba1480dce535dd464101e52637a06a92bfbbd4b1bd65856d";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.7.0";
+export const cliPackageVersion = "0.8.0";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
@@ -40,14 +40,14 @@ export const storedApiUrl = "http://127.0.0.1:1";
 export const configuredApiUrl = "http://127.0.0.1:2";
 export const apiToken = "canary-private-api-token";
 export const foundationPlanFormat =
-  "firstdraft.foundation-plan.sketch/0.22";
+  "firstdraft.foundation-plan.sketch/0.23";
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-09-22-theme";
+  "foundation-plan-rails/application-2026-09-27-bookmark-assets";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-23-pwa";
+  "foundation-plan-rails/compiler-application-2026-09-27-bookmark-assets";
 export const compilationTarget = {
   id: "rails",
-  profile: "rails-sketch/2026-09",
+  profile: "rails-sketch/2026-09-bookmark-assets",
 };
 export const artifactMediaType =
   "application/vnd.firstdraft.compilation-artifact+json";

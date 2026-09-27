@@ -6,31 +6,31 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000909",
     "graph_version": 1,
-    "head_source_sha256": "1ad1b25f36d26e7c9155272e1e632d39a64131639c2d3b818875aa1678695fd2",
-    "analyzer_release": "foundation-plan-rails/application-2026-09-22-theme",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-23-pwa",
+    "head_source_sha256": "d9c3fe7a339e0fe9074e13fe3f24faf27ab4cfd5c428be0bcf13f19dfb34665b",
+    "analyzer_release": "foundation-plan-rails/application-2026-09-27-bookmark-assets",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-27-bookmark-assets",
     "target": {
       "id": "rails",
-      "profile": "rails-sketch/2026-09"
+      "profile": "rails-sketch/2026-09-bookmark-assets"
     },
     "status": "valid",
     "diagnostics": [],
     "gap_set": {
       "format": "firstdraft.foundation-gaps/2",
       "source": {
-        "sha256": "1ad1b25f36d26e7c9155272e1e632d39a64131639c2d3b818875aa1678695fd2"
+        "sha256": "d9c3fe7a339e0fe9074e13fe3f24faf27ab4cfd5c428be0bcf13f19dfb34665b"
       },
       "project": {
         "id": "01900000-0000-7000-8000-000000000024",
         "graph_version": 1
       },
       "analysis": {
-        "release": "foundation-plan-rails/application-2026-09-22-theme"
+        "release": "foundation-plan-rails/application-2026-09-27-bookmark-assets"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-23-pwa",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-27-bookmark-assets",
       "target": {
         "id": "rails",
-        "profile": "rails-sketch/2026-09"
+        "profile": "rails-sketch/2026-09-bookmark-assets"
       },
       "gaps": [
         {
@@ -40,8 +40,8 @@
           "status": "partially_generated",
           "pointer": "/application/appearance",
           "readable_path": "application.appearance",
-          "reason": "Application shell colors, theme, and derived Web icon assets are generated, but emitted native clients still use stock Core launcher icons.",
-          "consequence": "The generated favicon and PWA icons use the derived pair, and emitted native shells apply Appearance colors; native launcher icons remain stock Core assets."
+          "reason": "Application shell colors, theme, and name-derived black-on-white bookmark icons are generated, but emitted native clients still use stock Core launcher icons.",
+          "consequence": "The generated bookmark icons use fixed black-on-white artwork, and emitted native shells apply Appearance colors; native launcher icons remain stock Core assets."
         },
         {
           "classification": "target_support_gap",
@@ -55,7 +55,7 @@
         }
       ]
     },
-    "gap_set_sha256": "f84e5eec06b443f412dc2aab011f18455f4b42f47eee19b40a8a993362e7ac24",
+    "gap_set_sha256": "055eab90b7f72c0fbc184774fc299913e44db8fce1686bc5585f165bd4d9f4ca",
     "started_at": "2026-07-30T12:03:00.000Z",
     "completed_at": "2026-07-30T12:03:01.000Z"
   }

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://firstdraft.com/schemas/foundation-plan/sketch-0.22",
+  "$id": "https://firstdraft.com/schemas/foundation-plan/sketch-0.23",
   "title": "Foundation Plan",
-  "description": "The working sketch/0.22 JSON import and export representation for one First Draft Project graph.",
+  "description": "The working sketch/0.23 JSON import and export representation for one First Draft Project graph.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,7 +14,7 @@
     "format": {
       "title": "Format",
       "description": "Names the Foundation Plan serialization vocabulary and its version.",
-      "const": "firstdraft.foundation-plan.sketch/0.22"
+      "const": "firstdraft.foundation-plan.sketch/0.23"
     },
     "target": {
       "$ref": "#/$defs/target"
@@ -99,7 +99,7 @@
         "profile": {
           "title": "Target profile",
           "description": "Pins the release of target defaults, supported lowerings, and verification expectations.",
-          "const": "rails-sketch/2026-09"
+          "const": "rails-sketch/2026-09-bookmark-assets"
         }
       }
     },
@@ -134,11 +134,6 @@
             "example.com"
           ]
         },
-        "pwa": {
-          "title": "Add to Home Screen support",
-          "description": "Enables online browser installation metadata by default. False omits generated installation support; browsers may still save an ordinary site. This does not select offline behavior, Web Push, or a native client.",
-          "type": "boolean"
-        },
         "home_index": {
           "title": "Home index",
           "description": "The Entity whose selected Web index is the home page. Omission uses the target's welcome page. The index retains its authored authorization.",
@@ -146,7 +141,7 @@
         },
         "appearance": {
           "title": "Appearance",
-          "description": "Shared brand values every target honors. Splash screens, launch icons, and navigation-bar branding derive from these rather than being authored.",
+          "description": "Shared theme choice and native brand colors. Web bookmark icons are independent of Appearance.",
           "$ref": "#/$defs/appearance"
         },
         "native": {
@@ -248,12 +243,12 @@
       "properties": {
         "tint_color": {
           "title": "Tint color",
-          "description": "Native interaction tint and generated icon branding. Web components keep the target theme.",
+          "description": "Native interaction tint. Web components and bookmark icons keep the target defaults.",
           "$ref": "#/$defs/color"
         },
         "background_color": {
           "title": "Background color",
-          "description": "The native application and launch background, also used for the generated icon field.",
+          "description": "The native application and launch background.",
           "$ref": "#/$defs/color"
         },
         "theme": {
