@@ -1,0 +1,4 @@
+interface:
+  display_name: "Set up First Draft"
+  short_description: "Prepare a Mac and run a First Draft app locally"
+  default_prompt: "Use $setup-first-draft to prepare my Mac for First Draft and help me run my compiled app locally."

@@ -29,6 +29,17 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-09-27: Mac setup with your agent
+
+**Skills — unreleased source candidate.** The new `setup-first-draft` Skill pairs a Mac prerequisite installer with
+guidance for running a compiled app. The [workshop setup entry point](docs/workshop-setup.md) can be read before
+Node or the First Draft plugin is installed, avoiding a circular setup requirement.
+
+The installer uses Homebrew and mise, then reads runtime versions from the compiled app. An existing runtime
+manager stays in place; the agent uses it instead of migrating the user's projects. Application setup still belongs
+to the emitted `bin/setup` and `bin/dev`. This is workshop tooling, not another dependency for emitted applications.
+Fresh-Mac qualification is still pending; package checks alone do not establish that student journey.
+
 ## 2026-09-27: Public Plan authoring references
 
 **Skills — merged source, unreleased 0.7.1 candidate.** The packaged authoring references now route to the existing

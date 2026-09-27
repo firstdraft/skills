@@ -16,7 +16,9 @@ ajv.addSchema(schema);
 const validate = (name, value) => ajv.getSchema(`${schema.$id}#/$defs/${name}`)(value);
 
 test("authoring release excludes the deferred UI Skill auditions", () => {
-  assert.deepEqual(canonicalPluginSkillNames, ["create-full-stack-app"]);
+  for (const name of ["extend-app-ui", "review-ui-consistency"]) {
+    assert.equal(canonicalPluginSkillNames.includes(name), false);
+  }
 });
 
 test("ordinary form routes validate without return overrides", () => {

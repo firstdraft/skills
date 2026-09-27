@@ -1,0 +1,238 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.22",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-09"
+  },
+  "application": {
+    "key": "reading_list",
+    "name": "Reading List",
+    "native": {
+      "ios": {},
+      "android": {}
+    },
+    "delivery": {},
+    "home_index": "book",
+    "entities": [
+      {
+        "subject_uuid": "01a0e512-df9a-7619-b775-835c95e82dad",
+        "key": "book",
+        "name": "Book",
+        "icon": "bookmark",
+        "primary_descriptor": {
+          "field": "book.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0e512-dd36-7fd0-9163-5df02d9b3187",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "trim",
+              "blank_to_null"
+            ]
+          },
+          {
+            "subject_uuid": "01a0e512-dde1-7812-91b5-30af80dcbb94",
+            "key": "author",
+            "name": "Author",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "trim",
+              "blank_to_null"
+            ]
+          },
+          {
+            "subject_uuid": "01a0e512-de5e-715c-9520-a372678ff8c3",
+            "key": "note",
+            "name": "Note",
+            "type": "long_text",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0e512-df0f-79e4-9879-27882ba6af93",
+            "key": "finished",
+            "name": "Finished",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author"
+              },
+              {
+                "field": "book.note"
+              },
+              {
+                "field": "book.finished"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author"
+              },
+              {
+                "field": "book.note"
+              },
+              {
+                "field": "book.finished"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author"
+              },
+              {
+                "field": "book.note"
+              },
+              {
+                "field": "book.finished"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author"
+              },
+              {
+                "field": "book.note"
+              },
+              {
+                "field": "book.finished"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a0e512-e047-7031-b879-8a51711f0562",
+        "key": "a_wizard_of_earthsea",
+        "entity": "book",
+        "fields": [
+          {
+            "field": "book.title",
+            "value": {
+              "kind": "literal",
+              "value": "A Wizard of Earthsea"
+            }
+          },
+          {
+            "field": "book.author",
+            "value": {
+              "kind": "literal",
+              "value": "Ursula K. Le Guin"
+            }
+          },
+          {
+            "field": "book.finished",
+            "value": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0e512-e10c-7c17-afd5-7a4104878a85",
+        "key": "pride_and_prejudice",
+        "entity": "book",
+        "fields": [
+          {
+            "field": "book.title",
+            "value": {
+              "kind": "literal",
+              "value": "Pride and Prejudice"
+            }
+          },
+          {
+            "field": "book.author",
+            "value": {
+              "kind": "literal",
+              "value": "Jane Austen"
+            }
+          },
+          {
+            "field": "book.finished",
+            "value": {
+              "kind": "literal",
+              "value": true
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0e512-e1b5-7efa-a6fa-c5b81bb1e7bc",
+        "key": "the_hobbit",
+        "entity": "book",
+        "fields": [
+          {
+            "field": "book.title",
+            "value": {
+              "kind": "literal",
+              "value": "The Hobbit"
+            }
+          },
+          {
+            "field": "book.author",
+            "value": {
+              "kind": "literal",
+              "value": "J. R. R. Tolkien"
+            }
+          },
+          {
+            "field": "book.finished",
+            "value": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

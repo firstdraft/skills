@@ -12,8 +12,8 @@ It preserves the planning workspace under `.firstdraft/design/` and defaults to 
 Use explicit `--github` for server
 Publication. Its identities belong in
 [release compatibility](release/compatibility.json). The [public catalog](.claude-plugin/marketplace.json) owns the
-installed version; source compatibility does not establish publication. Only `create-full-stack-app` is packaged;
-the UI Skill auditions remain deferred source.
+installed version; source compatibility does not establish publication. The candidate packages `create-full-stack-app`
+and `setup-first-draft`. The UI Skill auditions remain deferred source.
 
 Trying First Draft as a tester? Start with the
 [local development guide](https://gist.github.com/raghubetina/3d424a97a1eaa6de8c406e67f32a237e). Start in an empty
@@ -39,6 +39,7 @@ behavior. This repository teaches an agent how to use those contracts without cr
 |---|---|
 | Change the Skill or repository | [Agent instructions](AGENTS.md), then [documentation map](docs/README.md) |
 | Understand the installed workflow | [Skill entrypoint](skills/create-full-stack-app/SKILL.md) |
+| Prepare a Mac for the workshop | [Setup entry point](docs/workshop-setup.md), then [setup Skill](skills/setup-first-draft/SKILL.md) |
 | Continue or review an app's UI | The app's `UI.md` and shared components; [UI Skill status](#ui-continuation) |
 | Review improvements for an existing app or workflow | [First Draft changelog](CHANGELOG.md) |
 | Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
@@ -84,6 +85,7 @@ conversation, run `codex resume` from the same workspace root.
 | Path | Responsibility |
 |---|---|
 | skills/create-full-stack-app/ | Canonical portable Skill and packaged references |
+| skills/setup-first-draft/ | Mac prerequisite installer and local-app setup guidance |
 | skills/extend-app-ui/, skills/review-ui-consistency/ | Deferred UI Skill sources, excluded from the package |
 | .claude-plugin/, packages/ | Release-gated public catalog selection and plugin assembly, not a second editable Skill copy |
 | evals/ | Behavioral cases and evaluator contracts |

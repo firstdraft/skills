@@ -17,6 +17,7 @@
     "application-generation"
   ],
   "skills": [
-    "./skills/create-full-stack-app"
+    "./skills/create-full-stack-app",
+    "./skills/setup-first-draft"
   ]
 }

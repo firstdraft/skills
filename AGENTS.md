@@ -5,6 +5,7 @@
 | Task | Route |
 |---|---|
 | Plan authoring or Compile behavior | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md), then only its routed reference section |
+| Workshop prerequisites or local setup | [`docs/workshop-setup.md`](docs/workshop-setup.md), then [`skills/setup-first-draft/SKILL.md`](skills/setup-first-draft/SKILL.md) |
 | UI continuation or review | The consumer app's `UI.md`; [UI Skill auditions remain deferred](README.md#ui-continuation) |
 | Release work | [`RELEASING.md`](RELEASING.md) and [`release/compatibility.json`](release/compatibility.json) |
 | Evidence or prior rollout facts | [`evidence/README.md`](evidence/README.md), then one dated record |

@@ -27,10 +27,19 @@ export const canonicalSourceSkills = Object.freeze({
     "agents/openai.yaml",
     "references/capture.md",
   ]),
+  "setup-first-draft": Object.freeze([
+    "LICENSE.txt",
+    "SKILL.md",
+    "agents/openai.yaml",
+    "references/windows.md",
+    "scripts/Brewfile",
+    "scripts/setup-macos.sh",
+  ]),
 });
 
 export const canonicalPluginSkills = Object.freeze({
   "create-full-stack-app": canonicalSourceSkills["create-full-stack-app"],
+  "setup-first-draft": canonicalSourceSkills["setup-first-draft"],
 });
 
 export const canonicalPluginSkillNames = Object.freeze(Object.keys(canonicalPluginSkills));
