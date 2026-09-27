@@ -6,7 +6,7 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
 
-Source candidate `0.7.1` requires CLI `0.7.0`, Service API `0.6`, and Foundation Plan `0.22`. New remote work uses production
+Source candidate `0.8.0` requires CLI `0.8.0`, Service API `0.7`, and Foundation Plan `0.23`. New remote work uses production
 at `https://firstdraft.com`; staging is explicit with `firstdraft --staging ...` and a separate staging token.
 It preserves the planning workspace under `.firstdraft/design/` and defaults to current-folder local output.
 Use explicit `--github` for server
@@ -24,7 +24,7 @@ local folder; a Drawing Board clone and GitHub push are unnecessary. The
 
 - the portable create-full-stack-app Skill and its task routing;
 - deferred UI extension and consistency-review Skill auditions;
-- beginner-to-machine-reference authoring guidance for Foundation Plan 0.22;
+- beginner-to-machine-reference authoring guidance for Foundation Plan 0.23;
 - the exact schema, examples, and review checklists packaged with the Skill;
 - behavioral evaluations for agent workflow changes;
 - shared Claude/Codex plugin assembly around the canonical Skills and reviewed CLI package; and
@@ -42,8 +42,8 @@ behavior. This repository teaches an agent how to use those contracts without cr
 | Continue or review an app's UI | The app's `UI.md` and shared components; [UI Skill status](#ui-continuation) |
 | Review improvements for an existing app or workflow | [First Draft changelog](CHANGELOG.md) |
 | Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
-| Check current Foundation Plan capability | [Foundation Plan reference](skills/create-full-stack-app/references/foundation-plan-022.md) |
-| Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.22.schema.json) |
+| Check current Foundation Plan capability | [Foundation Plan reference](skills/create-full-stack-app/references/foundation-plan-023.md) |
+| Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.23.schema.json) |
 | Add or run behavioral evaluations | [Evaluation guide](evals/README.md) |
 | Inspect a dated observation | [Evidence archive](evidence/README.md) |
 | Prepare or promote a release | [Release runbook](RELEASING.md) |

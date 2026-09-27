@@ -1,8 +1,8 @@
-# Foundation Plan 0.22
+# Foundation Plan 0.23
 
 This reference and [Examples](examples.md) guide authoring for the experimental
-`firstdraft.foundation-plan.sketch/0.22` boundary. The bundled
-[exact JSON Schema](foundation-plan-0.22.schema.json) is the machine-readable structural contract. Never read it
+`firstdraft.foundation-plan.sketch/0.23` boundary. The bundled
+[exact JSON Schema](foundation-plan-0.23.schema.json) is the machine-readable structural contract. Never read it
 end to end. Use a compatible JSON Schema 2020-12 validator when the user names its command, the project exposes a
 specific validation command, or a straightforward check finds an existing compatible local command. Confirm that
 command is available, then pass the schema file to it without loading its contents into context. A declared library
@@ -25,7 +25,7 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
 - [Presence](#presence)
 - [Current conditional PUT boundary](#current-conditional-put-boundary)
   - [Application and clients](#application-and-clients)
-  - [Bookmark assets and current metadata option](#bookmark-assets-and-current-metadata-option)
+  - [Bookmark assets](#bookmark-assets)
   - [Entities, descriptors, and Fields](#entities-descriptors-and-fields)
   - [Enums](#enums)
   - [Defaults](#defaults)
@@ -44,8 +44,8 @@ generated output, not observed application behavior, device installation, or dep
 
 **Current design and machine authority**
 
-- The bundled JSON Schema owns v0.22 transport shape. This reference describes the bounded
-  `rails-sketch/2026-09` behavior; the public [Rails target profile](https://firstdraft.github.io/firstdraft/docs/architecture/targets/rails/profile.html)
+- The bundled JSON Schema owns v0.23 transport shape. This reference describes the bounded
+  `rails-sketch/2026-09-bookmark-assets` behavior; the public [Rails target profile](https://firstdraft.github.io/firstdraft/docs/architecture/targets/rails/profile.html)
   gives lowering details. The public guide can advance beyond an installed Skill, and neither establishes the
   deployed service revision. Use the matching results for the submitted Plan.
 - Read `analyzer_release` and `compiler_release` from the matching Analysis result; Compilation results carry
@@ -55,11 +55,11 @@ generated output, not observed application behavior, device installation, or dep
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
-- Service API 0.6 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
+- Service API 0.7 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
   AnalysisRun, including an empty `gaps` array. `valid` applies only to the admitted graph; it is not proof of
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
-  State Machine, bookmark assets and metadata, Appearance theme/native-color/Web-icon, Web Account, Action Policy, generalized Web Scaffold,
+  State Machine, bookmark assets and metadata, Appearance theme/native-color, Web Account, Action Policy, generalized Web Scaffold,
   development-data, and selected-iPhone/Android slices. Their prerequisites matter: unsupported children and consumers
   remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
   retain a named partial gap for their stock launcher icons; `toggle` also records the absent native preference control.
@@ -76,18 +76,18 @@ generated output, not observed application behavior, device installation, or dep
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`4a89f5e3ab027c9099c21ff4912b3eb4af5c93e0` and has SHA-256
-`fcd0123860d4f4a35bdfb9b97b17b6aa220bf5396fb471cf2e5f65d444c9843a`. This is exact contract provenance, not
+`ff0b6ac9cc6fab5aa2a63c455d3da73469211c43` and has SHA-256
+`6dd98b424fd1744d1e5d3a40fb51f0a22f89e77b58a175b08e29e6c8e3aed7ba`. This is exact contract provenance, not
 release or execution evidence.
 
 The source candidate and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.7.1/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
 `plan compile --output`, `compilation status`, and
 `compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-`@firstdraft.com/cli@0.7.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
+`@firstdraft.com/cli@0.8.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
 current-root adoption by default or with `--output .`; the recovery reference owns its preconditions. Check commands
 rather than inferring compatibility from a version number. These source checks do not prove plugin/catalog
 publication, authentication, staging compatibility, or a complete user journey.
@@ -123,17 +123,17 @@ The root contains exactly three required properties:
 
 ```json
 {
-  "format": "firstdraft.foundation-plan.sketch/0.22",
+  "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-09"
+    "profile": "rails-sketch/2026-09-bookmark-assets"
   },
   "application": {}
 }
 ```
 
 The Application must contain `key`, `name`, `native`, `delivery`, and `entities`. It may also contain the optional
-properties `domain`, `pwa`, `home_index`, `appearance`, and `development_data`. Objects are closed; do not add explanatory or
+properties `domain`, `home_index`, `appearance`, and `development_data`. Objects are closed; do not add explanatory or
 tool-specific keys.
 
 The Project route and `.firstdraft/state.json` own Project identity and concurrency. Do not place `id`,
@@ -206,7 +206,7 @@ App Schema artifact.
 ### Application and clients
 
 The reviewed importer accepts the required Application properties `key`, `name`, `native`, `delivery`, and
-`entities`, plus optional `domain`, `pwa`, `home_index`, `appearance`, and `development_data`. Nonempty delivery remains
+`entities`, plus optional `domain`, `home_index`, `appearance`, and `development_data`. Nonempty delivery remains
 in the exact Head and appears as a service-support gap instead of being silently discarded. Development data is
 admitted record by record when its assignments and dependencies are realizable; unsupported assignments remain precise gaps rather
 than causing the whole development-data graph to disappear.
@@ -267,10 +267,8 @@ the browser selector/storage, and disclose the missing native preference control
 `partially_generated` status, naming the affected emitted targets. Preserve the authored choice and selected
 clients; no native settings bridge is generated. This source mapping does not establish native runtime qualification.
 
-Native tint and background colors do not replace the stock Zinc web component tokens. Rails derives an adaptive
-SVG and deterministic 512px PNG from the authored branding for favicon and touch-icon use. Enabled PWA output also
-adds a real 192px PNG and declares both PNG sizes and the SVG in its manifest. The opt-out retains the favicon and
-touch-icon assets. When native clients are emitted, their stock launcher icons are the reason for the precise
+Native tint and background colors do not replace the stock Zinc web component tokens or the black-on-white
+[bookmark artwork](#bookmark-assets). For authored Appearance with emitted native clients, stock launcher icons cause the precise
 `foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Web-only output has no Appearance
 icon-assets gap. Other admitted but unconsumed Application configuration remains a target gap.
 
@@ -303,17 +301,15 @@ The smallest accepted Application remains:
 }
 ```
 
-### Bookmark assets and current metadata option
+### Bookmark assets
 
-Generated bookmark artwork is ordinary source: follow the app's `UI.md` when replacing `public/icon.svg`,
-`public/icon.png`, and any manifest icon assets. Keep layout and manifest references consistent with the files and
-application name. These assets do not establish installed-device behavior or provide offline or push features.
+Every web app includes a favicon, touch icon, and home-screen bookmark metadata without a Plan choice. The
+Compiler selects prepared black-on-white artwork from the app name's first trimmed character: ASCII A–Z and 0–9,
+with lowercase letters uppercased and a neutral circle for other initials. The actual app name is unchanged.
+Authored Appearance colors do not recolor these assets; native launcher artwork remains separate.
 
-The current v0.22 contract still accepts optional boolean `application.pwa`. Preserve an existing omission or
-explicit value: omission and `true` emit the manifest route/template/link, related metadata and request spec, and
-192px icon; `false` omits them while retaining favicons, the Apple touch icon, ordinary theme metadata, legal pages,
-and signup acceptance. This is independent of Home, access, Appearance, and native clients. Do not add a PWA
-interview choice or installation checklist to ordinary planning.
+After Compilation, follow the app's `UI.md` when replacing `public/icon.svg`, `public/icon.png` (512px), and
+`public/icon-192.png`. Keep layout and manifest references consistent with the files and application name.
 
 ### Entities, descriptors, and Fields
 

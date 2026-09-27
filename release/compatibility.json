@@ -1,21 +1,21 @@
 {
   "format": "firstdraft.release-compatibility/1",
   "component": "skills",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "plugin_source": {
     "package": "@firstdraft.com/claude-code",
-    "tarball_sha256": "b360587401ecd2190d2e83117d4042aaf22a1c14ec2e4b0d6a6fbc754e968e7e"
+    "tarball_sha256": "02a7ffe39c563e064890070df174cb34c8be28f63721a32e322b1d43851dc640"
   },
   "requires": {
     "api_contract": [
-      ">= 0.6.0",
-      "< 0.7.0"
+      ">= 0.7.0",
+      "< 0.8.0"
     ],
     "cli": [
-      "= 0.7.0"
+      "= 0.8.0"
     ],
     "foundation_plan_formats": [
-      "firstdraft.foundation-plan.sketch/0.22"
+      "firstdraft.foundation-plan.sketch/0.23"
     ]
   }
 }
