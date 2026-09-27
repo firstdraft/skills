@@ -32,10 +32,11 @@ Homebrew may need the user to run that command in Terminal and complete a Mac ad
 in the system prompt, not the conversation. Rerun after the prompt is complete. Diagnose an error from its actual
 output; do not restart the installation from scratch, delete a database, or replace unrelated working tools.
 
-The script configures zsh/bash login PATH. Quit and reopen Claude Desktop after installation, then verify
+The script configures zsh/bash login PATH. After the initial installation, quit and reopen Claude Desktop, then verify
 `node --version` and `npm --version` in a new local session. Desktop may need a full restart to
 [reload its environment](https://code.claude.com/docs/en/desktop#session-not-finding-installed-tools).
 If the current session needs to continue first, use Homebrew's absolute mise path and `mise exec node@lts -- ...`.
+Later reruns from a session that already sees those tools do not need another restart.
 
 Before asking the user to restart or begin a new session, give them a short continuation prompt naming the project,
 this Skill's path or setup URL, what succeeded, and the next step. Include no secrets.

@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+caller_path=$PATH
 
 usage() {
   printf 'Usage: bash setup-macos.sh [--check] [APP_DIRECTORY]\n'
@@ -151,7 +152,11 @@ git --version
 gh --version | head -1
 node --version
 
-printf '\nMac prerequisites are ready. Restart your agent app or open a new Terminal to pick up PATH changes.\n'
+printf '\nMac prerequisites are ready.\n'
+case ":$caller_path:" in
+  *":$mise_shims:"*) ;;
+  *) printf 'Restart your agent app or open a new Terminal to pick up PATH changes.\n' ;;
+esac
 if [ -n "$project" ]; then
   printf 'Next, from %s: bin/setup --skip-server, then bin/dev.\n' "$project"
 else
