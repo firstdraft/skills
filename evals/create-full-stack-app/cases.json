@@ -239,11 +239,12 @@
     {
       "id": "author-associated-only-creation",
       "should_trigger": true,
-      "prompt": "In this local public movie-rating draft, Ratings should be created only from a Movie's ratings collection, never from a standalone New page or standalone POST. Keep the current Rating create definition, inputs, authorization and return choice for reuse; change only its standalone new/create route exposure. Preserve the other routes, model, empty data and no Account choice. Update the Plan locally and explain how the nested route supplies its Movie. Do not submit or Compile.",
+      "prompt": "In this local public movie-rating draft, Ratings should be created only from a Movie's ratings collection, never from a standalone New page or standalone POST. Keep the current Rating create definition, inputs, authorization and standalone return choice unchanged; change only its standalone new/create route exposure. Preserve the other routes, model, empty data and no Account choice. Update the Plan locally and explain how the nested route supplies its Movie and where a successful nested save returns. Do not submit or Compile.",
       "expectations": [
         "Removes only new and create from rating.scaffold.resource_routes while preserving the create definition and the Movie collection create_form; does not add a fictitious standalone route to satisfy the schema.",
         "Preserves all subject identities, authored inputs, authorization, return choices and unrelated routes without introducing bindings or Accounts.",
         "Explains that the authorized Movie from the URL supplies the nested parent and that competing submitted parent values cannot replace it; the scoped form retains other editable inputs and ordinary validation behavior.",
+        "Explains that the retained create.return_to applies only to standalone creation, which is no longer exposed; nested saves return to the Movie's ratings collection. Does not transfer that override to create_form.return_to without a separate authored choice.",
         "Distinguishes local schema/authoring checks from Analysis and generated-app proof, and makes no network submission or Compilation claim."
       ],
       "artifacts": [
