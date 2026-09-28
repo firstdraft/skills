@@ -32,8 +32,8 @@ is required. Keep normal Mac authentication and agent permission checks.
    tools finish installing, so a redundant graphical installer does not interrupt setup.
 3. **Handle the administrator step only when needed.** Claude runs commands where its
    tools permit. If a real terminal is needed, use Desktop's integrated terminal when
-   available, with ordinary Terminal as fallback. Paste one resolved command that saves
-   output and exit status in a private log. The user types the password into sudo's hidden
+   available, with ordinary Terminal as fallback. Run the resolved setup command; the
+   installer saves output and exit status in a private log. The user types the password into sudo's hidden
    prompt. Claude reads the log, diagnoses a failure, and resumes after the process ends.
    Do not assume the integrated terminal automatically shares its output with the agent.
    Do not pass passwords to Claude, change sudoers, or disable permission checks.
@@ -90,8 +90,8 @@ prompt count. Do not promise one password entry or extrapolate this trial to man
   adding recovery machinery. If no failure occurs, a bounded trial-owned failure fixture
   can check log visibility without interrupting or corrupting Homebrew.
 
-Check the revised handoff command in Bash and zsh for success, failure, paths with spaces,
-log privacy, and exit propagation before the VM test. Use existing repository checks;
+Check the installer's logging for success, failure, paths with spaces, unchanged package
+permissions, log privacy, and exit propagation. Use existing repository checks;
 do not introduce tests that freeze Skill prose. Deployment and Revyl remain separate checks.
 
 ## Sources and review scope

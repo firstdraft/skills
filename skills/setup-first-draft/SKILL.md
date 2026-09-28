@@ -36,23 +36,8 @@ directory too; the script reads its Ruby, Node, and npm pins. Do not run the ins
 
 Lead setup from the current agent session. If the installer needs a Terminal or the permission system prevents
 execution, hand over that command only. In Claude Desktop, try its integrated terminal (**Views → Terminal**,
-or **Ctrl+`**); use the Mac's Terminal app if unavailable. Supply the resolved absolute script path and save output
-and completion status so you can diagnose failures without asking the user to copy the output:
-
-```sh
-(
-  (umask 077 && : > "$HOME/firstdraft-setup.log")
-  chmod 600 "$HOME/firstdraft-setup.log"
-  set -o pipefail
-  if bash "<skill-dir>/scripts/setup-macos.sh" 2>&1 | tee "$HOME/firstdraft-setup.log"; then
-    setup_exit=0
-  else
-    setup_exit=$?
-  fi
-  printf '\nSetup exit status: %s\n' "$setup_exit" | tee -a "$HOME/firstdraft-setup.log"
-  exit "$setup_exit"
-)
-```
+or **Ctrl+`**); use the Mac's Terminal app if unavailable. Supply the resolved absolute script path. The installer
+itself saves output and completion status to the private `$HOME/firstdraft-setup.log`; no extra wrapper is needed.
 
 The user enters their Mac password in the terminal's normal hidden prompt, never in chat or a command argument.
 Read the log to follow progress; do not assume terminal output is automatically added to your context. On a rerun,

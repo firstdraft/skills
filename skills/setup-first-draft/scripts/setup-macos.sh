@@ -27,6 +27,14 @@ done
 fail() { printf '%s\n' "$*" >&2; exit 1; }
 step="checking the machine"
 trap 'printf "Setup stopped while %s. Read the error above, correct it, and rerun this command.\n" "$step" >&2' ERR
+installer=
+setup_log=
+finish() {
+  local status=$?
+  if [ -n "$installer" ]; then rm -f "$installer"; fi
+  if [ -n "$setup_log" ]; then printf '\nSetup exit status: %s\n' "$status"; fi
+}
+trap finish EXIT
 
 [ "$(uname -s)" = Darwin ] || fail 'This installer supports macOS. Use the Windows/WSL guidance for Windows.'
 [ "$(id -u)" != 0 ] || fail 'Run as your normal Mac user, not with sudo.'
@@ -35,6 +43,13 @@ case "$(uname -m)" in
   x86_64) brew_prefix=/usr/local ;;
   *) fail 'Unsupported Mac architecture.' ;;
 esac
+
+if ! $check; then
+  setup_log="$HOME/firstdraft-setup.log"
+  (umask 077 && : > "$setup_log")
+  chmod 600 "$setup_log"
+  exec > >(tee "$setup_log") 2>&1
+fi
 
 script_dir=$(cd "$(dirname "$0")" && pwd)
 if [ -n "$project" ]; then
@@ -59,7 +74,6 @@ if ! command -v brew >/dev/null 2>&1; then
   [ -t 0 ] || fail 'Homebrew needs a Terminal for the Mac administrator prompt. Run this same command in Terminal, then return to your agent.'
   step="installing Homebrew and Apple command-line tools"
   installer=$(mktemp -t firstdraft-homebrew)
-  trap 'rm -f "$installer"' EXIT
   curl --fail --location --silent --show-error https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o "$installer"
   /bin/bash "$installer"
 fi

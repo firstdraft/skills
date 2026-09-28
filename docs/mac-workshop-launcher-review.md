@@ -1,7 +1,7 @@
 # Mac setup proposal: Opus and Fable review
 
 Both requested reviews completed against the same proposal on 2026-09-27 (local time). Both returned
-**Needs attention**. No launcher implementation or new VM trial followed the reviews.
+**Needs attention**. At that checkpoint, no launcher implementation or new VM trial had followed the reviews.
 
 The user subsequently selected [Claude Desktop as the primary setup client](mac-workshop-launcher-proposal.md).
 The assessment below records the original review; its interactive CLI recommendation is superseded by that
@@ -70,19 +70,10 @@ a [sudo failure report](https://github.com/anthropics/claude-code/issues/83046) 
 [stdin-passthrough request](https://github.com/anthropics/claude-code/issues/37523), both closed without a documented
 implementation. Those reports are not a fresh reproduction on our installed CLI 2.1.283.
 
-The ordinary Terminal fallback can preserve visibility without recording the password:
-
-```sh
-(
-  set -o pipefail
-  bash "/resolved/path/to/setup-macos.sh" 2>&1 | tee "$HOME/firstdraft-setup.log"
-)
-```
-
-The installer still reads its password normally. `tee` records stdout/stderr; it does not record terminal input,
-and sudo does not echo the password. Do not add `set -x`, stdin recording, or secret arguments. For an automatic
-launcher, create the log with private permissions, capture the setup command's status even when it fails, and
-enter Claude with the log path/status instead of exiting before diagnosis. Check logging failure as well.
+The ordinary Terminal fallback can preserve visibility without recording the password. The current installer
+owns its private log and exit-status line; run it directly, without the wrapper considered in the original review.
+Its `tee` records stdout/stderr, not terminal input, and sudo does not echo the password. Do not add `set -x`, stdin
+recording, or secret arguments. Keep a failure available to Claude for diagnosis rather than discarding its output.
 
 The agent reads the log and checks the result; the student need not copy output into chat or diagnose the error.
 Long installer logs may be read while the command runs, but do not launch a second installer or dependent setup
@@ -135,3 +126,24 @@ installer rejects non-Apple-Silicon macOS. Confirmed in the actual installer sou
 Skill and workshop guide now scope fresh automated setup accordingly, retaining existing
 Intel-toolchain inspection and the Codespaces alternative. No Intel runtime qualification
 or new installer is claimed.
+
+## Logging ownership after Test 2
+
+The fresh Desktop trial showed the agent reconstructing the documented wrapper incorrectly: first it leaked
+the restrictive umask to the installer, then an inline fallback omitted pipefail. The first error was corrected
+before package installation. Moving the existing logging responsibility into `setup-macos.sh` removes that
+reconstruction step and shortens the Skill. It does not add a launcher, permission exception, or supervisor.
+
+The established Opus 5.5 Max session reviewed that delta as `review-mukobgzd-8ff53a` and returned **Approve**.
+Both retained findings, **F-7baed6** and **F-3e417b**, were fixed; there were no new findings or checkout warnings.
+The citation check resolved the unchanged reviewed tree before this assessment was added.
+
+The reviewer ran all 83 Node tests and independent scratch-PTY probes of password/Return input, failure status,
+log privacy, inherited umask, interrupt/hangup behavior, cleanup, and non-mutating readiness. The author separately
+ran the setup/repository checks (30/30) and the new script on the prepared Test 2 VM: all nine packages were reused,
+the existing database remained available, and the script wrote a 0600 log with status 0. Fresh package installation
+and its one password entry used the original candidate plus the corrected wrapper; these are separate observations.
+
+The review did not require special signal handling for unusual terminal settings. The current Skill already
+directs the agent to inspect a still-running installer when a completion line is missing. A later package refresh
+must update the digest after the coordinated 0.8 source integration; this review does not authorize publication.
