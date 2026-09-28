@@ -4,6 +4,10 @@ This is the agent entry point for local workshop setup. The student has installe
 opened the **Code** tab in a **Local** environment, and selected their project folder. A supported paid Claude
 subscription is required. Use the scope in their request; setup alone does not request a deployment.
 
+Lead setup from this session: inspect the machine, use the standard recipe where it fits, and diagnose failures
+from the install log. A Terminal handoff is only for steps that require it; the student should not have to
+troubleshoot their toolchain before returning to you.
+
 ## Get the setup Skill before Node or Git is installed
 
 On a Mac, download this repository into a temporary directory outside the student's app folder. The system's curl,

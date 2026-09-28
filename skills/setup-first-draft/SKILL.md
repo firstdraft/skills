@@ -24,7 +24,7 @@ Resolve `<skill-dir>` to this Skill's directory and run:
 bash "<skill-dir>/scripts/setup-macos.sh" --check
 ```
 
-Use this readiness check before invoking Git, Clang, or other Apple developer-tool commands. On a fresh Mac,
+Use this readiness check before invoking development tools such as `git`, `clang`, `make`, or `python3`. On a fresh Mac,
 even `git --version` opens Apple's graphical installer. Homebrew handles command-line tools during setup;
 do not start a second installer or probe those commands while it is still running.
 
@@ -32,11 +32,20 @@ For an authorized setup, install missing prerequisites with the same script with
 and mise, installs Node for the plugin, and prepares PostgreSQL. If there is an existing app, pass its absolute
 directory too; the script reads its Ruby, Node, and npm pins. Do not run the installer with sudo.
 
-Homebrew may need the user to run that command in Terminal and complete a Mac administrator prompt. Keep passwords
-in the system prompt, not the conversation. Leave that one installer running until it prints **Mac prerequisites
-are ready** or an error. While it runs, the user can sign in to GitHub and First Draft. Do not ask them to restart
-Claude yet. Diagnose a failure from its actual output and rerun after correcting it; do not restart from scratch,
-delete a database, or replace unrelated working tools.
+Homebrew may need the user to run the command in Terminal and complete a Mac administrator prompt. Supply the
+resolved absolute script path and save its output so you can diagnose machine-specific failures:
+
+```sh
+(
+  set -o pipefail
+  bash "<skill-dir>/scripts/setup-macos.sh" 2>&1 | tee "$HOME/firstdraft-setup.log"
+)
+```
+
+Keep passwords in the system prompt, not the conversation. Leave that one installer running until it prints **Mac
+prerequisites are ready** or an error. While it runs, the user can sign in to GitHub and First Draft. Do not ask them
+to restart Claude yet. On failure, read the log yourself, identify the cause, and adapt or rerun the failed step.
+Do not restart from scratch, delete a database, or replace unrelated working tools.
 
 The script configures zsh/bash login PATH. After confirming the initial installation finished, quit and reopen Claude Desktop, then verify
 `node --version` and `npm --version` in a new local session. Desktop may need a full restart to
@@ -50,15 +59,15 @@ this Skill's path or setup URL, what succeeded, and the next step. Include no se
 ## Install and connect First Draft
 
 Use the current public `firstdraft/skills` marketplace selection, which includes a compatible CLI. In Claude
-Desktop's Code tab, use **Plugins** to add that marketplace and install **First Draft**. Complete authentication
-below before starting a new session with the installed Skills. Do not install an unrelated global CLI alongside
-the bundled one.
+Desktop, open **Customize → Plugins → Add → Add marketplace**, choose `firstdraft/skills`, and sync it. In the
+directory's **Code** tab, install **First Draft**. Complete authentication below before starting a new session with
+the installed Skills. Do not install an unrelated global CLI alongside the bundled one.
 
 For First Draft authentication, have the user create a token at `https://firstdraft.com/api-tokens/new`. In Claude
-Desktop, use the Local environment settings to enter `FIRSTDRAFT_API_TOKEN`, then start a new session with that
-environment. Do not ask the user to paste the token into chat, a command argument, or a tracked file. For another
-agent, follow its supported secret/environment entry mechanism. Staging requires an explicitly chosen environment
-and separate credentials.
+Desktop, open the environment menu above the prompt, hover over **Local**, and click its gear to enter
+`FIRSTDRAFT_API_TOKEN`. Then start a new session with that environment. Do not ask the user to paste the token into
+chat, a command argument, or a tracked file. For another agent, follow its supported secret/environment entry
+mechanism. Staging requires an explicitly chosen environment and separate credentials.
 
 Continue Plan work with the installed `create-full-stack-app` Skill. Its current CLI/contract checks and normal
 review/Compile workflow remain authoritative; this setup Skill does not duplicate them.
