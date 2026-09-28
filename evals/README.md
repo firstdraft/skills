@@ -37,6 +37,7 @@ specifically prepared server-backed run. Never print or commit private `.firstdr
 - `reconcile-optional-field-origin`
 - `author-deliberate-return-overrides`
 - `preserve-current-location-return`
+- `author-associated-only-creation`
 - `choose-conventional-validations`
 - `preserve-structured-validation-gap`
 - `retain-outside-vocabulary-requirement`

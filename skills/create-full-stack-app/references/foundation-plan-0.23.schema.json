@@ -3019,26 +3019,6 @@
         },
         {
           "if": {
-            "required": [
-              "create"
-            ]
-          },
-          "then": {
-            "required": [
-              "resource_routes"
-            ],
-            "properties": {
-              "resource_routes": {
-                "type": "array",
-                "contains": {
-                  "const": "create"
-                }
-              }
-            }
-          }
-        },
-        {
-          "if": {
             "properties": {
               "resource_routes": {
                 "type": "array",

@@ -47,6 +47,21 @@ test("default returns retain route coupling and closed authored context", () => 
   assert(!validate("scaffoldCreateForm", { return_to: "/movies/42" }));
 });
 
+test("associated creation needs a definition without standalone route exposure", async () => {
+  const plan = JSON.parse(await readFile(
+    new URL("../evals/create-full-stack-app/fixtures/redirect-movies.foundation-plan.json", import.meta.url),
+    "utf8",
+  ));
+  const rating = plan.application.entities.find(({ key }) => key === "rating");
+  rating.scaffold.resource_routes = rating.scaffold.resource_routes.filter(
+    (route) => route !== "new" && route !== "create",
+  );
+  assert(ajv.getSchema(schema.$id)(plan));
+
+  assert(validate("scaffold", { create: rating.scaffold.create }));
+  assert(!validate("scaffold", { resource_routes: ["create"] }));
+});
+
 test("Entity validation errors belong to a Field or Reference", () => {
   const uniqueness = {
     subject_uuid: "01900000-0000-7000-8000-000000000001",
