@@ -10,6 +10,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-28-mac-desktop-workshop-trial.md`](2026-09-28-mac-desktop-workshop-trial.md) | Fresh Desktop-led Mac setup with recorded interventions, public 0.7 Compilation, browser create/edit, live CSS rebuild, and setup rerun preserving data; deployment and native preview remain separate |
 | [`2026-09-27-mac-workshop-local-app.md`](2026-09-27-mac-workshop-local-app.md) | Same-VM continuation through service Compilation, app setup, a repaired local server, and Safari create/edit/reload; CLI-led cold setup, CSS rebuild, Render, and Revyl remain separate |
 | [`2026-09-27-mac-setup-prerequisites.md`](2026-09-27-mac-setup-prerequisites.md) | Clean Apple Silicon Mac prerequisite installation, preserved rerun state, fresh Desktop runtime discovery, and public plugin installation; service Compilation and local Rails preview remain separate |
 | [`2026-09-19-api-0.4-landed-source-amendment.md`](2026-09-19-api-0.4-landed-source-amendment.md) | Landed Service/CLI pins, reproduced 0.3.0 package, both Node suites, and isolated Codex/Claude package discovery; terminal review and PR78 CI remain separate gates |

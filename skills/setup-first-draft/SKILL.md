@@ -70,8 +70,8 @@ and underscores. Save changes, then start a new session with that environment. D
 chat, a command argument, or a tracked file. For another agent, follow its supported secret/environment entry
 mechanism. Staging requires an explicitly chosen environment and separate credentials.
 
-Continue Plan work with the installed `create-full-stack-app` Skill. Its current CLI/contract checks and normal
-review/Compile workflow remain authoritative; this setup Skill does not duplicate them.
+Invoke the installed `create-full-stack-app` Skill before describing Compilation support or running Plan commands.
+Use its current CLI/contract checks and the server's actual analysis for the review/Compile workflow.
 
 ## Run the compiled application
 
@@ -81,9 +81,11 @@ Read the generated README and agent instructions. With the Mac mise setup, insta
 bash "<skill-dir>/scripts/setup-macos.sh" "/absolute/path/to/app"
 ```
 
-From that app directory, run `bin/setup --skip-server`, then keep `bin/dev` running. Use the app's documented sample
-data command if separate. Open its local URL, create or edit a record, and verify the change persisted. Do not use
-`--reset` to solve ordinary setup errors.
+From that app directory, run `bin/setup --skip-server`, then keep `bin/dev` running. In Claude Desktop, use its
+[preview-server tools](https://code.claude.com/docs/en/desktop#preview-your-app) to manage `bin/dev` beyond a shell
+command's lifetime; the integrated terminal is a fallback. Use the app's documented sample data command if separate.
+Open its local URL, create or edit a record, and verify the change persisted. Do not use `--reset` to solve ordinary
+setup errors.
 
 If runtime selection differs between Terminal and the agent, check PATH and the app's `.ruby-version`,
 `.node-version`, and `package.json`. `mise exec ruby@VERSION node@VERSION -- bin/setup --skip-server` selects those
