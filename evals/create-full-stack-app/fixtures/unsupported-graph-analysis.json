@@ -7,8 +7,8 @@
     "id": "01900000-0000-7000-8000-000000000908",
     "graph_version": 1,
     "head_source_sha256": "3318da62e564ae5b8e6e3f549912354396dbe7b5e694c10a12e2e589ce0ba125",
-    "analyzer_release": "foundation-plan-rails/application-2026-09-27-bookmark-assets",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-27-bookmark-assets",
+    "analyzer_release": "foundation-plan-rails/application-2026-09-28-controller-create-context",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-28-controller-create-context",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-09-bookmark-assets"
@@ -25,9 +25,9 @@
         "graph_version": 1
       },
       "analysis": {
-        "release": "foundation-plan-rails/application-2026-09-27-bookmark-assets"
+        "release": "foundation-plan-rails/application-2026-09-28-controller-create-context"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-27-bookmark-assets",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-28-controller-create-context",
       "target": {
         "id": "rails",
         "profile": "rails-sketch/2026-09-bookmark-assets"
@@ -55,7 +55,7 @@
         }
       ]
     },
-    "gap_set_sha256": "9da351eaa2f52e55d5915db9cef43b67f01e372cf03f0977fca76de5dd762b5a",
+    "gap_set_sha256": "2a81b30fe6903beb7de5757c44dc443a6c40794968ee7ab7e5230f4312b56cce",
     "started_at": "2026-07-30T12:04:00.000Z",
     "completed_at": "2026-07-30T12:04:01.000Z"
   }

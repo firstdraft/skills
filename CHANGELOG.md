@@ -29,6 +29,18 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-09-28: Associated creation without standalone routes
+
+**Compiler and Skills — coordinated 0.8.0 source candidate, unreleased.** An associated form can use a create
+definition without exposing standalone New/Create routes. For example, keep Rating's create inputs, authorization,
+and Movie collection form while omitting `new` and `create` from Rating's `resource_routes`. The nested route still
+supplies its Movie; a retained standalone `create.return_to` does not choose the nested form's destination.
+
+Standalone Create without New or a return destination now returns 201 on success even when its definition also
+serves associated forms; that shared case previously redirected with 303. Invalid submissions return 422. Review
+the [Scaffolds guidance](skills/create-full-stack-app/references/foundation-plan-023.md#scaffolds) for required-parent
+gaps and shared-Policy form-entry limits before handing unfinished application behavior to the implementation agent.
+
 ## 2026-09-27: Bookmark assets without a planning option
 
 **Compiler and authoring contract — coordinated source candidate, unreleased.** The next Plan contract includes

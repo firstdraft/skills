@@ -76,8 +76,8 @@ generated output, not observed application behavior, device installation, or dep
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`ff0b6ac9cc6fab5aa2a63c455d3da73469211c43` and has SHA-256
-`6dd98b424fd1744d1e5d3a40fb51f0a22f89e77b58a175b08e29e6c8e3aed7ba`. This is exact contract provenance, not
+`806090dd36113c856fbd63d702ee74e353e9a7e2` and has SHA-256
+`242889fae4e1031f3be7aa3d226a9966402e7516f0055f506bb40ce05d1430dd`. This is exact contract provenance, not
 release or execution evidence.
 
 The source candidate and pinned contract check use the exact reviewed CLI revision and runtime digest in
@@ -515,10 +515,11 @@ records the applicable native consequence instead of borrowing Web authorization
 
 ### Scaffolds
 
-The schema couples each selected standard `resource_routes` member to its matching `index`, `show`, `create`,
-`update`, or `destroy` definition. `new` requires create and `edit` requires update. A custom `profile` requires a
-sibling `update`; an Account may instead author `update` alone for its derived settings routes. Every authored
-request declares public or Policy-controlled authorization; do not infer access from route shape.
+`scaffold.create` defines creation inputs, bindings, and authorization independently of standalone route exposure.
+An associated `create_form` can use that definition without selecting standalone `new` or `create` in
+`resource_routes`. Each selected standalone route still requires its matching definition; `new` requires selected
+`create`, and `edit` requires `update`. A custom `profile` requires a sibling `update`; an Account may instead author
+`update` alone for its derived settings routes. Do not infer authorization from route shape.
 
 The current Web target realizes bounded standard routes, public and Policy-controlled request checks, direct and
 recursive projections, Predicate and Ordering selection, cursor pagination, Field and Association inputs, server
@@ -532,17 +533,35 @@ the exact associated-create parent. Protected forms authorize before loading opt
 may target only the realized Account Reference in a non-public Account-backed context; it cannot silently turn a
 public create into an authenticated request.
 
+If an admitted associated form supplies a required parent but the selected standalone create has no source for it,
+the standalone endpoint remains generated with its authored inputs and authorization plus a `partially_generated`
+gap naming the missing value. Preserve working associated creation and record the unfinished standalone behavior
+for implementation; do not invent an editable parent or binding. Unrelated required values still need an admitted
+source, and a selected standalone create with no admitted associated form needs the complete source set.
+
+New and Create share the create Policy. New authorizes after URL-parent assignment and explicit bindings, before
+editable values exist; Create authorizes the submitted record. A Policy requiring an editable `token.author` to
+equal `current_account` can allow a valid POST while denying the empty New form and hiding its Add link. A separate
+form-entry Policy is not an FP option. Preserve the editable input and submitted-record authorization, and carry
+the required application form-entry work into [implementation notes](modeling-guide.md#retain-implementation-requirements).
+Qualifying fixtures do not fix that application behavior; add successful New/browser coverage after repairing it.
+
 Omit `return_to` when the conventional interaction is intended: standalone New/Edit returns to the saved record,
 scoped associated create returns to its collection, destroy returns to the record's collection, and profile updates
 return to Account. If a preferred record or collection route is unavailable, Rails uses the admitted collection
 or home fallback. An explicit override remains authored meaning and must itself be lowerable; it does not silently
 become a default. The browser supplies no destination URL, hidden return input, or history-based redirect.
 
+A selected standalone create without New or an explicit return uses an empty `201 Created` response on success
+and `422` for validation failure, even when its definition also serves associated forms. Authorization denials keep
+their own status. Form-backed writes redirect with `303` on success and redisplay entered values and errors on failure.
+
 Admitted details collections show a bounded preview with a separate paginated full collection page. A supported
 `create_form` selects an Add entry point on that collection page and a dedicated scoped New page, such as
 `/movies/42/credits/new`, posting to `/movies/42/credits`. Rails supplies `params[:movie_id]` from the route; child
 attributes remain under `params[:credit]`. The authorized parent association builds the child, with no hidden
-parent input. The shared target new/create actions and form retain the other inputs and validation errors.
+parent input; a competing submitted parent does not replace it. Shared target new/create actions select the form
+for that context and retain its other inputs and validation errors.
 Ordinary child edit/update/destroy routes stay flat. Preview rows contain selected properties and an optional
 authorized details link, without inline mutation controls. If no target show route is selected, its flat mutation
 routes can remain unlinked starter code. Do not invent a show route or discard authored properties to fill that gap.
