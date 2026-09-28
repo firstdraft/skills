@@ -521,7 +521,7 @@
       "should_trigger": true,
       "prompt": "The staged Plan's domain, selected iPhone client, Movie icon and Field, and public-index Scaffold are intentional. A successful plan push was followed by plan status --wait, which printed the attached valid analysis. Review the result, but do not compile it.",
       "expectations": [
-        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-09-27-bookmark-assets, graph version 1, and the absence of diagnostics.",
+        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-09-28-controller-create-context, graph version 1, and the absence of diagnostics.",
         "Reports the complete empty firstdraft.foundation-gaps/2 object and exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, rather than omitting the reviewed support result; never substitutes a fixture, historical, or other Project's digest.",
         "Preserves the complete staged Plan unchanged, including its domain, native.ios request, semantic icon, required title Field, and exact public-index Scaffold.",
         "Recognizes that the prepared 2026-09 boundary admits this bounded web public-index and selected iPhone request, while analysis alone does not prove generated output.",

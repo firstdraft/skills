@@ -36,8 +36,9 @@ definition without exposing standalone New/Create routes. For example, keep Rati
 and Movie collection form while omitting `new` and `create` from Rating's `resource_routes`. The nested route still
 supplies its Movie; a retained standalone `create.return_to` does not choose the nested form's destination.
 
-Explicit standalone Create without New or a return destination uses ordinary 201/422 responses. Review the
-[Scaffolds guidance](skills/create-full-stack-app/references/foundation-plan-023.md#scaffolds) for required-parent
+Standalone Create without New or a return destination now returns 201 on success even when its definition also
+serves associated forms; that shared case previously redirected with 303. Invalid submissions return 422. Review
+the [Scaffolds guidance](skills/create-full-stack-app/references/foundation-plan-023.md#scaffolds) for required-parent
 gaps and shared-Policy form-entry limits before handing unfinished application behavior to the implementation agent.
 
 ## 2026-09-27: Bookmark assets without a planning option

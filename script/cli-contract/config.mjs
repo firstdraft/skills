@@ -42,9 +42,9 @@ export const apiToken = "canary-private-api-token";
 export const foundationPlanFormat =
   "firstdraft.foundation-plan.sketch/0.23";
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-09-27-bookmark-assets";
+  "foundation-plan-rails/application-2026-09-28-controller-create-context";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-27-bookmark-assets";
+  "foundation-plan-rails/compiler-application-2026-09-28-controller-create-context";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-09-bookmark-assets",
