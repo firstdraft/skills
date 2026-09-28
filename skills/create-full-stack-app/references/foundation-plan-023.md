@@ -76,8 +76,8 @@ generated output, not observed application behavior, device installation, or dep
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`444173a2551d65c03e675ef8137a6bd2daedd1de` and has SHA-256
-`3bbfdf43befe978be066c6ddaf78990b53e457cfdf929e48e5f29f31c9450646`. This is exact contract provenance, not
+`806090dd36113c856fbd63d702ee74e353e9a7e2` and has SHA-256
+`242889fae4e1031f3be7aa3d226a9966402e7516f0055f506bb40ce05d1430dd`. This is exact contract provenance, not
 release or execution evidence.
 
 The source candidate and pinned contract check use the exact reviewed CLI revision and runtime digest in
@@ -537,7 +537,7 @@ If an admitted associated form supplies a required parent but the selected stand
 the standalone endpoint remains generated with its authored inputs and authorization plus a `partially_generated`
 gap naming the missing value. Preserve working associated creation and record the unfinished standalone behavior
 for implementation; do not invent an editable parent or binding. Unrelated required values still need an admitted
-source, and a definition with no admitted associated form needs the full standalone source set.
+source, and a selected standalone create with no admitted associated form needs the complete source set.
 
 New and Create share the create Policy. New authorizes after URL-parent assignment and explicit bindings, before
 editable values exist; Create authorizes the submitted record. A Policy requiring an editable `token.author` to

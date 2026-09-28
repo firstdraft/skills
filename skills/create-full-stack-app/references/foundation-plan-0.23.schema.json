@@ -4912,7 +4912,7 @@
     },
     "scaffoldCreateForm": {
       "title": "Associated create form",
-      "description": "An associated-create entry point backed by the target Entity's selected create definition. Rails derives scoped New and POST routes and supplies the inverse Reference from the route-bound parent.",
+      "description": "An associated-create entry point backed by the target Entity's create definition, independently of top-level route selection. Rails derives scoped New and POST routes and supplies the inverse Reference from the route-bound parent.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
