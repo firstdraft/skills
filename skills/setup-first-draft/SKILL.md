@@ -64,8 +64,9 @@ directory's **Code** tab, install **First Draft**. Complete authentication below
 the installed Skills. Do not install an unrelated global CLI alongside the bundled one.
 
 For First Draft authentication, have the user create a token at `https://firstdraft.com/api-tokens`. In Claude
-Desktop, open the environment menu above the prompt, hover over **Local**, and click its gear to enter
-`FIRSTDRAFT_API_TOKEN`. Then start a new session with that environment. Do not ask the user to paste the token into
+Desktop, open the environment menu above the prompt, hover over **Local**, and click its gear. In its `.env`-format
+editor, enter `FIRSTDRAFT_API_TOKEN=<token>`, replacing `<token>` with the token and keeping the exact uppercase name
+and underscores. Save changes, then start a new session with that environment. Do not ask the user to paste the token into
 chat, a command argument, or a tracked file. For another agent, follow its supported secret/environment entry
 mechanism. Staging requires an explicitly chosen environment and separate credentials.
 
