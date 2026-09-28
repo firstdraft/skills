@@ -1,12 +1,13 @@
 # First Draft workshop setup
 
 This is the agent entry point for local workshop setup. The student has installed Claude Desktop, signed in,
-opened the **Code** tab in a **Local** environment, and selected their project folder. A supported paid Claude
+opened the **Code** tab in a **Local** environment with **Auto** permissions, and selected their project folder. A supported paid Claude
 subscription is required. Use the scope in their request; setup alone does not request a deployment.
 
 Lead setup from this session: inspect the machine, use the standard recipe where it fits, and diagnose failures
 from the install log. A Terminal handoff is only for steps that require it; the student should not have to
-troubleshoot their toolchain before returning to you.
+troubleshoot their toolchain before returning to you. Use Desktop's integrated terminal for that handoff when
+available, and read the setup log yourself afterward. A separate Claude CLI installation is not required.
 
 ## Get the setup Skill before Node or Git is installed
 

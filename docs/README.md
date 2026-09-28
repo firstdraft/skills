@@ -26,6 +26,8 @@ dated observation records an earlier value.
 ## Routes by task
 
 - **Workshop setup:** [public entry point](workshop-setup.md), then the [setup Skill](../skills/setup-first-draft/SKILL.md).
+  The [Desktop setup plan](mac-workshop-launcher-proposal.md) and [review assessment](mac-workshop-launcher-review.md)
+  are maintainer design work, not the current student procedure.
 - **Skill authoring:** read the relevant Skill's `SKILL.md`, then only its applicable reference. Packaged bytes are
   the product surface; changing any of them changes the candidate digest.
 - **Foundation Plan examples or schema:** start with `references/examples.md` or the relevant prose subsection. Pass

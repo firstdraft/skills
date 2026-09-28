@@ -13,6 +13,8 @@ project and tools. This Skill supplies machine prerequisites; the app's own `bin
 
 Inspect the OS, shell, existing runtime manager, and project folder. For Windows, read
 [Windows and WSL](references/windows.md); do not run the Mac script. Codespaces already provides the prerequisites.
+On an Intel Mac, inspect and reuse existing tools where practical; Homebrew's current fresh installer requires
+Apple Silicon. Offer Codespaces when local setup is unsuitable.
 
 If a different runtime manager already serves the user's projects, keep it. Select the app's required versions
 with that manager and use [the Brewfile](scripts/Brewfile) as a reference for missing system packages, omitting mise.
@@ -32,19 +34,32 @@ For an authorized setup, install missing prerequisites with the same script with
 and mise, installs Node for the plugin, and prepares PostgreSQL. If there is an existing app, pass its absolute
 directory too; the script reads its Ruby, Node, and npm pins. Do not run the installer with sudo.
 
-Homebrew may need the user to run the command in Terminal and complete a Mac administrator prompt. Supply the
-resolved absolute script path and save its output so you can diagnose machine-specific failures:
+Lead setup from the current agent session. If the installer needs a Terminal or the permission system prevents
+execution, hand over that command only. In Claude Desktop, try its integrated terminal (**Views → Terminal**,
+or **Ctrl+`**); use the Mac's Terminal app if unavailable. Supply the resolved absolute script path and save output
+and completion status so you can diagnose failures without asking the user to copy the output:
 
 ```sh
 (
+  (umask 077 && : > "$HOME/firstdraft-setup.log")
+  chmod 600 "$HOME/firstdraft-setup.log"
   set -o pipefail
-  bash "<skill-dir>/scripts/setup-macos.sh" 2>&1 | tee "$HOME/firstdraft-setup.log"
+  if bash "<skill-dir>/scripts/setup-macos.sh" 2>&1 | tee "$HOME/firstdraft-setup.log"; then
+    setup_exit=0
+  else
+    setup_exit=$?
+  fi
+  printf '\nSetup exit status: %s\n' "$setup_exit" | tee -a "$HOME/firstdraft-setup.log"
+  exit "$setup_exit"
 )
 ```
 
-Keep passwords in the system prompt, not the conversation. Leave that one installer running until it prints **Mac
-prerequisites are ready** or an error. While it runs, the user can sign in to GitHub and First Draft. Do not ask them
-to restart Claude yet. On failure, read the log yourself, identify the cause, and adapt or rerun the failed step.
+The user enters their Mac password in the terminal's normal hidden prompt, never in chat or a command argument.
+Read the log to follow progress; do not assume terminal output is automatically added to your context. On a rerun,
+check that the log belongs to the new run. If the completion status is missing, check whether the installer is
+still running before treating it as interrupted. Leave that one installer running until it prints **Mac prerequisites are
+ready** or an error. While it runs, the user can sign in to GitHub and First Draft. Do not ask them to restart Claude
+yet. On failure, read the log yourself, identify the cause, and adapt or rerun the failed step.
 Do not restart from scratch, delete a database, or replace unrelated working tools.
 
 The script configures zsh/bash login PATH. After confirming the initial installation finished, quit and reopen Claude Desktop, then verify
