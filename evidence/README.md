@@ -10,6 +10,7 @@ The source/public split observed at the start of this documentation change is ca
 
 | Record | Observed boundary |
 |---|---|
+| [`2026-09-27-mac-setup-prerequisites.md`](2026-09-27-mac-setup-prerequisites.md) | Clean Apple Silicon Mac prerequisite installation, preserved rerun state, fresh Desktop runtime discovery, and public plugin installation; service Compilation and local Rails preview remain separate |
 | [`2026-09-19-api-0.4-landed-source-amendment.md`](2026-09-19-api-0.4-landed-source-amendment.md) | Landed Service/CLI pins, reproduced 0.3.0 package, both Node suites, and isolated Codex/Claude package discovery; terminal review and PR78 CI remain separate gates |
 | [`2026-09-19-api-0.4-source-companion.md`](2026-09-19-api-0.4-source-companion.md) | Initial 0.3.0 source composition and local reviews; its Service/CLI pins and packed digest are superseded by the [landed-source amendment](2026-09-19-api-0.4-landed-source-amendment.md) |
 | [`2026-09-15-shared-plugin-0.2.4-public-install.md`](2026-09-15-shared-plugin-0.2.4-public-install.md) | Fresh public Claude/Codex installation from exact catalog 0.2.4, original logs and helper; [machine receipt](2026-09-15-shared-plugin-0.2.4-public-install.json) |

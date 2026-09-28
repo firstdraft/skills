@@ -38,7 +38,8 @@ Node or the First Draft plugin is installed, avoiding a circular setup requireme
 The installer uses Homebrew and mise, then reads runtime versions from the compiled app. An existing runtime
 manager stays in place; the agent uses it instead of migrating the user's projects. Application setup still belongs
 to the emitted `bin/setup` and `bin/dev`. This is workshop tooling, not another dependency for emitted applications.
-Fresh-Mac qualification is still pending; package checks alone do not establish that student journey.
+The [clean-Mac prerequisite trial](evidence/2026-09-27-mac-setup-prerequisites.md) verifies installation, a safe rerun,
+and Desktop tool discovery. Compilation and local Rails preview in that VM remain pending.
 
 ## 2026-09-27: Public Plan authoring references
 
