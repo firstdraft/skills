@@ -68,8 +68,7 @@ eval "$(brew shellenv)"
 
 if ! xcode-select -p >/dev/null 2>&1; then
   $check && fail 'Missing Apple command-line tools.'
-  xcode-select --install
-  fail 'Complete the Apple command-line tools installer, then rerun setup.'
+  fail 'Apple command-line tools are still missing. Finish or repair the Homebrew installation, then rerun setup.'
 fi
 
 step="installing Mac packages"

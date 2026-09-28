@@ -24,15 +24,21 @@ Resolve `<skill-dir>` to this Skill's directory and run:
 bash "<skill-dir>/scripts/setup-macos.sh" --check
 ```
 
+Use this readiness check before invoking Git, Clang, or other Apple developer-tool commands. On a fresh Mac,
+even `git --version` opens Apple's graphical installer. Homebrew handles command-line tools during setup;
+do not start a second installer or probe those commands while it is still running.
+
 For an authorized setup, install missing prerequisites with the same script without `--check`. It uses Homebrew
 and mise, installs Node for the plugin, and prepares PostgreSQL. If there is an existing app, pass its absolute
 directory too; the script reads its Ruby, Node, and npm pins. Do not run the installer with sudo.
 
 Homebrew may need the user to run that command in Terminal and complete a Mac administrator prompt. Keep passwords
-in the system prompt, not the conversation. Rerun after the prompt is complete. Diagnose an error from its actual
-output; do not restart the installation from scratch, delete a database, or replace unrelated working tools.
+in the system prompt, not the conversation. Leave that one installer running until it prints **Mac prerequisites
+are ready** or an error. While it runs, the user can sign in to GitHub and First Draft. Do not ask them to restart
+Claude yet. Diagnose a failure from its actual output and rerun after correcting it; do not restart from scratch,
+delete a database, or replace unrelated working tools.
 
-The script configures zsh/bash login PATH. After the initial installation, quit and reopen Claude Desktop, then verify
+The script configures zsh/bash login PATH. After confirming the initial installation finished, quit and reopen Claude Desktop, then verify
 `node --version` and `npm --version` in a new local session. Desktop may need a full restart to
 [reload its environment](https://code.claude.com/docs/en/desktop#session-not-finding-installed-tools).
 If the current session needs to continue first, use Homebrew's absolute mise path and `mise exec node@lts -- ...`.

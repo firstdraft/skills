@@ -20,7 +20,7 @@ function machine(t) {
   const command = (name, body) => writeFileSync(path.join(bin, name), `#!/bin/bash\nset -eu\nprintf '%s\\n' "${name} $*" >> "$SETUP_TEST_LOG"\n${body}\n`, { mode: 0o755 });
   command("uname", 'if [ "$1" = -s ]; then echo Darwin; else echo arm64; fi');
   command("id", 'echo "${SETUP_TEST_UID:-501}"');
-  command("xcode-select", "exit 0");
+  command("xcode-select", 'exit "${SETUP_TEST_CLT_STATUS:-0}"');
   command("brew", 'case "$1" in --prefix) echo "$SETUP_TEST_ROOT";; shellenv) :;; bundle|services) :;; *) exit 90;; esac');
   command("mise", 'if [ "$1" = exec ]; then while [ "$1" != -- ]; do shift; done; shift; exec "$@"; fi');
   command("node", 'exec "$SETUP_TEST_NODE" "$@"');
@@ -57,6 +57,16 @@ test("readiness does not install packages, change shell configuration, or start 
   assert.equal(readFileSync(mac.profile, "utf8"), "# existing shell setup\n");
   assert.match(mac.commands(), /brew bundle check /);
   assert.doesNotMatch(mac.commands(), /brew bundle install|brew services|mise (settings|use|install)/);
+});
+
+test("missing developer tools do not launch a GUI installer or probe Git", (t) => {
+  const mac = machine(t);
+  for (const args of [[], ["--check"]]) {
+    const result = mac.run(args, { SETUP_TEST_CLT_STATUS: "1" });
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /command-line tools/);
+    assert.doesNotMatch(mac.commands(), /xcode-select --install|^git |brew bundle|mise /m);
+  }
 });
 
 test("rerunning setup preserves shell configuration and does not replace working runtimes or database", (t) => {
