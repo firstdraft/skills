@@ -168,6 +168,14 @@ test("documentation roles are routed and retrieval-sized", async () => {
   }
 });
 
+test("Claude Code imports the shared agent instructions", async () => {
+  assert.equal(
+    await readFile(path.join(repository, "CLAUDE.md"), "utf8"),
+    "@AGENTS.md\n",
+    "CLAUDE.md must only import AGENTS.md so both harnesses read one source",
+  );
+});
+
 test("canonical Skill sources follow the portable repository profile", async () => {
   const entries = await readdir(skillsDirectory, { withFileTypes: true });
   const skillNames = entries
