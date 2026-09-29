@@ -11,6 +11,27 @@
 | Behavioral evals | [`evals/README.md`](evals/README.md), then one case and its declared artifacts |
 | Repository documentation roles | [`docs/README.md`](docs/README.md) |
 
+## Sibling repositories
+
+| Repository | Owns |
+|---|---|
+| `firstdraft/firstdraft` (private) | Foundation Plan format, service API, Compiler, and release coordination |
+| `firstdraft/cli` | Commands and handled errors |
+| `firstdraft/skills` (this one) | Authoring Skill, plugin packaging, and plugin catalog |
+
+## Checks and review
+
+- Run `npm ci --ignore-scripts && sh script/check` before committing. It takes about 7 seconds.
+- That check packs the plugin with a stub CLI and skips the package digest. CI packs it with the `firstdraft/cli`
+  commit named by `cliRevision` in `script/cli-contract/config.mjs`, then checks the digest and CLI contract. A
+  change to packaged bytes needs a new `plugin_source.tarball_sha256` in `release/compatibility.json`. Reproduce
+  the CI checks with the `--cli-root` commands in [`RELEASING.md`](RELEASING.md#1-use-the-checks-already-completed).
+- Get an independent review through [cross-review](https://github.com/raghubetina/cross-review) before merging a
+  contract change or an instruction-policy change. A contract change edits a `requires` entry in
+  `release/compatibility.json` or the bundled Plan schema in `skills/create-full-stack-app/references/`. An
+  instruction-policy change edits `AGENTS.md`, `CLAUDE.md`, or `RELEASING.md`. Use `codex-review` from Claude Code
+  and `$claude-review` from Codex.
+
 ## Release coordination
 
 - A merge integrates source. Publication, service deployment, and a catalog change require release authorization;
