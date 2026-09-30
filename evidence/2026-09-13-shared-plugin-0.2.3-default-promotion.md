@@ -30,7 +30,8 @@ owns the bounded advisory evaluations. Promotion published no new bytes and does
 
 The npm UI confirmed `FirstDraftGitHubPromotion-20260913` has stage-only read/write access to exactly
 `@firstdraft.com/cli` and `@firstdraft.com/claude-code`, no organization access, and bypass 2FA enabled.
-It expires **December 12, 2026**; renew it before that date using the [promotion runbook](../docs/npm-promotion.md).
+It expires **December 12, 2026**; renew it before that date using the
+[promotion runbook](https://github.com/firstdraft/skills/blob/de582bf391b269885710c05025a1e8b8490c780f/docs/npm-promotion.md).
 Stage-only access also permits staging, deprecation, and unpublication; npm does not expose a dist-tag-only token.
 The value was stored only as `NPM_PROMOTION_TOKEN` in GitHub's protected `npm-promotion` environment.
 Package publication continues through OIDC. No token value appears in this record.

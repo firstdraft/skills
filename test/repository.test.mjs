@@ -202,6 +202,11 @@ const retiredTerms = [
     reason: promotionRetirement,
   },
   {
+    pattern: /\bnpm-promotion\.md\b|\bnpm[- ]default repair\b/gi,
+    successor: "dist-tag repair (docs/dist-tag-repair.md)",
+    reason: "the repair page became docs/dist-tag-repair.md on 2026-09-30 and covers both packages",
+  },
+  {
     pattern: /\bgh skill publish\b|\bSkill collection release\b/gi,
     successor: "npm publication through a claude-v<version> tag (RELEASING.md)",
     reason: "gh skill publication would release the deferred UI Skills without the bundled CLI",

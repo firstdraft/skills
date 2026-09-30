@@ -137,9 +137,9 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `report-successful-product-compile`
 - `compile-terminal-publication-failure`
 
-`RELEASING.md` uses local compile and boot as the ordinary release smoke only when needed. The cases here are
-focused behavioral regressions for authoring or authorization changes, not a mandatory release sequence. The two-turn
-approval smoke below is optional precedent from
+Release coordination in the service repository calls for a local compile-and-boot smoke only when a release needs
+one. The cases here are focused behavioral regressions for authoring or authorization changes, not a mandatory
+release sequence. The two-turn approval smoke below is optional precedent from
 [an earlier release qualification](../evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md), not a gate.
 When a change targets the two-turn approval behavior, it can use these continuing-session pairs:
 
@@ -215,4 +215,5 @@ A loopback fixture server can exercise the real packaged CLI and count requests 
 Retain that boundary: returned fixture artifacts are not real Compiler output, and an existing agent login does not
 prove fresh browser sign-in. Record unchanged Plan bytes, zero Compile starts before approval, exactly one after
 approval, and the final response. Treat fresh registry installation, the hosted Codespace journey, and first-time
-sign-in as separate observations. Follow `RELEASING.md` for the selected release's gates.
+sign-in as separate observations. Release coordination in the service repository decides whether a release
+needs any of them.

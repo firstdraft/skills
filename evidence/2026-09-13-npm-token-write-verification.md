@@ -46,7 +46,8 @@ Normal promotion uses `npm dist-tag add` to set `latest` and never deletes a tag
 maps establish the configured token's needed write access across separate runs; they do not prove a future CLI
 version promotion or uninterrupted availability. npm's [token documentation](https://docs.npmjs.com/about-access-tokens/#about-stage-only-tokens)
 permits dist-tag changes with stage-only tokens but does not explain this deletion rejection. The
-[runbook](../docs/npm-promotion.md#initial-setup-and-renewal) keeps that limitation separate from promotion readiness.
+[runbook](https://github.com/firstdraft/skills/blob/11f5e110b942ddf0770d937e3e15158c63da1df6/docs/npm-promotion.md#initial-setup-and-renewal)
+keeps that limitation separate from promotion readiness.
 
 This supersedes the [pending-cleanup observation](2026-09-13-npm-token-cleanup.md) for the retained probe and the
 previous CLI-write gap. No package bytes, permanent tags, catalog, deployment, or Drawing Board pin changed during
