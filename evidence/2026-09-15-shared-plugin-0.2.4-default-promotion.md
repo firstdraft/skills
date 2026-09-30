@@ -1,5 +1,8 @@
 # Shared plugin 0.2.4 default promotion — September 15, 2026 UTC
 
+- **Date:** 2026-09-15
+- **Status:** Historical
+
 At `2026-09-15T04:19:29.762931Z`, independent registry reads confirmed plugin
 `0.2.4` and CLI `0.2.2` selected by both `next` and `latest`. The public catalog
 already selected plugin `0.2.4` at `071aa964f3f851e50cf1725f31155e98e97d1d99`.

@@ -1,5 +1,8 @@
 # Direct npm plugin check — 2026-08-07
 
+- **Date:** 2026-08-07
+- **Status:** Historical
+
 One isolated no-service rehearsal adapted the package-first check in `RELEASING.md` to the already-published
 `@firstdraft.com/claude-code@0.1.0-alpha.3` package and its bundled CLI alpha.2. It used Claude Code 2.1.224,
 Node v24.3.0, and npm 11.4.2. npm read the exact version from the explicitly selected public registry into fresh

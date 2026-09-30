@@ -1,5 +1,8 @@
 # Requirement reconciliation and return authoring: source exercise
 
+- **Date:** 2026-09-22
+- **Status:** Evidence
+
 This record covers [Skills #79](https://github.com/firstdraft/skills/issues/79),
 [Skills #80](https://github.com/firstdraft/skills/issues/80), and the authoring examples under
 [Service #647](https://github.com/firstdraft/firstdraft/issues/647). It records three fresh source-context exercises,

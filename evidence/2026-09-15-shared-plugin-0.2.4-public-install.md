@@ -1,5 +1,8 @@
 # Shared plugin 0.2.4 public installation — September 15, 2026 UTC
 
+- **Date:** 2026-09-15
+- **Status:** Evidence
+
 After [catalog PR #71](https://github.com/firstdraft/skills/pull/71) merged at
 `071aa964f3f851e50cf1725f31155e98e97d1d99`, fresh public installations passed in
 Claude Code `2.1.267` and Codex `0.154.0`. Both fetched that exact catalog commit.

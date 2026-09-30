@@ -1,6 +1,9 @@
 # Staging Movie Catalog discovery smoke — 2026-08-10
 
-**Status: passed the bounded discovery-promotion gate.** This record does not claim a completed v14 qualification.
+- **Date:** 2026-08-10
+- **Status:** Historical
+
+**Outcome: passed the bounded discovery-promotion gate.** This record does not claim a completed v14 qualification.
 It records one live staging product result at the narrower boundary selected for catalog promotion: a Plan authored
 after a Claude Code Skill session reached valid analysis, successful Compilation, and successful OAuth/App-backed
 publication to a fresh private personal GitHub repository.

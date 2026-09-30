@@ -1,5 +1,8 @@
 # Plugin 0.2.1 qualification and publication — 2026-09-10
 
+- **Date:** 2026-09-10
+- **Status:** Evidence
+
 The exact plugin passed both human-approved, two-turn smokes and was published through the protected GitHub OIDC
 workflow. A fresh installation from npm reproduced the qualified package and passed its package checks.
 

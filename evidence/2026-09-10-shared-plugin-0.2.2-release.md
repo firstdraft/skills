@@ -1,5 +1,8 @@
 # Shared Claude/Codex plugin 0.2.2 release — September 10, 2026
 
+- **Date:** 2026-09-10
+- **Status:** Evidence
+
 The owner approved qualification, GitHub-provenance publication, catalog promotion, and the Drawing Board source
 pin update. The exact package passed the controlled-service pairs and final-package Codex cases below.
 Publication completed at `2026-09-11T04:38:29.171Z` (September 10 in America/Chicago).

@@ -1,5 +1,8 @@
 # Shared plugin 0.2.3 publication — September 13, 2026
 
+- **Date:** 2026-09-13
+- **Status:** Evidence
+
 [Protected publication](https://github.com/firstdraft/skills/actions/runs/34771138358) published
 `@firstdraft.com/claude-code@0.2.3` from `e84a6ecddfa6a4170774768f24ddc798c0f13331`, tagged `claude-v0.2.3`.
 The tag object is `8616ad5402d177b715fae1a4b9dc0e0d5b9e2e86`. Required review, immutable tag protection,

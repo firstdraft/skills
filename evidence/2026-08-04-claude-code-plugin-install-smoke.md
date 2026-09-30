@@ -1,5 +1,8 @@
 # Claude Code plugin install smoke — 2026-08-04
 
+- **Date:** 2026-08-04
+- **Status:** Historical
+
 This report records one local source-only packaging check at Skills revision
 `3777ae515bd366e7d6e55df0c2add3a7f12a9d12`. It is historical evidence for that revision's local-directory Claude
 Code marketplace shape and isolated install cache, not evidence of the later npm-source marketplace, a released

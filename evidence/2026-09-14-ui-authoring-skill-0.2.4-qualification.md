@@ -1,5 +1,8 @@
 # UI authoring Skill 0.2.4 qualification — September 14, 2026
 
+- **Date:** 2026-09-14
+- **Status:** Evidence
+
 The authoring-only `@firstdraft.com/claude-code@0.2.4` candidate passed the local
 package checks and both installation adapters. Its final SHA-256 is
 `7c947c8837a955249a1f5cfdf0c2fbbd37b088de6293e5ef0d7e5473097bc4c7`.

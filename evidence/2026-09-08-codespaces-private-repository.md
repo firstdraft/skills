@@ -1,5 +1,8 @@
 # Codespaces private repository creation — 2026-09-08
 
+- **Date:** 2026-09-08
+- **Status:** Evidence
+
 A fresh Codespace opened directly from the Drawing Board template created a private repository using its built-in
 GitHub token through the Codespaces publication endpoint. The same credential then pushed an initial Git commit and
 a subsequent commit. The generic repository-creation routes rejected that credential.

@@ -1,5 +1,8 @@
 # Claude plugin vendored-CLI smoke — 2026-08-05
 
+- **Date:** 2026-08-05
+- **Status:** Evidence
+
 ## Outcome
 
 Claude Code 2.1.222 successfully installed the `firstdraft` plugin through an npm marketplace source backed by an

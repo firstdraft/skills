@@ -1,5 +1,8 @@
 # Useful first preview and artifact discovery
 
+- **Date:** 2026-09-22
+- **Status:** Evidence
+
 This source candidate implements the guidance in [Skills #83](https://github.com/firstdraft/skills/issues/83) and
 [#84](https://github.com/firstdraft/skills/issues/84). The
 [machine receipt](2026-09-22-first-preview.json) owns exact case outputs and source/package identities. This is local

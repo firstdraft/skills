@@ -1,5 +1,8 @@
 # npm promotion cache repair — September 13, 2026
 
+- **Date:** 2026-09-13
+- **Status:** Historical
+
 The approved CLI package policy was saved through npm's existing passkey. A fresh settings reload confirmed
 that `@firstdraft.com/cli` permits granular tokens with bypass 2FA; its `firstdraft/cli` / `publish.yml` / `npm`
 trusted publisher remains configured. This supersedes the unsaved-policy observation in the

@@ -1,5 +1,8 @@
 # npm trusted-publisher configuration — 2026-08-07
 
+- **Date:** 2026-08-07
+- **Status:** Evidence
+
 An authenticated read-only reconciliation observed the npm trusted publisher for
 `@firstdraft.com/claude-code` with these exact fields:
 

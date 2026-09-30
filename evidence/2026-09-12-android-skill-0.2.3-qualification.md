@@ -1,5 +1,8 @@
 # Android Skill 0.2.3 candidate qualification
 
+- **Date:** 2026-09-12
+- **Status:** Superseded by [final qualification](2026-09-12-android-skill-0.2.3-final-qualification.md)
+
 This is a pre-publication observation against the exact candidate package, not a public install or a deployed
 Android release. The [machine receipt](2026-09-12-android-skill-0.2.3-qualification.json) retains input and transcript
 digests. Source integration, npm publication, catalog promotion, and service deployment have separate gates.

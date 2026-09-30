@@ -1,5 +1,8 @@
 # Native preview Skill 0.2.3 qualification — 2026-09-13
 
+- **Date:** 2026-09-13
+- **Status:** Evidence
+
 The revised unpublished `@firstdraft.com/claude-code@0.2.3` package completed four selected advisory cases and passed both
 client adapters. Three advisory cases passed; Codex Android retained the limited omission described below. Its SHA-256 is `53aab0e84d82131e97de70896bd5973856ff919290bbdb38f2f1c640878918fc`.
 The [machine receipt](2026-09-13-native-preview-skill-0.2.3-qualification.json) binds exact inputs, responses,

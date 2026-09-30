@@ -1,5 +1,8 @@
 # npm promotion retirement
 
+- **Date:** 2026-09-22
+- **Status:** Evidence
+
 Observed 2026-09-22 after the owner authorized cleanup.
 
 - Confirmed no unfinished legacy promotion jobs, then disabled `Promote npm defaults`

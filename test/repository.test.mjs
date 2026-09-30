@@ -11,6 +11,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import {
   canonicalClaudePluginSkillFiles,
   canonicalPluginSkillNames,
+  canonicalPluginSkillPaths,
   canonicalSourceSkills,
   classifyInventoryEntry,
   forbiddenCheckoutRootClaudePluginComponentPaths,
@@ -174,6 +175,230 @@ test("Claude Code imports the shared agent instructions", async () => {
     "@AGENTS.md\n",
     "CLAUDE.md must only import AGENTS.md so both harnesses read one source",
   );
+});
+
+// This repository's own retired vocabulary. Dated evidence, the *-history.md archives, and dated CHANGELOG
+// entries may still use these terms as history; current pages may not.
+const promotionRetirement = "npm promotion was retired on 2026-09-22; releases publish directly to latest";
+const retiredTerms = [
+  {
+    pattern: /\bunpromoted\b/gi,
+    successor: "unpublished",
+    reason: promotionRetirement,
+  },
+  {
+    pattern: /\bpromotion runbooks?\b/gi,
+    successor: "release runbook (RELEASING.md)",
+    reason: promotionRetirement,
+  },
+  {
+    pattern: /\bpromote (?:a|the) (?:release|marketplace entry|catalog entry)\b|\bcatalog promotion\b/gi,
+    successor: "publish the release, then select it in the catalog",
+    reason: promotionRetirement,
+  },
+  {
+    pattern: /\bnpm `?next`? channel\b|\bnext-to-latest\b|\bpromote-v|\bpromote\.yml\b|\bnpm-promotion\.mjs\b/gi,
+    successor: "a claude-v<version> tag that publishes directly to latest",
+    reason: promotionRetirement,
+  },
+  {
+    pattern: /\bgh skill publish\b|\bSkill collection release\b/gi,
+    successor: "npm publication through a claude-v<version> tag (RELEASING.md)",
+    reason: "gh skill publication would release the deferred UI Skills without the bundled CLI",
+  },
+  {
+    // Case-sensitive, so a lowercase heading anchor such as #bounded-web-and-iphone-application passes.
+    pattern: /\bweb-and-iPhone\b/g,
+    successor: "the reviewed GapSet for the Plan, or plain 'web and iPhone' for one example's clients",
+    reason: "the web-and-iPhone contract ended when Android support was added on 2026-09-12",
+  },
+  {
+    pattern: /\bAndroid (?:is )?not (?:yet )?available\b/gi,
+    successor: "the reviewed GapSet for the Plan",
+    reason: "Android support was added on 2026-09-12",
+  },
+  {
+    pattern: /\bAccounts (?:are )?not (?:yet )?available\b/gi,
+    successor: "the bounded web Accounts in the Foundation Plan reference",
+    reason: "bounded web Accounts were added on 2026-08-28",
+  },
+  {
+    pattern: /\bradix-vega\b/gi,
+    successor: "base-vega (shadcn on Base UI)",
+    reason: "generated apps moved from radix-vega to base-vega on 2026-09-14",
+  },
+  {
+    pattern: /\bfirstdraft-author-plan\b/gi,
+    successor: "create-full-stack-app",
+    reason: "the Skill was renamed on 2026-07-29",
+  },
+  {
+    pattern: /\bnpm install -g firstdraft(?!\.?[\w/-])/gi,
+    successor: "npm install -g @firstdraft.com/cli",
+    reason: "npm rejected the unscoped name, so the CLI publishes as @firstdraft.com/cli",
+  },
+];
+
+// Packaged Skill bytes are pinned by plugin_source.tarball_sha256, so their hits wait for the next Skill release.
+// Entries only shrink: the currency test fails when an entry stops matching. Do not add entries for other files.
+// An entry allows one occurrence unless it sets `count`, so a new copy of the same stale text still fails.
+const packagedCurrencyReason = "packaged; fixed in the next Skill release";
+const packagedReferences = "skills/create-full-stack-app/references";
+const currencyBaseline = [
+  {
+    file: `${packagedReferences}/diagnostics-and-recovery.md`,
+    rule: "release-label",
+    match: "the source candidate",
+    reason: packagedCurrencyReason,
+  },
+  {
+    file: `${packagedReferences}/diagnostics-and-recovery.md`,
+    rule: "identity",
+    match: "CLI 0.3.0",
+    reason: packagedCurrencyReason,
+  },
+  {
+    file: `${packagedReferences}/diagnostics-and-recovery.md`,
+    rule: "identity",
+    match: "0.2.2",
+    reason: packagedCurrencyReason,
+  },
+  {
+    file: `${packagedReferences}/examples.md`,
+    rule: "retired-term",
+    match: "web-and-iPhone",
+    reason: packagedCurrencyReason,
+  },
+  {
+    file: `${packagedReferences}/foundation-plan-023.md`,
+    rule: "release-label",
+    match: "the source candidate",
+    reason: packagedCurrencyReason,
+  },
+  {
+    file: `${packagedReferences}/foundation-plan-023.md`,
+    rule: "identity",
+    match: "CLI 0.3.0",
+    reason: packagedCurrencyReason,
+  },
+  {
+    file: `${packagedReferences}/foundation-plan-023.md`,
+    rule: "identity",
+    match: "CLI 0.2.2",
+    reason: packagedCurrencyReason,
+  },
+];
+
+test("current pages name current identities, release labels, and terms", async () => {
+  const compatibility = JSON.parse(
+    await readFile(path.join(repository, "release", "compatibility.json"), "utf8"),
+  );
+  const marketplace = JSON.parse(
+    await readFile(path.join(claudePluginDirectory, "marketplace.json"), "utf8"),
+  );
+  const catalogEntry = marketplace.plugins.find(({ name }) => name === claudePluginName);
+  assert(catalogEntry, `marketplace.json must select the ${claudePluginName} plugin`);
+  const identities = currentIdentities(compatibility, catalogEntry.version);
+  const packagedPaths = new Set(canonicalPluginSkillPaths);
+
+  const hits = [];
+  for (const file of trackedFiles()) {
+    const name = repositoryPath(file);
+    if (!isCurrencyScoped(name)) continue;
+
+    const source = await readFile(file, "utf8");
+    for (const unit of currencyUnits(name, source)) {
+      hits.push(
+        ...identityHits(unit, identities),
+        ...releaseLabelHits(unit, identities, packagedPaths.has(name)),
+        ...retiredTermHits(unit),
+      );
+    }
+  }
+
+  const key = ({ file, rule, match }) => [file, rule, match].join("\0");
+  const allowances = new Map();
+  for (const entry of currencyBaseline) {
+    assert(
+      packagedPaths.has(entry.file) && entry.reason === packagedCurrencyReason,
+      `currency baseline entry for ${entry.file}: only packaged Skill files may wait, with the reason ` +
+        `"${packagedCurrencyReason}"; fix the page instead of baselining it`,
+    );
+    allowances.set(key(entry), entry.count ?? 1);
+  }
+
+  const hitsByKey = Map.groupBy(hits, key);
+  const unbaselined = [...hitsByKey].flatMap(([hitKey, found]) => {
+    const allowed = allowances.get(hitKey) ?? 0;
+    if (found.length <= allowed) return [];
+    const note = allowed ? ` (the baseline allows ${allowed} of these; fix the new occurrence)` : "";
+    return found.map(({ message }) => `${message}${note}`);
+  });
+  assert.equal(
+    unbaselined.length,
+    0,
+    `Update stale current pages:\n${unbaselined.join("\n")}`,
+  );
+  const stale = currencyBaseline.filter((entry) => (hitsByKey.get(key(entry))?.length ?? 0) < (entry.count ?? 1));
+  assert.equal(
+    stale.length,
+    0,
+    "Delete or lower currency baseline entries that no longer match (the baseline only shrinks):\n" +
+      stale
+        .map(({ file, rule, match, count = 1 }) => {
+          const found = hitsByKey.get(key({ file, rule, match }))?.length ?? 0;
+          return `${file} ${rule} "${match}": the baseline allows ${count}, the file has ${found}`;
+        })
+        .join("\n"),
+  );
+});
+
+// Retained artifacts keep their exact bytes because a record binds their SHA-256; they are not reports.
+const retainedEvidenceArtifacts = new Map([
+  [
+    "evidence/2026-09-19-implementation-notes-source/authored-implementation-notes.md",
+    "evidence/2026-09-19-implementation-notes-source.md",
+  ],
+]);
+
+test("dated evidence records open with a date and status", async () => {
+  for (const [artifact, record] of retainedEvidenceArtifacts) {
+    const digest = createHash("sha256")
+      .update(await readFile(path.join(repository, artifact)))
+      .digest("hex");
+    assert(
+      (await readFile(path.join(repository, record), "utf8")).includes(digest),
+      `${record} no longer binds ${artifact} by SHA-256; ` +
+        "remove it from retainedEvidenceArtifacts and give it a header",
+    );
+  }
+
+  const failures = [];
+  for (const file of trackedFiles()) {
+    const name = repositoryPath(file);
+    const dated = name.match(/^evidence\/(\d{4}-\d{2}-\d{2})-[^/]*(?:\/.*)?\.md$/);
+    if (!dated || retainedEvidenceArtifacts.has(name)) continue;
+
+    const header = (await readFile(file, "utf8")).split("\n").slice(0, 5);
+    const date = header.map((line) => line.match(/^- \*\*Date:\*\* (\d{4}-\d{2}-\d{2})$/)?.[1]).find(Boolean);
+    const status = header
+      .map((line) => line.match(/^- \*\*Status:\*\* (Evidence|Historical|Superseded)(.*)$/))
+      .find(Boolean);
+    const fix =
+      `put "- **Date:** ${dated[1]}" and "- **Status:** Evidence", "Historical", or "Superseded by [record](path)" ` +
+      "in its first five lines (see evidence/README.md#status-headers)";
+
+    if (!date || !status) {
+      failures.push(`${name}: ${fix}`);
+    } else if (date !== dated[1]) {
+      failures.push(`${name}: its Date ${date} differs from its path date; ${fix}`);
+    } else if (status[1] === "Superseded" && !/^ by \[[^\]]+\]\([^)\s]+\)/.test(status[2])) {
+      failures.push(`${name}: a Superseded status needs its successor, as "Superseded by [record](path)"`);
+    } else if (status[1] !== "Superseded" && status[2]) {
+      failures.push(`${name}: keep the status line to one word; put context in the record body`);
+    }
+  }
+  assert.equal(failures.length, 0, failures.join("\n"));
 });
 
 test("canonical Skill sources follow the portable repository profile", async () => {
@@ -3054,4 +3279,301 @@ function trackedFiles() {
 
 function spawnBufferText(value) {
   return value === null || value === undefined ? "" : value.toString("utf8");
+}
+
+function repositoryPath(file) {
+  return path.relative(repository, file).split(path.sep).join("/");
+}
+
+function isCurrencyScoped(file) {
+  return (
+    ["AGENTS.md", "CHANGELOG.md", "README.md", "RELEASING.md", "SECURITY.md"].includes(file) ||
+    /^docs\/[^/]+\.md$/.test(file) ||
+    /^evals\/(?:[^/]+\/)*README\.md$/.test(file) ||
+    /^skills\/[^/]+\/(?:SKILL\.md|references\/[^/]+\.md)$/.test(file)
+  );
+}
+
+function currentIdentities(compatibility, catalogVersion) {
+  const comparator = (requirement) => {
+    const match = requirement.match(/^(>=|<=|=|<|>)\s*(\d+\.\d+\.\d+)$/);
+    assert(match, `release/compatibility.json has an unrecognized requirement: ${requirement}`);
+    return { operator: match[1], version: parseVersion(match[2]) };
+  };
+  const api = compatibility.requires.api_contract.map(comparator);
+  const cli = compatibility.requires.cli.map(comparator);
+  const apiFloor = api.find(({ operator }) => operator === ">=" || operator === "=");
+  const cliExact = cli.find(({ operator }) => operator === "=");
+  assert(apiFloor && cliExact, "release/compatibility.json must name an API floor and an exact CLI");
+  const plans = compatibility.requires.foundation_plan_formats.map((format) => {
+    const match = format.match(/^firstdraft\.foundation-plan\.sketch\/(\d+\.\d+)$/);
+    assert(match, `release/compatibility.json has an unrecognized Plan format: ${format}`);
+    return parseVersion(match[1]);
+  });
+  const plugin = parseVersion(compatibility.version);
+  const identities = {
+    api: apiFloor.version,
+    apiText: compatibility.requires.api_contract.join(", "),
+    bounds: {
+      api: api.map(({ version }) => version),
+      cli: cli.map(({ version }) => version),
+      unlabeled: [...api, ...cli].map(({ version }) => version),
+    },
+    catalog: parseVersion(catalogVersion),
+    catalogText: catalogVersion,
+    cli: cliExact.version,
+    plan: plans.reduce((lowest, version) => (compareVersions(version, lowest) < 0 ? version : lowest)),
+    planText: compatibility.requires.foundation_plan_formats.join(", "),
+    plugin,
+    profile: foundationPlanTarget.profile,
+  };
+  identities.package = compareVersions(identities.cli, plugin) < 0 ? identities.cli : plugin;
+  identities.majors = new Set([plugin, identities.cli, identities.api, identities.plan].map(({ major }) => major));
+  return identities;
+}
+
+function parseVersion(text) {
+  const match = text.match(/^v?(\d+)\.(\d+)(?:\.(\d+))?$/);
+  assert(match, `expected a version, found ${text}`);
+  return {
+    major: Number(match[1]),
+    minor: Number(match[2]),
+    patch: match[3] === undefined ? undefined : Number(match[3]),
+  };
+}
+
+// A two-part version such as "CLI 0.4" names a whole minor line, so it compares by major and minor only.
+function compareVersions(left, right) {
+  return (
+    left.major - right.major ||
+    left.minor - right.minor ||
+    (left.patch === undefined || right.patch === undefined ? 0 : left.patch - right.patch)
+  );
+}
+
+// Splits a page into headings, table rows, code lines, and prose sentences. A CHANGELOG section headed by a date
+// is a dated entry: it records history, so only the release-label rule applies to it.
+function currencyUnits(file, source) {
+  const units = [];
+  const directory = path.posix.dirname(file);
+  let dated = false;
+  let fence;
+  let block;
+  const add = (line, text) =>
+    units.push({ dated, file, line, text: withoutEvidenceTargets(text, directory).replace(/\s+/g, " ") });
+  const flush = () => {
+    if (!block) return;
+    const text = block.lines.join("\n");
+    let offset = 0;
+    for (const sentence of text.split(/(?<=[.!?][*_`)"'\]]*)\s+/)) {
+      const start = text.indexOf(sentence, offset);
+      offset = start + sentence.length;
+      add(block.line + text.slice(0, start).split("\n").length - 1, sentence);
+    }
+    block = undefined;
+  };
+
+  source.split("\n").forEach((raw, index) => {
+    const line = index + 1;
+    const fenceMarker = raw.match(/^\s*(`{3,}|~{3,})/)?.[1];
+    if (fence) {
+      if (fenceMarker?.[0] === fence[0] && fenceMarker.length >= fence.length) fence = undefined;
+      else add(line, raw);
+    } else if (fenceMarker) {
+      flush();
+      fence = fenceMarker;
+    } else if (/^#{1,6}\s/.test(raw)) {
+      flush();
+      if (file === "CHANGELOG.md" && raw.startsWith("## ")) dated = /^## \d{4}-\d{2}-\d{2}\b/.test(raw);
+      add(line, raw);
+    } else if (!raw.trim()) {
+      flush();
+    } else if (/^\s*\|/.test(raw)) {
+      flush();
+      add(line, raw);
+    } else {
+      if (/^\s*(?:[-*+]|\d+\.)\s/.test(raw)) flush();
+      block ??= { line, lines: [] };
+      block.lines.push(raw);
+    }
+  });
+  flush();
+  return units;
+}
+
+// Dated evidence file names carry the version they observed, so links into evidence/ are not identity claims.
+function withoutEvidenceTargets(text, directory) {
+  return text.replace(/\]\(([^)\s]+)\)/g, (link, target) => {
+    if (/^[a-z]+:|^#/.test(target)) return link;
+    const resolved = path.posix.normalize(path.posix.join(directory, target));
+    return resolved.startsWith("evidence/") ? "]()" : link;
+  });
+}
+
+const versionToken = /(?<![\w.])(v?)(\d+)\.(\d+)(?:\.(\d+))?(?!\.?\d|\w)/g;
+
+function versionTokens(text, identities) {
+  const tokens = [];
+  for (const match of text.matchAll(versionToken)) {
+    const version = parseVersion(match[0]);
+    if (!identities.majors.has(version.major)) continue;
+
+    const before = text.slice(Math.max(0, match.index - 60), match.index);
+    const { bound, kind, label } = identityKind(match[1], before);
+    tokens.push({
+      bound,
+      end: match.index + match[0].length,
+      kind,
+      start: match.index - label.length,
+      text: `${label}${match[0]}`.replaceAll("`", ""),
+      version,
+    });
+  }
+  return tokens;
+}
+
+// A comparison bound takes its kind from the label that opens its range, as in "API `>= 0.7.0`, `< 0.8.0`".
+const boundRange =
+  /\b(API|CLI)(?: contract)?(?: version)? `?(?:(?:[<>]=?|=) ?`?v?\d+\.\d+(?:\.\d+)?`?(?:,| and)? `?)*$/;
+
+function identityKind(tagPrefix, before) {
+  const labels = [
+    ["plugin", /(?:@firstdraft\.com\/claude-code@|claude-|\b(?:plugin|Skills?)(?: version)? `?)$/i],
+    ["cli", /(?:@firstdraft\.com\/cli@|\bCLI(?: version)? `?)$/],
+    ["api", /\bAPI(?: contract)?(?: version)? `?$/],
+    ["plan", /(?:sketch\/|\bPlan(?: format)?(?: version)? `?)$/],
+  ];
+  for (const [kind, pattern] of labels) {
+    const label = before.match(pattern)?.[0];
+    if (label !== undefined) return { bound: false, kind, label };
+  }
+  const bound = before.match(/(?:[<>]=?|=) ?`?$/)?.[0];
+  if (bound !== undefined) {
+    const range = before.slice(0, -bound.length).match(boundRange)?.[1];
+    return { bound: true, kind: range ? range.toLowerCase() : "unlabeled", label: bound };
+  }
+  return { bound: false, kind: tagPrefix ? "cli" : "unlabeled", label: "" };
+}
+
+function identityHits(unit, identities) {
+  if (unit.dated) return [];
+
+  const where = `${unit.file}:${unit.line}`;
+  const stateWithout =
+    "Name the current identity, or state the behavior without a version and keep the dated fact in CHANGELOG.md " +
+    "or evidence/.";
+  const current = {
+    plugin: [identities.plugin, `release/compatibility.json is plugin ${formatVersion(identities.plugin)}`],
+    cli: [identities.cli, `release/compatibility.json requires CLI ${formatVersion(identities.cli)}`],
+    api: [identities.api, `release/compatibility.json accepts API ${identities.apiText}`],
+    plan: [identities.plan, `release/compatibility.json accepts ${identities.planText}`],
+    unlabeled: [
+      identities.package,
+      `release/compatibility.json names plugin ${formatVersion(identities.plugin)} and CLI ` +
+        formatVersion(identities.cli),
+    ],
+  };
+  const hits = [];
+  for (const token of versionTokens(unit.text, identities)) {
+    const isDeclared = (bound) => compareVersions(token.version, bound) === 0;
+    if (token.bound && identities.bounds[token.kind].some(isDeclared)) continue;
+    if (token.kind === "unlabeled" && token.version.patch === undefined) continue;
+
+    const [floor, expected] = current[token.kind];
+    if (compareVersions(token.version, floor) < 0) {
+      const named =
+        token.bound && token.kind !== "unlabeled" ? `${token.kind.toUpperCase()} ${token.text}` : token.text;
+      hits.push({
+        file: unit.file,
+        match: named,
+        message: `${where} names ${named}, but ${expected}. ${stateWithout}`,
+        rule: "identity",
+      });
+    }
+  }
+  for (const [profile] of unit.text.matchAll(/\brails-sketch\/[\w-]*\w/g)) {
+    if (profile === identities.profile) continue;
+
+    hits.push({
+      file: unit.file,
+      match: profile,
+      message:
+        `${where} names ${profile}, but script/cli-contract/config.mjs targets ${identities.profile}. ` +
+        stateWithout,
+      rule: "identity",
+    });
+  }
+  return hits;
+}
+
+// A status word labels only the version beside it: "candidate `0.8.0`", "CLI 0.8.0 candidates", "0.8.1 (source)
+// candidate", or "unreleased 0.7.1". Another version in the same sentence is usually what that version requires.
+// Packaged Skill text becomes the published release, so it is checked against its own package version while its
+// bytes can still change, not against the catalog, which selects it only after publication.
+function releaseLabelHits(unit, identities, packaged) {
+  const where = `${unit.file}:${unit.line}`;
+  const fix = "Say it was released or never published, or drop the release-status word.";
+  const hits = [];
+  if (packaged) {
+    for (const [phrase] of unit.text.matchAll(/\bthe source candidate\b/gi)) {
+      hits.push({
+        file: unit.file,
+        match: phrase.toLowerCase(),
+        message:
+          `${where} calls this package "${phrase}", but packaged Skill text ships as the published plugin. ` +
+          "Name the versions it requires without a release-status word.",
+        rule: "release-label",
+      });
+    }
+  }
+  if (/\bnever (?:been )?(?:published|released)\b/i.test(unit.text)) return hits;
+
+  const statuses = [...unit.text.matchAll(/\b(?:source candidates?|candidates?|unreleased)\b/gi)];
+  if (statuses.length === 0) return hits;
+
+  const [newest, selected] = packaged
+    ? [identities.plugin, `this packaged file ships in plugin ${formatVersion(identities.plugin)}`]
+    : [identities.catalog, `.claude-plugin/marketplace.json already selects published ${identities.catalogText}`];
+  const beside = (token, status) => {
+    const statusEnd = status.index + status[0].length;
+    return (
+      (statusEnd <= token.start && /^[\s`(]*$/.test(unit.text.slice(statusEnd, token.start))) ||
+      (token.end <= status.index && /^[\s`(),]*(?:\(source\) )?$/i.test(unit.text.slice(token.end, status.index)))
+    );
+  };
+  for (const token of versionTokens(unit.text, identities)) {
+    const packageVersion =
+      token.kind === "plugin" ||
+      token.kind === "cli" ||
+      (token.kind === "unlabeled" && token.version.patch !== undefined);
+    if (token.bound || !packageVersion || compareVersions(token.version, newest) > 0) continue;
+
+    const status = statuses.find((candidate) => beside(token, candidate));
+    if (!status) continue;
+
+    hits.push({
+      file: unit.file,
+      match: `${status[0].toLowerCase()} ${token.text}`,
+      message: `${where} labels ${token.text} "${status[0]}", but ${selected}. ${fix}`,
+      rule: "release-label",
+    });
+  }
+  return hits;
+}
+
+function retiredTermHits(unit) {
+  if (unit.dated) return [];
+
+  return retiredTerms.flatMap(({ pattern, successor, reason }) =>
+    [...unit.text.matchAll(pattern)].map(([term]) => ({
+      file: unit.file,
+      match: term,
+      message: `${unit.file}:${unit.line} uses retired "${term}"; write ${successor} instead (${reason}).`,
+      rule: "retired-term",
+    })),
+  );
+}
+
+function formatVersion({ major, minor, patch }) {
+  return patch === undefined ? `${major}.${minor}` : `${major}.${minor}.${patch}`;
 }

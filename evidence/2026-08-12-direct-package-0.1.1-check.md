@@ -1,5 +1,8 @@
 # Direct npm plugin 0.1.1 check — 2026-08-12
 
+- **Date:** 2026-08-12
+- **Status:** Evidence
+
 One isolated no-service check installed exact public package `@firstdraft.com/claude-code@0.1.1` with Node
 v24.18.0, npm 11.16.0, and Claude Code 2.1.228. It used fresh temporary Claude and npm state and did not alter a
 colleague's configured Claude installation.

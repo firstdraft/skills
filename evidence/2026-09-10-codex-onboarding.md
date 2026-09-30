@@ -1,5 +1,8 @@
 # Codex installation and onboarding observation
 
+- **Date:** 2026-09-10
+- **Status:** Evidence
+
 Observed September 10, 2026 (US Central). This record covers shared plugin packaging and local agent behavior,
 not a signed-in Codespaces journey or a release qualification against the First Draft service.
 

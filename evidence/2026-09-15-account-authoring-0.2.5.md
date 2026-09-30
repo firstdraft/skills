@@ -1,5 +1,8 @@
 # Account authoring patch 0.2.5 — September 15, 2026
 
+- **Date:** 2026-09-15
+- **Status:** Evidence
+
 This compatible candidate corrects the default Account settings guidance and takes observed Analyzer/Compiler
 identities from matching service results instead of claiming a hard-coded current pair. It packages only the
 canonical `create-full-stack-app` Skill; UI Skill auditions remain deferred.

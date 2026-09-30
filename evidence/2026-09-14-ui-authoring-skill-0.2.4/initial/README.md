@@ -1,5 +1,8 @@
 # UI authoring release: local evidence
 
+- **Date:** 2026-09-14
+- **Status:** Evidence
+
 This packet supports the authoring-only Skills 0.2.4 candidate at
 `8f9e3b28d1687432b18afe92550a3305b58136c9` with Service
 `3ab16255b3d03c7e588b5bc95a079e36d9923e03` and CLI

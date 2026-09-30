@@ -1,5 +1,8 @@
 # Publication companion records
 
+- **Date:** 2026-09-15
+- **Status:** Evidence
+
 These are the observed records behind the [publication receipt](../2026-09-15-shared-plugin-0.2.4-publication.md).
 Harmless local path context is retained. No credential was supplied to the
 registry-install helper; these metadata and attestation payloads are public

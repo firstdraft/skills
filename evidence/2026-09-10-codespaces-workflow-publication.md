@@ -1,5 +1,8 @@
 # Codespaces workflow-file publication — 2026-09-10
 
+- **Date:** 2026-09-10
+- **Status:** Evidence
+
 A fresh unpublished Drawing Board Codespace created a private repository and pushed the complete template checkout,
 including its two GitHub Actions workflows, using only its built-in GitHub token. This extends the earlier
 [README-only probe](2026-09-08-codespaces-private-repository.md) at the workflow-file permission boundary.

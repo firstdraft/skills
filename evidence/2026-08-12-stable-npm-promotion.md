@@ -1,5 +1,8 @@
 # Stable npm promotion — 2026-08-12
 
+- **Date:** 2026-08-12
+- **Status:** Historical
+
 A read-only pre-mutation check completed at `2026-08-12T21:23:03Z` using the two dist-tag queries below. It recorded
 plugin `next` at 0.1.1 and `latest` at historical alpha.3, and CLI `next` at 0.1.0 and `latest` at historical alpha.2.
 The plugin package, catalog, and public-install checks were complete; CLI 0.1.0 had its dated release evidence and

@@ -1,5 +1,8 @@
 # Qualification companion packets
 
+- **Date:** 2026-09-14
+- **Status:** Evidence
+
 These files support the [qualification record](../2026-09-14-ui-authoring-skill-0.2.4-qualification.md).
 Original observations and harmless local path context are preserved without
 content redaction. The initial packet used digest `90df9cd3…`; the amendment

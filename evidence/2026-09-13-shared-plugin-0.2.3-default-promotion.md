@@ -1,5 +1,8 @@
 # Shared plugin 0.2.3 default promotion
 
+- **Date:** 2026-09-13
+- **Status:** Historical
+
 At `2026-09-13T17:43:13Z`, both npm `next` and `latest` selected shared plugin `0.2.3` and CLI `0.2.2`.
 The public catalog already selected plugin `0.2.3`. The [machine receipt](2026-09-13-shared-plugin-0.2.3-default-promotion.json)
 retains the two workflow attempts, independent package-byte reconciliation, and non-secret token configuration.

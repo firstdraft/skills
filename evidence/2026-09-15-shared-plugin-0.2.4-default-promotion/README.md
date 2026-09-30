@@ -1,5 +1,8 @@
 # Default promotion companion records
 
+- **Date:** 2026-09-15
+- **Status:** Historical
+
 The [summary](../2026-09-15-shared-plugin-0.2.4-default-promotion.md) and
 [machine record](../2026-09-15-shared-plugin-0.2.4-default-promotion.json)
 link these original receipts and their SHA-256 hashes.

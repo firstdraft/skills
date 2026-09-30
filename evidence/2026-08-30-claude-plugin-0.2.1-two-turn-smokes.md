@@ -1,5 +1,8 @@
 # Claude plugin 0.2.1 two-turn smokes — 2026-08-30
 
+- **Date:** 2026-08-30
+- **Status:** Evidence
+
 Two controlled continuing-agent sessions passed the release-specific semantic-approval gates for the unpublished
 plugin 0.2.1 candidate. The Publication session used strict fake GitHub transport and made no real GitHub change;
 the direct-output session materialized one local application and created no Publication or Git repository.
