@@ -1,6 +1,6 @@
 {
   "name": "@firstdraft/skills",
-  "version": "0.0.0",
+  "version": "0.8.0",
   "description": "Portable Agent Skills for First Draft",
   "license": "MIT",
   "private": true,
@@ -17,6 +17,7 @@
   "scripts": {
     "check": "sh script/check",
     "check:claude-plugin-package": "node script/check-claude-plugin-package.mjs",
-    "check:release-compatibility": "node script/check-release-compatibility.mjs"
+    "check:release-compatibility": "node script/check-release-compatibility.mjs",
+    "version": "node script/sync-plugin-version.mjs --apply"
   }
 }

@@ -11,22 +11,29 @@ import {
   isOrdinaryPreOneVersion,
   isSemanticVersion,
 } from "../script/check-release-compatibility.mjs";
-import {
-  cliPackageVersion,
-  foundationPlanFormat,
-} from "../script/cli-contract/config.mjs";
+import { cliPackageVersion } from "../script/cli-contract/config.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 test("release compatibility matches the installable plugin manifest", async () => {
   const compatibility = await checkSkillsReleaseCompatibility(repository);
+  const { version } = await readJson("package.json");
   const skill = await readFile(path.join(repository, "skills/create-full-stack-app/SKILL.md"), "utf8");
   const declaredPluginVersion = skill.match(/^Targets plugin ([0-9]+\.[0-9]+\.[0-9]+),/m);
   assert(declaredPluginVersion, "the Skill must identify its plugin compatibility version");
-  assert.equal(declaredPluginVersion[1], compatibility.version);
+  assert.equal(declaredPluginVersion[1], version);
+  // The probe names the CLI version without a "CLI" label, so the currency check compares it only with the lower of
+  // the plugin and CLI versions. A stale probe would make the Skill reject its own bundled CLI.
+  const versionProbe = skill.match(/^Require the version probe to succeed with one exact `([^`]+)` output line/m);
+  assert(versionProbe, "the Skill must name the exact CLI version that its startup probe expects");
+  assert.equal(
+    versionProbe[1],
+    cliPackageVersion,
+    "the Skill's startup version probe must expect the CLI pinned in script/cli-contract/config.mjs",
+  );
 
   const cliConfigurationUrl =
-    `https://github.com/firstdraft/skills/blob/claude-v${compatibility.version}/script/cli-contract/config.mjs`;
+    `https://github.com/firstdraft/skills/blob/claude-v${version}/script/cli-contract/config.mjs`;
   for (const name of ["diagnostics-and-recovery.md", "foundation-plan-023.md"]) {
     const reference = await readText(`skills/create-full-stack-app/references/${name}`);
     assert.equal(
@@ -36,23 +43,13 @@ test("release compatibility matches the installable plugin manifest", async () =
       cliConfigurationUrl,
       `${name}: bundled CLI provenance must use the plugin's release tag`,
     );
-    assert(reference.includes(`@firstdraft.com/cli@${cliPackageVersion}`));
+    assert(
+      reference.includes(`@firstdraft.com/cli@${cliPackageVersion}`),
+      `${name} must name @firstdraft.com/cli@${cliPackageVersion}, the CLI pinned in script/cli-contract/config.mjs`,
+    );
   }
 
-  assert.deepEqual(compatibility, {
-    format: "firstdraft.release-compatibility/1",
-    component: "skills",
-    version: "0.8.0",
-    plugin_source: {
-      package: "@firstdraft.com/claude-code",
-      tarball_sha256: compatibility.plugin_source.tarball_sha256,
-    },
-    requires: {
-      api_contract: [">= 0.7.0", "< 0.8.0"],
-      cli: [`= ${cliPackageVersion}`],
-      foundation_plan_formats: [foundationPlanFormat],
-    },
-  });
+  assert.equal(compatibility.version, version);
 });
 
 test("release compatibility rejects shape and manifest drift", async () => {
@@ -82,7 +79,14 @@ test("release compatibility rejects shape and manifest drift", async () => {
   withCandidateDrift.packageTemplate.version = "0.2.0";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCandidateDrift),
-    /Expected values to be strictly equal/,
+    /package\.template\.json names plugin 0\.2\.0, .* Run node script\/sync-plugin-version\.mjs --apply/,
+  );
+
+  const withPackageVersionDrift = structuredClone(documents);
+  withPackageVersionDrift.packageDocument.version = "0.0.0";
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withPackageVersionDrift),
+    /release\/compatibility\.json names plugin .*, but package\.json names 0\.0\.0/,
   );
 
   const withPrereleaseCandidate = structuredClone(documents);
@@ -98,7 +102,14 @@ test("release compatibility rejects shape and manifest drift", async () => {
   withCliAlias.compatibility.requires.cli.push("= 0.1.0-alpha.3");
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCliAlias),
-    /Expected values to be strictly deep-equal/,
+    /requires\.cli must name the exact CLI pinned in script\/cli-contract\/config\.mjs/,
+  );
+
+  const withSecondPlanFormat = structuredClone(documents);
+  withSecondPlanFormat.compatibility.requires.foundation_plan_formats.push("firstdraft.foundation-plan.sketch/9.9");
+  assert.throws(
+    () => assertSkillsReleaseCompatibility(withSecondPlanFormat),
+    /exactly one Plan format/,
   );
 
   const withNextChannel = structuredClone(documents);
@@ -154,7 +165,7 @@ test("release compatibility rejects shape and manifest drift", async () => {
   withCheckoutToolingVersionDrift.checkoutManifest.version = "0.0.1";
   assert.throws(
     () => assertSkillsReleaseCompatibility(withCheckoutToolingVersionDrift),
-    /must match the private root tooling version/,
+    /keeps the non-release version 0\.0\.0/,
   );
 });
 

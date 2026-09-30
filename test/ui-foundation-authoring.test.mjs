@@ -6,6 +6,7 @@ import test from "node:test";
 import Ajv2020 from "ajv/dist/2020.js";
 
 import { canonicalPluginSkillNames } from "../script/claude-plugin-boundaries.mjs";
+import { foundationPlanFormat } from "../script/cli-contract/config.mjs";
 
 const schema = JSON.parse(await readFile(
   new URL("../skills/create-full-stack-app/references/foundation-plan-0.23.schema.json", import.meta.url),
@@ -96,7 +97,7 @@ test("Appearance offers only the authored theme choices", () => {
 test("the bundled Plan contract replaces the previous input identity", () => {
   const validatePlan = ajv.getSchema(schema.$id);
   const plan = {
-    format: "firstdraft.foundation-plan.sketch/0.23",
+    format: foundationPlanFormat,
     target: { id: "rails", profile: "rails-sketch/2026-09-bookmark-assets" },
     application: { key: "theme_app", name: "Theme App", native: {}, delivery: {}, entities: [], appearance: { theme: "toggle" } },
   };

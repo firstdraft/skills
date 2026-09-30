@@ -7,6 +7,7 @@ historical observations intentionally have different owners.
 
 | Question | Authority |
 |---|---|
+| What plugin version is this source? | [`package.json`](../package.json), set by [`npm version`](../RELEASING.md#candidate-and-catalog) |
 | What package is the source candidate compatible with? | [`release/compatibility.json`](../release/compatibility.json) |
 | What does the shared Claude/Codex catalog select? | [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) |
 | What is the current release procedure? | [`RELEASING.md`](../RELEASING.md) |
