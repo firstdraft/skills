@@ -45,6 +45,7 @@ dated observation records an earlier value.
 |---|---|---|
 | Entry and routing | `README.md`, this page | Keep short; link rather than restate |
 | Always-loaded guardrails | `AGENTS.md` | Include only rules that prevent likely high-impact mistakes |
+| Commit, review, and landing procedure | `CONTRIBUTING.md` | Rules shared with `firstdraft/cli` and the service; change all three together |
 | Current operator procedure | `RELEASING.md` and its linked runbooks | No completed chronology or historical shell transcripts |
 | Agent workflow source | `skills/` | One editable source per Skill; package inventory selects distribution and app-owned `UI.md` controls UI choices |
 | Point-in-time evidence | `evidence/YYYY-MM-DD-*` | Append a new record with a [date and status](../evidence/README.md#status-headers); do not rewrite an old observation as current |

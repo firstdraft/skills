@@ -105,6 +105,7 @@ test("documentation roles are routed and retrieval-sized", async () => {
   );
   for (const route of [
     "AGENTS.md",
+    "CONTRIBUTING.md",
     "docs/README.md",
     "skills/create-full-stack-app/SKILL.md",
     "RELEASING.md",
@@ -3301,7 +3302,7 @@ function repositoryPath(file) {
 
 function isCurrencyScoped(file) {
   return (
-    ["AGENTS.md", "CHANGELOG.md", "README.md", "RELEASING.md", "SECURITY.md"].includes(file) ||
+    ["AGENTS.md", "CHANGELOG.md", "CONTRIBUTING.md", "README.md", "RELEASING.md", "SECURITY.md"].includes(file) ||
     /^docs\/[^/]+\.md$/.test(file) ||
     /^evals\/(?:[^/]+\/)*README\.md$/.test(file) ||
     /^skills\/[^/]+\/(?:SKILL\.md|references\/[^/]+\.md)$/.test(file)

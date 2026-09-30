@@ -10,6 +10,7 @@
 | Evidence or prior rollout facts | [`evidence/README.md`](evidence/README.md), then one dated record |
 | Behavioral evals | [`evals/README.md`](evals/README.md), then one case and its declared artifacts |
 | Repository documentation roles | [`docs/README.md`](docs/README.md) |
+| Commits, pull requests, review setup, or landing | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 
 ## Sibling repositories
 
@@ -21,7 +22,7 @@
 
 ## Checks and review
 
-- Run `npm ci --ignore-scripts && sh script/check` before committing. It takes about 7 seconds.
+- Run `npm ci --ignore-scripts && npm audit && sh script/check` before committing. The check takes about 7 seconds.
 - That check packs the plugin with a stub CLI and skips the package digest. CI packs it with the `firstdraft/cli`
   commit named by `cliRevision` in `script/cli-contract/config.mjs`, then checks the digest and CLI contract. A
   change to packaged bytes needs a new `plugin_source.tarball_sha256` in `release/compatibility.json`. Reproduce
@@ -29,11 +30,10 @@
 - Get an independent review through [cross-review](https://github.com/raghubetina/cross-review) before merging a
   contract change or an instruction-policy change. A contract change edits a `requires` entry in
   `release/compatibility.json` or the bundled Plan schema in `skills/create-full-stack-app/references/`. An
-  instruction-policy change edits `AGENTS.md`, `CLAUDE.md`, or `RELEASING.md`. Use `codex-review` from Claude Code
-  and `$claude-review` from Codex. Pass the service repository's `docs/review-focus.md` as `--focus-file`. Without
-  a sibling checkout, fetch it into `tmp/` with
-  `gh api repos/firstdraft/firstdraft/contents/docs/review-focus.md -H 'Accept: application/vnd.github.raw'`.
-  Put the reviewer, session id, and verdict in the pull request body, and leave the findings out.
+  instruction-policy change edits `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `RELEASING.md`,
+  `.claude/settings.json`, or `.codex/config.toml`. Use the `codex-review` Skill from Claude Code and
+  `$claude-review` from Codex; neither is a shell command. [`CONTRIBUTING.md`](CONTRIBUTING.md#independent-review)
+  covers setup, the service's focus file, and what the pull request body records.
 
 ## Release coordination
 
