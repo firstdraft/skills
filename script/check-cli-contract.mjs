@@ -9,7 +9,6 @@ import {
   cliPackageVersion,
   cliRevision,
   cliRuntimeSha256,
-  foundationPlanFormat,
   packedFileAllowlist,
 } from "./cli-contract/config.mjs";
 import {
@@ -35,6 +34,9 @@ assert.equal(cliRuntimeDigest(cliDirectory), cliRuntimeSha256);
 verifyPackageMetadata(
   JSON.parse(readFileSync(path.join(cliDirectory, "package.json"), "utf8")),
 );
+const { requires } = JSON.parse(
+  readFileSync(path.join(repository, "release", "compatibility.json"), "utf8"),
+);
 assert.deepEqual(
   JSON.parse(
     readFileSync(
@@ -47,10 +49,11 @@ assert.deepEqual(
     component: "cli",
     version: cliPackageVersion,
     requires: {
-      api_contract: [">= 0.7.0", "< 0.8.0"],
-      foundation_plan_formats: [foundationPlanFormat],
+      api_contract: requires.api_contract,
+      foundation_plan_formats: requires.foundation_plan_formats,
     },
   },
+  "the pinned CLI must accept the API range and Plan formats in this repository's release/compatibility.json",
 );
 
 const temporaryDirectory = mkdtempSync(

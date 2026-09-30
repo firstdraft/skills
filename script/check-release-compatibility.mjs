@@ -5,10 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import { canonicalPluginSkillNames } from "./claude-plugin-boundaries.mjs";
 
-import {
-  cliPackageVersion,
-  foundationPlanFormat,
-} from "./cli-contract/config.mjs";
+import { cliPackageVersion } from "./cli-contract/config.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const semanticVersionPattern =
@@ -118,11 +115,16 @@ export function assertSkillsReleaseCompatibility({
   ]) {
     assertComparator(requirement);
   }
-  assert.deepEqual(compatibility.requires, {
-    api_contract: [">= 0.7.0", "< 0.8.0"],
-    cli: [`= ${cliPackageVersion}`],
-    foundation_plan_formats: [foundationPlanFormat],
-  });
+  assert.deepEqual(
+    compatibility.requires.cli,
+    [`= ${cliPackageVersion}`],
+    "requires.cli must name the exact CLI pinned in script/cli-contract/config.mjs",
+  );
+  assert.equal(
+    compatibility.requires.foundation_plan_formats.length,
+    1,
+    "the bundled Plan schema and the CLI contract fixtures use exactly one Plan format",
+  );
 
   assert.equal(marketplace.name, "firstdraft-skills");
   assert(Array.isArray(marketplace.plugins), "marketplace plugins must be an array");
@@ -160,12 +162,30 @@ export function assertSkillsReleaseCompatibility({
     "marketplace plugin version must match the marketplace package source",
   );
 
+  assert.equal(packageDocument.name, "@firstdraft/skills");
+  assert.equal(
+    packageDocument.private,
+    true,
+    "the root npm package stays private; releases publish packages/claude-plugin/package.template.json",
+  );
+  for (const [file, version] of [
+    ["release/compatibility.json", compatibility.version],
+    ["packages/claude-plugin/.claude-plugin/plugin.json", installableManifest.version],
+    ["packages/claude-plugin/package.template.json", packageTemplate.version],
+  ]) {
+    assert.equal(
+      version,
+      packageDocument.version,
+      `${file} names plugin ${version}, but package.json names ${packageDocument.version}. package.json owns the ` +
+        "plugin version. Run node script/sync-plugin-version.mjs --apply to copy it into every other file; " +
+        "npm version <x.y.z> runs that script unless npm scripts are ignored",
+    );
+  }
+
   assert.equal(installableManifest.name, installablePlugin.name);
-  assert.equal(installableManifest.version, compatibility.version);
   assert.deepEqual(installableManifest.skills, canonicalPluginSkillNames.map((name) => `./skills/${name}`));
 
   assert.equal(packageTemplate.name, compatibility.plugin_source.package);
-  assert.equal(packageTemplate.version, compatibility.version);
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(packageTemplate.publishConfig, {
     access: "public",
@@ -191,15 +211,8 @@ export function assertSkillsReleaseCompatibility({
   );
   assert.equal(
     checkoutManifest.version,
-    packageDocument.version,
-    "checkout tooling version must match the private root tooling version",
-  );
-  assert.equal(packageDocument.name, "@firstdraft/skills");
-  assert.equal(packageDocument.version, "0.0.0");
-  assert.equal(
-    packageDocument.private,
-    true,
-    "the root npm package is private tooling, not the plugin release identity",
+    "0.0.0",
+    "the checkout manifest .claude-plugin/plugin.json keeps the non-release version 0.0.0",
   );
 
   return compatibility;

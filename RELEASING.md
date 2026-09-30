@@ -6,11 +6,42 @@ longer part of an ordinary release. Coordinate the service, CLI, and Skills thro
 
 ## Candidate and catalog
 
-[`release/compatibility.json`](release/compatibility.json) owns the candidate version, compatible CLI/API/Plan
-identities, and deterministic package SHA-256. The [marketplace manifest](.claude-plugin/marketplace.json)
-independently selects a published plugin version; retain its selection until the intended new version is actually
-published. Source compatibility is not public catalog selection. Query npm when releasing rather than treating a
-dated distribution snapshot as current.
+[`package.json`](package.json) owns the plugin version. Preview a new candidate version, then set it with npm:
+
+```sh
+node script/sync-plugin-version.mjs <x.y.z>
+npm version <x.y.z>
+```
+
+The preview prints every change and writes nothing. `npm version` writes even with `--dry-run`. npm updates
+`package.json` and `package-lock.json`. Its `version` script then runs
+[`script/sync-plugin-version.mjs`](script/sync-plugin-version.mjs) with `--apply`, which copies the version into
+`release/compatibility.json`, the package template and plugin manifest under `packages/claude-plugin/`, and each
+packaged Skill line that names the plugin version or its `claude-v` tag. npm skips that script under
+`--ignore-scripts` or `ignore-scripts=true`, so run `node script/sync-plugin-version.mjs --apply` afterward. The
+repository's [`.npmrc`](.npmrc) sets `git-tag-version=false`, so npm neither commits nor creates a `v<x.y.z>` tag.
+A release uses a `claude-v<x.y.z>` tag on `main`.
+
+The command does not change these:
+
+- **Catalog selection.** The [marketplace manifest](.claude-plugin/marketplace.json) selects a published plugin
+  version. It keeps its selection until the new version is published
+  ([step 4](#4-select-the-published-version-in-the-catalog)).
+- **CLI pin.** `script/cli-contract/config.mjs` names the bundled CLI by `cliPackageVersion`, `cliRevision`, and
+  `cliRuntimeSha256`. A CLI change edits them by hand, along with `requires.cli` in `release/compatibility.json`.
+  It also edits `packedFileAllowlist` when the CLI package's file list changes.
+  `node script/check-cli-contract.mjs /path/to/exact/cli` checks these values against that CLI checkout. Then
+  `sh script/check` fails until the Skill's startup version probe and its `@firstdraft.com/cli@` references name
+  the new CLI. Its currency check also lists each current page and packaged Skill line that labels an older CLI.
+- **Package digest.** After the last packaged edit, run
+  `node script/claude-plugin-package.mjs pack tmp/plugin --cli-root /path/to/exact/cli` and copy its `sha256` into
+  `plugin_source.tarball_sha256`.
+
+[`release/compatibility.json`](release/compatibility.json) owns the compatible CLI/API/Plan identities and the
+deterministic package SHA-256. Checks read the API range and the Plan format string from this file. A Plan format
+change still renames the versioned schema and reference files under `skills/create-full-stack-app/references/`, so
+search `script/` and `test/` for the old file names. Source compatibility is not public catalog selection. Query npm
+when releasing rather than treating a dated distribution snapshot as current.
 
 Release 0.8.0 retires the authored `application.pwa` choice and uses target
 `rails-sketch/2026-09-bookmark-assets`; bookmark assets are part of every generated web app. It requires the matching
@@ -25,7 +56,9 @@ An unpublished candidate may be revised at a new commit and digest without anoth
 Packaged Skill text ships in the release and cannot be relabeled after publication. Do not let it call its own
 version a candidate or unreleased, or call itself the source candidate. The repository check compares packaged files
 with the `release/compatibility.json` version rather than the catalog, so it reports such a label while the bytes
-can still change.
+can still change. Its currency baseline lets some packaged lines wait for the next release. That baseline stops
+applying once `release/compatibility.json` names a version that the catalog does not select, so the check lists
+those lines for the candidate to fix.
 
 ## Authorization
 

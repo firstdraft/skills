@@ -240,8 +240,10 @@ const retiredTerms = [
 ];
 
 // Packaged Skill bytes are pinned by plugin_source.tarball_sha256, so their hits wait for the next Skill release.
-// Entries only shrink: the currency test fails when an entry stops matching. Do not add entries for other files.
-// An entry allows one occurrence unless it sets `count`, so a new copy of the same stale text still fails.
+// That release is being prepared once release/compatibility.json names a version the catalog does not select, and
+// then the baseline stops applying. Entries only shrink: the currency test fails when an entry stops matching.
+// Do not add entries for other files. An entry allows one occurrence unless it sets `count`, so a new copy of the
+// same stale text still fails.
 const packagedCurrencyReason = "packaged; fixed in the next Skill release";
 const packagedReferences = "skills/create-full-stack-app/references";
 const currencyBaseline = [
@@ -317,6 +319,7 @@ test("current pages name current identities, release labels, and terms", async (
   }
 
   const key = ({ file, rule, match }) => [file, rule, match].join("\0");
+  const preparingRelease = compatibility.version !== catalogEntry.version;
   const allowances = new Map();
   for (const entry of currencyBaseline) {
     assert(
@@ -324,7 +327,7 @@ test("current pages name current identities, release labels, and terms", async (
       `currency baseline entry for ${entry.file}: only packaged Skill files may wait, with the reason ` +
         `"${packagedCurrencyReason}"; fix the page instead of baselining it`,
     );
-    allowances.set(key(entry), entry.count ?? 1);
+    if (!preparingRelease) allowances.set(key(entry), entry.count ?? 1);
   }
 
   const hitsByKey = Map.groupBy(hits, key);
@@ -334,10 +337,15 @@ test("current pages name current identities, release labels, and terms", async (
     const note = allowed ? ` (the baseline allows ${allowed} of these; fix the new occurrence)` : "";
     return found.map(({ message }) => `${message}${note}`);
   });
+  const releaseNote = preparingRelease
+    ? `release/compatibility.json names plugin ${compatibility.version}, which the catalog does not select yet, ` +
+      "so the packaged currency baseline no longer applies. Fix these lines before that release, then delete " +
+      "their baseline entries.\n"
+    : "";
   assert.equal(
     unbaselined.length,
     0,
-    `Update stale current pages:\n${unbaselined.join("\n")}`,
+    `Update stale current pages:\n${releaseNote}${unbaselined.join("\n")}`,
   );
   const stale = currencyBaseline.filter((entry) => (hitsByKey.get(key(entry))?.length ?? 0) < (entry.count ?? 1));
   assert.equal(
@@ -416,6 +424,7 @@ test("canonical Skill sources follow the portable repository profile", async () 
 });
 
 test("Claude Code packaging selects canonical authoring source exactly once", async () => {
+  const { version } = JSON.parse(await readFile(path.join(repository, "package.json"), "utf8"));
   const checkoutManifest = JSON.parse(
     await readFile(path.join(claudePluginDirectory, "plugin.json"), "utf8"),
   );
@@ -448,8 +457,8 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
     version: marketplace.plugins[0].version,
     registry: "https://registry.npmjs.org/",
   });
-  assert.equal(packageTemplate.version, "0.8.0");
-  assert.equal(installableManifest.version, "0.8.0");
+  assert.equal(packageTemplate.version, version);
+  assert.equal(installableManifest.version, version);
   assert.equal(packageTemplate.dependencies, undefined);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);

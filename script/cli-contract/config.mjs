@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 export const cliRevision = "269dcaff9beb8369235f25b62fdb9d4a845e56c6";
 export const cliRuntimeSha256 =
   "9c74b4073a6b884bba1480dce535dd464101e52637a06a92bfbbd4b1bd65856d";
@@ -39,8 +41,10 @@ export const staleAnalysisId = "01900000-0000-7000-8000-000000000992";
 export const storedApiUrl = "http://127.0.0.1:1";
 export const configuredApiUrl = "http://127.0.0.1:2";
 export const apiToken = "canary-private-api-token";
-export const foundationPlanFormat =
-  "firstdraft.foundation-plan.sketch/0.23";
+// release/compatibility.json owns the Plan format. Checks and contract fixtures use the one format it accepts.
+export const [foundationPlanFormat] = JSON.parse(
+  readFileSync(new URL("../../release/compatibility.json", import.meta.url), "utf8"),
+).requires.foundation_plan_formats;
 export const analyzerRelease =
   "foundation-plan-rails/application-2026-09-28-controller-create-context";
 export const compilerRelease =
