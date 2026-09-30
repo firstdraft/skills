@@ -1,7 +1,7 @@
 # First Draft Skills
 
 This repository packages the portable agent instructions that turn a product conversation into a reviewed
-[Foundation Plan](https://github.com/firstdraft/firstdraft) and drive the First Draft authoring workflow. The
+[Foundation Plan](https://firstdraft.github.io/firstdraft/) and drive the First Draft authoring workflow. The
 canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI continuation follows the generated
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
@@ -165,8 +165,8 @@ gh skill preview firstdraft/skills create-full-stack-app
 ~~~
 
 Source validation does not publish a package, move a dist-tag, select a catalog version, or deploy the Service.
-Those actions follow the machine-owned [compatibility record](release/compatibility.json),
-[RELEASING.md](RELEASING.md), and the serialized cross-repository release process described there.
+Those actions follow the machine-owned [compatibility record](release/compatibility.json) and
+[RELEASING.md](RELEASING.md), which names the service repository's release coordination.
 
 ## Credential boundary
 

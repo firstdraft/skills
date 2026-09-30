@@ -1,86 +1,114 @@
 # Releasing First Draft Skills
 
-Release from tested `main`. Publish directly to npm `latest`; `next` and a separate npm-default promotion are no
-longer part of an ordinary release. Coordinate the service, CLI, and Skills through the service repository's
-`RELEASE_COORDINATION.md`. [Release history](evidence/release-history.md) retains earlier procedures and receipts.
+The service repository's `RELEASE_COORDINATION.md` coordinates releases of the service, CLI, and Skills. It owns
+the approval scope, the order across repositories, and when a release needs a product smoke. This page covers the
+Skills mechanics only. The [publish workflow](.github/workflows/publish.yml) enforces its own gates, so this page
+does not list them. [Release history](evidence/release-history.md) keeps earlier procedures and receipts.
 
-## Candidate and catalog
+## 1. Set the version
 
-[`package.json`](package.json) owns the plugin version. Preview a new candidate version, then set it with npm:
+[`package.json`](package.json) owns the plugin version. Preview the change, then set it with npm:
 
 ```sh
 node script/sync-plugin-version.mjs <x.y.z>
 npm version <x.y.z>
 ```
 
-The preview prints every change and writes nothing. `npm version` writes even with `--dry-run`. npm updates
-`package.json` and `package-lock.json`. Its `version` script then runs
-[`script/sync-plugin-version.mjs`](script/sync-plugin-version.mjs) with `--apply`, which copies the version into
-`release/compatibility.json`, the package template and plugin manifest under `packages/claude-plugin/`, and each
-packaged Skill line that names the plugin version or its `claude-v` tag. npm skips that script under
+The preview prints every change and writes nothing. `npm version` writes even with `--dry-run`. Its `version`
+script runs [`script/sync-plugin-version.mjs`](script/sync-plugin-version.mjs) with `--apply`. That copies the
+version into `release/compatibility.json`, the package template and plugin manifest under `packages/claude-plugin/`,
+and each packaged Skill line that names the plugin version or its `claude-v` tag. npm skips that script under
 `--ignore-scripts` or `ignore-scripts=true`, so run `node script/sync-plugin-version.mjs --apply` afterward. The
-repository's [`.npmrc`](.npmrc) sets `git-tag-version=false`, so npm neither commits nor creates a `v<x.y.z>` tag.
-A release uses a `claude-v<x.y.z>` tag on `main`.
+repository's [`.npmrc`](.npmrc) stops npm from committing or creating a `v<x.y.z>` tag.
 
-The command does not change these:
+The version change does not touch the [catalog selection](.claude-plugin/marketplace.json), which moves only after
+publication ([step 4](#4-select-the-published-version-in-the-catalog)). Until the tag is pushed, the candidate may
+change at a new commit and digest without another version.
 
-- **Catalog selection.** The [marketplace manifest](.claude-plugin/marketplace.json) selects a published plugin
-  version. It keeps its selection until the new version is published
-  ([step 4](#4-select-the-published-version-in-the-catalog)).
-- **CLI pin.** `script/cli-contract/config.mjs` names the bundled CLI by `cliPackageVersion`, `cliRevision`, and
-  `cliRuntimeSha256`. A CLI change edits them by hand, along with `requires.cli` in `release/compatibility.json`.
-  It also edits `packedFileAllowlist` when the CLI package's file list changes.
-  `node script/check-cli-contract.mjs /path/to/exact/cli` checks these values against that CLI checkout. Then
-  `sh script/check` fails until the Skill's startup version probe and its `@firstdraft.com/cli@` references name
-  the new CLI. Its currency check also lists each current page and packaged Skill line that labels an older CLI.
-- **Package digest.** After the last packaged edit, run
-  `node script/claude-plugin-package.mjs pack tmp/plugin --cli-root /path/to/exact/cli` and copy its `sha256` into
-  `plugin_source.tarball_sha256`.
+Write the CHANGELOG entry in the same change. Give it a dated heading and a bold lead that names the plugin version
+as released:
 
-[`release/compatibility.json`](release/compatibility.json) owns the compatible CLI/API/Plan identities and the
-deterministic package SHA-256. Checks read the API range and the Plan format string from this file. A Plan format
-change still renames the versioned schema and reference files under `skills/create-full-stack-app/references/`, so
-search `script/` and `test/` for the old file names. Source compatibility is not public catalog selection. Query npm
-when releasing rather than treating a dated distribution snapshot as current.
+```markdown
+## YYYY-MM-DD: What changed
 
-Release 0.8.0 retires the authored `application.pwa` choice and uses target
-`rails-sketch/2026-09-bookmark-assets`; bookmark assets are part of every generated web app. It requires the matching
-API contract and CLI rather than accepting the replaced Plan format. There is no retained-Project migration or
-compatibility bridge. Production/staging credential separation, saved Project origins, local-output defaults, and
-`.firstdraft/design/` are unchanged.
+**Skills — released in plugin <x.y.z>.** What changed, why, and when it applies.
+```
 
-Use an ordinary pre-1.0 minor bump for a breaking compatibility change and a patch bump for a compatible change.
-Never reuse a published npm version, protected release tag, or marketplace version for different package bytes.
-An unpublished candidate may be revised at a new commit and digest without another version bump.
+A lead that names only a CLI version does not count. `sh script/check` fails until the entry exists, and the
+publish workflow refuses a tag without one. [`script/check-changelog-entry.mjs`](script/check-changelog-entry.mjs)
+owns the matching rule. The tag publishes this commit, so the entry is accurate from publication onward. If the
+candidate moves to a new version before its tag, or a failed publication spends its tag, rewrite the entry's lead
+for the version that ships the change, or say the old version was never published.
 
-Packaged Skill text ships in the release and cannot be relabeled after publication. Do not let it call its own
-version a candidate or unreleased, or call itself the source candidate. The repository check compares packaged files
-with the `release/compatibility.json` version rather than the catalog, so it reports such a label while the bytes
-can still change. Its currency baseline lets some packaged lines wait for the next release. That baseline stops
-applying once `release/compatibility.json` names a version that the catalog does not select, so the check lists
-those lines for the candidate to fix.
+Packaged Skill text ships in the release and cannot change after publication. It must not call its own version a
+candidate or unreleased. The currency check lets a few packaged lines wait for the next release, but that allowance
+ends once `release/compatibility.json` names a version the catalog does not select. After a version change, fix the
+packaged lines it lists.
 
-## Authorization
+## 2. Update the pin and digest
 
-A merge integrates source; it does not alone authorize package publication, service deployment, or a catalog
-change. One user approval may cover the complete coordinated release, including its tags and catalog update.
-Resolve and report the concrete versions and commits, then continue that approved sequence without asking again at
-every step. Ask only when the effects or destinations exceed it. Keep mutations serialized through one operator.
-The real GitHub `npm` environment protection still applies; do not bypass it or add another conversational gate.
+`script/cli-contract/config.mjs` names the bundled CLI by `cliPackageVersion`, `cliRevision`, and
+`cliRuntimeSha256`. To bundle a new CLI, edit them by hand, along with `requires.cli` in
+[`release/compatibility.json`](release/compatibility.json). CI checks out `cliRevision` from CLI `main`, so land the
+CLI first. `sh script/check` then fails until the Skill's startup version probe and its `@firstdraft.com/cli@`
+references name the new CLI.
 
-## 1. Use the checks already completed
+**What breaks Skills CI without warning.** Skills keeps copies of CLI facts, and CI compares them only against the
+pinned CLI. No CLI check fails when they change, so the next pin change fails here instead:
 
-1. Resolve the candidate commits for the service, CLI, and Skills. Confirm the Skills commit is on `main`, and the
-   CLI pin and compatibility metadata match the intended release. `script/cli-contract/config.mjs` owns the exact
-   CLI revision and runtime digest; workflows read that configuration rather than copying its values.
-2. Reuse successful hosted CI for the exact release commit. CI already runs repository tests, the pinned CLI
-   contract, deterministic package checks, and Codex discovery. Do not rerun that suite, dependency audit, both
-   client installations, or behavioral evaluation sessions merely because the release is about to publish.
-3. Reproduce the package digest while packing. If packaged bytes changed since an earlier observation, use the
-   new digest. Documentation-only or workflow-only changes need their normal source checks, not another product
-   journey when the packed bytes and relevant service/CLI behavior are unchanged.
+- `packedFileAllowlist` in `script/cli-contract/config.mjs`, the CLI package's file list;
+- `requires.api_contract` and `requires.foundation_plan_formats`, which must equal the CLI's own
+  `release/compatibility.json`; and
+- the contract fixtures in `script/cli-contract/config.mjs` that the CLI checks exactly, such as
+  `compilationTarget.profile`, `artifactMediaType`, and `safeGithubReasonCodes`.
 
-For development or a failed check, the relevant reproduction commands are:
+A Plan format change also renames the versioned schema and reference under
+`skills/create-full-stack-app/references/`. Search `script/` and `test/` for the old file names.
+
+After the last packaged edit, pack with the exact CLI and copy the printed `sha256` into
+`plugin_source.tarball_sha256`:
+
+```sh
+node script/claude-plugin-package.mjs pack tmp/plugin --cli-root /path/to/exact/cli
+```
+
+## 3. Tag and publish
+
+Publish the CLI first. The workflow compares the bundled CLI with the published CLI package. Then tag the approved
+`main` commit:
+
+```sh
+git tag -a claude-v<x.y.z> <main-sha> -m "Release First Draft plugin <x.y.z>"
+git push origin claude-v<x.y.z>
+```
+
+Pushing the tag is the irreversible step. The tag is protected, and npm never accepts a version twice. The publish
+job waits for approval in the GitHub `npm` environment.
+
+**Retry after a CLI tarball 404.** The registry can answer E404 for a newly published CLI tarball for several
+minutes. The `check-cli-registry-package.mjs` step then fails before `npm publish` runs. The
+[first attempt of an earlier run](https://github.com/firstdraft/skills/actions/runs/36453895942/attempts/1) failed
+this way. Confirm that `npm view @firstdraft.com/cli@<cliPackageVersion> dist.tarball` resolves and the tarball
+downloads. Then rerun only the failed job with `gh run rerun <run-id> --failed`. After any other failure in the
+publish job, read the registry to confirm nothing was published before a rerun.
+
+After success, read the registry with the
+[dist-tag repair read commands](docs/dist-tag-repair.md#read-the-current-state).
+
+## 4. Select the published version in the catalog
+
+Open a PR that sets both `version` and `source.version` in
+[`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) to the published version. CI treats a change to
+only those fields as catalog-only. It validates the catalog metadata and checks that npm has the version, and it
+skips the full suite, including the currency check. That check fails once the catalog selects the version and any
+current page still calls it a candidate or unreleased. Run `sh script/check` on the catalog change before opening
+the PR, or the next ordinary PR fails instead. Merging the PR changes the live catalog for Claude and Codex users.
+It does not refresh existing installations.
+
+## Reproduce CI locally
+
+Without `--cli-root`, `sh script/check` packs the plugin with a stub CLI and skips the package digest. CI uses the
+pinned CLI checkout:
 
 ```sh
 npm ci --ignore-scripts
@@ -88,77 +116,7 @@ sh script/check --cli-root /path/to/exact/cli
 node script/check-cli-contract.mjs /path/to/exact/cli
 ```
 
-These are troubleshooting and pre-merge commands, not a second post-merge release checklist.
+## Repair
 
-## 2. Smoke the local path only when useful
-
-A release needs a product smoke when it changes Compilation transport, root output, generated boot behavior, or
-another integration boundary that existing CI and retained evidence do not exercise. A documentation change or an
-already exercised compatible patch does not automatically need one. Use a small reviewed Plan and the candidate
-CLI/Skill against the intended service. Compilation runs on the service; the output and runtime stay local.
-
-```sh
-firstdraft plan compile --output .
-# plain `firstdraft plan compile` selects the same mode
-```
-
-Start in an eligible disposable local folder. Review the Plan and matching analysis gaps, then invoke Compile once
-under the existing smoke authorization. Verify materialization, follow the generated README to boot Rails, and open
-one primary page. Record the versions/commits, Plan and artifact identities, and the actual result. This is the
-ordinary release smoke: no GitHub Publication, Codespace, multi-session interview, dual-client install, native build,
-or Revyl session is required. Test one of those paths separately only when the release changes it.
-
-Use the attached `analysis.gap_set_sha256`; live GapSet digests include Project identity. Never copy a fixture or a
-prior Project's digest. Semantic review still preserves the requested meaning and discloses actual support gaps.
-An existing approval of the candidate and gaps is sufficient; do not ask again for the command itself.
-
-For a breaking service/API change, coordinate activation and this smoke before publishing incompatible packages to
-`latest`. Compile with the candidate source if publication has not happened yet. A smoke already completed against
-those same relevant inputs is reusable. Do not invent a `next` staging round trip to perform it.
-
-## 3. Publish once to `latest`
-
-Confirm the protected `claude-v*` tags and the intended GitHub `npm` environment reviewers are configured, and
-`NPM_RELEASE_ENABLED=true`. Check the npm trusted-publisher binding interactively only when setting it up or
-changing it; a normal OIDC publication does not require another local npm login or a long-lived npm token.
-
-Push `claude-v<version>` for the approved `main` commit. The workflow verifies the protected tag, source ancestry,
-version order, and existing successful main CI. It then enters the protected environment, checks that the bundled
-CLI equals the already-published compatible CLI, reproduces the package digest, and publishes with OIDC and
-provenance directly to `latest`. Publish the CLI first so its public package is available for that comparison.
-The publication workflow does not run the full suite again.
-
-Afterward, read the Actions result and registry metadata to confirm the exact version, integrity/provenance,
-tarball digest, and `latest` selection. `next` may retain an older version; keeping it synchronized is unnecessary.
-A public package verification is a read-only reconciliation, not another live app journey or sign-in exercise.
-
-## 4. Select the published version in the catalog
-
-Update `.claude-plugin/marketplace.json` to the exact published version. Keep its version and npm source version
-aligned and merge under the already authorized release scope. A version-selection-only change uses the catalog
-metadata and published-version checks; any other change runs the full CI matrix. Never point the live catalog
-at an unpublished candidate. Catalog CI validates this small change; do not add a second product smoke.
-
-Before that selection PR, relabel CHANGELOG entries and other unpackaged current pages that call the published
-version a candidate or unreleased. The repository check fails on those labels once the catalog selects the version,
-and a selection-only PR skips that check, so a missed label fails the next ordinary PR instead.
-
-A normal package release does not require installing both Claude and Codex again after the catalog merge. Verify a
-public install when the catalog source format, packaging, client integration, or discovery behavior changes, or
-when an actual install problem needs reproduction. Catalog selection does not prove that an existing installation
-has refreshed; report updates only when observed.
-
-## Recovery
-
-After an ambiguous tag push or npm publication, inspect GitHub and npm read-only before attempting another mutation.
-Do not republish changed bytes under the same version, blindly rerun an uncertain publication, or automatically
-roll back a known successful write. A known failure before a write may be repaired within the original scope.
-
-For an ambiguous local Compilation start, preserve the exact Plan, private CLI state, and selected output. Do not
-start again without reconciliation. A validated retained Compilation ID permits status and download. For explicit
-`plan compile --github`, the documented unchanged-byte, same-singleton Publication replay remains available after
-the prior invocation exits; it never applies to an ambiguous Plan push or direct Compilation start.
-
-Use the short [npm-default repair procedure](docs/npm-promotion.md) for an approved change to an already-published
-version. It uses standard npm dist-tags, without a separate promotion workflow or credential probe. Record new
-release observations in [`evidence/`](evidence/README.md) without rewriting historical receipts.
+Move `latest` on an already-published version with [dist-tag repair](docs/dist-tag-repair.md). After an ambiguous
+tag push or publication, read GitHub and npm before any further write.

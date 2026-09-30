@@ -37,4 +37,5 @@ discard requested meaning to satisfy current target limits. No new Compile or pu
 being evaluated; those unchanged mechanisms retain their earlier receipts.
 
 These checks do not prove fresh sign-in, a public catalog install, a Codespace journey, actual Compiler output,
-native runtime, or deployment. Follow `RELEASING.md` for the stages that own those observations.
+native runtime, or deployment. Release coordination in the service repository decides whether a release needs
+those observations.

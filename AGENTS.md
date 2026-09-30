@@ -25,12 +25,15 @@
 - That check packs the plugin with a stub CLI and skips the package digest. CI packs it with the `firstdraft/cli`
   commit named by `cliRevision` in `script/cli-contract/config.mjs`, then checks the digest and CLI contract. A
   change to packaged bytes needs a new `plugin_source.tarball_sha256` in `release/compatibility.json`. Reproduce
-  the CI checks with the `--cli-root` commands in [`RELEASING.md`](RELEASING.md#1-use-the-checks-already-completed).
+  the CI checks with the `--cli-root` commands in [`RELEASING.md`](RELEASING.md#reproduce-ci-locally).
 - Get an independent review through [cross-review](https://github.com/raghubetina/cross-review) before merging a
   contract change or an instruction-policy change. A contract change edits a `requires` entry in
   `release/compatibility.json` or the bundled Plan schema in `skills/create-full-stack-app/references/`. An
   instruction-policy change edits `AGENTS.md`, `CLAUDE.md`, or `RELEASING.md`. Use `codex-review` from Claude Code
-  and `$claude-review` from Codex.
+  and `$claude-review` from Codex. Pass the service repository's `docs/review-focus.md` as `--focus-file`. Without
+  a sibling checkout, fetch it into `tmp/` with
+  `gh api repos/firstdraft/firstdraft/contents/docs/review-focus.md -H 'Accept: application/vnd.github.raw'`.
+  Put the reviewer, session id, and verdict in the pull request body, and leave the findings out.
 
 ## Release coordination
 

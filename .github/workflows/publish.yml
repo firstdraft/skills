@@ -50,6 +50,8 @@ jobs:
           test "$GITHUB_REF_NAME" = "claude-v$package_version"
           git rev-list --first-parent refs/remotes/origin/main > "$RUNNER_TEMP/main-first-parent"
           grep -Fqx "$release_sha" "$RUNNER_TEMP/main-first-parent"
+      - name: Require a CHANGELOG entry
+        run: node script/check-changelog-entry.mjs "${GITHUB_REF_NAME#claude-v}"
       - name: Reuse successful main CI
         env:
           GH_TOKEN: ${{ github.token }}
