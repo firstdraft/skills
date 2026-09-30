@@ -14,7 +14,7 @@ workspace under `.firstdraft/design/` and defaults to current-folder local outpu
 server Publication. Only `create-full-stack-app` is packaged; the UI Skill auditions remain deferred source.
 
 Trying First Draft as a tester? Start with the
-[local development guide](https://gist.github.com/raghubetina/3d424a97a1eaa6de8c406e67f32a237e). Start in an empty
+[local development guide](https://firstdraft.github.io/firstdraft/docs/guides/local-app.html). Start in an empty
 local folder; a Drawing Board clone and GitHub push are unnecessary. The
 [Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft) is the Codespaces fallback.
 
