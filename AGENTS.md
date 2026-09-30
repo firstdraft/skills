@@ -43,7 +43,7 @@
 - Keep one release operator. Preserve protected tags, the actual GitHub environment reviewers, OIDC/provenance, exact
   package bytes, compatible service/CLI identities, and read-only reconciliation of ambiguous external effects.
 - Never reuse a published npm version, protected release tag, or marketplace version for different package bytes.
-  Unpublished, unpromoted candidates may be revised before release. Before 1.0 use a minor bump for a breaking
+  Unpublished candidates may be revised before release. Before 1.0 use a minor bump for a breaking
   compatibility change, otherwise a patch. Dist-tags are selections, not version semantics.
 - The marketplace must select an already-published package. Keep the existing selection while preparing a candidate;
   after publication, update it through normal passing PR checks. Do not bypass the protected environment or CI.

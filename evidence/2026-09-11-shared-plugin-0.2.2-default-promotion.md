@@ -1,5 +1,8 @@
 # Shared plugin 0.2.2 default promotion — 2026-09-11
 
+- **Date:** 2026-09-11
+- **Status:** Historical
+
 The approved release sequence completed its final npm default promotion after
 [exact-package qualification and OIDC publication](2026-09-10-shared-plugin-0.2.2-release.md) and
 [fresh public installation in Claude Code and Codex](2026-09-10-shared-plugin-0.2.2-public-install.md).

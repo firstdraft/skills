@@ -11,7 +11,7 @@ successful publication or retained release evidence before changing a tag:
 
 ```sh
 package='@firstdraft.com/cli' # or @firstdraft.com/claude-code
-version='0.4.0' # the approved, already-published version
+version='x.y.z' # replace with the approved, already-published version
 npm view "$package@$version" name version dist --json --prefer-online --registry=https://registry.npmjs.org/
 npm dist-tag ls "$package" --prefer-online --registry=https://registry.npmjs.org/
 ```

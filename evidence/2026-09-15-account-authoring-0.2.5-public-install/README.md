@@ -1,5 +1,8 @@
 # Public install observations for plugin 0.2.5
 
+- **Date:** 2026-09-15
+- **Status:** Evidence
+
 The [release record](../2026-09-15-account-authoring-0.2.5.md) owns these claims.
 The [receipt](receipt.json), [registry metadata](registry-package.json), and
 [executed helper](public-install-smoke.mjs) retain the observed inputs and output.

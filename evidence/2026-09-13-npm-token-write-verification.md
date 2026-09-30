@@ -1,5 +1,8 @@
 # npm token writes verified; cleanup reconciled — September 13, 2026
 
+- **Date:** 2026-09-13
+- **Status:** Historical
+
 The configured GitHub promotion token has successfully written a tag on both packages. At the
 `2026-09-13T19:21:29Z` registry read, only the intended permanent tags remained: CLI `next/latest = 0.2.2` and
 shared plugin `next/latest = 0.2.3`. The [machine receipt](2026-09-13-npm-token-write-verification.json) binds the

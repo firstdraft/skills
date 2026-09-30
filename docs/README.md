@@ -46,7 +46,7 @@ dated observation records an earlier value.
 | Always-loaded guardrails | `AGENTS.md` | Include only rules that prevent likely high-impact mistakes |
 | Current operator procedure | `RELEASING.md` and its linked runbooks | No completed chronology or historical shell transcripts |
 | Agent workflow source | `skills/` | One editable source per Skill; package inventory selects distribution and app-owned `UI.md` controls UI choices |
-| Point-in-time evidence | `evidence/YYYY-MM-DD-*` | Append a new record; do not rewrite an old observation as current |
+| Point-in-time evidence | `evidence/YYYY-MM-DD-*` | Append a new record with a [date and status](../evidence/README.md#status-headers); do not rewrite an old observation as current |
 | Historical narrative | `evidence/*-history.md` | Archive only; never treat as the current runbook |
 | Behavioral corpus | `evals/` | Cases are expectations and fixtures, not proof of execution |
 

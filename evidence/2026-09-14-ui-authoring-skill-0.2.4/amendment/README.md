@@ -1,5 +1,8 @@
 # Full collection navigation amendment
 
+- **Date:** 2026-09-14
+- **Status:** Evidence
+
 Skills candidate `702f90e5dd7a30131b8291e28b2f4b8827d0cdd9` changes one
 packaged sentence from “separate paginated View all page” to “separate paginated
 full collection page.” It describes the destination without prescribing a

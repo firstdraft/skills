@@ -6,6 +6,26 @@ do not read this directory as one narrative and do not treat an old observation 
 The source/public split observed at the start of this documentation change is captured in
 [`2026-08-13-release-state.json`](2026-08-13-release-state.json). Recheck live external state before a mutation.
 
+## Status headers
+
+Each dated Markdown record opens with its date and one status, right after the title:
+
+```markdown
+- **Date:** 2026-09-22
+- **Status:** Evidence
+```
+
+- **Evidence:** the observation stands within the boundary the record names.
+- **Historical:** the record exercises a retired procedure or channel, such as npm `next` promotion, promotion
+  tokens, the package-first rehearsal, the local-directory marketplace, or alpha prereleases. Do not replay it.
+- **Superseded:** a later record replaces its conclusion. Follow the word with `by` and a link to that record.
+
+Classify a record by its main observation. A release record whose publication or installation still stands stays
+Evidence even when a later section ran a retired step, such as npm promotion. Do not replay that step.
+
+The date matches the file or directory name. After writing a record, change only its status line and link repairs.
+A retained artifact whose SHA-256 a record binds keeps its exact bytes and carries no header.
+
 ## Installation and packaging
 
 | Record | Observed boundary |

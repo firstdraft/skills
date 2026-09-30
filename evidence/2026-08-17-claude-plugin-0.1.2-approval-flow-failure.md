@@ -1,5 +1,8 @@
 # Claude plugin 0.1.2 approval-flow failure — 2026-08-17
 
+- **Date:** 2026-08-17
+- **Status:** Evidence
+
 This record preserves the reviewed outcome of the final controlled qualification attempt for the earlier
 unpublished 0.1.2 candidate. It is failure evidence, never PASS or release evidence. Sanitized machine artifacts
 were retained privately; their hashes are recorded here without credentials, private state, raw Plan contents, or

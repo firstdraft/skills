@@ -1,5 +1,8 @@
 # npm token cleanup remains incomplete — September 13, 2026
 
+- **Date:** 2026-09-13
+- **Status:** Superseded by [token write verification](2026-09-13-npm-token-write-verification.md)
+
 The [cache repair](2026-09-13-npm-promotion-cache-repair.md) landed at
 `5d6d7f313bfbf5ddfc02c655b2244aa79c7d9a3d`; its [main CI](https://github.com/firstdraft/skills/actions/runs/34776439837)
 passed on both Node versions. A fresh [credential check](https://github.com/firstdraft/skills/actions/runs/34776479919)

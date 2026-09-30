@@ -1,5 +1,8 @@
 # Fresh Claude Code evaluations — 2026-08-04
 
+- **Date:** 2026-08-04
+- **Status:** Evidence
+
 This report preserves two model-backed observations of the candidate
 `create-full-stack-app` plugin. It records only reviewed, allowlisted results;
 it contains no credentials, private CLI state, raw Foundation Plan or artifact

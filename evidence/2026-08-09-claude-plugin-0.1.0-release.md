@@ -1,5 +1,8 @@
 # Claude plugin 0.1.0 publication — 2026-08-09
 
+- **Date:** 2026-08-09
+- **Status:** Evidence
+
 One read-only reconciliation observed the exact `@firstdraft.com/claude-code@0.1.0` package after its protected-tag
 publication workflow completed. The immutable source and publication identities were:
 

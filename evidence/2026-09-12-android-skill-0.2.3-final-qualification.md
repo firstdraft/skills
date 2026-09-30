@@ -1,5 +1,8 @@
 # Reviewed Android Skill 0.2.3 qualification
 
+- **Date:** 2026-09-12
+- **Status:** Evidence
+
 This record qualifies the revised unpublished package after the
 [earlier candidate](2026-09-12-android-skill-0.2.3-qualification.md). It does not record npm publication, catalog
 promotion, service deployment, or a fresh student journey. The

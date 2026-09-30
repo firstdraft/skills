@@ -1,5 +1,8 @@
 # Stable npm promotion — 2026-09-10
 
+- **Date:** 2026-09-10
+- **Status:** Historical
+
 The owner completed the previously approved `latest` changes after the exact-package
 [qualification](2026-09-10-claude-plugin-0.2.1-publication.md) and
 [public catalog installation](2026-09-10-public-plugin-0.2.1-install.md) passed.

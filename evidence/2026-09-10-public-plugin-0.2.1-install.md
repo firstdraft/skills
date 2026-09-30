@@ -1,5 +1,8 @@
 # Public plugin 0.2.1 installation — 2026-09-10
 
+- **Date:** 2026-09-10
+- **Status:** Evidence
+
 The two public marketplace commands installed exact plugin `0.2.1` with bundled CLI `0.2.2` after catalog promotion.
 This was an isolated package installation with no First Draft credentials, model invocation, or service call.
 

@@ -1,5 +1,8 @@
 # Shared plugin 0.2.2 public installation — September 10, 2026
 
+- **Date:** 2026-09-10
+- **Status:** Evidence
+
 After [catalog PR #55](https://github.com/firstdraft/skills/pull/55) merged at
 `fb6c8e63105f1f139e6ae59f3958f9c98b44cd69`, fresh isolated installations passed in Claude Code `2.1.267` and
 Codex `0.154.0`. Each used empty agent configuration, npm configuration/cache, and a workspace without a global

@@ -1,5 +1,8 @@
 # Direct npm plugin 0.1.0 check — 2026-08-09
 
+- **Date:** 2026-08-09
+- **Status:** Evidence
+
 One isolated no-service check installed exact public package `@firstdraft.com/claude-code@0.1.0` with Node
 v24.18.0, npm 11.16.0, and Claude Code 2.1.224. The retained npm result reported one added package. The check used
 fresh temporary state; this record omits its run-local absolute path because that path is not a release identity.

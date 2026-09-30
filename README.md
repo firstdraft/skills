@@ -6,14 +6,12 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex. UI
 app's own design and components. The public catalog and Drawing Board pins determine what an installed workspace
 actually receives.
 
-Source candidate `0.8.0` requires CLI `0.8.0`, Service API `0.7`, and Foundation Plan `0.23`. New remote work uses production
-at `https://firstdraft.com`; staging is explicit with `firstdraft --staging ...` and a separate staging token.
-It preserves the planning workspace under `.firstdraft/design/` and defaults to current-folder local output.
-Use explicit `--github` for server
-Publication. Its identities belong in
-[release compatibility](release/compatibility.json). The [public catalog](.claude-plugin/marketplace.json) owns the
-installed version; source compatibility does not establish publication. Only `create-full-stack-app` is packaged;
-the UI Skill auditions remain deferred source.
+[Release compatibility](release/compatibility.json) names the CLI, Service API, and Foundation Plan format that
+this source requires. The [public catalog](.claude-plugin/marketplace.json) owns the installed version; source
+compatibility does not establish publication. New remote work uses production at `https://firstdraft.com`; staging
+is explicit with `firstdraft --staging ...` and a separate staging token. The workflow preserves the planning
+workspace under `.firstdraft/design/` and defaults to current-folder local output. Use explicit `--github` for
+server Publication. Only `create-full-stack-app` is packaged; the UI Skill auditions remain deferred source.
 
 Trying First Draft as a tester? Start with the
 [local development guide](https://gist.github.com/raghubetina/3d424a97a1eaa6de8c406e67f32a237e). Start in an empty
@@ -28,7 +26,7 @@ local folder; a Drawing Board clone and GitHub push are unnecessary. The
 - the exact schema, examples, and review checklists packaged with the Skill;
 - behavioral evaluations for agent workflow changes;
 - shared Claude/Codex plugin assembly around the canonical Skills and reviewed CLI package; and
-- release compatibility checks, package evidence, and promotion runbooks.
+- release compatibility checks, package evidence, and release runbooks.
 
 The Service owns Foundation Plan semantics and Compilation behavior. The CLI owns transport and terminal command
 behavior. This repository teaches an agent how to use those contracts without creating a second product definition.
@@ -46,7 +44,7 @@ behavior. This repository teaches an agent how to use those contracts without cr
 | Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.23.schema.json) |
 | Add or run behavioral evaluations | [Evaluation guide](evals/README.md) |
 | Inspect a dated observation | [Evidence archive](evidence/README.md) |
-| Prepare or promote a release | [Release runbook](RELEASING.md) |
+| Prepare or publish a release | [Release runbook](RELEASING.md) |
 
 Historical pins and release chronology in the evidence archive are receipts, not current instructions.
 
@@ -129,6 +127,8 @@ sh script/check
 The check covers:
 
 - repository and documentation structure;
+- documentation currency: no retired version or term and no candidate label on a published version in current
+  pages, and a date and status at the top of each dated evidence record;
 - every portable Skill's discovery, references, license, and packaging boundary;
 - Foundation Plan schema and example fixtures;
 - behavioral-evaluation structure and offline UI evaluation fixtures;
@@ -164,13 +164,7 @@ If the installed GitHub CLI supports Skill preview:
 gh skill preview firstdraft/skills create-full-stack-app
 ~~~
 
-Before proposing a Skill collection release, also run:
-
-~~~sh
-gh skill publish --dry-run
-~~~
-
-Source validation does not publish a package, move a dist-tag, promote a marketplace entry, or deploy the Service.
+Source validation does not publish a package, move a dist-tag, select a catalog version, or deploy the Service.
 Those actions follow the machine-owned [compatibility record](release/compatibility.json),
 [RELEASING.md](RELEASING.md), and the serialized cross-repository release process described there.
 

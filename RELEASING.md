@@ -7,13 +7,12 @@ longer part of an ordinary release. Coordinate the service, CLI, and Skills thro
 ## Candidate and catalog
 
 [`release/compatibility.json`](release/compatibility.json) owns the candidate version, compatible CLI/API/Plan
-identities, and deterministic package SHA-256. The current source candidate is
-`@firstdraft.com/claude-code@0.8.0` with CLI `0.8.0`, API `>= 0.7.0`, `< 0.8.0`, and Plan `sketch/0.23`.
-The [marketplace manifest](.claude-plugin/marketplace.json) independently selects a published plugin version;
-retain its selection until the intended new version is actually published. Source compatibility is not public
-catalog selection. Query npm when releasing rather than treating a dated distribution snapshot as current.
+identities, and deterministic package SHA-256. The [marketplace manifest](.claude-plugin/marketplace.json)
+independently selects a published plugin version; retain its selection until the intended new version is actually
+published. Source compatibility is not public catalog selection. Query npm when releasing rather than treating a
+dated distribution snapshot as current.
 
-This breaking candidate retires the authored `application.pwa` choice and uses target
+Release 0.8.0 retires the authored `application.pwa` choice and uses target
 `rails-sketch/2026-09-bookmark-assets`; bookmark assets are part of every generated web app. It requires the matching
 API contract and CLI rather than accepting the replaced Plan format. There is no retained-Project migration or
 compatibility bridge. Production/staging credential separation, saved Project origins, local-output defaults, and
@@ -21,7 +20,12 @@ compatibility bridge. Production/staging credential separation, saved Project or
 
 Use an ordinary pre-1.0 minor bump for a breaking compatibility change and a patch bump for a compatible change.
 Never reuse a published npm version, protected release tag, or marketplace version for different package bytes.
-An unpublished, unpromoted candidate may be revised at a new commit and digest without another version bump.
+An unpublished candidate may be revised at a new commit and digest without another version bump.
+
+Packaged Skill text ships in the release and cannot be relabeled after publication. Do not let it call its own
+version a candidate or unreleased, or call itself the source candidate. The repository check compares packaged files
+with the `release/compatibility.json` version rather than the catalog, so it reports such a label while the bytes
+can still change.
 
 ## Authorization
 
@@ -62,7 +66,7 @@ CLI/Skill against the intended service. Compilation runs on the service; the out
 
 ```sh
 firstdraft plan compile --output .
-# CLI 0.4 also selects this mode with: firstdraft plan compile
+# plain `firstdraft plan compile` selects the same mode
 ```
 
 Start in an eligible disposable local folder. Review the Plan and matching analysis gaps, then invoke Compile once
@@ -101,6 +105,10 @@ Update `.claude-plugin/marketplace.json` to the exact published version. Keep it
 aligned and merge under the already authorized release scope. A version-selection-only change uses the catalog
 metadata and published-version checks; any other change runs the full CI matrix. Never point the live catalog
 at an unpublished candidate. Catalog CI validates this small change; do not add a second product smoke.
+
+Before that selection PR, relabel CHANGELOG entries and other unpackaged current pages that call the published
+version a candidate or unreleased. The repository check fails on those labels once the catalog selects the version,
+and a selection-only PR skips that check, so a missed label fails the next ordinary PR instead.
 
 A normal package release does not require installing both Claude and Codex again after the catalog merge. Verify a
 public install when the catalog source format, packaging, client integration, or discovery behavior changes, or

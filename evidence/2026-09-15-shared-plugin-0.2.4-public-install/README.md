@@ -1,5 +1,8 @@
 # Public installation companion records
 
+- **Date:** 2026-09-15
+- **Status:** Evidence
+
 These are the original records from the successful public installation at
 `2026-09-15T04:16:05.550Z`, preserved without content redaction.
 The [summary](../2026-09-15-shared-plugin-0.2.4-public-install.md) owns the claim;

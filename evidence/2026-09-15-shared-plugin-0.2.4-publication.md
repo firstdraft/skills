@@ -1,5 +1,8 @@
 # Shared plugin 0.2.4 publication — September 15, 2026 UTC
 
+- **Date:** 2026-09-15
+- **Status:** Evidence
+
 [Protected publication](https://github.com/firstdraft/skills/actions/runs/34926132617)
 published `@firstdraft.com/claude-code@0.2.4` from
 `66eeb1ab330646e6d998ba1448c26c8b366ef806`. Annotated tag `claude-v0.2.4`

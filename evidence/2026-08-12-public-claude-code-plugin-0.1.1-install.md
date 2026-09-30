@@ -1,5 +1,8 @@
 # Public Claude Code plugin 0.1.1 installation — 2026-08-12
 
+- **Date:** 2026-08-12
+- **Status:** Evidence
+
 One isolated Claude Code 2.1.228 state ran the public colleague commands:
 
 ```sh

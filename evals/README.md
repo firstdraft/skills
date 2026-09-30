@@ -138,8 +138,10 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 - `compile-terminal-publication-failure`
 
 `RELEASING.md` uses local compile and boot as the ordinary release smoke only when needed. The cases here are
-focused behavioral regressions for authoring or authorization changes, not a mandatory release sequence. When testing
-the two-turn approval behavior specifically, use these continuing-session pairs:
+focused behavioral regressions for authoring or authorization changes, not a mandatory release sequence. The two-turn
+approval smoke below is optional precedent from
+[an earlier release qualification](../evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md), not a gate.
+When a change targets the two-turn approval behavior, it can use these continuing-session pairs:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
 - Direct output pairs `precompile-drawing-board-read-back` with
@@ -204,15 +206,13 @@ that a server produced them during an eval.
 ## Shared client qualification
 
 When changing client integration or packaging, use the affected cases and exact assembled package in the affected
-client. Ordinary releases do not require a fresh session in both Claude and Codex. Record each client's version and the actual
-model. For the Codex 0.2.2 candidate, exercise installed Skill discovery, bundled CLI use without a global
-`firstdraft`, project-wrapper precedence, local-only initialization, authentication pause/resume, the continuing
-two-turn direct-Compile pair, and both non-trigger controls. The automatic install check is model-free; running it
-does not execute these behavioral cases.
+client. Ordinary releases do not require a fresh session in both Claude and Codex. Record each client's version and
+the actual model. The automatic install check is model-free; running it does not execute these behavioral cases.
+[The 2026-09-10 Codex onboarding record](../evidence/2026-09-10-codex-onboarding.md) shows which cases one earlier
+Codex packaging change exercised. It is precedent, not a checklist.
 
 A loopback fixture server can exercise the real packaged CLI and count requests without a live First Draft service.
 Retain that boundary: returned fixture artifacts are not real Compiler output, and an existing agent login does not
 prove fresh browser sign-in. Record unchanged Plan bytes, zero Compile starts before approval, exactly one after
 approval, and the final response. Treat fresh registry installation, the hosted Codespace journey, and first-time
-sign-in as separate observations. Follow `RELEASING.md` for the selected release's gates; the controlled-service
-approval smokes above record the 0.2.2 procedure.
+sign-in as separate observations. Follow `RELEASING.md` for the selected release's gates.

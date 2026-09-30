@@ -31,7 +31,7 @@ and any useful small example or verification; they need not reproduce commit log
 
 ## 2026-09-28: Associated creation without standalone routes
 
-**Compiler and Skills — coordinated 0.8.0 source candidate, unreleased.** An associated form can use a create
+**Compiler and Skills — released with plugin and CLI 0.8.0.** An associated form can use a create
 definition without exposing standalone New/Create routes. For example, keep Rating's create inputs, authorization,
 and Movie collection form while omitting `new` and `create` from Rating's `resource_routes`. The nested route still
 supplies its Movie; a retained standalone `create.return_to` does not choose the nested form's destination.
@@ -43,26 +43,26 @@ gaps and shared-Policy form-entry limits before handing unfinished application b
 
 ## 2026-09-27: Bookmark assets without a planning option
 
-**Compiler and authoring contract — coordinated source candidate, unreleased.** The next Plan contract includes
+**Compiler and authoring contract — released with plugin and CLI 0.8.0.** The Plan 0.23 contract includes
 favicon and home-screen bookmark assets for every web app, removing the `application.pwa` option. Prepared
 black-on-white artwork uses the app name's first trimmed character when it is an ASCII letter or digit, or a neutral
 circle otherwise. Appearance still controls theme and native colors. This supplies a useful starting point without
 another planning question. Broader installed-app behavior remains outside this change.
 
-The source Skills and CLI 0.8.0 candidates require Plan 0.23, API 0.7, and the bookmark-assets target profile. These
-source identities do not change the published catalog. Existing application owners can keep their current artwork
-or replace the public icon files using their app's `UI.md`; no new Compilation is needed for that edit.
+Skills and CLI 0.8.0 require Plan 0.23, API 0.7, and the bookmark-assets target profile. Existing application
+owners can keep their current artwork or replace the public icon files using their app's `UI.md`; no new
+Compilation is needed for that edit.
 
 ## 2026-09-27: Public Plan authoring references
 
-**Skills — merged source, unreleased 0.7.1 candidate.** The packaged authoring references now route to the existing
+**Skills — released in plugin 0.8.0.** The packaged authoring references now route to the existing
 public [Field catalog](https://firstdraft.github.io/firstdraft/docs/architecture/design/field-catalog.html#normalization-and-comparison)
 and [Rails profile](https://firstdraft.github.io/firstdraft/docs/architecture/targets/rails/profile.html), and include
 the required native identity and AASM caveats. Dated qualification receipts moved to maintainer history.
 
 This removes the need for private Service access during Plan authoring. If you are revising a Plan, use these
 references and the matching analysis for its actual support boundaries. Existing application code needs no change
-from this documentation repair. Source integration alone does not make the candidate available from the catalog.
+from this documentation repair.
 
 ## 2026-09-27: Continue UI work from the application's guidance
 

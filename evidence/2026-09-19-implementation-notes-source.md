@@ -1,5 +1,8 @@
 # Implementation notes and validation authoring: source exercise
 
+- **Date:** 2026-09-19
+- **Status:** Evidence
+
 This record covers source guidance for [Skills #77](https://github.com/firstdraft/skills/issues/77) and the interim
 workspace convention under [Service #751](https://github.com/firstdraft/firstdraft/issues/751). It does not establish
 installed-plugin behavior, a complete generated application, or delivery of notes through live GitHub Publication.
