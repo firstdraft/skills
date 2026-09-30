@@ -45,6 +45,7 @@ behavior. This repository teaches an agent how to use those contracts without cr
 | Add or run behavioral evaluations | [Evaluation guide](evals/README.md) |
 | Inspect a dated observation | [Evidence archive](evidence/README.md) |
 | Prepare or publish a release | [Release runbook](RELEASING.md) |
+| Commit, review, or land a change | [Contributing guide](CONTRIBUTING.md) |
 
 Historical pins and release chronology in the evidence archive are receipts, not current instructions.
 
