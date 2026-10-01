@@ -8,8 +8,8 @@ JSON object. An unrecognized prefixed line, a progress line after the envelope, 
 interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
 human-readable `detail` or broad process exit status.
 
-The source candidate uses `@firstdraft.com/cli@0.8.0`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.0/script/cli-contract/config.mjs)
+This plugin bundles `@firstdraft.com/cli@0.8.1`. Its exact reviewed revision and runtime digest are owned by
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.1/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -34,22 +34,29 @@ agent-authored Plan content. Inspect only its `api_url` when a persistent read-o
 the pinned origin.
 
 `plan init` only creates local files; it does not choose a server. New remote work defaults to production at
-`https://firstdraft.com`, using `FIRSTDRAFT_API_TOKEN`. For requested staging work, use the root flag before each
-remote command (`firstdraft_cli --staging plan push`) and configure
-`FIRSTDRAFT_STAGING_API_TOKEN` from `https://staging.firstdraft.com`. Token selection follows the saved origin,
-including existing staging Plans resumed without the flag. The CLI never sends the production token to staging
-as a fallback. Staging Plans made with an older CLI now need the separate staging token variable.
+`https://firstdraft.com`. For requested staging work, use the root flag before each remote command
+(`firstdraft_cli --staging plan push`). Credential selection follows the saved origin, including existing staging
+Plans resumed without the flag.
 
-`FIRSTDRAFT_API_URL` selects an advanced custom server and uses `FIRSTDRAFT_API_TOKEN`, except that the exact
-staging origin always requires `FIRSTDRAFT_STAGING_API_TOKEN`. Combining `--staging` with a different URL, or with
+Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
+or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the token `firstdraft login` saved for that
+origin. The CLI never sends one environment's credential to another. The usual setup is one login per environment,
+which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.8.1 login`, with `--staging` added for
+staging, or `firstdraft login` from an installed CLI. It prints a URL to approve in a browser; on a machine without
+one, `--interactive` shows a device code to approve elsewhere. The login is saved outside the project, so every
+session and client on the machine shares it.
+
+`FIRSTDRAFT_API_URL` selects an advanced custom server, which uses `FIRSTDRAFT_API_TOKEN` or a login saved with the
+same variable set; the exact staging origin always uses the staging credential. Combining `--staging` with a different URL, or with
 a non-staging saved origin, returns `invalid_configuration`. `plan push` and `plan compile` also reject a URL
 override that differs from the saved origin; status and download commands keep using that origin and ignore the
 URL override. None of these selections migrates a Project. Preserve the existing Plan and state. To start
 independent work in another environment, use a separate folder with a new Plan; do not hand-edit private state or
 automatically copy Project identity across environments.
 
-Let the user configure credentials outside the conversation. Do not request either token's value, print it, place
-it on a command line, or persist it in project files. When the user confirms authentication is configured, resume
+Let the user configure credentials outside the conversation. Do not request a token's value, print it, place it on
+a command line, or persist it in project files. Do not run `login` or `logout` yourself: approval belongs to the
+user, and the command waits for it. When the user confirms authentication is configured, resume
 the already requested operation without asking for fresh authorization.
 
 `plan init` has two handled failures:
@@ -148,9 +155,9 @@ local development is unsuitable, not a prerequisite.
 
 ### Direct local output
 
-CLI 0.8.0 defaults to current-root adoption and archives the original workspace under `.firstdraft/design/`.
-CLI 0.3.0 supports the same archive via explicit `--output .`; older 0.2.2 uses top-level `design/`. Preserve the actual
-layout of an already materialized application; this change does not migrate it.
+The bundled CLI adopts the current root by default, or with explicit `--output .`, and archives the original workspace
+under `.firstdraft/design/`. Applications materialized by much older CLIs may have a top-level `design/` instead.
+Preserve the actual layout of an already materialized application; the CLI does not migrate it.
 
 `plan compile` defaults to the physical current directory. Explicit `--output` accepts an absent destination or a spelling that resolves to the physical current directory.
 It validates the destination before Plan mutation, then starts one direct conditional Compilation. An absent path is
@@ -493,7 +500,7 @@ bytes and private state; create replacement work only within the user's authoriz
 | --- | --- | --- |
 | Any leaf command | `invalid_arguments` | Syntax failed before the requested action. Read that command's help. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `authentication_required` | Configure the token outside the conversation. |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `authentication_required` | Ask the user to run `login` for that environment, or set its token, outside the conversation. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
 | `plan status`, `plan compile`, `compilation status`, `compilation download` | `project_not_pushed` | No accepted Project/origin is pinned locally. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |

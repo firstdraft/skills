@@ -29,6 +29,24 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-01: Log in once instead of exporting a token
+
+**Skills — released in plugin 0.8.1, with CLI 0.8.1.** The bundled CLI adds `firstdraft login` and
+`firstdraft logout`, so you no longer need to copy a token from `/api-tokens` into `FIRSTDRAFT_API_TOKEN` or
+`FIRSTDRAFT_STAGING_API_TOKEN`. Log in once per environment from any terminal:
+
+```sh
+npx --yes @firstdraft.com/cli@0.8.1 login            # production
+npx --yes @firstdraft.com/cli@0.8.1 --staging login  # staging
+```
+
+Open the URL it prints and approve the CLI in your browser; add `--interactive` on a machine without a browser to
+approve a device code elsewhere. The token is saved per origin in your user configuration directory, so Claude
+Code, Codex, and desktop sessions share it, and it never authenticates a different environment. Token environment
+variables still work and take precedence, so an existing setup needs no change. When a remote command reports
+`authentication_required`, the Skill now asks you to log in yourself; it never runs `login` or `logout`. API 0.7
+and Plan 0.23 are unchanged.
+
 ## 2026-09-28: Associated creation without standalone routes
 
 **Compiler and Skills — released with plugin and CLI 0.8.0.** An associated form can use a create

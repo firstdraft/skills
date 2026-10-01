@@ -67,6 +67,9 @@ for (const name of [
 ]) {
   delete cleanEnvironment[name];
 }
+// A credentials file saved by `firstdraft login` on this machine must not
+// reach the bundled CLI.
+cleanEnvironment.XDG_CONFIG_HOME = path.join(temporaryDirectory, "config");
 
 try {
   const fakeCliRoot = createFakeCli(temporaryDirectory);

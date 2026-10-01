@@ -3,10 +3,13 @@ import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
   mkdirSync,
+  mkdtempSync,
   readFileSync,
   readdirSync,
+  rmSync,
   writeFileSync,
 } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 import {
@@ -18,9 +21,23 @@ import {
   storedApiUrl,
 } from "./config.mjs";
 
-export const cleanEnvironment = Object.fromEntries(
-  Object.entries(process.env).filter(([name]) => !name.startsWith("FIRSTDRAFT_")),
+// An empty configuration directory for every CLI run, so a credentials file
+// saved by `firstdraft login` on this machine never authenticates a check.
+export const isolatedConfigHome = mkdtempSync(
+  path.join(tmpdir(), "firstdraft-skill-cli-config-"),
 );
+process.once("exit", () =>
+  rmSync(isolatedConfigHome, { recursive: true, force: true }),
+);
+
+export const cleanEnvironment = {
+  ...Object.fromEntries(
+    Object.entries(process.env).filter(
+      ([name]) => !name.startsWith("FIRSTDRAFT_"),
+    ),
+  ),
+  XDG_CONFIG_HOME: isolatedConfigHome,
+};
 
 const safeGithubReasonCodeSet = new Set(safeGithubReasonCodes);
 
@@ -74,6 +91,7 @@ export async function invokeRunner(
     cwd,
     apiUrl: storedApiUrl,
     apiToken,
+    env: { XDG_CONFIG_HOME: isolatedConfigHome },
     createProjectId: () => projectId,
     ...options,
   });

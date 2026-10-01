@@ -251,51 +251,7 @@ const retiredTerms = [
 // Do not add entries for other files. An entry allows one occurrence unless it sets `count`, so a new copy of the
 // same stale text still fails.
 const packagedCurrencyReason = "packaged; fixed in the next Skill release";
-const packagedReferences = "skills/create-full-stack-app/references";
-const currencyBaseline = [
-  {
-    file: `${packagedReferences}/diagnostics-and-recovery.md`,
-    rule: "release-label",
-    match: "the source candidate",
-    reason: packagedCurrencyReason,
-  },
-  {
-    file: `${packagedReferences}/diagnostics-and-recovery.md`,
-    rule: "identity",
-    match: "CLI 0.3.0",
-    reason: packagedCurrencyReason,
-  },
-  {
-    file: `${packagedReferences}/diagnostics-and-recovery.md`,
-    rule: "identity",
-    match: "0.2.2",
-    reason: packagedCurrencyReason,
-  },
-  {
-    file: `${packagedReferences}/examples.md`,
-    rule: "retired-term",
-    match: "web-and-iPhone",
-    reason: packagedCurrencyReason,
-  },
-  {
-    file: `${packagedReferences}/foundation-plan-023.md`,
-    rule: "release-label",
-    match: "the source candidate",
-    reason: packagedCurrencyReason,
-  },
-  {
-    file: `${packagedReferences}/foundation-plan-023.md`,
-    rule: "identity",
-    match: "CLI 0.3.0",
-    reason: packagedCurrencyReason,
-  },
-  {
-    file: `${packagedReferences}/foundation-plan-023.md`,
-    rule: "identity",
-    match: "CLI 0.2.2",
-    reason: packagedCurrencyReason,
-  },
-];
+const currencyBaseline = [];
 
 test("current pages name current identities, release labels, and terms", async () => {
   const compatibility = JSON.parse(

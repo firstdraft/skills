@@ -45,7 +45,7 @@ An empty Plan is preferable to a fake Entity. Tell the user that the application
 
 ## Bounded web and iPhone application
 
-This complete document is the smallest canonical `rails-sketch/2026-09-bookmark-assets` web-and-iPhone success candidate. It
+This complete document is the smallest canonical `rails-sketch/2026-09-bookmark-assets` web and iPhone success candidate. It
 requests one read-only public web index and one selected iPhone project with the same navigation label and semantic
 icon. The domain supplies the native HTTPS origin and identifier prefix, plus the Rails production mailer host.
 The required title Field supplies the human-facing Primary Descriptor. The prepared analyzer is designed to
