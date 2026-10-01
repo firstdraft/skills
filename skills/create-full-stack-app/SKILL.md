@@ -253,7 +253,8 @@ After the exact candidate's semantic read-back is approved, read
 
   `--github` and `--output` are mutually exclusive.
 
-Invoke it exactly once without another confirmation or gap field; do not reimplement CLI internals.
+Invoke it exactly once without another confirmation or gap field; do not reimplement CLI internals. Tell the user
+it usually takes under a minute.
 
 Report direct output only after materialization verifies. On `request_outcome_unknown` with `phase: "compilation"`,
 preserve Plan, private state, and the selected output; do not retry or switch modes. A validated retained ID permits

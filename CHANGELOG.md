@@ -44,8 +44,8 @@ Open the URL it prints and approve the CLI in your browser; add `--interactive` 
 approve a device code elsewhere. The token is saved per origin in your user configuration directory, so Claude
 Code, Codex, and desktop sessions share it, and it never authenticates a different environment. Token environment
 variables still work and take precedence, so an existing setup needs no change. When a remote command reports
-`authentication_required`, the Skill now asks you to log in yourself; it never runs `login` or `logout`. API 0.7
-and Plan 0.23 are unchanged.
+`authentication_required`, the Skill now asks you to log in yourself; it never runs `login` or `logout`. Before a
+Compile, the Skill also tells you it usually finishes in under a minute. API 0.7 and Plan 0.23 are unchanged.
 
 ## 2026-09-28: Associated creation without standalone routes
 
