@@ -6,20 +6,18 @@ artifacts are attached, staged into the project, or retained only as expected ou
 
 The current Plan/analysis fixtures below are synthetic contract inputs, not new Service observations.
 Current authoring cases use Foundation Plan `firstdraft.foundation-plan.sketch/0.23` and target
-`rails-sketch/2026-09-bookmark-assets`. The `appearance-current` Plan/analysis and `resume-current` Plan fixtures replace their older
-inputs for new evaluations. The original `appearance-issues` Plan/analysis and `resume` Plan retain the exact bytes
-declared by the [September 14 qualification receipt](../evidence/2026-09-14-ui-authoring-skill-0.2.4-qualification.json).
-The `current-case-chat` Plan/GapSet retains its eval-case and repository-test digest bindings, including the GapSet's
-source digest. Its review case reads the attached August 28 result as dated evidence; it does not claim the current
-Compiler produced that result.
+`rails-sketch/2026-09-bookmark-assets`. The `current-case-chat` Plan/GapSet retains its eval-case and repository-test
+digest bindings, including the GapSet's source digest. Its review case reads the attached August 28 result as dated
+evidence; it does not claim the current Compiler produced that result.
 
 For existing-app UI work, use the separate [UI continuation corpus](ui-continuation/README.md). Its nine offline
 source cases cover normal screens, forms, component reuse, themes, unavailable discovery, an older app, source-only
 review, and routing controls. They are evaluation inputs, not evidence that a client completed those tasks.
 
 Run independent cases in fresh agent contexts; continue a session only for a pair explicitly identified below.
-Record the agent, model, Skill revision, commands, resulting file changes, and external effects. Replace synthetic state only for a
-specifically prepared server-backed run. Never print or commit private `.firstdraft/state.json` contents.
+Record the agent, model, Skill revision, commands, resulting file changes, and external effects in the commit message
+of the change the run supports. Replace synthetic state only for a specifically prepared server-backed run. Never
+print or commit private `.firstdraft/state.json` contents.
 
 ## Initialization, interview, and authoring
 
@@ -139,9 +137,8 @@ fresh private state with the exact reviewed CLI in an isolated scratch project.
 
 Release coordination in the service repository calls for a local compile-and-boot smoke only when a release needs
 one. The cases here are focused behavioral regressions for authoring or authorization changes, not a mandatory
-release sequence. The two-turn approval smoke below is optional precedent from
-[an earlier release qualification](../evidence/2026-08-30-claude-plugin-0.2.1-two-turn-smokes.md), not a gate.
-When a change targets the two-turn approval behavior, it can use these continuing-session pairs:
+release sequence. The two-turn approval smoke below is optional, not a gate. When a change targets the two-turn
+approval behavior, it can use these continuing-session pairs:
 
 - Publication pairs `precompile-semantic-read-back` with `compile-prepared-movie-catalog`.
 - Direct output pairs `precompile-drawing-board-read-back` with
@@ -208,8 +205,6 @@ that a server produced them during an eval.
 When changing client integration or packaging, use the affected cases and exact assembled package in the affected
 client. Ordinary releases do not require a fresh session in both Claude and Codex. Record each client's version and
 the actual model. The automatic install check is model-free; running it does not execute these behavioral cases.
-[The 2026-09-10 Codex onboarding record](../evidence/2026-09-10-codex-onboarding.md) shows which cases one earlier
-Codex packaging change exercised. It is precedent, not a checklist.
 
 A loopback fixture server can exercise the real packaged CLI and count requests without a live First Draft service.
 Retain that boundary: returned fixture artifacts are not real Compiler output, and an existing agent login does not

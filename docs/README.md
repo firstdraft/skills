@@ -17,9 +17,8 @@ historical observations intentionally have different owners.
 | What changes might an existing app or workflow adopt? | [First Draft changelog](../CHANGELOG.md) |
 | What is exact Plan syntax? | [JSON Schema](../skills/create-full-stack-app/references/foundation-plan-0.23.schema.json) |
 | What capability is currently described? | [Foundation Plan reference](../skills/create-full-stack-app/references/foundation-plan-023.md) |
-| What happened in a particular run? | [`evidence/README.md`](../evidence/README.md), then one dated record |
 | What behavior should a fresh agent exhibit? | [`evals/README.md`](../evals/README.md), then one case |
-| Why do historical pins or limitations exist? | [Repository history](../evidence/repository-history.md) or [release history](../evidence/release-history.md) |
+| Why do historical pins or limitations exist? | `git log -S` on the pin, then the archived [repository history](https://github.com/firstdraft/skills/blob/archive/evidence-2026-10-01/evidence/repository-history.md) or [release history](https://github.com/firstdraft/skills/blob/archive/evidence-2026-10-01/evidence/release-history.md) |
 
 Registry, GitHub, service, and hosted-CI state can drift. Recheck them live before an external mutation even when a
 dated observation records an earlier value.
@@ -32,10 +31,8 @@ dated observation records an earlier value.
   the schema to a validator or search one `$defs` entry; do not load the entire schema as prose.
 - **Behavioral evaluation:** start with the eval index, select one case ID, and load only that case's declared
   artifacts. `cases.json` is a harness contract, not an execution record.
-- **Evidence review:** start with the evidence index and choose one dated record. A record proves only its named
-  identities and boundaries.
-- **Release work:** read the current runbook and compatibility JSON. Consult release history only for precedent or
-  recovery rationale, never as pending instructions.
+- **Release work:** read the current runbook and compatibility JSON. Consult the archived release history only for
+  precedent or recovery rationale, never as pending instructions.
 - **Packaging or CI:** use root development commands, then inspect the relevant script or workflow. Configuration is
   executable authority; prose summarizes it.
 
@@ -48,17 +45,15 @@ dated observation records an earlier value.
 | Commit, review, and landing procedure | `CONTRIBUTING.md` | Rules shared with `firstdraft/cli` and the service; change all three together |
 | Current operator procedure | `RELEASING.md` and its linked runbooks | No completed chronology or historical shell transcripts |
 | Agent workflow source | `skills/` | One editable source per Skill; package inventory selects distribution and app-owned `UI.md` controls UI choices |
-| Point-in-time evidence | `evidence/YYYY-MM-DD-*` | Append a new record with a [date and status](../evidence/README.md#status-headers); do not rewrite an old observation as current |
-| Historical narrative | `evidence/*-history.md` | Archive only; never treat as the current runbook |
 | Behavioral corpus | `evals/` | Cases are expectations and fixtures, not proof of execution |
+| Run proof | The commit message of the change it supports | Commit no run receipts and no per-release report besides the CHANGELOG entry |
 
 ## Retrieval rules
 
-- Prefer a table, short section, or one exact evidence record over a repository-wide read.
+- Prefer a table or short section over a repository-wide read.
 - Keep current state separate from historical state and from future procedure.
 - Give every long collection an index and every index a complete inventory check.
 - Keep paragraphs scoped to one claim. Use headings before the topic changes.
 - Avoid duplicating exact identities in narrative. When repetition helps a human, link to the structured authority and
   label the copied value as a summary.
-- Public-facing entry pages should not depend on links a public reader cannot open. Internal provenance may remain in
-  dated evidence with its access boundary made explicit.
+- Public-facing entry pages should not depend on links a public reader cannot open.

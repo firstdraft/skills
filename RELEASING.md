@@ -3,7 +3,9 @@
 The service repository's `RELEASE_COORDINATION.md` coordinates releases of the service, CLI, and Skills. It owns
 the approval scope, the order across repositories, and when a release needs a product smoke. This page covers the
 Skills mechanics only. The [publish workflow](.github/workflows/publish.yml) enforces its own gates, so this page
-does not list them. [Release history](evidence/release-history.md) keeps earlier procedures and receipts.
+does not list them. The
+[archived release history](https://github.com/firstdraft/skills/blob/archive/evidence-2026-10-01/evidence/release-history.md)
+keeps earlier procedures and receipts.
 
 ## 1. Set the version
 
