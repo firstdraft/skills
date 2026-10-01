@@ -7,7 +7,6 @@
 | Plan authoring or Compile behavior | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md), then only its routed reference section |
 | UI continuation or review | The consumer app's `UI.md`; [UI Skill auditions remain deferred](README.md#ui-continuation) |
 | Release work | [`RELEASING.md`](RELEASING.md) and [`release/compatibility.json`](release/compatibility.json) |
-| Evidence or prior rollout facts | [`evidence/README.md`](evidence/README.md), then one dated record |
 | Behavioral evals | [`evals/README.md`](evals/README.md), then one case and its declared artifacts |
 | Repository documentation roles | [`docs/README.md`](docs/README.md) |
 | Commits, pull requests, review setup, or landing | [`CONTRIBUTING.md`](CONTRIBUTING.md) |

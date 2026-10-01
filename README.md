@@ -26,7 +26,7 @@ local folder; a Drawing Board clone and GitHub push are unnecessary. The
 - the exact schema, examples, and review checklists packaged with the Skill;
 - behavioral evaluations for agent workflow changes;
 - shared Claude/Codex plugin assembly around the canonical Skills and reviewed CLI package; and
-- release compatibility checks, package evidence, and release runbooks.
+- release compatibility checks and release runbooks.
 
 The Service owns Foundation Plan semantics and Compilation behavior. The CLI owns transport and terminal command
 behavior. This repository teaches an agent how to use those contracts without creating a second product definition.
@@ -43,18 +43,14 @@ behavior. This repository teaches an agent how to use those contracts without cr
 | Check current Foundation Plan capability | [Foundation Plan reference](skills/create-full-stack-app/references/foundation-plan-023.md) |
 | Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.23.schema.json) |
 | Add or run behavioral evaluations | [Evaluation guide](evals/README.md) |
-| Inspect a dated observation | [Evidence archive](evidence/README.md) |
 | Prepare or publish a release | [Release runbook](RELEASING.md) |
 | Commit, review, or land a change | [Contributing guide](CONTRIBUTING.md) |
-
-Historical pins and release chronology in the evidence archive are receipts, not current instructions.
 
 ## Using Codex
 
 The [catalog manifest](.claude-plugin/marketplace.json) selects the shared plugin, which includes the compatible CLI
-and discovers it in either agent. Drawing Board supplies its own project wrapper and installed CLI. The
-[release evidence](evidence/2026-09-15-account-authoring-0.2.5.md) distinguishes package checks from public catalog
-installation. A fresh authenticated student Codespace journey remains unproved.
+and discovers it in either agent. Drawing Board supplies its own project wrapper and installed CLI. A fresh
+authenticated student Codespace journey remains unproved.
 
 Start in a local folder. Codex uses the same catalog as Claude. Install it with:
 
@@ -86,7 +82,6 @@ conversation, run `codex resume` from the same workspace root.
 | skills/extend-app-ui/, skills/review-ui-consistency/ | Deferred UI Skill sources, excluded from the package |
 | .claude-plugin/, packages/ | Release-gated public catalog selection and plugin assembly, not a second editable Skill copy |
 | evals/ | Behavioral cases and evaluator contracts |
-| evidence/ | Dated installation, compatibility, and workflow receipts |
 | script/ | Repository, package, and release compatibility checks |
 | docs/ | Maintainer documentation and ownership map |
 
@@ -109,8 +104,8 @@ contracts, and component update commands. Existing apps keep their own stack unl
 
 The retained [extension](skills/extend-app-ui/SKILL.md) and [consistency-review](skills/review-ui-consistency/SKILL.md)
 auditions are excluded from both candidate distribution manifests and the package. Their selection and qualification
-will be decided separately after the infrastructure release. Their existing source and evidence are not current
-plugin-install instructions.
+will be decided separately after the infrastructure release. Their existing source is not current plugin-install
+guidance.
 
 [Upstream shadcn guidance](https://ui.shadcn.com/docs/skills) and its [MCP](https://ui.shadcn.com/docs/mcp) can help
 discover React components. They are optional development aids, not bundled Skills, required sign-ins, or dependencies
@@ -129,7 +124,7 @@ The check covers:
 
 - repository and documentation structure;
 - documentation currency: no retired version or term and no candidate label on a published version in current
-  pages, and a date and status at the top of each dated evidence record;
+  pages;
 - every portable Skill's discovery, references, license, and packaging boundary;
 - Foundation Plan schema and example fixtures;
 - behavioral-evaluation structure and offline UI evaluation fixtures;

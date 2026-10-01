@@ -35,11 +35,9 @@ const historicalFoundationPlanTarget = {
   id: "rails",
   profile: "rails-sketch/2026-08",
 };
-// These exact inputs remain linked by dated qualification receipts.
+// This exact input keeps its eval-case and GapSet digest bindings, so it keeps its original Plan format.
 const historicalPlanFixtures = new Set([
-  "appearance-issues.foundation-plan.json",
   "current-case-chat.foundation-plan.json",
-  "resume.foundation-plan.json",
 ].map((file) => path.join(evalsDirectory, "create-full-stack-app", "fixtures", file)));
 const reviewedFixtureAnalyzerRelease =
   "foundation-plan-rails/application-2026-08-28-reviewed-realization";
@@ -86,10 +84,6 @@ test("documentation roles are routed and retrieval-sized", async () => {
     path.join(repository, "RELEASING.md"),
     "utf8",
   );
-  const evidenceIndex = await readFile(
-    path.join(repository, "evidence", "README.md"),
-    "utf8",
-  );
   const evalIndex = await readFile(
     path.join(repository, "evals", "README.md"),
     "utf8",
@@ -109,22 +103,9 @@ test("documentation roles are routed and retrieval-sized", async () => {
     "docs/README.md",
     "skills/create-full-stack-app/SKILL.md",
     "RELEASING.md",
-    "evidence/README.md",
     "evals/README.md",
   ]) {
     assert.ok(readme.includes(`(${route})`), `README.md must route to ${route}`);
-  }
-  const evidenceFiles = (await readdir(path.join(repository, "evidence"), {
-    withFileTypes: true,
-  }))
-    .filter((entry) => entry.isFile() && entry.name !== "README.md")
-    .map((entry) => entry.name)
-    .sort();
-  for (const file of evidenceFiles) {
-    assert(
-      evidenceIndex.includes(`(${file})`),
-      `evidence index is missing evidence/${file}`,
-    );
   }
 
   const cases = JSON.parse(
@@ -145,9 +126,6 @@ test("documentation roles are routed and retrieval-sized", async () => {
     ...trackedFiles().filter((file) => file.endsWith(".md")),
     path.join(repository, "docs", "README.md"),
     path.join(repository, "evals", "README.md"),
-    path.join(repository, "evidence", "README.md"),
-    path.join(repository, "evidence", "release-history.md"),
-    path.join(repository, "evidence", "repository-history.md"),
   ];
   for (const file of new Set(currentDocumentation)) {
     const source = await readFile(file, "utf8");
@@ -178,8 +156,8 @@ test("Claude Code imports the shared agent instructions", async () => {
   );
 });
 
-// This repository's own retired vocabulary. Dated evidence, the *-history.md archives, and dated CHANGELOG
-// entries may still use these terms as history; current pages may not.
+// This repository's own retired vocabulary. Dated CHANGELOG entries may still use these terms as history; current
+// pages may not.
 const promotionRetirement = "npm promotion was retired on 2026-09-22; releases publish directly to latest";
 const retiredTerms = [
   {
@@ -321,54 +299,6 @@ test("current pages name current identities, release labels, and terms", async (
         })
         .join("\n"),
   );
-});
-
-// Retained artifacts keep their exact bytes because a record binds their SHA-256; they are not reports.
-const retainedEvidenceArtifacts = new Map([
-  [
-    "evidence/2026-09-19-implementation-notes-source/authored-implementation-notes.md",
-    "evidence/2026-09-19-implementation-notes-source.md",
-  ],
-]);
-
-test("dated evidence records open with a date and status", async () => {
-  for (const [artifact, record] of retainedEvidenceArtifacts) {
-    const digest = createHash("sha256")
-      .update(await readFile(path.join(repository, artifact)))
-      .digest("hex");
-    assert(
-      (await readFile(path.join(repository, record), "utf8")).includes(digest),
-      `${record} no longer binds ${artifact} by SHA-256; ` +
-        "remove it from retainedEvidenceArtifacts and give it a header",
-    );
-  }
-
-  const failures = [];
-  for (const file of trackedFiles()) {
-    const name = repositoryPath(file);
-    const dated = name.match(/^evidence\/(\d{4}-\d{2}-\d{2})-[^/]*(?:\/.*)?\.md$/);
-    if (!dated || retainedEvidenceArtifacts.has(name)) continue;
-
-    const header = (await readFile(file, "utf8")).split("\n").slice(0, 5);
-    const date = header.map((line) => line.match(/^- \*\*Date:\*\* (\d{4}-\d{2}-\d{2})$/)?.[1]).find(Boolean);
-    const status = header
-      .map((line) => line.match(/^- \*\*Status:\*\* (Evidence|Historical|Superseded)(.*)$/))
-      .find(Boolean);
-    const fix =
-      `put "- **Date:** ${dated[1]}" and "- **Status:** Evidence", "Historical", or "Superseded by [record](path)" ` +
-      "in its first five lines (see evidence/README.md#status-headers)";
-
-    if (!date || !status) {
-      failures.push(`${name}: ${fix}`);
-    } else if (date !== dated[1]) {
-      failures.push(`${name}: its Date ${date} differs from its path date; ${fix}`);
-    } else if (status[1] === "Superseded" && !/^ by \[[^\]]+\]\([^)\s]+\)/.test(status[2])) {
-      failures.push(`${name}: a Superseded status needs its successor, as "Superseded by [record](path)"`);
-    } else if (status[1] !== "Superseded" && status[2]) {
-      failures.push(`${name}: keep the status line to one word; put context in the record body`);
-    }
-  }
-  assert.equal(failures.length, 0, failures.join("\n"));
 });
 
 test("canonical Skill sources follow the portable repository profile", async () => {
@@ -3326,12 +3256,11 @@ function compareVersions(left, right) {
 // is a dated entry: it records history, so only the release-label rule applies to it.
 function currencyUnits(file, source) {
   const units = [];
-  const directory = path.posix.dirname(file);
   let dated = false;
   let fence;
   let block;
   const add = (line, text) =>
-    units.push({ dated, file, line, text: withoutEvidenceTargets(text, directory).replace(/\s+/g, " ") });
+    units.push({ dated, file, line, text: text.replace(archiveTarget, "]()").replace(/\s+/g, " ") });
   const flush = () => {
     if (!block) return;
     const text = block.lines.join("\n");
@@ -3372,16 +3301,11 @@ function currencyUnits(file, source) {
   return units;
 }
 
-// Dated evidence file names carry the version they observed, so links into evidence/ are not identity claims.
-function withoutEvidenceTargets(text, directory) {
-  return text.replace(/\]\(([^)\s]+)\)/g, (link, target) => {
-    if (/^[a-z]+:|^#/.test(target)) return link;
-    const resolved = path.posix.normalize(path.posix.join(directory, target));
-    return resolved.startsWith("evidence/") ? "]()" : link;
-  });
-}
+// An archived record's file name carries the version it observed, so a link into an archive tag is not an identity
+// claim. Other link targets stay checked: a current page linking claude-v0.7.0 source still names that release.
+const archiveTarget = /\]\(https:\/\/github\.com\/firstdraft\/skills\/blob\/archive\/[^)\s]+\)/g;
 
-const versionToken = /(?<![\w.])(v?)(\d+)\.(\d+)(?:\.(\d+))?(?!\.?\d|\w)/g;
+const versionToken =/(?<![\w.])(v?)(\d+)\.(\d+)(?:\.(\d+))?(?!\.?\d|\w)/g;
 
 function versionTokens(text, identities) {
   const tokens = [];
@@ -3431,8 +3355,7 @@ function identityHits(unit, identities) {
 
   const where = `${unit.file}:${unit.line}`;
   const stateWithout =
-    "Name the current identity, or state the behavior without a version and keep the dated fact in CHANGELOG.md " +
-    "or evidence/.";
+    "Name the current identity, or state the behavior without a version and keep the dated fact in CHANGELOG.md.";
   const current = {
     plugin: [identities.plugin, `release/compatibility.json is plugin ${formatVersion(identities.plugin)}`],
     cli: [identities.cli, `release/compatibility.json requires CLI ${formatVersion(identities.cli)}`],

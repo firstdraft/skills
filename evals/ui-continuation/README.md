@@ -19,5 +19,6 @@ prose sounds plausible. A source-only case cannot prove appearance, runtime, acc
 For actual continuation qualification, use a freshly compiled app and the same four tasks in both clients:
 add an ordinary Rails screen, extend a form, add or reuse an interactive control, and change the shared theme.
 Record the generated app revision, actual changed files, reused components, commands, token/time cost, and focused
-browser evidence in related screens and states. Keep those results separate from this fixture corpus and from
-model-free package/discovery checks. Optional model review is not a required deterministic CI gate.
+browser evidence in related screens and states. Put those results in the commit message of the change they support,
+separate from this fixture corpus and from model-free package/discovery checks. Optional model review is not a
+required deterministic CI gate.
