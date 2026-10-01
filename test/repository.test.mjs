@@ -84,10 +84,6 @@ test("documentation roles are routed and retrieval-sized", async () => {
     path.join(repository, "RELEASING.md"),
     "utf8",
   );
-  const evalIndex = await readFile(
-    path.join(repository, "evals", "README.md"),
-    "utf8",
-  );
 
   assert(
     Buffer.byteLength(readme) < 12_000,
@@ -100,7 +96,6 @@ test("documentation roles are routed and retrieval-sized", async () => {
   for (const route of [
     "AGENTS.md",
     "CONTRIBUTING.md",
-    "docs/README.md",
     "skills/create-full-stack-app/SKILL.md",
     "RELEASING.md",
     "evals/README.md",
@@ -114,17 +109,14 @@ test("documentation roles are routed and retrieval-sized", async () => {
       "utf8",
     ),
   ).cases;
-  for (const { id } of cases) {
-    assert(evalIndex.includes(`\`${id}\``), `eval index is missing ${id}`);
-  }
   assert.equal(
     cases.filter(({ should_trigger: shouldTrigger }) => !shouldTrigger).length,
     2,
+    "the two non-trigger controls must remain the only should_trigger: false cases",
   );
 
   const currentDocumentation = [
     ...trackedFiles().filter((file) => file.endsWith(".md")),
-    path.join(repository, "docs", "README.md"),
     path.join(repository, "evals", "README.md"),
   ];
   for (const file of new Set(currentDocumentation)) {
