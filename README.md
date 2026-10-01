@@ -35,7 +35,7 @@ behavior. This repository teaches an agent how to use those contracts without cr
 
 | Task | Read first |
 |---|---|
-| Change the Skill or repository | [Agent instructions](AGENTS.md), then [documentation map](docs/README.md) |
+| Change the Skill or repository | [Agent instructions](AGENTS.md) |
 | Understand the installed workflow | [Skill entrypoint](skills/create-full-stack-app/SKILL.md) |
 | Continue or review an app's UI | The app's `UI.md` and shared components; [UI Skill status](#ui-continuation) |
 | Review improvements for an existing app or workflow | [First Draft changelog](CHANGELOG.md) |
@@ -83,7 +83,7 @@ conversation, run `codex resume` from the same workspace root.
 | .claude-plugin/, packages/ | Release-gated public catalog selection and plugin assembly, not a second editable Skill copy |
 | evals/ | Behavioral cases and evaluator contracts |
 | script/ | Repository, package, and release compatibility checks |
-| docs/ | Maintainer documentation and ownership map |
+| docs/ | Dist-tag repair runbook for published packages |
 
 Packing copies the selected canonical Skill from the explicit package inventory and adds the reviewed CLI package.
 Deferred Skill sources remain in this repository. Keep editable truth under `skills/`; do not maintain parallel
@@ -120,16 +120,8 @@ npm ci --ignore-scripts
 sh script/check
 ~~~
 
-The check covers:
-
-- repository and documentation structure;
-- documentation currency: no retired version or term and no candidate label on a published version in current
-  pages;
-- every portable Skill's discovery, references, license, and packaging boundary;
-- Foundation Plan schema and example fixtures;
-- behavioral-evaluation structure and offline UI evaluation fixtures;
-- deterministic plugin packaging with a stub CLI; and
-- release compatibility.
+The check covers repository structure, documentation links and currency, each Skill's packaging boundary, the
+Plan schema and fixtures, the eval corpus, deterministic packaging with a stub CLI, and release compatibility.
 
 CI checks consumer commands against the exact pinned CLI and verifies the candidate package digest. CLI-owned tests
 cover the complete Publication protocol matrix; Skills retains representative recovery cases, compatible fixtures,

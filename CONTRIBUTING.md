@@ -40,17 +40,9 @@ outside the sandbox; `sh script/check` runs inside it.
 ## Independent review
 
 The reviewer is the other vendor's agent, through [cross-review](https://github.com/raghubetina/cross-review).
-Install and sign in to both Claude Code (`claude auth login`) and the Codex CLI (`codex login`).
-
-- From Claude Code, use the `codex-review` Skill; it is not a shell command. The tracked `.claude/settings.json`
-  registers the marketplace and enables the plugin, which installs once you accept the workspace-trust prompt. A
-  headless `claude -p` run loads it only in a folder you already trusted interactively.
-- From Codex, use `$claude-review`. The tracked `.codex/config.toml` declares it for a trusted project. The first
-  session fetches it and the next one loads it; to load it at once, run
-  `codex plugin marketplace upgrade cross-review`. Quit and reopen the desktop app after the first fetch.
-- Outside a checkout, run `claude plugin marketplace add raghubetina/cross-review`, then
-  `claude plugin install codex-review@cross-review`; or `codex plugin marketplace add raghubetina/cross-review`,
-  then `codex plugin add claude-review@cross-review`.
+Install and sign in to both Claude Code (`claude auth login`) and the Codex CLI (`codex login`). Once you trust the
+checkout, the tracked `.claude/settings.json` and `.codex/config.toml` enable `codex-review` and `$claude-review`
+(Codex loads its plugin from the next session); otherwise install them as the cross-review README describes.
 
 To run a review:
 
