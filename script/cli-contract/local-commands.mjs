@@ -14,6 +14,7 @@ import {
 import { acceptedPlanResponse } from "./fixtures.mjs";
 import {
   assertErrorEnvelope,
+  assertPrivateValuesAbsent,
   initializedProject,
   invokeRunner,
   pinRemoteState,
@@ -34,6 +35,7 @@ const validatePlan = ajv.compile(planSchema);
 export async function verifyLocalCommands(context) {
   await verifyLocalFailureBoundaries(context);
   await verifyStagingCredentials(context);
+  await verifySavedLoginOrigins(context);
 
   const rootHelp = await invokeRunner(
     context.runCli,
@@ -43,6 +45,8 @@ export async function verifyLocalCommands(context) {
   assert.equal(rootHelp.status, 0);
   assert.match(rootHelp.stdout, /compilation\s+Inspect and download Compilations/);
   assert.match(rootHelp.stdout, /generate\s+Generate local values/);
+  assert.match(rootHelp.stdout, /login\s+Log in to First Draft and save a token/);
+  assert.match(rootHelp.stdout, /logout\s+Revoke and remove the saved token/);
   assert.match(rootHelp.stdout, /plan\s+Work with Foundation Plans/);
 
   const planHelp = await invokeRunner(
@@ -182,6 +186,60 @@ async function verifyStagingCredentials(context) {
   assert.equal(new URL(calls[0].input).origin, apiUrl);
   assert.equal(calls[0].init.headers.Authorization, `Bearer ${stagingApiToken}`);
   assert.equal(JSON.parse(readFileSync(statePath(cwd), "utf8")).api_url, apiUrl);
+}
+
+// The Skill tells users to run `firstdraft login` for the environment they
+// work in, so a saved login must authenticate only its exact origin.
+async function verifySavedLoginOrigins(context) {
+  const cwd = await initializedProject(context, "saved-login");
+  const configHome = path.join(context.temporaryDirectory, "saved-login-config");
+  const productionOrigin = "https://firstdraft.com";
+  const stagingOrigin = "https://staging.firstdraft.com";
+  const productionToken = "canary-private-saved-production-token";
+  const stagingToken = "canary-private-saved-staging-token";
+  const saveLogins = (origins) => {
+    mkdirSync(path.join(configHome, "firstdraft"), { recursive: true });
+    writeFileSync(
+      path.join(configHome, "firstdraft", "credentials.json"),
+      JSON.stringify({ format: "firstdraft.cli-credentials/1", origins }),
+    );
+  };
+  const savedLogin = (token) => ({
+    access_token: token,
+    token_type: "Bearer",
+    created_at: "2026-10-01T00:00:00.000Z",
+  });
+  const push = (fetchFunction) =>
+    invokeRunner(context.runCli, ["--staging", "plan", "push"], cwd, {
+      apiUrl: stagingOrigin,
+      apiToken: "",
+      stagingApiToken: "",
+      env: { XDG_CONFIG_HOME: configHome },
+      fetchFunction,
+    });
+
+  saveLogins({ [productionOrigin]: savedLogin(productionToken) });
+  const missing = await push(async () =>
+    assert.fail("a production login must not reach staging"),
+  );
+  assertErrorEnvelope(missing, "authentication_required", {
+    privateValues: [productionToken],
+  });
+
+  saveLogins({
+    [productionOrigin]: savedLogin(productionToken),
+    [stagingOrigin]: savedLogin(stagingToken),
+  });
+  const calls = [];
+  const result = await push(
+    sequenceFetch([acceptedPlanResponse(readFileSync(planPath(cwd)))], calls),
+  );
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  assertPrivateValuesAbsent(result, [productionToken, stagingToken]);
+  assert.equal(calls.length, 1);
+  assert.equal(new URL(calls[0].input).origin, stagingOrigin);
+  assert.equal(calls[0].init.headers.Authorization, `Bearer ${stagingToken}`);
 }
 
 async function verifyLocalFailureBoundaries(context) {

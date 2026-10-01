@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "269dcaff9beb8369235f25b62fdb9d4a845e56c6";
+export const cliRevision = "2f4bc93f996ba2e0a63c9f39df6cf1a8b9c91dac";
 export const cliRuntimeSha256 =
-  "9c74b4073a6b884bba1480dce535dd464101e52637a06a92bfbbd4b1bd65856d";
+  "46cb062f67a00b49fa8edbe35b8c2f08034fb45a0710e6702a94c4c4cdb66cfc";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.8.0";
+export const cliPackageVersion = "0.8.1";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
@@ -59,26 +59,28 @@ export const artifactMediaType =
 export const packedFileAllowlist = [
   "LICENSE",
   "README.md",
-  "RELEASING.md",
   "SECURITY.md",
   "bin/firstdraft.js",
   "docs/README.md",
   "docs/commands.md",
   "docs/errors.md",
-  "docs/release-history.md",
   "package.json",
   "src/api-authentication.js",
   "src/api-response.js",
   "src/application-identity.js",
   "src/cli.js",
   "src/commands/compilation.js",
+  "src/commands/login.js",
+  "src/commands/logout.js",
   "src/commands/plan-compile.js",
   "src/commands/plan-init.js",
   "src/commands/plan-publish.js",
   "src/commands/plan-push.js",
   "src/commands/plan-status.js",
   "src/compilation-artifact.js",
+  "src/credentials.js",
   "src/file-system.js",
+  "src/oauth.js",
   "src/plan-compile-progress.js",
   "src/plan-state.js",
   "src/root-output.js",

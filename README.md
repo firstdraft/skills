@@ -67,10 +67,10 @@ Start a new Codex conversation after installation. Use `$firstdraft:create-full-
 `/skills`. Node.js 22 or newer and npm must be available. The package includes the compatible First Draft CLI;
 there is no separate CLI version to choose.
 
-For Codex CLI, export First Draft credentials in the terminal before launching Codex, using your workspace's
-documented setup. For desktop sessions, use a project credential wrapper: a separately launched app may not inherit
-terminal exports. A plugin install does not sign you into First Draft. If authentication interrupts an already
-requested operation, configure it and tell the same conversation to continue. Approve the specific CLI command when
+A plugin install does not sign you into First Draft. Log in once per environment from any terminal with
+`npx --yes @firstdraft.com/cli@0.8.1 login` (add `--staging` for staging). The login is saved in your user
+configuration directory, so Claude Code, Codex CLI, and desktop sessions all use it without exported variables. If
+authentication interrupts an already requested operation, log in and tell the same conversation to continue. Approve the specific CLI command when
 Codex requests network access; its tool permission is separate from approval of the Plan and Compile mode.
 
 For the Codespaces fallback, Drawing Board already has the Skill and CLI installed. Follow the
@@ -171,14 +171,15 @@ Those actions follow the machine-owned [compatibility record](release/compatibil
 
 ## Credential boundary
 
-The workspace supplies `FIRSTDRAFT_API_TOKEN` for production at `https://firstdraft.com`. For staging, use
-`firstdraft --staging ...` and `FIRSTDRAFT_STAGING_API_TOKEN` from `https://staging.firstdraft.com`; the CLI never
-falls back to the production token for staging. Existing Plans keep their saved origin. `FIRSTDRAFT_API_URL` is an
+The user logs in once per environment with `firstdraft login`, or `firstdraft --staging login` for
+`https://staging.firstdraft.com`. A workspace may instead supply `FIRSTDRAFT_API_TOKEN` for production or
+`FIRSTDRAFT_STAGING_API_TOKEN` for staging; a set variable takes precedence over a saved login. The CLI never uses
+one environment's credential for another. Existing Plans keep their saved origin. `FIRSTDRAFT_API_URL` is an
 advanced custom-server override; a conflicting URL cannot be combined with `--staging` or redirect an existing Project.
 The shared helper prefers the project's `bin/firstdraft` credential wrapper, then the bundled CLI, then an
 installed CLI on PATH.
 It preserves the working directory and arguments. The adapter forwards ambient credentials; it does not read
-ignored credential files or provide an authentication UI. Claude Code does not deliver plugin `userConfig` to
+ignored credential files. The bundled CLI reads its own saved login, and only the user runs `login` or `logout`. Claude Code does not deliver plugin `userConfig` to
 `bin/` executables; a secure bridge is tracked in [issue #27](https://github.com/firstdraft/skills/issues/27).
 Never put a token in agent conversation, command-line arguments, checked-in files, examples, evaluations, or
 evidence. The executable adapter may read the environment, but ordinary Skill reference text must not receive or

@@ -80,18 +80,18 @@ The bundled schema was copied byte-for-byte from
 `242889fae4e1031f3be7aa3d226a9966402e7516f0055f506bb40ce05d1430dd`. This is exact contract provenance, not
 release or execution evidence.
 
-The source candidate and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.0/script/cli-contract/config.mjs)
+This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.1/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
-`plan compile --output`, `compilation status`, and
-`compilation download`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-`@firstdraft.com/cli@0.8.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
+`plan compile --output`, `compilation status`,
+`compilation download`, and the user-run `login` and `logout`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
+`@firstdraft.com/cli@0.8.1` package. Direct output accepts the ordinary absent destination and, on POSIX,
 current-root adoption by default or with `--output .`; the recovery reference owns its preconditions. Check commands
 rather than inferring compatibility from a version number. These source checks do not prove plugin/catalog
 publication, authentication, staging compatibility, or a complete user journey.
-CLI 0.3.0 and later use `.firstdraft/design/`; older CLI 0.2.2 used top-level `design/`. See the
+The bundled CLI uses `.firstdraft/design/`; much older CLIs used a top-level `design/`. See the
 [direct-output compatibility boundary](diagnostics-and-recovery.md#direct-local-output).
 
 Selected native projects compose separate pinned Cores under `ios/` and `android/`. Each emitted
