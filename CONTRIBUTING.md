@@ -1,7 +1,7 @@
 # Contributing
 
 [`AGENTS.md`](AGENTS.md) owns this repository's checks, review trigger, and release rules. The commit, pull request,
-review, and landing rules below also apply in `firstdraft/cli` and the private service repository,
+review, landing, and maintenance rules below also apply in `firstdraft/cli` and the private service repository,
 `firstdraft/firstdraft`. When you change one of them, change it in all three `CONTRIBUTING.md` pages.
 
 ## Checks
@@ -29,8 +29,9 @@ outside the sandbox; `sh script/check` runs inside it.
 
 - Start from the [pull request template](.github/pull_request_template.md). Say why the change was needed; the diff
   shows what changed.
-- Update the documentation the change makes stale. The body carries one line: `Docs: updated X` or
-  `Docs: none, because ...`.
+- Update the documentation the change makes stale. The pull request body carries one line: `Docs: updated X` or
+  `Docs: none, because ...`. The [`Docs line`](.github/workflows/pr-docs-line.yml) check fails until the body has
+  one, and it skips pull requests that a bot such as Dependabot opens.
 - When a review is required, add the line `Review: <reviewer>, session <id>, <verdict>` to the body, and leave the
   findings out.
 - Use GitHub closing keywords only for completed Issues: even `does not close #123` can close an Issue. Say the
@@ -56,12 +57,18 @@ To run a review:
 1. Start a `new` session over the branch (`new branch main`) or an explicit range (`new range <base>..<head>`).
    When an instruction-policy change is the only reason for review, run that one session with `--effort high`
    instead of the default `max`.
-2. Pass the service repository's `docs/review-focus.md` with `--focus-file`, and list the affected surfaces after
-   `--`. Without a sibling checkout, fetch it into `tmp/` with
+2. Pass the service repository's `docs/review-focus.md` with `--focus-file`. Without a sibling checkout, fetch it
+   into `tmp/` with
    `gh api repos/firstdraft/firstdraft/contents/docs/review-focus.md -H 'Accept: application/vnd.github.raw'`.
+   After `--`, name the claims the change affects: the specific statements and pages, such as the owners in the
+   `Docs:` line and the facts the change alters. The reviewer checks whether each still holds. Give the reviewer the
+   diff and affected behavior, not an author verdict to repeat.
 3. The host runs `cite` and classifies each finding before relaying it.
-4. Record decisions as `reject F-...: reason`, `accept F-...`, or `defer F-...`. Re-review an amendment only when it
-   does more than apply accepted findings; that re-review covers only the amendment (`range <reviewed-head>..HEAD`).
+4. Record decisions as `reject F-...: reason`, `accept F-...`, or `defer F-...`. A later re-review in the same
+   session covers only the amendment (`range <reviewed-head>..HEAD`).
+
+Fix feedback in coherent amendments. Re-review an amendment only when it does more than apply accepted findings;
+that follow-up covers the extra change and its affected consumers.
 
 Do not merge while a required review is still running.
 
@@ -76,3 +83,13 @@ merging, report the repository and the exact merged SHA.
 A merge is integration, not release approval. A merge that changes the catalog selection in
 `.claude-plugin/marketplace.json` changes the live catalog for Claude and Codex users; follow
 [`RELEASING.md`](RELEASING.md#4-select-the-published-version-in-the-catalog).
+
+## Maintenance
+
+At each new model release, or quarterly if none comes first, the owner prunes instructions and documentation checks
+in all three repositories: `firstdraft/firstdraft`, `firstdraft/skills`, and `firstdraft/cli`.
+
+- Test each line of every `AGENTS.md`: would an agent get a task wrong if the line were gone? If not, delete it. In
+  Claude Code, `/doctor prompt-audit` also suggests lines to cut.
+- Shrink each exceptions list, such as `docs/owner-shape-exceptions.json` in `firstdraft/firstdraft`.
+- Delete any documentation check that caught nothing that tests or review would not have caught.
