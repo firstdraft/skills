@@ -54,12 +54,14 @@ Install and sign in to both Claude Code (`claude auth login`) and the Codex CLI 
 To run a review:
 
 1. Start a `new` session over the branch (`new branch main`) or an explicit range (`new range <base>..<head>`).
+   When an instruction-policy change is the only reason for review, run that one session with `--effort high`
+   instead of the default `max`.
 2. Pass the service repository's `docs/review-focus.md` with `--focus-file`, and list the affected surfaces after
    `--`. Without a sibling checkout, fetch it into `tmp/` with
    `gh api repos/firstdraft/firstdraft/contents/docs/review-focus.md -H 'Accept: application/vnd.github.raw'`.
 3. The host runs `cite` and classifies each finding before relaying it.
-4. Record decisions as `reject F-...: reason`, `accept F-...`, or `defer F-...`. A re-review in the same session
-   covers only the amendment (`range <reviewed-head>..HEAD`).
+4. Record decisions as `reject F-...: reason`, `accept F-...`, or `defer F-...`. Re-review an amendment only when it
+   does more than apply accepted findings; that re-review covers only the amendment (`range <reviewed-head>..HEAD`).
 
 Do not merge while a required review is still running.
 
