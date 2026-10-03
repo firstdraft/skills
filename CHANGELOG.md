@@ -29,6 +29,15 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-03: Photo and file uploads
+
+**Skills — released in plugin 0.8.2.** The authoring reference now says that `image` and `attachment` Fields
+compile to Active Storage uploads instead of being skipped. Generated apps with such a Field store files on
+Cloudinary in development and production, so the Skill tells the user to create a Cloudinary account and set
+`CLOUDINARY_URL` in `.env.development.local` before `bin/setup`, and in Render before a deploy. It applies once the
+First Draft service runs Compiler release `foundation-plan-rails/compiler-application-2026-10-03-image-uploads` or
+later; until then, these Fields still appear as skipped gaps.
+
 ## 2026-10-01: Log in once instead of exporting a token
 
 **Skills — released in plugin 0.8.1, with CLI 0.8.1.** The bundled CLI adds `firstdraft login` and
