@@ -97,6 +97,19 @@
       ]
     },
     {
+      "id": "sample-data-without-unrequested-rules",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a directory for my running club: members sign up with a unique username, a name, email and password, and can follow each other. Nobody can follow themselves. Add sample data so I can click around after it's built. Choose reasonable remaining details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Keeps the requested username uniqueness and does not add a format Validation to usernames or any other format or not-equal rule the user did not ask for.",
+        "Authors the requested no-self-follow rule as an Entity comparison with one not_equals clause between the two required Follow References, with a Reference error target.",
+        "Proposes connected sample members and follows with a disposable demo Account in the ordinary Plan review.",
+        "Says in the read-back that First Draft cannot yet check the no-self-follow rule against sample data, so the named sample follows will be left out of the generated seed while the members and demo sign-in remain.",
+        "Keeps the requested rule and the sample follows in the Plan rather than dropping either silently to avoid the gaps.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
       "id": "account-without-email-confirmation",
       "should_trigger": true,
       "prompt": "Use First Draft to plan a book club app for my workshop. People sign up with their name, email and password, then see the club's books; only signed-in members can see the book list. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
@@ -113,6 +126,43 @@
       "expectations": [
         "Authors one Account with an email identifier, password sign-in, self-service registration, verification of kind email, password-reset recovery and lockout.",
         "Says plainly in the read-back that people must confirm their email before they can sign in.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "private-app-signed-in-gate",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a private message board for my family: family members sign up, post short updates, and comment on each other's updates. Every page should require sign-in, and each person can see and edit only their own account details. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Authors one gate Policy on the Account Entity with its own operation name rather than read, manage, create, update, or destroy, allowing when the current record equals current_account.",
+        "Binds every sign-in-only Scaffold request, such as the list of family updates, their details pages, and posting one, to that gate with record {kind: environment, name: current_account}, and keeps owner-only edits and deletes on their own Entity's Policies.",
+        "Gives no Entity two Policies with the same operation; the Account's read_self profile Policy keeps operation read while the gate uses a different operation.",
+        "Binds a displayed Association directly on a gated page to the gate or an owner Policy, and uses public for one nested inside another displayed Association because the page gate still applies.",
+        "Does not make any page public to avoid gaps, and says in the read-back that every page requires sign-in.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "one-tap-like-record",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a private recipe board for my cooking club: members sign up, share recipes with a title and instructions, and like a recipe with one tap from its page. Every page requires sign-in. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Models Like as its own Entity with required immutable References to Recipe and to the Account Entity, plus one-like-per-member uniqueness over both References.",
+        "Gives Like's scaffold.create no inputs, binds its Account Reference to current_account, and authorizes it with a Like Policy or the signed-in gate.",
+        "Adds create_form {} to the displayed likes Association on the Recipe details page and leaves new and create out of Like's resource_routes.",
+        "Explains in the read-back that members like a recipe with a one-tap button on its page instead of a New page with dropdowns.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "list-fields-start-with-descriptor",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a reading log just for me on my laptop, with no sign-in: each book has a title, an author name, a status (want to read, reading, finished), the date I finished it, and a long review. I want a list of my books and a page for each one. Choose what the list shows. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Uses the required title as Book's primary descriptor and starts the index projection with book.title.",
+        "Adds one to three short Fields that tell books apart, such as author, status, or finished date, and leaves the long review off the list.",
+        "Names the list's fields in the read-back as a delegated choice.",
+        "Does not author an explicit list projection that leaves out the title.",
         "Makes no service request, Compile or remote write."
       ]
     },
@@ -1222,13 +1272,14 @@
       "prompt": "Prepare the staged Movie Catalog for Compilation. I want the approved result published to one private GitHub repository. Reread the exact Plan and attached matching valid analysis, identify the Plan and GapSet digests, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
+        "Gives the plain-language summary first, then the gap described by what the user will notice (the iPhone app keeps a stock app icon), then a closing technical block with the Plan path and SHA-256, the gap_set_sha256, the record count, and the gaps file; does not paste the record's code, kind, status, or pointer into the chat.",
         "Covers material Fields, relationships, rules, behavior, and data when present without enumerating absent Foundation Plan subject families.",
         "Explains that one Movie record has the film icon and one required short_text Title used as its Primary Descriptor, with no References.",
         "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, and that delivery is empty.",
         "Explains that Appearance requests the auto theme and #4F46E5 tint color, that the theme applies across clients while native colors do not replace stock web tokens, that web bookmark icons use fixed black-on-white artwork, and that only the selected-iOS AppIcon remains stock.",
         "Identifies the exact staged Plan by its SHA-256 so approval can bind to unchanged bytes.",
         "Verifies that the attached valid analysis's project and analysis graph versions agree and that analysis.head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before treating it as the matching reviewed result.",
-        "Reports the complete one-record GapSet and the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes; does not substitute a fixture, historical, or other Project's digest; and includes classification target_support_gap, code foundation_plan.gap.appearance.icon_assets.not_generated, kind appearance_icon_assets, status partially_generated, pointer /application/appearance, readable_path application.appearance, reason, and consequence.",
+        "Writes the complete one-record GapSet to planning-root gaps-readback.md with the Plan SHA-256, the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, and classification target_support_gap, code foundation_plan.gap.appearance.icon_assets.not_generated, kind appearance_icon_assets, status partially_generated, pointer /application/appearance, readable_path application.appearance, reason, and consequence; names that file in the read-back and does not substitute a fixture, historical, or other Project's digest.",
         "Explains that valid applies to the admitted graph, that Appearance theme and native colors are realized, that web bookmark icons use fixed black-on-white artwork while the selected-iOS AppIcon remains stock, and that the partial gap does not require weakening the Plan before Compile.",
         "Selects the explicit --github Publication mode because the requested result is one private GitHub repository, states explicitly that Compile does not deploy, and explains that only that invocation's validated terminal success proves Publication.",
         "Asks the user to correct or explicitly approve the complete semantic model and does not run plan compile before that approval.",
@@ -1259,11 +1310,40 @@
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back covering the Movie Entity's material Fields, rules, behavior, data, surfaces, access, clients, assumptions, and exclusions without enumerating absent subject families.",
         "Explains the required short_text Title Primary Descriptor, public read-only web index, selected iPhone navigation under movies.example.com, empty delivery, and intentional auto-theme and #4F46E5 Appearance meaning.",
-        "Identifies the exact staged Plan SHA-256, verifies the attached valid analysis's matching project and analysis graph versions and Head source digest, reports the complete one-record Appearance icon-assets GapSet with its reason, consequence, and exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, and does not substitute a fixture, historical, or other Project's digest.",
+        "Identifies the exact staged Plan SHA-256, verifies the attached valid analysis's matching project and analysis graph versions and Head source digest, writes the complete one-record Appearance icon-assets GapSet with its reason and consequence to planning-root gaps-readback.md, and reports the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, in a closing technical block after the plain-language summary and the gap described by what the user will notice; does not substitute a fixture, historical, or other Project's digest.",
         "Explains that valid applies only to the admitted graph, that Appearance theme and native colors are realized, that web bookmark icons use fixed black-on-white artwork while the selected-iOS AppIcon remains stock, and that the partial gap does not require weakening the Plan before Compile.",
         "Selects direct mode before approval because this is an explicit Drawing Board and local-directory request; states that the intended command is firstdraft plan compile --output ./application and that success creates no Publication, GitHub repository, .git directory, or deployment, while Drawing Board owns later nested-Git initialization.",
         "Asks the user to correct or explicitly approve the complete semantic model, reviewed support result, exact Plan bytes, and selected direct mode; the Compile wrapper count remains zero before approval.",
         "Preserves the exact staged Plan and its subject UUIDs without deleting, loosening, flattening, relabeling, or substituting intentional meaning to fit current capabilities."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/appearance-current-analysis.json",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/appearance-current.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "pilot-read-back-plain-first",
+      "should_trigger": true,
+      "prompt": "I'm not technical. Before you build my Movie Catalog, tell me in plain words what it will do and anything it won't do yet. The staged Plan and the attached analysis are current. Don't build it until I say so.",
+      "expectations": [
+        "Rereads the exact staged Plan and checks that the attached valid analysis's graph versions agree and that its head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before using it.",
+        "Leads with a plain-language summary: one kind of record, a movie with a required title; a public list anyone can read on the web; an iPhone app that opens that list; and the automatic light or dark theme with its tint color. No digest, code, or JSON pointer appears before the technical block.",
+        "Describes the one gap by what the user will notice: the iPhone app keeps a stock app icon, while web bookmark icons use fixed black-on-white artwork. Does not paste the record's code, kind, status, or pointer into the chat.",
+        "Writes planning-root gaps-readback.md with the Plan SHA-256, the exact attached analysis.gap_set_sha256, and the complete record, including classification target_support_gap and code foundation_plan.gap.appearance.icon_assets.not_generated, and names that file.",
+        "Ends with a short technical block giving the Plan path and SHA-256, the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, the record count, the gaps file, and the default current-folder local output; never substitutes a fixture, historical, or other Project's digest.",
+        "Asks once for approval of the whole candidate, requires no digest echo or gap acknowledgment, and does not run plan compile before that approval."
       ],
       "artifacts": [
         {
@@ -1646,16 +1726,16 @@
       ]
     },
     {
-      "id": "android-preview-respects-provider-limit",
+      "id": "android-preview-uses-revyl",
       "should_trigger": true,
-      "prompt": "I have compiled my Android app in Codespaces. Read ANDROID_PREVIEW.md and explain the next step to preview it in Revyl from my browser. I use a free account. Explain where the APK is built, which account allowance each stage uses, and how saving to a private repository the first time differs from later pushes. Keep this advisory: do not install anything, sign in, start a device, or change files.",
+      "prompt": "I compiled my app with iPhone and Android clients on my laptop and pushed it to my private GitHub repository. bin/dev is running on localhost:3000, and I don't have Android Studio. Read ANDROID_PREVIEW.md and tell me how to preview the Android app from my browser. Keep this advisory: do not install anything, sign in, start a tunnel or device, or change files.",
       "expectations": [
         "Reads the emitted preview guide before recommending commands.",
-        "Explains the current WebView 113 versus required 120 blocker and does not promise that the available Revyl image provides a clean preview.",
-        "Recommends local Android Studio Emulator for native checks and the web preview for ordinary Rails work; explains that the emulator needs a suitable local computer and is not an all-browser fallback. Does not lower WebView requirements or suggest Google Play sign-in as part of this trial.",
-        "Distinguishes GitHub Linux APK builds from Revyl device usage and remote build compute; does not promise a recurring free allowance.",
-        "Explains that the compiled baseline needs its own private origin before GitHub builds and that an existing origin uses ordinary commit and push.",
-        "Does not invoke First Draft or Revyl, install software, authenticate, create a repository, start a device, or modify the staged files."
+        "Recommends Revyl as the Android preview and explains that the guide's WebView 113 note predates the 2026-10-03 check that found WebView 152 on Revyl's Android device; does not send the user to install Android Studio or an Emulator.",
+        "Gives the local steps in order: one cloudflared quick tunnel for http://localhost:3000, restarting the web app as RAILS_DEVELOPMENT_HOSTS=.trycloudflare.com bin/dev, then bin/android preview revyl --server with the tunnel URL in place of the guide's Codespace address.",
+        "Says the Viewer link needs the browser signed in to Revyl, that only one Revyl device runs at a time, and that bin/android preview revyl stop ends the session because closing the Viewer does not.",
+        "Distinguishes the GitHub Actions APK build of the pushed commit from Revyl device usage; does not promise a recurring free allowance.",
+        "Does not invoke First Draft or Revyl, install software, authenticate, start a tunnel or device, or modify the staged files."
       ],
       "artifacts": [
         {

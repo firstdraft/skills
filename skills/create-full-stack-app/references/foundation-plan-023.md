@@ -103,20 +103,26 @@ Follow the [preview guidance](#preview-generated-native-apps) after verified mat
 
 ## Preview generated native apps
 
-Keep ordinary Rails iteration in the local web app. Native preview is optional: use iOS Simulator on a Mac or
-Android Studio Emulator on a suitable local computer. Follow the emitted platform guides for SDK/JDK versions,
-project setup, and `APP_ROOT_URL`. The Android emulator's
-[`10.0.2.2` host alias](https://developer.android.com/studio/run/emulator-networking-address) reaches the host
-computer; a device elsewhere needs a reachable origin such as a Cloudflare Tunnel.
+Keep ordinary Rails iteration in the local web app. Revyl is the primary native preview for both iPhone and
+Android: it runs the app on a hosted device that the user watches in the browser. Android works in Revyl; its
+Android device reported System WebView 152 on 2026-10-03, above the required 120. A generated `ANDROID_PREVIEW.md`
+that leads with the Emulator or says Revyl's Android image has an outdated WebView predates that check. iOS Simulator
+and Android Studio Emulator remain optional for people who already have them.
 
-The [local development guide](https://gist.github.com/raghubetina/3d424a97a1eaa6de8c406e67f32a237e) covers
-local Rails, local native builds, and optional Revyl uploads without a GitHub push. A Codespace and its GitHub build
-wrappers are fallback options when local development is unsuitable. Most Rails edits need only a refresh; native
-changes need a new artifact. Neither native builds nor Revyl are required for ordinary release smoke tests.
+For Rails running on the user's computer:
 
-Android requires **System WebView 120 or newer**. Check the actual device compatibility when Revyl is requested.
-Stop owned Revyl sessions and tunnels when finished. Preview does not install the app on a physical phone or
-publish it to a store.
+1. Start one quick tunnel and keep it running: `cloudflared tunnel --url http://localhost:3000`. Copy its
+   `https://….trycloudflare.com` address.
+2. Start the web app with tunnel hosts allowed: `RAILS_DEVELOPMENT_HOSTS=.trycloudflare.com bin/dev`.
+3. Run `bin/ios preview revyl --server <tunnel URL>` or `bin/android preview revyl --server <tunnel URL>`, then give
+   the user the printed Viewer link. The browser must be signed in to Revyl to open it.
+
+The preview helper uploads the build that GitHub Actions makes from the pushed commit, so commit and push to the
+app's GitHub repository first. In a Codespace, use its public port 3000 address instead of a tunnel. Run one Revyl
+device at a time: run `bin/<platform> preview revyl stop` before starting the other platform, because closing the
+Viewer does not stop the device. A quick tunnel makes the development app public, so keep disposable sample data
+and stop the tunnel when finished. Most Rails edits need only a refresh; native changes need a new build. Preview
+does not install the app on a physical phone or publish it to a store.
 
 ## Closed envelope
 
@@ -351,6 +357,11 @@ when a transition is intended; constructing its destination state directly would
 `attachment` and `image` are schema-valid
 Field types, but they are skipped from the admitted graph and recorded as service-support gaps; they cannot reach
 the current Compiler. Active Storage and image-delivery prose describes target direction, not emitted support.
+Keep requested image and attachment Fields in the Plan either way. When a Compiler generates them, so that the
+matching GapSet no longer reports the Field skipped, it stores files with Active Storage on Cloudinary. Then tell
+the user to sign up for Cloudinary and set `CLOUDINARY_URL` from its dashboard in `.env.development.local` for
+local use and in the Render environment for the deployed app. The user sets it; never ask for, print, or commit
+its value.
 
 ### Field capability matrix
 
@@ -474,6 +485,11 @@ Ordinary Rails application code can still use `errors[:base]` after Compilation.
 presence/absence, uniqueness tuples, conditions, owners, and `exclusion` can produce service- or target-support gaps.
 They remain invalid only when the admitted meaning itself violates semantic rules.
 
+The current Analyzer cannot prove an admitted `format` or `not_equals` rule for development records. Each record
+the rule covers, and each record that references it, gets a
+`foundation_plan.gap.development_data.record.not_generated` gap and is left out of the seed. Author these rules only
+when the user asks, and name the dropped sample records in the read-back.
+
 ### Predicates
 
 A Predicate retains schema-valid combinations of `subject_uuid`, `key`, `name`, and `expression`. Import preserves
@@ -509,6 +525,15 @@ algebra and the relation scopes demanded by supported consumers. Unsupported Pol
 and every dependent Scaffold or projection remains an exact child gap. Do not infer that all Policies are supported
 or that all Scaffolds are public; inspect the whole matching GapSet.
 
+An Entity may have only one Policy per `operation`. A second Policy with the same operation on that Entity, such as a
+sign-in gate and a `read_self` Policy both using `read`, leaves both Policies out, along with every page that uses
+them. Give each extra decision on an Entity its own operation name. When every page requires sign-in, author one
+gate Policy on the Account Entity with a custom operation such as `use_app`, allowing when the current record equals
+`current_account`, and bind each sign-in-only request and displayed Association to it with
+`"record": {"kind": "environment", "name": "current_account"}`. A displayed Association nested inside another
+displayed Association uses `"public"`: the page's gate still applies, and deeper protected items are not generated.
+The [signed-in gate example](examples.md#signed-in-gate-and-one-tap-records) shows the shape.
+
 Account details show the signup Fields and normalized email by default. Editing permits only mutable, non-derived
 signup Fields; other Account Fields are not exposed automatically. An authored `scaffold.profile` replaces displayed
 details and collections with its projection and read Policy. An authored `scaffold.update` independently replaces
@@ -533,6 +558,11 @@ recursive projections, Predicate and Ordering selection, cursor pagination, Fiel
 bindings, associated-create entry points, and optional return overrides. Account settings support the default
 signup Fields and bounded authored profile/update customizations described above. Each consumer still has shape-specific prerequisites. Unsupported children are omitted
 or partially generated with exact GapSet records; a supported sibling may survive.
+
+An omitted index projection shows the primary descriptor. An explicit projection shows only its items and does not
+add the descriptor, so its rows show a View link in place of the record's name; put the descriptor first. A create
+definition with bindings and no `inputs`, reached through an associated `create_form`, is the
+[one-tap create](modeling-guide.md#add-behavior-deliberately) for records made by a tap.
 
 Create and update controls cover the admitted scalar, required-enum, and direct-Association slices. Required
 destinations need an admitted source such as a control, binding, realized default, state-machine initial state, or

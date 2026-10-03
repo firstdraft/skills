@@ -30,8 +30,8 @@ Targets plugin 0.8.2, CLI 0.8.1, API 0.7, Plan 0.23; catalog selection is separa
   with explicit gaps for native launcher artwork.
 - Account/Policy protection applies to Web Scaffolds. Native clients require a public index and do not inherit Web privacy.
 - Preserve unsupported requests and their gaps, including selected clients and access. Artifacts retain the Plan and GapSet.
-- Native preview follows generated guides and local iOS Simulator or Android Studio Emulator; native builds and Revyl
-  are optional for Rails development.
+- Preview iPhone and Android apps in [Revyl](references/foundation-plan-023.md#preview-generated-native-apps); Rails
+  work needs only the local web app.
 
 Before support claims, read [current evidence](references/foundation-plan-023.md#current-evidence-boundary).
 
@@ -44,8 +44,8 @@ For authoring, choose the relevant section:
   and Scaffolds.
 - [Modeling guide](references/modeling-guide.md): interview, Entities/Fields, validations, relationships, behavior,
   and [candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back).
-- [Examples](references/examples.md): concrete Application, scalar Field, enum, Account/Policy, Scaffold, and
-  relationship shapes.
+- [Examples](references/examples.md): concrete Application, scalar Field, enum, Account/Policy, signed-in gate,
+  one-tap create, Scaffold, and relationship shapes.
 
 For CLI work:
 
@@ -198,14 +198,12 @@ valid status so the complete GapSet can be reviewed. `plan compile` later repeat
 
 Before the first `plan compile`, complete the modeling guide's
 [candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back), then reread the exact current
-`.firstdraft/foundation-plan.json`. Give a compact semantic summary covering its path and SHA-256; application scope;
-Entities and material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; assumptions;
-and exclusions. Summarize outstanding implementation notes and how the selected mode will carry them forward.
-Show the matching valid run's `gap_set_sha256` and every ordered GapSet record, including classification, code,
-kind, status, reason, consequence, location, and cause when present. Use only that attached
+`.firstdraft/foundation-plan.json`. Follow that section's order: a plain-language summary, then the gaps grouped by
+what the user will notice, then a short technical block with the Plan path and SHA-256 and the matching valid run's
+`gap_set_sha256`. Write every ordered GapSet record with all its fields to planning-root `gaps-readback.md` and
+name that file instead of pasting the records into the chat. Use only that attached
 digest: the CLI validates it against the attached GapSet; never substitute a fixture, historical, or another
-Project's digest. Explain that service gaps were skipped before semantic analysis, target gaps were not fully
-realized, and `valid` applies only to the admitted graph. Use current-folder output by default. Select an absent
+Project's digest. Use current-folder output by default. Select an absent
 `--output <path>` for a requested destination, an ineligible root, or model-only originals when root output was not
 explicitly requested. Select `--github`
 only for an explicit private GitHub repository request. Generic compile or build language selects local output.
@@ -312,7 +310,7 @@ Report:
 - material choices, delegated decisions, exclusions, open questions, warnings, and capability gaps;
 - the implementation-notes location, outstanding agreed behavior, and whether the resulting repository actually
   contains them; follow the [notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff);
-- observed analyzer release, graph version, Head SHA, and complete valid GapSet and digest;
+- observed analyzer release, graph version, Head SHA, valid GapSet digest, and where its full records are;
 - mode and distinct Compilation/Publication statuses when Publication was requested;
 - `--github` mode's private URL after Publication success; direct output's path, file count, manifest digest, and
   any `root_adoption` after materialization;

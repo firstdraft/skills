@@ -79,7 +79,8 @@ snapshot, its admitted graph after whole-graph analysis, and the matching review
 One complete candidate is ready for read-back when it expresses a coherent, honest first-release slice; every
 included Entity, Field, and Reference has enough meaning to represent that slice without silent guesses; access and
 requested-client choices that change the slice are explicit; and remaining unknowns are clearly nonblocking or
-deferred. Read back delegated choices, exclusions, open questions, and capability gaps. Readiness does not require
+deferred. Read back delegated choices, exclusions, open questions, and capability gaps in the
+[read-back order](#prepare-the-pre-compile-semantic-read-back). Readiness does not require
 resolving every imaginable future product decision, and it does not prohibit earlier local edits or diagnostic
 submissions.
 
@@ -117,6 +118,12 @@ where appropriate. For a movie app, a few movies, one demo viewer, and related w
 relationships explorable. For a habit app without Accounts, related goals, active and paused habits, and historical
 logs can demonstrate the flow without inventing authentication. Do not require a universal row count or add
 Entities solely to seed them.
+
+Do not add a `format` Validation or a not-equal ("must be other than") comparison unless the user asks for that
+rule. The current Analyzer cannot prove either rule against development records, so it drops every sample record
+the rule covers and every record that references one. An invented username pattern can drop every member and, with
+them, their posts and the demo sign-in. When the user does ask for such a rule, author it and say in the read-back
+which sample records will be dropped.
 
 Make the dataset and any source reuse visible in the existing semantic read-back. Approve it with the Plan, not
 row by row. Honor an explicit empty-data choice, omitting `development_data` when there are no records. An already
@@ -160,7 +167,8 @@ Keep these outcomes distinct:
 | Behavior outside the vocabulary | Retain it in implementation notes for ordinary source development; analysis cannot promise a gap for meaning it never received. |
 | Explicit user exclusion | Honor the agreed scope and retain the exclusion in the existing decisions/read-back; do not reintroduce it during a later revision. |
 
-Notes may refer to a structured subject or its gap, but do not duplicate the Plan or maintain another gap inventory.
+Notes may refer to a structured subject or its gap, but do not duplicate the Plan or keep a gap list in the notes;
+the read-back's `gaps-readback.md` is a copy of the analysis.
 Before Compile, summarize outstanding agreed behavior and open questions during the existing semantic read-back.
 Use the [output-mode handoff](diagnostics-and-recovery.md#implementation-notes-handoff) to preserve and discover the
 notes in the application repository. The implementation agent may have neither this conversation nor the original
@@ -245,6 +253,9 @@ express the product requirement:
 | A rating is at least one, an end date follows a start date, or two selected people must differ | `comparison` with compatible values; use Entity ownership for a cross-value rule and select the input that should receive the error. |
 | A title and release date must be unique together | One Entity-owned `uniqueness` tuple, with an explicit participating Field or Reference as its error target and the intended null policy. |
 
+Add `format` and not-equal comparisons only when the user asks for them; today they drop
+[sample records](#prepare-data-for-the-first-preview).
+
 Select a useful Field or Reference for Entity-owned feedback; for example, attach an invalid end-date comparison
 to the end-date input. Plan error targets do not include the whole record. A complete sentence does not require a
 custom validator: ordinary Rails I18n can customize application error copy after Compilation. Ownership of
@@ -294,7 +305,8 @@ rather than applying an older blanket relationship limit.
 
 - Add Predicates and Orderings when generated queries or surfaces need reusable product meaning.
 - Add a Scaffold only when the user wants those standard generated routes and surfaces.
-- Make access on generated surfaces explicitly public or Policy-controlled.
+- Make access on generated surfaces explicitly public or Policy-controlled. An Entity may have only one Policy per
+  `operation`; when every page needs sign-in, use one [signed-in gate](examples.md#signed-in-gate-and-one-tap-records).
 - Treat every structured definition as a generation request; there is no per-subject opt-out.
 - Keep custom Ruby, arbitrary seed code, secrets, and post-Compilation implementation notes outside the Plan.
 
@@ -311,6 +323,22 @@ Every request and displayed Association declares public access or a Policy bindi
 Web Account/Policy slice can protect supported surfaces and provide a Web-only Account profile; unsupported Policies
 and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
 silently narrow a broader requested Scaffold or make it public merely to obtain a gap-free result.
+
+Choose what each main list shows. Start its index projection with the record's primary descriptor, such as a
+book's title or a post's author, using the Association item when the descriptor is an Association. Then add one to
+three short Fields that tell records apart, such as a date, status, or count; never long text. An explicit
+projection does not add the descriptor for you: rows without it show a View link in place of the record's name.
+Name each list's fields in the read-back as a delegated choice unless the user chose them.
+
+When a record is created by a tap rather than by typing, and every value comes from context (the parent page, the
+signed-in Account, or the current time), author a request-only create nested under the parent. Likes, follows,
+RSVPs, upvotes, bookmarks, and "mark as read" fit this. Give the child's `scaffold.create` no `inputs`, bind its
+Account Reference to `current_account`, let a required datetime use a `current_time` default, add
+`"create_form": {}` to the parent's displayed Association, and leave `new` and `create` out of the child's
+`resource_routes`. The Compiler then puts a one-tap button on the parent page instead of a New page with dropdowns;
+a Compiler without that support links to a New page holding only a Create button. If the generated parent page
+offers no undo, such as unlike or unfollow, record it in implementation notes. See the
+[one-tap example](examples.md#signed-in-gate-and-one-tap-records).
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
 Compilation emits each with at least one admitted public navigation entry and an identity that fits its
@@ -331,10 +359,9 @@ preference, following OS changes only while System is selected. Fixed modes igno
 Native `toggle` output stays automatic with one reviewed gap for the absent native preference control; preserve
 the authored choice and requested clients instead of replacing `toggle` with `auto` or dropping a client.
 Web components retain the stock Zinc theme, and native launcher icons remain stock. Android shows
-one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, follow the
-emitted platform preview guide and the [native preview boundary](foundation-plan-023.md#preview-generated-native-apps).
-Use local Android Studio Emulator or iOS Simulator for native checks when available. Ordinary Rails iteration uses
-the local web app. Revyl is an optional preview destination, not a release or development prerequisite.
+one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, preview both
+native apps in Revyl with the [native preview steps](foundation-plan-023.md#preview-generated-native-apps). Ordinary
+Rails iteration uses the local web app; native preview is not a release or development prerequisite.
 Nonempty delivery, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
 v0.23 shape, including notification trigger/template definitions, deployment, and iPad, remain in
 [implementation notes](#retain-implementation-requirements) and the semantic read-back as currently unplannable
@@ -367,8 +394,28 @@ Reconcile again after a revision, carrying settled decisions forward rather than
 
 The read-back reviews the reconciled candidate; it is not a last-minute authoring pass. Preserve existing subject
 identity and present remaining concerns as warnings. Do not require a candidate edit without a user correction,
-a confirmed product decision, or a demonstrated diagnostic. For an Account, say plainly whether people can sign in
-right after signing up or confirm their email first, as the
-[Accounts reference](foundation-plan-023.md#accounts-and-policies) describes. Follow the Skill's
+a confirmed product decision, or a demonstrated diagnostic.
+
+Write it for a reader who is not technical, in this order:
+
+1. A plain-language summary: what the app is for and who uses it; each kind of record and its material Fields,
+   with each relationship as a "must" or "may" sentence; rules, sign-up and access, and clients; what each main
+   list shows; a few of the proposed sample records and any the gaps will drop; and delegated choices,
+   assumptions, exclusions, open questions, and outstanding implementation notes with how the selected output
+   mode carries them forward. For an Account, say plainly whether people can sign in right after signing up or
+   confirm their email first, as the [Accounts reference](foundation-plan-023.md#accounts-and-policies) describes.
+2. What is not generated yet. Group the gaps by what the user will notice, lead with that effect, and say what
+   the app does instead, for example "Photos aren't generated yet; posts are caption-only" or "Like and follower
+   counts aren't generated yet". Use one line per group rather than one per record, and say which groups you plan
+   to build in Rails after Compile.
+3. A short technical block: the Plan path and SHA-256; the matching valid run's `gap_set_sha256` and record count;
+   that service gaps were skipped before semantic analysis, target gaps were analyzed but not fully realized, and
+   `valid` covers only the admitted graph; the selected output mode; and the gaps file.
+
+Before giving the read-back, write planning-root `gaps-readback.md`: the Plan SHA-256, the `gap_set_sha256`, and
+every ordered GapSet record with its classification, code, kind, status, location, reason, consequence, and cause
+when present. Copy it from the attached analysis, and rewrite it whenever the candidate bytes change. Root
+adoption archives it under `.firstdraft/design/`; after Compile, the app's `.firstdraft/gaps.json` is the
+authority. Follow the Skill's
 [read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the exact
-candidate, complete GapSet, selected output mode, and authorization checkpoint.
+candidate, selected output mode, and the single approval.
