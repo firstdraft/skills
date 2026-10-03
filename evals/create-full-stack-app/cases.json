@@ -145,12 +145,14 @@
     {
       "id": "one-tap-like-record",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a private recipe board for my cooking club: members sign up, share recipes with a title and instructions, and like a recipe with one tap from its page. Every page requires sign-in. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a private recipe board for my cooking club: members sign up, share recipes with a title and instructions, like a recipe with one tap from its page, and tap \"Cooked it\" on a recipe each time they cook it. Every page requires sign-in. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
         "Models Like as its own Entity with required immutable References to Recipe and to the Account Entity, plus one-like-per-member uniqueness over both References.",
         "Gives Like's scaffold.create no inputs, binds its Account Reference to current_account, and authorizes it with a Like Policy or the signed-in gate.",
+        "Selects destroy in Like's resource_routes, authorized by a Like Policy that allows only when its Account Reference equals current_account.",
         "Adds create_form {} to the displayed likes Association on the Recipe details page and leaves new and create out of Like's resource_routes.",
-        "Explains in the read-back that members like a recipe with a one-tap button on its page instead of a New page with dropdowns.",
+        "Models each cooking as its own no-input record created from the Recipe page, with no uniqueness rule over Recipe and the member and no destroy, so a member can record the same recipe more than once.",
+        "Says plainly in the read-back \"one tap to like, one tap to unlike\" and that each Cooked it tap adds another record.",
         "Makes no service request, Compile or remote write."
       ]
     },

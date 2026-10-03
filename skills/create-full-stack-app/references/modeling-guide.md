@@ -330,15 +330,14 @@ three short Fields that tell records apart, such as a date, status, or count; ne
 projection does not add the descriptor for you: rows without it show a View link in place of the record's name.
 Name each list's fields in the read-back as a delegated choice unless the user chose them.
 
-When a record is created by a tap rather than by typing, and every value comes from context (the parent page, the
-signed-in Account, or the current time), author a request-only create nested under the parent. Likes, follows,
-RSVPs, upvotes, bookmarks, and "mark as read" fit this. Give the child's `scaffold.create` no `inputs`, bind its
-Account Reference to `current_account`, let a required datetime use a `current_time` default, add
-`"create_form": {}` to the parent's displayed Association, and leave `new` and `create` out of the child's
-`resource_routes`. The Compiler then puts a one-tap button on the parent page instead of a New page with dropdowns;
-a Compiler without that support links to a New page holding only a Create button. If the generated parent page
-offers no undo, such as unlike or unfollow, record it in implementation notes. See the
-[one-tap example](examples.md#signed-in-gate-and-one-tap-records).
+When the user describes something people do with a click, such as a like, follow, RSVP, bookmark, or upvote, use
+the Foundation Plan's no-input record pattern: a create with no `inputs` under the parent's `"create_form": {}`,
+with every value bound from context. The Foundation Plan Guide's No-input records section defines it, and the
+[Like example](examples.md#signed-in-gate-and-one-tap-records) copies its example. When each person does it once
+and can take it back, it is a toggle: also add a uniqueness rule over the parent Reference and the Account
+Reference, and select `destroy` authorized by an owner Policy. Records that may repeat, such as "mark as read"
+events or check-ins, get neither. Say it plainly in the read-back, such as "one tap to like, one tap to unlike".
+Today's deployed Compiler may still show a separate Create page until the one-tap change ships.
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
 Compilation emits each with at least one admitted public navigation entry and an identity that fits its
