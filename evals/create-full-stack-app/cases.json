@@ -169,6 +169,103 @@
       ]
     },
     {
+      "id": "interview-opening-asks-level-once",
+      "should_trigger": true,
+      "prompt": "Help me make an app for my neighborhood's tool library, where neighbors lend each other tools. This is our first message; keep it local and do not contact First Draft yet.",
+      "expectations": [
+        "Restates the idea in a sentence and proposes a name, asking about the idea itself only if it needs clarifying.",
+        "Invites materials such as design docs, screenshots, a CSV of sample data, or an app the user likes, and says none is required.",
+        "Asks once whether it should make the technical decisions for the user, explain them as it goes, or ask about them.",
+        "Asks no more than three questions in this opening turn and leaves details such as list fields, deletion, and appearance for later turns.",
+        "Does not ask about hosting.",
+        "Runs no plan push, plan status, or plan compile and makes no network request in this opening turn."
+      ]
+    },
+    {
+      "id": "interview-level-not-asked-again",
+      "should_trigger": true,
+      "prompt": "Earlier in this conversation you asked whether to make the technical decisions for me, explain them as you go, or ask me about them, and I said to explain them as you go. We settled that it's a tool library for my neighborhood, private to neighbors who sign up, web only. Keep going with the interview. I have no artifacts to share. Keep this local; do not contact First Draft.",
+      "expectations": [
+        "Does not ask the level question again.",
+        "Asks one product decision in this turn, with one line on why it matters and two to four options with its recommendation first.",
+        "When a technical choice comes up, explains it in a plain sentence because the user chose to have choices explained, while still asking product meaning such as whether a tool can be lent to two neighbors at once.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "interview-decide-the-rest",
+      "should_trigger": true,
+      "prompt": "We're planning a recipe board for my cooking club. You asked my level and I said to make the technical decisions for me. I told you members sign up, share recipes with a title and instructions, and every page needs sign-in. You just asked whether members can comment on recipes: yes. Now make the rest of the decisions for me. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Asks no further product or implementation questions.",
+        "Chooses its recommendation for each remaining item, including product meaning such as who may edit or delete a comment and what happens to comments when a recipe is deleted, and records each as delegated.",
+        "Writes those choices into .firstdraft/foundation-plan.json instead of leaving them open.",
+        "Walks the coverage checklist without presenting it as questions, and writes the applicable After Compile items into implementation-notes.md.",
+        "Summarizes the delegated choices plainly so the user can still correct them. Treats the delegation as covering decisions, not approval: it does not claim the candidate is approved, and a later read-back still asks once for approval before Compile.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "interview-early-reality-check",
+      "should_trigger": true,
+      "prompt": "Help me build a social network for just my family. It should work and look like Instagram so that it's familiar. You already asked your opening questions; my answers: only my family can use it and everyone signs in, I have nothing to share, and make the technical decisions for me.",
+      "expectations": [
+        "Writes a rough Plan with private, signed-in pages and a photo on each post, then runs plan push and plan status --wait and reads the matching analysis before asking detailed questions.",
+        "Tells the user in a few plain lines what First Draft will and will not build, based on that analysis, such as that photos are not generated yet so posts start caption-only, and that iPhone and Android apps show only public pages and have no sign-in, so a private app works in the phone's browser.",
+        "Does not paste GapSet codes, pointers, or digests into this message.",
+        "Keeps the photo Field and private access in the Plan instead of removing them or making pages public to avoid gaps.",
+        "Then asks one product decision that the analysis informs, such as whether the user still wants phone apps given that trade-off.",
+        "Does not run plan compile."
+      ]
+    },
+    {
+      "id": "meaning-asked-implementation-by-level",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and family can comment on updates and on albums. Every page needs sign-in. You asked my level and I said to make the technical decisions for me. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Treats whether one kind of comment can belong to either an update or an album as product meaning: asks it as one product question or states it as an assumption the user can correct, rather than treating the technical level as settling it.",
+        "When one Comment may belong to either, models one Reference with both targets and sets realization.rails_association to polymorphic without asking, with a one-line why.",
+        "Says plainly that today's Compiler leaves a Reference with several targets, and the Associations over it, out of the app as gaps whichever realization is chosen, and keeps the Reference in the Plan.",
+        "Asks no implementation question, such as about gems, column types, or the realization.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "implementation-choice-asked-at-ask-level",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and one kind of comment can go on either an update or an album. Every page needs sign-in. You asked my level and I said to ask me about technical decisions. The product questions are settled. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Asks the one real implementation choice the Plan exposes, for the comment's Reference with two targets: polymorphic or exclusive arc.",
+        "Says what each emits, an ID and a type column with a Rails polymorphic association, or nullable foreign keys per target with an exclusive-arc constraint; puts polymorphic first as Rails' convention; and links the Foundation Plan Guide's Rails output view.",
+        "Says that today's Compiler leaves that Reference out of the app as a gap whichever option is chosen.",
+        "Does not invent other implementation choices such as gems, column types, or callbacks.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "coverage-checklist-walked",
+      "should_trigger": true,
+      "prompt": "We've finished the questions for my book club app. You asked my level and I said to make the technical decisions for me. Settled: members sign up; a member adds a book with a title and author; members review books with a rating from 1 to 5 and a comment; every page needs sign-in; web only. I have no artifacts. Get it ready for my review, but keep this local; do not submit or Compile.",
+      "expectations": [
+        "Checks records, required and unique values, links and deletion, access, Accounts, lists, sample data, one-tap records, phone apps, hosting, appearance, and implementation choices before its summary, without turning them into a questionnaire.",
+        "Does not ask again about settled items such as sign-in, web only, or the rating range.",
+        "Does not treat the technical level as delegating product meaning: asks one remaining meaning question, such as whether a member may review the same book twice or what happens to reviews when a book or member is deleted, and leaves any others for later turns.",
+        "Proposes list fields, sample data, and appearance itself for the read-back without asking, and says hosting is set up for Render's free plan with Neon.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "after-compile-checklist-written",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a private photo journal for my family with iPhone and Android apps: members sign up and post a photo with a caption. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Writes implementation-notes.md with an After Compile checklist of the applicable items: Rollbar once ROLLBAR_ACCESS_TOKEN is set; Skylight once SKYLIGHT_AUTHENTICATION is set; a mail provider for password reset following DEPLOY.md's Account email launch prerequisite; Cloudinary and CLOUDINARY_URL once photos generate; deploying with DEPLOY.md's command-line section; and Revyl for previewing the phone apps.",
+        "Keeps those steps out of the Plan and does not ask for, print, or invent any key.",
+        "Keeps the photo Field, private access, and the requested phone apps in the Plan.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
       "id": "artifact-invitation",
       "should_trigger": true,
       "prompt": "Use First Draft to help me plan a lending app for our workshop's equipment. Members borrow cameras and microphones and staff record returns. Let's start with the model; keep this local.",

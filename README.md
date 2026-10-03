@@ -39,7 +39,7 @@ behavior. This repository teaches an agent how to use those contracts without cr
 | Understand the installed workflow | [Skill entrypoint](skills/create-full-stack-app/SKILL.md) |
 | Continue or review an app's UI | The app's `UI.md` and shared components; [UI Skill status](#ui-continuation) |
 | Review improvements for an existing app or workflow | [First Draft changelog](CHANGELOG.md) |
-| Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
+| Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [interview guide](skills/create-full-stack-app/references/interview.md) or [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
 | Check current Foundation Plan capability | [Foundation Plan reference](skills/create-full-stack-app/references/foundation-plan-023.md) |
 | Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.23.schema.json) |
 | Add or run behavioral evaluations | [Evaluation guide](evals/README.md) |

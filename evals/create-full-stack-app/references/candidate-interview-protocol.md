@@ -22,7 +22,9 @@ Track each consequential choice as one of:
   tooling limitation.
 
 Offer concrete alternatives when they make a question easier to answer, but label proposals as proposals. A missing
-answer is not a default. Keep each turn concise and prioritize questions whose answers would change the graph,
+answer is not a default; "you pick" or "make the rest of the decisions for me" delegates. The opening turn clarifies
+the idea, invites materials, and asks once whether the agent should make the technical decisions, explain them, or
+ask about them; later turns ask one decision at a time. Prioritize questions whose answers would change the graph,
 access, or requested clients. The ambiguity matrix guides the dialogue; it is not a one-message questionnaire.
 
 ## Interview from product meaning
@@ -43,10 +45,11 @@ access, or requested clients. The ambiguity matrix guides the dialogue; it is no
    notifications, and absent Account requirements do not imply public access.
 7. **Read back and obtain approval.** Summarize Entities and their material Fields, relationships, rules, behavior,
    and data; surfaces, access, native and delivery choices; explicit exclusions, delegated decisions, and open
-   choices. For a matching valid analysis, show the GapSet digest and every ordered record, distinguishing service
-   meaning skipped before semantic analysis from admitted meaning not fully realized by the target. Ask the user to
-   correct or explicitly approve that exact semantic model and reviewed support delta before Compile; do not require
-   a digest echo or another gap-specific acknowledgment.
+   choices. For a matching valid analysis, group the gaps by what the user will notice, then give the GapSet digest
+   and write every ordered record to a gaps file, distinguishing service meaning skipped before semantic analysis
+   from admitted meaning not fully realized by the target. Ask the user to correct or explicitly approve that exact
+   semantic model and reviewed support delta before Compile; do not require a digest echo or another gap-specific
+   acknowledgment.
 
 Capture intended product meaning before comparing it with current target support. A capability gap is not permission
 to silently delete, loosen, flatten, relabel, or substitute the user's intent merely to obtain `valid` analysis.
@@ -97,14 +100,16 @@ and deferred questions can be revisited after diagnostics or further dialogue.
 ## Read back and approve before Compile
 
 Before the first Compile that could start direct retained work or reach Publication, reread the exact staged Plan and
-give a compact plain-language semantic summary. Cover the Plan path and SHA-256; application scope; Entities and their
-material Fields, relationships, rules, behavior, and data; surfaces, access, and clients; material assumptions, exclusions, and
-capability gaps; and the matching valid AnalysisRun's GapSet digest and every ordered record. Explain that service
-gaps were skipped before semantic analysis, target gaps were not fully realized, and `valid` applies only to the
-admitted graph. State the selected completion mode: direct output creates only a verified local directory, while
-terminal successful Publication is intended to create one private GitHub repository. Neither deploys. Use whatever
-order is clearest. Do not enumerate absent subject families or immaterial empty categories. Ask the user to correct
-or explicitly approve the exact model and reviewed gaps without requiring a digest echo or gap-specific field.
+give a plain-language semantic summary first: application scope; Entities and their material Fields, relationships,
+rules, behavior, and data; surfaces, access, and clients; material assumptions, delegated choices, exclusions, and
+open questions. Then group the gaps by what the user will notice. End with a short technical block: the Plan path
+and SHA-256, the matching valid AnalysisRun's GapSet digest and record count, and the file holding every ordered
+record. Explain that service gaps were skipped before semantic analysis, target gaps were not fully realized, and
+`valid` applies only to the admitted graph. State the selected completion mode: direct output creates only a
+verified local directory, while terminal successful Publication is intended to create one private GitHub
+repository. Neither deploys. Do not enumerate absent subject families or immaterial empty categories. Ask the user
+to correct or explicitly approve the exact model and reviewed gaps without requiring a digest echo or gap-specific
+field.
 
 The read-back reviews the staged candidate rather than reopening authoring. Preserve its existing subject UUIDs;
 do not require an edit without a user correction, a confirmed product decision, or a demonstrated diagnostic. If

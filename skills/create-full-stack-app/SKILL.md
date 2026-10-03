@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.8.2, CLI 0.8.1, API 0.7, Plan 0.23; catalog selection is separate.
+Targets plugin 0.8.3, CLI 0.8.1, API 0.7, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
@@ -42,8 +42,9 @@ For authoring, choose the relevant section:
 - [Foundation Plan reference](references/foundation-plan-023.md): exact envelope, identity, ownership, presence,
   current evidence, and target support for Application/clients, Fields, relationships, Validations, Accounts/Policies,
   and Scaffolds.
-- [Modeling guide](references/modeling-guide.md): interview, Entities/Fields, validations, relationships, behavior,
-  and [candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back).
+- [Interview](references/interview.md): flow, meaning versus implementation, what each option emits, and checklists.
+- [Modeling guide](references/modeling-guide.md): decision ledger, Entities/Fields, validations, relationships,
+  behavior, and [candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back).
 - [Examples](references/examples.md): concrete Application, scalar Field, enum, Account/Policy, signed-in gate,
   one-tap create, Scaffold, and relationship shapes.
 
@@ -125,21 +126,18 @@ reinitialize. Inspect private state only for a recovery check explicitly named i
 
 ## Interview and author incrementally
 
-Use the modeling guide's decision ledger and readiness criteria. In the opening turn, ask no more than three closely
-related questions about choices changing Entity boundaries, record granularity, access, or clients. When a collection
-could mean unique objects, interchangeable goods, or both, offer one record per unique object, one record carrying a
-quantity, or both with distinct meaning. Alternatives are proposals, not answers.
+Start when the user asks for help making an app or invokes `/create-full-stack-app`, and follow the
+[interview flow](references/interview.md#interview-flow). Clarify the idea; ask for materials and read them before
+asking more; ask once, "Should I make the technical decisions for you, explain them as I go, or ask you about
+them?" Then ask the product questions that shape the data model, most important first and one decision per turn,
+until only delegated or nonblocking items remain. Right after the opening answers, push a rough Plan and tell the
+user plainly what First Draft will and will not build. Ask implementation choices last, by the user's level;
+product meaning is always asked or delegated. Honor "make the rest of the decisions for me" at any point. Before
+the read-back, walk the coverage checklist silently and write the after-Compile checklist into the notes.
 
-Ask early for examples and propose preview data through the
-[artifact and data guidance](references/modeling-guide.md#learn-from-examples-and-artifacts),
-within ordinary Plan review.
-
-For an underspecified opening request, ask only about product meaning and deferred areas. Wait for the user's reply
-before discussing target support unless feasibility was requested. Later, state the current access boundary
-precisely: Web Scaffolds may be public or may use the bounded Account and Policy slices, while ordinary iPhone and Android
-navigation remains public-only and Account-free. If the user requires private or authenticated access, model that
-meaning first and use whole-graph analysis to distinguish realized Web behavior from exact Web or native gaps.
-Keep private access and requested clients in the Plan even when native behavior remains ungenerated.
+State the access boundary precisely: Web pages may be public or use Accounts and Policies, while iPhone and Android
+apps show only public pages and have no sign-in. Keep private access and requested clients in the Plan even when
+native output is a gap.
 
 Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
 incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails
@@ -212,7 +210,8 @@ Do not enumerate absent subject families or immaterial properties. Ask the user 
 candidate and reviewed gaps only when those decisions are still unresolved; require no digest echo or
 gap-acknowledgment field. Existing authorization carries forward: if the user has already approved the candidate and
 reviewed gaps, or requested the complete app with these choices delegated, give the read-back as a progress update
-and proceed. Ask only when new material scope or gap consequences need a user decision.
+and proceed. Ask only when new material scope or gap consequences need a user decision. Delegating interview
+decisions, as with "make the rest of the decisions for me", is not that request: ask once.
 
 If the Plan bytes change, show the new SHA-256 and the semantic delta. Obtain approval of the changed candidate only
 when the delta exceeds the existing request or delegated choices.

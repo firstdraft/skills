@@ -29,6 +29,34 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-03: An interview that asks your level first
+
+**Skills — released in plugin 0.8.3.** The Skill's interview now follows one order. The agent clarifies your idea,
+asks for materials such as design docs, screenshots, a CSV of sample data, or an app you like, and reads them before
+asking more. It asks once whether it should make the technical decisions for you, explain them as it goes, or ask
+you about them. Then it asks the product questions that shape the data model, most important first and one
+decision at a time, and stops when only delegated or minor items remain. At any point you can say "make the rest
+of the decisions for me"; the read-back names what the agent chose so you can still correct it. Earlier versions set
+no order after the opening turn and never asked how involved you wanted to be in technical choices.
+
+- Right after your first answers, the agent submits a rough Plan and tells you plainly what First Draft will and
+  will not build yet, such as photos, or phone apps for a private app, so surprises come before details.
+- Product meaning, such as whether one comment can belong to either a post or a photo, is always asked or
+  delegated. Implementation choices come last and follow your level. Today the Plan has one: how a Reference with
+  several targets is stored, `polymorphic` (the Rails convention and the default) or `exclusive_arc`. The agent
+  links the Foundation Plan Guide's Rails output view to show what a choice emits.
+- Before the read-back the agent checks a coverage list silently and writes an After Compile checklist into
+  `implementation-notes.md`: Rollbar and Skylight keys, a mail provider for password reset, Cloudinary for images,
+  deploying with `DEPLOY.md`, and Revyl for phone preview.
+- Hosting is not a question. Generated apps are set up for Render's free plan with a free Neon database; a paid
+  option is planned.
+- If you or the agent prefer your own implementation of a generated part, the agent replaces it in Rails after
+  Compile and notes why in `implementation-notes.md`. Compile is one-shot today, so there is no option to leave a
+  part out.
+
+The read-back, the single approval, and the exact Plan and GapSet binding are unchanged. The new order applies to
+conversations started after you update the plugin; an existing app needs no change.
+
 ## 2026-10-03: Workshop fixes to authoring and preview
 
 **Skills — released in plugin 0.8.2.** When the Skill authors an Account, it now omits `verification`, so people

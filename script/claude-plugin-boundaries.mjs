@@ -8,6 +8,7 @@ export const canonicalClaudePluginSkillFiles = Object.freeze([
   "references/examples.md",
   "references/foundation-plan-0.23.schema.json",
   "references/foundation-plan-023.md",
+  "references/interview.md",
   "references/modeling-guide.md",
   "scripts/firstdraft.sh",
 ]);
