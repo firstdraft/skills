@@ -98,9 +98,10 @@ two minutes. Every validated domain status exits successfully:
 
 For `valid`, require non-null `analysis.gap_set` and `analysis.gap_set_sha256`. The CLI validates the canonical
 `firstdraft.foundation-gaps/2` format, digest, exact Head, Project graph generation, analyzer and Compiler releases,
-and target/profile before printing it. Inspect and surface every ordered record; do not replace the list with only
-counts or categories. A `service_support_gap` records schema-valid meaning skipped before semantic analysis, so
-`valid` does not validate that skipped meaning. A `target_support_gap` records admitted and analyzed meaning that
+and target/profile before printing it. Inspect every ordered record. The
+[read-back](modeling-guide.md#prepare-the-pre-compile-semantic-read-back) groups them in plain language and writes
+each complete record to `gaps-readback.md`; do not drop records or report only counts. A `service_support_gap`
+records schema-valid meaning skipped before semantic analysis, so `valid` does not validate that skipped meaning. A `target_support_gap` records admitted and analyzed meaning that
 the selected target does not fully realize. A valid analysis with an empty `gaps` array still carries the canonical
 object and digest. Every non-valid status carries null values for both fields.
 
@@ -299,6 +300,9 @@ actual `db/seeds/development.rb`; report omitted records or dependencies instead
 need an explicit development `bin/rails db:seed` to load added samples. Do not reset a database to hide missing data.
 Inspect the existing data first: ordinary seeds match their generated attribute tuples, so changing those values
 can make a later seed run recreate the original sample. Reseeding does not reconcile customized records.
+
+If the app has generated image or attachment Fields, uploads need the user's Cloudinary `CLOUDINARY_URL`
+([setup](foundation-plan-023.md#entities-descriptors-and-fields)) before you check them.
 
 Open the running app in a browser and check representative visible records, their relationships, and relevant
 states in the intended flow. For an explicit empty start, check the empty state and appropriate create flow. For
