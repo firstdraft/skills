@@ -37,20 +37,20 @@ smallest structured meaning that preserves the user's product intent.
 
 ## Interview toward one coherent candidate
 
-Treat the interview as an incremental design conversation, not a questionnaire that must finish before local work
-begins. Ask no more than three closely related questions in the opening turn. Prioritize answers that change the
-graph, access model, or requested clients. Offer concrete alternatives when they help, but label them as proposals
-rather than treating them as answers.
+Follow the [interview flow](interview.md#interview-flow) for the order of questions. Treat the interview as an
+incremental design conversation, not a questionnaire that must finish before local work begins: edit and push the
+Plan as answers arrive. Prioritize answers that change the graph, access model, or requested clients.
 
 When modeling a collection, distinguish one uniquely identified object, a quantity of interchangeable goods, and a
 mixed product that needs both meanings. Do not collapse that branch into only individual-versus-group wording.
-For an underspecified opening request, ask only about intended product meaning and name deferred product areas;
-wait for the user's answer before discussing target support or capability gaps unless feasibility was itself part
-of the request. Do not promote a common use case into an assumption. When target support later matters, ask for
+In the opening turn, ask only about intended product meaning, materials, and the user's level, and name deferred
+product areas; give the reality check about target support after the user answers, unless feasibility was itself
+part of the request. Do not promote a common use case into an assumption. When target support matters, know the
 desired access before describing the current Account, Policy, Web, and native boundaries. Keep one candidate Plan: do not maintain a
 parallel flattened or capability-friendly shape merely so one version can Compile.
 
-Track consequential choices as:
+Track consequential choices as follows; in the [coverage checklist](interview.md#coverage-checklist), an asked item
+is Confirmed and a delegated item is Delegated:
 
 - **Confirmed:** the user chose it.
 - **Delegated:** the user asked the agent to choose; include the choice in the read-back.
@@ -86,10 +86,10 @@ submissions.
 
 ## Learn from examples and artifacts
 
-After understanding the rough goal and before settling detailed modeling, ask once whether the user has a
-representative spreadsheet, CSV, form, photo, report, or export. The purpose is to understand the work; sample-data
-reuse is secondary. An example already supplied satisfies this invitation. If none is available or sharing is
-declined, continue from the description or a synthetic example.
+In the opening turn, ask once for materials: design docs, screenshots, a spreadsheet or CSV of sample data, a form,
+photo, report, or export, or an app the user likes. Read what arrives before asking more. The purpose is to
+understand the work; sample-data reuse is secondary. An example already supplied satisfies this invitation. If none
+is available or sharing is declined, continue from the description or a synthetic example.
 
 Have the user explain a representative item and how it is used. Inspect relevant material with available tools;
 say when a format could not be read. Use it to clarify vocabulary, record boundaries, relationships, units, dates,
@@ -152,6 +152,7 @@ Maintain `implementation-notes.md` at the planning workspace root as the convers
 Plan cannot express. Write the product requirement, relevant Entities or interactions, useful rationale, and a few
 acceptance examples. Separate agreed requirements from unresolved questions and proposals. Keep it concise and
 revise it when the user's decisions change; it is not a transcript, task database, or second structured Plan.
+Add the applicable [after-Compile checklist](interview.md#after-compile-checklist) under `## After Compile`.
 
 For example, an agreed CSV import may need to preview all row errors before saving anything and save a valid file
 as one transaction. Record examples such as "one invalid row leaves all records unchanged" and "a valid file saves
@@ -287,7 +288,8 @@ Put a Reference on the Entity that stores the relationship fact. Ask:
 - What should happen to referencing records when a target is deleted?
 - Is the target immutable after creation?
 - Is the relationship one-to-one?
-- For a closed multi-target Reference, which supported target realization should be used?
+- For a closed multi-target Reference, which supported target realization should be used? This is an
+  implementation choice; follow the user's level in [meaning and implementation](interview.md#meaning-and-implementation).
 
 Do not author the Reference's same-key forward Association. Add a referenced-side Association when the target
 needs a meaningful reverse traversal. Add an indirect Association only when the composed traversal itself has a
@@ -374,6 +376,10 @@ diagnostic reveals an ambiguous product decision, ask the user rather than optim
 
 In particular, do not remove or weaken modeled content solely because the reviewed GapSet reports a
 `service_support_gap` or `target_support_gap`. Preserve the local Plan and report the exact pointer and consequence.
+GapSet records are the output limitations; report an analysis warning as a warning. A `public_scaffold` warning on
+a Policy-protected page is not a reason to make it public. Report a gap as the analysis gives it, even when its
+reason names no cause or contradicts these references. Do not trim the Plan or push trial or example Plans to find
+a cause: each push replaces the Project's current Plan.
 
 ## Prepare the pre-Compile semantic read-back
 
