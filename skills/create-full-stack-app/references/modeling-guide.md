@@ -367,6 +367,8 @@ Reconcile again after a revision, carrying settled decisions forward rather than
 
 The read-back reviews the reconciled candidate; it is not a last-minute authoring pass. Preserve existing subject
 identity and present remaining concerns as warnings. Do not require a candidate edit without a user correction,
-a confirmed product decision, or a demonstrated diagnostic. Follow the Skill's
+a confirmed product decision, or a demonstrated diagnostic. For an Account, say plainly whether people can sign in
+right after signing up or confirm their email first, as the
+[Accounts reference](foundation-plan-023.md#accounts-and-policies) describes. Follow the Skill's
 [read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the exact
 candidate, complete GapSet, selected output mode, and authorization checkpoint.
