@@ -52,7 +52,11 @@ A workshop rehearsal of a private family social network found more problems, whi
 - Each main list starts with the record's primary descriptor, such as a book's title, plus one to three short
   fields that tell records apart.
 - Records made by a tap, such as likes, follows, and RSVPs, are authored as a create with no inputs nested under
-  the parent page, so the Compiler can offer a one-tap button instead of a New page.
+  the parent page, so the Compiler can offer a one-tap button instead of a New page. When each person does it once
+  and can take it back, the Skill also authors a uniqueness rule over the parent and the account and an owner-only
+  delete, so the parent page can show one Like or Unlike button. Records that may repeat, such as check-ins, get
+  neither. The read-back says "one tap to like, one tap to unlike". Today's deployed Compiler may still show a
+  separate Create page until the one-tap change ships.
 - Revyl is the primary preview for both iPhone and Android. For local Rails, start one cloudflared quick tunnel, run
   `RAILS_DEVELOPMENT_HOSTS=.trycloudflare.com bin/dev`, then `bin/<platform> preview revyl --server <tunnel URL>`.
   Revyl's Android device reported WebView 152 on 2026-10-03, so a generated guide that calls Revyl Android blocked

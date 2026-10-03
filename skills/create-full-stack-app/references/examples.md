@@ -612,10 +612,16 @@ would use `"public"`, since the page's gate already applies.
 }
 ```
 
-A like is made by a tap: the post comes from the page and the member from the signed-in Account, so Like's create
-has a binding and no `inputs`, and Like selects neither `new` nor `create`. The Compiler puts a one-tap button on the
-post page; a Compiler without that support links to a New page holding only a Create button. Follows, RSVPs,
-upvotes, bookmarks, and "mark as read" use the same shape. The uniqueness rule allows one like per member per post.
+This Like fragment is a copy of the example in the Foundation Plan Guide's No-input records section, which defines
+the pattern and what Rails generates for it. A like is made by a tap: the post comes from the page and the member
+from the signed-in Account, so Like's create has a binding and no `inputs`, and Like selects neither `new` nor
+`create`. A member can take a like back, so Like is a toggle. Its uniqueness rule over `like.post` and `like.member`
+allows one like per member per post, and its `destroy` is authorized by `like.manage_own`, which only the like's
+member passes. With both, the post page shows one button that reads Like or Unlike: one tap to like, one tap to
+unlike. Follows, RSVPs, upvotes, and bookmarks are toggles too. A record that may repeat, such as a "mark as read"
+event or a check-in, keeps the no-input create but gets no uniqueness rule or `destroy`; a required time on it uses
+a `current_time` default. Today's deployed Compiler may still show a separate Create page until the one-tap change
+ships.
 
 ```jsonc
 {
