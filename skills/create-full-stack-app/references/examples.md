@@ -15,6 +15,7 @@ change.
 - [One Entity with required and optional scalar Fields](#one-entity-with-required-and-optional-scalar-fields)
 - [Ordinal enum Field](#ordinal-enum-field)
 - [Web Account and protected profile](#web-account-and-protected-profile)
+- [Signed-in gate and one-tap records](#signed-in-gate-and-one-tap-records)
 - [Stored and reverse relationship](#stored-and-reverse-relationship)
 
 ## Empty starter
@@ -408,7 +409,8 @@ Do not assume a blanket enum gap; inspect the matching analysis for any unsuppor
 
 This complete document expresses the current bounded Web Account topology with Field-only self-service registration,
 two self Policies, and a protected `/account` surface authored through `scaffold.profile`. It requests no native client; adding `native.ios` would not
-make this Account or profile available natively.
+make this Account or profile available natively. It omits `verification`, so sign-up signs the person in; add
+`"verification": {"kind": "email"}` to `account` only when the user asks people to confirm their email.
 
 ```json
 {
@@ -455,9 +457,6 @@ make this Account or profile available natively.
                 "required": true
               }
             ]
-          },
-          "verification": {
-            "kind": "email"
           },
           "recovery": {
             "kind": "password_reset"
@@ -559,6 +558,132 @@ The Account-bearing Entity owns all required registration Fields, and every regi
 Field-backed. Each Scaffold definition references one authored Policy; neither route is public. Broader Account
 topologies, Association registration inputs, and unsupported Policy expressions remain authored meaning with exact
 GapSet consequences.
+
+## Signed-in gate and one-tap records
+
+These fragments come from a private family social network where every page requires sign-in. The Account Entity
+`member` already has `read_self` and `update_self` Policies for its profile, like the example above. It adds one gate
+Policy with its own operation; any signed-in member passes because the gate record is the current Account. An Entity
+may have only one Policy per `operation`, so the gate must not also use `read`: two `read` Policies on `member`
+would leave both out, along with every page that uses them.
+
+```jsonc
+{
+  "subject_uuid": "019fb300-0000-7000-8000-000000000101",
+  "key": "signed_in",
+  "operation": "use_app",
+  "allow_when": {
+    "kind": "comparison",
+    "left": { "target": { "record": "current" } },
+    "operator": "equals",
+    "right": { "kind": "environment", "name": "current_account" }
+  }
+}
+```
+
+Post's Scaffold binds its pages to that gate. Any member may post, and `post.author` is bound to the signed-in
+Account. Owner-only edit and delete would use a Policy on Post itself, such as a `manage` Policy comparing
+`post.author` to `current_account`. The details page shows the post's likes with an associated `create_form` (Post
+owns the referenced-side `likes` Association over `like.post`). A displayed Association nested inside `post.likes`
+would use `"public"`, since the page's gate already applies.
+
+```jsonc
+{
+  "resource_routes": ["index", "show", "new", "create"],
+  "index": {
+    "authorization": { "policy": "member.signed_in", "record": { "kind": "environment", "name": "current_account" } }
+  },
+  "show": {
+    "authorization": { "policy": "member.signed_in", "record": { "kind": "environment", "name": "current_account" } },
+    "projection": [
+      { "field": "post.caption" },
+      {
+        "association": "post.likes",
+        "authorization": { "policy": "member.signed_in", "record": { "kind": "environment", "name": "current_account" } },
+        "create_form": {}
+      }
+    ]
+  },
+  "create": {
+    "inputs": [{ "field": "post.caption" }],
+    "bindings": [{ "reference": "post.author", "value": { "kind": "environment", "name": "current_account" } }],
+    "authorization": { "policy": "member.signed_in", "record": { "kind": "environment", "name": "current_account" } }
+  }
+}
+```
+
+This Like fragment is a copy of the example in the Foundation Plan Guide's No-input records section, which defines
+the pattern and what Rails generates for it. A like is made by a tap: the post comes from the page and the member
+from the signed-in Account, so Like's create has a binding and no `inputs`, and Like selects neither `new` nor
+`create`. A member can take a like back, so Like is a toggle. Its uniqueness rule over `like.post` and `like.member`
+allows one like per member per post, and its `destroy` is authorized by `like.manage_own`, which only the like's
+member passes. With both, the post page shows one button that reads Like or Unlike: one tap to like, one tap to
+unlike. Follows, RSVPs, upvotes, and bookmarks are toggles too. A record that may repeat, such as a "mark as read"
+event or a check-in, keeps the no-input create but gets no uniqueness rule or `destroy`; a required time on it uses
+a `current_time` default. Today's deployed Compiler may still show a separate Create page until the one-tap change
+ships.
+
+```jsonc
+{
+  "subject_uuid": "019fb300-0000-7000-8000-000000000110",
+  "key": "like",
+  "name": "Like",
+  "primary_descriptor": { "association": "like.member" },
+  "references": [
+    {
+      "subject_uuid": "019fb300-0000-7000-8000-000000000111",
+      "key": "post",
+      "name": "Post",
+      "targets": ["post"],
+      "required": true,
+      "immutable": true,
+      "on_referenced_deleted": "delete_referencing_record"
+    },
+    {
+      "subject_uuid": "019fb300-0000-7000-8000-000000000112",
+      "key": "member",
+      "name": "Member",
+      "targets": ["member"],
+      "required": true,
+      "immutable": true,
+      "on_referenced_deleted": "delete_referencing_record"
+    }
+  ],
+  "validations": [
+    {
+      "subject_uuid": "019fb300-0000-7000-8000-000000000113",
+      "key": "once_per_member",
+      "kind": "uniqueness",
+      "targets": [{ "reference": "like.post" }, { "reference": "like.member" }],
+      "nulls": "distinct",
+      "error_target": { "reference": "like.member" }
+    }
+  ],
+  "policies": [
+    {
+      "subject_uuid": "019fb300-0000-7000-8000-000000000114",
+      "key": "manage_own",
+      "operation": "manage",
+      "allow_when": {
+        "kind": "comparison",
+        "left": { "target": { "association": "like.member" } },
+        "operator": "equals",
+        "right": { "kind": "environment", "name": "current_account" }
+      }
+    }
+  ],
+  "scaffold": {
+    "resource_routes": ["destroy"],
+    "create": {
+      "bindings": [{ "reference": "like.member", "value": { "kind": "environment", "name": "current_account" } }],
+      "authorization": { "policy": "like.manage_own" }
+    },
+    "destroy": {
+      "authorization": { "policy": "like.manage_own" }
+    }
+  }
+}
+```
 
 ## Stored and reverse relationship
 

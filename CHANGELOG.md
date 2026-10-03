@@ -29,6 +29,41 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-03: Workshop fixes to authoring and preview
+
+**Skills — released in plugin 0.8.2.** When the Skill authors an Account, it now omits `verification`, so people
+can sign in right after signing up; the Compiler generates that Account without an email-confirmation step. Email
+confirmation added a step before anyone could use a new app. If you want people to confirm their email first, ask
+for it, and the Skill authors `"verification": {"kind": "email"}`. The read-back says which one your Plan uses. An
+existing Plan keeps its `verification` until you ask to remove it. Password reset and lockout are unchanged.
+
+A workshop rehearsal of a private family social network found more problems, which this release also addresses:
+
+- When every page requires sign-in, the Skill authors one gate Policy on the Account Entity with its own operation,
+  such as `use_app`, and binds each page to it with `current_account` as the gate record. An Entity may have only
+  one Policy per operation. In the rehearsal a gate and a profile Policy both used `read`, so both were left out
+  along with every page that used them.
+- The Skill no longer adds `format` or not-equal Validations you did not ask for. First Draft cannot yet check those
+  rules against sample data, so it leaves the affected sample records, and the records that reference them, out of
+  the seed. When you ask for such a rule, the read-back names the sample records that will be dropped.
+- The read-back starts with a plain-language summary, then groups what is not generated yet by what you will
+  notice, then ends with a short technical block. The full GapSet goes to `gaps-readback.md` in the planning folder
+  instead of the chat. Approval is still one step bound to the exact Plan and GapSet digest.
+- Each main list starts with the record's primary descriptor, such as a book's title, plus one to three short
+  fields that tell records apart.
+- Records made by a tap, such as likes, follows, and RSVPs, are authored as a create with no inputs nested under
+  the parent page, so the Compiler can offer a one-tap button instead of a New page. When each person does it once
+  and can take it back, the Skill also authors a uniqueness rule over the parent and the account and an owner-only
+  delete, so the parent page can show one Like or Unlike button. Records that may repeat, such as check-ins, get
+  neither. The read-back says "one tap to like, one tap to unlike". Today's deployed Compiler may still show a
+  separate Create page until the one-tap change ships.
+- Revyl is the primary preview for both iPhone and Android. For local Rails, start one cloudflared quick tunnel, run
+  `RAILS_DEVELOPMENT_HOSTS=.trycloudflare.com bin/dev`, then `bin/<platform> preview revyl --server <tunnel URL>`.
+  Revyl's Android device reported WebView 152 on 2026-10-03, so a generated guide that calls Revyl Android blocked
+  is out of date.
+- Once the Compiler generates image or attachment Fields, the Skill tells you to create a Cloudinary account and set
+  `CLOUDINARY_URL` in `.env.development.local` and in the Render environment.
+
 ## 2026-10-01: Log in once instead of exporting a token
 
 **Skills — released in plugin 0.8.1, with CLI 0.8.1.** The bundled CLI adds `firstdraft login` and
