@@ -29,6 +29,14 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-03: Sign in right after signing up
+
+**Skills — released in plugin 0.8.2.** When the Skill authors an Account, it now omits `verification`, so people
+can sign in right after signing up; the Compiler generates that Account without an email-confirmation step. Email
+confirmation added a step before anyone could use a new app. If you want people to confirm their email first, ask
+for it, and the Skill authors `"verification": {"kind": "email"}`. The read-back says which one your Plan uses. An
+existing Plan keeps its `verification` until you ask to remove it. Password reset and lockout are unchanged.
+
 ## 2026-10-01: Log in once instead of exporting a token
 
 **Skills — released in plugin 0.8.1, with CLI 0.8.1.** The bundled CLI adds `firstdraft login` and

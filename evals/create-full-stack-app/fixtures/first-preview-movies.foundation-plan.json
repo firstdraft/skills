@@ -39,9 +39,6 @@
               }
             ]
           },
-          "verification": {
-            "kind": "email"
-          },
           "recovery": {
             "kind": "password_reset"
           },

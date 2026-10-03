@@ -66,10 +66,11 @@ generated output, not observed application behavior, device installation, or dep
 - Required enums emit string storage with Rails enum inclusion, presence validation, and native helpers. An admitted
   required enum accepts its compatible in-domain literal-key default. Optional enums, database membership
   constraints, general rank behavior, and broader enum consumers remain unsupported.
-- Web Account realization requires the exact email/password/self-service registration, verification, recovery,
-  lockout, Account-self, and Field-only input topology described below. Bounded Account-backed Policies and protected
-  Web Scaffolds are supported. Ordinary iPhone and Android output remains Account- and Policy-free and consumes public-only
-  navigation; protected Web support does not imply protected native behavior.
+- Web Account realization requires the exact email/password/self-service registration, password-reset recovery,
+  lockout, Account-self, and Field-only input topology described below; email verification is optional. Bounded
+  Account-backed Policies and protected Web Scaffolds are supported. Ordinary iPhone and Android output remains
+  Account- and Policy-free and consumes public-only navigation; protected Web support does not imply protected native
+  behavior.
 - There is no Plan GET or pull operation, arbitrary application generation, deployment workflow, iPad
   output, or complete support for the Foundation Plan vocabulary. Preserve intended meaning and let the reviewed
   GapSet name the current delta.
@@ -81,7 +82,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.1/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.2/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -487,13 +488,19 @@ flows. Do not add Account merely because a surface is private: establish the use
 then author the Account and Policies that represent it. Self-service registration or sign-in does not establish
 staff membership; preserve required eligibility conditions and ask when they are unspecified.
 
-Current public Web Account realization requires self-service registration, email verification, password-reset
-recovery, and lockout. A realized Account derives one Web `/account` destination without requiring an authored
-profile. Registration inputs must be one contiguous
+Current public Web Account realization requires self-service registration, password-reset recovery, and lockout;
+email verification is optional. A realized Account derives one Web `/account` destination without requiring an
+authored profile. Registration inputs must be one contiguous
 ordered list of required, unique, emitted Account-owned `short_text` or `time_zone` Fields with compatible defaults;
 they must cover every required emitted Account Field, and the Account Entity may own no required Reference. A
 required enum on that Entity may still emit as Domain storage, but it cannot be a registration input, so that Account
 shape remains a gap. Association registration and native Account/session restoration are not public behavior.
+
+Omit `verification` by default, so sign-up signs the person in. Author `"verification": {"kind": "email"}` only when
+the user asks people to confirm their email; they then open an emailed link before they can sign in. Keep an existing
+Plan's `verification` unless the user asks to remove it. In the read-back, say plainly that people can sign in right
+after signing up and that email confirmation is available if they want it, or, when authored, that people confirm
+their email first.
 
 Each Policy has stable identity, an owner-local key, one operation, and one `allow_when` Policy Expression. A
 Scaffold authorization is either the literal `public` or a typed Policy binding; the binding may select the primary

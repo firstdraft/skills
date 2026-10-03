@@ -75,7 +75,7 @@
       "expectations": [
         "Honors the explicit empty choice with no development records or demo Account data while retaining the requested Account model and private access.",
         "Does not repeatedly ask about artifacts or data, invent login credentials, or weaken authentication to make the empty preview usable.",
-        "Includes empty-state and ordinary registration/create verification in the handoff without claiming runtime success."
+        "Includes empty-state, sign-up, and create checks in the handoff without claiming runtime success."
       ],
       "artifacts": [
         {
@@ -94,6 +94,26 @@
         "Respects Account-free public scope and never adds an Account or advertises a demo login.",
         "Keeps fixed dates historical rather than promising they remain today, distinguishes development data from all-environment reference data, and includes the dataset in ordinary review.",
         "Does not stall on absent artifacts or claim schema, Compilation or runtime proof it has not obtained."
+      ]
+    },
+    {
+      "id": "account-without-email-confirmation",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a book club app for my workshop. People sign up with their name, email and password, then see the club's books; only signed-in members can see the book list. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Authors one Account with an email identifier, password sign-in, self-service registration, password-reset recovery and lockout, and omits verification because the user did not ask for email confirmation.",
+        "Says plainly in the read-back that people can sign in right after signing up and that email confirmation is available if the user wants it.",
+        "Makes no service request, Compile or remote write."
+      ]
+    },
+    {
+      "id": "account-with-email-confirmation",
+      "should_trigger": true,
+      "prompt": "Use First Draft to plan a book club app for my workshop. People sign up with their name, email and password, then see the club's books; only signed-in members can see the book list. Make people confirm their email before they can sign in. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Authors one Account with an email identifier, password sign-in, self-service registration, verification of kind email, password-reset recovery and lockout.",
+        "Says plainly in the read-back that people must confirm their email before they can sign in.",
+        "Makes no service request, Compile or remote write."
       ]
     },
     {
