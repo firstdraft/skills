@@ -81,7 +81,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.1/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.2/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -319,11 +319,13 @@ descriptor terminates in a required emitted scalar or system Field. It preloads 
 The whole-graph analyzer rejects an optional Field descriptor; multi-target, longer-chain, optional-source, cyclic,
 or otherwise unsupported Association descriptors remain exact gaps. A Field may use these types:
 
+- `attachment`
 - `boolean`
 - `date`
 - `datetime`
 - `decimal`
 - `enum`
+- `image`
 - `integer`
 - `language_code`
 - `long_text`
@@ -347,9 +349,13 @@ query `status_active` when the stored state is `active`. Check an affected appli
 state; no generated workaround or namespace-based scope suppression is supplied. With `no_direct_assignment: true`,
 a scoped builder can also raise even for the initial state. Use ordinary creation followed by the named event
 when a transition is intended; constructing its destination state directly would bypass the event's effects.
-`attachment` and `image` are schema-valid
-Field types, but they are skipped from the admitted graph and recorded as service-support gaps; they cannot reach
-the current Compiler. Active Storage and image-delivery prose describes target direction, not emitted support.
+An `attachment` or `image` Field compiles to Active Storage `has_one_attached`, with a presence validation when
+required, a Scaffold file input (images accept `image/*`), and an image or download link on show pages and list rows.
+Development seeds attach a placeholder file to each required upload; development data cannot supply upload bytes.
+Development and production store files on Cloudinary, so the user needs a Cloudinary account: before `bin/setup` or
+a deploy, put its API environment variable in `.env.development.local` and in Render as `CLOUDINARY_URL`. Uploaded
+files have public URLs. Type and size limits, several files per Field, direct uploads, and protected delivery are not
+generated; model several photos as a child Entity with one `image` Field.
 
 ### Field capability matrix
 
