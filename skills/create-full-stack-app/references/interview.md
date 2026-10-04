@@ -188,8 +188,8 @@ apply under `## After Compile` in `implementation-notes.md`, so the agent that c
       the Render environment.
 - [ ] Email (apps with Accounts): password reset and unlock emails need a mail provider. Once the Account is
       generated, follow `DEPLOY.md`'s "Account email launch prerequisite" before inviting real users.
-- [ ] Images (once the GapSet no longer reports image Fields as skipped): sign up for Cloudinary and set
-      `CLOUDINARY_URL` as the [image setup](foundation-plan-023.md#entities-descriptors-and-fields) describes.
+- [ ] Photos and files (apps with image or attachment Fields): sign up for Cloudinary and set `CLOUDINARY_URL`
+      as the [upload setup](foundation-plan-023.md#photos-and-files) describes.
 - [ ] Deploy: follow `DEPLOY.md`, using its "Deploy from the command line" section for the Neon and Render CLIs.
       The free plan sleeps when idle.
 - [ ] Phone preview (apps with iPhone or Android): preview in Revyl with the

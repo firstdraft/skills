@@ -27,6 +27,7 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
   - [Application and clients](#application-and-clients)
   - [Bookmark assets](#bookmark-assets)
   - [Entities, descriptors, and Fields](#entities-descriptors-and-fields)
+  - [Photos and files](#photos-and-files)
   - [Enums](#enums)
   - [Defaults](#defaults)
   - [References and Associations](#references-and-associations)
@@ -328,11 +329,13 @@ descriptor terminates in a required emitted scalar or system Field. It preloads 
 The whole-graph analyzer rejects an optional Field descriptor; multi-target, longer-chain, optional-source, cyclic,
 or otherwise unsupported Association descriptors remain exact gaps. A Field may use these types:
 
+- `attachment`
 - `boolean`
 - `date`
 - `datetime`
 - `decimal`
 - `enum`
+- `image`
 - `integer`
 - `language_code`
 - `long_text`
@@ -356,14 +359,26 @@ query `status_active` when the stored state is `active`. Check an affected appli
 state; no generated workaround or namespace-based scope suppression is supplied. With `no_direct_assignment: true`,
 a scoped builder can also raise even for the initial state. Use ordinary creation followed by the named event
 when a transition is intended; constructing its destination state directly would bypass the event's effects.
-`attachment` and `image` are schema-valid
-Field types, but they are skipped from the admitted graph and recorded as service-support gaps; they cannot reach
-the current Compiler. Active Storage and image-delivery prose describes target direction, not emitted support.
-Keep requested image and attachment Fields in the Plan either way. When a Compiler generates them, so that the
-matching GapSet no longer reports the Field skipped, it stores files with Active Storage on Cloudinary. Then tell
-the user to sign up for Cloudinary and set `CLOUDINARY_URL` from its dashboard in `.env.development.local` for
-local use and in the Render environment for the deployed app. The user sets it; never ask for, print, or commit
-its value.
+
+### Photos and files
+
+An `attachment` or `image` Field holds one uploaded file. The Compiler emits Active Storage `has_one_attached`, a
+presence validation when the Field is required, and a Scaffold file input; an image input accepts `image/*`. Where a
+page shows the Field, an image appears large on its details page and as a thumbnail in list rows, and an attachment
+appears as a download link. A stored file satisfies a required Field on edit. Model several photos as a child Entity
+with one `image` Field, such as a Photo with its own caption.
+
+Type and size limits, several files per Field, direct uploads, optimized image delivery, and protected delivery are
+not generated. Uploaded files have permanent public URLs, so a Policy does not protect their bytes; say so when the
+files are private. A required upload on the Account Entity gets no sign-up file input: the Account keeps a partial
+gap, and because the model requires the file, sign-up cannot finish until the owner adds that input in Rails. Do not
+assign upload values in development data. Seeds attach a placeholder file to each required upload, and an authored
+upload value becomes a development-data gap.
+
+Apps with uploads store them on Cloudinary in development and production; tests use local disk. Tell the user to
+create a Cloudinary account and set `CLOUDINARY_URL` from its dashboard in `.env.development.local` for local use and
+in the Render environment for the deployed app. Setup works without it, but the first upload raises a `KeyError`
+naming it. The user sets it; never ask for, print, or commit its value.
 
 ### Field capability matrix
 

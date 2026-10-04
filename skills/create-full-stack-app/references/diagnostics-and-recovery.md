@@ -301,8 +301,8 @@ need an explicit development `bin/rails db:seed` to load added samples. Do not r
 Inspect the existing data first: ordinary seeds match their generated attribute tuples, so changing those values
 can make a later seed run recreate the original sample. Reseeding does not reconcile customized records.
 
-If the app has generated image or attachment Fields, uploads need the user's Cloudinary `CLOUDINARY_URL`
-([setup](foundation-plan-023.md#entities-descriptors-and-fields)) before you check them.
+If the app has image or attachment Fields, uploads need the user's Cloudinary `CLOUDINARY_URL`
+([setup](foundation-plan-023.md#photos-and-files)) before you check them; seeded samples use placeholder files.
 
 Open the running app in a browser and check representative visible records, their relationships, and relevant
 states in the intended flow. For an explicit empty start, check the empty state and appropriate create flow. For
