@@ -29,6 +29,16 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-04: Photo and file uploads
+
+**Skills — released in plugin 0.8.4.** The authoring reference now says that `image` and `attachment` Fields
+compile to Active Storage uploads instead of being skipped, what they generate, and what stays a gap. Generated apps
+store uploads on Cloudinary, so the Skill tells the user to create a Cloudinary account and set `CLOUDINARY_URL` in
+`.env.development.local` and in Render; setup works without it, and the first upload raises a `KeyError` naming it.
+It applies once the First Draft service runs Compiler release
+`foundation-plan-rails/compiler-application-2026-10-04-image-uploads` or later; until then the GapSet still lists
+these Fields as skipped.
+
 ## 2026-10-03: An interview that asks your level first
 
 **Skills — released in plugin 0.8.3.** The Skill's interview now follows one order. The agent clarifies your idea,

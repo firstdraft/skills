@@ -316,7 +316,7 @@
       "expectations": [
         "Uses the supplied document without a redundant artifact invitation and models item-level return facts independently of the whole loan.",
         "Does not turn four printed photo boxes into four fixed Fields or infer a fixed attachment limit.",
-        "Preserves attachment intent as structured meaning whose image or attachment Fields become service-support gaps skipped at import, separate from outside-grammar media/import work in notes; does not encode file paths as supported uploaded seed values.",
+        "Preserves attachment intent as structured meaning, such as a child Entity with one image Field per damage photo, separate from outside-grammar media/import work in notes; does not encode file paths as supported uploaded seed values.",
         "Does not retain private filled-in content in Plan, notes, seed, archive or repository."
       ],
       "artifacts": [
