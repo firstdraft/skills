@@ -31,6 +31,7 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
   - [Enums](#enums)
   - [Defaults](#defaults)
   - [References and Associations](#references-and-associations)
+  - [Counters](#counters)
   - [Validations](#validations)
   - [Predicates](#predicates)
   - [Accounts and Policies](#accounts-and-policies)
@@ -331,6 +332,7 @@ or otherwise unsupported Association descriptors remain exact gaps. A Field may 
 
 - `attachment`
 - `boolean`
+- `counter`
 - `date`
 - `datetime`
 - `decimal`
@@ -471,6 +473,28 @@ form. These are per-Association shape rules, not per-Entity or per-Plan quotas. 
 needs. Multi-target realization, aliases, defaults, broader paths, cardinality, polymorphism, exclusive arcs, and
 unsupported predicates or consumers can produce exact gaps. Scaffold input support is a separate consumer decision
 from Reference storage. Preserve the authored relationship meaning and review the matching consequence.
+
+### Counters
+
+A `counter` Field is a count of related records that Rails keeps current, such as a post's likes or a person's
+followers. It belongs to the Entity that owns the counted Association, is always `required: true`, accepts no
+`default` or `immutable`, and names that Association in `settings.counts`, as in a Post's
+`{"key": "likes_count", "name": "Likes", "type": "counter", "required": true, "settings": {"counts": "post.likes"}}`
+plus its own `subject_uuid`.
+
+The Compiler emits an integer column that starts at zero, maintained by Rails `counter_cache` on the counted
+record's `belongs_to`. Count a direct referenced-side Association over an ordinary single-target Reference, such as
+`post.likes` over `like.post`. For followers, count the direct `user.follower_links` over `follow.followed`, not an
+indirect `user.followers` through those links; when each pair is unique, both give the same number, and the gap
+reason for an indirect counter names the direct Association to count instead. Author one counter per Reference: two
+counters through the same Reference both remain gaps. Indirect, filtered (predicated), and polymorphic counts remain
+gaps.
+
+A counter is never a form input or a development-data value. An authored counter input is dropped with a gap while
+the rest of the form remains, and an assigned development value becomes a development-data gap. Explicit index,
+show, and collection-row projections also show each emitted counter they do not already select, after the authored
+items. An Ordering may sort by a counter. Bulk writes such as `delete_all` or raw SQL skip the callbacks and leave
+counts stale; Rails `reset_counters` repairs one record, and no repair task is generated.
 
 ### Validations
 
