@@ -35,8 +35,8 @@ is usually the opening turn:
   capability, such as real-time sensors, a game loop, live audio or video, on-device machine learning,
   offline-first sync, Bluetooth or other hardware, or background location. First Draft builds the accounts,
   records, and pages around it. Name what comes after and where, such as native Swift or Kotlin in the generated
-  iPhone and Android projects. Those projects are Hotwire Native shells around the web app: device features are
-  code added there, and the shells show only public pages, with no sign-in.
+  iPhone and Android projects. Those projects are Hotwire Native shells around the web app that show its pages,
+  sign-in included; device features are code added there.
 - **Plan only:** the user will build in another stack, or won't use the generated code. The Foundation Plan and its
   analysis still help design the data model: push it and use the analysis to check the model, skip the reality
   check about what First Draft generates, give the read-back, and do not Compile.

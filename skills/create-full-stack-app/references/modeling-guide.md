@@ -358,16 +358,15 @@ events or check-ins, get neither. Say it plainly in the read-back, such as "one 
 Today's deployed Compiler may still show a separate Create page until the one-tap change ships.
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
-Compilation emits each with at least one admitted public navigation entry and an identity that fits its
+Compilation emits each with at least one main-navigation entry, public or protected, and an identity that fits its
 [platform limits](foundation-plan-023.md#application-and-clients); otherwise the valid run records an unrealized-client
 target gap. Domain supplies a native HTTPS origin and platform identifier;
 it also configures the Rails production mailer host. It does not provision DNS, deployment, TLS, or mail delivery.
 Without a domain the native identifiers are explicit placeholders. Semantic icons inform Web, SF Symbol, and
-Material navigation. Public Rails detail and form links work within Hotwire Native; Web Account and Policy support
-does not establish native authentication or protected navigation. Confirm public access is intentional; preserve
-private requirements and requested clients, then review the support gap. Do not recommend removing a requested
-client to quiet gaps, or adding public indexes to satisfy native prerequisites. The user may change product scope;
-target support alone is not that decision.
+Material navigation. The phone apps show the same lists as the web app, protected ones and the Account tab included,
+and people sign in through the generated web pages inside the app. A private app needs no public page for its phone
+apps. Do not recommend removing a requested client to quiet gaps, or adding public indexes to satisfy native
+prerequisites. The user may change product scope; target support alone is not that decision.
 Appearance sets the theme and native colors. Web bookmark artwork uses fixed black-on-white assets.
 Omitted theme or `light` means fixed light;
 `dark` means fixed dark, and `auto` follows the system with no manual control or saved preference. Use `toggle`
