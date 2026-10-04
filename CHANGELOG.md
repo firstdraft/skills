@@ -59,7 +59,7 @@ conversations started after you update the plugin; an existing app needs no chan
 
 ## 2026-10-03: Workshop fixes to authoring and preview
 
-**Skills — released in plugin 0.8.2.** When the Skill authors an Account, it now omits `verification`, so people
+**Skills — released in plugin 0.8.3.** When the Skill authors an Account, it now omits `verification`, so people
 can sign in right after signing up; the Compiler generates that Account without an email-confirmation step. Email
 confirmation added a step before anyone could use a new app. If you want people to confirm their email first, ask
 for it, and the Skill authors `"verification": {"kind": "email"}`. The read-back says which one your Plan uses. An
