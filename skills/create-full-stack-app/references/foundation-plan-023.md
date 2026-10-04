@@ -58,9 +58,10 @@ generated output, not observed application behavior, device installation, or dep
 - Service API 0.7 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
   AnalysisRun, including an empty `gaps` array. `valid` applies only to the admitted graph; it is not proof of
   Compilation or of meaning skipped before analysis.
-- Current public Compilation has bounded scalar, required-enum, relationship, Validation, Predicate, Ordering,
-  State Machine, bookmark assets and metadata, Appearance theme/native-color, Web Account, Action Policy, generalized Web Scaffold,
-  development-data, and selected-iPhone/Android slices. Their prerequisites matter: unsupported children and consumers
+- Current public Compilation has bounded Field, relationship, Validation, Predicate, Ordering, State Machine,
+  bookmark assets and metadata, Appearance theme/native-color, Web Account, Action Policy, generalized Web Scaffold,
+  development-data, and selected-iPhone/Android slices; [Fields](#entities-descriptors-and-fields) lists the Field
+  types that import and what each generates. Their prerequisites matter: unsupported children and consumers
   remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
   retain a named partial gap for their stock launcher icons; `toggle` also records the absent native preference control.
 - Required enums emit string storage with Rails enum inclusion, presence validation, and native helpers. An admitted

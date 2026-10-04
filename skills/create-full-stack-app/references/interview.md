@@ -36,9 +36,9 @@ Steps 1 to 3 are the opening turn, with at most three questions.
 5. **Give an early reality check.** As soon as the opening answers settle the main records, tell the user this takes
    a few minutes, then write a rough Plan, push it, and read its analysis. Keep the rough Plan small: the main
    records and their key Fields, any Account, who can see what, and requested phone apps. Tell the user in a few
-   plain lines what First Draft will build and what it will not build yet, for example "Photos aren't generated
-   yet, so posts start caption-only; I'll add photo upload in Rails after" or "iPhone and Android apps show only
-   pages anyone can see, and have no sign-in; a private app works in the phone's browser". Then let the analysis
+   plain lines what First Draft will build and what it will not build yet, for example "Formatted descriptions
+   aren't generated yet, so posts start without one; I'll add them in Rails after" or "Comments that can go on
+   either a post or an album aren't generated yet; I'll add them in Rails after". Then let the analysis
    steer the remaining questions: ask about consequences the user can choose between, not about gaps they cannot
    change. Keep private access and requested phone apps in the Plan. Report each gap as the analysis gives it,
    even when its reason names no cause or contradicts these references; the deployed First Draft may not generate

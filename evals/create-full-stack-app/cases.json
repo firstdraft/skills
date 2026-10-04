@@ -211,10 +211,10 @@
       "prompt": "Help me build a social network for just my family. It should work and look like Instagram so that it's familiar. You already asked your opening questions; my answers: only my family can use it and everyone signs in, I have nothing to share, and make the technical decisions for me.",
       "expectations": [
         "Writes a rough Plan with private, signed-in pages and a photo on each post, then runs plan push and plan status --wait and reads the matching analysis before asking detailed questions.",
-        "Tells the user in a few plain lines what First Draft will and will not build, based on that analysis, such as that photos are not generated yet so posts start caption-only, and that iPhone and Android apps show only public pages and have no sign-in, so a private app works in the phone's browser.",
+        "Tells the user in a few plain lines what First Draft will and will not build, based on that analysis, naming each reported gap by what the user will notice and what the app does instead.",
         "Does not paste GapSet codes, pointers, or digests into this message.",
         "Keeps the photo Field and private access in the Plan instead of removing them or making pages public to avoid gaps.",
-        "Then asks one product decision that the analysis informs, such as whether the user still wants phone apps given that trade-off.",
+        "Then asks one product decision that the analysis informs, rather than a question about a gap the user cannot change.",
         "Does not run plan compile."
       ]
     },

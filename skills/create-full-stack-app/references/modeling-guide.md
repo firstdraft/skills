@@ -410,9 +410,9 @@ Write it for a reader who is not technical, in this order:
    mode carries them forward. For an Account, say plainly whether people can sign in right after signing up or
    confirm their email first, as the [Accounts reference](foundation-plan-023.md#accounts-and-policies) describes.
 2. What is not generated yet. Group the gaps by what the user will notice, lead with that effect, and say what
-   the app does instead, for example "Photos aren't generated yet; posts are caption-only" or "Like and follower
-   counts aren't generated yet". Use one line per group rather than one per record, and say which groups you plan
-   to build in Rails after Compile.
+   the app does instead, for example "Formatted descriptions aren't generated yet; posts start without one" or
+   "The rule that usernames can't be admin isn't generated yet; any username is accepted". Use one line per group
+   rather than one per record, and say which groups you plan to build in Rails after Compile.
 3. A short technical block: the Plan path and SHA-256; the matching valid run's `gap_set_sha256` and record count;
    that service gaps were skipped before semantic analysis, target gaps were analyzed but not fully realized, and
    `valid` covers only the admitted graph; the selected output mode; and the gaps file.
