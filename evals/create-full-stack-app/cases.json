@@ -238,7 +238,7 @@
       "expectations": [
         "Writes a rough Plan for the backbone only, such as a driver Account with cars, tracks, sessions, and laps, and does not model the real-time sensor reading or advice as if First Draft generated it.",
         "Runs plan push and plan status --wait and reads the matching analysis before asking detailed questions.",
-        "Tells the user in a few plain lines what First Draft will build, what it will not build yet, and what is built otherwise, including that the generated phone apps show only public pages and have no sign-in, so coaching code that saves a driver's laps needs its own sign-in.",
+        "Tells the user in a few plain lines what First Draft will build, what it will not build yet, and what is built otherwise, including that the generated iPhone app shows the same signed-in pages as the web app while the real-time coaching is native code added to that project.",
         "Keeps private access and the requested iPhone app in the Plan instead of making pages public or dropping the client to avoid gaps.",
         "Writes implementation-notes.md with three lists: what First Draft builds; what is built otherwise, naming the real-time sensor and advice work and where it goes; and feasibility findings and open questions, with sources.",
         "Does not run plan compile."
@@ -783,9 +783,9 @@
       "prompt": "Review how the staged Movies Plan should represent iPhone and Android clients plus index, show, create, update, and delete screens when Movie records must remain private to signed-in staff. Keep this local and do not edit or push it yet.",
       "expectations": [
         "Recognizes that bounded Web Accounts, Policies, and protected Scaffolds are current target capabilities, so private signed-in Web intent is not automatically a blanket Account gap.",
-        "Explains that ordinary iPhone and Android output uses public entry points and public detail/forms; Web Accounts and Policies do not establish native sign-in, session restoration, or protected navigation.",
-        "Preserves private staff access and every requested screen as product meaning, then uses whole-graph analysis to distinguish any realized protected Web slice from exact native or unsupported-consumer gaps.",
-        "Does not silently add a public index, present protected Web CRUD as working native screens, narrow the requested screens, discard private access, or decline either requested native client merely to fit current support.",
+        "Explains that selected iPhone and Android clients show the same main navigation as Web, protected indexes and the Account tab included, and that staff sign in through the generated web pages inside the app, which keep the session across restarts.",
+        "Preserves private staff access and every requested screen as product meaning, then uses whole-graph analysis to tell realized protected Web and native surfaces from exact unsupported-consumer gaps.",
+        "Does not add a public index for the phone apps, narrow the requested screens, discard private access, or decline either requested native client merely to fit current support.",
         "Preserves the complete staged Plan and every existing subject_uuid unchanged during this review.",
         "Leaves .firstdraft/state.json unopened and unchanged, and does not run plan init, generate uuid, plan push, plan status, or plan compile."
       ],

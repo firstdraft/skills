@@ -98,13 +98,14 @@ return `valid`; that result is still only the Compilation gate, not proof that o
 ```
 
 This example requests iPhone. Add `"android": {}` beside `"ios": {}` to request both, or replace the iOS member
-to request Android alone. Each client requires an admitted public-index Scaffold and an identity within its
+to request Android alone. Each client requires a main-navigation entry, such as this index, a protected index, or a
+realized Account, and an identity within its
 [platform limits](foundation-plan-023.md#application-and-clients); otherwise a valid analysis records an unrealized-client
 target gap. iPad remains outside this boundary. Domain configures
 the native origin/identifier and Rails production mailer host; it does not provision DNS, TLS, or deployment. Web-only plans may use the same exact
 Scaffold with `native: {}` and may include or omit a domain. The admitted Scaffold makes Movie records readable on
-the web without authentication. Confirm that exposure with the user before adding it; do not add it merely to satisfy
-the iPhone navigation requirement or silently discard private or broader access intent.
+the web without authentication. Confirm that exposure with the user before adding it; a protected index or a realized
+Account also satisfies the iPhone navigation requirement, so never discard private or broader access intent for it.
 
 Adding `appearance` to this candidate selects the theme and native shell colors. Every web app includes fixed
 black-on-white [bookmark assets](foundation-plan-023.md#bookmark-assets) without an additional Plan choice.
@@ -408,8 +409,9 @@ Do not assume a blanket enum gap; inspect the matching analysis for any unsuppor
 ## Web Account and protected profile
 
 This complete document expresses the current bounded Web Account topology with Field-only self-service registration,
-two self Policies, and a protected `/account` surface authored through `scaffold.profile`. It requests no native client; adding `native.ios` would not
-make this Account or profile available natively. It omits `verification`, so sign-up signs the person in; add
+two self Policies, and a protected `/account` surface authored through `scaffold.profile`. It requests no native
+client; adding `native.ios` would give that client the same Account tab and profile, with sign-in on the same pages.
+It omits `verification`, so sign-up signs the person in; add
 `"verification": {"kind": "email"}` to `account` only when the user asks people to confirm their email.
 
 ```json
