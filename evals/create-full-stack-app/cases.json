@@ -323,7 +323,7 @@
       "should_trigger": true,
       "prompt": "Use First Draft to plan a private photo journal for my family with iPhone and Android apps: members sign up and post a photo with a caption. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
-        "Writes implementation-notes.md with an After Compile checklist of the applicable items: Rollbar once ROLLBAR_ACCESS_TOKEN is set; Skylight once SKYLIGHT_AUTHENTICATION is set; a mail provider for password reset following DEPLOY.md's Account email launch prerequisite; Cloudinary and CLOUDINARY_URL once photos generate; deploying with DEPLOY.md's command-line section; and Revyl for previewing the phone apps.",
+        "Writes implementation-notes.md with an After Compile checklist of the applicable items: Rollbar once ROLLBAR_ACCESS_TOKEN is set; Skylight once SKYLIGHT_AUTHENTICATION is set; a mail provider for password reset following DEPLOY.md's Account email launch prerequisite; Cloudinary and CLOUDINARY_URL for the photo uploads; deploying with DEPLOY.md's command-line section; and Revyl for previewing the phone apps.",
         "Keeps those steps out of the Plan and does not ask for, print, or invent any key.",
         "Keeps the photo Field, private access, and the requested phone apps in the Plan.",
         "Makes no service request, Compile or remote write."
@@ -380,7 +380,7 @@
       "expectations": [
         "Uses the supplied document without a redundant artifact invitation and models item-level return facts independently of the whole loan.",
         "Does not turn four printed photo boxes into four fixed Fields or infer a fixed attachment limit.",
-        "Preserves attachment intent as structured meaning whose image or attachment Fields become service-support gaps skipped at import, separate from outside-grammar media/import work in notes; does not encode file paths as supported uploaded seed values.",
+        "Preserves attachment intent as structured meaning, such as a child Entity with one image Field and a caption per damage photo, separate from outside-grammar media/import work in notes; does not encode file paths as supported uploaded seed values.",
         "Does not retain private filled-in content in Plan, notes, seed, archive or repository."
       ],
       "artifacts": [
