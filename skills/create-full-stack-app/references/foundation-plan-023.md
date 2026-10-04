@@ -29,6 +29,7 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
   - [Entities, descriptors, and Fields](#entities-descriptors-and-fields)
   - [Photos and files](#photos-and-files)
   - [Enums](#enums)
+  - [Money, positions, tokens, and JSON](#money-positions-tokens-and-json)
   - [Defaults](#defaults)
   - [References and Associations](#references-and-associations)
   - [Counters](#counters)
@@ -66,9 +67,9 @@ generated output, not observed application behavior, device installation, or dep
   types that import and what each generates. Their prerequisites matter: unsupported children and consumers
   remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
   retain a named partial gap for their stock launcher icons; `toggle` also records the absent native preference control.
-- Required enums emit string storage with Rails enum inclusion, presence validation, and native helpers. An admitted
-  required enum accepts its compatible in-domain literal-key default. Optional enums, database membership
-  constraints, general rank behavior, and broader enum consumers remain unsupported.
+- Enums emit string storage with Rails enum inclusion and native helpers; a required enum adds presence validation,
+  and an optional enum allows nil. An admitted enum accepts its compatible in-domain literal-key default. Database
+  membership constraints, general rank behavior, and broader enum consumers remain unsupported.
 - Web Account realization requires the exact email/password/self-service registration, password-reset recovery,
   lockout, and Account-self topology described below; email verification is optional, and sign-up inputs the
   target cannot generate become partial Account gaps. Bounded
@@ -344,8 +345,12 @@ or otherwise unsupported Association descriptors remain exact gaps. A Field may 
 - `enum`
 - `image`
 - `integer`
+- `json`
 - `language_code`
 - `long_text`
+- `money`
+- `position`
+- `secure_token`
 - `short_text`
 - `state_machine`
 - `time_zone`
@@ -398,7 +403,7 @@ one target release into machine syntax.
 | `required` | Mandatory Boolean; write `true` or `false`. Retained on admitted Fields. | A realized required Field emits target nullability and validation; an ungenerated Field remains a Field gap. |
 | `default` | Closed tagged Value where the Field variant permits it. Retained structurally. | Lowering is Field- and value-specific; the exact current-time and admitted-required-enum cases are documented target slices. |
 | `notes` | Optional nonempty string on Fields only. Retained as review context. | Emits no application behavior. |
-| `immutable` | Optional Boolean; omission means `false`. Retained. | Realized for admitted emitted scalar and required-enum Fields; otherwise the owning Field or modifier remains a gap. |
+| `immutable` | Optional Boolean; omission means `false`. Retained. | Realized for admitted emitted scalar, enum, and secure-token Fields; otherwise the owning Field or modifier remains a gap. |
 | `comparison` | `case_insensitive` on `short_text` only. Retained. | Lowering and downstream query use are profile-dependent; inspect the matching GapSet. |
 | `normalizations` | Explicit ordered pipeline on selected text or URL Fields, with URL restrictions. Retained. | Follow the [content and operation-order guidance](modeling-guide.md#choose-text-normalization); inspect the matching GapSet. |
 | `encrypted_at_rest` | Optional Boolean; omission means `false`. Retained. | Lowering and consumer support are Field-specific; inspect the matching GapSet. |
@@ -421,14 +426,32 @@ while preserving the value's UUID.
 
 The current Compiler emits a required enum as a non-null string column and a Rails `enum` mapping stable keys to
 themselves in authored order. `validate: true` supplies inclusion; a separate presence declaration handles
-requiredness. Native scopes and predicate/bang methods keep ordinary names when safe; the Compiler uses Rails
-prefix or suffix options when needed to avoid collisions. Compatible in-domain literal-key defaults use the enum
-declaration and matching database default. Admitted form options and read-only projections use Rails I18n entries under
-`enums.<model>.<field>.<key>` in `config/locales/foundation_domain.en.yml`, seeded from the authored value names.
+requiredness. An optional enum uses a nullable column with `validate: {allow_nil: true}` and no presence check; its
+form keeps a blank choice that stores nil, and read-only pages show nil as missing. Native scopes and predicate/bang
+methods keep ordinary names when safe; the Compiler uses Rails prefix or suffix options when needed to avoid
+collisions. Compatible in-domain literal-key defaults use the enum declaration and matching database default.
+Admitted form options and read-only projections use Rails I18n entries under `enums.<model>.<field>.<key>` in
+`config/locales/foundation_domain.en.yml`, seeded from the authored value names.
 Forms submit stable keys in authored order. Edit the locale to change labels after Compile; general ordinal rank
-semantics, a native PostgreSQL enum, and database membership `CHECK` are not emitted. Optional
-enums and unsupported defaults or consumers remain precise gaps. Preserve the enum and report only the reviewed
-consequences rather than assuming either blanket support or blanket failure.
+semantics, a native PostgreSQL enum, and database membership `CHECK` are not emitted. Conditions and Orderings
+over an optional enum, and other unsupported defaults or consumers, remain precise gaps. Preserve the enum and report
+only the reviewed consequences rather than assuming either blanket support or blanket failure.
+
+### Money, positions, tokens, and JSON
+
+`money`, `position`, `secure_token`, and `json` Fields generate what a Rails scaffold or a developer would write by
+hand. Each also records one `foundation_plan.gap.field_kind.partially_generated` target gap for the meaning it
+lacks; report that gap without removing the Field:
+
+| Type | Generated | Still a gap |
+| --- | --- | --- |
+| `money` | Decimal column with two decimal places, numericality validation, a number input with step 0.01, and currency formatting on show and list pages: `USD` uses the locale's format, and another `settings.currency` shows its code | Currency-aware arithmetic, allocation, and rounding; the app has no Money object. A money Field's own comparison Validations remain Validation gaps |
+| `position` | Required integer with integer validation and a number input where a Scaffold lists it; a new record without one joins the end of its `settings.within` list, and an Ordering may sort by it | Renumbering after deletes, moves between lists, concurrent appends, and drag reordering |
+| `secure_token` | String column with a unique index and Rails `has_secure_token`, filled when a new record is built; never a form input, and shown where a projection selects it | Lookup by token, regeneration, expiry, and digest storage |
+| `json` | `jsonb` column edited as JSON text in a textarea; malformed text is an ordinary validation error, and show pages print the document formatted | Document structure and schema validation |
+
+Positions and secure tokens are filled by the app, so they never become sign-up controls or factory values. In
+development data, a money value needs at most two decimal places and a JSON value must be an object or array.
 
 ### Defaults
 
@@ -508,6 +531,10 @@ The current Rails Validation subset admits:
 - unconditional or bounded conditional ordered literal comparisons on stored integer or date Fields, using
   `greater_than`, `greater_than_or_equal_to`, `less_than`, or `less_than_or_equal_to`; date bounds start at
   `1582-10-15` because earlier Gregorian values differ from ordinary Rails casting;
+- an unconditional same-record comparison between two stored `date` Fields or two stored `datetime` Fields with
+  those ordered operators, such as a check-out after its check-in. A Field-owned rule reports on its own Field and
+  an Entity-owned rule on its error target. Each side's requiredness owns its missing value, and the comparison is
+  skipped while the other side is blank;
 - an unconditional Entity `comparison` with one `not_equals` clause between distinct required ordinary References
   to the same record type, with a participating Reference as its error target;
 - unconditional or conditional `length` on `short_text` or `long_text`, using `minimum`, `maximum`, or
@@ -527,7 +554,8 @@ the emitted predicate. Required numeric input uses Rails numericality, Boolean F
 bounds share numericality with requiredness. Date comparison and length rules leave missing-value feedback to
 requiredness. Admitted uniqueness uses a native Rails validator and a matching unique index, including logical
 Reference targets. Entity errors must target a Field or Reference; this Plan has no record-wide custom error target.
-Ordinary Rails application code can still use `errors[:base]` after Compilation. Broader comparisons, patterns,
+Ordinary Rails application code can still use `errors[:base]` after Compilation. Conditional Field-to-Field
+comparisons, relationship-path or dynamic operands, `datetime` literal comparisons, broader comparisons, patterns,
 presence/absence, uniqueness tuples, conditions, owners, and `exclusion` can produce service- or target-support gaps.
 They remain invalid only when the admitted meaning itself violates semantic rules.
 
@@ -669,11 +697,11 @@ Scalar Fields have no `settings` object, and enum `settings` admits only `values
 settings shape is structurally invalid rather than a support gap. Nonempty delivery, unsupported Field kinds and
 modifiers, and graph members outside the importer boundary remain in the exact submitted Head and appear as
 `service_support_gap` records when the admitted graph is valid. Imported but incompletely generated shapes—such as
-optional enums, broader State Machine behavior, broader Account or Policy topologies, and unsupported consumers of
-otherwise realized subjects—appear as `target_support_gap` records. Development-data records and assignments are
-assessed individually; do not assume a blanket Application-level gap. Service-support meaning was skipped before
-semantic analysis; target-support meaning was admitted and analyzed but is not fully realized. Preserve the authored
-Plan and report every exact gap.
+money and position semantics, broader State Machine behavior, broader Account or Policy topologies, and unsupported
+consumers of otherwise realized subjects—appear as `target_support_gap` records. Development-data records and
+assignments are assessed individually; do not assume a blanket Application-level gap. Service-support meaning was
+skipped before semantic analysis; target-support meaning was admitted and analyzed but is not fully realized.
+Preserve the authored Plan and report every exact gap.
 
 Successful Compilation retains the exact submitted Plan at `.firstdraft/submitted-foundation-plan.json` and the
 canonical machine-readable GapSet at `.firstdraft/gaps.json`. There is intentionally no duplicate

@@ -203,13 +203,20 @@ Do not infer uniqueness from a label, presence from a form, or immutability from
 matter.
 
 Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
-order carries semantic rank rather than presentation order alone. The current Compiler emits required enum string
-storage using Rails `enum` with inclusion and presence validation plus native scopes and instance methods. The
-Compiler selects Rails prefix or suffix options when helper names would collide.
+order carries semantic rank rather than presentation order alone. The current Compiler emits enum string storage
+using Rails `enum` with inclusion plus native scopes and instance methods; a required enum adds presence validation
+and an optional enum allows a blank choice. The Compiler selects Rails prefix or suffix options when helper names
+would collide.
 Compatible in-domain literal-key defaults work regardless of whether the order has semantic rank. Database
-membership constraints, general rank semantics, optional enums, and unsupported consumers remain gaps. Preserve
+membership constraints, general rank semantics, and unsupported consumers remain gaps. Preserve
 product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-023.md#enums)
 owns the exact lowering.
+
+Use `money` for an amount in one fixed currency, `position` for an order people arrange within a list, `secure_token`
+for a random token the app creates, such as an invite code, and `json` for a document whose structure the app does
+not model. Each generates ordinary Rails storage and inputs with a partial gap for its missing behavior, as the
+[Field type reference](foundation-plan-023.md#money-positions-tokens-and-json) lists. Keep stable facts as Fields,
+References, or Entities rather than inside JSON.
 
 ### Choose text normalization
 
