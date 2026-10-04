@@ -72,9 +72,9 @@ generated output, not observed application behavior, device installation, or dep
 - Web Account realization requires the exact email/password/self-service registration, password-reset recovery,
   lockout, and Account-self topology described below; email verification is optional, and sign-up inputs the
   target cannot generate become partial Account gaps. Bounded
-  Account-backed Policies and protected Web Scaffolds are supported. Ordinary iPhone and Android output remains
-  Account- and Policy-free and consumes public-only navigation; protected Web support does not imply protected native
-  behavior.
+  Account-backed Policies and protected Web Scaffolds are supported. Selected iPhone and Android clients show the same
+  main navigation as Web, protected lists and the Account entry included, and sign in through the generated web
+  pages inside the app.
 - There is no Plan GET or pull operation, arbitrary application generation, deployment workflow, iPad
   output, or complete support for the Foundation Plan vocabulary. Preserve intended meaning and let the reviewed
   GapSet name the current delta.
@@ -101,7 +101,7 @@ The bundled CLI uses `.firstdraft/design/`; much older CLIs used a top-level `de
 
 Selected native projects compose separate pinned Cores under `ios/` and `android/`. Each emitted
 `FOUNDATION_PROVENANCE.json` records the exact revision, archive digest, and replaced application seams.
-Those pins identify source, not exercised devices or runtime behavior. Public native navigation stays Account-free.
+Those pins identify source, not exercised devices or runtime behavior. Native navigation matches Web, Account last.
 Both clients use one stack, up to five direct tabs, or four direct tabs plus More for additional destinations.
 Follow the [preview guidance](#preview-generated-native-apps) after verified materialization.
 
@@ -238,7 +238,8 @@ for the Rails production mailer host independently of native-client selection. I
 host authorization, TLS, sender identity, or email provider. A domain is optional: without one, native clients use
 an explicit `.invalid` origin and `invalid.firstdraft` identifier prefix.
 
-Each selected client needs an admitted public-index Scaffold and an identity that fits its platform:
+Each selected client needs at least one main-navigation entry, meaning an admitted index Scaffold, public or
+protected, or a realized Account, and an identity that fits its platform:
 
 - iOS replaces underscores in `application.key` with hyphens. That component must be one DNS-safe label of at most
   63 ASCII bytes, beginning with a letter and ending with a letter or digit. An authored domain must have at least
@@ -253,12 +254,16 @@ Each selected client needs an admitted public-index Scaffold and an identity tha
 
 For example, key `oscar_party` with domain `2-app.example.com` produces iOS identifier
 `com.example.2-app.oscar-party` and Android ID `com.example.d_2_happ.oscar_party`.
-Structurally valid values can still exceed these target limits. A missing public entry or unusable identity omits
+Structurally valid values can still exceed these target limits. A missing navigation entry or unusable identity omits
 that client and records `foundation_plan.gap.native_client.not_generated`; a missing domain alone does not.
 Preserve the user's requested clients and access rather than changing product meaning to avoid that gap.
 
-Public detail and form links use Hotwire; Web Account and Policy support does not implement native sign-in,
-profile, or protected navigation. Confirm that public native access is intentional.
+Detail and form links use Hotwire, and native pages use the same Rails sessions and Policies as the web app. With a
+realized Account, people sign up, sign in, and recover passwords through the generated web pages inside the app, and
+signed-out people reach sign-in from the Account tab. Rodauth remember keeps a native sign-in across app restarts
+for up to 14 days. The Account page adds Sign out, and every tab restarts after signing in or out: iPhone returns
+to the first tab and Android keeps the selected one. Native sign-in screens, biometric unlock, and email links that
+open inside the app are not generated.
 
 `application.appearance.theme` accepts four modes:
 
@@ -284,8 +289,8 @@ Native tint and background colors do not replace the stock Zinc web component to
 icon-assets gap. Other admitted but unconsumed Application configuration remains a target gap.
 
 The prepared Compilation emits admitted public and bounded Account/Policy-controlled Web surfaces and, when the
-public-navigation prerequisite is met, selected owned iPhone and Android projects beneath `ios/` and `android/`.
-Native authenticated sessions, push, and iPad remain outside the public boundary.
+navigation prerequisite is met, selected owned iPhone and Android projects beneath `ios/` and `android/`. Push and
+iPad remain outside the public boundary.
 
 `entities` may contain any number of closed Entity objects. The schema owns their exact optional families, including
 `account`, `fields`, `references`, `associations`, `predicates`, `orderings`, `validations`, `trees`, `policies`,
@@ -588,8 +593,8 @@ gaps and never activate permissive defaults. Every Account action resolves `curr
 Credential changes use Rodauth: **Change email** verifies the new address before replacing the existing one, and
 **Change password** uses its signed-in password-change flow.
 
-Ordinary iPhone and Android output stays Account- and Policy-free, omits profile and protected Web navigation, and
-records the applicable native consequence instead of borrowing Web authorization.
+Selected iPhone and Android clients include the Account tab and the protected lists the web app shows, served by the
+same Rails pages and Policies; the [native Account flow](#application-and-clients) covers sign-in and sign-out.
 
 ### Scaffolds
 
@@ -654,9 +659,9 @@ During pre-alpha, generated Rails may also contain conventional unclaimed scaffo
 starter code is neither authored meaning nor proof that unsupported consequences work. Preserve the Plan and report
 the reviewed gaps instead of changing requiredness, access, or workflows to match incidental output.
 
-Only public indexes become native entry points. Public detail and form pages remain reachable through links.
-New/edit use modal context: iOS sheets and Android's full-screen form destination, with pull-to-refresh disabled.
-Web profile and protected navigation do not become native screens.
+Every admitted index, public or protected, becomes a native entry point, with the Account entry last. Detail and
+form pages remain reachable through links. Public New/edit use modal context: iOS sheets and Android's full-screen
+form destination, with pull-to-refresh disabled.
 
 ### Unsupported shapes
 

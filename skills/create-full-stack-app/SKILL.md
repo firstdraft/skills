@@ -28,7 +28,7 @@ Targets plugin 0.8.3, CLI 0.8.1, API 0.7, Plan 0.23; catalog selection is separa
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
   with explicit gaps for native launcher artwork.
-- Account/Policy protection applies to Web Scaffolds. Native clients require a public index and do not inherit Web privacy.
+- iPhone and Android apps mirror Web navigation, including protected lists and Account, and sign in on web pages.
 - Preserve unsupported requests and their gaps, including selected clients and access. Artifacts retain the Plan and GapSet.
 - Preview iPhone and Android apps in [Revyl](references/foundation-plan-023.md#preview-generated-native-apps); Rails
   work needs only the local web app.
@@ -135,9 +135,8 @@ user plainly what First Draft will and will not build. Ask implementation choice
 product meaning is always asked or delegated. Honor "make the rest of the decisions for me" at any point. Before
 the read-back, walk the coverage checklist silently and write the after-Compile checklist into the notes.
 
-State the access boundary precisely: Web pages may be public or use Accounts and Policies, while iPhone and Android
-apps show only public pages and have no sign-in. Keep private access and requested clients in the Plan even when
-native output is a gap.
+State the access boundary precisely: Web pages may be public or use Accounts and Policies, and iPhone and Android
+apps show the same pages with the same sign-in. Keep private access and requested clients in the Plan.
 
 Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
 incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails
