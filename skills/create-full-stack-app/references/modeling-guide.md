@@ -303,6 +303,13 @@ cardinality, polymorphism, exclusive arcs, and unsupported consumers can remain 
 separate consumer decision from Reference storage. Preserve broader product meaning and inspect the matching GapSet
 rather than applying an older blanket relationship limit.
 
+When people should see how many related records something has, such as likes on a post or a person's followers, add
+a [`counter` Field](foundation-plan-023.md#counters) on the record being counted for. Point it at the direct
+Association that holds the counted records: `user.follower_links`, not the indirect `user.followers` through them.
+Add that direct referenced-side Association when the Plan lacks it, author one counter per Reference, and keep an
+indirect, filtered, or polymorphic count in the Plan as a reviewed gap. An explicit list or details projection shows
+each counter after its authored items; people never type them.
+
 ## Add behavior deliberately
 
 - Add Predicates and Orderings when generated queries or surfaces need reusable product meaning.
