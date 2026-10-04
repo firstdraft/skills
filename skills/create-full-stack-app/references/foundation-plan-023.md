@@ -67,7 +67,8 @@ generated output, not observed application behavior, device installation, or dep
   required enum accepts its compatible in-domain literal-key default. Optional enums, database membership
   constraints, general rank behavior, and broader enum consumers remain unsupported.
 - Web Account realization requires the exact email/password/self-service registration, password-reset recovery,
-  lockout, Account-self, and Field-only input topology described below; email verification is optional. Bounded
+  lockout, and Account-self topology described below; email verification is optional, and sign-up inputs the
+  target cannot generate become partial Account gaps. Bounded
   Account-backed Policies and protected Web Scaffolds are supported. Ordinary iPhone and Android output remains
   Account- and Policy-free and consumes public-only navigation; protected Web support does not imply protected native
   behavior.
@@ -506,11 +507,16 @@ staff membership; preserve required eligibility conditions and ask when they are
 
 Current public Web Account realization requires self-service registration, password-reset recovery, and lockout;
 email verification is optional. A realized Account derives one Web `/account` destination without requiring an
-authored profile. Registration inputs must be one contiguous
-ordered list of required, unique, emitted Account-owned `short_text` or `time_zone` Fields with compatible defaults;
-they must cover every required emitted Account Field, and the Account Entity may own no required Reference. A
-required enum on that Entity may still emit as Domain storage, but it cannot be a registration input, so that Account
-shape remains a gap. Association registration and native Account/session restoration are not public behavior.
+authored profile. Sign-up shows a control for each required registration input that names a stored Account Field,
+then one for each other required stored Account Field that the application does not fill itself. Each control is
+the Field's Scaffold form control, so a required enum becomes a select. The application fills State Machine initial
+states and realized [defaults](#defaults); counters, secure tokens, positions, and derived Fields never become
+sign-up controls. A registration input's own `default` applies only to `short_text` and `time_zone` inputs.
+
+Missing sign-up meaning never omits the Account. An Association input, an optional input, an input for a derived or
+unstored Field, a registration default on another kind, or a required Reference on the Account Entity becomes a
+`foundation_plan.gap.account.partially_generated` record. A required Reference also blocks sign-up, because the model
+rejects an Account without it; the owner adds its control or default in Rails after Compile.
 
 Omit `verification` by default, so sign-up signs the person in. Author `"verification": {"kind": "email"}` only when
 the user asks people to confirm their email; they then open an emailed link before they can sign in. Keep an existing
