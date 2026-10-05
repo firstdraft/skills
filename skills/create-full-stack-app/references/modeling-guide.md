@@ -44,8 +44,9 @@ Plan as answers arrive. Prioritize answers that change the graph, access model, 
 When modeling a collection, distinguish one uniquely identified object, a quantity of interchangeable goods, and a
 mixed product that needs both meanings. Do not collapse that branch into only individual-versus-group wording.
 In the opening turn, ask only about intended product meaning, materials, and the user's level, and name deferred
-product areas; give the reality check about target support after the user answers, unless feasibility was itself
-part of the request. Do not promote a common use case into an assumption. When target support matters, know the
+product areas; give the reality check about target support after the user answers. Whether First Draft covers the
+core of the idea is [fit](interview.md#start-from-the-users-goal), not target support: say it in the opening turn
+when research shows it. Do not promote a common use case into an assumption. When target support matters, know the
 desired access before describing the current Account, Policy, Web, and native boundaries. Keep one candidate Plan: do not maintain a
 parallel flattened or capability-friendly shape merely so one version can Compile.
 
@@ -148,11 +149,19 @@ extend `db/seeds/development.rb`; keep demo Accounts out of all-environment seed
 
 ## Retain implementation requirements
 
-Maintain `implementation-notes.md` at the planning workspace root as the conversation establishes behavior that the
-Plan cannot express. Write the product requirement, relevant Entities or interactions, useful rationale, and a few
-acceptance examples. Separate agreed requirements from unresolved questions and proposals. Keep it concise and
-revise it when the user's decisions change; it is not a transcript, task database, or second structured Plan.
-Add the applicable [after-Compile checklist](interview.md#after-compile-checklist) under `## After Compile`.
+Maintain `implementation-notes.md` at the planning workspace root as the conversation establishes what the Plan
+cannot express. Keep it in three lists, then the after-Compile steps:
+
+- `## What First Draft builds`: a line or two naming the Plan and its gaps file; do not copy them.
+- `## What is built otherwise`: each agreed requirement outside the Plan, with relevant Entities or interactions,
+  useful rationale, and a few acceptance examples; and each part of the idea that First Draft does not cover, with
+  where it will be built, such as native Swift in the generated `ios/` project.
+- `## Feasibility findings and open questions`: what research found and its known limits, with source links, and
+  each unresolved question or proposal.
+- `## After Compile`: the applicable [after-Compile checklist](interview.md#after-compile-checklist).
+
+Keep it concise and revise it when the user's decisions change; it is not a transcript, task database, or second
+structured Plan.
 
 For example, an agreed CSV import may need to preview all row errors before saving anything and save a valid file
 as one transaction. Record examples such as "one invalid row leaves all records unchanged" and "a valid file saves
@@ -403,19 +412,23 @@ a confirmed product decision, or a demonstrated diagnostic.
 
 Write it for a reader who is not technical, in this order:
 
-1. A plain-language summary: what the app is for and who uses it; each kind of record and its material Fields,
-   with each relationship as a "must" or "may" sentence; rules, sign-up and access, and clients; what each main
-   list shows; a few of the proposed sample records and any the gaps will drop; and delegated choices,
-   assumptions, exclusions, open questions, and outstanding implementation notes with how the selected output
-   mode carries them forward. For an Account, say plainly whether people can sign in right after signing up or
-   confirm their email first, as the [Accounts reference](foundation-plan-023.md#accounts-and-policies) describes.
+1. What First Draft builds, as a plain-language summary: what the app is for and who uses it; each kind of record
+   and its material Fields, with each relationship as a "must" or "may" sentence; rules, sign-up and access, and
+   clients; what each main list shows; a few of the proposed sample records and any the gaps will drop; and
+   delegated choices, assumptions, and exclusions. For an Account, say plainly whether people can sign in right
+   after signing up or confirm their email first, as the
+   [Accounts reference](foundation-plan-023.md#accounts-and-policies) describes.
 2. What is not generated yet. Group the gaps by what the user will notice, lead with that effect, and say what
    the app does instead, for example "Photos aren't generated yet; posts are caption-only" or "Like and follower
    counts aren't generated yet". Use one line per group rather than one per record, and say which groups you plan
    to build in Rails after Compile.
-3. A short technical block: the Plan path and SHA-256; the matching valid run's `gap_set_sha256` and record count;
+3. What is built otherwise: outstanding implementation notes and any part of the idea outside First Draft, each
+   with where it will be built, and how the selected output mode carries the notes forward.
+4. Feasibility findings and open questions, with sources for what research found. Leave out a list with nothing
+   in it.
+5. A short technical block: the Plan path and SHA-256; the matching valid run's `gap_set_sha256` and record count;
    that service gaps were skipped before semantic analysis, target gaps were analyzed but not fully realized, and
-   `valid` covers only the admitted graph; the selected output mode; and the gaps file.
+   `valid` covers only the admitted graph; the selected output mode, or plan only; and the gaps file.
 
 Before giving the read-back, write planning-root `gaps-readback.md`: the Plan SHA-256, the `gap_set_sha256`, and
 every ordered GapSet record with its classification, code, kind, status, location, reason, consequence, and cause

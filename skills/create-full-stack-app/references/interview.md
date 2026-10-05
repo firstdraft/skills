@@ -5,11 +5,48 @@ to model each answer. The Skill's read-back, approval, and Compile rules are unc
 
 ## Contents
 
+- [Start from the user's goal](#start-from-the-users-goal)
 - [Interview flow](#interview-flow)
 - [Meaning and implementation](#meaning-and-implementation)
 - [See what First Draft emits](#see-what-first-draft-emits)
 - [Coverage checklist](#coverage-checklist)
 - [After-Compile checklist](#after-compile-checklist)
+
+## Start from the user's goal
+
+First Draft is one tool for the user's goal. Use it where it helps: to plan and Compile, to plan only, or not at
+all. Decide which before the opening turn.
+
+**Research first, always.** Before the opening turn, take a quick look with your web search tools, a few searches,
+at how others build similar apps: common features, patterns, and pitfalls. Use what you find to choose better
+questions and defaults. Research thoroughly only when feasibility is in question, because the idea depends on a
+device capability, outside data or APIs, store or platform rules, or real-time behavior. Then find out whether it
+is possible (device sensors and their limits, APIs, store rules, and whether the data exists) and how others build
+it (existing apps, their stacks, and their known limits), and start the opening turn with a few lines on what you
+found, with sources.
+
+**Decide how First Draft helps.** When it won't cover the core of the idea, say so as soon as that is clear, which
+is usually the opening turn:
+
+- **Plan and Compile:** the core is records, people, permissions, lists, and forms, such as a book club or a
+  private family photo feed. Do not mention fit, not even that the idea fits. You may mention one or two useful
+  findings, such as "Most family photo apps also let you…"; then start the interview.
+- **Plan and Compile the backbone; build the rest separately:** the core is continuous computation or a device
+  capability, such as real-time sensors, a game loop, live audio or video, on-device machine learning,
+  offline-first sync, Bluetooth or other hardware, or background location. First Draft builds the accounts,
+  records, and pages around it. Name what comes after and where, such as native Swift or Kotlin in the generated
+  iPhone and Android projects. Those projects are Hotwire Native shells around the web app: device features are
+  code added there, and the shells show only public pages, with no sign-in.
+- **Plan only:** the user will build in another stack, or won't use the generated code. The Foundation Plan and its
+  analysis still help design the data model: push it and use the analysis to check the model, skip the reality
+  check about what First Draft generates, give the read-back, and do not Compile.
+- **Not at all:** First Draft doesn't help with the core, and the core is the app, such as a first-person shooter.
+  Say First Draft isn't the right tool and name what is, such as a game engine like Unity, Unreal, or Godot. Say
+  First Draft could later build a part it fits, such as accounts, leaderboards, or a website, if the user wants.
+  Do not initialize or push a Plan unless the user asks for that part.
+
+Then continue with whichever applies; the interview below covers the First Draft part. Keep the
+[three lists](modeling-guide.md#retain-implementation-requirements) in the notes and the read-back.
 
 ## Interview flow
 
@@ -24,7 +61,7 @@ Start when the user asks for help making an app, such as "help me make an app fo
 3. **Ask the user's level once:** "Should I make the technical decisions for you, explain them as I go, or ask you
    about them?" Do not ask it again; the user may change it at any time.
 
-Steps 1 to 3 are the opening turn, with at most three questions.
+Steps 1 to 3 are the opening turn, after the research and any fit, with at most three questions.
 
 4. **Ask product questions** that decide the data model, most important first: which records exist and what one
    record is, who can see and do what, and whether they want iPhone or Android apps. After the opening turn, ask
@@ -35,20 +72,20 @@ Steps 1 to 3 are the opening turn, with at most three questions.
    database, and that a paid option is planned.
 5. **Give an early reality check.** As soon as the opening answers settle the main records, tell the user this takes
    a few minutes, then write a rough Plan, push it, and read its analysis. Keep the rough Plan small: the main
-   records and their key Fields, any Account, who can see what, and requested phone apps. Tell the user in a few
-   plain lines what First Draft will build and what it will not build yet, for example "Photos aren't generated
-   yet, so posts start caption-only; I'll add photo upload in Rails after" or "iPhone and Android apps show only
-   pages anyone can see, and have no sign-in; a private app works in the phone's browser". Then let the analysis
-   steer the remaining questions: ask about consequences the user can choose between, not about gaps they cannot
-   change. Keep private access and requested phone apps in the Plan. Report each gap as the analysis gives it,
-   even when its reason names no cause or contradicts these references; the deployed First Draft may not generate
-   it yet. Do not trim the Plan or push trial or example Plans to find a cause: each push replaces the Project's
-   current Plan, and a defensible variant is still a trial.
+   records and their key Fields, any Account, who can see what, and requested phone apps; for a backbone, only the
+   part First Draft builds. Tell the user in a few plain lines what First Draft will build and what it will not
+   build yet, for example "Photos aren't generated yet, so posts start caption-only; I'll add photo upload in Rails
+   after" or "iPhone and Android apps show only pages anyone can see, and have no sign-in; a private app works in
+   the phone's browser". Then let the analysis steer the remaining questions: ask about consequences the user can
+   choose between, not about gaps they cannot change. Keep private access and requested phone apps in the Plan.
+   Report each gap as the analysis gives it, even when its reason names no cause or contradicts these references;
+   the deployed First Draft may not generate it yet. Do not trim the Plan or push trial or example Plans to find a
+   cause: each push replaces the Project's current Plan, and a defensible variant is still a trial.
 6. **Ask implementation choices last**, following the user's level and
    [meaning and implementation](#meaning-and-implementation).
 7. **Walk the [coverage checklist](#coverage-checklist)** silently, and write the
    [after-Compile checklist](#after-compile-checklist) into the implementation notes.
-8. **Read back and approve** as the Skill describes, then Compile.
+8. **Read back and approve** as the Skill describes, then Compile. For plan only, give the read-back and stop.
 
 At any point the user may say "make the rest of the decisions for me". Stop asking. Choose your recommendation for
 every remaining item, including product meaning, and mark each one delegated. Then walk the checklist and give the

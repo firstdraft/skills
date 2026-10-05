@@ -39,7 +39,7 @@
         "Prioritizes whether one inventory record represents a uniquely identified object, a quantity of interchangeable goods, or both because that answer changes the Entity and Field model.",
         "Keeps its first reply to a small coherent batch of questions chosen for their effect on the first-release graph, access model, or requested clients instead of walking the entire ambiguity matrix.",
         "Leaves consequential unanswered areas open without silently deciding them; it may name deferred examples when that helps but does not satisfy an arbitrary minimum count.",
-        "Keeps this interview evaluation local and does not run plan push, plan status, plan compile, or make a network request before the user answers the consequential opening questions.",
+        "Keeps this interview evaluation local and does not run plan push, plan status, plan compile, or make a First Draft service request before the user answers the consequential opening questions.",
         "Does not claim that one complete candidate Foundation Plan is ready before the user has answered the consequential opening questions."
       ],
       "artifacts": [
@@ -178,7 +178,7 @@
         "Asks once whether it should make the technical decisions for the user, explain them as it goes, or ask about them.",
         "Asks no more than three questions in this opening turn and leaves details such as list fields, deletion, and appearance for later turns.",
         "Does not ask about hosting.",
-        "Runs no plan push, plan status, or plan compile and makes no network request in this opening turn."
+        "Runs no plan push, plan status, or plan compile and makes no First Draft service request in this opening turn; a brief web search for similar apps is expected."
       ]
     },
     {
@@ -216,6 +216,70 @@
         "Keeps the photo Field and private access in the Plan instead of removing them or making pages public to avoid gaps.",
         "Then asks one product decision that the analysis informs, such as whether the user still wants phone apps given that trade-off.",
         "Does not run plan compile."
+      ]
+    },
+    {
+      "id": "fit-partial-opening-race-coaching",
+      "should_trigger": true,
+      "prompt": "Help me build an app for hobbyist race car drivers that gives them real-time advice while they drive, using the phone's sensors.",
+      "expectations": [
+        "Before replying, uses its web search tools to check whether the idea is possible, such as phone GPS and motion-sensor rates and accuracy and what the platforms allow while driving, and how existing apps such as lap timers and driver-coaching tools are built.",
+        "Opens the reply with a few lines on what it found, with sources.",
+        "Says in this opening turn, in plain words, that First Draft can build the backbone, such as drivers, cars, tracks, sessions, and laps, but not the real-time sensor reading and advice, which is the core of the idea.",
+        "Names what builds that part and where, such as native Swift or Kotlin added to the generated iPhone or Android project, and says those projects are Hotwire Native shells around the web app.",
+        "Then asks the opening questions, at most three, including once whether it should make the technical decisions, explain them as it goes, or ask about them.",
+        "Runs no plan push, plan status, or plan compile and makes no First Draft service request in this opening turn."
+      ]
+    },
+    {
+      "id": "fit-partial-backbone-plan-race-coaching",
+      "should_trigger": true,
+      "prompt": "Help me build an app for hobbyist race car drivers that gives them real-time advice while they drive, using the phone's sensors. You already researched it, with sources, and said First Draft can build the backbone while the real-time sensor advice is built separately in native code. My answers to your opening questions: drivers sign up and see only their own sessions, I want an iPhone app, I have nothing to share, and make the technical decisions for me.",
+      "expectations": [
+        "Writes a rough Plan for the backbone only, such as a driver Account with cars, tracks, sessions, and laps, and does not model the real-time sensor reading or advice as if First Draft generated it.",
+        "Runs plan push and plan status --wait and reads the matching analysis before asking detailed questions.",
+        "Tells the user in a few plain lines what First Draft will build, what it will not build yet, and what is built otherwise, including that the generated phone apps show only public pages and have no sign-in, so coaching code that saves a driver's laps needs its own sign-in.",
+        "Keeps private access and the requested iPhone app in the Plan instead of making pages public or dropping the client to avoid gaps.",
+        "Writes implementation-notes.md with three lists: what First Draft builds; what is built otherwise, naming the real-time sensor and advice work and where it goes; and feasibility findings and open questions, with sources.",
+        "Does not run plan compile."
+      ]
+    },
+    {
+      "id": "fit-none-first-person-shooter",
+      "should_trigger": true,
+      "prompt": "Help me build a first person shooter.",
+      "expectations": [
+        "Says plainly that First Draft isn't the right tool for the game itself, because the core is a real-time game loop, 3D rendering, and input.",
+        "Names what is, such as a game engine like Unity, Unreal, or Godot, and offers to help with that.",
+        "Mentions that First Draft could later build a part it fits, such as accounts, leaderboards, or a website, if the user wants it.",
+        "Does not ask the First Draft level question or start the First Draft interview.",
+        "Runs no plan init, plan push, plan status, or plan compile and creates no .firstdraft directory."
+      ]
+    },
+    {
+      "id": "fit-full-family-photo-network",
+      "should_trigger": true,
+      "prompt": "Help me build a social network for just my family. It should work and look like Instagram so that it's familiar. This is our first message; do not contact First Draft yet.",
+      "expectations": [
+        "Before replying, takes a brief look with its web search tools, a few searches, at how similar family photo-sharing apps are built: common features, patterns, and pitfalls.",
+        "Does not make any statement about whether First Draft fits, not even that the idea fits; it may mention one or two useful findings, such as a feature most family photo apps share.",
+        "Restates the idea in a sentence and proposes a name.",
+        "Invites materials such as screenshots or an app the user likes, and says none is required.",
+        "Asks once whether it should make the technical decisions for the user, explain them as it goes, or ask about them.",
+        "Asks no more than three questions in this opening turn and leaves photo support and phone-app consequences for the reality check after the user answers.",
+        "Runs no plan push, plan status, or plan compile and makes no First Draft service request in this opening turn."
+      ]
+    },
+    {
+      "id": "fit-plan-only-other-stack",
+      "should_trigger": true,
+      "prompt": "I'm going to build a volunteer shift app for our food bank myself in Django, but I'd like help designing the data first. Coordinators create shifts, and volunteers sign up for them. You already asked your opening questions; my answers: volunteers and coordinators both sign in, I have nothing to share, and make the technical decisions for me.",
+      "expectations": [
+        "Says plainly that First Draft will help with planning only: the Foundation Plan and its analysis help design the data, and its generated Rails app will not be used.",
+        "Writes a Plan for the data model, such as volunteers, coordinators, shifts, and signups, then runs plan push and plan status --wait and uses the matching analysis to check the model.",
+        "Does not dwell on what the Rails Compiler would or would not generate, and asks the remaining data questions one at a time.",
+        "Writes implementation-notes.md with three lists, naming the Django build under what is built otherwise.",
+        "Never runs plan compile and does not offer to Compile."
       ]
     },
     {

@@ -101,8 +101,9 @@ and deferred questions can be revisited after diagnostics or further dialogue.
 
 Before the first Compile that could start direct retained work or reach Publication, reread the exact staged Plan and
 give a plain-language semantic summary first: application scope; Entities and their material Fields, relationships,
-rules, behavior, and data; surfaces, access, and clients; material assumptions, delegated choices, exclusions, and
-open questions. Then group the gaps by what the user will notice. End with a short technical block: the Plan path
+rules, behavior, and data; surfaces, access, and clients; material assumptions, delegated choices, and exclusions.
+Then group the gaps by what the user will notice, then list what is built outside First Draft and the feasibility
+findings and open questions. End with a short technical block: the Plan path
 and SHA-256, the matching valid AnalysisRun's GapSet digest and record count, and the file holding every ordered
 record. Explain that service gaps were skipped before semantic analysis, target gaps were not fully realized, and
 `valid` applies only to the admitted graph. State the selected completion mode: direct output creates only a
