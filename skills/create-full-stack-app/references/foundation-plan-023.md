@@ -87,7 +87,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.6/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.7/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -259,12 +259,12 @@ Structurally valid values can still exceed these target limits. A missing naviga
 that client and records `foundation_plan.gap.native_client.not_generated`; a missing domain alone does not.
 Preserve the user's requested clients and access rather than changing product meaning to avoid that gap.
 
-Detail and form links use Hotwire, and native pages go through the same Rails controllers and Policies as the web
-app. With a realized Account, people sign up and sign in through the generated web pages inside the app, and a
-signed-out person who opens a protected tab or the Account tab is sent to sign-in. Rodauth remember keeps a native
-sign-in across app restarts for up to 14 days. The Account page adds Sign out, and every tab restarts after signing
-in or out: iPhone returns to the first tab and Android keeps the selected one. Native sign-in screens, biometric
-unlock, and email links that open inside the app are not generated.
+Detail and form links use Hotwire, and native pages go through the same Rails controllers and Policies as the web app.
+With a realized Account, people sign up and sign in through the generated web pages inside the app, and a signed-out
+person who opens a protected tab or the Account tab is sent to sign-in. Rodauth remember keeps every sign-in, in the
+browser and in the app, across restarts; each use moves the deadline a year out. The Account page adds Sign out, and
+every tab restarts after signing in or out: iPhone returns to the first tab and Android keeps the selected one. Native
+sign-in screens, biometric unlock, and email links that open inside the app are not generated.
 
 `application.appearance.theme` accepts four modes:
 

@@ -29,6 +29,15 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-05: Remembered sign-ins
+
+**Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
+keep people signed in, in the browser and in the iPhone and Android apps. Every sign-in is remembered without a
+"Remember me" checkbox, and each use moves the deadline a year out, so someone who keeps using the app stays signed in
+across browser and app restarts. Before, a web sign-in ended when the browser closed, and a phone-app sign-in ended 14
+days after the first one. Signing out revokes the remembered sign-ins on other devices, though a device that still has
+an open session stays signed in. The Skill's description of phone-app sign-in now says this.
+
 ## 2026-10-05: When Render's Hobby workspaces run out
 
 **Skills — released in plugin 0.8.6.** Render allows [five Hobby workspaces](https://render.com/docs/team-members)
