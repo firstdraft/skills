@@ -9,11 +9,11 @@
   "plugins": [
     {
       "name": "firstdraft",
-      "version": "0.8.3",
+      "version": "0.8.4",
       "source": {
         "source": "npm",
         "package": "@firstdraft.com/claude-code",
-        "version": "0.8.3",
+        "version": "0.8.4",
         "registry": "https://registry.npmjs.org/"
       },
       "displayName": "First Draft",
