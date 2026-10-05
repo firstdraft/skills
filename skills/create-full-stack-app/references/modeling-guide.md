@@ -343,7 +343,7 @@ consumers, cursor pagination, Field and Association inputs, server bindings, ass
 optional return overrides. Omit `return_to` for conventional interaction defaults; discuss navigation only when
 product intent needs an exception. The [worked return examples](examples.md#deliberate-return-overrides) show the
 complete record operand and independent associated-success override. A supported associated `create_form` supplies
-a scoped New page, not an inline form in the details card.
+a scoped New page, or a one-tap button for a no-input record, not an inline form in the details card.
 Every request and displayed Association declares public access or a Policy binding. The exact
 Web Account/Policy slice can protect supported surfaces and provide a Web-only Account profile; unsupported Policies
 and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
@@ -357,12 +357,14 @@ Name each list's fields in the read-back as a delegated choice unless the user c
 
 When the user describes something people do with a click, such as a like, follow, RSVP, bookmark, or upvote, use
 the Foundation Plan's no-input record pattern: a create with no `inputs` under the parent's `"create_form": {}`,
-with every value bound from context. The Foundation Plan Guide's No-input records section defines it, and the
-[Like example](examples.md#signed-in-gate-and-one-tap-records) copies its example. When each person does it once
-and can take it back, it is a toggle: also add a uniqueness rule over the parent Reference and the Account
-Reference, and select `destroy` authorized by an owner Policy. Records that may repeat, such as "mark as read"
-events or check-ins, get neither. Say it plainly in the read-back, such as "one tap to like, one tap to unlike".
-Today's deployed Compiler may still show a separate Create page until the one-tap change ships.
+with every value bound from context. The parent page shows a one-tap button, and a tap returns to the parent page.
+The public Guide's [No-input records](https://firstdraft.github.io/firstdraft/docs/architecture/design/foundation-plan.html#no-input-records)
+section defines the pattern, and the [Like example](examples.md#signed-in-gate-and-one-tap-records) copies its
+example. When each person does it once and can take it back, it is a toggle: also add a uniqueness rule over the
+parent Reference and the Account Reference, select `destroy` authorized by an owner Policy, and author
+`destroy.return_to` through the parent Reference so Unlike stays on the parent page. Records that may repeat, such
+as "mark as read" events or check-ins, get no uniqueness rule or `destroy`. Say it plainly in the read-back, such as
+"one tap to like, one tap to unlike".
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
 Compilation emits each with at least one main-navigation entry, public or protected, and an identity that fits its

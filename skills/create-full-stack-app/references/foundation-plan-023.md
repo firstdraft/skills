@@ -679,10 +679,11 @@ the required application form-entry work into [implementation notes](modeling-gu
 Qualifying fixtures do not fix that application behavior; add successful New/browser coverage after repairing it.
 
 Omit `return_to` when the conventional interaction is intended: standalone New/Edit returns to the saved record,
-scoped associated create returns to its collection, destroy returns to the record's collection, and profile updates
-return to Account. If a preferred record or collection route is unavailable, Rails uses the admitted collection
-or home fallback. An explicit override remains authored meaning and must itself be lowerable; it does not silently
-become a default. The browser supplies no destination URL, hidden return input, or history-based redirect.
+scoped associated create returns to its collection, a no-input associated create returns to its parent's page,
+destroy returns to the record's collection, and profile updates return to Account. If a preferred record or
+collection route is unavailable, Rails uses the admitted collection or home fallback. An explicit override remains
+authored meaning and must itself be lowerable; it does not silently become a default. The browser supplies no
+destination URL, hidden return input, or history-based redirect.
 
 A selected standalone create without New or an explicit return uses an empty `201 Created` response on success
 and `422` for validation failure, even when its definition also serves associated forms. Authorization denials keep
@@ -694,6 +695,8 @@ Admitted details collections show a bounded preview with a separate paginated fu
 attributes remain under `params[:credit]`. The authorized parent association builds the child, with no hidden
 parent input; a competing submitted parent does not replace it. Shared target new/create actions select the form
 for that context and retain its other inputs and validation errors.
+A [no-input create](modeling-guide.md#add-behavior-deliberately) shows a one-tap button in place of the Add link,
+with no scoped New page.
 Ordinary child edit/update/destroy routes stay flat. Preview rows contain selected properties and an optional
 authorized details link, without inline mutation controls. If no target show route is selected, its flat mutation
 routes can remain unlinked starter code. Do not invent a show route or discard authored properties to fill that gap.
