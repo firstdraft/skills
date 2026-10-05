@@ -2949,16 +2949,16 @@ async function checkSkill(skillName) {
   assert(metadata.description.length > 0);
   assert(metadata.description.length <= 1024);
   if (skillName === "create-full-stack-app") {
-    assert.match(metadata.description, /^Experimental and in development:/);
-    assert(metadata.description.includes("First Draft Foundation Plan"));
+    // Discovery starts from the user's goal and must not claim First Draft builds any app it is asked for.
+    assert.match(metadata.description, /^Use when someone asks for help making or planning an app or game,/);
     for (const fragment of [
-      "Authors and revises First Draft Foundation Plans",
-      "submits exact bytes",
-      "Web Accounts, Policies, protected Scaffolds, and required enums are bounded",
-      "arbitrary apps",
-      "broader clients are unavailable",
+      "Experimental",
+      "researches whether the idea is possible",
+      "uses First Draft where it helps",
+      "Foundation Plans, analysis, and bounded Rails/iPhone/Android Compile",
+      "won't cover the core",
     ]) {
-      assert(metadata.description.includes(fragment));
+      assert(metadata.description.includes(fragment), `description must include "${fragment}"`);
     }
     assert.doesNotMatch(metadata.description, /Accounts[^.;]*are not available/);
     assert(source.includes("## Load references only when needed"));

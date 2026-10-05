@@ -1,14 +1,14 @@
 ---
 name: "create-full-stack-app"
-description: "Experimental and in development: Authors and revises First Draft Foundation Plans, submits exact bytes, and requests bounded Rails/iPhone/Android Compile. Preserves identity, state, and provenance. Web Accounts, Policies, protected Scaffolds, and required enums are bounded; arbitrary apps, deployment, iPad, notifications, and broader clients are unavailable."
+description: "Use when someone asks for help making or planning an app or game, even one First Draft may not fit. Experimental: researches whether the idea is possible and how similar things are built, then uses First Draft where it helps: Foundation Plans, analysis, and bounded Rails/iPhone/Android Compile for records, people, permissions, lists, and forms. Says early when First Draft won't cover the core, and what will."
 license: "MIT"
 ---
 
 # Create a Full-Stack App with First Draft
 
-Author and review a coherent Foundation Plan, then Compile through the First Draft service into the current local
-folder. Run and develop the generated app locally. A Codespace is an optional fallback; GitHub publication and native
-preview are optional follow-ups. Compilation does not deploy.
+Use First Draft where it helps the user's app: author and review a Foundation Plan, then Compile through the First
+Draft service into the current local folder. Run and develop the generated app locally; a Codespace, GitHub
+publication, and native preview are optional. Compilation does not deploy.
 
 ## Preserve implementation requirements
 
@@ -58,11 +58,10 @@ For CLI work:
   read [ambiguous mutations](references/diagnostics-and-recovery.md#ambiguous-mutations) only when the named error
   requires it.
 
-The bundled [JSON Schema](references/foundation-plan-0.23.schema.json) is machine-readable validator input, not prose.
-Use a compatible JSON Schema 2020-12 command named by the user, exposed by the project, or found through a
-straightforward check of existing local commands. Pass only its path; never read it end to end. Do not install
-dependencies or add validation/build plumbing solely for this workflow. Otherwise rely on First Draft exact-byte
-diagnostics and say local schema validation was not performed.
+The bundled [JSON Schema](references/foundation-plan-0.23.schema.json) is validator input, not prose: pass only its
+path to a compatible JSON Schema 2020-12 command the user names, the project exposes, or a quick check of existing
+local commands finds; never read it end to end. Install nothing and add no validation plumbing for this. Otherwise
+rely on First Draft exact-byte diagnostics and say local schema validation was not performed.
 
 ## Verify the local capability
 
@@ -126,7 +125,8 @@ reinitialize. Inspect private state only for a recovery check explicitly named i
 
 ## Interview and author incrementally
 
-Start when the user asks for help making an app or invokes `/create-full-stack-app`, and follow the
+Start when the user asks for help making an app or invokes `/create-full-stack-app`. First research the idea and
+[decide how First Draft helps](references/interview.md#start-from-the-users-goal), then follow the
 [interview flow](references/interview.md#interview-flow). Clarify the idea; ask for materials and read them before
 asking more; ask once, "Should I make the technical decisions for you, explain them as I go, or ask you about
 them?" Then ask the product questions that shape the data model, most important first and one decision per turn,
@@ -196,10 +196,10 @@ valid status so the complete GapSet can be reviewed. `plan compile` later repeat
 
 Before the first `plan compile`, complete the modeling guide's
 [candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back), then reread the exact current
-`.firstdraft/foundation-plan.json`. Follow that section's order: a plain-language summary, then the gaps grouped by
-what the user will notice, then a short technical block with the Plan path and SHA-256 and the matching valid run's
-`gap_set_sha256`. Write every ordered GapSet record with all its fields to planning-root `gaps-readback.md` and
-name that file instead of pasting the records into the chat. Use only that attached
+`.firstdraft/foundation-plan.json`. Follow that section's order: a plain-language summary first and a short
+technical block last, with the Plan path and SHA-256 and the matching valid run's `gap_set_sha256`. Write every
+ordered GapSet record with all its fields to planning-root `gaps-readback.md` and name that file instead of pasting
+the records into the chat. Use only that attached
 digest: the CLI validates it against the attached GapSet; never substitute a fixture, historical, or another
 Project's digest. Use current-folder output by default. Select an absent
 `--output <path>` for a requested destination, an ineligible root, or model-only originals when root output was not
@@ -283,9 +283,9 @@ firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli compilation download <compilation-id> --output <absent-path>
 ```
 
-Download reads one succeeded Compilation, verifies retained provenance, transport, manifest, paths, modes, and file
-digests, then installs atomically. It never starts or polls work. `--output .` uses the same current-root transaction
-and preconditions as direct Compile; preserve every other existing destination.
+Download reads one succeeded Compilation, verifies it, and installs atomically; it never starts or polls work.
+`--output .` uses the same current-root transaction and preconditions as direct Compile; preserve every other
+existing destination.
 
 ## Recover from failures
 

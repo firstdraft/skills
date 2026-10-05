@@ -29,6 +29,23 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## Pending for 0.8.4
+
+This section is not a dated entry. The plugin 0.8.4 release moves it into that release's dated entry.
+
+- The Skill treats First Draft as one tool for your app instead of assuming it can build whatever you describe.
+  Before the interview the agent takes a quick look at how others build similar apps and uses what it finds to
+  choose better questions and defaults. When feasibility is in question, such as phone sensors, outside data,
+  store rules, or real-time behavior, it researches thoroughly whether the idea is possible and tells you what it
+  found with sources. As soon as it is clear, it says how First Draft helps:
+  plan and Compile the whole app; plan and Compile the backbone, such as accounts, sessions, and lists, while the
+  core, such as real-time sensor advice, is built separately in native Swift or Kotlin; plan only, when you will
+  build in another stack; or not at all, as for a first-person shooter, where it names a game engine and offers
+  First Draft later for accounts, leaderboards, or a website. An app of records and people, such as a family photo
+  feed, gets no talk about fit and starts the interview as before. `implementation-notes.md` and the read-back keep three lists: what First
+  Draft builds, what is built otherwise, and feasibility findings and open questions. The Skill's description now
+  starts from your goal, so it triggers when you ask for help making or planning an app or game.
+
 ## 2026-10-03: An interview that asks your level first
 
 **Skills — released in plugin 0.8.3.** The Skill's interview now follows one order. The agent clarifies your idea,
