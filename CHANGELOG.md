@@ -29,6 +29,32 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-04: Photos, counts, Field types, and signed-in phone apps
+
+**Skills — released in plugin 0.8.4.** The Skill now describes what the current Compiler generates, so the agent
+authors these features and stops reporting them as gaps. Earlier versions said each was skipped or unsupported.
+
+- **Photos and files.** `image` and `attachment` Fields generate Active Storage uploads stored on Cloudinary. Set
+  `CLOUDINARY_URL` in `.env.development.local` and in Render; setup works without it, and the first upload names
+  it. Model several photos as a child record with one image each. A required upload on the Account gets no sign-up
+  file input yet.
+- **Counts.** `counter` Fields generate with Rails `counter_cache` and show on list and details pages. Count the
+  direct Association, such as `follower_links` rather than `followers`; indirect, filtered, and polymorphic counts
+  remain gaps.
+- **Phone apps with Accounts.** iPhone and Android apps show the same lists as the web app, protected ones and the
+  Account tab included. People sign in through the web pages inside the app and stay signed in after a restart, so
+  a private app no longer needs a public page for its phone apps.
+- **More Field types.** Optional enums generate. `money`, `position`, `secure_token`, and `json` Fields generate
+  ordinary Rails storage and inputs with a partial gap for their missing behavior, and two `date` or `datetime`
+  Fields on one record can be compared, such as a check-out after its check-in.
+- **Defaults.** Literal defaults on boolean, number, and text Fields, and today's date on a required date Field, are
+  realized instead of reported as gaps.
+
+The sign-up description now also matches the Compiler deployed with plugin 0.8.3: every required Account Field the
+app does not fill gets a sign-up control, and sign-up meaning the Compiler cannot generate becomes a partial gap
+instead of leaving the Account out. Existing apps keep what they generated; add a newly supported feature there in
+ordinary Rails.
+
 ## 2026-10-03: An interview that asks your level first
 
 **Skills — released in plugin 0.8.3.** The Skill's interview now follows one order. The agent clarifies your idea,
