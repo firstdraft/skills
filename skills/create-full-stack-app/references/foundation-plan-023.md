@@ -396,7 +396,7 @@ one target release into machine syntax.
 | Property | Schema and import meaning | Current review rule |
 | --- | --- | --- |
 | `required` | Mandatory Boolean; write `true` or `false`. Retained on admitted Fields. | A realized required Field emits target nullability and validation; an ungenerated Field remains a Field gap. |
-| `default` | Closed tagged Value where the Field variant permits it. Retained structurally. | Lowering is Field- and value-specific; the exact current-time and admitted-required-enum cases are documented target slices. |
+| `default` | Closed tagged Value where the Field variant permits it. Retained structurally. | Realized for compatible boolean, number, and text literals, required-date `current_date`, required-datetime `current_time`, and in-domain enum keys; see [Defaults](#defaults). |
 | `notes` | Optional nonempty string on Fields only. Retained as review context. | Emits no application behavior. |
 | `immutable` | Optional Boolean; omission means `false`. Retained. | Realized for admitted emitted scalar and required-enum Fields; otherwise the owning Field or modifier remains a gap. |
 | `comparison` | `case_insensitive` on `short_text` only. Retained. | Lowering and downstream query use are profile-dependent; inspect the matching GapSet. |
@@ -448,6 +448,17 @@ representation, while the exact submitted bytes remain in the Project Head.
 This retention is structural, not default analysis. It does not prove literal compatibility with the Field,
 enum membership, readable-locator resolution, nullability, normalization behavior, or Compiler lowering. Preserve
 the intended default when reporting any later semantic gap.
+
+The current target realizes a compatible literal default on an emitted `boolean`, `integer`, `decimal`,
+`short_text`, or `long_text` Field as an ordinary column default, such as
+`t.boolean "finished", default: false, null: false`. A new record starts with it, and an explicit value wins,
+including `false`, `0`, or nil on an optional Field. An integer default must fit PostgreSQL `integer`, and the schema
+writes a decimal default such as `"10"` as `"10.0"`. A text literal that the Field's own normalizations would change
+stays a gap, because a column default bypasses normalization. `current_date` on a required `date` Field and
+`current_time` on a required `datetime` Field set the value when Rails builds the record, with no database default.
+Enum keys follow the [enum rule](#enums). A null literal, literals on other Field kinds, and optional environment
+defaults remain `foundation_plan.gap.field_modifier.default` records. A required Field with a realized default needs
+no form or sign-up input.
 
 ### References and Associations
 
