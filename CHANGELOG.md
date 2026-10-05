@@ -29,6 +29,16 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-05: A Render workspace per app
+
+**Skills — released in plugin 0.8.5.** The After Compile checklist now has you create a separate Render workspace
+for each app before its first deploy. Render grants each workspace
+[750 free instance hours](https://render.com/docs/free) a month and suspends every free web service in the workspace
+when they run out, so apps that share one can take each other offline. A Hobby workspace has no monthly fee and
+includes two custom domains. The Render CLI cannot create a workspace: create it in the Render dashboard, then
+select it with `render workspace set <id> --confirm`. If Render cannot see the repository, connect GitHub for that
+workspace. Earlier versions did not mention workspaces.
+
 ## 2026-10-04: First Draft as one tool for your app
 
 **Skills — released in plugin 0.8.4.** The Skill treats First Draft as one tool for your app instead of assuming it
