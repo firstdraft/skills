@@ -29,6 +29,15 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-05: When Render's Hobby workspaces run out
+
+**Skills — released in plugin 0.8.6.** Render allows [five Hobby workspaces](https://render.com/docs/team-members)
+per account. At that limit, the dashboard's New workspace form shows Hobby as "Limit reached" and preselects the paid
+Pro plan, so the per-app workspace step from plugin 0.8.5 could lead to a monthly charge. The After Compile checklist
+now says never to choose Pro or any paid plan there. Deploy into an existing workspace instead, preferably the one
+with the fewest free web services; the app then shares that workspace's 750 free instance hours with the apps already
+in it. Plugin 0.8.5 did not mention the limit.
+
 ## 2026-10-05: A Render workspace per app
 
 **Skills — released in plugin 0.8.5.** The After Compile checklist now has you create a separate Render workspace

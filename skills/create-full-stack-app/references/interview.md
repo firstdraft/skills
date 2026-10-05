@@ -193,7 +193,11 @@ apply under `## After Compile` in `implementation-notes.md`, so the agent that c
 - [ ] Deploy: before the first deploy, the user creates a separate Render workspace for this app in the Render
       dashboard, because each workspace gets [750 free instance hours](https://render.com/docs/free) a month and
       running out suspends every free web service in it. A Hobby workspace has no monthly fee and includes two
-      custom domains. The Render CLI cannot create a workspace; select it with `render workspace set <id> --confirm`.
+      custom domains. Render allows [five Hobby workspaces](https://render.com/docs/team-members) per account. If
+      the New workspace form shows Hobby as "Limit reached" and offers Pro, never choose Pro or any paid plan.
+      Deploy into an existing workspace instead, preferably the one with the fewest free web services, and tell
+      the user the app shares that workspace's 750 free instance hours.
+      The Render CLI cannot create a workspace; select it with `render workspace set <id> --confirm`.
       If Render cannot see the repository, connect GitHub for that workspace. Then follow `DEPLOY.md`, using its
       "Deploy from the command line" section for the Neon and Render CLIs. The free plan sleeps when idle.
 - [ ] Phone preview (apps with iPhone or Android): preview in Revyl with the
