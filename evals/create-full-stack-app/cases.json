@@ -150,6 +150,7 @@
         "Models Like as its own Entity with required immutable References to Recipe and to the Account Entity, plus one-like-per-member uniqueness over both References.",
         "Gives Like's scaffold.create no inputs, binds its Account Reference to current_account, and authorizes it with a Like Policy or the signed-in gate.",
         "Selects destroy in Like's resource_routes, authorized by a Like Policy that allows only when its Account Reference equals current_account.",
+        "Sets Like's destroy.return_to to the Recipe show route with record from mutation_record through Like's Recipe Association, so Unlike stays on the Recipe page.",
         "Adds create_form {} to the displayed likes Association on the Recipe details page and leaves new and create out of Like's resource_routes.",
         "Models each cooking as its own no-input record created from the Recipe page, with no uniqueness rule over Recipe and the member and no destroy, so a member can record the same recipe more than once.",
         "Says plainly in the read-back \"one tap to like, one tap to unlike\" and that each Cooked it tap adds another record.",
