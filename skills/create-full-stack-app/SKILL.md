@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.8.4, CLI 0.8.1, API 0.7, Plan 0.23; catalog selection is separate.
+Targets plugin 0.8.4, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
@@ -79,13 +79,13 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.8.1` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.8.2` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Contract tests own separate stdout and stderr assertions for leaf
 commands; do not repeat them in a startup shell loop. The compatible CLI supplies these public commands:
 
 - `generate uuid` and `generate application-key`;
-- `plan init`, `plan push`, `plan status`, and `plan compile` (local `--output .` by default), optional `--output <path>`, or explicit `--github`; and
-- `compilation status` and `compilation download`; and
+- `plan init`, `plan push`, `plan status`, and `plan compile` (local `--output .` by default), optional `--output <path>`, or explicit `--github`;
+- `compilation status`, `compilation download`, and `compilation cancel`; and
 - `login` and `logout`, which only the user runs.
 
 There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.
@@ -260,9 +260,9 @@ never applies to an ambiguous push or direct start.
 
 ## Inspect or download the retained Compilation
 
-`--github` success prints only the repository URL. Use retained commands only with an exact ID
-supplied by the user or a validated structured projection; never recover one from private state or unvalidated
-output.
+`--github` success prints only the repository URL. Use retained commands only with an exact ID from the user, a
+validated structured projection, or the UUIDv7 in a `compilation_active` `response.detail`; never recover one from
+private state or unvalidated output.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -270,8 +270,8 @@ firstdraft_cli compilation status <compilation-id>
 firstdraft_cli compilation status <compilation-id> --wait
 ```
 
-Status is read-only. Without `--wait` it reads once; with it, it follows the same retained Compilation for up to
-ten minutes. Branch on `compilation.status`; `failed` and `cancelled` are successfully read terminal states.
+Status is read-only; `--wait` follows it for up to ten minutes. Branch on `compilation.status`; `failed` and
+`cancelled` are successful terminal reads.
 
 For local source, choose an absent destination beneath an existing real directory or explicitly selected
 current-root adoption, then read
