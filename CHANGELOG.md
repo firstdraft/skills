@@ -44,6 +44,15 @@ starts the interview as before. `implementation-notes.md` and the read-back keep
 builds, what is built otherwise, and feasibility findings and open questions. The Skill's description now starts
 from your goal, so it triggers when you ask for help making or planning an app or game.
 
+## 2026-10-04: Cancel a stuck Compilation
+
+**Skills — released in plugin 0.8.4 with CLI 0.8.2.** The plugin bundles CLI 0.8.2, which adds
+`firstdraft compilation cancel <compilation-id>`. When `plan push` or `plan compile` fails with First Draft's
+`409 compilation_active` problem because an earlier Compilation never finished, the agent checks that Compilation with
+`compilation status <id> --wait`, cancels it if it is still queued or running, and runs the command again. Before,
+only an operator could clear it. Cancelling a Compilation that `plan compile --github` started also cancels that
+Project's Publication, so the agent asks first.
+
 ## 2026-10-04: Photos, counts, Field types, and signed-in phone apps
 
 **Skills — released in plugin 0.8.4.** The Skill now describes what the current Compiler generates, so the agent
