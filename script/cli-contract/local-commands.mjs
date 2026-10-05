@@ -43,7 +43,7 @@ export async function verifyLocalCommands(context) {
     context.temporaryDirectory,
   );
   assert.equal(rootHelp.status, 0);
-  assert.match(rootHelp.stdout, /compilation\s+Inspect and download Compilations/);
+  assert.match(rootHelp.stdout, /compilation\s+Inspect, download, and cancel Compilations/);
   assert.match(rootHelp.stdout, /generate\s+Generate local values/);
   assert.match(rootHelp.stdout, /login\s+Log in to First Draft and save a token/);
   assert.match(rootHelp.stdout, /logout\s+Revoke and remove the saved token/);
@@ -68,6 +68,7 @@ export async function verifyLocalCommands(context) {
   assert.equal(compilationHelp.status, 0);
   assert.match(compilationHelp.stdout, /^  status\s/m);
   assert.match(compilationHelp.stdout, /^  download\s/m);
+  assert.match(compilationHelp.stdout, /^  cancel\s/m);
 
   const compileHelp = await invokeRunner(
     context.runCli,

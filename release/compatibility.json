@@ -4,7 +4,7 @@
   "version": "0.8.4",
   "plugin_source": {
     "package": "@firstdraft.com/claude-code",
-    "tarball_sha256": "7ebc1b593dbbb10e0edaf54fa64fcb78fba60fae6b7d3defaf9b9fd09e2b0b40"
+    "tarball_sha256": "7f9ab91eaed4d7b5fe44a867ce3a82aef2b9be352abdd260191daede55ac52d2"
   },
   "requires": {
     "api_contract": [
@@ -12,7 +12,7 @@
       "< 0.8.0"
     ],
     "cli": [
-      "= 0.8.1"
+      "= 0.8.2"
     ],
     "foundation_plan_formats": [
       "firstdraft.foundation-plan.sketch/0.23"

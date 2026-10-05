@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.8.4, CLI 0.8.1, API 0.7, Plan 0.23; catalog selection is separate.
+Targets plugin 0.8.4, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
@@ -80,13 +80,13 @@ firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.8.1` output line and no other output, and top-level help that
+Require the version probe to succeed with one exact `0.8.2` output line and no other output, and top-level help that
 lists `generate`, `plan`, and `compilation`. Contract tests own separate stdout and stderr assertions for leaf
 commands; do not repeat them in a startup shell loop. The compatible CLI supplies these public commands:
 
 - `generate uuid` and `generate application-key`;
 - `plan init`, `plan push`, `plan status`, and `plan compile` (local `--output .` by default), optional `--output <path>`, or explicit `--github`; and
-- `compilation status` and `compilation download`; and
+- `compilation status`, `compilation download`, and `compilation cancel`; and
 - `login` and `logout`, which only the user runs.
 
 There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.

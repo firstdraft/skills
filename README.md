@@ -64,7 +64,7 @@ Start a new Codex conversation after installation. Use `$firstdraft:create-full-
 there is no separate CLI version to choose.
 
 A plugin install does not sign you into First Draft. Log in once per environment from any terminal with
-`npx --yes @firstdraft.com/cli@0.8.1 login` (add `--staging` for staging). The login is saved in your user
+`npx --yes @firstdraft.com/cli@0.8.2 login` (add `--staging` for staging). The login is saved in your user
 configuration directory, so Claude Code, Codex CLI, and desktop sessions all use it without exported variables. If
 authentication interrupts an already requested operation, log in and tell the same conversation to continue. Approve the specific CLI command when
 Codex requests network access; its tool permission is separate from approval of the Plan and Compile mode.

@@ -92,8 +92,8 @@ at this plugin's protected release tag, as contract provenance rather than relea
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
 `plan compile --output`, `compilation status`,
-`compilation download`, and the user-run `login` and `logout`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-`@firstdraft.com/cli@0.8.1` package. Direct output accepts the ordinary absent destination and, on POSIX,
+`compilation download`, `compilation cancel`, and the user-run `login` and `logout`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
+`@firstdraft.com/cli@0.8.2` package. Direct output accepts the ordinary absent destination and, on POSIX,
 current-root adoption by default or with `--output .`; the recovery reference owns its preconditions. Check commands
 rather than inferring compatibility from a version number. These source checks do not prove plugin/catalog
 publication, authentication, staging compatibility, or a complete user journey.

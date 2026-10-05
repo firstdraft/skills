@@ -8,7 +8,7 @@ JSON object. An unrecognized prefixed line, a progress line after the envelope, 
 interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
 human-readable `detail` or broad process exit status.
 
-This plugin bundles `@firstdraft.com/cli@0.8.1`. Its exact reviewed revision and runtime digest are owned by
+This plugin bundles `@firstdraft.com/cli@0.8.2`. Its exact reviewed revision and runtime digest are owned by
 [the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.4/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
@@ -23,6 +23,7 @@ staging compatibility, or a complete user journey.
 - [Retained Compilation download](#retained-compilation-download)
 - [Stable error families](#stable-error-families)
 - [Ambiguous mutations](#ambiguous-mutations)
+- [Stuck Compilation recovery](#stuck-compilation-recovery)
 - [Diagnostic shape](#diagnostic-shape)
 - [Concurrent replacement](#concurrent-replacement)
 
@@ -41,7 +42,7 @@ Plans resumed without the flag.
 Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
 or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the token `firstdraft login` saved for that
 origin. The CLI never sends one environment's credential to another. The usual setup is one login per environment,
-which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.8.1 login`, with `--staging` added for
+which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.8.2 login`, with `--staging` added for
 staging, or `firstdraft login` from an installed CLI. It prints a URL to approve in a browser; on a machine without
 one, `--interactive` shows a device code to approve elsewhere. The login is saved outside the project, so every
 session and client on the machine shares it.
@@ -217,7 +218,8 @@ Progress contains only the analysis and Compilation messages from the stable tab
 creates no Publication or repository; report later GitHub publication or pushes separately. A direct wait timeout
 does not cancel retained work. When its validated `current` projection supplies the exact Compilation ID, use
 read-only `compilation status <id> --wait` and, after terminal success,
-`compilation download <id> --output <still-absent-directory>` rather than starting another Compilation.
+`compilation download <id> --output <still-absent-directory>` rather than starting another Compilation. If it stays
+`queued` or `running` after that wait, follow [stuck Compilation recovery](#stuck-compilation-recovery).
 
 An ambiguous direct start is not replayable: `request_outcome_unknown` with `phase: "compilation"` means one
 Compilation may exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and selected
@@ -504,11 +506,11 @@ bytes and private state; create replacement work only within the user's authoriz
 | --- | --- | --- |
 | Any leaf command | `invalid_arguments` | Syntax failed before the requested action. Read that command's help. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `authentication_required` | Ask the user to run `login` for that environment, or set its token, outside the conversation. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
-| `plan status`, `plan compile`, `compilation status`, `compilation download` | `project_not_pushed` | No accepted Project/origin is pinned locally. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
-| `plan push`, `plan compile` | `server_rejected` | Inspect the validated status, bounded response, and diagnostics. |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | Ask the user to run `login` for that environment, or set its token, outside the conversation. |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
+| `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `project_not_pushed` | No accepted Project/origin is pinned locally. |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
+| `plan push`, `plan compile` | `server_rejected` | Inspect the validated status, bounded response, and diagnostics. A `compilation_active` problem starts [stuck Compilation recovery](#stuck-compilation-recovery). |
 | `plan push`, `plan compile` | `local_state_not_saved` | The Plan was accepted but private ETag state was not saved. |
 | `plan push`, `plan compile` | `request_outcome_unknown` | A mutation or its response was not fully verified. See phase rules below. |
 | `plan status` | `status_unavailable`, `invalid_server_response`, `server_rejected` | The analysis read failed transport or protocol validation, or received a bounded rejection. |
@@ -517,7 +519,7 @@ bytes and private state; create replacement work only within the user's authoriz
 | `plan compile` | `analysis_status_unavailable`, `invalid_analysis_status`, `analysis_status_rejected` | Compile's analysis read failed or was rejected. |
 | `plan compile` | `plan_not_valid` | The accepted graph did not reach `valid`; inspect `current`. |
 | `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before the selected mutation. |
-| local `plan compile` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | Direct Compilation start or status did not complete its validated contract. Do not infer Publication. |
+| local `plan compile` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | Direct Compilation start or status did not complete its validated contract. Do not infer Publication. A `compilation_active` start rejection starts [stuck Compilation recovery](#stuck-compilation-recovery). |
 | local `plan compile` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned direct Compilation changed, remained nonterminal, or reached a non-success terminal state. |
 | local `plan compile` | `invalid_output_path` | Preflight makes no request; an absent-path post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve owner material and correct only the reported root precondition or choose an absent path. |
 | local `plan compile`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `materialization_failed` | No verified local tree was installed. |
@@ -532,6 +534,7 @@ bytes and private state; create replacement work only within the user's authoriz
 | `compilation download` | `artifact_unavailable`, `invalid_artifact` | Artifact transport, provenance, Plan/profile compatibility, or integrity failed before installation. An older artifact cannot be upgraded by retry. |
 | `compilation download` | `invalid_output_path` | No network request was made; correct only a reported root precondition or choose another absent path. |
 | `compilation download` | `materialization_failed` | The verified tree could not be atomically installed. |
+| `compilation cancel` | `compilation_cancel_rejected`, `compilation_cancel_unavailable`, `invalid_compilation_status` | Nothing was cancelled, the outcome is unconfirmed, or the response broke its contract; see [stuck Compilation recovery](#stuck-compilation-recovery). |
 
 ## Ambiguous mutations
 
@@ -591,6 +594,36 @@ Unknown, absent, malformed, or additional output after removing only recognized 
 not a trusted recovery envelope. Preserve local state and avoid guessing whether a mutation happened. An HTTP status
 by itself does not prove that an account lacks provisioning or that an endpoint does not exist, and it is not a
 basis for a support recommendation.
+
+## Stuck Compilation recovery
+
+A Project allows one active Compilation. While one is `queued` or `running`, `plan push` and `plan compile` fail with
+`server_rejected`, and a direct start can fail with `compilation_start_rejected`. Either carries First Draft's `409`
+problem with `response.code: "compilation_active"`, and its validated `response.detail` names the active
+Compilation's UUID; use that exact UUID. A Compilation usually finishes in under a minute, so when this error follows
+a Compile that has been stuck for minutes:
+
+1. Run `compilation status <id> --wait`. If the Compilation reaches `succeeded`, `failed`, or `cancelled`, it no
+   longer blocks; rerun the command that failed.
+2. If the wait ends with `compilation_wait_timed_out` while it is still `queued` or `running`, run
+   `compilation cancel <id>`. Cancelling throws away any work it is still doing. Success prints the cancelled
+   Compilation in the `compilation status` shape.
+3. After the cancel succeeds, rerun the command that failed once.
+
+Cancelling a Compilation that `plan compile --github` started also cancels the Project's Publication, and that
+singleton cannot start again for the Project, so ask the user before cancelling one. `compilation cancel` never
+changes a succeeded or failed Compilation, and repeating it is safe:
+
+- `compilation_cancel_rejected` means nothing was cancelled; `response.code` says why. `compilation_not_cancellable`
+  means the Compilation already succeeded or failed and no longer blocks. `compilation_not_found` or
+  `project_not_found` means this Project and account have no such Compilation; check the ID, directory,
+  environment, and login.
+- `compilation_cancel_unavailable` left the outcome unconfirmed; rerun `compilation cancel` or read
+  `compilation status`.
+- `invalid_compilation_status` means the response broke the Compilation contract; read `compilation status` instead
+  of repeating the request.
+
+This recovery applies only to `compilation_active`. It does not change the stop rules for `request_outcome_unknown`.
 
 ## Diagnostic shape
 

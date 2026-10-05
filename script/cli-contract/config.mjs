@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "2f4bc93f996ba2e0a63c9f39df6cf1a8b9c91dac";
+export const cliRevision = "4c68064f4bdd293bc5cf5ad5f832488b110ec460";
 export const cliRuntimeSha256 =
-  "46cb062f67a00b49fa8edbe35b8c2f08034fb45a0710e6702a94c4c4cdb66cfc";
+  "c24ff5ef154ac89b60c6c7a0cca63217a00af746704c9c9e6824ff3458888672";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.8.1";
+export const cliPackageVersion = "0.8.2";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
