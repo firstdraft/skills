@@ -29,22 +29,51 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
-## Pending for 0.8.4
+## 2026-10-04: First Draft as one tool for your app
 
-This section is not a dated entry. The plugin 0.8.4 release moves it into that release's dated entry.
+**Skills — released in plugin 0.8.4.** The Skill treats First Draft as one tool for your app instead of assuming it
+can build whatever you describe. Before the interview the agent takes a quick look at how others build similar apps
+and uses what it finds to choose better questions and defaults. When feasibility is in question, such as phone
+sensors, outside data, store rules, or real-time behavior, it researches thoroughly whether the idea is possible and
+tells you what it found with sources. As soon as it is clear, it says how First Draft helps: plan and Compile the
+whole app; plan and Compile the backbone, such as accounts, sessions, and lists, while the core, such as real-time
+sensor advice, is built separately in native Swift or Kotlin; plan only, when you will build in another stack; or not
+at all, as for a first-person shooter, where it names a game engine and offers First Draft later for accounts,
+leaderboards, or a website. An app of records and people, such as a family photo feed, gets no talk about fit and
+starts the interview as before. `implementation-notes.md` and the read-back keep three lists: what First Draft
+builds, what is built otherwise, and feasibility findings and open questions. The Skill's description now starts
+from your goal, so it triggers when you ask for help making or planning an app or game.
 
-- The Skill treats First Draft as one tool for your app instead of assuming it can build whatever you describe.
-  Before the interview the agent takes a quick look at how others build similar apps and uses what it finds to
-  choose better questions and defaults. When feasibility is in question, such as phone sensors, outside data,
-  store rules, or real-time behavior, it researches thoroughly whether the idea is possible and tells you what it
-  found with sources. As soon as it is clear, it says how First Draft helps:
-  plan and Compile the whole app; plan and Compile the backbone, such as accounts, sessions, and lists, while the
-  core, such as real-time sensor advice, is built separately in native Swift or Kotlin; plan only, when you will
-  build in another stack; or not at all, as for a first-person shooter, where it names a game engine and offers
-  First Draft later for accounts, leaderboards, or a website. An app of records and people, such as a family photo
-  feed, gets no talk about fit and starts the interview as before. `implementation-notes.md` and the read-back keep three lists: what First
-  Draft builds, what is built otherwise, and feasibility findings and open questions. The Skill's description now
-  starts from your goal, so it triggers when you ask for help making or planning an app or game.
+## 2026-10-04: Photos, counts, Field types, and signed-in phone apps
+
+**Skills — released in plugin 0.8.4.** The Skill now describes what the current Compiler generates, so the agent
+authors these features and stops reporting them as gaps. Earlier versions said each was skipped or unsupported.
+
+- **Photos and files.** `image` and `attachment` Fields generate Active Storage uploads stored on Cloudinary. Set
+  `CLOUDINARY_URL` in `.env.development.local` and in Render; setup works without it, and the first upload names
+  it. Model several photos as a child record with one image each. A required upload on the Account gets no sign-up
+  file input yet.
+- **Counts.** `counter` Fields generate with Rails `counter_cache` and show on list and details pages. Count the
+  direct Association, such as `follower_links` rather than `followers`; indirect, filtered, and polymorphic counts
+  remain gaps.
+- **Phone apps with Accounts.** iPhone and Android apps show the same lists as the web app, protected ones and the
+  Account tab included. People sign in through the web pages inside the app and stay signed in after a restart, so
+  a private app no longer needs a public page for its phone apps.
+- **More Field types.** Optional enums generate. `money`, `position`, `secure_token`, and `json` Fields generate
+  ordinary Rails storage and inputs with a partial gap for their missing behavior, and two `date` or `datetime`
+  Fields on one record can be compared, such as a check-out after its check-in. A required JSON Field on the Account
+  gets no sign-up control yet.
+- **Defaults.** Literal defaults on boolean, number, and text Fields, and today's date on a required date Field, are
+  realized instead of reported as gaps.
+- **One-tap records.** A like, follow, or RSVP is a one-tap button on the parent page instead of a separate Create
+  page. With a uniqueness rule and an owner-authorized delete it becomes a toggle, and the Like example authors
+  `destroy.return_to` through the parent so Unlike stays on that page. A guest who opens a protected page is sent to
+  sign in and returns there afterwards.
+
+The sign-up description now also matches the Compiler deployed with plugin 0.8.3: every required Account Field the
+app does not fill gets a sign-up control, and sign-up meaning the Compiler cannot generate becomes a partial gap
+instead of leaving the Account out. Existing apps keep what they generated; add a newly supported feature there in
+ordinary Rails.
 
 ## 2026-10-03: An interview that asks your level first
 
