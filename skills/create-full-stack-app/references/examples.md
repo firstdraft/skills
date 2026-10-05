@@ -563,7 +563,8 @@ GapSet consequences.
 
 ## Signed-in gate and one-tap records
 
-These fragments come from a private family social network where every page requires sign-in. The Account Entity
+These fragments come from a private family social network where every page requires sign-in. A guest who opens
+any page is sent to sign in and, after signing in, returns to the page they asked for. The Account Entity
 `member` already has `read_self` and `update_self` Policies for its profile, like the example above. It adds one gate
 Policy with its own operation; any signed-in member passes because the gate record is the current Account. An Entity
 may have only one Policy per `operation`, so the gate must not also use `read`: two `read` Policies on `member`
@@ -614,74 +615,126 @@ would use `"public"`, since the page's gate already applies.
 }
 ```
 
-This Like fragment is a copy of the example in the Foundation Plan Guide's No-input records section, which defines
-the pattern and what Rails generates for it. A like is made by a tap: the post comes from the page and the member
-from the signed-in Account, so Like's create has a binding and no `inputs`, and Like selects neither `new` nor
-`create`. A member can take a like back, so Like is a toggle. Its uniqueness rule over `like.post` and `like.member`
-allows one like per member per post, and its `destroy` is authorized by `like.manage_own`, which only the like's
-member passes. With both, the post page shows one button that reads Like or Unlike: one tap to like, one tap to
-unlike. Follows, RSVPs, upvotes, and bookmarks are toggles too. A record that may repeat, such as a "mark as read"
-event or a check-in, keeps the no-input create but gets no uniqueness rule or `destroy`; a required time on it uses
-a `current_time` default. Today's deployed Compiler may still show a separate Create page until the one-tap change
-ships.
+This Like fragment is a copy of the example in the public Guide's [No-input records](https://firstdraft.github.io/firstdraft/docs/architecture/design/foundation-plan.html#no-input-records)
+section, which defines the pattern and what Rails generates for it. A like is made by a tap: the post comes from
+the page and the member from the signed-in Account, so Like's create has a binding and no `inputs`, and Like selects
+neither `new` nor `create`. A tap on Like creates the like and returns to the post page. A member can take a like
+back, so Like is a toggle. Its uniqueness rule over `like.post` and `like.member` allows one like per member per
+post, and its `destroy` is authorized by `like.manage_own`, which only the like's member passes. With both, the post
+page shows one button that reads Like or Unlike: one tap to like, one tap to unlike. A toggle also authors
+`destroy.return_to` through the parent Reference, here `like.post`, so Unlike stays on the post page; without it,
+Unlike goes to the ordinary delete destination, such as Home. Follows, RSVPs, upvotes, and bookmarks are toggles
+too. A record that may repeat, such as a "mark as read" event or a check-in, keeps the no-input create but gets no
+uniqueness rule or `destroy`; a required time on it uses a `current_time` default.
 
 ```jsonc
 {
-  "subject_uuid": "019fb300-0000-7000-8000-000000000110",
+  "subject_uuid": "01a10369-3055-7edd-bb07-1d3835cd140b",
   "key": "like",
   "name": "Like",
-  "primary_descriptor": { "association": "like.member" },
+  "primary_descriptor": {
+    "association": "like.member"
+  },
   "references": [
     {
-      "subject_uuid": "019fb300-0000-7000-8000-000000000111",
+      "subject_uuid": "01a10369-3055-7fdf-b8c1-89fa2e048fbe",
       "key": "post",
       "name": "Post",
-      "targets": ["post"],
+      "targets": [
+        "post"
+      ],
       "required": true,
-      "immutable": true,
-      "on_referenced_deleted": "delete_referencing_record"
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
     },
     {
-      "subject_uuid": "019fb300-0000-7000-8000-000000000112",
+      "subject_uuid": "01a10369-3055-77bf-9eb6-72e155679db8",
       "key": "member",
       "name": "Member",
-      "targets": ["member"],
+      "targets": [
+        "member"
+      ],
       "required": true,
-      "immutable": true,
-      "on_referenced_deleted": "delete_referencing_record"
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
     }
   ],
   "validations": [
     {
-      "subject_uuid": "019fb300-0000-7000-8000-000000000113",
+      "subject_uuid": "01a10369-3055-79e4-a51d-1d7ef064798c",
       "key": "once_per_member",
       "kind": "uniqueness",
-      "targets": [{ "reference": "like.post" }, { "reference": "like.member" }],
+      "targets": [
+        {
+          "reference": "like.post"
+        },
+        {
+          "reference": "like.member"
+        }
+      ],
       "nulls": "distinct",
-      "error_target": { "reference": "like.member" }
+      "error_target": {
+        "reference": "like.member"
+      }
     }
   ],
   "policies": [
     {
-      "subject_uuid": "019fb300-0000-7000-8000-000000000114",
+      "subject_uuid": "01a10369-3055-7254-8716-e913cc529b55",
       "key": "manage_own",
       "operation": "manage",
       "allow_when": {
         "kind": "comparison",
-        "left": { "target": { "association": "like.member" } },
+        "left": {
+          "target": {
+            "association": "like.member"
+          }
+        },
         "operator": "equals",
-        "right": { "kind": "environment", "name": "current_account" }
+        "right": {
+          "kind": "environment",
+          "name": "current_account"
+        }
       }
     }
   ],
   "scaffold": {
-    "resource_routes": ["destroy"],
+    "resource_routes": [
+      "destroy"
+    ],
     "create": {
-      "bindings": [{ "reference": "like.member", "value": { "kind": "environment", "name": "current_account" } }],
-      "authorization": { "policy": "like.manage_own" }
+      "bindings": [
+        {
+          "reference": "like.member",
+          "value": {
+            "kind": "environment",
+            "name": "current_account"
+          }
+        }
+      ],
+      "authorization": {
+        "policy": "like.manage_own"
+      }
     },
     "destroy": {
-      "authorization": { "policy": "like.manage_own" }
+      "authorization": {
+        "policy": "like.manage_own"
+      },
+      "return_to": {
+        "kind": "resource",
+        "entity": "post",
+        "route": "show",
+        "record": {
+          "from": "mutation_record",
+          "through": [
+            {
+              "association": "like.post"
+            }
+          ]
+        }
+      }
     }
   }
 }
