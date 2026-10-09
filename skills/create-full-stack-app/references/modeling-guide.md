@@ -307,9 +307,10 @@ Put a Reference on the Entity that stores the relationship fact. Ask:
 - For a closed multi-target Reference, which supported target realization should be used? This is an
   implementation choice; follow the user's level in [meaning and implementation](interview.md#meaning-and-implementation).
 
-Do not author the Reference's same-key forward Association. Add a referenced-side Association when the target
-needs a meaningful reverse traversal. Add an indirect Association only when the composed traversal itself has a
-stable product name or behavior.
+Do not author the Reference's same-key forward Association. A referenced-side Association adds the reverse
+`has_many` or `has_one` on the target. An indirect Association composes two Associations: a team's `members` through
+its [memberships](foundation-plan-023.md#groups-and-memberships), with source `membership.user`, emits
+`has_many :members, -> { distinct }, through: :memberships, source: :user`, and a team's show page can list them.
 
 The current Compiler emits a bounded single-target Reference slice with Boolean `required`, `one_to_one`, and
 `immutable`, plus its derived forward traversal and supported direct inverses. The supported catalog also includes

@@ -43,6 +43,19 @@ a standalone create that cannot supply its required parent, and a New page whose
 Movie example now says that anyone can change its Movies without signing in, so agents confirm that exposure with the
 user or bind Policies. Requests the Compiler cannot realize still stay in the Plan.
 
+The Plan reference now models people who belong to a group, such as a team, shop, or household, as membership.
+Sign-up creates only the Account, whoever creates a group owns it through a `current_account` create binding, and
+the owner adds members through a membership Entity with a role. The reference used to accept a required Reference
+from the Account Entity to the group and told agents to add its sign-up control in Rails after Compile. Sign-up
+cannot supply that Reference, so every sign-up failed, and a public group picker would let anyone join any group.
+The new Groups and memberships section gives the Entities, Associations, and a read Policy that admits the group's
+owner or a member. The Compiler does not generate that `or` Policy yet, so it lists the group's index and show pages
+as not generated. It also lists the owner's form for adding members, because no authorization decides which Accounts
+that form may offer. Invitations are not in the format yet, so a person signs up before an owner can add them. This
+applies to a Plan whose Account Entity requires a Reference to a group. The Association guidance also shows the Rails
+lines that referenced-side and indirect Associations emit, where it used to say to author them only when they carry
+product meaning.
+
 ## 2026-10-05: Remembered sign-ins
 
 **Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
