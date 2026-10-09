@@ -36,6 +36,7 @@ and inspect only that definition. Use server diagnostics for the exact bytes sub
   - [Validations](#validations)
   - [Predicates](#predicates)
   - [Accounts and Policies](#accounts-and-policies)
+    - [Groups and memberships](#groups-and-memberships)
   - [Scaffolds](#scaffolds)
   - [Unsupported shapes](#unsupported-shapes)
 
@@ -189,8 +190,19 @@ Account behavior, Scaffold, and stable reference data. Application-wide developm
 explicitly because its records can form one connected graph.
 
 A Reference is a stored relationship fact. Its same-key forward Association is derived; do not author that
-inevitable traversal. Author additional referenced-side or indirect Associations only when their names or behavior
-carry product meaning.
+inevitable traversal. A referenced-side Association reverses a Reference. An indirect Association follows its
+`through` Association, then a `source` Association from each of those records. With the `membership` Entity in
+[groups and memberships](#groups-and-memberships), authoring `team.memberships` over `membership.team` and
+`team.members` with `"through": "team.memberships"` and `"source": "membership.user"` adds these lines to `Team`:
+
+```ruby
+has_many :memberships, dependent: :delete_all
+has_many :members, -> { distinct }, through: :memberships, source: :user
+```
+
+A team's show page can project either collection as a list. `dependent: :delete_all` carries the deletion outcome
+of `membership.team`. The Compiler writes `source:` only when Rails cannot infer it from the name, so an indirect
+Association named `users` emits `has_many :users, -> { distinct }, through: :memberships`.
 
 Every structured subject requests generation. Keep unsupported application-specific work with the user's agent;
 do not create Continuation prose, custom-code fields, selected-Capability lists, prerequisite lists, or a separate
@@ -604,8 +616,18 @@ sign-up controls. A registration input's own `default` applies only to `short_te
 
 Missing sign-up meaning never omits the Account. An Association input, an optional input, an input for a derived or
 unstored Field, a registration default on another kind, or a required Reference on the Account Entity becomes a
-`foundation_plan.gap.account.partially_generated` record. A required Reference also blocks sign-up, because the model
-rejects an Account without it; the owner adds its control or default in Rails after Compile.
+`foundation_plan.gap.account.partially_generated` record.
+
+With self-service registration, sign-up must be able to supply each required Reference on the Account Entity,
+because the model rejects an Account without it. A default on the Reference or on its registration input supplies
+one. So does a required registration input over its Association when signed-out visitors may read the target's
+records, such as a public list of countries or languages. Without either, no sign-up can succeed, so do not author
+that Reference; this format does not reject it. When the target is a group the person belongs to, such as a shop or
+team, use [groups and memberships](#groups-and-memberships) instead. The Compiler generates none of these sources
+yet. With a registration input or with no source, it generates the Reference with the partial gap above, so every
+sign-up fails until its control or default is added in Rails after Compile. A default on the Reference itself
+instead leaves the whole Reference out with a `foundation_plan.gap.reference.not_generated` record, so its column
+and relationship are Rails work after Compile.
 
 Omit `verification` by default, so sign-up signs the person in. Author `"verification": {"kind": "email"}` only when
 the user asks people to confirm their email; they then open an emailed link before they can sign in. Keep an existing
@@ -642,6 +664,121 @@ Credential changes use Rodauth: **Change email** verifies the new address before
 
 Selected iPhone and Android clients include the Account tab and the protected lists the web app shows, served by the
 same Rails pages and Policies; the [native Account flow](#application-and-clients) covers sign-in and sign-out.
+
+#### Groups and memberships
+
+When people belong to a group, such as a team, shop, or household, model the group as its own Entity and join it to
+the Account through a membership Entity with a `role` enum. Sign-up creates only the Account, so the Account Entity
+has no Reference to the group. Do not make groups public so sign-up can offer them: anyone could then join any group.
+The group owns a required `owner` Reference to the Account, and the group's create binds it to `current_account`, so
+whoever creates a group owns it. The owner adds members by creating memberships under a Policy the owner passes.
+Without a User show or index authorization that decides which Accounts the form's `user` input may offer, the GapSet
+lists that form as not generated; letting every signed-in person read every User would show each group owner every
+Account. The group's `memberships` and indirect `members` emit the `Team` lines in [ownership](#ownership). A
+uniqueness Validation over `membership.team` and `membership.user`, with its error on `user`, emits
+`validates :user, uniqueness: {scope: :team_id}`, so a person joins a team once.
+
+This `membership` Entity joins a `user` Account to a `team`:
+
+```jsonc
+{
+  "subject_uuid": "01a122a0-1b63-7edc-a656-727bc918af2f",
+  "key": "membership",
+  "name": "Membership",
+  "primary_descriptor": { "association": "membership.user" },
+  "fields": [
+    {
+      "subject_uuid": "01a122a0-1b64-7a9b-9f7b-cbac1dc39c93",
+      "key": "role",
+      "name": "Role",
+      "type": "enum",
+      "required": true,
+      "settings": {
+        "values": [
+          { "subject_uuid": "01a122a0-1b64-731e-9007-f0fbeebe7740", "key": "member", "name": "Member" },
+          { "subject_uuid": "01a122a0-1b64-74a0-8a46-ffdff31a4af7", "key": "admin", "name": "Admin" }
+        ]
+      }
+    }
+  ],
+  "references": [
+    {
+      "subject_uuid": "01a122a0-1b64-7760-a627-681fc4e32902",
+      "key": "team", "name": "Team", "targets": ["team"], "required": true, "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record", "immutable": true
+    },
+    {
+      "subject_uuid": "01a122a0-1b64-73bb-a323-a919e9492700",
+      "key": "user", "name": "User", "targets": ["user"], "required": true, "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record", "immutable": true
+    }
+  ]
+}
+```
+
+Each `delete_referencing_record` outcome needs a referenced-side Association to carry it; without one, the GapSet
+lists the outcome as not generated. `team.memberships` carries `membership.team`. For `membership.user` and
+`team.owner`, add these to the Account Entity's `associations`:
+
+```jsonc
+[
+  {
+    "subject_uuid": "01a122a0-1b64-7e83-8185-19206be0da8c",
+    "key": "memberships", "kind": "direct", "name": "Memberships",
+    "reference": "membership.user", "side": "referenced"
+  },
+  {
+    "subject_uuid": "01a122a0-1b64-708c-abc3-e7a843cfe650",
+    "key": "owned_teams", "kind": "direct", "name": "Owned teams",
+    "reference": "team.owner", "side": "referenced"
+  }
+]
+```
+
+They add these lines to `User`; `:destroy` lets each owned team's own `dependent: :delete_all` remove its
+memberships:
+
+```ruby
+has_many :memberships, dependent: :delete_all
+has_many :owned_teams, class_name: "Team", foreign_key: "owner_id", dependent: :destroy
+```
+
+The owner has no membership, so the group's `read` Policy allows its owner or a member. With a members-only Policy,
+creating a team redirects its owner to a team page that returns 404. Add this Policy to the `team` Entity and bind
+the team's `index` and `show` authorization to `{ "policy": "team.owner_or_member" }`, so each person lists and opens
+the teams they own or belong to:
+
+```jsonc
+{
+  "subject_uuid": "01a122a0-1b64-7f3a-9c2e-5d8b41a7e6c3",
+  "key": "owner_or_member", "operation": "read",
+  "allow_when": {
+    "kind": "or",
+    "expressions": [
+      {
+        "kind": "comparison", "left": { "target": { "association": "team.owner" } },
+        "operator": "equals", "right": { "kind": "environment", "name": "current_account" }
+      },
+      {
+        "kind": "exists", "association": "team.members",
+        "where": {
+          "kind": "comparison", "left": { "target": { "record": "current" } },
+          "operator": "equals", "right": { "kind": "environment", "name": "current_account" }
+        }
+      }
+    ]
+  }
+}
+```
+
+The Compiler does not generate `or` Policies yet; generating them is planned. Compiling this today lists
+`team.owner_or_member`, `team.scaffold.index`, and `team.scaffold.show` as not generated, so creating a team returns
+to the home page and nothing links to `/teams/new`. Either half alone generates both pages, but then the members or
+the owner cannot open them.
+
+Invitations are not in the format yet, so a person signs up before a group's owner can add them. Say so in the
+read-back, and keep invitation work in [implementation notes](modeling-guide.md#retain-implementation-requirements)
+when the user wants it.
 
 ### Scaffolds
 
