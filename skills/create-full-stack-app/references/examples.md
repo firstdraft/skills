@@ -215,8 +215,10 @@ combination. Omitted `return_to` sends successful New/Edit to the saved Movie an
 
 Omit `show.projection` for descriptor-only detail. Without destroy, omit its route and definition. Standalone show,
 Policy-controlled authorization, server bindings, Association or recursive projections, and other route subsets are
-assessed from their own structured prerequisites. This fragment demonstrates one public combination; use the current
-Foundation Plan reference and matching GapSet for any other authored consumer instead of generalizing from it.
+assessed from their own structured prerequisites. This fragment demonstrates one public combination, in which anyone
+can add, change, and delete Movies without signing in. Author that only after the user confirms the exposure;
+otherwise bind Policies as in [Web Account and protected profile](#web-account-and-protected-profile). Use the
+current Foundation Plan reference and matching GapSet for any other authored consumer instead of generalizing from it.
 An intentional destination override can still supply `return_to`; ordinary defaults do not need to be repeated.
 
 ## Deliberate return overrides
@@ -588,7 +590,8 @@ Post's Scaffold binds its pages to that gate. Any member may post, and `post.aut
 Account. Owner-only edit and delete would use a Policy on Post itself, such as a `manage` Policy comparing
 `post.author` to `current_account`. The details page shows the post's likes with an associated `create_form` (Post
 owns the referenced-side `likes` Association over `like.post`). A displayed Association nested inside `post.likes`
-would use `"public"`, since the page's gate already applies.
+would use `"public"` when every signed-in member may see its records, since the page's gate already applies; one
+whose records need their own rule binds that Policy instead.
 
 ```jsonc
 {

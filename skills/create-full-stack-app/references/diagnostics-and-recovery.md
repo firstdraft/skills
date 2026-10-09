@@ -9,7 +9,7 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 This plugin bundles `@firstdraft.com/cli@0.8.2`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.7/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.8/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -279,11 +279,13 @@ Adding application features does not require First Draft Capabilities, Plan edit
 ### Application handoff
 
 After verified local materialization, or after opening the successfully published repository, inspect the reviewed
-gaps and replace the short product-description placeholder near the top of `README.md`. Use the agreed product
-decisions, retained Plan, and implementation notes to describe its purpose, intended users, and main workflows.
-Check those claims against the actual emitted source and reviewed gaps. Distinguish the generated starting point
-from behavior still to implement; do not turn Plan subjects into an automatic feature catalogue. Preserve applicable
-setup, run, test, and preview instructions. This step creates no new Plan field or separate description artifact.
+gaps and replace the short product-description placeholder near the top of `README.md`, or add a description below
+its title when there is no placeholder. The placeholder is current output that conflicts with First Draft's
+code-worth-keeping rule. Use the agreed product decisions, retained Plan, and implementation notes to describe its
+purpose, intended users, and main workflows. Check those claims against the actual emitted source and reviewed gaps.
+Distinguish the generated starting point from behavior still to implement; do not turn Plan subjects into an
+automatic feature catalogue. Preserve applicable setup, run, test, and preview instructions. This step creates no
+new Plan field or separate description artifact.
 
 This is ordinary application documentation after Compile. Keep the generated baseline checkpoint reviewable and
 follow the existing Git workflow for later commits and authorized pushes. Preserve optional planning context and

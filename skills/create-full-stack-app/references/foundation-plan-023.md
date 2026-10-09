@@ -87,7 +87,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.7/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.8/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -626,8 +626,11 @@ them. Give each extra decision on an Entity its own operation name. When every p
 gate Policy on the Account Entity with a custom operation such as `use_app`, allowing when the current record equals
 `current_account`, and bind each sign-in-only request and displayed Association to it with
 `"record": {"kind": "environment", "name": "current_account"}`. A displayed Association nested inside another
-displayed Association uses `"public"`: the page's gate still applies, and deeper protected items are not generated.
-The [signed-in gate example](examples.md#signed-in-gate-and-one-tap-records) shows the shape.
+displayed Association uses `"public"` when everyone who passes the page's gate may see its records, because that
+gate still applies. When those records need their own rule, bind that Policy to the nested record instead. A
+Policy on a record one level inside a collection can be generated; a gate binding there, or a protected item any
+deeper, is omitted with a gap. The [signed-in gate example](examples.md#signed-in-gate-and-one-tap-records) shows
+the shape.
 
 Account details show the signup Fields and normalized email by default. Editing permits only mutable, non-derived
 signup Fields; other Account Fields are not exposed automatically. An authored `scaffold.profile` replaces displayed
@@ -667,15 +670,19 @@ public create into an authenticated request.
 
 If an admitted associated form supplies a required parent but the selected standalone create has no source for it,
 the standalone endpoint remains generated with its authored inputs and authorization plus a `partially_generated`
-gap naming the missing value. Preserve working associated creation and record the unfinished standalone behavior
-for implementation; do not invent an editable parent or binding. Unrelated required values still need an admitted
-source, and a selected standalone create with no admitted associated form needs the complete source set.
+gap naming the missing value. No request to that endpoint can succeed, because nothing supplies the parent. That
+output conflicts with First Draft's code-worth-keeping rule and is tracked as a Compiler defect. Preserve working
+associated creation and record the unfinished standalone behavior for implementation; do not invent an editable
+parent or binding. Unrelated required values still need an admitted source, and a selected standalone create with
+no admitted associated form needs the complete source set.
 
 New and Create share the create Policy. New authorizes after URL-parent assignment and explicit bindings, before
 editable values exist; Create authorizes the submitted record. A Policy requiring an editable `token.author` to
-equal `current_account` can allow a valid POST while denying the empty New form and hiding its Add link. A separate
-form-entry Policy is not an FP option. Preserve the editable input and submitted-record authorization, and carry
-the required application form-entry work into [implementation notes](modeling-guide.md#retain-implementation-requirements).
+equal `current_account` can allow a valid POST while denying the empty New form and hiding its Add link. The
+emitted New page then refuses everyone, which conflicts with First Draft's code-worth-keeping rule and is tracked as
+a Compiler defect. A separate form-entry Policy is not an FP option. Preserve the editable input and
+submitted-record authorization, and carry the required application form-entry work into
+[implementation notes](modeling-guide.md#retain-implementation-requirements).
 Qualifying fixtures do not fix that application behavior; add successful New/browser coverage after repairing it.
 
 Omit `return_to` when the conventional interaction is intended: standalone New/Edit returns to the saved record,
@@ -698,13 +705,21 @@ for that context and retain its other inputs and validation errors.
 A [no-input create](modeling-guide.md#add-behavior-deliberately) shows a one-tap button in place of the Add link,
 with no scoped New page.
 Ordinary child edit/update/destroy routes stay flat. Preview rows contain selected properties and an optional
-authorized details link, without inline mutation controls. If no target show route is selected, its flat mutation
-routes can remain unlinked starter code. Do not invent a show route or discard authored properties to fill that gap.
+authorized details link, without inline mutation controls. If no target show route is selected, its selected flat
+mutation routes are still generated, but no generated page links to them. Do not invent a show route or discard
+authored properties to fill that gap.
 
 For behavior claimed as realized, routes, projections, authorization, inputs, and returns follow the authored Plan.
-During pre-alpha, generated Rails may also contain conventional unclaimed scaffold boilerplate; that editable
-starter code is neither authored meaning nor proof that unsupported consequences work. Preserve the Plan and report
-the reviewed gaps instead of changing requiredness, access, or workflows to match incidental output.
+Generated Rails may do less than the Plan asks. The reviewed GapSet lists the authored meaning it does not realize,
+such as a missing validation, input, page, Policy, or display filter; an index whose Predicate cannot be generated
+lists every record its Policies allow. Missing safeguards and app-wide trade-offs, such as upload type and size
+checks or a sign-up request limit, belong in the generated README and `DEPLOY.md`, not the GapSet. First Draft's
+code-worth-keeping rule says the output never does more: the Compiler emits only what the Plan requests or its
+realization forces, never lets anyone do or see records the Plan's Policies deny, and omits with a gap a surface
+whose Policy it cannot generate or that cannot succeed for any input. When it omits a selected show or index, routes
+that only lose their link on that page stay, with their own authorization and reachable by URL, and the omitted
+page's gap names them. This reference notes current output that conflicts with that rule. Preserve the Plan and
+report the reviewed gaps instead of changing requiredness, access, or workflows to match generated output.
 
 Every admitted index, public or protected, becomes a native entry point, with the Account entry last. Detail and
 form pages remain reachable through links. Public New/edit use modal context: iOS sheets and Android's full-screen
