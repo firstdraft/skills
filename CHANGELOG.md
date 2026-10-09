@@ -29,6 +29,20 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-09: Code worth keeping
+
+**Skills — released in plugin 0.8.8.** First Draft now holds generated apps to one
+[standard](https://firstdraft.github.io/firstdraft/docs/product/requirements.html#foundation-quality) (F-9): an app
+may be unfinished, but every emitted line should be one its owner would keep. The Skill's Plan reference used to call
+unused or unguarded starter code an acceptable result of a gap. It now says the Compiler emits only what the Plan
+requests, omits a surface whose Policy it cannot generate or that cannot succeed, and keeps a selected route that
+only loses its link, naming that route in the omitted page's gap. The GapSet lists authored meaning the app does not
+realize; missing safeguards, such as upload type and size checks, belong in the generated README and `DEPLOY.md`.
+The reference also names current output that does not meet the standard yet: the README's description placeholder,
+a standalone create that cannot supply its required parent, and a New page whose Policy refuses everyone. The public
+Movie example now says that anyone can change its Movies without signing in, so agents confirm that exposure with the
+user or bind Policies. Requests the Compiler cannot realize still stay in the Plan.
+
 ## 2026-10-05: Remembered sign-ins
 
 **Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
