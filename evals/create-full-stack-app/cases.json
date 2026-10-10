@@ -289,8 +289,8 @@
       "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and family can comment on updates and on albums. Every page needs sign-in. You asked my level and I said to make the technical decisions for me. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
         "Treats whether one kind of comment can belong to either an update or an album as product meaning: asks it as one product question or states it as an assumption the user can correct, rather than treating the technical level as settling it.",
-        "When one Comment may belong to either, models one Reference with both targets and sets realization.rails_association to polymorphic without asking, with a one-line why.",
-        "Says plainly that today's Compiler leaves a Reference with several targets, and the Associations over it, out of the app as gaps whichever realization is chosen, and keeps the Reference in the Plan.",
+        "When one Comment may belong to either, models one Reference with both targets and sets realization.rails_association to exclusive_arc without asking, with a one-line why.",
+        "Says that the Compiler emits that Reference under either realization while forms, selects, Policies, and other screens that cross it remain gaps, and keeps the Reference in the Plan.",
         "Asks no implementation question, such as about gems, column types, or the realization.",
         "Makes no service request, Compile or remote write."
       ]
@@ -301,8 +301,8 @@
       "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and one kind of comment can go on either an update or an album. Every page needs sign-in. You asked my level and I said to ask me about technical decisions. The product questions are settled. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
         "Asks the one real implementation choice the Plan exposes, for the comment's Reference with two targets: polymorphic or exclusive arc.",
-        "Says what each emits, an ID and a type column with a Rails polymorphic association, or nullable foreign keys per target with an exclusive-arc constraint; puts polymorphic first as Rails' convention; and links the Foundation Plan Guide's Rails output view.",
-        "Says that today's Compiler leaves that Reference out of the app as a gap whichever option is chosen.",
+        "Says what each emits, nullable foreign keys per target with an exclusive-arc constraint, or an ID and a type column with a Rails polymorphic association; puts exclusive arc first as the recommendation for a closed set, with polymorphic for targets added later without a migration; and links the Foundation Plan Guide's Rails output view.",
+        "Says that both options compile, and that forms, selects, Policies, and other screens that cross the Reference remain gaps.",
         "Does not invent other implementation choices such as gems, column types, or callbacks.",
         "Makes no service request, Compile or remote write."
       ]

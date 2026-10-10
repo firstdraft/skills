@@ -101,10 +101,17 @@ decisions for me". Choosing a level does not delegate meaning.
 
 **Implementation** is how First Draft emits that meaning in Rails. The target profile fixes almost all of it: the
 Plan has no property for gems, column types, or callbacks. Today the Plan exposes one real choice: a Reference
-with more than one target needs `realization.rails_association`. In the bundled schema's words, `polymorphic` uses
-a Rails polymorphic association with ID and type columns, and `exclusive_arc` uses nullable foreign keys plus an
-exclusive-arc constraint. Whichever is chosen, the current Compiler leaves that Reference and the Associations over
-it out of the app and lists them as gaps; say so.
+with more than one target needs `realization.rails_association`. Both values compile:
+
+- `exclusive_arc` stores one nullable foreign key per target, with a check that exactly one is set (at most one
+  when optional). Recommend it for a closed set of targets.
+- `polymorphic` is Rails' type-and-ID association, limited to the Plan's targets by a validation. Recommend it when
+  the developer expects to add target types later without a migration. Every target then needs a deletion
+  carrier, so a target with two inverses, or a name the conventional inverse would reuse, omits the Reference, as
+  does an optional or one-to-one immutable polymorphic Reference.
+
+Forms, selects, Policies, Predicates, and other screens that cross either shape remain gaps, and a standalone
+create that needs a required multi-target Reference is omitted; say so.
 
 Follow the user's level:
 
@@ -114,9 +121,10 @@ Follow the user's level:
   choices in the read-back.
 - **Explain:** use the convention default too, and give the one-line why in plain words when the choice comes up.
 
-For a Reference with several targets the convention default is `polymorphic`, Rails' own pattern for "belongs to
-one of several" (Active Storage uses it). A one-line why: "I used Rails' standard polymorphic link; one
-database-checked link per target is the alternative."
+For a Reference with several targets the convention default is `exclusive_arc`: the Plan's targets are a closed
+set, and a foreign key per target lets the database refuse a delete that would leave a row pointing at nothing. A
+one-line why: "I gave each kind of target its own database-checked link; Rails' polymorphic link is the
+alternative if you will add kinds later."
 
 ## See what First Draft emits
 
