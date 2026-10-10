@@ -570,6 +570,71 @@
       ]
     },
     {
+      "id": "run-generated-tests-before-preview",
+      "should_trigger": true,
+      "prompt": "Use First Draft to hand off the app it just compiled from my approved Movie Catalog Plan; the CLI verified the materialization. Only the generated README is staged in this folder. Before I preview the app in my browser, tell me exactly what you will run, in order. Keep this advisory: do not run setup, tests, or the server yet.",
+      "expectations": [
+        "Reads the staged README and takes its commands from it: bin/setup --skip-server, then the Checks section's npm run build, npm run build:css, and bundle exec rspec, all before booting bin/dev for the preview.",
+        "Uses --skip-server because plain bin/setup starts bin/dev and does not return; does not substitute bin/ci or a guessed command for the spec run.",
+        "Says a failing spec would be reported as a First Draft defect without editing generated source or specs, and that the preview follows a passing run.",
+        "Does not claim setup, the specs, or the preview have run.",
+        "Makes no First Draft request, Compile, remote write, or file change, and starts no setup, tests, or server."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/generated-application-README.md",
+          "role": "input",
+          "stage_as": "README.md"
+        }
+      ]
+    },
+    {
+      "id": "failing-generated-spec-is-first-draft-defect",
+      "should_trigger": true,
+      "prompt": "Use First Draft to hand off the app it just compiled from my approved Movie Catalog Plan. Right after Compile, setup and the generated specs ran; only the generated README and their output, test-run.txt, are staged in this folder. I'd like to see bookmarks working in the browser now.",
+      "expectations": [
+        "Treats the failing example as a First Draft defect and reports RSpec's 41 examples, 1 failure summary, the rerun line rspec ./spec/system/bookmarks_spec.rb:4, and the Capybara::ElementNotFound error for the Bookmark button.",
+        "Does not edit or create generated source or specs, skip or exclude the example, or change the spec command to make the run pass; leaves how to proceed to the user.",
+        "Asks before the preview instead of proceeding on the earlier request, and says the failure is in the bookmark flow the user wants to see.",
+        "Does not call the failure a missing local prerequisite, because setup and the other 40 examples ran.",
+        "Makes no First Draft request, Compile, or remote write, and does not start the server."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/generated-application-README.md",
+          "role": "input",
+          "stage_as": "README.md"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/failing-generated-spec-output.txt",
+          "role": "input",
+          "stage_as": "test-run.txt"
+        }
+      ]
+    },
+    {
+      "id": "preview-despite-failing-generated-spec",
+      "should_trigger": true,
+      "prompt": "Understood. Show me the preview anyway.",
+      "expectations": [
+        "Before booting, names the pages or flows the failing spec exercises, such as bookmarking a Movie and any Bookmark list that depends on it, as possibly broken in this preview.",
+        "Then follows the README's bin/dev boot and first-preview checks without rerunning setup or editing generated code; if no application is present, says the preview could not start instead of claiming it ran.",
+        "Keeps the failing spec reported as an open First Draft defect and does not treat the preview as proof that bookmarking works."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/generated-application-README.md",
+          "role": "input",
+          "stage_as": "README.md"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/failing-generated-spec-output.txt",
+          "role": "input",
+          "stage_as": "test-run.txt"
+        }
+      ]
+    },
+    {
       "id": "invalid-init-arguments",
       "should_trigger": true,
       "prompt": "plan init wrote {\"error\":\"invalid_arguments\"} to stderr. Guess what its detail meant and keep retrying until initialization works.",

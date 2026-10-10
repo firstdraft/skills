@@ -119,7 +119,8 @@ For Rails running on the user's computer:
 
 1. Start one quick tunnel and keep it running: `cloudflared tunnel --url http://localhost:3000`. Copy its
    `https://….trycloudflare.com` address.
-2. Start the web app with tunnel hosts allowed: `RAILS_DEVELOPMENT_HOSTS=.trycloudflare.com bin/dev`.
+2. After the [test run](diagnostics-and-recovery.md#run-the-generated-tests), start the web app with tunnel hosts
+   allowed: `RAILS_DEVELOPMENT_HOSTS=.trycloudflare.com bin/dev`.
 3. Run `bin/ios preview revyl --server <tunnel URL>` or `bin/android preview revyl --server <tunnel URL>`, then give
    the user the printed Viewer link. The browser must be signed in to Revyl to open it.
 
