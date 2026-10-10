@@ -20,7 +20,8 @@ For existing-app UI work, use the separate [UI continuation corpus](ui-continuat
   - `reconcile-habit-requirements`, then `reconcile-habit-creation-only-revision`;
   - `author-deliberate-return-overrides`, then `preserve-current-location-return`;
   - `precompile-semantic-read-back`, then `compile-prepared-movie-catalog`;
-  - `precompile-drawing-board-read-back`, then `compile-prepared-drawing-board-application`.
+  - `precompile-drawing-board-read-back`, then `compile-prepared-drawing-board-application`;
+  - `failing-generated-spec-is-first-draft-defect`, then `preview-despite-failing-generated-spec`.
 - Give the executing agent only its prompt, the Skill, and its input artifacts, not the expectations. Stage
   model-only artifacts outside the workspace that root adoption will archive.
 - The interview case attaches

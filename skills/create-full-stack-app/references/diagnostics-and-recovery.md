@@ -9,7 +9,7 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 This plugin bundles `@firstdraft.com/cli@0.8.2`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.8/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.9/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -289,16 +289,40 @@ new Plan field or separate description artifact.
 
 This is ordinary application documentation after Compile. Keep the generated baseline checkpoint reviewable and
 follow the existing Git workflow for later commits and authorized pushes. Preserve optional planning context and
-immutable Plan/GapSet provenance. Then follow the [notes handoff](#implementation-notes-handoff) and
-[first-preview verification](#verify-the-first-preview), followed by [UI continuation](#ui-continuation) for the
-requested work.
+immutable Plan/GapSet provenance. Then follow the [notes handoff](#implementation-notes-handoff), the
+[test run](#run-the-generated-tests), and [first-preview verification](#verify-the-first-preview), followed by
+[UI continuation](#ui-continuation) for the requested work.
 
 For later improvements, the public [First Draft changelog](https://github.com/firstdraft/skills/blob/main/CHANGELOG.md)
 provides an ordinary review prompt and an optional reading checkpoint at `.firstdraft/updates.md`.
 
+### Run the generated tests
+
+Before the first preview, run the application's specs where that preview will run. Pass `--skip-server`: without it,
+`bin/setup` ends by starting `bin/dev` and does not return. The other commands are the spec run in the generated
+README's Checks section:
+
+```sh
+bin/setup --skip-server
+npm run build
+npm run build:css
+bundle exec rspec
+```
+
+Run these rather than `bin/ci`, whose lint and dependency audits are not tests and whose advisories change after
+Compile. A missing README prerequisite, such as PostgreSQL 18 or Chrome for system specs, is a local blocker, not a
+First Draft defect: report it and ask before installing anything. With the prerequisites present, a setup failure
+is a defect.
+
+Treat every failing spec as a First Draft defect. Report RSpec's summary line and each failure's rerun line
+(`rspec ./spec/...:LINE`) and error. Do not edit generated source or specs, skip examples, or change the commands
+to make the run pass; the user decides how to proceed. When the run passes, continue to the preview. When specs
+fail, ask before the preview, even one requested earlier. If the user still wants it, first name the pages or
+flows the failing specs exercise.
+
 ### Verify the first preview
 
-Follow the generated README's local setup and boot commands. Compare the approved data with the reviewed gaps and
+After the test run, boot with the README's `bin/dev`. Compare the approved data with the reviewed gaps and
 actual `db/seeds/development.rb`; report omitted records or dependencies instead of fabricating replacements.
 `bin/setup` prepares the database and seeds a newly initialized development database. An existing database may
 need an explicit development `bin/rails db:seed` to load added samples. Do not reset a database to hide missing data.

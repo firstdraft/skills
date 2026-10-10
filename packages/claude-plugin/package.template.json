@@ -1,6 +1,6 @@
 {
   "name": "@firstdraft.com/claude-code",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "First Draft Foundation Plan authoring and Compilation for Claude Code and Codex",
   "license": "MIT",
   "type": "module",

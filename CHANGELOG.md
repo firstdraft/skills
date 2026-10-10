@@ -29,6 +29,22 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-10: Generated tests before the first preview
+
+**Skills — released in plugin 0.8.9.** After Compile, the Skill now runs the generated application's specs where
+the first preview will run: `bin/setup --skip-server`, then the spec commands in the generated README's Checks
+section, `npm run build`, `npm run build:css`, and `bundle exec rspec`. The handoff used to go from setup straight to
+the browser, so a Compiler defect first showed up as a broken page, and nothing confirmed the app worked on the
+user's machine. Plain `bin/setup` starts `bin/dev` and does not return, and `bin/ci` adds lint and dependency audits
+whose advisories change after Compile, so the Skill uses neither for this step.
+
+The agent reports each failing spec as a First Draft defect, with RSpec's rerun line and error, and does not edit
+generated source or specs to make the run pass; the user decides how to proceed. With failures, it asks before the
+preview and, if the user still wants one, first names the pages or flows those specs exercise. A missing prerequisite
+that the README names, such as PostgreSQL 18 or Chrome for system specs, is a local blocker rather than a defect. The
+hand-off report now says whether setup and the specs actually ran and how they ended. For an app compiled earlier,
+run the same commands from its root; a spec that fails in unedited generated code points to the Compiler.
+
 ## 2026-10-09: Code worth keeping
 
 **Skills — released in plugin 0.8.8.** First Draft now holds generated apps to one

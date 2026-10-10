@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.8.8, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
+Targets plugin 0.8.9, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
@@ -313,7 +313,9 @@ Report:
 - `--github` mode's private URL after Publication success; direct output's path, file count, manifest digest, and
   any `root_adoption` after materialization;
 - that direct Compile created no Publication or repository; after root adoption, use the
-  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for local setup and an optional Git checkpoint; and
+  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for local setup and an optional Git checkpoint;
+- whether setup and the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) actually ran,
+  and their outcome; and
 - any recovery blocker or external prerequisite.
 
 Distinguish verified materialization, First Draft Publication, and GitHub pushes. None proves deployment or
