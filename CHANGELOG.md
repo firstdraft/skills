@@ -116,6 +116,33 @@ where a generated form does. Both used to say so even when every page for the En
 local-check guidance now says that only required uploads get placeholders. In an app compiled earlier, compare the
 README's Uploaded files sentence with the `attach` calls in `db/seeds/development.rb`.
 
+Once the First Draft service deploys the matching Compiler, deleting a record that other records restrict shows a
+refusal message instead of an error page. A `restrict` Reference without an authored inverse, such as a Deadline's
+`lease`, used to leave Lease with no `restrict_with_error`, so deleting a Lease that had Deadlines raised the database
+error; Lease now gets `has_many :deadlines, dependent: :restrict_with_error`. Models also declare restrictions first
+and delete a child that restricts its sibling before that sibling, so deleting a Household removes its Dinners before
+the Meals they restrict. A `destroy` action that a restriction can refuse calls `destroy!` before its redirect, so
+its success message appears only after an actual deletion. It rescues `ActiveRecord::RecordNotDestroyed`, whose
+`record` is the one that refused, and redirects to the same destination with that record's errors as the only
+message. The alert therefore names the reason even when a cascaded child refused, unless the cascade is one-to-one.
+The Skill's Reference section now says this. To apply it to an app compiled earlier, add the inverse to each model a
+restrict Reference targets and reorder its `dependent:` Associations the same way. Then give each affected `destroy`
+action this shape, keeping its existing redirect after `destroy!`:
+
+```ruby
+def destroy
+  @lease.destroy!
+  redirect_to leases_path, status: :see_other
+rescue ActiveRecord::RecordNotDestroyed => error
+  redirect_to leases_path, alert: error.record.errors.full_messages.to_sentence, status: :see_other
+end
+```
+
+Without that rescue, a bare `destroy!` still shows an error page, now for `RecordNotDestroyed`, and an action that
+reads its own record's errors shows an empty alert when a cascaded child refuses. A cascade into records that restrict
+their own parent, such as nested Categories, keeps `dependent: :delete_all` when that restriction is their only
+callback, and needs an `incorrect_dependent_option` exception in `.active_record_doctor.rb`.
+
 ## 2026-10-05: Remembered sign-ins
 
 **Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps

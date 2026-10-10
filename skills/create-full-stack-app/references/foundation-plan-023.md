@@ -543,9 +543,22 @@ adds logical Association uniqueness. The post-table migration supports self-Refe
 An eligible unpredicated inverse carries authored deletion through Rails `dependent:` options: restriction gives
 model errors, nullification clears the Reference, and deleting referencing records uses ordinary deletion or destroy
 according to emitted callbacks and downstream Associations. Plain `NO ACTION` foreign keys preserve integrity.
-Missing or ambiguous inverse carriers and destructive cascade cycles can leave the authored deletion consequence
-as a partial gap; the Compiler does not synthesize an inverse or callback scheduler. A lone `restrict` can still be
-realized by the foreign-key backstop. Callback-bypassing writes do not establish Rails lifecycle behavior.
+A `restrict` Reference with no authored inverse gets the conventional one when the app can delete its target, through
+the target's `destroy` route or a cascade from an Entity that has one: a Deadline's `lease` Reference adds
+`has_many :deadlines, dependent: :restrict_with_error` to Lease, so deleting a Lease that still has Deadlines shows
+"Cannot delete record because dependent deadlines exist" instead of an error page. An Entity that references the
+same target twice gets Reference-prefixed names, such as `landlord_leases`. If that name is already a member of the
+target model, the outcome stays a partial gap and the delete raises the database error. Models declare restrictions
+before cascades and delete a child that restricts its sibling first, so deleting a Household removes its Dinners
+before the Meals they restrict. A refusal's message comes from the record that refused, even a cascaded child,
+except through a one-to-one cascade: Rails then keeps every record but shows no message, and the GapSet lists that
+restriction as a partial gap. A cascade into records that restrict their own parent, such as a Store's nested
+Categories, keeps `dependent: :delete_all` when that restriction is their only callback, so one statement deletes the
+whole tree; a Category outside that delete whose parent is in it makes the delete raise the database error, which the
+GapSet also lists.
+Missing or ambiguous inverse carriers for the other outcomes and destructive cascade cycles can leave the authored
+deletion consequence as a partial gap; the Compiler does not synthesize an inverse or callback scheduler for them.
+Callback-bypassing writes do not establish Rails lifecycle behavior.
 
 The current Association catalog includes supported mutable direct inverses, the exact required-immutable `has_many`
 inverse, selected predicated direct Associations, several first-level indirect collections, and one nested-through
