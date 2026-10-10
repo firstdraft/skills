@@ -418,6 +418,9 @@ Name each list's fields in the read-back as a delegated choice unless the user c
 When the user describes something people do with a click, such as a like, follow, RSVP, bookmark, or upvote, use
 the Foundation Plan's no-input record pattern: a create with no `inputs` under the parent's `"create_form": {}`,
 with every value bound from context. The parent page shows a one-tap button, and a tap returns to the parent page.
+The button's label is the Entity's name: an Entity named Check-in emits
+`button_to CheckIn.model_name.human, unit_check_ins_path(@unit)`, which reads Check-in, one named Visit record shows
+a Visit record button, and a Bookmark toggle reads Bookmark, then Remove Bookmark.
 The public Guide's [No-input records](https://firstdraft.github.io/firstdraft/docs/architecture/design/foundation-plan.html#no-input-records)
 section defines the pattern, and the [Like example](examples.md#signed-in-gate-and-one-tap-records) copies its
 example. On that Like, a uniqueness rule over the parent Reference and the Account Reference emits
