@@ -306,7 +306,8 @@ Inspect the existing data first: ordinary seeds match their generated attribute 
 can make a later seed run recreate the original sample. Reseeding does not reconcile customized records.
 
 If the app has image or attachment Fields, uploads need the user's Cloudinary `CLOUDINARY_URL`
-([setup](foundation-plan-023.md#photos-and-files)) before you check them; seeded samples use placeholder files.
+([setup](foundation-plan-023.md#photos-and-files)) before you check them. Seeded samples attach a placeholder file
+only to a required upload, and the README's Uploaded files section names each one; an optional upload starts empty.
 
 Open the running app in a browser and check representative visible records, their relationships, and relevant
 states in the intended flow. For an explicit empty start, check the empty state and appropriate create flow. For

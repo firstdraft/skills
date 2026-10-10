@@ -107,6 +107,15 @@ link to the stored address in a new tab. The Skill's validation guidance used to
 app compiled earlier can add the same validator by hand; check that its stored values are `http` or `https` addresses
 first, because existing rows that fail the check can no longer be saved.
 
+Once the First Draft service deploys the matching Compiler, the generated README names each upload that development
+samples fill with a placeholder file, such as `Photo#image`, and says nothing about placeholder files when the samples
+attach none. Seeds attach a placeholder only to a required upload on a seeded record, but the README used to say that
+samples attach placeholder files in every app with uploads. A money Field's GapSet entry now says amounts are entered
+or displayed only where a generated form or page carries the Field, and a JSON Field's entry says forms edit it only
+where a generated form does. Both used to say so even when every page for the Entity was omitted. The Skill's
+local-check guidance now says that only required uploads get placeholders. In an app compiled earlier, compare the
+README's Uploaded files sentence with the `attach` calls in `db/seeds/development.rb`.
+
 ## 2026-10-05: Remembered sign-ins
 
 **Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
