@@ -246,8 +246,9 @@ page. Entity order and navigation order do not choose Home.
 The selected index keeps its resource URL and the same action, query, and authorization at the Web root; selecting
 a protected index does not make it public. An originally missing Entity or unselected index rejects import. A valid
 selection lost to service or target support limits keeps a dependent Home gap and the default welcome root.
-Preserve the authored choice when reviewing that gap. This choice does not reorder native navigation. The
-[modeling guide](modeling-guide.md#choose-home-independently-of-navigation) owns the product decision.
+Preserve the authored choice when reviewing that gap. A generated Home index is also the first Web link and native
+tab; the other indexes keep Entity order. The [modeling guide](modeling-guide.md#choose-home) owns the product
+decision.
 
 The prepared Compiler uses an admitted `domain` for the native HTTPS origin and reversed identifier prefix, and
 for the Rails production mailer host independently of native-client selection. It provisions no DNS, deployment,
