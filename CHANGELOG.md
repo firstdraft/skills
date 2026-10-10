@@ -143,6 +143,15 @@ reads its own record's errors shows an empty alert when a cascaded child refuses
 their own parent, such as nested Categories, keeps `dependent: :delete_all` when that restriction is their only
 callback, and needs an `incorrect_dependent_option` exception in `.active_record_doctor.rb`.
 
+Once the First Draft service deploys the matching Compiler, every generated New and edit page in the iPhone and Android
+apps opens as a modal, including pages that require sign-in or a Policy. Before, only pages anyone could use opened as
+modals, so forms behind sign-in or a Policy were pushed like ordinary pages. The generated Rails app also serves each
+app's bundled navigation rules at `/configurations/ios_v1.json` and `/configurations/android_v1.json`, and each app
+loads that copy after its bundled one, so a rule change deployed with Rails reaches installed apps without a new build.
+The Skill's Plan reference used to say that only public New and edit pages open as modals; it now describes this
+behavior. This applies to a Plan that selects an iPhone or Android client. Apps compiled earlier keep their rules; their
+iPhone app's request for the server copy gets a 404, which leaves the bundled rules in place.
+
 ## 2026-10-05: Remembered sign-ins
 
 **Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
