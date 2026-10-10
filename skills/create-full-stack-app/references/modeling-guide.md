@@ -7,7 +7,7 @@
 - [Learn from examples and artifacts](#learn-from-examples-and-artifacts)
 - [Prepare data for the first preview](#prepare-data-for-the-first-preview)
 - [Retain implementation requirements](#retain-implementation-requirements)
-- [Choose Home independently of navigation](#choose-home-independently-of-navigation)
+- [Choose Home](#choose-home)
 - [Model Entities and Fields](#model-entities-and-fields)
   - [Choose text normalization](#choose-text-normalization)
 - [Choose validations](#choose-validations)
@@ -207,12 +207,14 @@ notes in the application repository. The implementation agent may have neither t
 planning workspace. The Compiler does not interpret the notes, and app setup, runtime, and tests must remain
 independent of removable `.firstdraft/` context.
 
-## Choose Home independently of navigation
+## Choose Home
 
 Home may keep the default welcome or show an existing Web index. For a selected index, set
 `application.home_index` to its Entity's current local key, such as `"movie"`; the Entity must already select its
-Scaffold index. Without it the root is the welcome page, `root "home#index"`, whatever the Entity or navigation
-order; `"home_index": "product"` emits `root "products#index"` and no Home controller.
+Scaffold index. Without it the root is the welcome page, `root "home#index"`, whatever the Entity order;
+`"home_index": "product"` emits `root "products#index"`, no Home controller, and Products as the first navigation
+link and the first tab of selected iPhone and Android apps, so those apps open where a browser does. The other
+indexes keep Entity order.
 
 Selecting an index preserves its resource URL, query, and authorization. A protected index stays protected at Home.
 A missing Entity or an Entity without a selected index is invalid. If the selected index is genuinely unsupported,

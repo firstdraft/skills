@@ -90,6 +90,13 @@ image on public pages keeps a permanent signed CDN link, and an upload that no g
 no one. The Skill's upload section used to say that a Policy did not protect uploaded files and to warn users whose
 files were private; it now describes this access. Apps compiled earlier keep their public upload links.
 
+Once the First Draft service deploys the matching Compiler, the Plan's `home_index` index is the first navigation
+link and the first tab of the iPhone and Android apps, so those apps open on the page the browser's root serves. The
+other indexes keep Entity order, and Account stays last. Before, links and tabs followed Entity order, so an app whose
+Home was not its first Entity opened on another list. The Skill's Home guidance used to say that choosing Home does
+not reorder native navigation; it now describes this order. This applies to a Plan that sets `home_index`; apps
+compiled earlier keep their order.
+
 ## 2026-10-05: Remembered sign-ins
 
 **Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
