@@ -296,9 +296,12 @@ include consequential choices in the semantic read-back.
 
 Choose the Field's type and unconditional `required` first. The type brings its own checks: an `integer` emits
 `validates :quantity, numericality: {only_integer: true, ...}` bounded to PostgreSQL `integer`, an `enum` its
-`validate: true` inclusion, and a `url` a browser `url_field` input; the model adds no URL check. Normalization is a
-separate decision about stored meaning, not a substitute for a rule. Use the standard closed Validation families
-when they express the product requirement:
+`validate: true` inclusion, and a `url` `validates :website, url: true` through a generated `UrlValidator`. That
+validator accepts only `http` and `https` addresses with a host, so `example.com` without a scheme is rejected, and
+pages link to the stored address. The declaration adds `allow_blank: true`, or `allow_nil: true` when
+`blank_to_null` turns blanks into nil, and leaves a blank value to `required`: a blank required URL reports only that
+it can't be blank. Normalization is a separate decision about stored meaning, not a substitute for a rule. Use the
+standard closed Validation families when they express the product requirement:
 
 | Product rule | Authoring choice |
 | --- | --- |

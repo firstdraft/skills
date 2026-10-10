@@ -97,6 +97,16 @@ Home was not its first Entity opened on another list. The Skill's Home guidance 
 not reorder native navigation; it now describes this order. This applies to a Plan that sets `home_index`; apps
 compiled earlier keep their order.
 
+Once the First Draft service deploys the matching Compiler, a `url` Field gets a model check. A generated
+`app/validators/url_validator.rb` parses the value with Ruby's standard `URI` library and accepts only `http` and
+`https` addresses with a host, so `example.com`, `ftp://` addresses, and `javascript:` links are rejected as "is not a
+valid URL". The model declares `validates :website, url: true, allow_blank: true`, because a browser submits an empty
+URL input as an empty string, or `allow_nil: true` instead when `blank_to_null` already turns blanks into nil. A blank
+value is left to `required`, so a blank required URL reports only that it can't be blank. Show pages and list rows
+link to the stored address in a new tab. The Skill's validation guidance used to say the model adds no URL check. An
+app compiled earlier can add the same validator by hand; check that its stored values are `http` or `https` addresses
+first, because existing rows that fail the check can no longer be saved.
+
 ## 2026-10-05: Remembered sign-ins
 
 **Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
