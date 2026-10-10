@@ -29,6 +29,23 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-10: References with several targets compile
+
+**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a Reference with
+several targets, such as a comment on either a post or a photo, appears in the generated app under either
+`realization`. Before, the Skill asked you to choose `polymorphic` or `exclusive_arc`, and the Compiler then left the
+Reference out either way. Now `exclusive_arc` emits one nullable foreign key per target, a `belongs_to` per target, a
+generated reader and writer, and a check that exactly one is set. `polymorphic` emits Rails' type and ID columns
+with a validation that keeps the type to the Plan's targets, and every target carries the deletion outcome on its
+inverse. A target that cannot, such as one with two inverses, leaves the whole Reference out with its reason.
+
+The Skill now recommends `exclusive_arc` and uses it when you let the agent make technical decisions, replacing the
+earlier `polymorphic` default. The Plan's targets are a closed set, and a foreign key per target lets the database
+refuse a delete that would leave a row pointing at nothing. Choose `polymorphic` when you expect to add kinds of
+target later without a migration. Forms, selects, Policies, Predicates, and other screens that cross the Reference
+remain gaps, and a standalone create that needs a required one is omitted. Apps compiled earlier lack the Reference
+until their owners add it in Rails.
+
 ## 2026-10-10: Generated tests before the first preview
 
 **Skills — released in plugin 0.8.9.** After Compile, the Skill now runs the generated application's specs where

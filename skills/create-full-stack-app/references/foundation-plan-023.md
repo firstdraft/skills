@@ -563,11 +563,25 @@ Missing or ambiguous inverse carriers for the other outcomes and destructive cas
 deletion consequence as a partial gap; the Compiler does not synthesize an inverse or callback scheduler for them.
 Callback-bypassing writes do not establish Rails lifecycle behavior.
 
+A Reference with several targets lowers to its `realization`. `polymorphic` emits `<key>_type` and `<key>_id`
+columns, `belongs_to ..., polymorphic: true`, and an inclusion validation of its type column. No foreign key can
+refuse deleting a target, so every target carries the deletion outcome on `has_many ..., as:`, or `has_one` when
+one-to-one, authored or inferred. When one target cannot, because it has several inverses, a destructive cascade
+cycle reaches it, or its conventional inverse name is taken, the whole Reference, columns included, is left out with
+a `foundation_plan.gap.reference.not_generated` record; so is an optional or one-to-one immutable polymorphic
+Reference. `exclusive_arc` emits one nullable foreign key per target, per-target `belongs_to`, a generated reader and
+writer, and a check that exactly one column is set, or at most one when optional; each target's inverse follows the
+single-target deletion rules above. A required multi-target Reference on the Account Entity is also left out whole,
+because sign-up has no input for it. Predicated inverses over either shape, Scaffold inputs and selects,
+descriptors, Policies, Predicates, Orderings, counters, positions, indirect Associations through it, and seeds for a
+one-to-one multi-target Reference remain gaps, and a standalone create that needs a required multi-target Reference
+is omitted.
+
 The current Association catalog includes supported mutable direct inverses, the exact required-immutable `has_many`
 inverse, selected predicated direct Associations, several first-level indirect collections, and one nested-through
 form. These are per-Association shape rules, not per-Entity or per-Plan quotas. Author each traversal the product
-needs. Multi-target realization, aliases, defaults, broader paths, cardinality, polymorphism, exclusive arcs, and
-unsupported predicates or consumers can produce exact gaps. Scaffold input support is a separate consumer decision
+needs. Aliases, defaults, broader paths, cardinality, and unsupported predicates or consumers can produce exact
+gaps. Scaffold input support is a separate consumer decision
 from Reference storage. Preserve the authored relationship meaning and review the matching consequence.
 
 ### Counters

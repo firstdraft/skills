@@ -348,7 +348,8 @@ Put a Reference on the Entity that stores the relationship fact. Ask:
 - Is the target immutable after creation?
 - Is the relationship one-to-one?
 - For a closed multi-target Reference, which supported target realization should be used? This is an
-  implementation choice; follow the user's level in [meaning and implementation](interview.md#meaning-and-implementation).
+  implementation choice: `exclusive_arc` by default, `polymorphic` when targets will be added later without a
+  migration. Follow the user's level in [meaning and implementation](interview.md#meaning-and-implementation).
 
 A Reference already emits its same-key forward Association, such as `belongs_to :team` for `membership.team`;
 authoring that Association again is skipped at import with a service-support gap. A referenced-side Association
@@ -359,11 +360,11 @@ them.
 
 The current Compiler emits a bounded single-target Reference slice with Boolean `required`, `one_to_one`, and
 `immutable`, plus its derived forward traversal and supported direct inverses. The supported catalog also includes
-selected required-immutable inverses and several direct, predicated, indirect, and nested-through consumers; these
-are per-relationship shape rules, not a quota. Multi-target realizations, aliases, defaults, broader paths,
-cardinality, polymorphism, exclusive arcs, and unsupported consumers can remain gaps. Scaffold input support is a
-separate consumer decision from Reference storage. Preserve broader product meaning and inspect the matching GapSet
-rather than applying an older blanket relationship limit.
+selected required-immutable inverses and several direct, predicated, indirect, and nested-through consumers; these are
+per-relationship shape rules, not a quota. A multi-target Reference compiles under either realization, but consumers
+that cross it, aliases, defaults, broader paths, cardinality, and unsupported consumers can remain gaps. Scaffold
+input support is a separate consumer decision from Reference storage. Preserve broader product meaning and inspect the
+matching GapSet rather than applying an older blanket relationship limit.
 
 When people should see how many related records something has, such as likes on a post or a person's followers, add
 a [`counter` Field](foundation-plan-023.md#counters) on the record being counted for. Point it at the direct
