@@ -18,8 +18,12 @@
 
 ## Start from product meaning
 
-Identify the durable nouns, stored facts, relationships, rules, and user-visible workflows in the product. Do not
-begin by transcribing database tables or Rails macros.
+Identify the durable nouns, stored facts, relationships, rules, and user-visible workflows in the product. The
+Compiler writes the tables and Rails macros from them: a required `membership.team` Reference emits
+`belongs_to :team`, a `t.uuid "team_id", null: false` column, and a foreign key to `teams`, and Team's
+referenced-side `memberships` Association adds `has_many :memberships, dependent: :delete_all`. That `dependent:`
+option comes from `membership.team`'s `on_referenced_deleted`: `delete_referencing_record` gives `:delete_all`, and
+`restrict` gives `:restrict_with_error`.
 
 Use these distinctions:
 
@@ -32,8 +36,12 @@ Use these distinctions:
   its error are separate choices.
 - **Scaffold:** the standard generated routes and surfaces explicitly requested for one Entity.
 
-Ask whether a concept needs independent records, merely describes another record, or is derivable. Prefer the
-smallest structured meaning that preserves the user's product intent.
+Ask whether a concept needs independent records, merely describes another record, or is derivable. Each structured
+subject becomes code: an Entity alone adds a model, migration, factory, and model spec, and a Field adds a column
+and a control on each form that lists it. An `image` or `attachment` Field adds `has_one_attached` in place of a
+column. A counter listed as a form input gets no control and a `foundation_plan.gap.scaffold.input.not_generated`
+record; a secure token listed as one also leaves out its whole form with
+`foundation_plan.gap.scaffold.definition.not_generated`.
 
 ## Interview toward one coherent candidate
 
@@ -42,12 +50,14 @@ incremental design conversation, not a questionnaire that must finish before loc
 Plan as answers arrive. Prioritize answers that change the graph, access model, or requested clients.
 
 When modeling a collection, distinguish one uniquely identified object, a quantity of interchangeable goods, and a
-mixed product that needs both meanings. Do not collapse that branch into only individual-versus-group wording.
-In the opening turn, ask only about intended product meaning, materials, and the user's level, and name deferred
-product areas; give the reality check about target support after the user answers. Whether First Draft covers the
-core of the idea is [fit](interview.md#start-from-the-users-goal), not target support: say it in the opening turn
-when research shows it. Do not promote a common use case into an assumption. When target support matters, know the
-desired access before describing the current Account, Policy, Web, and native boundaries. Keep one candidate Plan: do not maintain a
+mixed product that needs both meanings. Uniquely identified objects are records of their own Entity, such as a Unit
+with a serial number and `belongs_to :product`; a quantity is an `integer` Field on one record, emitted as
+`t.integer "quantity", null: false`; a mixed product authors both. In the opening turn, ask only about intended
+product meaning, materials, and the user's level, and name deferred product areas; give the reality check about
+target support after the user answers. Whether First Draft covers the core of the idea is
+[fit](interview.md#start-from-the-users-goal), not target support: say it in the opening turn when research shows it.
+Do not promote a common use case into an assumption. When target support matters, know the desired access before
+describing the current Account, Policy, Web, and native boundaries. Keep one candidate Plan: do not maintain a
 parallel flattened or capability-friendly shape merely so one version can Compile.
 
 Track consequential choices as follows; in the [coverage checklist](interview.md#coverage-checklist), an asked item
@@ -117,14 +127,25 @@ Normally propose a small realistic `application.development_data` graph even whe
 Choose enough related records and relevant states to exercise the intended first flow, plus a useful empty state
 where appropriate. For a movie app, a few movies, one demo viewer, and related watched/watchlist records make the
 relationships explorable. For a habit app without Accounts, related goals, active and paused habits, and historical
-logs can demonstrate the flow without inventing authentication. Do not require a universal row count or add
-Entities solely to seed them.
+logs can demonstrate the flow without inventing authentication. Each authored record becomes a seed statement, such
+as `rockets = Team.find_or_create_by!(name: "Rockets", code: "rockets", owner: alice)`. An Account record takes four
+lines that find it by email, assign its Fields, set its password, and save it, and a record with a required upload
+attaches the placeholder file in a `do` block. An Entity added only for sample data also adds its model and table.
 
-Do not add a `format` Validation or a not-equal ("must be other than") comparison unless the user asks for that
-rule. The current Analyzer cannot prove either rule against development records, so it drops every sample record
-the rule covers and every record that references one. An invented username pattern can drop every member and, with
-them, their posts and the demo sign-in. When the user does ask for such a rule, author it and say in the read-back
-which sample records will be dropped.
+A `format` Validation emits a Rails format check. A team code limited to `\A[a-z0-9_]+\z` adds:
+
+```ruby
+validates :code, format: {
+  with: Regexp.new("\\A[a-z0-9_]+\\z", 0, timeout: 1.0),
+  allow_nil: true
+}
+```
+
+The current Analyzer cannot prove that rule, or a not-equal ("must be other than") comparison, against development
+records, so it drops every sample record the rule covers and every record that references one. With this rule, the
+sample team Rockets and Alice's membership in it are left out of `db/seeds/development.rb`, and a username pattern
+can drop every member and, with them, their posts and the demo sign-in. Say in the read-back which sample records
+the rule drops.
 
 Make the dataset and any source reuse visible in the existing semantic read-back. Approve it with the Plan, not
 row by row. Honor an explicit empty-data choice, omitting `development_data` when there are no records. An already
@@ -165,8 +186,9 @@ structured Plan.
 
 For example, an agreed CSV import may need to preview all row errors before saving anything and save a valid file
 as one transaction. Record examples such as "one invalid row leaves all records unchanged" and "a valid file saves
-every row." Whether duplicate rows should be rejected can remain an explicit open question. Do not invent an
-`import_valid` Field, callback JSON, or a custom Validation kind to encode that workflow.
+every row." Whether duplicate rows should be rejected can remain an explicit open question. The format has no
+callback property, its seven Validation kinds are a closed list, and an `import_valid` Field would only add a
+column and a [checkbox](#choose-validations), so that workflow stays in the notes.
 
 Keep these outcomes distinct:
 
@@ -189,7 +211,8 @@ independent of removable `.firstdraft/` context.
 
 Home may keep the default welcome or show an existing Web index. For a selected index, set
 `application.home_index` to its Entity's current local key, such as `"movie"`; the Entity must already select its
-Scaffold index. Do not infer Home from Entity order or navigation order. Omission keeps the default welcome page.
+Scaffold index. Without it the root is the welcome page, `root "home#index"`, whatever the Entity or navigation
+order; `"home_index": "product"` emits `root "products#index"` and no Home controller.
 
 Selecting an index preserves its resource URL, query, and authorization. A protected index stays protected at Home.
 A missing Entity or an Entity without a selected index is invalid. If the selected index is genuinely unsupported,
@@ -202,20 +225,22 @@ Do not substitute another index or weaken access. See the
 For each Entity:
 
 1. Choose a stable lower-snake-case `key` and a human-facing singular `name`.
-2. Select a typed `primary_descriptor` that can identify a record to a person. A selected Field must be required;
-   do not infer that the descriptor is unique.
-3. Add only Fields that represent stored or continuously derived product facts.
-4. Choose a semantic Field `type`, not a target column type.
-5. Decide requiredness, immutability, default, normalization, and structured validations independently.
+2. Select a typed `primary_descriptor` that can identify a record to a person. A selected Field must be required.
+   The descriptor adds no unique index or uniqueness check, so two Teams may share a name.
+3. Choose a semantic Field `type`, not a target column type.
+4. Decide requiredness, immutability, default, normalization, and structured validations independently.
 
-Do not infer uniqueness from a label, presence from a form, or immutability from current UI. Ask when those facts
-matter.
+Uniqueness, presence, and immutability each emit their own code, and a label, form, or current UI supplies none of
+them. On a Product, a uniqueness Validation over `sku` emits `validates :sku, uniqueness: true` and a unique index,
+`required: true` on `name` emits `null: false` and `validates :name, presence: true`, and `immutable: true` on `sku`
+emits `attr_readonly :sku`. Ask when those facts matter.
 
-Use an `enum` for a closed named set. Give every value its own stable identity, and set `ordinal` only when value
-order carries semantic rank rather than presentation order alone. The current Compiler emits enum string storage
-using Rails `enum` with inclusion plus native scopes and instance methods; a required enum adds presence validation
-and an optional enum allows a blank choice. The Compiler selects Rails prefix or suffix options when helper names
-would collide.
+An `enum` holds one of a closed named set, and every value has its own stable identity. `ordinal: true` records that
+value order is a rank rather than presentation order. On its own it changes no generated file; it lets a rank
+Ordering, such as priority descending, then `created_at` and `id`, emit a model scope and index, and without it that
+Ordering is a gap. The current Compiler emits enum string storage using Rails `enum` with inclusion plus native
+scopes and instance methods; a required enum adds presence validation and an optional enum allows a blank choice.
+The Compiler selects Rails prefix or suffix options when helper names would collide.
 Compatible in-domain literal-key defaults work regardless of whether the order has semantic rank. Database
 membership constraints, general rank semantics, and unsupported consumers remain gaps. Preserve
 product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-023.md#enums)
@@ -231,20 +256,31 @@ References, or Entities rather than inside JSON.
 
 Select a `normalizations` pipeline for each Field whose content needs it. `short_text` becomes Rails `string` with a
 single-line input; `long_text` becomes `text` with a textarea. Those types guide the choice but set no normalization
-default. Omit `normalizations` when no general-purpose cleanup is intended.
+default: without `normalizations`, the model emits no `normalizes` line and stores text as typed.
 
 - Names and titles can use `["collapse_whitespace", "blank_to_null"]` when internal whitespace has no meaning.
 - Ordinary multiline prose can use `["trim", "blank_to_null"]` to retain interior paragraphs and repeated spaces.
 - Code, Markdown, and other format-sensitive content can omit normalization or use only `["blank_to_null"]`.
   Whole-value trimming removes first-line indentation and trailing newlines, so it can change those formats.
 
-Identifiers and URLs retain their own constraints. URL Fields permit only `trim` and `blank_to_null`; do not
-infer downcasing from a URL or identifier label. Request `blank_to_null` only when empty or whitespace-only input
-should become null. Requiredness is a separate choice, and null stays null through every operation.
+Identifiers and URLs retain their own constraints. URL Fields permit only `trim` and `blank_to_null`. `downcase`
+changes the stored value: `["trim", "downcase", "blank_to_null"]` on a SKU emits
+`normalizes :sku, with: ->(value) { StripAttributes.strip(value, allow_empty: true).downcase.presence }`, so
+`DR-100` is saved as `dr-100`. Each pipeline emits one `normalizes` line, and `blank_to_null` decides what a cleared
+value stores:
 
-Preserve the authored array order. Do not combine `trim` with `collapse_whitespace`. When `blank_to_null` accompanies
-either cleanup operation, put it after that operation so repeated normalization produces the same result. This
-also applies when `downcase` occurs between them: `["trim", "downcase", "blank_to_null"]` is valid, while
+| Authored | Emitted | Whitespace-only input becomes |
+| --- | --- | --- |
+| `["collapse_whitespace", "blank_to_null"]` | `normalizes :name, with: ->(value) { value.squish.presence }` | nil |
+| `["trim", "blank_to_null"]` | `normalizes :motto, with: ->(value) { StripAttributes.strip(value) }` | nil |
+| `["trim"]` | `normalizes :tagline, with: ->(value) { StripAttributes.strip(value, allow_empty: true) }` | `""` |
+
+Requiredness is a separate choice: a required Field also emits `validates :name, presence: true`. Null stays null
+through every operation.
+
+Preserve the authored array order. The schema rejects a pipeline with both `trim` and `collapse_whitespace`, and
+one with `blank_to_null` before either cleanup operation, so repeated normalization produces the same result. That
+also holds when `downcase` occurs between them: `["trim", "downcase", "blank_to_null"]` is valid, while
 `["blank_to_null", "downcase", "trim"]` and `["blank_to_null", "downcase", "collapse_whitespace"]` are invalid.
 This rule gives `downcase` no fixed position. Do not silently reorder an existing pipeline or repeat it until stable.
 
@@ -256,10 +292,11 @@ include consequential choices in the semantic read-back.
 
 ## Choose validations
 
-Choose the Field's type and unconditional `required` first. An integer's numeric meaning, a URL's basic shape, and
-an enum's closed domain belong to the type; do not repeat them as generic validations. Normalization is a separate
-decision about stored meaning, not a substitute for a rule. Use the standard closed Validation families when they
-express the product requirement:
+Choose the Field's type and unconditional `required` first. The type brings its own checks: an `integer` emits
+`validates :quantity, numericality: {only_integer: true, ...}` bounded to PostgreSQL `integer`, an `enum` its
+`validate: true` inclusion, and a `url` a browser `url_field` input; the model adds no URL check. Normalization is a
+separate decision about stored meaning, not a substitute for a rule. Use the standard closed Validation families
+when they express the product requirement:
 
 | Product rule | Authoring choice |
 | --- | --- |
@@ -270,8 +307,7 @@ express the product requirement:
 | A rating is at least one, an end date follows a start date, or two selected people must differ | `comparison` with compatible values; use Entity ownership for a cross-value rule and select the input that should receive the error. |
 | A title and release date must be unique together | One Entity-owned `uniqueness` tuple, with an explicit participating Field or Reference as its error target and the intended null policy. |
 
-Add `format` and not-equal comparisons only when the user asks for them; today they drop
-[sample records](#prepare-data-for-the-first-preview).
+Today `format` and not-equal comparisons drop [sample records](#prepare-data-for-the-first-preview).
 
 Select a useful Field or Reference for Entity-owned feedback; for example, attach an invalid end-date comparison
 to the end-date input. Plan error targets do not include the whole record. A complete sentence does not require a
@@ -286,8 +322,9 @@ because Rails supports it.
 
 Operation-specific checks and bespoke rules outside the grammar belong in
 [implementation notes](#retain-implementation-requirements), with behavior and acceptance examples for the agent
-to implement and test in ordinary application code. Do not invent stored Fields to force them into the Plan or
-use notes to bypass supported structured meaning.
+to implement and test in ordinary application code. A stored Field invented to carry such a rule is a real column
+and form control: an `import_valid` Boolean emits `t.boolean "import_valid"` and a checkbox people can tick.
+Supported structured meaning stays in the Plan, not in notes.
 
 For example, an Entity comparison can express that a HabitLog's related Habit must be active whenever the log is
 saved. Preserve that structured rule and its actual reviewed target gap; a generation limitation does not make it
@@ -307,10 +344,12 @@ Put a Reference on the Entity that stores the relationship fact. Ask:
 - For a closed multi-target Reference, which supported target realization should be used? This is an
   implementation choice; follow the user's level in [meaning and implementation](interview.md#meaning-and-implementation).
 
-Do not author the Reference's same-key forward Association. A referenced-side Association adds the reverse
-`has_many` or `has_one` on the target. An indirect Association composes two Associations: a team's `members` through
-its [memberships](foundation-plan-023.md#groups-and-memberships), with source `membership.user`, emits
-`has_many :members, -> { distinct }, through: :memberships, source: :user`, and a team's show page can list them.
+A Reference already emits its same-key forward Association, such as `belongs_to :team` for `membership.team`;
+authoring that Association again is skipped at import with a service-support gap. A referenced-side Association
+adds the reverse `has_many` or `has_one` on the target. An indirect Association composes two Associations: a team's
+`members` through its [memberships](foundation-plan-023.md#groups-and-memberships), with source `membership.user`,
+emits `has_many :members, -> { distinct }, through: :memberships, source: :user`, and a team's show page can list
+them.
 
 The current Compiler emits a bounded single-target Reference slice with Boolean `required`, `one_to_one`, and
 `immutable`, plus its derived forward traversal and supported direct inverses. The supported catalog also includes
@@ -329,31 +368,51 @@ each counter after its authored items; people never type them.
 
 ## Add behavior deliberately
 
-- Add Predicates and Orderings when generated queries or surfaces need reusable product meaning.
-- Add a Scaffold only when the user wants those standard generated routes and surfaces.
+- A Predicate emits a named model scope, and an Ordering emits a named scope and a matching index. On Post, a
+  `featured` Predicate that compares the Boolean `post.pinned` with `true` emits
+  `scope :featured, -> { where(pinned: true) }` and no index. An Ordering of `created_at`, then `id`, both
+  descending, emits `scope :newest_first, -> { order(created_at: :desc, id: :desc) }` and
+  `t.index ["created_at", "id"]`. A Scaffold index that selects both lists `Post.featured.newest_first`; without a
+  selection, an index lists by `id`, as in `Topic.order(:id)`. A `contains` Predicate on `caption` and an Ordering
+  of `caption` alone emit no code: each is a `foundation_plan.gap.predicate.not_generated` or
+  `foundation_plan.gap.ordering.not_generated` record. An index that selects one still generates, without that
+  filter or in `id` order, and records its own gap. A Field followed by `id` also generates when both run in one
+  direction: on Bulletin, `title`, then `id`, both ascending, emits
+  `scope :by_title, -> { order(title: :asc, id: :asc) }` and `t.index ["title", "id"]`. The same terms with `id`
+  descending are a `foundation_plan.gap.ordering.not_generated` record.
+- A Scaffold gives an Entity pages. `"resource_routes": ["index", "show", "new", "create"]` on Team emits
+  `resources :teams, only: %i[index show new create]`, a `TeamsController`, views, a request spec, and a Teams link
+  in the main navigation. Without a Scaffold, an Entity keeps its model, factory, and seeds, and its records have no
+  page of their own.
 - Make access on generated surfaces explicitly public or Policy-controlled. An Entity may have only one Policy per
   `operation`; when every page needs sign-in, use one [signed-in gate](examples.md#signed-in-gate-and-one-tap-records).
 - Treat every structured definition as a generation request; there is no per-subject opt-out.
 - Keep custom Ruby, arbitrary seed code, secrets, and post-Compilation implementation notes outside the Plan.
 
-Do not add a realization choice when the target profile has only one supported lowering. Do not repeat derived
-Capabilities or prerequisites as authored lists.
+The schema rejects `realization` on a single-target Reference and requires it on a multi-target one. It has no
+property for Capabilities or prerequisites, and an Entity that lists them is rejected for an unknown property.
 
 Current Web Scaffolds may select standard resource routes, direct or recursive projections, Predicate and Ordering
 consumers, cursor pagination, Field and Association inputs, server bindings, associated-create entry points, and
-optional return overrides. Omit `return_to` for conventional interaction defaults; discuss navigation only when
-product intent needs an exception. The [worked return examples](examples.md#deliberate-return-overrides) show the
-complete record operand and independent associated-success override. A supported associated `create_form` supplies
-a scoped New page, or a one-tap button for a no-input record, not an inline form in the details card.
+optional return overrides. Without `return_to`, a saved New or Edit form redirects to the record, as in
+`redirect_to movie_path(@movie), status: :see_other`, and a delete to its list; `return_to` changes that
+destination, and the [Scaffold reference](foundation-plan-023.md#scaffolds) lists the other defaults. The
+[worked return examples](examples.md#deliberate-return-overrides) show the complete record operand and independent
+associated-success override. A supported associated `create_form` supplies a scoped New page, or a one-tap button
+for a no-input record, not an inline form in the details card.
 Every request and displayed Association declares public access or a Policy binding. The exact
 Web Account/Policy slice can protect supported surfaces and provide a Web-only Account profile; unsupported Policies
 and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
 silently narrow a broader requested Scaffold or make it public merely to obtain a gap-free result.
 
 Choose what each main list shows. Start its index projection with the record's primary descriptor, such as a
-book's title or a post's author, using the Association item when the descriptor is an Association. Then add one to
-three short Fields that tell records apart, such as a date, status, or count; never long text. An explicit
-projection does not add the descriptor for you: rows without it show a View link in place of the record's name.
+book's title or a post's author, using the Association item when the descriptor is an Association. Then add the
+Fields that tell records apart, such as a date, status, or count. Each projected Field, the descriptor included,
+becomes one labeled `<div><dt>…</dt><dd>…</dd></div>` cell in every row's `<dl>` grid. A narrow row stacks the
+cells (`grid-cols-1`); from medium width the grid has one column per Field, up to `@md:grid-cols-3`, and later
+Fields wrap onto more lines. A `long_text` Field in a list prints its whole text, line breaks kept, in every row:
+`<dd class="whitespace-pre-wrap"><%= product.description %></dd>`. An explicit projection does not add the
+descriptor for you: rows without it show a View link in place of the record's name.
 Name each list's fields in the read-back as a delegated choice unless the user chose them.
 
 When the user describes something people do with a click, such as a like, follow, RSVP, bookmark, or upvote, use
@@ -361,11 +420,15 @@ the Foundation Plan's no-input record pattern: a create with no `inputs` under t
 with every value bound from context. The parent page shows a one-tap button, and a tap returns to the parent page.
 The public Guide's [No-input records](https://firstdraft.github.io/firstdraft/docs/architecture/design/foundation-plan.html#no-input-records)
 section defines the pattern, and the [Like example](examples.md#signed-in-gate-and-one-tap-records) copies its
-example. When each person does it once and can take it back, it is a toggle: also add a uniqueness rule over the
-parent Reference and the Account Reference, select `destroy` authorized by an owner Policy, and author
-`destroy.return_to` through the parent Reference so Unlike stays on the parent page. Records that may repeat, such
-as "mark as read" events or check-ins, get no uniqueness rule or `destroy`. Say it plainly in the read-back, such as
-"one tap to like, one tap to unlike".
+example. On that Like, a uniqueness rule over the parent Reference and the Account Reference emits
+`validates :member, uniqueness: {scope: :post_id}` and a unique index on `post_id` and `member_id`. With it, a
+`destroy` route authorized by an owner Policy makes the button a toggle: the parent page finds the person's own
+record with `@post.likes.find_by(member: current_account)` and shows Unlike in place of Like, and
+`destroy.return_to` through the parent Reference keeps Unlike on the parent page. Without either, as for a check-in
+or a "mark as read" event, every tap adds another record and no page removes one. The uniqueness rule alone keeps
+the Like button, and a second tap returns to the parent page with the uniqueness error as an alert; `destroy` alone
+emits its route and controller action, but no page links to them. Say it plainly in the read-back, such as "one tap
+to like, one tap to unlike" or "each tap records another check-in".
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
 Compilation emits each with at least one main-navigation entry, public or protected, and an identity that fits its

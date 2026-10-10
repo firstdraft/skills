@@ -42,7 +42,10 @@ smallest subset accepted by the reviewed conditional PUT.
 }
 ```
 
-An empty Plan is preferable to a fake Entity. Tell the user that the application model is still empty.
+This Plan compiles to the welcome page and no models. The
+[one-Entity Tasks Plan](#one-entity-with-required-and-optional-scalar-fields) adds `app/models/task.rb`, a
+`create_tasks` migration, a factory, and a model spec, so a placeholder Entity would ship as real code. Tell the user
+that the application model is still empty.
 
 ## Bounded web and iPhone application
 
@@ -213,13 +216,15 @@ combination. Omitted `return_to` sends successful New/Edit to the saved Movie an
 }
 ```
 
-Omit `show.projection` for descriptor-only detail. Without destroy, omit its route and definition. Standalone show,
-Policy-controlled authorization, server bindings, Association or recursive projections, and other route subsets are
-assessed from their own structured prerequisites. This fragment demonstrates one public combination, in which anyone
-can add, change, and delete Movies without signing in. Author that only after the user confirms the exposure;
-otherwise bind Policies as in [Web Account and protected profile](#web-account-and-protected-profile). Use the
-current Foundation Plan reference and matching GapSet for any other authored consumer instead of generalizing from it.
-An intentional destination override can still supply `return_to`; ordinary defaults do not need to be repeated.
+Without `show.projection`, the details page shows only the title as its heading; this projection adds the notes
+below it. Without destroy, omit its route and definition. Standalone show, Policy-controlled authorization, server
+bindings, Association or recursive projections, and other route subsets are assessed from their own structured
+prerequisites. This fragment demonstrates one public combination, in which anyone can add, change, and delete Movies
+without signing in. Author that only after the user confirms the exposure; otherwise bind Policies as in
+[Web Account and protected profile](#web-account-and-protected-profile). Use the current Foundation Plan reference
+and matching GapSet for any other authored consumer instead of generalizing from it. The default returns are the
+controller's `redirect_to movie_path(@movie), status: :see_other` after create and update and
+`redirect_to movies_path, status: :see_other` after destroy; an authored `return_to` changes that destination.
 
 ## Deliberate return overrides
 
@@ -328,8 +333,8 @@ UUID. The reviewed importer also accepts `boolean`, `date`, `datetime`, `decimal
 
 ## Ordinal enum Field
 
-Use an enum for a closed set of named choices. This complete document is structurally valid v0.23 and accepted by
-the reviewed bounded importer. Here, priority order carries semantic rank, so `ordinal` is `true`.
+An enum Field holds one of a closed set of named choices. This complete document is structurally valid v0.23 and
+accepted by the reviewed bounded importer. Here, priority order carries semantic rank, so `ordinal` is `true`.
 
 ```json
 {
@@ -399,13 +404,26 @@ the reviewed bounded importer. Here, priority order carries semantic rank, so `o
 
 The Entity, Fields, and every enum value have independent UUIDs. The default is a tagged value owned by the Field,
 so it has no UUID and does not require `generate uuid`. Its literal names the selected enum value by owner-local
-key. If `medium` is renamed, update the default in the same candidate while preserving that value's UUID. Omit
-`ordinal` when order is presentational rather than ranked.
+key. If `medium` is renamed, update the default in the same candidate while preserving that value's UUID.
 
-The current target emits this required enum as a non-null string with model inclusion and the literal `medium`
-default. Supported form and projection labels use its authored names through Rails I18n; stored values remain keys.
-It emits native Rails enum helpers with collision-aware naming; it emits no database membership constraint or
-general ordinal-rank behavior.
+The current target emits this required enum as `t.string "priority", default: "medium", null: false` and these
+lines in `Task`:
+
+```ruby
+enum :priority,
+  {
+    "low" => "low",
+    "medium" => "medium",
+    "high" => "high"
+  },
+  default: "medium",
+  validate: true
+validates :priority, presence: true
+```
+
+Supported form and projection labels use its authored names through Rails I18n; stored values remain keys. It emits
+native Rails enum helpers with collision-aware naming; it emits no database membership constraint or general
+ordinal-rank behavior. Without `ordinal`, this Plan compiles to the same application files.
 Do not assume a blanket enum gap; inspect the matching analysis for any unsupported consumer.
 
 ## Web Account and protected profile
@@ -413,8 +431,10 @@ Do not assume a blanket enum gap; inspect the matching analysis for any unsuppor
 This complete document expresses the current bounded Web Account topology with Field-only self-service registration,
 two self Policies, and a protected `/account` surface authored through `scaffold.profile`. It requests no native
 client; adding `native.ios` would give that client the same Account tab and profile, with sign-in on the same pages.
-It omits `verification`, so sign-up signs the person in; add
-`"verification": {"kind": "email"}` to `account` only when the user asks people to confirm their email.
+It omits `verification`, so sign-up signs the person in, and the app never checks that the person controls the email
+address. With `"verification": {"kind": "email"}` on `account`, sign-up instead emails a link and refuses sign-in
+until the person opens it; the [Accounts reference](foundation-plan-023.md#accounts-and-policies) lists what each
+choice emits.
 
 ```json
 {
@@ -622,13 +642,15 @@ This Like fragment is a copy of the example in the public Guide's [No-input reco
 section, which defines the pattern and what Rails generates for it. A like is made by a tap: the post comes from
 the page and the member from the signed-in Account, so Like's create has a binding and no `inputs`, and Like selects
 neither `new` nor `create`. A tap on Like creates the like and returns to the post page. A member can take a like
-back, so Like is a toggle. Its uniqueness rule over `like.post` and `like.member` allows one like per member per
-post, and its `destroy` is authorized by `like.manage_own`, which only the like's member passes. With both, the post
-page shows one button that reads Like or Unlike: one tap to like, one tap to unlike. A toggle also authors
-`destroy.return_to` through the parent Reference, here `like.post`, so Unlike stays on the post page; without it,
+back, so Like is a toggle. Its uniqueness rule over `like.post` and `like.member` emits
+`validates :member, uniqueness: {scope: :post_id}` and a unique index on `post_id` and `member_id`, so a member has
+at most one like per post. Its `destroy` is authorized by `like.manage_own`, which only the like's member passes.
+With both, the post page shows one button that reads Like or Unlike: one tap to like, one tap to unlike.
+`destroy.return_to` through the parent Reference, here `like.post`, keeps Unlike on the post page; without it,
 Unlike goes to the ordinary delete destination, such as Home. Follows, RSVPs, upvotes, and bookmarks are toggles
-too. A record that may repeat, such as a "mark as read" event or a check-in, keeps the no-input create but gets no
-uniqueness rule or `destroy`; a required time on it uses a `current_time` default.
+too. A Check-in with the same no-input create and neither choice gets a Check-in button that adds another record on
+every tap, and no page removes one. Its required `checked_in_at` with a `current_time` default emits
+`attribute :checked_in_at, default: -> { Time.current }`, so the tap supplies the time.
 
 ```jsonc
 {

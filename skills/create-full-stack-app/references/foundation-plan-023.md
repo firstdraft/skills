@@ -189,11 +189,13 @@ An Entity owns its Fields, References, Associations, Predicates, Orderings, Vali
 Account behavior, Scaffold, and stable reference data. Application-wide development data names its Entity owner
 explicitly because its records can form one connected graph.
 
-A Reference is a stored relationship fact. Its same-key forward Association is derived; do not author that
-inevitable traversal. A referenced-side Association reverses a Reference. An indirect Association follows its
-`through` Association, then a `source` Association from each of those records. With the `membership` Entity in
-[groups and memberships](#groups-and-memberships), authoring `team.memberships` over `membership.team` and
-`team.members` with `"through": "team.memberships"` and `"source": "membership.user"` adds these lines to `Team`:
+A Reference is a stored relationship fact, and it emits its same-key forward Association itself: `membership.team`
+gives `Membership` its `belongs_to :team`. An authored copy of that Association is skipped at import with
+`service_support_gap` records and changes no generated file. A referenced-side Association reverses a Reference. An
+indirect Association follows its `through` Association, then a `source` Association from each of those records.
+With the `membership` Entity in [groups and memberships](#groups-and-memberships), authoring `team.memberships` over
+`membership.team` and `team.members` with `"through": "team.memberships"` and `"source": "membership.user"` adds
+these lines to `Team`:
 
 ```ruby
 has_many :memberships, dependent: :delete_all
@@ -211,8 +213,9 @@ App Schema artifact.
 ## Presence
 
 - Omit ordinary empty collections and absent optional singleton or variant-specific objects.
-- `application.entities` is required and may be `[]` while authoring. Warn about the empty model; do not insert a
-  fake Entity.
+- `application.entities` is required and may be `[]` while authoring. That Plan compiles to the welcome page and no
+  models; any Entity, even a placeholder, adds a model, migration, factory, and model spec. Warn about the empty
+  model.
 - Required `native` and `delivery` maps may be `{}`. Within those sparse maps, a present member such as
   `"ios": {}` requests that feature; omission declines it. The current import and analysis boundary below determines
   whether that request can proceed beyond editable graph state.
@@ -392,12 +395,20 @@ page shows the Field, an image appears large on its details page and as a thumbn
 appears as a download link. A stored file satisfies a required Field on edit. Model several photos as a child Entity
 with one `image` Field, such as a Photo with its own caption.
 
-Type and size limits, several files per Field, direct uploads, optimized image delivery, and protected delivery are
-not generated. Uploaded files have permanent public URLs, so a Policy does not protect their bytes; say so when the
-files are private. A required upload on the Account Entity gets no sign-up file input: the Account keeps a partial
-gap, and because the model requires the file, sign-up cannot finish until the owner adds that input in Rails. Do not
-assign upload values in development data. Seeds attach a placeholder file to each required upload, and an authored
-upload value becomes a development-data gap.
+Uploads are Cloudinary "authenticated" assets, and a file follows the Policies of the pages that show it. The
+Compiler adds a `show_files?` rule to the Policy of each Entity with an upload, and `ActiveStorage::Authorization`
+asks that rule before Active Storage redirects to a download link that expires after five minutes. The rule allows
+anyone that a generated page displaying the upload allows: with the
+[signed-in gate](examples.md#signed-in-gate-and-one-tap-records) on the pages that show a Photo's picture, it is
+`allowed_to?(:use_app?, user, with: MemberPolicy)`. An image on public pages gets `true` and a permanent signed CDN
+link, and an upload that no generated page displays gets `false` and is served to no one. In an app without
+Policies, every generated page is public, and Active Storage serves any file to whoever has its link. Type and size
+limits, several files per Field, and direct uploads are not generated; the direct-upload route answers `403`.
+
+A required upload on the Account Entity gets no sign-up file input: the Account keeps a partial gap, and because the
+model requires the file, sign-up cannot finish until the owner adds that input in Rails. Seeds attach a placeholder
+file to each required upload. Development data cannot supply file bytes: an authored upload value becomes a
+development-data gap, and on a required upload its record is also left out of the seeds.
 
 Apps with uploads store them on Cloudinary in development and production; tests use local disk. Tell the user to
 create a Cloudinary account and set `CLOUDINARY_URL` from its dashboard in `.env.development.local` for local use and
@@ -429,12 +440,10 @@ default, security property, or other product meaning to obtain `valid`.
 An `enum` Field additionally requires `settings.values`, a nonempty array in stable order. Each value
 has its own `subject_uuid`, owner-local `key`, and human-facing `name`; mint an ID for each new value by running
 `generate uuid` through the Skill resolver, or use `generate uuid --count <n>` through that resolver for several
-values. Set the optional
-`settings.ordinal` to `true` only when the order carries semantic rank. Omit it when the order is presentational
-because omission and `false` are equivalent. Preserve a value's
-UUID through renames, reordering, and coherent moves between enum Fields. An enum literal default contains the
-selected value's owner-local `key`, not its UUID. Update that literal in the same candidate when renaming the value,
-while preserving the value's UUID.
+values. The optional `settings.ordinal: true` records that the order carries semantic rank; omission and `false` are
+equivalent. Preserve a value's UUID through renames, reordering, and coherent moves between enum Fields. An enum
+literal default contains the selected value's owner-local `key`, not its UUID. Update that literal in the same
+candidate when renaming the value, while preserving the value's UUID.
 
 The current Compiler emits a required enum as a non-null string column and a Rails `enum` mapping stable keys to
 themselves in authored order. `validate: true` supplies inclusion; a separate presence declaration handles
@@ -448,6 +457,20 @@ Forms submit stable keys in authored order. Edit the locale to change labels aft
 semantics, a native PostgreSQL enum, and database membership `CHECK` are not emitted. Conditions and Orderings
 over an optional enum, and other unsupported defaults or consumers, remain precise gaps. Preserve the enum and report
 only the reviewed consequences rather than assuming either blanket support or blanket failure.
+
+`ordinal` alone changes no generated file: the [ordinal example](examples.md#ordinal-enum-field) compiles to the same
+app without it. It lets a rank Ordering generate. On that example, an Ordering of `task.priority` descending, then
+`created_at` and `id` ascending, emits a matching expression index and:
+
+```ruby
+scope :by_priority, -> {
+  in_order_of(:priority, ["high", "medium", "low"], filter: false)
+    .order(created_at: :asc, id: :asc)
+}
+```
+
+Without `ordinal`, that Ordering is a `foundation_plan.gap.ordering.not_generated` record. A Scaffold index that
+selects it does not use the scope yet: it lists by `id` and records the same gap code.
 
 ### Money, positions, tokens, and JSON
 
@@ -589,8 +612,9 @@ They remain invalid only when the admitted meaning itself violates semantic rule
 
 The current Analyzer cannot prove an admitted `format` or `not_equals` rule for development records. Each record
 the rule covers, and each record that references it, gets a
-`foundation_plan.gap.development_data.record.not_generated` gap and is left out of the seed. Author these rules only
-when the user asks, and name the dropped sample records in the read-back.
+`foundation_plan.gap.development_data.record.not_generated` gap and is left out of the seed, as the
+[modeling guide's example](modeling-guide.md#prepare-data-for-the-first-preview) shows. Name the dropped sample
+records in the read-back.
 
 ### Predicates
 
@@ -602,9 +626,12 @@ Importability does not imply generated Predicate behavior; the reviewed GapSet d
 
 At most one Entity may own `account`. The schema requires one email identifier and one password sign-in method at
 this format boundary; optional registration, verification, recovery, and lockout objects express the requested
-flows. Do not add Account merely because a surface is private: establish the user's identity and access model first,
-then author the Account and Policies that represent it. Self-service registration or sign-in does not establish
-staff membership; preserve required eligibility conditions and ask when they are unspecified.
+flows. A realized `account` makes its Entity the Rodauth Account: the generated `RodauthMain` enables sign-up,
+sign-in, remember, password reset, lockout, and email and password changes, and anyone with an email address can
+sign up. It protects no Scaffold page by itself: each one still declares `public` or a Policy. Establish the user's
+identity and access model, then author the Account and Policies that represent it. Self-service registration or
+sign-in does not establish staff membership; preserve required eligibility conditions and ask when they are
+unspecified.
 
 Current public Web Account realization requires self-service registration, password-reset recovery, and lockout;
 email verification is optional. A realized Account derives one Web `/account` destination without requiring an
@@ -621,19 +648,25 @@ unstored Field, a registration default on another kind, or a required Reference 
 With self-service registration, sign-up must be able to supply each required Reference on the Account Entity,
 because the model rejects an Account without it. A default on the Reference or on its registration input supplies
 one. So does a required registration input over its Association when signed-out visitors may read the target's
-records, such as a public list of countries or languages. Without either, no sign-up can succeed, so do not author
-that Reference; this format does not reject it. When the target is a group the person belongs to, such as a shop or
-team, use [groups and memberships](#groups-and-memberships) instead. The Compiler generates none of these sources
-yet. With a registration input or with no source, it generates the Reference with the partial gap above, so every
-sign-up fails until its control or default is added in Rails after Compile. A default on the Reference itself
+records, such as a public list of countries or languages. Without either, sign-up cannot supply the required
+Reference, so every sign-up fails; this format does not reject that Plan. When the target is a group the person
+belongs to, such as a shop or team, [groups and memberships](#groups-and-memberships) joins the person to it through
+a membership record, so the Account Entity has no Reference to the group. The Compiler generates none of these
+sources yet. With a registration input or with no source, it generates the Reference with the partial gap above, so
+every sign-up fails until its control or default is added in Rails after Compile. A default on the Reference itself
 instead leaves the whole Reference out with a `foundation_plan.gap.reference.not_generated` record, so its column
 and relationship are Rails work after Compile.
 
-Omit `verification` by default, so sign-up signs the person in. Author `"verification": {"kind": "email"}` only when
-the user asks people to confirm their email; they then open an emailed link before they can sign in. Keep an existing
-Plan's `verification` unless the user asks to remove it. In the read-back, say plainly that people can sign in right
-after signing up and that email confirmation is available if they want it, or, when authored, that people confirm
-their email first.
+`account.verification` decides whether sign-up signs the person in. Without it, sign-up asks for the email twice and
+signs the person in, Change email takes effect at once, and the app can accept sign-ups before any email provider is
+configured; the app never checks that a person controls the address they sign up with or change to. With
+`"verification": {"kind": "email"}`, the generated `RodauthMain` also enables `:verify_account` and
+`:verify_login_change`: sign-up redirects to `/login` and emails a link, and signing in before following it is
+refused with `403`. Change email then emails a link to the new address, and the old one keeps working until it is
+confirmed. Because those links travel by email, `DEPLOY.md` makes a mail provider a launch prerequisite. Password
+reset and unlock need a provider either way. Keep an existing Plan's `verification` unless the user asks to remove it.
+In the read-back, say plainly that people can sign in right after signing up and that email confirmation is
+available if they want it, or, when authored, that people confirm their email first.
 
 Each Policy has stable identity, an owner-local key, one operation, and one `allow_when` Policy Expression. A
 Scaffold authorization is either the literal `public` or a typed Policy binding; the binding may select the primary
@@ -659,8 +692,8 @@ signup Fields; other Account Fields are not exposed automatically. An authored `
 details and collections with its projection and read Policy. An authored `scaffold.update` independently replaces
 edit inputs and their write Policy, including when no profile is authored. Unsupported custom definitions remain
 gaps and never activate permissive defaults. Every Account action resolves `current_account`, never a submitted ID.
-Credential changes use Rodauth: **Change email** verifies the new address before replacing the existing one, and
-**Change password** uses its signed-in password-change flow.
+Credential changes use Rodauth: **Change email** replaces the address at once, or, with `verification`, after the
+new address confirms an emailed link, and **Change password** uses its signed-in password-change flow.
 
 Selected iPhone and Android clients include the Account tab and the protected lists the web app shows, served by the
 same Rails pages and Policies; the [native Account flow](#application-and-clients) covers sign-in and sign-out.
@@ -822,7 +855,7 @@ submitted-record authorization, and carry the required application form-entry wo
 [implementation notes](modeling-guide.md#retain-implementation-requirements).
 Qualifying fixtures do not fix that application behavior; add successful New/browser coverage after repairing it.
 
-Omit `return_to` when the conventional interaction is intended: standalone New/Edit returns to the saved record,
+Without `return_to`, the conventional interaction applies: standalone New/Edit returns to the saved record,
 scoped associated create returns to its collection, a no-input associated create returns to its parent's page,
 destroy returns to the record's collection, and profile updates return to Account. If a preferred record or
 collection route is unavailable, Rails uses the admitted collection or home fallback. An explicit override remains

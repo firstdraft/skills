@@ -99,8 +99,8 @@ who can see and do what, and what happens when something is deleted. "Can one co
 photo?" is meaning. Ask it, or decide it only when the user delegated it with "you pick" or "make the rest of the
 decisions for me". Choosing a level does not delegate meaning.
 
-**Implementation** is how First Draft emits that meaning in Rails. The target profile fixes almost all of it; do
-not invent choices such as gems, column types, or callbacks. Today the Plan exposes one real choice: a Reference
+**Implementation** is how First Draft emits that meaning in Rails. The target profile fixes almost all of it: the
+Plan has no property for gems, column types, or callbacks. Today the Plan exposes one real choice: a Reference
 with more than one target needs `realization.rails_association`. In the bundled schema's words, `polymorphic` uses
 a Rails polymorphic association with ID and type columns, and `exclusive_arc` uses nullable foreign keys plus an
 exclusive-arc constraint. Whichever is chosen, the current Compiler leaves that Reference and the Associations over
@@ -166,8 +166,8 @@ proposal in the read-back.
       like per person per post.
 - [ ] Links and deletion: which records belong to which, and what happens to them when that record is deleted.
 - [ ] Access: who can see, add, change, and delete each kind of record, with one Policy per operation.
-- [ ] Accounts: whether people sign up, the Account Fields on the sign-up form, and email confirmation, which is
-      off unless asked.
+- [ ] Accounts: whether people sign up, the Account Fields on the sign-up form, and email confirmation; without
+      `verification`, sign-up signs people in and never checks that they control the address.
 - [ ] Lists: what each main list shows, starting with the record's name, and its order.
 - [ ] Sample data: the proposed sample records and demo sign-in, and any CSV the user wants imported; import itself
       goes in the implementation notes.
@@ -186,8 +186,9 @@ apply under `## After Compile` in `implementation-notes.md`, so the agent that c
       is set in the Render environment.
 - [ ] Performance monitoring: the app includes Skylight, which stays off until `SKYLIGHT_AUTHENTICATION` is set in
       the Render environment.
-- [ ] Email (apps with Accounts): password reset and unlock emails need a mail provider. Once the Account is
-      generated, follow `DEPLOY.md`'s "Account email launch prerequisite" before inviting real users.
+- [ ] Email (apps with Accounts): password reset and unlock emails need a mail provider; with `verification`,
+      sign-up and Change email need it too, because their links travel by email. Once the Account is generated,
+      follow the Account email section of `DEPLOY.md` before inviting real users.
 - [ ] Photos and files (apps with image or attachment Fields): sign up for Cloudinary and set `CLOUDINARY_URL`
       as the [upload setup](foundation-plan-023.md#photos-and-files) describes.
 - [ ] Deploy: before the first deploy, the user creates a separate Render workspace for this app in the Render
