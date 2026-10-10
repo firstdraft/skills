@@ -955,8 +955,10 @@ page's gap names them. This reference notes current output that conflicts with t
 report the reviewed gaps instead of changing requiredness, access, or workflows to match generated output.
 
 Every admitted index, public or protected, becomes a native entry point, with the Account entry last. Detail and
-form pages remain reachable through links. Public New/edit use modal context: iOS sheets and Android's full-screen
-form destination, with pull-to-refresh disabled.
+form pages remain reachable through links. Every generated New and edit page, public or gated, uses modal context:
+iOS sheets and Android's full-screen form destination, with pull-to-refresh disabled. The generated Rails app serves
+each client's bundled rules at `/configurations/ios_v1.json` and `/configurations/android_v1.json`, and each app loads
+that copy after its bundled one.
 
 ### Unsupported shapes
 
