@@ -670,10 +670,14 @@ available if they want it, or, when authored, that people confirm their email fi
 
 Each Policy has stable identity, an owner-local key, one operation, and one `allow_when` Policy Expression. A
 Scaffold authorization is either the literal `public` or a typed Policy binding; the binding may select the primary
-record or an explicit `environment/current_account` gate record. The current target emits a bounded Action Policy
-algebra and the relation scopes demanded by supported consumers. Unsupported Policy meaning remains a Policy gap,
-and every dependent Scaffold or projection remains an exact child gap. Do not infer that all Policies are supported
-or that all Scaffolds are public; inspect the whole matching GapSet.
+record or an explicit `environment/current_account` gate record. The current target lowers each Policy Expression,
+including `or`, `not`, `exists`, reused Predicates, paths through singular Associations, and `matches_policy`, to an
+Action Policy record rule. It also emits a relation scope unless every consumer is a `current_account` gate or a
+create form. A few leaves remain Policy gaps with a reason naming the node: reference data, normalized, derived, or
+encrypted Fields, ordinal enum ordering, case-insensitive Fields beyond equality, money or datetime literals finer
+than their column, and comparisons between two paths across a relationship. Every dependent Scaffold or projection of
+a gapped Policy remains an exact child gap. Do not infer that all Policies are supported or that all Scaffolds are
+public; inspect the whole matching GapSet.
 
 An Entity may have only one Policy per `operation`. A second Policy with the same operation on that Entity, such as a
 sign-in gate and a `read_self` Policy both using `read`, leaves both Policies out, along with every page that uses
@@ -702,20 +706,17 @@ binding, or a later update.
 
 A Policy can also follow a relationship the Plan already has. A repair's landlord is its unit's landlord, so a
 `repair` Policy can compare `unit.landlord` through `repair.unit`, as
-`"left": {"through": [{"association": "repair.unit"}], "target": {"association": "unit.landlord"}}`, or use
-`matches_policy` over `repair.unit` with the unit's landlord Policy, and Repair needs no `landlord` Reference. The
-Compiler does not generate the comparison through `repair.unit` yet. Whether it generates `matches_policy` depends on
-what uses the Policy and how the matched Policy reaches the Account. Here the repair's show page and the unit page's
-Repairs list use it, and the unit's landlord Policy compares the unit's own `landlord` Reference, so with either form
-the GapSet lists the Policy, the repair's show page and create form, and the Repairs list as not generated. A
-delegation of the same shape is generated when only a create uses it: a Note added from its team's page, whose
-`matches_policy` over `note.team` names the team's owner Policy on `team.owner`, emits
-`user&.id.present? && allowed_to?(:manage?, record&.team, with: TeamPolicy)`. It is also generated for a show page and
-a list when the matched Policy reaches the Account through a membership: a Task whose `matches_policy` over
-`task.team` names the team's members Policy emits `allowed_to?(:read?, record&.team, with: TeamPolicy)`, the scope
-`relation.joins(team: :members).where(members: {id: user.id}).distinct`, `resources :tasks, only: %i[show]`, and a
-Tasks list on the team page. A `landlord` Reference on Repair would repeat the unit's landlord and need its own
-source.
+`"left": {"through": [{"association": "repair.unit"}], "target": {"association": "unit.landlord"}}`, and Repair
+needs no `landlord` Reference. That comparison emits `user&.id.present? && record&.unit&.landlord_id == user.id` and
+the scope `relation.where(unit_id: Unit.where(landlord_id: user.id))`. `matches_policy` with the unit's own Policy
+works the same way: an Inspection whose `matches_policy` over `inspection.unit` names the unit's landlord Policy
+emits `user&.id.present? && allowed_to?(:manage?, record&.unit, with: UnitPolicy)` and the scope
+`relation.where(unit_id: authorized_scope(Unit.all, as: :manage, with: UnitPolicy))`. With either form, the show page,
+the create form, and the unit page's list that use the Policy are generated. A delegation through a membership
+follows the same pattern: a Task whose `matches_policy` over `task.team` names the team's members Policy emits the
+scope `relation.where(team_id: authorized_scope(Team.all, as: :read, with: TeamPolicy))`,
+`resources :tasks, only: %i[show]`, and a Tasks list on the team page. A `landlord` Reference on Repair would repeat
+the unit's landlord and need its own source.
 
 An update Policy does not make a record visible. On the work order above, `work` admits a contractor whom `read_own`
 does not. The Work orders index, scoped by `read`, leaves the record out for the contractor, and the record's page
@@ -725,9 +726,10 @@ appears only on that page, behind `allowed_to?(:update?, work_order, with: WorkO
 passes both Policies sees it. Edit and Update find the record through the `update` scope, so the contractor can open
 `/work_orders/1/edit` by URL, and saving runs `redirect_to work_order_path(@work_order), status: :see_other` to the
 page that returns 404. In the read-back, say who may change records they cannot read, and offer to widen the read
-Policy with what that widening generates today: a `read` Policy that admits the reporter or the contractor, an `or`
-of the two comparisons, is not generated yet, and the GapSet lists it and the index and show pages that use it as
-not generated, so no one gets that list or page.
+Policy. A `read` Policy that admits the reporter or the contractor, an `or` of the two comparisons, emits
+`user&.id.present? && (record&.reporter_id == user.id || record&.contractor_id == user.id)` and the scope
+`relation.where(reporter_id: user.id).or(relation.where(contractor_id: user.id))`, so the index lists the record for
+both of them and its page opens for both.
 
 Account details show the signup Fields and normalized email by default. Editing permits only mutable, non-derived
 signup Fields; other Account Fields are not exposed automatically. An authored `scaffold.profile` replaces displayed
@@ -846,10 +848,9 @@ the teams they own or belong to:
 }
 ```
 
-The Compiler does not generate `or` Policies yet; generating them is planned. Compiling this today lists
-`team.owner_or_member`, `team.scaffold.index`, and `team.scaffold.show` as not generated, so creating a team returns
-to the home page and nothing links to `/teams/new`. Either half alone generates both pages, but then the members or
-the owner cannot open them.
+The Compiler generates this `or` Policy as one rule and one relation scope, so the team's `index` and `show` pages
+generate with it. Either half alone would also generate both pages, but then the members or the owner could not open
+them.
 
 Invitations are not in the format yet, so a person signs up before a group's owner can add them. Say so in the
 read-back, and keep invitation work in [implementation notes](modeling-guide.md#retain-implementation-requirements)

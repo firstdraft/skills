@@ -454,10 +454,11 @@ Web components retain the stock Zinc theme, and native launcher icons remain sto
 one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, preview both
 native apps in Revyl with the [native preview steps](foundation-plan-023.md#preview-generated-native-apps). Ordinary
 Rails iteration uses the local web app; native preview is not a release or development prerequisite.
-Nonempty delivery, broader Account/Policy shapes, and broader clients remain unsupported or incomplete. Requirements without a
-v0.23 shape, including notification trigger/template definitions, deployment, and iPad, remain in
-[implementation notes](#retain-implementation-requirements) and the semantic read-back as currently unplannable
-rather than being invented as Plan JSON or promised a GapSet record.
+Nonempty delivery, broader Account shapes, the Policy leaves that the [Plan
+reference](foundation-plan-023.md#accounts-and-policies) lists as gaps, and broader clients remain unsupported or
+incomplete. Requirements without a v0.23 shape, including notification trigger/template definitions, deployment, and
+iPad, remain in [implementation notes](#retain-implementation-requirements) and the semantic read-back as currently
+unplannable rather than being invented as Plan JSON or promised a GapSet record.
 The authored `delivery` channel block itself remains in the Plan and receives its expected service-support gap.
 
 ## Preserve intent during diagnostics
