@@ -313,7 +313,9 @@ Report:
 - `--github` mode's private URL after Publication success; direct output's path, file count, manifest digest, and
   any `root_adoption` after materialization;
 - that direct Compile created no Publication or repository; after root adoption, use the
-  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for local setup and an optional Git checkpoint; and
+  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for local setup and an optional Git checkpoint;
+- whether setup and the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) actually ran,
+  and their outcome; and
 - any recovery blocker or external prerequisite.
 
 Distinguish verified materialization, First Draft Publication, and GitHub pushes. None proves deployment or

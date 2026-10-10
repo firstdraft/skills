@@ -163,7 +163,8 @@ Account slice. Use intentionally public demo values, never owner, provider, or p
 is needed for an Account-free app; unsupported Account or data behavior needs an honest gap, not a promised login
 or weakened access. Inspect the retained seed result before claiming sign-in works.
 
-After Compilation, follow [first-preview verification](diagnostics-and-recovery.md#verify-the-first-preview):
+After Compilation and the [test run](diagnostics-and-recovery.md#run-the-generated-tests), follow
+[first-preview verification](diagnostics-and-recovery.md#verify-the-first-preview):
 load the selected development records, inspect visible relationships and states, and actually sign in where
 applicable. A seed file or successful setup alone does not prove a useful first preview. Later UI examples normally
 extend `db/seeds/development.rb`; keep demo Accounts out of all-environment seeds and preserve changed passwords.
