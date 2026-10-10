@@ -1,10 +1,10 @@
 {
   "format": "firstdraft.release-compatibility/1",
   "component": "skills",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "plugin_source": {
     "package": "@firstdraft.com/claude-code",
-    "tarball_sha256": "35c83b07da618636b40e0acf4547779553a82ebb389ca7a5287823067f275766"
+    "tarball_sha256": "dd15833b6da19259c9f55a4f9f8534e852b3e2dbd388df60de56ef4ae73196b6"
   },
   "requires": {
     "api_contract": [
