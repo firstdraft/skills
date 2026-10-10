@@ -112,13 +112,12 @@ Account also satisfies the iPhone navigation requirement, so never discard priva
 
 Adding `appearance` to this candidate selects the theme and native shell colors. Every web app includes fixed
 black-on-white [bookmark assets](foundation-plan-023.md#bookmark-assets) without an additional Plan choice.
-Omitted theme means fixed light; web components keep stock Zinc tokens. Because this example also emits
-iOS, a matching valid AnalysisRun records the partial
-`foundation_plan.gap.appearance.icon_assets.not_generated` record at `/application/appearance` for the stock
-AppIcon. With `toggle`, the browser offers Light/Dark/System while the iOS shell and embedded Rails responses stay
-automatic; the run also records `foundation_plan.gap.appearance.native_theme_preference.not_generated` at
-`/application/appearance/theme`. Preserve the intentional Appearance request and report the complete reviewed
-GapSet rather than describing Appearance as wholly unsupported.
+Omitted theme means fixed light; web components keep stock Zinc tokens. The iPhone app's launcher icon uses the
+same black-on-white monogram as the bookmark assets, so Appearance records no icon gap. With `toggle`, the browser
+offers Light/Dark/System while the iOS shell and embedded Rails responses stay automatic; the run records
+`foundation_plan.gap.appearance.native_theme_preference.not_generated` at `/application/appearance/theme`.
+Preserve the intentional Appearance request and report the complete reviewed GapSet rather than describing
+Appearance as wholly unsupported.
 
 ## Conditional text length
 

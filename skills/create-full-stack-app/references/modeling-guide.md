@@ -455,7 +455,8 @@ when the user wants Light, Dark, and System choices: the browser starts at Syste
 preference, following OS changes only while System is selected. Fixed modes ignore old saved preferences.
 Native `toggle` output stays automatic with one reviewed gap for the absent native preference control; preserve
 the authored choice and requested clients instead of replacing `toggle` with `auto` or dropping a client.
-Web components retain the stock Zinc theme, and native launcher icons remain stock. Android shows
+Web components retain the stock Zinc theme. Native launcher icons use the app name's black-on-white monogram,
+like the bookmark assets. Android shows
 one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, preview both
 native apps in Revyl with the [native preview steps](foundation-plan-023.md#preview-generated-native-apps). Ordinary
 Rails iteration uses the local web app; native preview is not a release or development prerequisite.
