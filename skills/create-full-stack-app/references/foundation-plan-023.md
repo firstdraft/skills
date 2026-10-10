@@ -64,9 +64,9 @@ generated output, not observed application behavior, device installation, or dep
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded Field, relationship, Validation, Predicate, Ordering, State Machine,
   bookmark assets and metadata, Appearance theme/native-color, Web Account, Action Policy, generalized Web Scaffold,
-  development-data, and selected-iPhone/Android slices; [Fields](#entities-descriptors-and-fields) lists the Field
-  types that import and what each generates. Their prerequisites matter: unsupported children and consumers
-  remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
+  development-data, and selected native client (iPhone and Android) slices; [Fields](#entities-descriptors-and-fields)
+  lists the Field types that import and what each generates. Their prerequisites matter: unsupported children and
+  consumers remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
   retain a named partial gap for their stock launcher icons; `toggle` also records the absent native preference control.
 - Enums emit string storage with Rails enum inclusion and native helpers; a required enum adds presence validation,
   and an optional enum allows nil. An admitted enum accepts its compatible in-domain literal-key default. Database
@@ -971,5 +971,5 @@ skipped before semantic analysis; target-support meaning was admitted and analyz
 Preserve the authored Plan and report every exact gap.
 
 Successful Compilation retains the exact submitted Plan at `.firstdraft/submitted-foundation-plan.json` and the
-canonical machine-readable GapSet at `.firstdraft/gaps.json`. There is intentionally no duplicate
-`FOUNDATION_GAPS.md`; future agents should read the one JSON authority.
+canonical machine-readable GapSet at `.firstdraft/gaps.json`. There is intentionally no duplicate Markdown gap file;
+future agents should read the one JSON authority.

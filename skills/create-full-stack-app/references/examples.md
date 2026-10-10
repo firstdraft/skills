@@ -8,7 +8,7 @@ change.
 ## Contents
 
 - [Empty starter](#empty-starter)
-- [Bounded web and iPhone application](#bounded-web-and-iphone-application)
+- [Bounded Rails and iOS application](#bounded-rails-and-ios-application)
 - [Conditional text length](#conditional-text-length)
 - [Public mutation, show projection, returns, and destroy](#public-mutation-show-projection-returns-and-destroy)
 - [Deliberate return overrides](#deliberate-return-overrides)
@@ -47,9 +47,9 @@ This Plan compiles to the welcome page and no models. The
 `create_tasks` migration, a factory, and a model spec, so a placeholder Entity would ship as real code. Tell the user
 that the application model is still empty.
 
-## Bounded web and iPhone application
+## Bounded Rails and iOS application
 
-This complete document is the smallest canonical `rails-sketch/2026-09-bookmark-assets` web and iPhone success candidate. It
+This complete document is the smallest canonical `rails-sketch/2026-09-bookmark-assets` Rails and iOS success candidate. It
 requests one read-only public web index and one selected iPhone project with the same navigation label and semantic
 icon. The domain supplies the native HTTPS origin and identifier prefix, plus the Rails production mailer host.
 The required title Field supplies the human-facing Primary Descriptor. The prepared analyzer is designed to
