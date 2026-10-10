@@ -183,9 +183,9 @@ const retiredTerms = [
     reason: "gh skill publication would release the deferred UI Skills without the bundled CLI",
   },
   {
-    // Case-sensitive, so a lowercase heading anchor such as #bounded-web-and-iphone-application passes.
+    // Case-sensitive, so a lowercase heading anchor passes.
     pattern: /\bweb-and-iPhone\b/g,
-    successor: "the reviewed GapSet for the Plan, or plain 'web and iPhone' for one example's clients",
+    successor: "the reviewed GapSet for the Plan, or plain 'Rails and iOS' for one example's clients",
     reason: "the web-and-iPhone contract ended when Android support was added on 2026-09-12",
   },
   {
@@ -1125,7 +1125,7 @@ test("documented Plans match canonical example fixtures", async () => {
   const applicationIntentPlan = (await markdownJsonDocuments(
     path.join(referencesDirectory, "examples.md"),
   )).find((document) => document?.application?.key === "movie_catalog");
-  assert(applicationIntentPlan, "examples.md: missing bounded web and iPhone Plan");
+  assert(applicationIntentPlan, "examples.md: missing bounded Rails and iOS Plan");
   assert.equal(applicationIntentPlan.application.domain, "movies.example.com");
   assert(!("appearance" in applicationIntentPlan.application));
   assert.deepEqual(applicationIntentPlan.application.native, { ios: {} });
