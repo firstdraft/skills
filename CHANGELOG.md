@@ -56,6 +56,27 @@ applies to a Plan whose Account Entity requires a Reference to a group. The Asso
 lines that referenced-side and indirect Associations emit, where it used to say to author them only when they carry
 product meaning.
 
+The authoring references replace most of their "only when" and "do not" rules with what a Plan choice emits. Agents
+read those rules, such as the ones for Scaffolds and `format` Validations, as prohibitions and left out parts of the
+format the product needed. The converted passages now quote current Compiler output: the Rails lines that a
+Reference, Scaffold, Validation, normalization pipeline, Home choice, email verification, Predicate, or Ordering
+emits, what a person sees, and the gap that remains, so the agent decides from the user's product. For a one-tap
+record, the uniqueness rule and `destroy` route are shown both ways: with both, the button is a Like/Unlike toggle;
+with neither, each tap adds another record, such as a check-in. Rules remain for access, personal data, and shapes
+the format rejects or that cannot succeed, stated as facts about the result. The references also correct these
+claims: **Change email** confirms the new address only when the Account authors `verification`, and without it the
+change takes effect at once and the app never checks that a person controls the address; a `url` Field gets a
+browser URL input, and the model does not check its shape; and the after-Compile email step now names the Account
+email section of `DEPLOY.md`, because its "launch prerequisite" heading appears only in apps with verification. This
+applies to every Plan the Skill authors.
+
+Once the First Draft service deploys the matching Compiler, uploads are no longer public Cloudinary assets. They
+become "authenticated" assets, and a file follows the Policies of the pages that show it: a generated `show_files?`
+rule decides who may open it, a protected file redirects to a download link that expires after five minutes, an
+image on public pages keeps a permanent signed CDN link, and an upload that no generated page displays is served to
+no one. The Skill's upload section used to say that a Policy did not protect uploaded files and to warn users whose
+files were private; it now describes this access. Apps compiled earlier keep their public upload links.
+
 ## 2026-10-05: Remembered sign-ins
 
 **Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
