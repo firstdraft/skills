@@ -70,6 +70,19 @@ browser URL input, and the model does not check its shape; and the after-Compile
 email section of `DEPLOY.md`, because its "launch prerequisite" heading appears only in apps with verification. This
 applies to every Plan the Skill authors.
 
+A line-by-line review of generated apps found four flows that their Plans made unreachable, and the references now
+show each outcome. A Policy that compares a Reference no input or binding sets, such as a work order's optional
+contractor, admits no one outside development data, and an update guarded by that same Policy cannot set it, so the
+read-back now says how each Reference a Policy compares gets its value. A Policy that follows a path the Plan already
+has, such as a repair's unit's landlord, needs no new Reference. The Compiler does not generate a comparison through
+that path yet. It does not generate `matches_policy` with the unit's landlord Policy when a repair's page or list
+uses it, and it generates `matches_policy` when only a create uses it or when the matched Policy reaches the Account
+through a membership. Someone whom an update Policy admits and the read Policy does not can reach the edit page only
+by URL, and saving sends them to a page that returns 404, so the read-back says who cannot see what they can change.
+A one-tap button's label is its Entity's name, so an Entity named Check-in shows a Check-in button. An Entity that
+selects `destroy` without `show` gets no Delete button unless it is a one-tap toggle, whose undo button deletes, so
+for the others the read-back asks where people delete from. This applies to every Plan the Skill authors.
+
 Once the First Draft service deploys the matching Compiler, uploads are no longer public Cloudinary assets. They
 become "authenticated" assets, and a file follows the Policies of the pages that show it: a generated `show_files?`
 rule decides who may open it, a protected file redirects to a download link that expires after five minutes, an

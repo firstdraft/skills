@@ -687,6 +687,48 @@ Policy on a record one level inside a collection can be generated; a gate bindin
 deeper, is omitted with a gap. The [signed-in gate example](examples.md#signed-in-gate-and-one-tap-records) shows
 the shape.
 
+A Policy that compares a Reference with `current_account` admits only records whose Reference holds that Account. On
+a work order whose `read_own` Policy compares `work_order.reporter` and whose `work` Policy, bound to update, compares
+the optional `work_order.contractor`, the Compiler emits `user&.id.present? && record&.reporter_id == user.id` for
+`read?` and `user&.id.present? && record&.contractor_id == user.id` for `update?`. The create binds the reporter to
+`current_account`, but no input or binding sets the contractor: the controller permits only
+`params.expect(work_order: [:summary])`, no form has a Contractor control, and only development data assigns one, as
+in `WorkOrder.find_or_create_by!(summary: "Leaking tap", reporter: alice, contractor: bob)`. Outside that seed, no
+contractor passes `work`. A later update sets such a Reference only if its Policy admits someone while the Reference
+is empty, such as the reporter. Here edit and update load the record through
+`relation.where(contractor_id: user.id)`, so no one can open the edit page of a work order with no contractor. In the
+read-back, name each Reference a Policy compares with the current Account and say how it gets its value: an input, a
+binding, or a later update.
+
+A Policy can also follow a relationship the Plan already has. A repair's landlord is its unit's landlord, so a
+`repair` Policy can compare `unit.landlord` through `repair.unit`, as
+`"left": {"through": [{"association": "repair.unit"}], "target": {"association": "unit.landlord"}}`, or use
+`matches_policy` over `repair.unit` with the unit's landlord Policy, and Repair needs no `landlord` Reference. The
+Compiler does not generate the comparison through `repair.unit` yet. Whether it generates `matches_policy` depends on
+what uses the Policy and how the matched Policy reaches the Account. Here the repair's show page and the unit page's
+Repairs list use it, and the unit's landlord Policy compares the unit's own `landlord` Reference, so with either form
+the GapSet lists the Policy, the repair's show page and create form, and the Repairs list as not generated. A
+delegation of the same shape is generated when only a create uses it: a Note added from its team's page, whose
+`matches_policy` over `note.team` names the team's owner Policy on `team.owner`, emits
+`user&.id.present? && allowed_to?(:manage?, record&.team, with: TeamPolicy)`. It is also generated for a show page and
+a list when the matched Policy reaches the Account through a membership: a Task whose `matches_policy` over
+`task.team` names the team's members Policy emits `allowed_to?(:read?, record&.team, with: TeamPolicy)`, the scope
+`relation.joins(team: :members).where(members: {id: user.id}).distinct`, `resources :tasks, only: %i[show]`, and a
+Tasks list on the team page. A `landlord` Reference on Repair would repeat the unit's landlord and need its own
+source.
+
+An update Policy does not make a record visible. On the work order above, `work` admits a contractor whom `read_own`
+does not. The Work orders index, scoped by `read`, leaves the record out for the contractor, and the record's page
+returns 404 for them, because `show` finds it through
+`authorized_scope(WorkOrder.all, type: :active_record_relation, as: :read, with: WorkOrderPolicy)`. The Edit link
+appears only on that page, behind `allowed_to?(:update?, work_order, with: WorkOrderPolicy)`, so only someone who
+passes both Policies sees it. Edit and Update find the record through the `update` scope, so the contractor can open
+`/work_orders/1/edit` by URL, and saving runs `redirect_to work_order_path(@work_order), status: :see_other` to the
+page that returns 404. In the read-back, say who may change records they cannot read, and offer to widen the read
+Policy with what that widening generates today: a `read` Policy that admits the reporter or the contractor, an `or`
+of the two comparisons, is not generated yet, and the GapSet lists it and the index and show pages that use it as
+not generated, so no one gets that list or page.
+
 Account details show the signup Fields and normalized email by default. Editing permits only mutable, non-derived
 signup Fields; other Account Fields are not exposed automatically. An authored `scaffold.profile` replaces displayed
 details and collections with its projection and read Policy. An authored `scaffold.update` independently replaces
@@ -876,8 +918,15 @@ A [no-input create](modeling-guide.md#add-behavior-deliberately) shows a one-tap
 with no scoped New page.
 Ordinary child edit/update/destroy routes stay flat. Preview rows contain selected properties and an optional
 authorized details link, without inline mutation controls. If no target show route is selected, its selected flat
-mutation routes are still generated, but no generated page links to them. Do not invent a show route or discard
-authored properties to fill that gap.
+mutation routes are still generated, but no generated page links to them. A Comment added from its unit's page with
+`"resource_routes": ["destroy"]` emits `resources :comments, only: %i[destroy]` and a `destroy` action, while the
+unit page lists its comments with no link or Delete button, so a comment can be deleted only by a request to its URL.
+The GapSet lists nothing for it. The Delete button is on the record's own page: with `show` as well, each row the
+viewer may open links to the comment's page, which shows Delete to whoever passes the destroy Policy, and other rows
+show the comment without a link. With `index` instead, a link in the main navigation opens a list of comments whose
+rows have no link or Delete button. A [one-tap toggle](modeling-guide.md#add-behavior-deliberately) is the
+exception: its undo button, such as Unlike, deletes from the parent page. Otherwise, when `destroy` comes without
+`show`, ask in the read-back where people delete from and show what each choice generates.
 
 For behavior claimed as realized, routes, projections, authorization, inputs, and returns follow the authored Plan.
 Generated Rails may do less than the Plan asks. The reviewed GapSet lists the authored meaning it does not realize,
