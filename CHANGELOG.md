@@ -29,6 +29,18 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-09: General Policy lowering
+
+**Skills — released in plugin 0.8.8.** Once the First Draft service deploys the matching Compiler, a Policy's
+`allow_when` lowers in general. `or`, `not`, `exists`, reused Predicates, paths through singular Associations, and
+`matches_policy` all generate an Action Policy rule. Each Policy also gets a relation scope unless it guards only
+`current_account` gates or create forms. The Skill's Plan reference used to say the target emitted a bounded set of
+Policy shapes, which could lead an agent to rewrite a Policy into one of them. It now lists the few leaves that still
+leave a Policy gap, each with a reason naming the node: reference data, normalized, derived, or encrypted Fields,
+ordinal enum ordering, case-insensitive Fields beyond equality, money or datetime literals finer than their column,
+and comparisons between two paths across a relationship. The group-membership, repair, and work-order examples now
+quote what their `or` Policies, path comparison, and delegations emit, along with the pages that use them.
+
 ## 2026-10-09: Code worth keeping
 
 **Skills — released in plugin 0.8.8.** First Draft now holds generated apps to one
@@ -49,12 +61,11 @@ the owner adds members through a membership Entity with a role. The reference us
 from the Account Entity to the group and told agents to add its sign-up control in Rails after Compile. Sign-up
 cannot supply that Reference, so every sign-up failed, and a public group picker would let anyone join any group.
 The new Groups and memberships section gives the Entities, Associations, and a read Policy that admits the group's
-owner or a member. The Compiler does not generate that `or` Policy yet, so it lists the group's index and show pages
-as not generated. It also lists the owner's form for adding members, because no authorization decides which Accounts
-that form may offer. Invitations are not in the format yet, so a person signs up before an owner can add them. This
-applies to a Plan whose Account Entity requires a Reference to a group. The Association guidance also shows the Rails
-lines that referenced-side and indirect Associations emit, where it used to say to author them only when they carry
-product meaning.
+owner or a member. The Compiler generates that `or` Policy with the group's index and show pages. It also lists the
+owner's form for adding members, because no authorization decides which Accounts that form may offer. Invitations are
+not in the format yet, so a person signs up before an owner can add them. This applies to a Plan whose Account Entity
+requires a Reference to a group. The Association guidance also shows the Rails lines that referenced-side and indirect
+Associations emit, where it used to say to author them only when they carry product meaning.
 
 The authoring references replace most of their "only when" and "do not" rules with what a Plan choice emits. Agents
 read those rules, such as the ones for Scaffolds and `format` Validations, as prohibitions and left out parts of the
@@ -74,14 +85,13 @@ A line-by-line review of generated apps found four flows that their Plans made u
 show each outcome. A Policy that compares a Reference no input or binding sets, such as a work order's optional
 contractor, admits no one outside development data, and an update guarded by that same Policy cannot set it, so the
 read-back now says how each Reference a Policy compares gets its value. A Policy that follows a path the Plan already
-has, such as a repair's unit's landlord, needs no new Reference. The Compiler does not generate a comparison through
-that path yet. It does not generate `matches_policy` with the unit's landlord Policy when a repair's page or list
-uses it, and it generates `matches_policy` when only a create uses it or when the matched Policy reaches the Account
-through a membership. Someone whom an update Policy admits and the read Policy does not can reach the edit page only
-by URL, and saving sends them to a page that returns 404, so the read-back says who cannot see what they can change.
-A one-tap button's label is its Entity's name, so an Entity named Check-in shows a Check-in button. An Entity that
-selects `destroy` without `show` gets no Delete button unless it is a one-tap toggle, whose undo button deletes, so
-for the others the read-back asks where people delete from. This applies to every Plan the Skill authors.
+has, such as a repair's unit's landlord, needs no new Reference. Both a comparison through that path and
+`matches_policy` with the unit's landlord Policy generate, along with the repair's page and list that use them.
+Someone whom an update Policy admits and the read Policy does not can reach the edit page only by URL, and saving
+sends them to a page that returns 404, so the read-back says who cannot see what they can change. A one-tap button's
+label is its Entity's name, so an Entity named Check-in shows a Check-in button. An Entity that selects `destroy`
+without `show` gets no Delete button unless it is a one-tap toggle, whose undo button deletes, so for the others the
+read-back asks where people delete from. This applies to every Plan the Skill authors.
 
 Once the First Draft service deploys the matching Compiler, uploads are no longer public Cloudinary assets. They
 become "authenticated" assets, and a file follows the Policies of the pages that show it: a generated `show_files?`
