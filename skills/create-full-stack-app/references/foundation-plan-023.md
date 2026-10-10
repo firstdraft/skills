@@ -66,8 +66,8 @@ generated output, not observed application behavior, device installation, or dep
   bookmark assets and metadata, Appearance theme/native-color, Web Account, Action Policy, generalized Web Scaffold,
   development-data, and selected native client (iPhone and Android) slices; [Fields](#entities-descriptors-and-fields)
   lists the Field types that import and what each generates. Their prerequisites matter: unsupported children and
-  consumers remain exact gaps rather than widening the supported shape. When Appearance is authored, emitted native clients
-  retain a named partial gap for their stock launcher icons; `toggle` also records the absent native preference control.
+  consumers remain exact gaps rather than widening the supported shape. With Appearance `toggle`, the GapSet records
+  the absent native preference control for emitted native clients.
 - Enums emit string storage with Rails enum inclusion and native helpers; a required enum adds presence validation,
   and an optional enum allows nil. An admitted enum accepts its compatible in-domain literal-key default. Database
   membership constraints, general rank behavior, and broader enum consumers remain unsupported.
@@ -88,7 +88,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.8/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.9/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -301,9 +301,8 @@ the browser selector/storage, and disclose the missing native preference control
 clients; no native settings bridge is generated. This source mapping does not establish native runtime qualification.
 
 Native tint and background colors do not replace the stock Zinc web component tokens or the black-on-white
-[bookmark artwork](#bookmark-assets). For authored Appearance with emitted native clients, stock launcher icons cause the precise
-`foundation_plan.gap.appearance.icon_assets.not_generated` partial gap. Web-only output has no Appearance
-icon-assets gap. Other admitted but unconsumed Application configuration remains a target gap.
+[bookmark artwork](#bookmark-assets). Native launcher icons use the same monogram, so Appearance records no icon gap.
+Other admitted but unconsumed Application configuration remains a target gap.
 
 The prepared Compilation emits admitted public and bounded Account/Policy-controlled Web surfaces and, when the
 navigation prerequisite is met, selected owned iPhone and Android projects beneath `ios/` and `android/`. Push and
@@ -339,10 +338,13 @@ The smallest accepted Application remains:
 Every web app includes a favicon, touch icon, and home-screen bookmark metadata without a Plan choice. The
 Compiler selects prepared black-on-white artwork from the app name's first trimmed character: ASCII A–Z and 0–9,
 with lowercase letters uppercased and a neutral circle for other initials. The actual app name is unchanged.
-Authored Appearance colors do not recolor these assets; native launcher artwork remains separate.
+Authored Appearance colors do not recolor these assets. A selected iPhone or Android client uses the same monogram
+as its launcher icon: an opaque 1024px `AppIcon.png`, and an Android vector foreground drawn on white that also
+serves as the themed-icon layer.
 
 After Compilation, follow the app's `UI.md` when replacing `public/icon.svg`, `public/icon.png` (512px), and
-`public/icon-192.png`. Keep layout and manifest references consistent with the files and application name.
+`public/icon-192.png`, or the native launcher icons. Keep layout and manifest references consistent with the files
+and application name.
 
 ### Entities, descriptors, and Fields
 

@@ -29,6 +29,18 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-10: Launcher icons from the app name
+
+**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a generated
+iPhone or Android app gets its launcher icon from the app name. The icon is the black-on-white monogram that already
+draws the web bookmark icons: the name's first ASCII letter or digit, or a neutral circle. Before, the iPhone
+AppIcon set held no image, so the app had no icon and an App Store upload would likely fail. Android showed a fixed
+F that matched few app names. Now iPhone receives an opaque 1024px `AppIcon.png`, and Android draws the monogram on
+a white background and reuses it for themed icons. The GapSet no longer lists
+`foundation_plan.gap.appearance.icon_assets.not_generated` for a Plan with Appearance and a native client, and the
+Skill's references no longer describe stock launcher icons. The generated `UI.md` names the icon files to replace
+with your own artwork. Apps compiled earlier keep Core's icons until their owners replace them.
+
 ## 2026-10-09: Code worth keeping
 
 **Skills — released in plugin 0.8.8.** First Draft now holds generated apps to one
