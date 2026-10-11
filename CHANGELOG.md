@@ -29,6 +29,30 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-11: Predicates and Orderings left to write
+
+**Skills — released in plugin 0.8.10.** Once the First Draft service deploys the matching Compiler, a Predicate or
+Ordering that the Compiler cannot generate still gets its named scope, unless the model cannot take that name. The
+scope raises `NotImplementedError` until someone writes it, and an Ordering's scope gets no database index. Every
+Scaffold index and collection that selects the scope calls it, so those pages raise and the specs that request them
+fail. Before, the Compiler left the scope out, and the page listed records without the filter or in `id` order. The
+generated README lists each such scope under Behavior to write, with the pages that call it and the specs that cover
+it. The generated `AGENTS.md` says to run the specs before other work and to write what a `NotImplementedError` names
+until its specs pass. Each gap record's consequence says what the generated app does.
+
+The Skill's test run after Compile now sorts failures the same way. A failure that raises `NotImplementedError` for
+behavior the README's Behavior to write lists is work to do: the agent writes that behavior until its specs pass. Any
+other failure is still a First Draft defect, reported with RSpec's rerun line and error. The agent never edits or
+deletes a generated spec, skips examples, or changes the commands to make the run pass. While specs fail, it still
+asks before a preview and names the pages that will fail or raise. Continued work in the app also starts with the
+specs. A repository published with `--github` starts with red CI while a spec fails for behavior the README lists,
+until that behavior is written and pushed. The Plan reference now says that omitting a surface whose Policy the
+Compiler cannot generate is current output, and that First Draft's direction is to emit that surface with a stubbed
+Policy that admits nobody until it is written.
+
+Until the service deploys that Compiler, no README lists Behavior to write, so every failing spec is a defect, as in
+plugin 0.8.9. Apps compiled earlier keep their omitted scopes, unfiltered lists, and `id` order.
+
 ## 2026-10-10: Reference pickers search the server
 
 **Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a generated form

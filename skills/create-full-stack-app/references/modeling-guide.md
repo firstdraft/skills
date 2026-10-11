@@ -380,10 +380,14 @@ each counter after its authored items; people never type them.
   `scope :featured, -> { where(pinned: true) }` and no index. An Ordering of `created_at`, then `id`, both
   descending, emits `scope :newest_first, -> { order(created_at: :desc, id: :desc) }` and
   `t.index ["created_at", "id"]`. A Scaffold index that selects both lists `Post.featured.newest_first`; without a
-  selection, an index lists by `id`, as in `Topic.order(:id)`. A `contains` Predicate on `caption` and an Ordering
-  of `caption` alone emit no code: each is a `foundation_plan.gap.predicate.not_generated` or
-  `foundation_plan.gap.ordering.not_generated` record. An index that selects one still generates, without that
-  filter or in `id` order, and records its own gap. A Field followed by `id` also generates when both run in one
+  selection, an index lists by `id`, as in `Topic.order(:id)`. The Compiler cannot generate a `contains` Predicate
+  on `caption` or an Ordering of `caption` alone: each is a `foundation_plan.gap.predicate.not_generated` or
+  `foundation_plan.gap.ordering.not_generated` record, and an index that selects one records its own gap. Each
+  record's consequence says what the generated app does. When it says the named scope raises `NotImplementedError`
+  until it is written, the Compiler emitted that scope as a stub, with no database index for an Ordering, and the
+  README's Behavior to write lists it; an index that selects it calls the stub, so the page raises until then.
+  Otherwise the scope is left out, as a Compiler without stubs does or when the model cannot take that name, and the
+  consequence says what the page does without it. A Field followed by `id` also generates when both run in one
   direction: on Bulletin, `title`, then `id`, both ascending, emits
   `scope :by_title, -> { order(title: :asc, id: :asc) }` and `t.index ["title", "id"]`. The same terms with `id`
   descending are a `foundation_plan.gap.ordering.not_generated` record.
