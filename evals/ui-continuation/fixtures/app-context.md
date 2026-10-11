@@ -30,8 +30,8 @@ Turbo Mount 0.4.4, and primitives copied by the shadcn 4.21.0 CLI. There is no c
 `shared/ui/page_heading` has locals `(title:, description: nil, eyebrow: nil, hide_in_native: false)`.
 `shared/ui/empty_state` has locals `(title:, description: nil, action_label: nil, action_path: nil)`.
 `shared/ui/field_errors` has locals `(errors:, id: nil)`.
-`shared/ui/reference_field` has locals
-`(form:, attribute:, options:, label:, value:, required: false, disabled: false, errors: [], id: nil)`.
+`shared/ui/reference_field` has locals `(form:, attribute:, options:, label:, value:, required: false,
+disabled: false, errors: [], id: nil, search_url: nil)`.
 `shared/ui/date_field` has the same locals except `options:`. Reference options are `[label, value]` pairs.
 All controls use the passed Rails form builder's `field_name`/`field_id`; a field renders model errors and receives
 the submitted value. Repeated/cached partials can pass explicit distinct IDs.

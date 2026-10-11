@@ -910,9 +910,14 @@ definition with bindings and no `inputs`, reached through an associated `create_
 
 Create and update controls cover the admitted scalar, required-enum, and direct-Association slices. Required
 destinations need an admitted source such as a control, binding, realized default, state-machine initial state, or
-the exact associated-create parent. Protected forms authorize before loading options. A `current_account` binding
-may target only the realized Account Reference in a non-public Account-backed context; it cannot silently turn a
-public create into an authenticated request.
+the exact associated-create parent. Protected forms authorize before loading options. A direct-Association control
+searches its target's records on the server as the person types when the target's descriptor is a required
+`short_text` or `long_text` Field, on the target or one hop away, that is neither redacted from logs nor encrypted.
+The page that renders the form answers that search behind its own checks, so it lists only records the form may
+offer, to people the page admits. Without JavaScript, a New form whose required Reference searches cannot create its
+record. Any other descriptor loads every target record into the form. A `current_account` binding may target only
+the realized Account Reference in a non-public Account-backed context; it cannot silently turn a public create into an
+authenticated request.
 
 If an admitted associated form supplies a required parent but the selected standalone create has no source for it,
 the standalone endpoint remains generated with its authored inputs and authorization plus a `partially_generated`
