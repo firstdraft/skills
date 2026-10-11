@@ -29,6 +29,25 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-10: Collection pages as nested resources
+
+**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a generated app
+serves each parent's full collection page, its New page, and its create from a nested Rails controller, as a Rails
+developer would write it. A Post's Comments use `Posts::CommentsController`, routed by
+`resources :comments, only: %i[index new create], module: :posts` inside `resources :posts`, which loads the Post in
+`before_action :set_post`. Its views live in `app/views/posts/comments/`, including a Post-specific row partial such
+as `posts/comments/_comment`, which the Post page's preview and the full page both render by that path. Before, the
+parent's controller held a `comments_collection` action and the child's controller branched on the request path to
+find its parent. URLs and route helpers do not change.
+
+The full collection page now shows the same two empty states as an index: "No comments yet" when there are none, and
+"That page is empty" with a link back to the first page when a page number runs past the end. A collection whose
+label is not its records' plural names that label as written, as in "Nothing in Pinned comments yet". Every index
+names its collection when empty instead of saying "No records yet". The nested resource's request and system specs
+live beside its controller, such as `spec/requests/posts/comments_spec.rb`. Apps compiled earlier keep their flat
+routes, which still work; an owner who wants this shape can move a collection's actions into a nested controller by
+hand.
+
 ## 2026-10-10: References with several targets compile
 
 **Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a Reference with
