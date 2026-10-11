@@ -29,6 +29,28 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-10: Removing an uploaded file
+
+**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, the edit form of
+an optional `attachment` or `image` Field offers a "Remove" checkbox once a file is stored. An empty file input
+keeps the stored file, so the file could not be cleared from the page before. The checkbox submits
+`remove_<field>`, the name CarrierWave and Shrine give the same control. The model declares
+`attribute :remove_proof, :boolean, default: false` and `before_save { self.proof = nil if remove_proof? }`, and
+Active Storage detaches the file in the save and deletes it in a job after commit. A checked box wins over a newly
+chosen file. A generated request spec attaches a file, submits only the flag, and expects no file to remain.
+
+The same Compiler also trims output nothing uses. Enum labels, the Yes/No and "Not set" copy, and the navigation
+label are written to the locale only when a generated page, form, or controller reads them. A details card with no
+action has no empty toolbar, and a collection card with no Add control has no empty action list. The instance
+variable that holds a one-tap record for its undo button takes the Entity's name, so a Product's saved records use
+`@own_save` rather than `@own_safe`, the singular Rails derives from `saves`.
+
+For an app compiled earlier, add the checkbox yourself where users need to clear a file: permit the flag in the
+update's strong parameters, and declare the attribute with `default: false` and the callback in the model. Render the
+checkbox in the edit form only for a saved record with a stored file, `record.persisted? &&
+record.proof_attachment.present?`: `record.proof.attached?` is also true for a file chosen in a submission that
+failed validation.
+
 ## 2026-10-10: Collection pages as nested resources
 
 **Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a generated app

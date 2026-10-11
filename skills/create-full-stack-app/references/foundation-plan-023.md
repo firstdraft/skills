@@ -396,8 +396,10 @@ when a transition is intended; constructing its destination state directly would
 An `attachment` or `image` Field holds one uploaded file. The Compiler emits Active Storage `has_one_attached`, a
 presence validation when the Field is required, and a Scaffold file input; an image input accepts `image/*`. Where a
 page shows the Field, an image appears large on its details page and as a thumbnail in list rows, and an attachment
-appears as a download link. A stored file satisfies a required Field on edit. Model several photos as a child Entity
-with one `image` Field, such as a Photo with its own caption.
+appears as a download link. A stored file satisfies a required Field on edit. An empty file input keeps the stored
+file, so the edit form of an optional upload adds a "Remove" checkbox once a file is stored; the model clears the file
+on save, and Active Storage deletes it afterward. Model several photos as a child Entity with one `image` Field, such
+as a Photo with its own caption.
 
 Uploads are Cloudinary "authenticated" assets, and a file follows the Policies of the pages that show it. The
 Compiler adds a `show_files?` rule to the Policy of each Entity with an upload, and `ActiveStorage::Authorization`
@@ -456,7 +458,8 @@ form keeps a blank choice that stores nil, and read-only pages show nil as missi
 methods keep ordinary names when safe; the Compiler uses Rails prefix or suffix options when needed to avoid
 collisions. Compatible in-domain literal-key defaults use the enum declaration and matching database default.
 Admitted form options and read-only projections use Rails I18n entries under `enums.<model>.<field>.<key>` in
-`config/locales/foundation_domain.en.yml`, seeded from the authored value names.
+`config/locales/scaffolds.en.yml`, seeded from the authored value names. An enum that no page shows and no form
+offers gets no entries.
 Forms submit stable keys in authored order. Edit the locale to change labels after Compile; general ordinal rank
 semantics, a native PostgreSQL enum, and database membership `CHECK` are not emitted. Conditions and Orderings
 over an optional enum, and other unsupported defaults or consumers, remain precise gaps. Preserve the enum and report
