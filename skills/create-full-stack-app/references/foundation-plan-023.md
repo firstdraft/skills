@@ -943,8 +943,10 @@ Admitted details collections show a bounded preview with a separate paginated fu
 `create_form` selects an Add entry point on that collection page and a dedicated scoped New page, such as
 `/movies/42/credits/new`, posting to `/movies/42/credits`. Rails supplies `params[:movie_id]` from the route; child
 attributes remain under `params[:credit]`. The authorized parent association builds the child, with no hidden
-parent input; a competing submitted parent does not replace it. Shared target new/create actions select the form
-for that context and retain its other inputs and validation errors.
+parent input; a competing submitted parent does not replace it. A nested Rails controller for that parent, such as
+`Movies::CreditsController` under `resources :movies`, serves the full collection page, the New page, and the POST;
+it renders the form for that context and retains its other inputs and validation errors. The full page says when
+the collection has no records, and a page past the end links back to the first page.
 A [no-input create](modeling-guide.md#add-behavior-deliberately) shows a one-tap button in place of the Add link,
 with no scoped New page.
 Ordinary child edit/update/destroy routes stay flat. Preview rows contain selected properties and an optional
