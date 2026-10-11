@@ -29,6 +29,32 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-10: Reference pickers search the server
+
+**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a generated form
+no longer loads every record a Reference picker can offer. When the target's descriptor is required text, such as a
+Station's name, the picker asks the server for matches as the person types and the form loads only its current
+choice. Before, a controller ran `Station.order(name: :asc).pluck(:name, :id)` on each New and Edit render; with
+10,000 Stations, that New page carried about 2 MB of HTML.
+
+Each page that renders such a picker answers its search with an action beside its own, behind the same callbacks
+and checks, such as `PriceReportsController#new_station_options` at `/price_reports/new/station_options` beside
+`/price_reports/new`, or `edit_station_options` beside `edit`. A search therefore lists only what its form may offer,
+to people its page admits. It matches a case-insensitive substring of the descriptor with Arel's `matches` and
+`sanitize_sql_like`, keeps the old order, and returns at most 20 records as `[{label, value}]`, from the same Policy
+scope the form's select used, which create and update also use to find a submitted ID. The form passes the action's
+path to `shared/ui/reference_field` as `search_url:`. The picker waits 250 ms after the last keystroke, drops a
+superseded request, and lists results only once they answer the text as typed; the arrow keys reach them, so Enter
+never picks a match for an earlier query. Without JavaScript, the picker's select offers the current choice and a
+blank, so a New page whose required Reference searches cannot create its record. Each page's request spec checks its
+search: the matching, the 20-record limit, that `%` and `_` match literally, every requester the page refuses, and,
+for a scoped search, that another account's records never appear.
+
+Descriptors that are not text, such as a date, keep the full list, as do descriptors redacted from logs or
+encrypted, whose typed text a search would put in request and SQL logs. Apps compiled earlier keep their full lists;
+an owner can adopt the search by adding a similar action beside a form's page and passing `search_url:`. When you
+author a Plan, a required text descriptor is what lets a large collection's picker search.
+
 ## 2026-10-10: Removing an uploaded file
 
 **Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, the edit form of
