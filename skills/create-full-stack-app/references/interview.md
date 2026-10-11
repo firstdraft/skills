@@ -187,8 +187,10 @@ proposal in the read-back.
 
 ## After-Compile checklist
 
-These steps are outside the Plan and do not block local development. Before the read-back, write the items that
-apply under `## After Compile` in `implementation-notes.md`, so the agent that continues in the app finds them:
+These steps are outside the Plan and do not block local development. They come after the
+[test run](diagnostics-and-recovery.md#run-the-generated-tests), which runs the specs and writes the behavior each
+`NotImplementedError` names before other work. Before the read-back, write the items that apply under
+`## After Compile` in `implementation-notes.md`, so the agent that continues in the app finds them:
 
 - [ ] Error tracking: the app includes Rollbar, which reports production errors only once `ROLLBAR_ACCESS_TOKEN`
       is set in the Render environment.

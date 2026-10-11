@@ -88,7 +88,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.9/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.10/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -316,11 +316,15 @@ profile's exact current slices are realized. Do not omit a schema-valid family m
 partial.
 
 The importer retains Entity `orderings`, and the current target emits a bounded named-Ordering slice when its terms,
-stability, nullability, and consumers meet the profile. Unsupported Orderings remain exact gaps with a deterministic
-fallback where the consumer can remain coherent. `implicit_order_column` is schema-valid, but the current integrated
-target realizes only the captured Case Chat `message.sent_at, id` authored shape. Ordered finders otherwise use the
-profile's `created_at, id` default. This fallback affects `first` and `last`, not ordinary Relation or Association
-loading or Scaffold list order; use the matching GapSet for other authored shapes.
+stability, nullability, and consumers meet the profile. Unsupported Orderings remain exact gaps, and each record's
+consequence says what the generated app does. When it says the named scope raises `NotImplementedError` until it is
+written, the Compiler emitted that scope as a stub, and a Scaffold index or collection that selects it calls the
+stub, so the page raises until then. Otherwise the scope is left out, as a Compiler without stubs does or when the
+model cannot take that name, and the consequence says what the page does without it. `implicit_order_column` is
+schema-valid, but the current integrated target realizes only the captured Case Chat `message.sent_at, id` authored
+shape. Ordered finders otherwise use the profile's `created_at, id` default. This fallback affects `first` and
+`last`, not ordinary Relation or Association loading or Scaffold list order; use the matching GapSet for other
+authored shapes.
 
 The smallest accepted Application remains:
 
@@ -476,8 +480,10 @@ scope :by_priority, -> {
 }
 ```
 
-Without `ordinal`, that Ordering is a `foundation_plan.gap.ordering.not_generated` record. A Scaffold index that
-selects it does not use the scope yet: it lists by `id` and records the same gap code.
+Without `ordinal`, that Ordering is a `foundation_plan.gap.ordering.not_generated` record, and a Scaffold index that
+selects it records the same gap code. Each record's consequence says what the generated app does. When it says
+`by_priority` raises `NotImplementedError` until it is written, the index calls that stub, so the page raises until
+then; otherwise the consequence says what the index does without the scope.
 
 ### Money, positions, tokens, and JSON
 
@@ -971,15 +977,19 @@ exception: its undo button, such as Unlike, deletes from the parent page. Otherw
 
 For behavior claimed as realized, routes, projections, authorization, inputs, and returns follow the authored Plan.
 Generated Rails may do less than the Plan asks. The reviewed GapSet lists the authored meaning it does not realize,
-such as a missing validation, input, page, Policy, or display filter; an index whose Predicate cannot be generated
-lists every record its Policies allow. Missing safeguards and app-wide trade-offs, such as upload type and size
-checks or a sign-up request limit, belong in the generated README and `DEPLOY.md`, not the GapSet. First Draft's
-code-worth-keeping rule says the output never does more: the Compiler emits only what the Plan requests or its
-realization forces, never lets anyone do or see records the Plan's Policies deny, and omits with a gap a surface
-whose Policy it cannot generate or that cannot succeed for any input. When it omits a selected show or index, routes
-that only lose their link on that page stay, with their own authorization and reachable by URL, and the omitted
-page's gap names them. This reference notes current output that conflicts with that rule. Preserve the Plan and
-report the reviewed gaps instead of changing requiredness, access, or workflows to match generated output.
+such as a missing validation, input, page, Policy, or display filter. For an index whose Predicate cannot be
+generated, the gap's consequence says what the page does: either it calls the Predicate's stubbed scope and raises
+until that scope is written, or the scope was left out and the page lists without that filter. Missing safeguards
+and app-wide trade-offs, such as upload type and size checks or a sign-up request limit, belong in the generated
+README and `DEPLOY.md`, not the GapSet. First Draft's code-worth-keeping rule says the output never does more: the
+Compiler emits only what the Plan requests or its realization forces, never lets anyone do or see records the Plan's
+Policies deny, and omits with a gap a surface that cannot succeed for any input for a reason other than behavior it
+did not write. Current output still omits with a gap a surface whose Policy the Compiler cannot generate; First
+Draft's direction is to emit such a surface with a stubbed Policy that admits nobody until it is written. When the
+Compiler omits a selected show or index, routes that only lose their link on that page stay, with their own
+authorization and reachable by URL, and the omitted page's gap names them. This reference notes current output that
+conflicts with that rule. Preserve the Plan and report the reviewed gaps instead of changing requiredness, access,
+or workflows to match generated output.
 
 Every admitted index, public or protected, becomes a native entry point, with the Account entry last. Detail and
 form pages remain reachable through links. Every generated New and edit page, public or gated, uses modal context:
