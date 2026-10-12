@@ -3,6 +3,8 @@ name: Docs line
 on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
+    # A catalog selection changes no documented behavior.
+    paths-ignore: [.claude-plugin/marketplace.json]
 
 permissions: {}
 

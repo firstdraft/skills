@@ -6,6 +6,7 @@ import { isDeepStrictEqual } from "node:util";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const catalogPath = ".claude-plugin/marketplace.json";
+const compatibilityPath = "release/compatibility.json";
 
 export function isCatalogSelectionChange(paths, before, after) {
   if (paths.length !== 1 || paths[0] !== catalogPath) return false;
@@ -34,6 +35,18 @@ export function catalogOnlyChange(base, root = repository) {
   return isCatalogSelectionChange(paths, JSON.parse(previous.stdout), JSON.parse(readFileSync(path.join(root, catalogPath), "utf8")));
 }
 
+// The plugin digest is recorded once per release, in a commit that changes only it. CI compares its own pack with
+// the committed digest when a change edits it, or when the base is unknown.
+export function digestChange(base, root = repository) {
+  const git = (...args) => spawnSync("git", args, { cwd: root, encoding: "utf8" });
+  if (!base || git("cat-file", "-e", `${base}^{commit}`).status !== 0) return true;
+  const previous = git("show", `${base}:${compatibilityPath}`);
+  if (previous.status !== 0) return true;
+  const digest = (source) => JSON.parse(source).plugin_source?.tarball_sha256;
+  return digest(previous.stdout) !== digest(readFileSync(path.join(root, compatibilityPath), "utf8"));
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   process.stdout.write(`catalog_only=${catalogOnlyChange(process.argv[2])}\n`);
+  process.stdout.write(`digest_changed=${digestChange(process.argv[2])}\n`);
 }

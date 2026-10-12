@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { catalogOnlyChange, isCatalogSelectionChange } from "../script/ci-scope.mjs";
+import { catalogOnlyChange, digestChange, isCatalogSelectionChange } from "../script/ci-scope.mjs";
 import { assertPublishedCatalogSelection } from "../script/check-catalog.mjs";
 
 const source = {
@@ -55,6 +55,32 @@ test("git scope falls back to full CI without a base or after another file chang
   git("add", ".");
   git("commit", "--quiet", "-m", "Change an unknown input");
   assert.equal(catalogOnlyChange(base, root), false);
+});
+
+test("CI compares the plugin digest only in a change that edits it", (t) => {
+  const root = mkdtempSync(path.join(tmpdir(), "firstdraft-digest-ci-"));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const git = (...args) => execFileSync("git", args, { cwd: root, encoding: "utf8" }).trim();
+  const compatibility = (digest) =>
+    `${JSON.stringify({ version: "0.8.1", plugin_source: { tarball_sha256: digest } }, null, 2)}\n`;
+  git("init", "--quiet");
+  git("config", "user.name", "Test");
+  git("config", "user.email", "test@example.com");
+  mkdirSync(path.join(root, "release"));
+  writeFileSync(path.join(root, "release/compatibility.json"), compatibility("a".repeat(64)));
+  writeFileSync(path.join(root, "SKILL.md"), "first\n");
+  git("add", ".");
+  git("commit", "--quiet", "-m", "Release");
+  const release = git("rev-parse", "HEAD");
+  writeFileSync(path.join(root, "SKILL.md"), "second\n");
+  git("commit", "--quiet", "-am", "Change packaged text");
+  const content = git("rev-parse", "HEAD");
+  assert.equal(digestChange(release, root), false);
+  writeFileSync(path.join(root, "release/compatibility.json"), compatibility("b".repeat(64)));
+  git("commit", "--quiet", "-am", "Record the digest");
+  assert.equal(digestChange(content, root), true);
+  assert.equal(digestChange("0".repeat(40), root), true);
+  assert.equal(digestChange(undefined, root), true);
 });
 
 test("catalog publication check rejects missing or mismatched registry identity", () => {

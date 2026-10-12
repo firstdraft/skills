@@ -24,8 +24,9 @@ and each packaged Skill line that names the plugin version or its `claude-v` tag
 repository's [`.npmrc`](.npmrc) stops npm from committing or creating a `v<x.y.z>` tag.
 
 The version change does not touch the [catalog selection](.claude-plugin/marketplace.json), which moves only after
-publication ([step 4](#4-select-the-published-version-in-the-catalog)). Until the tag is pushed, the candidate may
-change at a new commit and digest without another version.
+publication ([step 4](#4-select-the-published-version-in-the-catalog)), or the
+[package digest](#2-update-the-pin-and-digest). Until the tag is pushed, the candidate may change at a new commit
+without another version.
 
 Write the CHANGELOG entry in the same change. Give it a dated heading and a bold lead that names the plugin version
 as released:
@@ -67,17 +68,26 @@ pinned CLI. No CLI check fails when they change, so the next pin change fails he
 A Plan format change also renames the versioned schema and reference under
 `skills/create-full-stack-app/references/`. Search `script/` and `test/` for the old file names.
 
-After the last packaged edit, pack with the exact CLI and copy the printed `sha256` into
-`plugin_source.tarball_sha256`:
+Content changes leave `plugin_source.tarball_sha256` in `release/compatibility.json` alone. The release records it
+once, before the tag: the service repository's `script/release ship` packs the `main` commit it smoked with the exact
+CLI under the Node that the [publish workflow](.github/workflows/publish.yml) pins. When the committed digest
+differs, it commits the new digest on that commit as the only change, pushes it as a fast-forward of `main`, waits
+for that commit's CI, and tags it. CI packs with the exact CLI and compares the committed digest only in a change
+that edits it, so that commit's CI checks the digest the tag will publish.
+
+By hand, after the last packaged edit lands, pack `main` with the exact CLI under that Node:
 
 ```sh
 node script/claude-plugin-package.mjs pack tmp/plugin --cli-root /path/to/exact/cli
 ```
 
+Commit only the printed `sha256` as `plugin_source.tarball_sha256` on that commit, push it to `main`, and tag it once
+its CI passes.
+
 ## 3. Tag and publish
 
 Publish the CLI first. The workflow compares the bundled CLI with the published CLI package. Then tag the approved
-`main` commit:
+`main` commit that records the digest:
 
 ```sh
 git tag -a claude-v<x.y.z> <main-sha> -m "Release First Draft plugin <x.y.z>"
@@ -85,7 +95,8 @@ git push origin claude-v<x.y.z>
 ```
 
 Pushing the tag is the irreversible step. The tag is protected, and npm never accepts a version twice. The publish
-job waits for approval in the GitHub `npm` environment.
+job waits for approval in the GitHub `npm` environment; `script/release ship` approves it under the release
+approval.
 
 **Retry after a CLI tarball 404.** The registry can answer E404 for a newly published CLI tarball for several
 minutes. The `check-cli-registry-package.mjs` step then fails before `npm publish` runs. The
@@ -99,9 +110,10 @@ After success, read the registry with the
 
 ## 4. Select the published version in the catalog
 
-Open a PR that sets both `version` and `source.version` in
-[`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) to the published version. CI treats a change to
-only those fields as catalog-only. It validates the catalog metadata and checks that npm has the version, and it
+Set both `version` and `source.version` in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) to the
+published version. `script/release ship` commits that change to `main` after `sh script/check` and
+`node script/check-catalog.mjs` pass on it; by hand, open a pull request. CI treats a change to only those fields as
+catalog-only. It validates the catalog metadata and checks that npm has the version, and it
 skips the full suite, including the currency check. That check fails once the catalog selects the version and any
 current page still calls it a candidate or unreleased. Run `sh script/check` on the catalog change before opening
 the PR, or the next ordinary PR fails instead. Merging the PR changes the live catalog for Claude and Codex users.
@@ -109,12 +121,12 @@ It does not refresh existing installations.
 
 ## Reproduce CI locally
 
-Without `--cli-root`, `sh script/check` packs the plugin with a stub CLI and skips the package digest. CI uses the
-pinned CLI checkout:
+Without `--cli-root`, `sh script/check` packs the plugin with a stub CLI. CI uses the pinned CLI checkout, and adds
+`--require-digest` when the change edits the digest:
 
 ```sh
 npm ci --ignore-scripts
-sh script/check --cli-root /path/to/exact/cli
+sh script/check --cli-root /path/to/exact/cli [--require-digest]
 node script/check-cli-contract.mjs /path/to/exact/cli
 ```
 
