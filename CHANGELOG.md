@@ -29,6 +29,35 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-12: Policies First Draft cannot lower are stubs
+
+**Skills — released in plugin 0.8.13.** Once the First Draft service deploys the matching Compiler, a Policy whose
+Expression uses a leaf the Rails target cannot lower keeps its class and every surface it guards. Before, it was
+left out with every page, input, collection, Home index, and native tab it guarded. Now its rule returns `false`
+under a comment naming the Policy and its spec, so every page, link, and control that asks it denies. Its relation
+scope raises `NotImplementedError`, so every page that lists or looks up records through it raises, including a
+parent's collection, Reference options on another Entity's form, and Home when Home shows that index. A Club `read`
+Policy that compares the case-insensitive `club.status` with `"open"` emits `ClubPolicy#read?` returning `false` and
+a `:read` scope that raises, so the Club index, the Club page, its Photos list, the Club options on the Membership
+form, and Home raise until it is written. A Policy that delegates to a stub follows it. A negated delegation or
+negated `exists` that depends on a stub makes its Policy a stub too, because the stub's `false` would turn into an
+allow. The GapSet still lists each stub as a `foundation_plan.gap.policy.not_generated` record, whose consequence
+now says it is emitted with a stub, and the surfaces it guards leave the GapSet. The README's Behavior to write
+lists each stub with the pages its rule denies, the pages its scope raises on, Home, and the Policies that delegate
+to it. A reserved rule name, a Policy class name collision, a delegation cycle, or an unmet Account prerequisite
+still omits the Policy.
+
+The Skill's rule for a failing spec now names a stubbed Policy rule beside a stubbed scope and a left-out deletion
+outcome, as the generated `AGENTS.md` does, and says to write every item Behavior to write lists, including a
+denying rule no failing spec names. A Policy used only as a gate has no scope, so its stub makes no generated spec
+fail: the Report pages behind a stubbed `moderate` gate deny every account, yet no spec fails through them. So the
+agent previews only once the run passes and every listed item is written; otherwise it asks first, and also names
+each page the README says denies every account. The Plan reference and the interview's multi-target advice describe
+the stub instead of the omission.
+
+Until the service deploys that Compiler, such a Policy is still left out with its surfaces, as in plugin 0.8.12, and
+no README lists a Policy under Behavior to write.
+
 ## 2026-10-12: Polymorphic targets refuse deletes
 
 **Skills — released in plugin 0.8.12.** Once the First Draft service deploys the matching Compiler, a polymorphic

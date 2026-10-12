@@ -88,7 +88,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.12/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.13/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -739,11 +739,18 @@ create form. A Policy is still a Policy gap when its Expression uses one of thes
 normalized, derived, or encrypted Field; an ordered comparison on an ordinal enum; any comparison on a
 case-insensitive Field, whose case PostgreSQL folds by database locale, which Ruby's `downcase` does not follow for
 every letter; a decimal, money, or datetime literal finer than its column; a comparison between two paths that cross
-a relationship; an environment path that leaves `current_account` through anything but forward References; or a
-path across a Reference with several targets. The gap's reason names the node and its pointer, such as
-`target has several target Entities, which Policy lowering does not follow`. Every Scaffold or projection that uses
-a gapped Policy remains an exact child gap, and a Policy that delegates to it is a Policy gap too. Do not infer that
-all Policies are supported or that all Scaffolds are public; inspect the whole matching GapSet.
+a relationship; an environment path that leaves `current_account` through anything but forward References; a path
+across a Reference with several targets; a delegation to a Policy the Compiler omits; or a negated delegation or
+`exists` that depends on a stub, whose `false` would turn into an allow. The gap's reason names the node and its
+pointer, such as `commentable has several target Entities, which Policy lowering does not follow`. The Compiler
+emits such a Policy with a stub. Its rule returns `false`, so every page, link, and control that asks it denies. Its
+relation scope raises `NotImplementedError`, so every page that lists or looks up records through it raises,
+including a parent's collection, Reference options on another Entity's form, and Home when Home shows that index.
+The Scaffolds and projections it guards are still generated, and the README's Behavior to write lists the stub with
+the pages it denies and raises on. A Policy that delegates to a stub follows it and is not a gap itself. Only a
+reserved rule name, a Policy class name collision, a delegation cycle, or an unmet Account prerequisite still omits
+a Policy, because nothing could hold the stub. Do not infer that all Policies are supported or that all Scaffolds
+are public; inspect the whole matching GapSet.
 
 A Policy that compares nothing with `current_account` admits signed-out visitors too. A `read` Policy that compares
 the Boolean `note.visible` with `true` emits `record&.visible == true` and `relation.where(visible: true)`, with no
@@ -1020,12 +1027,11 @@ and app-wide trade-offs, such as upload type and size checks or a sign-up reques
 README and `DEPLOY.md`, not the GapSet. First Draft's code-worth-keeping rule says the output never does more: the
 Compiler emits only what the Plan requests or its realization forces, never lets anyone do or see records the Plan's
 Policies deny, and omits with a gap a surface that cannot succeed for any input for a reason other than behavior it
-did not write. Current output still omits with a gap a surface whose Policy the Compiler cannot generate; First
-Draft's direction is to emit such a surface with a stubbed Policy that admits nobody until it is written. When the
-Compiler omits a selected show or index, routes that only lose their link on that page stay, with their own
-authorization and reachable by URL, and the omitted page's gap names them. This reference notes current output that
-conflicts with that rule. Preserve the Plan and report the reviewed gaps instead of changing requiredness, access,
-or workflows to match generated output.
+did not write. A surface whose Policy the Compiler cannot generate stays, behind a stubbed Policy that admits nobody
+until it is written. When the Compiler omits a selected show or index, routes that only lose their link on that page
+stay, with their own authorization and reachable by URL, and the omitted page's gap names them. This reference notes
+current output that conflicts with that rule. Preserve the Plan and report the reviewed gaps instead of changing
+requiredness, access, or workflows to match generated output.
 
 Every admitted index, public or protected, becomes a native entry point, with the Account entry last. Detail and
 form pages remain reachable through links. Every generated New and edit page, public or gated, uses modal context:

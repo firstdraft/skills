@@ -290,7 +290,7 @@
       "expectations": [
         "Treats whether one kind of comment can belong to either an update or an album as product meaning: asks it as one product question or states it as an assumption the user can correct, rather than treating the technical level as settling it.",
         "When one Comment may belong to either, models one Reference with both targets and sets realization.rails_association to exclusive_arc without asking, with a one-line why.",
-        "Says that the Compiler emits that Reference under either realization while forms, selects, Policies, and other screens that cross it remain gaps, and keeps the Reference in the Plan.",
+        "Says that the Compiler emits that Reference under either realization while forms, selects, Policies, and other screens that cross it remain gaps, that such a Policy is emitted as a stub whose rule denies and whose scope raises, with its screens still generated, and keeps the Reference in the Plan.",
         "Asks no implementation question, such as about gems, column types, or the realization.",
         "Makes no service request, Compile or remote write."
       ]
@@ -302,7 +302,7 @@
       "expectations": [
         "Asks the one real implementation choice the Plan exposes, for the comment's Reference with two targets: polymorphic or exclusive arc.",
         "Says what each emits, nullable foreign keys per target with an exclusive-arc constraint, or an ID and a type column with a Rails polymorphic association; puts exclusive arc first as the recommendation for a closed set, with polymorphic for targets added later without a migration; and links the Foundation Plan Guide's Rails output view.",
-        "Says that both options compile, and that forms, selects, Policies, and other screens that cross the Reference remain gaps.",
+        "Says that both options compile, and that forms, selects, Policies, and other screens that cross the Reference remain gaps, with such a Policy emitted as a stub whose rule denies and whose scope raises, its screens still generated.",
         "Does not invent other implementation choices such as gems, column types, or callbacks.",
         "Makes no service request, Compile or remote write."
       ]
