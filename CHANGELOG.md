@@ -29,6 +29,48 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-12: Every Policy generates
+
+**Skills — released in plugin 0.8.11.** Once the First Draft service deploys the matching Compiler, a Policy's
+`allow_when` lowers in general instead of shape by shape. `or`, `not`, `exists`, reused Predicates, paths through
+singular Associations, and `matches_policy` each generate an Action Policy rule, and each Policy gets a relation scope
+unless only `current_account` gates and create forms use it. Before, a Policy outside a few admitted shapes was left
+out with every page, input, and list it guards. A work order's `read` Policy that admits its reporter or its
+contractor now emits `user&.id.present? && (record&.reporter_id == user.id || record&.contractor_id == user.id)` and
+`relation.where(reporter_id: user.id).or(relation.where(contractor_id: user.id))`, and a repair's Policy through
+`repair.unit` emits `relation.where(unit_id: Unit.where(landlord_id: user.id))`. The Plan reference now quotes that
+output for its repair, inspection, task, work order, and team examples, where it used to list those Policies and their
+pages as not generated.
+
+A Policy is still left out, with a reason that names the node, when it uses one of a few leaves: reference data;
+normalized, derived, or encrypted Fields; ordered comparisons on an ordinal enum; any comparison on a case-insensitive
+Field, whose case PostgreSQL folds by database locale, which Ruby's `downcase` does not follow for every letter;
+decimal, money, or datetime literals finer than their column; comparisons between two paths that cross a relationship;
+environment paths that leave `current_account` through anything but forward References; and paths across a Reference
+with several targets, whose reason names that Reference. Leaving such a Policy out is still current output. First
+Draft's direction is a stubbed Policy whose rule denies until it is written, so it still admits nobody.
+
+A Policy that compares nothing with `current_account`, such as `visible == true`, now generates and admits signed-out
+visitors, because its rule has no `user&.id.present?` guard. Bound as a `current_account` gate, it still turns guests
+away. A form whose own Policy admits guests leaves out a Reference input whose target's pages sit behind a
+`current_account` gate. When a page needs sign-in, the reference says to compare with `current_account` or bind the
+signed-in gate.
+
+The same Compiler checks each `image` Field with a generated `ImageValidator`: `validates :photo, image: true` adds
+"must be an image" for a file whose bytes Active Storage does not identify as an image. Size limits and attachment
+types stay unchecked.
+
+The three evals that stage a generated README now use one copied from a real Compile, under the Movie Catalog name the
+cases use. Its Checks section names `bin/ci`'s four groups, `bin/ci checks`, and `bundle exec rspec --only-failures`,
+and says which steps can fail while Behavior to write lists `Movie.highest_rated`. The staged test run adds that
+scope's `NotImplementedError` beside the Bookmark failure. The cases now expect the agent to treat the first as work
+to write and the second as a First Draft defect, to name the Movie index page as raising before any preview, and never
+to edit `spec/requests/movies_spec.rb`.
+
+Until the service deploys that Compiler, a Policy outside the old shapes is still left out with its pages, and image
+uploads are not type-checked, as in plugin 0.8.10. Apps compiled earlier keep those omissions; an owner can write the
+missing rule and scope in the app's Policy class, and an image check like the generated one, in Rails.
+
 ## 2026-10-11: Predicates and Orderings left to write
 
 **Skills — released in plugin 0.8.10.** Once the First Draft service deploys the matching Compiler, a Predicate or

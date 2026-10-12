@@ -88,7 +88,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.10/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.11/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -412,8 +412,10 @@ anyone that a generated page displaying the upload allows: with the
 [signed-in gate](examples.md#signed-in-gate-and-one-tap-records) on the pages that show a Photo's picture, it is
 `allowed_to?(:use_app?, user, with: MemberPolicy)`. An image on public pages gets `true` and a permanent signed CDN
 link, and an upload that no generated page displays gets `false` and is served to no one. In an app without
-Policies, every generated page is public, and Active Storage serves any file to whoever has its link. Type and size
-limits, several files per Field, and direct uploads are not generated; the direct-upload route answers `403`.
+Policies, every generated page is public, and Active Storage serves any file to whoever has its link. Each `image`
+Field declares `validates :photo, image: true` with a generated `ImageValidator`, so a form shows "must be an image"
+for a file whose bytes Active Storage does not identify as an image. Size limits, attachment types, several files per
+Field, and direct uploads are not generated; the direct-upload route answers `403`.
 
 A required upload on the Account Entity gets no sign-up file input: the Account keeps a partial gap, and because the
 model requires the file, sign-up cannot finish until the owner adds that input in Rails. Seeds attach a placeholder
@@ -710,10 +712,27 @@ available if they want it, or, when authored, that people confirm their email fi
 
 Each Policy has stable identity, an owner-local key, one operation, and one `allow_when` Policy Expression. A
 Scaffold authorization is either the literal `public` or a typed Policy binding; the binding may select the primary
-record or an explicit `environment/current_account` gate record. The current target emits a bounded Action Policy
-algebra and the relation scopes demanded by supported consumers. Unsupported Policy meaning remains a Policy gap,
-and every dependent Scaffold or projection remains an exact child gap. Do not infer that all Policies are supported
-or that all Scaffolds are public; inspect the whole matching GapSet.
+record or an explicit `environment/current_account` gate record. The current target lowers each Policy Expression,
+including `or`, `not`, `exists`, reused Predicates, paths through singular Associations, and `matches_policy`, to an
+Action Policy record rule. It also emits a relation scope unless every consumer is a `current_account` gate or a
+create form. A Policy is still a Policy gap when its Expression uses one of these leaves: reference data; a
+normalized, derived, or encrypted Field; an ordered comparison on an ordinal enum; any comparison on a
+case-insensitive Field, whose case PostgreSQL folds by database locale, which Ruby's `downcase` does not follow for
+every letter; a decimal, money, or datetime literal finer than its column; a comparison between two paths that cross
+a relationship; an environment path that leaves `current_account` through anything but forward References; or a
+path across a Reference with several targets. The gap's reason names the node and its pointer, such as
+`target has several target Entities, which Policy lowering does not follow`. Every Scaffold or projection that uses
+a gapped Policy remains an exact child gap, and a Policy that delegates to it is a Policy gap too. Do not infer that
+all Policies are supported or that all Scaffolds are public; inspect the whole matching GapSet.
+
+A Policy that compares nothing with `current_account` admits signed-out visitors too. A `read` Policy that compares
+the Boolean `note.visible` with `true` emits `record&.visible == true` and `relation.where(visible: true)`, with no
+`user&.id.present?` guard, so a guest can open every visible note. Bound as a `current_account` gate, such a Policy
+still turns guests away: an `admin` comparison on the Account Entity emits `record&.admin == true`, and a guest's gate
+record is `nil`. A form whose own Policy admits guests leaves out a Reference input whose target's pages sit behind a
+`current_account` gate, with a `foundation_plan.gap.scaffold.input.not_generated` record, so the form never offers
+those records to a guest. When a page needs sign-in, compare with `current_account` or bind the
+[signed-in gate](examples.md#signed-in-gate-and-one-tap-records).
 
 An Entity may have only one Policy per `operation`. A second Policy with the same operation on that Entity, such as a
 sign-in gate and a `read_self` Policy both using `read`, leaves both Policies out, along with every page that uses
@@ -742,20 +761,17 @@ binding, or a later update.
 
 A Policy can also follow a relationship the Plan already has. A repair's landlord is its unit's landlord, so a
 `repair` Policy can compare `unit.landlord` through `repair.unit`, as
-`"left": {"through": [{"association": "repair.unit"}], "target": {"association": "unit.landlord"}}`, or use
-`matches_policy` over `repair.unit` with the unit's landlord Policy, and Repair needs no `landlord` Reference. The
-Compiler does not generate the comparison through `repair.unit` yet. Whether it generates `matches_policy` depends on
-what uses the Policy and how the matched Policy reaches the Account. Here the repair's show page and the unit page's
-Repairs list use it, and the unit's landlord Policy compares the unit's own `landlord` Reference, so with either form
-the GapSet lists the Policy, the repair's show page and create form, and the Repairs list as not generated. A
-delegation of the same shape is generated when only a create uses it: a Note added from its team's page, whose
-`matches_policy` over `note.team` names the team's owner Policy on `team.owner`, emits
-`user&.id.present? && allowed_to?(:manage?, record&.team, with: TeamPolicy)`. It is also generated for a show page and
-a list when the matched Policy reaches the Account through a membership: a Task whose `matches_policy` over
-`task.team` names the team's members Policy emits `allowed_to?(:read?, record&.team, with: TeamPolicy)`, the scope
-`relation.joins(team: :members).where(members: {id: user.id}).distinct`, `resources :tasks, only: %i[show]`, and a
-Tasks list on the team page. A `landlord` Reference on Repair would repeat the unit's landlord and need its own
-source.
+`"left": {"through": [{"association": "repair.unit"}], "target": {"association": "unit.landlord"}}`, and Repair
+needs no `landlord` Reference. That comparison emits `user&.id.present? && record&.unit&.landlord_id == user.id` and
+the scope `relation.where(unit_id: Unit.where(landlord_id: user.id))`. `matches_policy` with the unit's own Policy
+works the same way: an Inspection whose `matches_policy` over `inspection.unit` names the unit's landlord Policy
+emits `user&.id.present? && allowed_to?(:manage?, record&.unit, with: UnitPolicy)` and the scope
+`relation.where(unit_id: authorized_scope(Unit.all, as: :manage, with: UnitPolicy))`. With either form, the show page,
+the create form, and the unit page's list that use the Policy are generated. A delegation through a membership
+follows the same pattern: a Task whose `matches_policy` over `task.team` names the team's members Policy emits the
+scope `relation.where(team_id: authorized_scope(Team.all, as: :read, with: TeamPolicy))`,
+`resources :tasks, only: %i[show]`, and a Tasks list on the team page. A `landlord` Reference on Repair would repeat
+the unit's landlord and need its own source.
 
 An update Policy does not make a record visible. On the work order above, `work` admits a contractor whom `read_own`
 does not. The Work orders index, scoped by `read`, leaves the record out for the contractor, and the record's page
@@ -765,9 +781,10 @@ appears only on that page, behind `allowed_to?(:update?, work_order, with: WorkO
 passes both Policies sees it. Edit and Update find the record through the `update` scope, so the contractor can open
 `/work_orders/1/edit` by URL, and saving runs `redirect_to work_order_path(@work_order), status: :see_other` to the
 page that returns 404. In the read-back, say who may change records they cannot read, and offer to widen the read
-Policy with what that widening generates today: a `read` Policy that admits the reporter or the contractor, an `or`
-of the two comparisons, is not generated yet, and the GapSet lists it and the index and show pages that use it as
-not generated, so no one gets that list or page.
+Policy. A `read` Policy that admits the reporter or the contractor, an `or` of the two comparisons, emits
+`user&.id.present? && (record&.reporter_id == user.id || record&.contractor_id == user.id)` and the scope
+`relation.where(reporter_id: user.id).or(relation.where(contractor_id: user.id))`, so the index lists the record for
+both of them and its page opens for both.
 
 Account details show the signup Fields and normalized email by default. Editing permits only mutable, non-derived
 signup Fields; other Account Fields are not exposed automatically. An authored `scaffold.profile` replaces displayed
@@ -886,10 +903,9 @@ the teams they own or belong to:
 }
 ```
 
-The Compiler does not generate `or` Policies yet; generating them is planned. Compiling this today lists
-`team.owner_or_member`, `team.scaffold.index`, and `team.scaffold.show` as not generated, so creating a team returns
-to the home page and nothing links to `/teams/new`. Either half alone generates both pages, but then the members or
-the owner cannot open them.
+The Compiler generates this `or` Policy as one rule and one relation scope, so the team's `index` and `show` pages
+generate with it. Either half alone would also generate both pages, but then the members or the owner could not open
+them.
 
 Invitations are not in the format yet, so a person signs up before a group's owner can add them. Say so in the
 read-back, and keep invitation work in [implementation notes](modeling-guide.md#retain-implementation-requirements)
@@ -1003,11 +1019,12 @@ Scalar Fields have no `settings` object, and enum `settings` admits only `values
 settings shape is structurally invalid rather than a support gap. Nonempty delivery, unsupported Field kinds and
 modifiers, and graph members outside the importer boundary remain in the exact submitted Head and appear as
 `service_support_gap` records when the admitted graph is valid. Imported but incompletely generated shapes—such as
-money and position semantics, broader State Machine behavior, broader Account or Policy topologies, and unsupported
-consumers of otherwise realized subjects—appear as `target_support_gap` records. Development-data records and
-assignments are assessed individually; do not assume a blanket Application-level gap. Service-support meaning was
-skipped before semantic analysis; target-support meaning was admitted and analyzed but is not fully realized.
-Preserve the authored Plan and report every exact gap.
+money and position semantics, broader State Machine behavior, broader Account topologies, the Policy leaves that
+[Accounts and Policies](#accounts-and-policies) lists, and unsupported consumers of otherwise realized
+subjects—appear as `target_support_gap` records. Development-data records and assignments are assessed individually;
+do not assume a blanket Application-level gap. Service-support meaning was skipped before semantic analysis;
+target-support meaning was admitted and analyzed but is not fully realized. Preserve the authored Plan and report
+every exact gap.
 
 Successful Compilation retains the exact submitted Plan at `.firstdraft/submitted-foundation-plan.json` and the
 canonical machine-readable GapSet at `.firstdraft/gaps.json`. There is intentionally no duplicate Markdown gap file;
