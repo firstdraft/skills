@@ -29,7 +29,7 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
-## 2026-10-12: Every Policy generates
+## 2026-10-12: Policies and reduced Accounts generate
 
 **Skills — released in plugin 0.8.11.** Once the First Draft service deploys the matching Compiler, a Policy's
 `allow_when` lowers in general instead of shape by shape. `or`, `not`, `exists`, reused Predicates, paths through
@@ -60,6 +60,17 @@ The same Compiler checks each `image` Field with a generated `ImageValidator`: `
 "must be an image" for a file whose bytes Active Storage does not identify as an image. Size limits and attachment
 types stay unchecked.
 
+The same Compiler also generates an Account that leaves out sign-up, password reset, or lockout. Before, such an
+Account lost its storage, sign-in, every Policy, and every page a Policy guards, so an invite-only app had to choose
+between open sign-up and no sign-in at all. Each omitted flow now leaves its Rodauth feature off, with no route, link,
+table, or mail. Without `registration`, the app has no sign-up page, and the generated README shows the owner how to
+create each Account, in development seeds and with `bin/rails runner` against the production database, because Render
+Free has no Shell. With `verification` but no `registration`, verification covers email changes only. Without
+`recovery`, the README shows how the owner sets a new password. Without `lockout`, failed sign-ins are not limited,
+and `DEPLOY.md` says so in its Failed sign-ins section. The Skill's interview now treats "no sign-up" as supported,
+the Plan reference says what each omitted flow leaves out, and the after-Compile checklist names the README and
+`DEPLOY.md` sections to follow.
+
 The three evals that stage a generated README now use one copied from a real Compile, under the Movie Catalog name the
 cases use. Its Checks section names `bin/ci`'s four groups, `bin/ci checks`, and `bundle exec rspec --only-failures`,
 and says which steps can fail while Behavior to write lists `Movie.highest_rated`. The staged test run adds that
@@ -67,9 +78,10 @@ scope's `NotImplementedError` beside the Bookmark failure. The cases now expect 
 to write and the second as a First Draft defect, to name the Movie index page as raising before any preview, and never
 to edit `spec/requests/movies_spec.rb`.
 
-Until the service deploys that Compiler, a Policy outside the old shapes is still left out with its pages, and image
-uploads are not type-checked, as in plugin 0.8.10. Apps compiled earlier keep those omissions; an owner can write the
-missing rule and scope in the app's Policy class, and an image check like the generated one, in Rails.
+Until the service deploys that Compiler, a Policy outside the old shapes is still left out with its pages, an Account
+without sign-up, password reset, or lockout is still left out with every Policy and guarded page, and image uploads
+are not type-checked, as in plugin 0.8.10. Apps compiled earlier keep those omissions; an owner can write the missing
+rule and scope in the app's Policy class, an image check like the generated one, and a Rodauth Account in Rails.
 
 ## 2026-10-11: Predicates and Orderings left to write
 

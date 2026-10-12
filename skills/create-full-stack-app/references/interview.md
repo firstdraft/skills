@@ -175,7 +175,9 @@ proposal in the read-back.
 - [ ] Links and deletion: which records belong to which, and what happens to them when that record is deleted.
 - [ ] Access: who can see, add, change, and delete each kind of record, with one Policy per operation.
 - [ ] Accounts: whether people sign up, the Account Fields on the sign-up form, and email confirmation; without
-      `verification`, sign-up signs people in and never checks that they control the address.
+      `verification`, sign-up signs people in and never checks that they control the address. "No sign-up" is
+      supported: without `registration`, sign-in and Policies still generate, and the generated README shows the
+      owner how to create each Account. Without `lockout`, failed sign-ins are not limited, and `DEPLOY.md` says so.
 - [ ] Lists: what each main list shows, starting with the record's name, and its order.
 - [ ] Sample data: the proposed sample records and demo sign-in, and any CSV the user wants imported; import itself
       goes in the implementation notes.
@@ -196,9 +198,13 @@ These steps are outside the Plan and do not block local development. They come a
       is set in the Render environment.
 - [ ] Performance monitoring: the app includes Skylight, which stays off until `SKYLIGHT_AUTHENTICATION` is set in
       the Render environment.
-- [ ] Email (apps with Accounts): password reset and unlock emails need a mail provider; with `verification`,
-      sign-up and Change email need it too, because their links travel by email. Once the Account is generated,
-      follow the Account email section of `DEPLOY.md` before inviting real users.
+- [ ] Email (apps with Accounts): password reset and unlock emails, with `recovery` and `lockout`, need a mail
+      provider; with `verification`, Change email needs it too, and so does sign-up with `registration`, because
+      their links travel by email. Once the Account is generated, follow the Account email section of `DEPLOY.md`
+      before inviting real users.
+- [ ] Accounts without sign-up or lockout: without `registration`, create each Account as the README's Accounts
+      section shows; without `lockout`, limit sign-in attempts as the Failed sign-ins section of `DEPLOY.md` says
+      before inviting real users.
 - [ ] Photos and files (apps with image or attachment Fields): sign up for Cloudinary and set `CLOUDINARY_URL`
       as the [upload setup](foundation-plan-023.md#photos-and-files) describes.
 - [ ] Deploy: before the first deploy, the user creates a separate Render workspace for this app in the Render

@@ -71,10 +71,10 @@ generated output, not observed application behavior, device installation, or dep
 - Enums emit string storage with Rails enum inclusion and native helpers; a required enum adds presence validation,
   and an optional enum allows nil. An admitted enum accepts its compatible in-domain literal-key default. Database
   membership constraints, general rank behavior, and broader enum consumers remain unsupported.
-- Web Account realization requires the exact email/password/self-service registration, password-reset recovery,
-  lockout, and Account-self topology described below; email verification is optional, and sign-up inputs the
-  target cannot generate become partial Account gaps. Bounded
-  Account-backed Policies and protected Web Scaffolds are supported. Selected iPhone and Android clients show the same
+- Web Account realization requires one email identifier, one password sign-in method, and the Account-self topology
+  described below. Sign-up, email verification, password reset, and lockout are each optional, and sign-up inputs the
+  target cannot generate become partial Account gaps. Bounded Account-backed Policies and protected Web Scaffolds are
+  supported. Selected iPhone and Android clients show the same
   main navigation as Web, protected lists and the Account entry included, and sign in through the generated web
   pages inside the app.
 - There is no Plan GET or pull operation, arbitrary application generation, deployment workflow, iPad
@@ -668,16 +668,24 @@ Importability does not imply generated Predicate behavior; the reviewed GapSet d
 
 At most one Entity may own `account`. The schema requires one email identifier and one password sign-in method at
 this format boundary; optional registration, verification, recovery, and lockout objects express the requested
-flows. A realized `account` makes its Entity the Rodauth Account: the generated `RodauthMain` enables sign-up,
-sign-in, remember, password reset, lockout, and email and password changes, and anyone with an email address can
-sign up. It protects no Scaffold page by itself: each one still declares `public` or a Policy. Establish the user's
-identity and access model, then author the Account and Policies that represent it. Self-service registration or
-sign-in does not establish staff membership; preserve required eligibility conditions and ask when they are
-unspecified.
+flows. A realized `account` makes its Entity the Rodauth Account: the generated `RodauthMain` enables sign-in,
+remember, and email and password changes, plus each of sign-up, email verification, password reset, and lockout that
+the Plan requests. With `registration`, anyone with an email address can sign up. The Account protects no Scaffold
+page by itself: each one still declares `public` or a Policy. Establish the user's identity and access model, then
+author the Account and Policies that represent it. Self-service registration or sign-in does not establish staff
+membership; preserve required eligibility conditions and ask when they are unspecified.
 
-Current public Web Account realization requires self-service registration, password-reset recovery, and lockout;
-email verification is optional. A realized Account derives one Web `/account` destination without requiring an
-authored profile. Sign-up shows a control for each required registration input that names a stored Account Field,
+Each of `registration`, `verification`, `recovery`, and `lockout` is optional, and an omitted flow has no route,
+link, table, or mail. Policies over `current_account` and the pages they guard still generate, because they need only
+a signed-in session. Without `registration`, nobody can sign themselves up: the app has no sign-up page, and the
+generated README shows the owner how to create each Account, in development seeds and with `bin/rails runner` against
+the production database, because Render Free has no Shell. With `verification` but no `registration`, verification
+covers email changes only. Without `recovery`, there is no password reset, and the README shows how the owner sets a
+new password. Without `lockout`, failed sign-ins are not limited: nothing throttles `/login`, and `DEPLOY.md` says so
+in its Failed sign-ins section. Keep `recovery` and `lockout` unless the user asks to leave them out.
+
+A realized Account derives one Web `/account` destination without requiring an authored profile. With
+`registration`, sign-up shows a control for each required registration input that names a stored Account Field,
 then one for each other required stored Account Field that the application does not fill itself. Each control is
 the Field's Scaffold form control, so a required enum becomes a select. The application fills State Machine initial
 states and realized [defaults](#defaults); counters, secure tokens, positions, and derived Fields never become
@@ -702,13 +710,16 @@ and relationship are Rails work after Compile.
 `account.verification` decides whether sign-up signs the person in. Without it, sign-up asks for the email twice and
 signs the person in, Change email takes effect at once, and the app can accept sign-ups before any email provider is
 configured; the app never checks that a person controls the address they sign up with or change to. With
-`"verification": {"kind": "email"}`, the generated `RodauthMain` also enables `:verify_account` and
-`:verify_login_change`: sign-up redirects to `/login` and emails a link, and signing in before following it is
-refused with `403`. Change email then emails a link to the new address, and the old one keeps working until it is
-confirmed. Because those links travel by email, `DEPLOY.md` makes a mail provider a launch prerequisite. Password
-reset and unlock need a provider either way. Keep an existing Plan's `verification` unless the user asks to remove it.
-In the read-back, say plainly that people can sign in right after signing up and that email confirmation is
-available if they want it, or, when authored, that people confirm their email first.
+`"verification": {"kind": "email"}`, the generated `RodauthMain` also enables `:verify_login_change` and, with
+`registration`, `:verify_account`: sign-up redirects to `/login` and emails a link, and signing in before following it
+is refused with `403`. Change email then emails a link to the new address, and the old one keeps working until it is
+confirmed. With `registration`, sign-up's link travels by email, so `DEPLOY.md` makes a mail provider a launch
+prerequisite. Without `registration`, the app can deploy and sign people in before a provider is configured, but an
+email change cannot finish until one is. Password reset and unlock, when the Plan has `recovery` and `lockout`, need a
+provider either way. Keep an existing Plan's `verification` unless the user asks to remove it. In the read-back, say
+plainly that people can sign in right after signing up and that email confirmation is available if they want it, or,
+when authored, that people confirm their email first. Without `registration`, say instead that the owner creates each
+Account.
 
 Each Policy has stable identity, an owner-local key, one operation, and one `allow_when` Policy Expression. A
 Scaffold authorization is either the literal `public` or a typed Policy binding; the binding may select the primary
