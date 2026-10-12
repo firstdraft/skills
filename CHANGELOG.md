@@ -29,6 +29,34 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-12: State Machine events First Draft cannot generate are stubs
+
+**Skills — released in plugin 0.8.14.** Once the First Draft service deploys the matching Compiler, a required,
+unconditional State Machine alone on its Entity stays in AASM when an event has effects the Compiler cannot generate.
+Before, one such event made the whole machine storage only: a string column with no events, AASM initialization, or
+direct-assignment guard, even for the events the Compiler could generate. Now the `aasm` block lists the generated
+events, and each other event is emitted as three methods, `<m>!`, `<m>`, and `may_<m>?`, under the names AASM would
+give it, each raising `NotImplementedError` until it is written. An event is generated when it is effect-free or sets
+one optional, mutable, non-derived `datetime` Field on the same record to the current time or `nil`. An event with
+two effects, or one that sets a Field on another Entity, a required Field, or a `date` Field, is a stub. A Ticket
+`status` machine whose `assign` event sets `assigned_at` to the current time, and whose `resolve` event sets
+`desk.last_resolved_at`, emits `event :assign` in the `aasm :status` block and `Ticket#resolve!`, `#resolve`, and
+`#may_resolve?` stubs. The README's Behavior to write lists each stubbed event with its states, effects, and Plan
+pointer, and says to add the event to the `aasm` block and delete its three stubs. The State Machine spec's allowed
+and rejected examples for that event fail through the stub until then. No generated page fires an event, so no page
+raises. Seeds and spec setup never fire a stub: a development record whose state needs one, such as a `resolved`
+Ticket, is left out of `db/seeds/development.rb`, and an example whose setup needs one is listed under Test coverage
+to complete. The GapSet keeps each stubbed event's `foundation_plan.gap.state_transition.effects_not_generated`
+record, whose consequence now names the stubs, and drops the machine's
+`foundation_plan.gap.state_machine.partially_generated` record and the generated events' records. Optional,
+conditional, and multiple-per-Entity machines still keep only storage.
+
+The Skill's rule for a failing spec now says a stubbed scope or event raises `NotImplementedError`, as the generated
+`AGENTS.md` does. The Plan reference describes the event stub instead of a storage-only machine.
+
+Until the service deploys that Compiler, such a machine is still storage only, as in plugin 0.8.13, and no README
+lists an event under Behavior to write.
+
 ## 2026-10-12: Policies First Draft cannot lower are stubs
 
 **Skills — released in plugin 0.8.13.** Once the First Draft service deploys the matching Compiler, a Policy whose

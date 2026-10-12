@@ -88,7 +88,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.13/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.14/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -381,14 +381,23 @@ or otherwise unsupported Association descriptors remain exact gaps. A Field may 
 
 That is the conditional import list, not the complete schema vocabulary. A State Machine Field retains its states,
 initial state, transitions, and transition effects. The current target realizes exactly one required unconditional
-State Machine per Entity when the AASM helper surface is safe, with effect-free transitions or one bounded local
-datetime `set_field` effect per transition. AASM owns initialization, validation, named events, state scopes, and the
-admitted effects; behavior-emitted state columns keep `NOT NULL` without a SQL default. Native naming options
-resolve supported helper collisions. Required storage-only states retain the initial-state SQL default and
+State Machine per Entity when the AASM helper surface is safe. AASM owns initialization, validation, named events,
+state scopes, and the generated effects; behavior-emitted state columns keep `NOT NULL` without a SQL default. Native
+naming options resolve supported helper collisions. An event is generated when it is effect-free or has one
+`set_field` effect that sets an optional, mutable, non-derived `datetime` Field on the same record to the current
+time or `nil`. Any other event, such as one with two effects or one that sets a Field on another Entity, a required
+Field, or a `date` Field, is emitted as a stub: its bang form, plain form, and `may_` predicate keep the names AASM
+would give it and raise `NotImplementedError` until it is written. The machine keeps its AASM states, initialization,
+validation, and direct-assignment guard even when every event is a stub. The README's Behavior to write lists each
+stubbed event, and its State Machine examples fail until then; no generated page fires an event. Development seeds
+and spec setup never fire a stub, so a development record whose authored state needs one is left out of
+`db/seeds/development.rb` with a development-data gap, and an example whose setup needs one is listed under Test
+coverage to complete. The GapSet keeps the event's `foundation_plan.gap.state_transition.effects_not_generated`
+record, whose consequence names the stubs. Required storage-only states retain the initial-state SQL default and
 inclusion validation; optional machines keep nullable storage without a default. Optional, conditional,
-multiple-per-Entity, guarded, cross-Entity, multi-effect, unresolved helper collisions, and broader effect shapes
-retain storage with behavior gaps. Failed transitions retain ordinary AASM/Rails object and transaction behavior;
-an application may need to reload or reset a failed object before reusing it.
+multiple-per-Entity, and guarded machines, and those with an unresolved helper collision, retain storage with
+behavior gaps. Failed transitions retain ordinary AASM/Rails object and transaction behavior; an application may need
+to reload or reset a failed object before reusing it.
 AASM 6.0.0 namespaced state scopes can query a prefixed value instead of the stored state: `status_active` can
 query `status_active` when the stored state is `active`. Check an affected application query against its stored
 state; no generated workaround or namespace-based scope suppression is supplied. With `no_direct_assignment: true`,
