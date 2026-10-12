@@ -53,7 +53,7 @@ When modeling a collection, distinguish one uniquely identified object, a quanti
 mixed product that needs both meanings. Uniquely identified objects are records of their own Entity, such as a Unit
 with a serial number and `belongs_to :product`; a quantity is an `integer` Field on one record, emitted as
 `t.integer "quantity", null: false`; a mixed product authors both. In the opening turn, ask only about intended
-product meaning, materials, and the user's level, and name deferred product areas; give the reality check about
+product meaning and materials, and name deferred product areas; give the reality check about
 target support after the user answers. Whether First Draft covers the core of the idea is
 [fit](interview.md#start-from-the-users-goal), not target support: say it in the opening turn when research shows it.
 Do not promote a common use case into an assumption. When target support matters, know the desired access before
@@ -148,8 +148,8 @@ can drop every member and, with them, their posts and the demo sign-in. Say in t
 the rule drops.
 
 Make the dataset and any source reuse visible in the existing semantic read-back. Approve it with the Plan, not
-row by row. Honor an explicit empty-data choice, omitting `development_data` when there are no records. An already
-approved Plan with no data is not permission to silently add records during handoff.
+row by row. Honor an explicit empty-data choice, omitting `development_data` when there are no records. After
+Compile, development seeds are ordinary source.
 
 Keep Entity `reference_data` for facts the app needs in every environment and `development_data` for disposable
 development exploration. Reference-data Rails emission remains incomplete. Use supported typed literal Field
@@ -200,8 +200,7 @@ Keep these outcomes distinct:
 | Behavior outside the vocabulary | Retain it in implementation notes for ordinary source development; analysis cannot promise a gap for meaning it never received. |
 | Explicit user exclusion | Honor the agreed scope and retain the exclusion in the existing decisions/read-back; do not reintroduce it during a later revision. |
 
-Notes may refer to a structured subject or its gap, but do not duplicate the Plan or keep a gap list in the notes;
-the read-back's `gaps-readback.md` is a copy of the analysis.
+Notes may refer to a structured subject or its gap, but do not duplicate the Plan or keep a gap list in the notes.
 Before Compile, summarize outstanding agreed behavior and open questions during the existing semantic read-back.
 Use the [output-mode handoff](diagnostics-and-recovery.md#implementation-notes-handoff) to preserve and discover the
 notes in the application repository. The implementation agent may have neither this conversation nor the original
@@ -349,7 +348,7 @@ Put a Reference on the Entity that stores the relationship fact. Ask:
 - Is the relationship one-to-one?
 - For a closed multi-target Reference, which supported target realization should be used? This is an
   implementation choice: `exclusive_arc` by default, `polymorphic` when targets will be added later without a
-  migration. Follow the user's level in [meaning and implementation](interview.md#meaning-and-implementation).
+  migration. Choose it as [meaning and implementation](interview.md#meaning-and-implementation) describes.
 
 A Reference already emits its same-key forward Association, such as `belongs_to :team` for `membership.team`;
 authoring that Association again is skipped at import with a service-support gap. A referenced-side Association
@@ -386,8 +385,8 @@ each counter after its authored items; people never type them.
   record's consequence says what the generated app does. When it says the named scope raises `NotImplementedError`
   until it is written, the Compiler emitted that scope as a stub, with no database index for an Ordering, and the
   README's Behavior to write lists it; an index that selects it calls the stub, so the page raises until then.
-  Otherwise the scope is left out, as a Compiler without stubs does or when the model cannot take that name, and the
-  consequence says what the page does without it. A Field followed by `id` also generates when both run in one
+  Otherwise the scope is left out, as when the model cannot take that name, and the consequence says what the page
+  does without it. A Field followed by `id` also generates when both run in one
   direction: on Bulletin, `title`, then `id`, both ascending, emits
   `scope :by_title, -> { order(title: :asc, id: :asc) }` and `t.index ["title", "id"]`. The same terms with `id`
   descending are a `foundation_plan.gap.ordering.not_generated` record.
@@ -521,14 +520,8 @@ Write it for a reader who is not technical, in this order:
    with where it will be built, and how the selected output mode carries the notes forward.
 4. Feasibility findings and open questions, with sources for what research found. Leave out a list with nothing
    in it.
-5. A short technical block: the Plan path and SHA-256; the matching valid run's `gap_set_sha256` and record count;
-   that service gaps were skipped before semantic analysis, target gaps were analyzed but not fully realized, and
-   `valid` covers only the admitted graph; the selected output mode, or plan only; and the gaps file.
+5. Where the app will be written: this folder, another folder, or a private GitHub repository; or plan only.
 
-Before giving the read-back, write planning-root `gaps-readback.md`: the Plan SHA-256, the `gap_set_sha256`, and
-every ordered GapSet record with its classification, code, kind, status, location, reason, consequence, and cause
-when present. Copy it from the attached analysis, and rewrite it whenever the candidate bytes change. Root
-adoption archives it under `.firstdraft/design/`; after Compile, the app's `.firstdraft/gaps.json` is the
-authority. Follow the Skill's
-[read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the exact
-candidate, selected output mode, and the single approval.
+After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record. Follow the Skill's
+[read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the selected
+output mode and when to ask for approval.

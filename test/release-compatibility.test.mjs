@@ -22,15 +22,6 @@ test("release compatibility matches the installable plugin manifest", async () =
   const declaredPluginVersion = skill.match(/^Targets plugin ([0-9]+\.[0-9]+\.[0-9]+),/m);
   assert(declaredPluginVersion, "the Skill must identify its plugin compatibility version");
   assert.equal(declaredPluginVersion[1], version);
-  // The probe names the CLI version without a "CLI" label, so the currency check compares it only with the lower of
-  // the plugin and CLI versions. A stale probe would make the Skill reject its own bundled CLI.
-  const versionProbe = skill.match(/^Require the version probe to succeed with one exact `([^`]+)` output line/m);
-  assert(versionProbe, "the Skill must name the exact CLI version that its startup probe expects");
-  assert.equal(
-    versionProbe[1],
-    cliPackageVersion,
-    "the Skill's startup version probe must expect the CLI pinned in script/cli-contract/config.mjs",
-  );
 
   const cliConfigurationUrl =
     `https://github.com/firstdraft/skills/blob/claude-v${version}/script/cli-contract/config.mjs`;

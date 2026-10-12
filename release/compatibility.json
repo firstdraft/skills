@@ -1,7 +1,7 @@
 {
   "format": "firstdraft.release-compatibility/1",
   "component": "skills",
-  "version": "0.8.15",
+  "version": "0.8.16",
   "plugin_source": {
     "package": "@firstdraft.com/claude-code",
     "tarball_sha256": "66ec2558448b739c470228a9df7b82aadfb422025083516cd9b95eae68ecbe9f"
