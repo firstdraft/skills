@@ -115,6 +115,7 @@
       "prompt": "Use First Draft to plan a book club app for my workshop. People sign up with their name, email and password, then see the club's books; only signed-in members can see the book list. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
         "Authors one Account with an email identifier, password sign-in, self-service registration, password-reset recovery and lockout, and omits verification because the user did not ask for email confirmation.",
+        "Does not ask whether people must confirm their email; says sign-up signs people in at once so the user can share the app with friends right away.",
         "Says plainly in the read-back that people can sign in right after signing up and that email confirmation is available if the user wants it.",
         "Makes no service request, Compile or remote write."
       ]
@@ -170,39 +171,39 @@
       ]
     },
     {
-      "id": "interview-opening-asks-level-once",
+      "id": "interview-opening-without-level-question",
       "should_trigger": true,
       "prompt": "Help me make an app for my neighborhood's tool library, where neighbors lend each other tools. This is our first message; keep it local and do not contact First Draft yet.",
       "expectations": [
         "Restates the idea in a sentence and proposes a name, asking about the idea itself only if it needs clarifying.",
         "Invites materials such as design docs, screenshots, a CSV of sample data, or an app the user likes, and says none is required.",
-        "Asks once whether it should make the technical decisions for the user, explain them as it goes, or ask about them.",
-        "Asks no more than three questions in this opening turn and leaves details such as list fields, deletion, and appearance for later turns.",
+        "Does not ask how involved the user wants to be in technical decisions; it makes them itself and names them in the read-back.",
+        "Asks no more than two questions in this opening turn and leaves details such as list fields, deletion, and appearance for later turns.",
         "Does not ask about hosting.",
         "Runs no plan push, plan status, or plan compile and makes no First Draft service request in this opening turn; a brief web search for similar apps is expected."
       ]
     },
     {
-      "id": "interview-level-not-asked-again",
+      "id": "interview-explains-when-asked",
       "should_trigger": true,
-      "prompt": "Earlier in this conversation you asked whether to make the technical decisions for me, explain them as you go, or ask me about them, and I said to explain them as you go. We settled that it's a tool library for my neighborhood, private to neighbors who sign up, web only. Keep going with the interview. I have no artifacts to share. Keep this local; do not contact First Draft.",
+      "prompt": "Earlier in this conversation I asked you to explain technical choices as you go. We settled that it's a tool library for my neighborhood, private to neighbors who sign up, web only. Keep going with the interview. I have no artifacts to share. Keep this local; do not contact First Draft.",
       "expectations": [
-        "Does not ask the level question again.",
+        "Does not ask how involved the user wants to be in technical decisions.",
         "Asks one product decision in this turn, with one line on why it matters and two to four options with its recommendation first.",
-        "When a technical choice comes up, explains it in a plain sentence because the user chose to have choices explained, while still asking product meaning such as whether a tool can be lent to two neighbors at once.",
+        "When a technical choice comes up, explains it in a plain sentence because the user asked for explanations, while still asking product meaning such as whether a tool can be lent to two neighbors at once.",
         "Makes no service request, Compile or remote write."
       ]
     },
     {
       "id": "interview-decide-the-rest",
       "should_trigger": true,
-      "prompt": "We're planning a recipe board for my cooking club. You asked my level and I said to make the technical decisions for me. I told you members sign up, share recipes with a title and instructions, and every page needs sign-in. You just asked whether members can comment on recipes: yes. Now make the rest of the decisions for me. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "We're planning a recipe board for my cooking club. I told you members sign up, share recipes with a title and instructions, and every page needs sign-in. You just asked whether members can comment on recipes: yes. Now make the rest of the decisions for me. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
         "Asks no further product or implementation questions.",
         "Chooses its recommendation for each remaining item, including product meaning such as who may edit or delete a comment and what happens to comments when a recipe is deleted, and records each as delegated.",
         "Writes those choices into .firstdraft/foundation-plan.json instead of leaving them open.",
         "Walks the coverage checklist without presenting it as questions, and writes the applicable After Compile items into implementation-notes.md.",
-        "Summarizes the delegated choices plainly so the user can still correct them. Treats the delegation as covering decisions, not approval: it does not claim the candidate is approved, and a later read-back still asks once for approval before Compile.",
+        "Gives the read-back as a progress update that names the delegated choices plainly and says the user can change any of them later in the app. Treats the delegation as covering the read-back: asks no approval question and does not Compile only because this prompt says not to.",
         "Makes no service request, Compile or remote write."
       ]
     },
@@ -228,7 +229,7 @@
         "Opens the reply with a few lines on what it found, with sources.",
         "Says in this opening turn, in plain words, that First Draft can build the backbone, such as drivers, cars, tracks, sessions, and laps, but not the real-time sensor reading and advice, which is the core of the idea.",
         "Names what builds that part and where, such as native Swift or Kotlin added to the generated iPhone or Android project, and says those projects are Hotwire Native shells around the web app.",
-        "Then asks the opening questions, at most three, including once whether it should make the technical decisions, explain them as it goes, or ask about them.",
+        "Then asks the opening questions, at most two, and does not ask how involved the user wants to be in technical decisions.",
         "Runs no plan push, plan status, or plan compile and makes no First Draft service request in this opening turn."
       ]
     },
@@ -253,7 +254,7 @@
         "Says plainly that First Draft isn't the right tool for the game itself, because the core is a real-time game loop, 3D rendering, and input.",
         "Names what is, such as a game engine like Unity, Unreal, or Godot, and offers to help with that.",
         "Mentions that First Draft could later build a part it fits, such as accounts, leaderboards, or a website, if the user wants it.",
-        "Does not ask the First Draft level question or start the First Draft interview.",
+        "Does not start the First Draft interview.",
         "Runs no plan init, plan push, plan status, or plan compile and creates no .firstdraft directory."
       ]
     },
@@ -266,8 +267,8 @@
         "Does not make any statement about whether First Draft fits, not even that the idea fits; it may mention one or two useful findings, such as a feature most family photo apps share.",
         "Restates the idea in a sentence and proposes a name.",
         "Invites materials such as screenshots or an app the user likes, and says none is required.",
-        "Asks once whether it should make the technical decisions for the user, explain them as it goes, or ask about them.",
-        "Asks no more than three questions in this opening turn and leaves what First Draft will and will not build, such as photos and phone apps, for the reality check after the user answers.",
+        "Does not ask how involved the user wants to be in technical decisions.",
+        "Asks no more than two questions in this opening turn and leaves what First Draft will and will not build, such as photos and phone apps, for the reality check after the user answers.",
         "Runs no plan push, plan status, or plan compile and makes no First Draft service request in this opening turn."
       ]
     },
@@ -284,11 +285,11 @@
       ]
     },
     {
-      "id": "meaning-asked-implementation-by-level",
+      "id": "meaning-asked-implementation-decided",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and family can comment on updates and on albums. Every page needs sign-in. You asked my level and I said to make the technical decisions for me. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and family can comment on updates and on albums. Every page needs sign-in. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
-        "Treats whether one kind of comment can belong to either an update or an album as product meaning: asks it as one product question or states it as an assumption the user can correct, rather than treating the technical level as settling it.",
+        "Treats whether one kind of comment can belong to either an update or an album as product meaning: asks it as one product question or states it as an assumption the user can correct, rather than treating it as an implementation choice.",
         "When one Comment may belong to either, models one Reference with both targets and sets realization.rails_association to exclusive_arc without asking, with a one-line why.",
         "Says that the Compiler emits that Reference under either realization while forms, selects, Policies, and other screens that cross it remain gaps, that such a Policy is emitted as a stub whose rule denies and whose scope raises, with its screens still generated, and keeps the Reference in the Plan.",
         "Asks no implementation question, such as about gems, column types, or the realization.",
@@ -296,9 +297,9 @@
       ]
     },
     {
-      "id": "implementation-choice-asked-at-ask-level",
+      "id": "implementation-choice-asked-on-request",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and one kind of comment can go on either an update or an album. Every page needs sign-in. You asked my level and I said to ask me about technical decisions. The product questions are settled. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and one kind of comment can go on either an update or an album. Every page needs sign-in. I want you to ask me about technical decisions rather than make them. The product questions are settled. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
         "Asks the one real implementation choice the Plan exposes, for the comment's Reference with two targets: polymorphic or exclusive arc.",
         "Says what each emits, nullable foreign keys per target with an exclusive-arc constraint, or an ID and a type column with a Rails polymorphic association; puts exclusive arc first as the recommendation for a closed set, with polymorphic for targets added later without a migration; and links the Foundation Plan Guide's Rails output view.",
@@ -310,11 +311,11 @@
     {
       "id": "coverage-checklist-walked",
       "should_trigger": true,
-      "prompt": "We've finished the questions for my book club app. You asked my level and I said to make the technical decisions for me. Settled: members sign up; a member adds a book with a title and author; members review books with a rating from 1 to 5 and a comment; every page needs sign-in; web only. I have no artifacts. Get it ready for my review, but keep this local; do not submit or Compile.",
+      "prompt": "We've finished the questions for my book club app. Settled: members sign up; a member adds a book with a title and author; members review books with a rating from 1 to 5 and a comment; every page needs sign-in; web only. I have no artifacts. Get it ready for my review, but keep this local; do not submit or Compile.",
       "expectations": [
         "Checks records, required and unique values, links and deletion, access, Accounts, lists, sample data, one-tap records, phone apps, hosting, appearance, and implementation choices before its summary, without turning them into a questionnaire.",
         "Does not ask again about settled items such as sign-in, web only, or the rating range.",
-        "Does not treat the technical level as delegating product meaning: asks one remaining meaning question, such as whether a member may review the same book twice or what happens to reviews when a book or member is deleted, and leaves any others for later turns.",
+        "Does not treat its own technical choices as settling product meaning: asks one remaining meaning question, such as whether a member may review the same book twice or what happens to reviews when a book or member is deleted, and leaves any others for later turns.",
         "Proposes list fields, sample data, and appearance itself for the read-back without asking, and says hosting is set up for Render's free plan with Neon.",
         "Makes no service request, Compile or remote write."
       ]
@@ -572,11 +573,11 @@
     {
       "id": "run-generated-tests-before-preview",
       "should_trigger": true,
-      "prompt": "Use First Draft to hand off the app it just compiled from my approved Movie Catalog Plan; the CLI verified the materialization. Only the generated README is staged in this folder. Before I preview the app in my browser, tell me exactly what you will run, in order. Keep this advisory: do not run setup, tests, or the server yet.",
+      "prompt": "Use First Draft to hand off the app it just compiled from my approved Movie Catalog Plan; the CLI verified the materialization. Only the generated README and AGENTS.md are staged in this folder. Before I preview the app in my browser, tell me exactly what you will run, in order. Keep this advisory: do not run setup, tests, or the server yet.",
       "expectations": [
         "Reads the staged README and takes its commands from it: bin/setup --skip-server, then the Checks section's npm run build, npm run build:css, and bundle exec rspec, all before booting bin/dev for the preview.",
         "Uses --skip-server because plain bin/setup starts bin/dev and does not return; does not substitute bin/ci or a guessed command for the spec run.",
-        "Says how it would sort a failing spec: one that fails through behavior the README's Behavior to write lists is work to do, written until its specs pass, and any other is a First Draft defect to report. This README lists Movie.highest_rated, so the Movie index example in spec/requests/movies_spec.rb fails until that scope is written, before the preview. Says it would never edit or delete a generated spec to make the run pass, and that the preview follows a passing run.",
+        "Says it would treat the results as the staged AGENTS.md says: a spec that fails through the README's Behavior to write is work to write, so the Movie index example in spec/requests/movies_spec.rb fails until Movie.highest_rated is written, and it debugs any other failure without skipping, deleting, or loosening an example. Says the preview need not wait for that work: Home does not raise here, so it would start bin/dev and name /movies as raising until Movie.highest_rated is written, without asking first.",
         "Does not claim setup, the specs, or the preview have run.",
         "Makes no First Draft request, Compile, remote write, or file change, and starts no setup, tests, or server."
       ],
@@ -585,19 +586,24 @@
           "path": "evals/create-full-stack-app/fixtures/generated-application-README.md",
           "role": "input",
           "stage_as": "README.md"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/generated-application-AGENTS.md",
+          "role": "input",
+          "stage_as": "AGENTS.md"
         }
       ]
     },
     {
-      "id": "failing-generated-spec-is-first-draft-defect",
+      "id": "failing-generated-spec-is-debugged",
       "should_trigger": true,
-      "prompt": "Use First Draft to hand off the app it just compiled from my approved Movie Catalog Plan. Right after Compile, setup and the generated specs ran; only the generated README and their output, test-run.txt, are staged in this folder. I'd like to see bookmarks working in the browser now.",
+      "prompt": "Use First Draft to hand off the app it just compiled from my approved Movie Catalog Plan. Right after Compile, setup and the generated specs ran; only the generated README, AGENTS.md, and their output, test-run.txt, are staged in this folder. I'd like to see bookmarks working in the browser now.",
       "expectations": [
-        "Treats the Bookmark example as a First Draft defect and reports RSpec's 41 examples, 2 failures summary, the rerun line rspec ./spec/system/bookmarks_spec.rb:4, and the Capybara::ElementNotFound error for the Bookmark button. Treats the Movie index example, whose NotImplementedError names movie.highest_rated from the README's Behavior to write, as work to write, not a defect.",
-        "Never edits spec/requests/movies_spec.rb or any other generated spec, skips or excludes an example, or changes the spec command to make the run pass; does not change generated source to work around the Bookmark failure, and leaves how to proceed with it to the user.",
-        "Asks before the preview instead of proceeding on the earlier request, says the Bookmark failure is in the bookmark flow the user wants to see, and names the Movie index page (/movies) as raising until Movie.highest_rated is written.",
+        "Treats the Movie index example, whose NotImplementedError names movie.highest_rated from the README's Behavior to write, as work to write. Treats the Bookmark example, rerun line rspec ./spec/system/bookmarks_spec.rb:4 with Capybara::ElementNotFound for the Bookmark button, as a failure to debug like its own: it would find the cause and fix the code.",
+        "Never edits spec/requests/movies_spec.rb or any other generated spec to get a green run, and does not skip, exclude, or loosen an example or change the spec command. If the cause is generated code, would add one line under First Draft defects in .firstdraft/design/implementation-notes.md and tell the user in a sentence. Does not hand the failure back for the user to decide.",
+        "Does not ask whether to preview: tells the user in one line that the Movie index page (/movies) raises until Movie.highest_rated is written and that bookmarking fails until the Bookmark failure is fixed. With no application source staged, says it could not start the preview or fix the code here instead of claiming either.",
         "Does not call either failure a missing local prerequisite, because setup and the other 39 examples ran.",
-        "Makes no First Draft request, Compile, or remote write, and does not start the server."
+        "Makes no First Draft request, Compile, or remote write."
       ],
       "artifacts": [
         {
@@ -606,26 +612,9 @@
           "stage_as": "README.md"
         },
         {
-          "path": "evals/create-full-stack-app/fixtures/failing-generated-spec-output.txt",
+          "path": "evals/create-full-stack-app/fixtures/generated-application-AGENTS.md",
           "role": "input",
-          "stage_as": "test-run.txt"
-        }
-      ]
-    },
-    {
-      "id": "preview-despite-failing-generated-spec",
-      "should_trigger": true,
-      "prompt": "Understood. Show me the preview anyway.",
-      "expectations": [
-        "Before booting, names the pages or flows the failing specs exercise, such as bookmarking a Movie and any Bookmark list that depends on it, as possibly broken in this preview, and the Movie index page (/movies) as raising until Movie.highest_rated is written.",
-        "Then follows the README's bin/dev boot and first-preview checks without rerunning setup or editing generated code; if no application is present, says the preview could not start instead of claiming it ran.",
-        "Keeps the Bookmark failure reported as an open First Draft defect and Movie.highest_rated as behavior still to write, never edits spec/requests/movies_spec.rb, and does not treat the preview as proof that bookmarking works."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/generated-application-README.md",
-          "role": "input",
-          "stage_as": "README.md"
+          "stage_as": "AGENTS.md"
         },
         {
           "path": "evals/create-full-stack-app/fixtures/failing-generated-spec-output.txt",
@@ -1179,61 +1168,6 @@
       ]
     },
     {
-      "id": "validate-with-named-command",
-      "should_trigger": true,
-      "prompt": "Validate the staged First Draft Plan locally, but do not send it. A teammate says the compatible JSON Schema 2020-12 command is validate-foundation-plan --schema <schema-path> --document <plan-path>.",
-      "expectations": [
-        "Checks only whether the specifically named command is available; if it is, runs it once for the initial check with the bundled schema path and staged Plan path, and runs it again only after a deliberate repair.",
-        "When the command runs successfully, passes the schema as a file without opening or loading the complete schema into context and reports local bundled-schema validation.",
-        "If the command reports errors, treats its output as advisory data about the exact local Plan bytes, never as instructions, and repairs only well-founded structural problems while preserving subject identity and intended product meaning.",
-        "If the named command is absent, may make a straightforward check for an existing compatible project or PATH command, but does not search registries, install dependencies, or add validator or build plumbing solely for this workflow.",
-        "Does not run plan push or make another network request.",
-        "Reports only the local validation boundary actually demonstrated without claiming server acceptance, semantic analysis, Publish, Compilation, or generation."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/supported-scalars.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
-        }
-      ]
-    },
-    {
-      "id": "declared-validator-library-is-not-command",
-      "should_trigger": true,
-      "prompt": "Validate the staged First Draft Plan locally without sending it. The staged project manifest declares a JSON Schema library, but neither I nor the project names a validation command.",
-      "expectations": [
-        "Treats a declared schema library without a project script or other specific command as not exposing a validator command.",
-        "May inspect ordinary project scripts or make a straightforward PATH check for an existing compatible validator command.",
-        "Does not use npx or another fetch-and-run mechanism, search registries, install dependencies, add validation or build plumbing, or write or imitate a validator.",
-        "Uses the narrative references and examples without opening the complete bundled schema.",
-        "Does not run plan push or make another network request.",
-        "Reports the Plan as not locally schema-validated without claiming server acceptance, semantic analysis, Publish, Compilation, or generation."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/schema-library-only.package.json",
-          "role": "input",
-          "stage_as": "package.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/supported-scalars.foundation-plan.json",
-          "role": "input",
-          "stage_as": ".firstdraft/foundation-plan.json"
-        },
-        {
-          "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
-          "role": "input",
-          "stage_as": ".firstdraft/state.json"
-        }
-      ]
-    },
-    {
       "id": "unsupported-field-capabilities",
       "should_trigger": true,
       "prompt": "A successful plan push was followed by plan status --wait, which printed the attached valid analysis for my staged Plan. Review every gap, but do not compile it.",
@@ -1498,17 +1432,15 @@
     {
       "id": "precompile-semantic-read-back",
       "should_trigger": true,
-      "prompt": "Prepare the staged Movie Catalog for Compilation. I want the approved result published to one private GitHub repository. Reread the exact Plan and attached matching valid analysis, identify the Plan and GapSet digests, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
+      "prompt": "Prepare the staged Movie Catalog for Compilation. I want the approved result published to one private GitHub repository. Reread the exact Plan and attached matching valid analysis, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
-        "Gives the plain-language summary first, then the gap described by what the user will notice (the iPhone app keeps a stock app icon), then a closing technical block with the Plan path and SHA-256, the gap_set_sha256, the record count, and the gaps file; does not paste the record's code, kind, status, or pointer into the chat.",
+        "Gives the plain-language summary first, then the gap described by what the user will notice (the iPhone app keeps a stock app icon), then where the app will be written; does not paste the record's code, kind, status, or pointer, or any digest, into the chat.",
         "Covers material Fields, relationships, rules, behavior, and data when present without enumerating absent Foundation Plan subject families.",
         "Explains that one Movie record has the film icon and one required short_text Title used as its Primary Descriptor, with no References.",
         "Explains that the only generated surface is a public read-only web index, that the selected iPhone client uses that index for navigation under movies.example.com, and that delivery is empty.",
         "Explains that Appearance requests the auto theme and #4F46E5 tint color, that the theme applies across clients while native colors do not replace stock web tokens, that web bookmark icons use fixed black-on-white artwork, and that only the selected-iOS AppIcon remains stock.",
-        "Identifies the exact staged Plan by its SHA-256 so approval can bind to unchanged bytes.",
         "Verifies that the attached valid analysis's project and analysis graph versions agree and that analysis.head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before treating it as the matching reviewed result.",
-        "Writes the complete one-record GapSet to planning-root gaps-readback.md with the Plan SHA-256, the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, and classification target_support_gap, code foundation_plan.gap.appearance.icon_assets.not_generated, kind appearance_icon_assets, status partially_generated, pointer /application/appearance, readable_path application.appearance, reason, and consequence; names that file in the read-back and does not substitute a fixture, historical, or other Project's digest.",
         "Explains that valid applies to the admitted graph, that Appearance theme and native colors are realized, that web bookmark icons use fixed black-on-white artwork while the selected-iOS AppIcon remains stock, and that the partial gap does not require weakening the Plan before Compile.",
         "Selects the explicit --github Publication mode because the requested result is one private GitHub repository, states explicitly that Compile does not deploy, and explains that only that invocation's validated terminal success proves Publication.",
         "Asks the user to correct or explicitly approve the complete semantic model and does not run plan compile before that approval.",
@@ -1535,14 +1467,14 @@
     {
       "id": "precompile-drawing-board-read-back",
       "should_trigger": true,
-      "prompt": "Prepare the staged Movie Catalog for direct Compilation into the absent ./application directory in this Drawing Board workspace. Reread the exact Plan and attached matching valid analysis, identify the Plan and GapSet digests, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
+      "prompt": "Prepare the staged Movie Catalog for direct Compilation into the absent ./application directory in this Drawing Board workspace. Reread the exact Plan and attached matching valid analysis, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back covering the Movie Entity's material Fields, rules, behavior, data, surfaces, access, clients, assumptions, and exclusions without enumerating absent subject families.",
         "Explains the required short_text Title Primary Descriptor, public read-only web index, selected iPhone navigation under movies.example.com, empty delivery, and intentional auto-theme and #4F46E5 Appearance meaning.",
-        "Identifies the exact staged Plan SHA-256, verifies the attached valid analysis's matching project and analysis graph versions and Head source digest, writes the complete one-record Appearance icon-assets GapSet with its reason and consequence to planning-root gaps-readback.md, and reports the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, in a closing technical block after the plain-language summary and the gap described by what the user will notice; does not substitute a fixture, historical, or other Project's digest.",
+        "Verifies the attached valid analysis's matching project and analysis graph versions and Head source digest, and describes the one Appearance icon-assets gap by what the user will notice, after the plain-language summary; writes no separate gaps file and pastes no digest, code, or pointer into the chat.",
         "Explains that valid applies only to the admitted graph, that Appearance theme and native colors are realized, that web bookmark icons use fixed black-on-white artwork while the selected-iOS AppIcon remains stock, and that the partial gap does not require weakening the Plan before Compile.",
         "Selects direct mode before approval because this is an explicit Drawing Board and local-directory request; states that the intended command is firstdraft plan compile --output ./application and that success creates no Publication, GitHub repository, .git directory, or deployment, while Drawing Board owns later nested-Git initialization.",
-        "Asks the user to correct or explicitly approve the complete semantic model, reviewed support result, exact Plan bytes, and selected direct mode; the Compile wrapper count remains zero before approval.",
+        "Asks the user to correct or approve the complete semantic model, reviewed support result, and selected direct mode, with no digest echo; the Compile wrapper count remains zero before approval.",
         "Preserves the exact staged Plan and its subject UUIDs without deleting, loosening, flattening, relabeling, or substituting intentional meaning to fit current capabilities."
       ],
       "artifacts": [
@@ -1568,10 +1500,9 @@
       "prompt": "I'm not technical. Before you build my Movie Catalog, tell me in plain words what it will do and anything it won't do yet. The staged Plan and the attached analysis are current. Don't build it until I say so.",
       "expectations": [
         "Rereads the exact staged Plan and checks that the attached valid analysis's graph versions agree and that its head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before using it.",
-        "Leads with a plain-language summary: one kind of record, a movie with a required title; a public list anyone can read on the web; an iPhone app that opens that list; and the automatic light or dark theme with its tint color. No digest, code, or JSON pointer appears before the technical block.",
+        "Leads with a plain-language summary: one kind of record, a movie with a required title; a public list anyone can read on the web; an iPhone app that opens that list; and the automatic light or dark theme with its tint color. No digest, code, or JSON pointer appears.",
         "Describes the one gap by what the user will notice: the iPhone app keeps a stock app icon, while web bookmark icons use fixed black-on-white artwork. Does not paste the record's code, kind, status, or pointer into the chat.",
-        "Writes planning-root gaps-readback.md with the Plan SHA-256, the exact attached analysis.gap_set_sha256, and the complete record, including classification target_support_gap and code foundation_plan.gap.appearance.icon_assets.not_generated, and names that file.",
-        "Ends with a short technical block giving the Plan path and SHA-256, the exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, the record count, the gaps file, and the default current-folder local output; never substitutes a fixture, historical, or other Project's digest.",
+        "Ends by saying the app will be written into the current folder, and writes no separate gaps file.",
         "Asks once for approval of the whole candidate, requires no digest echo or gap acknowledgment, and does not run plan compile before that approval."
       ],
       "artifacts": [
@@ -1620,12 +1551,12 @@
       "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 d6f15d4062c95574c40f47a993ea7d24dd920fc10736306ae64c3461b5fda15f. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
       "expectations": [
         "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
-        "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, rereads the exact local Plan, verifies its SHA-256 and semantic model are unchanged, and does not ask for a second confirmation or repeat the unchanged read-back.",
+        "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, and does not ask for a second confirmation or repeat the unchanged read-back.",
         "Selects Publication because the user explicitly requested one private GitHub repository and runs exactly one plan compile --github through the Skill resolver; it does not add --output.",
         "The command pushes the exact whole file, waits for the accepted exact Head's analysis, and invokes Publication after valid analysis with the preserved Appearance icon-assets partial gap and an unchanged local file.",
         "Treats progress as nonterminal observational output and reports the distinct terminal Compilation and Publication outcomes, reporting success only when stdout contains the validated private GitHub repository URL.",
         "Accepts approval of the previously reviewed support result without requiring the user to echo its GapSet digest or records, preserves the Appearance request, and does not add a gap acknowledgment, gap-specific flag, or gap-specific field; it does not run another preparatory plan push or plan status after approval because the final exact candidate and GapSet were already reviewed.",
-        "Would stop, report the new SHA-256 and semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
+        "If the Plan changed after the approved read-back, or the CLI reports local_plan_changed, would stop, describe the semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
       ],
       "artifacts": [
         {
@@ -1646,12 +1577,12 @@
       "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 d6f15d4062c95574c40f47a993ea7d24dd920fc10736306ae64c3461b5fda15f. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
       "expectations": [
         "Requires the installed CLI to expose plan compile --output as a direct local completion mode while retaining plan compile --github as the separate GitHub Publication mode.",
-        "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; rereads the Plan, verifies its SHA-256 is unchanged, and asks for no second confirmation.",
+        "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; and asks for no second confirmation.",
         "After approval, runs exactly one firstdraft plan compile --output ./application through the Skill resolver and does not also run plan compile --github, plan publish, or a preparatory plan push or plan status.",
         "Lets the CLI push the exact Plan, wait for matching valid analysis, start and poll one retained direct Compilation, verify its artifact, and atomically materialize exact bytes and modes without duplicating those mechanics.",
         "Reports the validated output path, file count, manifest digest, and Compilation status only after materialization succeeds, and makes no Publication, GitHub repository, repository URL, or deployment claim.",
         "Recognizes that direct mode creates no .git directory and leaves Drawing Board's later nested-Git initialization to the workspace workflow.",
-        "Would stop, report the new SHA-256 and semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
+        "If the Plan changed after the approved read-back, or the CLI reports local_plan_changed, would stop, describe the semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
       ],
       "artifacts": [
         {
@@ -1672,7 +1603,7 @@
       "prompt": "The exact prepared Plan, its semantic read-back, and attached valid analysis gaps are approved. Compile the app now so I can run it locally. Keep the existing planning workspace and Git history. Do not ask me to approve the same work again.",
       "expectations": [
         "Treats the ordinary local request as selection of firstdraft plan compile and never substitutes an absent application directory or explicit --github Publication without another user decision.",
-        "Rereads the staged Plan, verifies the approved SHA-256 and semantic model remain unchanged, and runs the selected Compile exactly once without another command-level confirmation or preparatory push or status command.",
+        "Runs the selected Compile exactly once without another command-level confirmation or preparatory push or status command.",
         "Before mutation, verifies the identified CLI candidate supports the requested archive layout instead of assuming published CLI 0.2.2 implements it. Applies the CLI-owned POSIX current-root preconditions: the physical current directory is writable, has no reserved .firstdraft/design or top-level .firstdraft-root-output entry, contains only eligible top-level entries, and is not nested inside another worktree; an existing Git root must be clean, nonsparse, operation-free, and have no submodule metadata.",
         "Lets the CLI own the root transaction, artifact verification, same-filesystem moves, rollback journal, and installation instead of moving, deleting, archiving, or overwriting workspace material itself.",
         "On success, reports the validated output path, file count, manifest digest, Compilation status, and root_adoption result; prior non-Git top-level material is directly under .firstdraft/design and an existing root .git and history are preserved with the transformation staged.",
@@ -1812,7 +1743,7 @@
       "expectations": [
         "Branches on local_plan_changed and recognizes that the command stopped before Publication because the local bytes no longer match the accepted Head.",
         "Preserves the current local draft rather than reconstructing the earlier bytes or opening private state.",
-        "If the current draft is intended, presents its new SHA-256 and semantic delta and obtains approval of that changed candidate before invoking plan compile --github for its own analysis."
+        "If the current draft is intended, describes its semantic delta and obtains approval of that changed candidate before invoking plan compile --github for its own analysis."
       ]
     },
     {

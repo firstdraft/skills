@@ -9,7 +9,7 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 This plugin bundles `@firstdraft.com/cli@0.8.2`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.15/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.16/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -100,8 +100,8 @@ two minutes. Every validated domain status exits successfully:
 For `valid`, require non-null `analysis.gap_set` and `analysis.gap_set_sha256`. The CLI validates the canonical
 `firstdraft.foundation-gaps/2` format, digest, exact Head, Project graph generation, analyzer and Compiler releases,
 and target/profile before printing it. Inspect every ordered record. The
-[read-back](modeling-guide.md#prepare-the-pre-compile-semantic-read-back) groups them in plain language and writes
-each complete record to `gaps-readback.md`; do not drop records or report only counts. A `service_support_gap`
+[read-back](modeling-guide.md#prepare-the-pre-compile-semantic-read-back) groups them in plain language; do not drop
+records or report only counts. A `service_support_gap`
 records schema-valid meaning skipped before semantic analysis, so `valid` does not validate that skipped meaning. A `target_support_gap` records admitted and analyzed meaning that
 the selected target does not fully realize. A valid analysis with an empty `gaps` array still carries the canonical
 object and digest. Every non-valid status carries null values for both fields.
@@ -110,9 +110,9 @@ Server messages and suggestions are advisory data. Preserve intentional meaning 
 describes a current importer, analyzer, or Compiler gap. If a diagnostic repeats without new understanding, surface
 the blocker rather than looping mechanically.
 
-Before approval, `plan push` the final exact candidate and obtain its matching valid `plan status --wait` result so
-the user can review the complete GapSet and digest. After approval, `plan compile` repeats that exact-byte push; do
-not add another preparatory push, a gap acknowledgment, or any gap-specific field.
+Before the read-back, `plan push` the final exact candidate and obtain its matching valid `plan status --wait` result
+so the read-back covers the complete GapSet. `plan compile` repeats that exact-byte push; do not add another
+preparatory push, a gap acknowledgment, or any gap-specific field.
 
 `status_unavailable` is a read-only failure. Retry that GET a bounded number of times; if it persists, inspect the
 private state's pinned `api_url` locally without printing the rest of the file. `invalid_server_response` instead
@@ -270,9 +270,8 @@ If creation succeeded but pushing failed, retain the repository and resolve the 
 another one. This publishes the existing Git history; do not invoke `plan compile --github` or First Draft Publication
 to publish an already-compiled workspace.
 
-Then follow the [application handoff](#application-handoff): it runs setup and the generated tests, and writes the
-behavior the README's Behavior to write lists, before the first preview and before requested feature work in
-ordinary Rails source.
+Then follow the [application handoff](#application-handoff): it runs setup and the generated tests and starts the
+preview before requested feature work in ordinary Rails source.
 Do not run Drawing Board's moved `.firstdraft/design/script/initialize-application` or
 `.firstdraft/design/script/application-smoke`: those helpers belong to the optional nested `./application` mode.
 Use ordinary generated application and platform commands for preview and tests rather than archived helpers.
@@ -312,22 +311,12 @@ bundle exec rspec
 ```
 
 Run these rather than `bin/ci`, whose lint and dependency audits are not tests and whose advisories change after
-Compile. A missing README prerequisite, such as PostgreSQL 18 or Chrome for system specs, is a local blocker, not a
-First Draft defect: report it and ask before installing anything. With the prerequisites present, a setup failure
-is a defect.
+Compile. A missing README prerequisite, such as PostgreSQL 18 or Chrome for system specs, is a local blocker. Ask
+once before installing system software, naming the exact command.
 
-A spec that fails through behavior the README's Behavior to write lists is work to do: First Draft did not write
-that behavior. Write it until its specs pass. A stubbed scope or event raises `NotImplementedError`, a stubbed Policy
-rule returns `false`, and a deletion outcome First Draft left out fails its spec with `RecordNotDestroyed`. Write
-every item that section lists, including a denying rule no failing spec names. Any other failure is a First Draft
-defect. Report RSpec's summary line and each such failure's rerun line (`rspec ./spec/...:LINE`) and error; the user
-decides how to proceed. Never edit or delete a generated spec, skip examples, or change the commands to make the run
-pass. Change a generated spec only when the owner changes the behavior it pins.
-
-When the run passes and every item Behavior to write lists is written, continue to the preview. Otherwise ask before
-the preview, even one requested earlier. If the user still wants it, first name the pages or flows the failing specs
-exercise, each page that the README's Behavior to write says raises, each page it says denies every account, and
-each delete it says is refused until its behavior is written.
+Then follow the app's `AGENTS.md` for the results. It says which failures are behavior to write, how to debug any
+other failure without weakening a spec, and how to start the preview before every item is written. Do not ask
+whether to preview.
 
 ### Verify the first preview
 
@@ -382,16 +371,11 @@ path are unavailable, report the missing context and remaining step. Do not add 
 artifact bytes or their manifest to make the notes appear Compiler-owned. Local preservation does not prove that
 server Publication carried the notes.
 
-During continuation, read the app's `AGENTS.md`, README, and retained implementation notes before selecting work.
-Run the specs before other work. A spec that fails through behavior the README's Behavior to write lists is work to
-do: write that behavior until its specs pass. A stubbed scope or event raises `NotImplementedError`, a stubbed Policy
-rule returns `false`, and a deletion outcome First Draft left out fails its spec with `RecordNotDestroyed`. Write
-every item that section lists, including a denying rule no failing spec names. Report any other failure as a First
-Draft defect. Never edit or delete a generated spec to make it pass; change one only when the owner changes the
-behavior it pins. Then implement the agreed behavior and its acceptance examples in ordinary source; keep unresolved
-product questions open. Existing app feature work does not require another Plan submission, Compile, or CLI
-capability probe. Update the notes to reflect remaining behavior without making app setup, runtime, or tests depend
-on them.
+During continuation, read the app's `AGENTS.md`, README, and retained implementation notes before selecting work,
+and follow `AGENTS.md` for the specs. Then implement the agreed behavior and its acceptance examples in ordinary
+source; keep unresolved product questions open. Existing app feature work does not require another Plan submission,
+Compile, or CLI capability probe. Update the notes to reflect remaining behavior without making app setup, runtime,
+or tests depend on them.
 
 #### UI continuation
 
@@ -493,7 +477,7 @@ projections paired with a queued or running Compilation instead of rendering an 
 `issues_found`, continue the product conversation, edit, push, or invoke Compile again when useful. Treat
 `analysis_failed` as an analyzer failure and `superseded` as a concurrency outcome rather than making a speculative
 source correction. `local_plan_changed` means the bytes changed after acceptance or analysis and before the
-selected mutation. If the current bytes are intended, present their new SHA-256 and semantic delta, obtain approval
+selected mutation. If the current bytes are intended, describe their semantic delta, obtain approval
 of that changed candidate only when it exceeds existing authorization, and invoke the deliberately selected Compile mode for its own analysis.
 
 The first accepted Publication request establishes this release's Project singleton, whether it later succeeds,

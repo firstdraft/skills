@@ -58,46 +58,43 @@ Start when the user asks for help making an app, such as "help me make an app fo
 2. **Ask for materials:** design docs, screenshots, a CSV of sample data, a form or report, or an app they like.
    None is required. Read whatever arrives before asking more, and do not ask what it already answers. Follow the
    [artifact guidance](modeling-guide.md#learn-from-examples-and-artifacts).
-3. **Ask the user's level once:** "Should I make the technical decisions for you, explain them as I go, or ask you
-   about them?" Do not ask it again; the user may change it at any time.
 
-Steps 1 to 3 are the opening turn, after the research and any fit, with at most three questions.
+Steps 1 and 2 are the opening turn, after the research and any fit, with at most two questions.
 
-4. **Ask product questions** that decide the data model, most important first: which records exist and what one
+3. **Ask product questions** that decide the data model, most important first: which records exist and what one
    record is, who can see and do what, and whether they want iPhone or Android apps. After the opening turn, ask
    one decision per turn: one line on why it matters, then two to four options with your recommendation first, and
    room for their own answer. A recommendation is a proposal until the user accepts it. Leave details such as list
    fields for later. Stop when only delegated or nonblocking items remain; there is no fixed number of questions.
    Do not ask about hosting. Say the app is set up for free hosting on Render's free plan with a free Neon
    database, and that a paid option is planned.
-5. **Give an early reality check.** As soon as the opening answers settle the main records, tell the user this takes
+4. **Give an early reality check.** As soon as the opening answers settle the main records, tell the user this takes
    a few minutes, then write a rough Plan, push it, and read its analysis. Keep the rough Plan small: the main
    records and their key Fields, any Account, who can see what, and requested phone apps; for a backbone, only the
    part First Draft builds. Tell the user in a few plain lines what First Draft will build and what it will not
    build yet, for example "Formatted descriptions aren't generated yet, so posts start without one; I'll add them in
-   Rails after" or "Comments that can go on either a post or an album aren't generated yet; I'll add them in Rails
+   Rails after" or "The list of posts that mention a word is generated, and I'll write its search in Rails right
    after". Then let the analysis steer the remaining questions: ask about consequences the user can choose between,
    not about gaps they cannot change. Keep private access and requested phone apps in the Plan. Report each gap as
    the analysis gives it, even when its reason names no cause or contradicts these references; the deployed First
    Draft may not generate it yet. Do not trim the Plan or push trial or example Plans to find a cause: each push
    replaces the Project's current Plan, and a defensible variant is still a trial.
-6. **Ask implementation choices last**, following the user's level and
-   [meaning and implementation](#meaning-and-implementation).
-7. **Walk the [coverage checklist](#coverage-checklist)** silently, and write the
+5. **Make implementation choices last**, as [meaning and implementation](#meaning-and-implementation) describes.
+6. **Walk the [coverage checklist](#coverage-checklist)** silently, and write the
    [after-Compile checklist](#after-compile-checklist) into the implementation notes.
-8. **Read back and approve** as the Skill describes, then Compile. For plan only, give the read-back and stop.
+7. **Read back and approve** as the Skill describes, then Compile. For plan only, give the read-back and stop.
 
 At any point the user may say "make the rest of the decisions for me". Stop asking. Choose your recommendation for
-every remaining item, including product meaning, and mark each one delegated. Then walk the checklist and give the
-read-back, which names those choices, and ask once for approval so the user can still correct them before Compile.
-Delegating decisions is not approval.
+every remaining item, including product meaning, and mark each one delegated. Walk the checklist, give the read-back,
+naming those choices, as a progress update, then Compile in the same turn. The user can change any of them
+afterward in the app.
 
 ## Meaning and implementation
 
 **Meaning** is what the app does: which records it stores and how they link, which values are required or unique,
 who can see and do what, and what happens when something is deleted. "Can one comment belong to either a post or a
 photo?" is meaning. Ask it, or decide it only when the user delegated it with "you pick" or "make the rest of the
-decisions for me". Choosing a level does not delegate meaning.
+decisions for me".
 
 **Implementation** is how First Draft emits that meaning in Rails. The target profile fixes almost all of it: the
 Plan has no property for gems, column types, or callbacks. Today the Plan exposes one real choice: a Reference
@@ -116,13 +113,11 @@ Forms, selects, Policies, Predicates, and other screens that cross either shape 
 that needs a required multi-target Reference is omitted. A Policy that crosses either shape is emitted as a stub:
 its rule denies and its scope raises until it is written, and the screens it guards are still generated. Say so.
 
-Follow the user's level:
-
-- **Ask me:** after the product questions, present each real choice with what each option emits, your
-  recommendation first, and the [Guide link](#see-what-first-draft-emits).
-- **Decide:** use the convention default without asking, and name it with a one-line why among the delegated
-  choices in the read-back.
-- **Explain:** use the convention default too, and give the one-line why in plain words when the choice comes up.
+Make implementation choices yourself: use the convention default without asking, and name it with a one-line why
+among the delegated choices in the read-back. Do not ask the user how involved they want to be. If they ask to be
+asked, present each real choice after the product questions, with what each option emits, your recommendation
+first, and the [Guide link](#see-what-first-draft-emits). If they ask for explanations, give the one-line why in
+plain words when the choice comes up.
 
 For a Reference with several targets the convention default is `exclusive_arc`: the Plan's targets are a closed
 set, and a foreign key per target lets the database refuse a delete that would leave a row pointing at nothing. A
@@ -166,8 +161,8 @@ Walk this list silently before the read-back; it is not a questionnaire. Mark ea
 - **asked:** the user answered your question;
 - **decided:** the user's request or materials settled it, or First Draft fixes it. State any meaning you inferred,
   such as "likes work as on Instagram", so the user can correct it; or
-- **delegated:** the user said "you pick" or "make the rest of the decisions for me". Their level delegates only
-  implementation choices.
+- **delegated:** the user said "you pick" or "make the rest of the decisions for me". Implementation choices are
+  yours to make unless the user asked to be asked.
 
 Ask about each unmarked item of meaning or product scope: what is stored, required, or unique; links and deletion;
 access; sign-up; and phone apps. Propose the rest yourself, such as list fields, sample data, and appearance. Name every delegated choice and
@@ -177,10 +172,11 @@ proposal in the read-back.
       like per person per post.
 - [ ] Links and deletion: which records belong to which, and what happens to them when that record is deleted.
 - [ ] Access: who can see, add, change, and delete each kind of record, with one Policy per operation.
-- [ ] Accounts: whether people sign up, the Account Fields on the sign-up form, and email confirmation; without
-      `verification`, sign-up signs people in and never checks that they control the address. "No sign-up" is
-      supported: without `registration`, sign-in and Policies still generate, and the generated README shows the
-      owner how to create each Account. Without `lockout`, failed sign-ins are not limited, and `DEPLOY.md` says so.
+- [ ] Accounts: whether people sign up, and the Account Fields on the sign-up form. Do not ask about email
+      confirmation: leave `verification` out unless the user asks for it, so sign-up signs people in at once and
+      they can share the app with friends right away. "No sign-up" is supported: without `registration`, sign-in
+      and Policies still generate, and the generated README shows the owner how to create each Account. Keep
+      `recovery` and `lockout`; without `lockout`, failed sign-ins are not limited, and `DEPLOY.md` says so.
 - [ ] Lists: what each main list shows, starting with the record's name, and its order.
 - [ ] Sample data: the proposed sample records and demo sign-in, and any CSV the user wants imported; import itself
       goes in the implementation notes.
@@ -193,18 +189,17 @@ proposal in the read-back.
 ## After-Compile checklist
 
 These steps are outside the Plan and do not block local development. They come after the
-[test run](diagnostics-and-recovery.md#run-the-generated-tests), which runs the specs and writes the behavior the
-README's Behavior to write lists before other work. Before the read-back, write the items that apply under
+[test run](diagnostics-and-recovery.md#run-the-generated-tests). Before the read-back, write the items that apply under
 `## After Compile` in `implementation-notes.md`, so the agent that continues in the app finds them:
 
 - [ ] Error tracking: the app includes Rollbar, which reports production errors only once `ROLLBAR_ACCESS_TOKEN`
       is set in the Render environment.
 - [ ] Performance monitoring: the app includes Skylight, which stays off until `SKYLIGHT_AUTHENTICATION` is set in
       the Render environment.
-- [ ] Email (apps with Accounts): password reset and unlock emails, with `recovery` and `lockout`, need a mail
-      provider; with `verification`, Change email needs it too, and so does sign-up with `registration`, because
-      their links travel by email. Once the Account is generated, follow the Account email section of `DEPLOY.md`
-      before inviting real users.
+- [ ] Email (apps with Accounts): password reset and unlock emails, with `recovery` and `lockout`, are not
+      delivered until a mail provider is added. Without `verification`, sign-up and sign-in work without one; with
+      it, Change email and sign-up with `registration` need one too, because their links travel by email. Follow
+      the Account email section of `DEPLOY.md` to add one before inviting real users.
 - [ ] Accounts without sign-up or lockout: without `registration`, create each Account as the README's Accounts
       section shows; without `lockout`, limit sign-in attempts as the Failed sign-ins section of `DEPLOY.md` says
       before inviting real users.

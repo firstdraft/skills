@@ -29,6 +29,38 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-12: Agents preview first and debug failures
+
+**Skills — released in plugin 0.8.16.** Once the First Draft service deploys the matching Compiler, a generated app's
+`AGENTS.md` changes how the agent treats the first spec run. Before, the agent wrote every item in the README's
+Behavior to write before the first preview, asked you before previewing otherwise, and reported any other failing spec
+to you as a First Draft defect. Now it first writes any item whose entry says Home raises, starts the preview, and
+tells you in one line which pages deny or raise until the rest are written. It debugs any other failure as its own and
+never skips, deletes, or loosens an example to get a green run. When generated code caused the failure, it adds one
+line under "First Draft defects" in `.firstdraft/design/implementation-notes.md`.
+
+The app's `AGENTS.md` also says that `.firstdraft/submitted-foundation-plan.json` and `.firstdraft/gaps.json` record
+what was compiled and never govern later code, and that a Behavior to write entry is deleted once its specs pass. It
+says how to add a resource the way the generated ones are built. Generated controllers declare `verify_authorized` and
+`ApplicationController` does not, so a controller from `bin/rails generate scaffold` is public until it gets that
+declaration, a Policy with a rule, a relation scope, and a spec, and request specs for each denial.
+
+The Skill now follows the app's `AGENTS.md` for the test run instead of restating it. It no longer asks how involved
+you want to be in technical decisions: it makes them, names them in the read-back, and asks only if you say you want
+to be asked. After "make the rest of the decisions for me", the read-back is a progress update and Compile follows in
+the same turn. The read-back drops its closing technical block and the `gaps-readback.md` file, and the Skill drops
+its local JSON Schema validation step and its exact CLI version check; `plan push` validates the Plan. When `destroy`
+comes without `show`, the Skill adds `show` so each record's page carries Delete, and names that choice in the
+read-back instead of asking. The hand-off report now says where the app is, what works, what the agent writes next,
+and how to preview it.
+
+The interview no longer asks about email confirmation. The Skill leaves `verification` out unless you ask for it, so
+sign-up signs people in at once and you can share the app with friends right away. Password reset and lockout stay;
+their emails are not delivered until you add a mail provider, as the Account email section of `DEPLOY.md` describes.
+
+Apps compiled earlier keep their `AGENTS.md`. To adopt the new rules, ask your agent to compare its spec bullet with
+this entry and update it.
+
 ## 2026-10-12: State Machine events First Draft cannot generate are stubs
 
 **Skills — released in plugin 0.8.15.** Plugin 0.8.14 carried the same text but was never published: its tag was pushed while a GitHub Actions incident had dropped its main CI run, so the publish workflow refused it. Once the First Draft service deploys the matching Compiler, a required,

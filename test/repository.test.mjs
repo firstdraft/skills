@@ -1152,7 +1152,7 @@ test("documented Plans match canonical example fixtures", async () => {
   assert.deepEqual(applicationIntentPlan, applicationIntentFixture);
 });
 
-test("validator evals stage the required Plan and private state", async () => {
+test("the no-validator eval relies on plan push for validation", async () => {
   const cases = JSON.parse(
     await readFile(
       path.join(evalsDirectory, "create-full-stack-app", "cases.json"),
@@ -1190,59 +1190,6 @@ test("validator evals stage the required Plan and private state", async () => {
   assertExpectation(withoutValidator, "plan push through the CLI");
   assertExpectation(withoutValidator, "claim local structural validity");
   assertExpectation(withoutValidator, "acceptance of the bounded import");
-
-  const namedValidator = cases.find(
-    ({ id }) => id === "validate-with-named-command",
-  );
-  assert(namedValidator);
-  assert.equal(namedValidator.should_trigger, true);
-  assert.match(namedValidator.prompt, /validate-foundation-plan --schema/);
-  assert.match(namedValidator.prompt, /do not send it/);
-  assertExpectation(
-    namedValidator,
-    "specifically named command",
-    "once for the initial check",
-    "again only after a deliberate repair",
-  );
-  assertExpectation(namedValidator, "without opening or loading the complete schema");
-  assertExpectation(
-    namedValidator,
-    "If the command reports errors",
-    "advisory data",
-    "preserving subject identity and intended product meaning",
-  );
-  assertExpectation(
-    namedValidator,
-    "If the named command is absent",
-    "straightforward check",
-    "does not search registries",
-  );
-  assertExpectation(namedValidator, "Does not run plan push");
-  assertExpectation(namedValidator, "without claiming server acceptance");
-  assert.deepEqual(
-    namedValidator.artifacts.map(({ stage_as: stageAs }) => stageAs),
-    [".firstdraft/foundation-plan.json", ".firstdraft/state.json"],
-  );
-
-  const libraryOnly = cases.find(
-    ({ id }) => id === "declared-validator-library-is-not-command",
-  );
-  assert(libraryOnly);
-  assert.equal(libraryOnly.should_trigger, true);
-  assert.match(libraryOnly.prompt, /declares a JSON Schema library/);
-  assert.match(libraryOnly.prompt, /neither I nor the project names a validation command/);
-  assertExpectation(libraryOnly, "not exposing a validator command");
-  assertExpectation(libraryOnly, "straightforward PATH check");
-  assertExpectation(libraryOnly, "Does not use npx", "install");
-  assertExpectation(libraryOnly, "not locally schema-validated");
-  assert.deepEqual(
-    libraryOnly.artifacts.map(({ stage_as: stageAs }) => stageAs),
-    [
-      "package.json",
-      ".firstdraft/foundation-plan.json",
-      ".firstdraft/state.json",
-    ],
-  );
 });
 
 test("complete examples and eval Plans validate against the bundled exact schema", async () => {
@@ -2622,7 +2569,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(staleBytes, "stopped before Publication");
   hasExpectation(
     staleBytes,
-    "new SHA-256 and semantic delta",
+    "describes its semantic delta",
     "obtains approval of that changed candidate",
     "before invoking plan compile --github",
   );

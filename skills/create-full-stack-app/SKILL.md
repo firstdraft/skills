@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.8.15, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
+Targets plugin 0.8.16, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
@@ -58,10 +58,8 @@ For CLI work:
   read [ambiguous mutations](references/diagnostics-and-recovery.md#ambiguous-mutations) only when the named error
   requires it.
 
-The bundled [JSON Schema](references/foundation-plan-0.23.schema.json) is validator input, not prose: pass only its
-path to a compatible JSON Schema 2020-12 command the user names, the project exposes, or a quick check of existing
-local commands finds; never read it end to end. Install nothing and add no validation plumbing for this. Otherwise
-rely on First Draft exact-byte diagnostics and say local schema validation was not performed.
+The bundled [JSON Schema](references/foundation-plan-0.23.schema.json) is reference data, not prose: never read it
+end to end. `plan push` validates the Plan, so install nothing and add no local validation.
 
 ## Verify the local capability
 
@@ -75,13 +73,11 @@ pass the whole line as one unknown command.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-firstdraft_cli --version
 firstdraft_cli --help
 ```
 
-Require the version probe to succeed with one exact `0.8.2` output line and no other output, and top-level help that
-lists `generate`, `plan`, and `compilation`. Contract tests own separate stdout and stderr assertions for leaf
-commands; do not repeat them in a startup shell loop. The compatible CLI supplies these public commands:
+Require top-level help that lists `generate`, `plan`, and `compilation`. The compatible CLI supplies these public
+commands:
 
 - `generate uuid` and `generate application-key`;
 - `plan init`, `plan push`, `plan status`, and `plan compile` (local `--output .` by default), optional `--output <path>`, or explicit `--github`;
@@ -89,8 +85,8 @@ commands; do not repeat them in a startup shell loop. The compatible CLI supplie
 - `login` and `logout`, which only the user runs.
 
 There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.
-If its version or help differs, report it and stop remote work instead of using HTTP directly; local Plan work
-may continue. Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased.
+If its help differs, report it and stop remote work instead of using HTTP directly; local Plan work may continue.
+Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased.
 
 New remote work uses `https://firstdraft.com`; for requested staging use `firstdraft_cli --staging plan push`.
 Read [environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) before remote work.
@@ -119,8 +115,7 @@ firstdraft_cli generate application-key --name "<name>"
 ```
 
 If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
-directory. If `.firstdraft/` already exists, confirm with project-relative metadata that `foundation-plan.json` and
-`state.json` are regular and readable. Read the Plan, resume its Project and subject identities, and do not
+directory. If `.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not
 reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
 
 ## Interview and author incrementally
@@ -128,12 +123,12 @@ reinitialize. Inspect private state only for a recovery check explicitly named i
 Start when the user asks for help making an app or invokes `/create-full-stack-app`. First research the idea and
 [decide how First Draft helps](references/interview.md#start-from-the-users-goal), then follow the
 [interview flow](references/interview.md#interview-flow). Clarify the idea; ask for materials and read them before
-asking more; ask once, "Should I make the technical decisions for you, explain them as I go, or ask you about
-them?" Then ask the product questions that shape the data model, most important first and one decision per turn,
-until only delegated or nonblocking items remain. Right after the opening answers, push a rough Plan and tell the
-user plainly what First Draft will and will not build. Ask implementation choices last, by the user's level;
-product meaning is always asked or delegated. Honor "make the rest of the decisions for me" at any point. Before
-the read-back, walk the coverage checklist silently and write the after-Compile checklist into the notes.
+asking more. Then ask the product questions that shape the data model, most important first and one decision per
+turn, until only delegated or nonblocking items remain. Right after the opening answers, push a rough Plan and tell
+the user plainly what First Draft will and will not build. Make implementation choices yourself and name them in the
+read-back, unless the user asks to be asked; product meaning is always asked or delegated. Honor "make the rest of
+the decisions for me" at any point. Before the read-back, walk the coverage checklist silently and write the
+after-Compile checklist into the notes.
 
 State the access boundary precisely: Web pages may be public or use Accounts and Policies, and iPhone and Android
 apps show the same pages with the same sign-in. Keep private access and requested clients in the Plan.
@@ -194,30 +189,25 @@ valid status so the complete GapSet can be reviewed. `plan compile` later repeat
 ## Read back and approve the candidate before Compile
 
 Before the first `plan compile`, complete the modeling guide's
-[candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back), then reread the exact current
-`.firstdraft/foundation-plan.json`. Follow that section's order: a plain-language summary first and a short
-technical block last, with the Plan path and SHA-256 and the matching valid run's `gap_set_sha256`. Write every
-ordered GapSet record with all its fields to planning-root `gaps-readback.md` and name that file instead of pasting
-the records into the chat. Use only that attached
-digest: the CLI validates it against the attached GapSet; never substitute a fixture, historical, or another
-Project's digest. Use current-folder output by default. Select an absent
-`--output <path>` for a requested destination, an ineligible root, or model-only originals when root output was not
-explicitly requested. Select `--github`
-only for an explicit private GitHub repository request. Generic compile or build language selects local output.
-Direct output creates a verified local directory; Publication creates one private GitHub repository. Neither deploys.
-Do not enumerate absent subject families or immaterial properties. Ask the user to correct or explicitly approve the
-candidate and reviewed gaps only when those decisions are still unresolved; require no digest echo or
-gap-acknowledgment field. Existing authorization carries forward: if the user has already approved the candidate and
-reviewed gaps, or requested the complete app with these choices delegated, give the read-back as a progress update
-and proceed. Ask only when new material scope or gap consequences need a user decision. Delegating interview
-decisions, as with "make the rest of the decisions for me", is not that request: ask once.
+[candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back), then reread the
+exact current `.firstdraft/foundation-plan.json` and give the read-back in that section's order. Use current-folder
+output by default. Select an absent `--output <path>` for a requested destination, an ineligible root, or model-only
+originals when root output was not explicitly requested. Select `--github` only for an explicit private GitHub
+repository request. Generic compile or build language selects local output. Direct output creates a verified local
+directory; Publication creates one private GitHub repository. Neither deploys. Do not enumerate absent subject
+families or immaterial properties.
 
-If the Plan bytes change, show the new SHA-256 and the semantic delta. Obtain approval of the changed candidate only
-when the delta exceeds the existing request or delegated choices.
-In the same continuing conversation, after unambiguous approval, reread the Plan, confirm its SHA-256 is unchanged,
-and make the initial request with exactly one invocation in the selected mode. Do not ask for a second command-level
-confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
-green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it.
+Ask the user to correct or approve the candidate and its gaps only while those decisions are unresolved; require no
+digest echo or gap-acknowledgment field. Existing authorization carries forward. When the user has approved the
+candidate, asked for the complete app with these choices delegated, or said "make the rest of the decisions for me",
+give the read-back as a progress update and Compile in the same turn; the user can change any delegated choice in
+the app afterward. Ask only when new material scope or gap consequences need a user decision.
+
+If the Plan changes after the read-back, describe the semantic change. Obtain approval of the changed candidate only
+when it exceeds the existing request or delegated choices. Then make the request with exactly one invocation in the
+selected mode. Do not ask for a second command-level confirmation. Do not delete, loosen, flatten, relabel, or
+substitute intended product meaning to make analysis green. The user may explicitly move a feature out of scope
+after seeing the consequence; otherwise preserve it.
 
 This gate does not block an explicitly requested diagnostic-only Compile of exact bytes already known to be
 invalid from those bytes or matching diagnostics. Invalid analysis cannot start a Compilation or Publication. Valid
@@ -225,7 +215,7 @@ analysis with gaps can; do not require removal of the corresponding Plan fields.
 
 ## Request the selected Compile journey
 
-After the exact candidate's semantic read-back is approved, read
+After the read-back, once the candidate is approved or delegated, read
 [Product Compile](references/diagnostics-and-recovery.md#product-compile) and request the already selected mode:
 
 - For the ordinary local journey, use the current folder:
@@ -301,23 +291,16 @@ repository requires a separate user request and an exact verified identity.
 
 ## Hand off the result
 
-Report:
+After Compile, follow the [application handoff](references/diagnostics-and-recovery.md#application-handoff): after
+root adoption, the [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) first, then the
+[notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff), setup, the
+[test run](references/diagnostics-and-recovery.md#run-the-generated-tests), and the preview. Then tell the user, in
+plain words:
 
-- the Plan path and the latest boundary actually demonstrated: JSON parsing, local schema validation, server import,
-  or whole-graph analysis;
-- material choices, delegated decisions, exclusions, open questions, warnings, and capability gaps;
-- the implementation-notes location, outstanding agreed behavior, and whether the resulting repository actually
-  contains them; follow the [notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff);
-- observed analyzer release, graph version, Head SHA, valid GapSet digest, and where its full records are;
-- mode and distinct Compilation/Publication statuses when Publication was requested;
-- `--github` mode's private URL after Publication success; direct output's path, file count, manifest digest, and
-  any `root_adoption` after materialization;
-- that direct Compile created no Publication or repository; after root adoption, use the
-  [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) for local setup and an optional Git checkpoint;
-- whether setup and the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) actually ran,
-  and their outcome; and
-- any recovery blocker or external prerequisite.
+- where the app is: its folder, or the private GitHub repository once Publication succeeds;
+- what works, as setup, the specs, and the preview actually showed;
+- what you will write next: the README's Behavior to write, agreed behavior from the implementation notes, and any
+  gap the user will notice; and
+- how to open the preview.
 
-Distinguish verified materialization, First Draft Publication, and GitHub pushes. None proves deployment or
-production readiness. Begin [application handoff](references/diagnostics-and-recovery.md#application-handoff), which
-writes the README's Behavior to write before the first preview.
+Compilation and Publication do not deploy the app or make it ready for real users.
