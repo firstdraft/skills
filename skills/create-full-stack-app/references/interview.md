@@ -112,8 +112,9 @@ with more than one target needs `realization.rails_association`. Both values com
   target of an optional or one-to-one immutable polymorphic Reference. A cascade or nullification there is left to
   write after Compile.
 
-Forms, selects, Policies, Predicates, and other screens that cross either shape remain gaps, and a standalone
-create that needs a required multi-target Reference is omitted; say so.
+Forms, selects, Policies, Predicates, and other screens that cross either shape remain gaps, and a standalone create
+that needs a required multi-target Reference is omitted. A Policy that crosses either shape is emitted as a stub:
+its rule denies and its scope raises until it is written, and the screens it guards are still generated. Say so.
 
 Follow the user's level:
 
