@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.8.11, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
+Targets plugin 0.8.12, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
@@ -320,4 +320,4 @@ Report:
 
 Distinguish verified materialization, First Draft Publication, and GitHub pushes. None proves deployment or
 production readiness. Begin [application handoff](references/diagnostics-and-recovery.md#application-handoff), which
-writes what each `NotImplementedError` names before the first preview.
+writes the README's Behavior to write before the first preview.

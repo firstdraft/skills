@@ -106,9 +106,11 @@ with more than one target needs `realization.rails_association`. Both values com
 - `exclusive_arc` stores one nullable foreign key per target, with a check that exactly one is set (at most one
   when optional). Recommend it for a closed set of targets.
 - `polymorphic` is Rails' type-and-ID association, limited to the Plan's targets by a validation. Recommend it when
-  the developer expects to add target types later without a migration. Every target then needs a deletion
-  carrier, so a target with two inverses, or a name the conventional inverse would reuse, omits the Reference, as
-  does an optional or one-to-one immutable polymorphic Reference.
+  the developer expects to add target types later without a migration. No foreign key refuses deleting a target,
+  so each target carries the deletion outcome on its inverse. A target that cannot, such as one with two inverses
+  or a Comment that replies to Comments, refuses its own deletion while a record references it, and so does every
+  target of an optional or one-to-one immutable polymorphic Reference. A cascade or nullification there is left to
+  write after Compile.
 
 Forms, selects, Policies, Predicates, and other screens that cross either shape remain gaps, and a standalone
 create that needs a required multi-target Reference is omitted; say so.
@@ -190,8 +192,8 @@ proposal in the read-back.
 ## After-Compile checklist
 
 These steps are outside the Plan and do not block local development. They come after the
-[test run](diagnostics-and-recovery.md#run-the-generated-tests), which runs the specs and writes the behavior each
-`NotImplementedError` names before other work. Before the read-back, write the items that apply under
+[test run](diagnostics-and-recovery.md#run-the-generated-tests), which runs the specs and writes the behavior the
+README's Behavior to write lists before other work. Before the read-back, write the items that apply under
 `## After Compile` in `implementation-notes.md`, so the agent that continues in the app finds them:
 
 - [ ] Error tracking: the app includes Rollbar, which reports production errors only once `ROLLBAR_ACCESS_TOKEN`
