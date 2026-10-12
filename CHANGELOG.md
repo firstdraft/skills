@@ -61,6 +61,10 @@ their emails are not delivered until you add a mail provider, as the Account ema
 Apps compiled earlier keep their `AGENTS.md`. To adopt the new rules, ask your agent to compare its spec bullet with
 this entry and update it.
 
+An Account that leaves out `lockout` now gets Rails' own sign-in limit in the generated `RodauthController`: 10
+attempts per IP address every three minutes. People on one network, such as a classroom, share it; `DEPLOY.md`
+describes the limit and how to key it by email as well. The Skill's Accounts text says so instead of "not limited".
+
 ## 2026-10-12: State Machine events First Draft cannot generate are stubs
 
 **Skills — released in plugin 0.8.15.** Plugin 0.8.14 carried the same text but was never published: its tag was pushed while a GitHub Actions incident had dropped its main CI run, so the publish workflow refused it. Once the First Draft service deploys the matching Compiler, a required,

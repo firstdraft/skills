@@ -692,8 +692,8 @@ a signed-in session. Without `registration`, nobody can sign themselves up: the 
 generated README shows the owner how to create each Account, in development seeds and with `bin/rails runner` against
 the production database, because Render Free has no Shell. With `verification` but no `registration`, verification
 covers email changes only. Without `recovery`, there is no password reset, and the README shows how the owner sets a
-new password. Without `lockout`, failed sign-ins are not limited: nothing throttles `/login`, and `DEPLOY.md` says so
-in its Failed sign-ins section. Keep `recovery` and `lockout` unless the user asks to leave them out.
+new password. Without `lockout`, the generated `RodauthController` carries Rails' own sign-in limit, 10 attempts per IP
+address every three minutes, and `DEPLOY.md` describes it in its Failed sign-ins section. Keep `recovery` and `lockout` unless the user asks to leave them out.
 
 A realized Account derives one Web `/account` destination without requiring an authored profile. With
 `registration`, sign-up shows a control for each required registration input that names a stored Account Field,
