@@ -37,6 +37,9 @@ const cliRoot =
   cliRootIndex === -1
     ? undefined
     : path.resolve(process.argv[cliRootIndex + 1] || "");
+// Content changes leave plugin_source.tarball_sha256 alone; the release records it in a commit that changes only it.
+const requireDigest = process.argv.includes("--require-digest");
+assert(!requireDigest || cliRoot, "--require-digest needs --cli-root with the exact CLI");
 
 assert.equal(packageTemplate.name, "@firstdraft.com/claude-code");
 assert.equal(packageTemplate.version, compatibility.version);
@@ -89,7 +92,8 @@ try {
     process.umask(previousUmask);
   }
   assert.equal(first.sha256, second.sha256, "plugin tarballs must be independent of the process umask");
-  if (cliRoot) {
+  if (cliRoot) process.stdout.write(`Packed plugin sha256 ${first.sha256}\n`);
+  if (requireDigest) {
     assert.equal(
       first.sha256,
       compatibility.plugin_source.tarball_sha256,

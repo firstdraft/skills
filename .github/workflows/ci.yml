@@ -67,7 +67,7 @@ jobs:
           cli_revision="$(node --input-type=module -e 'import { cliRevision } from "./script/cli-contract/config.mjs"; console.log(cliRevision)')"
           git -C tmp/firstdraft-cli merge-base --is-ancestor "$cli_revision" HEAD
           git -C tmp/firstdraft-cli checkout --detach "$cli_revision"
-      - run: sh script/check --cli-root tmp/firstdraft-cli
+      - run: sh script/check --cli-root tmp/firstdraft-cli ${{ steps.scope.outputs.digest_changed == 'true' && '--require-digest' || '' }}
         if: steps.scope.outputs.catalog_only != 'true'
       - run: node script/check-cli-contract.mjs tmp/firstdraft-cli
         if: steps.scope.outputs.catalog_only != 'true'

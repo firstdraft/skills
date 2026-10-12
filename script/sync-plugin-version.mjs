@@ -127,8 +127,7 @@ async function main(argv) {
     "Left unchanged:",
     "  .claude-plugin/marketplace.json keeps the published selection until npm publishes this version.",
     "  script/cli-contract/config.mjs and requires in release/compatibility.json keep the bundled CLI pin.",
-    "  plugin_source.tarball_sha256 in release/compatibility.json. After the last packaged edit, record the digest",
-    "  that this prints: node script/claude-plugin-package.mjs pack tmp/plugin --cli-root /path/to/exact/cli",
+    "  plugin_source.tarball_sha256 in release/compatibility.json, which the release records before its tag.",
     "",
     "Next, sh script/check lists any packaged Skill text that must change before this version is released.",
   ];

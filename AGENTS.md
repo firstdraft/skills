@@ -21,14 +21,16 @@ and release notes in `CHANGELOG.md`.
 
 ## Checks and review
 
-- Run `npm ci --ignore-scripts && npm audit && sh script/check` before committing. A change to packaged bytes needs
-  a new `plugin_source.tarball_sha256` in `release/compatibility.json`; the local check uses a stub CLI and skips
-  that digest, so [reproduce CI](RELEASING.md#reproduce-ci-locally) with the exact CLI.
-- Get an independent review through [cross-review](https://github.com/raghubetina/cross-review) before merging a
-  contract change or an instruction-policy change. A contract change edits a `requires` entry in
+- Run `npm ci --ignore-scripts && npm audit && sh script/check` before committing. Leave
+  `plugin_source.tarball_sha256` alone: the release records it before its tag
+  ([RELEASING.md](RELEASING.md#2-update-the-pin-and-digest)).
+- Get an independent review through [cross-review](https://github.com/raghubetina/cross-review) at the effort the
+  change's risk needs. Packaged Skill text that ships to users gets one round at `--effort high`. A contract change
+  or a change to scripts and workflows gets the default `max`. A contract change edits a `requires` entry in
   `release/compatibility.json` or the bundled Plan schema in `skills/create-full-stack-app/references/`. An
-  instruction-policy change edits `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `RELEASING.md`,
-  `.claude/settings.json`, or `.codex/config.toml`. Use the `codex-review` Skill from Claude Code and
+  instruction-policy change alone, to `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `RELEASING.md`,
+  `.claude/settings.json`, or `.codex/config.toml`, gets one session at `--effort high`. Mirror text, version pins,
+  catalog selections, and digest records get none. Use the `codex-review` Skill from Claude Code and
   `$claude-review` from Codex; neither is a shell command. [`CONTRIBUTING.md`](CONTRIBUTING.md#independent-review)
   covers setup, the service's focus file, and what the pull request body records.
 
@@ -40,6 +42,8 @@ and release notes in `CHANGELOG.md`.
   mutation.
 - Never reuse a published npm version, protected tag, or marketplace version for different package bytes. Before
   1.0, a breaking compatibility change takes a minor bump. The marketplace selects only an already-published
-  package, through a passing pull request; do not bypass the protected environment or CI.
+  package, after the catalog checks pass: the service's `script/release ship` commits that selection to `main`
+  under the release approval, and a selection by hand goes through a passing pull request. Do not bypass the
+  protected environment or CI.
 - Keep one editable source per Skill under `skills/`, and update the packaging inventory when adding a Skill or
   reference. Deferred UI Skills are not packaged.

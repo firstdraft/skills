@@ -31,9 +31,11 @@ outside the sandbox; `sh script/check` runs inside it.
   shows what changed.
 - Update the documentation the change makes stale. The pull request body carries one line: `Docs: updated X` or
   `Docs: none, because ...`. The [`Docs line`](.github/workflows/pr-docs-line.yml) check fails until the body has
-  one, and it skips pull requests that a bot such as Dependabot opens.
-- When a review is required, add the line `Review: <reviewer>, session <id>, <verdict>` to the body, and leave the
-  findings out.
+  one. It skips pull requests that a bot such as Dependabot opens, and catalog selections that change only
+  `.claude-plugin/marketplace.json`.
+- When a review is required, add one line with the reviewer, the verdict, and the counts, such as
+  `Review: Codex, approve (2 rounds, 3 findings fixed)`. Leave out session ids, which name files in a deleted
+  worktree, and the findings themselves; give a material finding one line in the commit message.
 - Use GitHub closing keywords only for completed Issues: even `does not close #123` can close an Issue. Say the
   remainder is tracked in open Issue `#123` instead.
 

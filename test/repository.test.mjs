@@ -660,7 +660,7 @@ test("CI binds publication to protected identities and checks", async () => {
   );
   assert.match(
     workflow,
-    /sh script\/check --cli-root tmp\/firstdraft-cli/,
+    /sh script\/check --cli-root tmp\/firstdraft-cli \$\{\{ steps\.scope\.outputs\.digest_changed == 'true' && '--require-digest' \|\| '' \}\}/,
   );
   assert.doesNotMatch(workflow, /node script\/check-claude-plugin-package/);
   assert.match(repositoryCheck, /node script\/check-claude-plugin-package\.mjs "\$@"/);
