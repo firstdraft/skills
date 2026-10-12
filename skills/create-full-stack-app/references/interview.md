@@ -176,7 +176,8 @@ proposal in the read-back.
       confirmation: leave `verification` out unless the user asks for it, so sign-up signs people in at once and
       they can share the app with friends right away. "No sign-up" is supported: without `registration`, sign-in
       and Policies still generate, and the generated README shows the owner how to create each Account. Keep
-      `recovery` and `lockout`; without `lockout`, failed sign-ins are not limited, and `DEPLOY.md` says so.
+      `recovery` and `lockout`; without `lockout`, sign-in allows 10 attempts per IP address every three minutes, and
+      `DEPLOY.md` describes the limit.
 - [ ] Lists: what each main list shows, starting with the record's name, and its order.
 - [ ] Sample data: the proposed sample records and demo sign-in, and any CSV the user wants imported; import itself
       goes in the implementation notes.
@@ -201,8 +202,8 @@ These steps are outside the Plan and do not block local development. They come a
       it, Change email and sign-up with `registration` need one too, because their links travel by email. Follow
       the Account email section of `DEPLOY.md` to add one before inviting real users.
 - [ ] Accounts without sign-up or lockout: without `registration`, create each Account as the README's Accounts
-      section shows; without `lockout`, limit sign-in attempts as the Failed sign-ins section of `DEPLOY.md` says
-      before inviting real users.
+      section shows; without `lockout`, read the Failed sign-ins section of `DEPLOY.md`, because people on one network,
+      such as a classroom, share the per-IP sign-in limit.
 - [ ] Photos and files (apps with image or attachment Fields): sign up for Cloudinary and set `CLOUDINARY_URL`
       as the [upload setup](foundation-plan-023.md#photos-and-files) describes.
 - [ ] Deploy: before the first deploy, the user creates a separate Render workspace for this app in the Render
