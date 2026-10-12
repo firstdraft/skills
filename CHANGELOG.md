@@ -31,7 +31,7 @@ and any useful small example or verification; they need not reproduce commit log
 
 ## 2026-10-12: State Machine events First Draft cannot generate are stubs
 
-**Skills — released in plugin 0.8.14.** Once the First Draft service deploys the matching Compiler, a required,
+**Skills — released in plugin 0.8.15.** Plugin 0.8.14 carried the same text but was never published: its tag was pushed while a GitHub Actions incident had dropped its main CI run, so the publish workflow refused it. Once the First Draft service deploys the matching Compiler, a required,
 unconditional State Machine alone on its Entity stays in AASM when an event has effects the Compiler cannot generate.
 Before, one such event made the whole machine storage only: a string column with no events, AASM initialization, or
 direct-assignment guard, even for the events the Compiler could generate. Now the `aasm` block lists the generated
