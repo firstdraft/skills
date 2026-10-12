@@ -9,7 +9,7 @@ interleaved output fail closed. Branch on the object's stable `error` and struct
 human-readable `detail` or broad process exit status.
 
 This plugin bundles `@firstdraft.com/cli@0.8.2`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.11/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.12/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -271,8 +271,8 @@ another one. This publishes the existing Git history; do not invoke `plan compil
 to publish an already-compiled workspace.
 
 Then follow the [application handoff](#application-handoff): it runs setup and the generated tests, and writes the
-behavior each `NotImplementedError` names, before the first preview and before requested feature work in ordinary
-Rails source.
+behavior the README's Behavior to write lists, before the first preview and before requested feature work in
+ordinary Rails source.
 Do not run Drawing Board's moved `.firstdraft/design/script/initialize-application` or
 `.firstdraft/design/script/application-smoke`: those helpers belong to the optional nested `./application` mode.
 Use ordinary generated application and platform commands for preview and tests rather than archived helpers.
@@ -316,15 +316,16 @@ Compile. A missing README prerequisite, such as PostgreSQL 18 or Chrome for syst
 First Draft defect: report it and ask before installing anything. With the prerequisites present, a setup failure
 is a defect.
 
-A failure that raises `NotImplementedError` for behavior the README's Behavior to write lists is work to do: First
-Draft did not write that behavior. Write it until its specs pass. Any other failure is a First Draft defect. Report
-RSpec's summary line and each such failure's rerun line (`rspec ./spec/...:LINE`) and error; the user decides how to
+A spec that fails through behavior the README's Behavior to write lists is work to do: First Draft did not write
+that behavior. Write it until its specs pass. A stub raises `NotImplementedError`, and a deletion outcome First
+Draft left out fails its spec with `RecordNotDestroyed`. Any other failure is a First Draft defect. Report RSpec's
+summary line and each such failure's rerun line (`rspec ./spec/...:LINE`) and error; the user decides how to
 proceed. Never edit or delete a generated spec, skip examples, or change the commands to make the run pass. Change a
 generated spec only when the owner changes the behavior it pins.
 
 When the run passes, continue to the preview. When specs still fail, ask before the preview, even one requested
-earlier. If the user still wants it, first name the pages or flows the failing specs exercise and each page that the
-README's Behavior to write says raises until its behavior is written.
+earlier. If the user still wants it, first name the pages or flows the failing specs exercise, each page that the
+README's Behavior to write says raises, and each delete it says is refused until its behavior is written.
 
 ### Verify the first preview
 
@@ -380,12 +381,13 @@ artifact bytes or their manifest to make the notes appear Compiler-owned. Local 
 server Publication carried the notes.
 
 During continuation, read the app's `AGENTS.md`, README, and retained implementation notes before selecting work.
-Run the specs before other work. A failure that raises `NotImplementedError` for behavior the README's Behavior to
-write lists is work to do: write that behavior until its specs pass. Report any other failure. Never edit or delete
-a generated spec to make it pass; change one only when the owner changes the behavior it pins. Then implement the
-agreed behavior and its acceptance examples in ordinary source; keep unresolved product questions open. Existing app
-feature work does not require another Plan submission, Compile, or CLI capability probe. Update the notes to reflect
-remaining behavior without making app setup, runtime, or tests depend on them.
+Run the specs before other work. A spec that fails through behavior the README's Behavior to write lists is work to
+do: write that behavior until its specs pass. A stub raises `NotImplementedError`, and a deletion outcome First
+Draft left out fails its spec with `RecordNotDestroyed`. Report any other failure as a First Draft defect. Never
+edit or delete a generated spec to make it pass; change one only when the owner changes the behavior it pins. Then
+implement the agreed behavior and its acceptance examples in ordinary source; keep unresolved product questions
+open. Existing app feature work does not require another Plan submission, Compile, or CLI capability probe. Update
+the notes to reflect remaining behavior without making app setup, runtime, or tests depend on them.
 
 #### UI continuation
 

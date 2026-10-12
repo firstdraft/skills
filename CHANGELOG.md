@@ -29,6 +29,33 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-12: Polymorphic targets refuse deletes
+
+**Skills — released in plugin 0.8.12.** Once the First Draft service deploys the matching Compiler, a polymorphic
+Reference keeps its columns, `belongs_to`, and type list when a target cannot carry the authored deletion outcome.
+Before, the whole Reference was left out when a target had several inverses, a destructive cascade cycle reached it,
+as with comments that reply to comments, or its conventional inverse name was taken, and so was an optional or
+one-to-one immutable polymorphic Reference. Now such a target refuses its own deletion in a private `before_destroy`
+while a record references it, as a foreign key refuses the same delete for a single-target Reference, and a
+generated destroy action shows the refusal as an alert. That completes `restrict`. A cascade or nullification stays
+unwritten: the README's Behavior to write lists it, the GapSet lists a
+`foundation_plan.gap.reference.deletion_not_generated` record, and its deletion spec fails with
+`ActiveRecord::RecordNotDestroyed` until it is written in place of the refusal. A comment with replies cannot be
+deleted until then. A required multi-target Reference on the Account Entity is generated too, and it blocks sign-up
+as a required single-target one does.
+
+The Skill's rule for a failing spec now keys on the README's Behavior to write list, as the generated `AGENTS.md`
+does: a spec that fails through behavior that list names is work to do, written until its specs pass, and any other
+failure is a First Draft defect. A stub raises `NotImplementedError`, and a deletion outcome First Draft left out
+fails its spec with `RecordNotDestroyed`. Plugin 0.8.11 named only `NotImplementedError`, so it would have reported
+a left-out deletion as a defect. The test run, continuation, the after-Compile checklist, and the hand-off say so,
+and before a preview the agent also names each delete the README says is refused. The Plan reference and the
+interview's realization advice describe the refusal instead of the omission.
+
+Until the service deploys that Compiler, those References are still left out whole, as in plugin 0.8.11, and no
+README lists a deletion outcome. Apps compiled earlier keep the omissions; an owner can add the columns, the
+`belongs_to`, and each target's deletion outcome in Rails.
+
 ## 2026-10-12: Policies and reduced Accounts generate
 
 **Skills — released in plugin 0.8.11.** Once the First Draft service deploys the matching Compiler, a Policy's

@@ -88,7 +88,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.11/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.12/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -576,17 +576,26 @@ Callback-bypassing writes do not establish Rails lifecycle behavior.
 
 A Reference with several targets lowers to its `realization`. `polymorphic` emits `<key>_type` and `<key>_id`
 columns, `belongs_to ..., polymorphic: true`, and an inclusion validation of its type column. No foreign key can
-refuse deleting a target, so every target carries the deletion outcome on `has_many ..., as:`, or `has_one` when
-one-to-one, authored or inferred. When one target cannot, because it has several inverses, a destructive cascade
-cycle reaches it, or its conventional inverse name is taken, the whole Reference, columns included, is left out with
-a `foundation_plan.gap.reference.not_generated` record; so is an optional or one-to-one immutable polymorphic
-Reference. `exclusive_arc` emits one nullable foreign key per target, per-target `belongs_to`, a generated reader and
-writer, and a check that exactly one column is set, or at most one when optional; each target's inverse follows the
-single-target deletion rules above. A required multi-target Reference on the Account Entity is also left out whole,
-because sign-up has no input for it. Predicated inverses over either shape, Scaffold inputs and selects,
-descriptors, Policies, Predicates, Orderings, counters, positions, indirect Associations through it, and seeds for a
-one-to-one multi-target Reference remain gaps, and a standalone create that needs a required multi-target Reference
-is omitted.
+refuse deleting a target, so each target carries the deletion outcome on `has_many ..., as:`, or `has_one` when
+one-to-one, authored or inferred. A target cannot carry it when it has several inverses, a destructive cascade cycle
+reaches it, or its conventional inverse name is taken, and no target of an optional or one-to-one immutable
+polymorphic Reference can. Such a target refuses its own deletion instead, as a foreign key would: while a record
+references it, a private `before_destroy` adds the error `restrict_with_error` adds, such as "Cannot delete record
+because dependent comments exist", and halts the delete, which a generated destroy action shows as an alert.
+Storage, the `belongs_to`, and the type list stay generated. The refusal completes `restrict`. For
+`delete_referencing_record` or `nullify_reference`, the GapSet lists a
+`foundation_plan.gap.reference.deletion_not_generated` record, the README's Behavior to write lists the outcome, and
+its deletion spec fails with `RecordNotDestroyed` until that outcome is written in place of the refusal. When
+Comments reply to Posts and to other Comments, Post keeps
+`has_many :comments, as: :commentable, dependent: :destroy`, and a Comment with replies, or a Post whose Comments
+have replies, cannot be deleted until that cascade is written. `exclusive_arc` emits one nullable foreign key per
+target, per-target `belongs_to`, a generated reader and writer, and a check that exactly one column is set, or at
+most one when optional; each target's inverse follows the single-target deletion rules above. A required
+multi-target Reference on the Account Entity is generated as a required single-target one is: sign-up has no input
+for it, so every sign-up fails, and the GapSet lists a `foundation_plan.gap.account.partially_generated` record.
+Predicated inverses over either shape, Scaffold inputs and selects, descriptors, Policies, Predicates, Orderings,
+counters, positions, indirect Associations through it, and seeds for a one-to-one multi-target Reference remain
+gaps, and a standalone create that needs a required multi-target Reference is omitted.
 
 The current Association catalog includes supported mutable direct inverses, the exact required-immutable `has_many`
 inverse, selected predicated direct Associations, several first-level indirect collections, and one nested-through
