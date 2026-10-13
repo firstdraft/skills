@@ -160,9 +160,10 @@ only after a release date exists; nil title handling still comes from requiredne
 }
 ```
 
-The same release also admits unconditional or bounded conditional ordered integer-literal range comparisons and
-conditional text or ordinary-Reference presence and absence. See the Foundation Plan reference for the exact closed
-subset. A conditional maximum does not become an unconditional form `maxlength`.
+The same release also admits unconditional or conditional ordered literal comparisons on integer, decimal, money,
+and date Fields, conditional presence and absence on scalar Fields and ordinary References, and wider and
+conditional uniqueness. See the Foundation Plan reference for the exact closed subset; a rule outside it is declared
+as an empty method, with a failing spec where the Compiler can build a record the rule rejects. A conditional maximum does not become an unconditional form `maxlength`.
 
 ## Public mutation, show projection, returns, and destroy
 

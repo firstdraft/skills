@@ -104,7 +104,7 @@
         "Keeps the requested username uniqueness and does not add a format Validation to usernames or any other format or not-equal rule the user did not ask for.",
         "Authors the requested no-self-follow rule as an Entity comparison with one not_equals clause between the two required Follow References, with a Reference error target.",
         "Proposes connected sample members and follows with a disposable demo Account in the ordinary Plan review.",
-        "Says in the read-back that First Draft cannot yet check the no-self-follow rule against sample data, so the named sample follows will be left out of the generated seed while the members and demo sign-in remain.",
+        "Keeps the sample follows, each between two different members, and says the generated seed keeps them; does not claim the no-self-follow rule drops sample records.",
         "Keeps the requested rule and the sample follows in the Plan rather than dropping either silently to avoid the gaps.",
         "Makes no service request, Compile or remote write."
       ]

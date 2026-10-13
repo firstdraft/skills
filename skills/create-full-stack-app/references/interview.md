@@ -72,9 +72,9 @@ Steps 1 and 2 are the opening turn, after the research and any fit, with at most
    a few minutes, then write a rough Plan, push it, and read its analysis. Keep the rough Plan small: the main
    records and their key Fields, any Account, who can see what, and requested phone apps; for a backbone, only the
    part First Draft builds. Tell the user in a few plain lines what First Draft will build and what it will not
-   build yet, for example "Formatted descriptions aren't generated yet, so posts start without one; I'll add them in
-   Rails after" or "The list of posts that mention a word is generated, and I'll write its search in Rails right
-   after". Then let the analysis steer the remaining questions: ask about consequences the user can choose between,
+   build yet, for example "Descriptions are stored as plain text for now; I'll add formatting in Rails after" or
+   "The list of posts that mention a word is generated, and I'll write its search in Rails right after". Then let
+   the analysis steer the remaining questions: ask about consequences the user can choose between,
    not about gaps they cannot change. Keep private access and requested phone apps in the Plan. Report each gap as
    the analysis gives it, even when its reason names no cause or contradicts these references; the deployed First
    Draft may not generate it yet. Do not trim the Plan or push trial or example Plans to find a cause: each push
@@ -106,11 +106,12 @@ with more than one target needs `realization.rails_association`. Both values com
   the developer expects to add target types later without a migration. No foreign key refuses deleting a target,
   so each target carries the deletion outcome on its inverse. A target that cannot, such as one with two inverses
   or a Comment that replies to Comments, refuses its own deletion while a record references it, and so does every
-  target of an optional or one-to-one immutable polymorphic Reference. A cascade or nullification there is left to
-  write after Compile.
+  target of a one-to-one immutable polymorphic Reference whose outcome is nullification. A cascade or nullification
+  there is left to write after Compile.
 
 Forms, selects, Policies, Predicates, and other screens that cross either shape remain gaps, and a standalone create
-that needs a required multi-target Reference is omitted. A Policy that crosses either shape is emitted as a stub:
+that needs a required multi-target Reference is generated but cannot save until the Reference is supplied in Rails. A
+Policy that crosses either shape is emitted as a stub:
 its rule denies and its scope raises until it is written, and the screens it guards are still generated. Say so.
 
 Make implementation choices yourself: use the convention default without asking, and name it with a one-line why

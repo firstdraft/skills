@@ -29,6 +29,47 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-12: More of the Plan reaches the generated app
+
+**Skills — released in plugin 0.8.17.** Once the First Draft service deploys the matching Compiler, more of an
+authored Plan reaches the generated app, and what the Compiler cannot write yet is declared where it belongs, behind a
+failing spec. The Skill's references now describe that output.
+
+**Validations.** Decimal and money comparisons, conditional presence and absence on scalar Fields, and uniqueness over
+wider tuples or under a condition now generate; a conditional uniqueness gets a partial unique index. A Validation the
+Compiler still cannot lower, such as an `exclusion`, becomes `validate :<key>` with an empty private method and a
+Behavior to write entry, plus an `enforces <path>` model example that expects the Rails error kind wherever the
+Compiler can build a record the rule rejects. An unconditional left-out uniqueness over indexable columns still gets
+its unique index. Factories build values that satisfy every emitted rule.
+
+**Sample data.** Seeds keep every record no rule is proven to reject, where they used to drop each record a `format`
+or not-equal rule covered. A sample record that breaks its own rule gets a
+`foundation_plan.development_data.validation_violated` warning, and the read-back names it. Entity `reference_data` is
+seeded in every environment.
+
+**State Machines.** An Entity with several machines gets one namespaced AASM machine per Field, so events read
+`leave_status!`. An optional machine keeps a nullable column, stubbed events, and an empty applicability callback with
+a failing example, instead of storage alone.
+
+**Pages and forms.** A failing input, binding, return, or collection drops only itself, and a create missing a
+required value is still generated, with a partial gap. A Reference input to an Account Entity whose Policies don't
+decide which Accounts to offer asks for an exact sign-in email. A Primary Descriptor no longer has to be a required
+Field: a blank or unshowable one labels the record `Movie #12`. A reserved Policy operation such as `present` becomes
+`present_rule?`, and a reserved scope key such as `public` becomes `public_profiles`, each with a warning.
+
+**Relationships.** A cascade or nullification with no authored inverse gets the conventional `has_many` or `has_one`.
+Inverse Associations over immutable References are plain Rails, and the app's `AGENTS.md` names the collection writers
+that can still clear an optional immutable key. Counter columns and defaulted References keep their storage; a count
+Rails cannot maintain, or the default, is left out behind a failing example or a Test coverage to complete entry, and
+a Policy that reads an unmaintained count becomes a stub that denies.
+
+**Import.** A `rich_text` Field is stored as plain text for now, a Tree imports with its self-Reference, an
+Association's `cardinality` is skipped as one key, and canonical-form slips such as a repeated Ordering source warn
+instead of blocking Compile.
+
+Apps compiled earlier are unchanged. A rule they left out can be added by hand in the same shape: a `validate`
+declaration, a method, and a spec that pins its error kind.
+
 ## 2026-10-12: Agents preview first and debug failures
 
 **Skills — released in plugin 0.8.16.** Once the First Draft service deploys the matching Compiler, a generated app's

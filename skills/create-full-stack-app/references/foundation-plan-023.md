@@ -81,7 +81,7 @@ The bundled schema was copied byte-for-byte from
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.16/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.17/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
@@ -306,14 +306,23 @@ iPad remain outside the public boundary.
 `account`, `fields`, `references`, `associations`, `predicates`, `orderings`, `validations`, `trees`, `policies`,
 `scaffold`, and `reference_data`; each Entity has `subject_uuid`, `key`, `name`, and `primary_descriptor`. Only the
 profile's exact current slices are realized. Do not omit a schema-valid family merely because its current lowering is
-partial.
+partial. Entity `reference_data` is seeded in every environment through `db/seeds.rb`, with `find_or_create_by!`
+keyed by each record's identity Field, so a rerun never duplicates a row; a reference record whose identity is a
+State Machine Field is left out with a gap. A Tree imports with its self-Reference generated; the hierarchy's own
+rules are a `tree.partially_generated` gap, and a tree Ordering is a scope stub that raises until it is written.
+An Association's `cardinality` is skipped as one key with a service-support gap, and the Association still imports.
+Canonical-form slips warn rather than block: a comparison of a path with itself, a null test on a required Field, a
+repeated Ordering source or sign-up input, an optional source for a required sign-up input, and a redundant
+`maximum` on an Association. The target treats each rule as written.
 
 The importer retains Entity `orderings`, and the current target emits a bounded named-Ordering slice when its terms,
 stability, nullability, and consumers meet the profile. Unsupported Orderings remain exact gaps, and each record's
 consequence says what the generated app does. When it says the named scope raises `NotImplementedError` until it is
 written, the Compiler emitted that scope as a stub, and a Scaffold index or collection that selects it calls the
-stub, so the page raises until then. Otherwise the scope is left out, as when the model cannot take that name, and
-the consequence says what the page does without it. `implicit_order_column` is
+stub, so the page raises until then. A key that Rails or a selected gem reserves, such as `public`, becomes the key
+plus the table name, as `Profile.public_profiles`, and the Analyzer warns with
+`foundation_plan.rails_target.scope.renamed`. Otherwise the scope is left out, as when even the renamed name is taken,
+and the consequence says what the page does without it. `implicit_order_column` is
 schema-valid, but the current integrated target realizes only the captured Case Chat `message.sent_at, id` authored
 shape. Ordered finders otherwise use the profile's `created_at, id` default. This fallback affects `first` and
 `last`, not ordinary Relation or Association loading or Scaffold list order; use the matching GapSet for other
@@ -346,11 +355,15 @@ and application name.
 
 ### Entities, descriptors, and Fields
 
-A Primary Descriptor may select a required Field owned by that Entity or a schema-supported system Field. The
-current target also admits one required ordinary single-target forward Association hop when the target Entity's
-descriptor terminates in a required emitted scalar or system Field. It preloads that hop for admitted Web consumers.
-The whole-graph analyzer rejects an optional Field descriptor; multi-target, longer-chain, optional-source, cyclic,
-or otherwise unsupported Association descriptors remain exact gaps. A Field may use these types:
+A Primary Descriptor may select a Field owned by that Entity or a schema-supported system Field. The current target
+also admits one required ordinary single-target forward Association hop when the target Entity's descriptor
+terminates in an emitted scalar or system Field, and preloads that hop for admitted Web consumers. Each page writes
+the label where it shows a record. An optional Field descriptor shows `Movie #12` where the value is blank, as
+`movie.title.presence || "#{movie.model_name.human} ##{movie.id}"`, and an enum shows its value's label. Any other
+descriptor, such as a two-hop chain, a `money` or upload Field, or a multi-target Reference, labels every record
+`Movie #12` and is listed as `primary_descriptor.partially_generated`; the pages, Reference options, and specs that
+show those records are still generated, and Reference options for such a label are ordered by `id`. An optional
+Association descriptor is still an analysis error. A Field may use these types:
 
 - `attachment`
 - `boolean`
@@ -366,15 +379,20 @@ or otherwise unsupported Association descriptors remain exact gaps. A Field may 
 - `long_text`
 - `money`
 - `position`
+- `rich_text`
 - `secure_token`
 - `short_text`
 - `state_machine`
 - `time_zone`
 - `url`
 
-That is the conditional import list, not the complete schema vocabulary. A State Machine Field retains its states,
-initial state, transitions, and transition effects. The current target realizes exactly one required unconditional
-State Machine per Entity when the AASM helper surface is safe. AASM owns initialization, validation, named events,
+That is the conditional import list, not the complete schema vocabulary. A `rich_text` Field lowers like `long_text`
+for now: a `text` column, a textarea, and plain-text display, with formatting and embedded files listed as its
+partial gap. A State Machine Field retains its states,
+initial state, transitions, and transition effects. The current target realizes each required unconditional State
+Machine as AASM when the AASM helper surface is safe. An Entity with several machines gets one AASM machine per Field,
+each namespaced by its Field key, so events read `leave_status!` and `may_leave_status?` and predicates read
+`status_left?`; adding a second machine renames the first machine's events. AASM owns initialization, validation, named events,
 state scopes, and the generated effects; behavior-emitted state columns keep `NOT NULL` without a SQL default. Native
 naming options resolve supported helper collisions. An event is generated when it is effect-free or has one
 `set_field` effect that sets an optional, mutable, non-derived `datetime` Field on the same record to the current
@@ -386,10 +404,15 @@ stubbed event, and its State Machine examples fail until then; no generated page
 and spec setup never fire a stub, so a development record whose authored state needs one is left out of
 `db/seeds/development.rb` with a development-data gap, and an example whose setup needs one is listed under Test
 coverage to complete. The GapSet keeps the event's `foundation_plan.gap.state_transition.effects_not_generated`
-record, whose consequence names the stubs. Required storage-only states retain the initial-state SQL default and
-inclusion validation; optional machines keep nullable storage without a default. Optional, conditional,
-multiple-per-Entity, and guarded machines, and those with an unresolved helper collision, retain storage with
-behavior gaps. Failed transitions retain ordinary AASM/Rails object and transaction behavior; an application may need
+record, whose consequence names the stubs. An optional machine, which applies only where its `settings.when` holds,
+gets no `aasm` block, because AASM would fill every blank state column with the initial state. Its column stays
+nullable without a default, with an inclusion validation that admits `nil`, and each event is a stub under the names
+AASM would give it. Its applicability is left out behind an empty `before_validation` callback, such as
+`assign_initial_role`, so every new record keeps `nil` until it is written. Its model example fails until then where
+the Compiler can build a record the condition selects, and Test coverage to complete lists it otherwise; the README's
+Behavior to write lists the callback and the stubs. A machine whose helper names collide in a way no
+namespace resolves, including with an earlier machine on the Entity, keeps only storage: a required one keeps the
+initial-state SQL default and inclusion validation, with behavior gaps. Failed transitions retain ordinary AASM/Rails object and transaction behavior; an application may need
 to reload or reset a failed object before reusing it.
 AASM 6.0.0 namespaced state scopes can query a prefixed value instead of the stored state: `status_active` can
 query `status_active` when the stored state is `active`. Check an affected application query against its stored
@@ -552,19 +575,29 @@ Project graph mechanically maintains its same-key forward Association.
 Reference is a schema error rather than an importer or Compiler capability diagnostic.
 
 The current target emits a bounded single-target Reference slice with Boolean `required`, `one_to_one`, and
-`immutable`, no Reference default or realization, and one of the three deletion outcomes: `restrict`,
-`nullify_reference`, or `delete_referencing_record`. It emits the same-key forward traversal, UUID foreign-key
+`immutable`, no realization, and one of the three deletion outcomes: `restrict`, `nullify_reference`, or
+`delete_referencing_record`. A Reference `default` keeps the Reference's storage, `belongs_to`, and consumers while
+the default itself is left out, with a `foundation_plan.gap.reference.default_not_generated` record: a
+`reference_record` default behind a model example that saves a record without one, and an environment default behind
+a Test coverage to complete entry for the create request. A literal null default needs nothing. It emits the same-key forward traversal, UUID foreign-key
 storage, matching nullability, an index, and a post-table foreign key. `one_to_one: true` makes that index unique and
 adds logical Association uniqueness. The post-table migration supports self-References and migration-order cycles.
 An eligible unpredicated inverse carries authored deletion through Rails `dependent:` options: restriction gives
 model errors, nullification clears the Reference, and deleting referencing records uses ordinary deletion or destroy
 according to emitted callbacks and downstream Associations. Plain `NO ACTION` foreign keys preserve integrity.
-A `restrict` Reference with no authored inverse gets the conventional one when the app can delete its target, through
-the target's `destroy` route or a cascade from an Entity that has one: a Deadline's `lease` Reference adds
+A Reference with no authored inverse gets the conventional one. A `delete_referencing_record` or
+`nullify_reference` outcome needs it to happen at all, so it gets one wherever the target is deleted: a Trip's
+`owner` Reference that deletes Trips adds `has_many :trips, dependent: :delete_all` to the owner, and a one-to-one
+Reference adds `has_one`. A `restrict` outcome gets one when the app can delete its target, through the target's
+`destroy` route or a cascade from an Entity that has one: a Deadline's `lease` Reference adds
 `has_many :deadlines, dependent: :restrict_with_error` to Lease, so deleting a Lease that still has Deadlines shows
 "Cannot delete record because dependent deadlines exist" instead of an error page. An Entity that references the
 same target twice gets Reference-prefixed names, such as `landlord_leases`. If that name is already a member of the
-target model, the outcome stays a partial gap and the delete raises the database error. Models declare restrictions
+target model, a restriction stays a partial gap and the delete raises the database error. A cascade or
+nullification is instead left out behind a deletion example in the target's model spec that fails with
+`ActiveRecord::InvalidForeignKey`, and the README's Behavior to write lists it. A one-to-one immutable nullification
+is left out the same way, because Rails' `has_one` nullifies through `update_columns`, which refuses a readonly
+attribute. Models declare restrictions
 before cascades and delete a child that restricts its sibling first, so deleting a Household removes its Dinners
 before the Meals they restrict. A refusal's message comes from the record that refused, even a cascaded child,
 except through a one-to-one cascade: Rails then keeps every record but shows no message, and the GapSet lists that
@@ -572,16 +605,17 @@ restriction as a partial gap. A cascade into records that restrict their own par
 Categories, keeps `dependent: :delete_all` when that restriction is their only callback, so one statement deletes the
 whole tree; a Category outside that delete whose parent is in it makes the delete raise the database error, which the
 GapSet also lists.
-Missing or ambiguous inverse carriers for the other outcomes and destructive cascade cycles can leave the authored
-deletion consequence as a partial gap; the Compiler does not synthesize an inverse or callback scheduler for them.
+Ambiguous inverse carriers and destructive cascade cycles leave the authored deletion consequence as a partial gap;
+the Compiler does not choose a carrier or schedule callbacks for them.
 Callback-bypassing writes do not establish Rails lifecycle behavior.
 
 A Reference with several targets lowers to its `realization`. `polymorphic` emits `<key>_type` and `<key>_id`
 columns, `belongs_to ..., polymorphic: true`, and an inclusion validation of its type column. No foreign key can
 refuse deleting a target, so each target carries the deletion outcome on `has_many ..., as:`, or `has_one` when
-one-to-one, authored or inferred. A target cannot carry it when it has several inverses, a destructive cascade cycle
-reaches it, or its conventional inverse name is taken, and no target of an optional or one-to-one immutable
-polymorphic Reference can. Such a target refuses its own deletion instead, as a foreign key would: while a record
+one-to-one, authored or inferred, including over an optional or one-to-one immutable Reference. A target cannot carry
+it when it has several inverses, a destructive cascade cycle reaches it, or its conventional inverse name is taken,
+and no target can carry the nullification of a one-to-one immutable Reference. Such a target refuses its own deletion
+instead, as a foreign key would: while a record
 references it, a private `before_destroy` adds the error `restrict_with_error` adds, such as "Cannot delete record
 because dependent comments exist", and halts the delete, which a generated destroy action shows as an alert.
 Storage, the `belongs_to`, and the type list stay generated. The refusal completes `restrict`. For
@@ -595,15 +629,20 @@ target, per-target `belongs_to`, a generated reader and writer, and a check that
 most one when optional; each target's inverse follows the single-target deletion rules above. A required
 multi-target Reference on the Account Entity is generated as a required single-target one is: sign-up has no input
 for it, so every sign-up fails, and the GapSet lists a `foundation_plan.gap.account.partially_generated` record.
-Predicated inverses over either shape, Scaffold inputs and selects, descriptors, Policies, Predicates, Orderings,
-counters, positions, indirect Associations through it, and seeds for a one-to-one multi-target Reference remain
-gaps, and a standalone create that needs a required multi-target Reference is omitted.
+Predicated inverses over either shape, Scaffold inputs and selects, Policies, Predicates, Orderings, positions,
+indirect Associations through it, and seeds for a one-to-one multi-target Reference remain gaps; a descriptor through
+it labels records `Model #id`. A standalone create that needs a required multi-target Reference is generated with a
+`partially_generated` gap: it cannot save until application code supplies the Reference.
 
-The current Association catalog includes supported mutable direct inverses, the exact required-immutable `has_many`
-inverse, selected predicated direct Associations, several first-level indirect collections, and one nested-through
-form. These are per-Association shape rules, not per-Entity or per-Plan quotas. Author each traversal the product
-needs. Aliases, defaults, broader paths, cardinality, and unsupported predicates or consumers can produce exact
-gaps. Scaffold input support is a separate consumer decision
+The current Association catalog includes direct inverses, `has_many` or `has_one`, over mutable and immutable
+References, each with the `dependent:` option that carries the authored outcome; predicated direct Associations over
+any single-target Reference; several first-level indirect collections; and one nested-through form. Over an
+optional immutable Reference whose inverse has no cascade carrier, a collection's `delete`, `delete_all`, `clear`,
+`replace`, and IDs writers still set the key to `NULL` with SQL that skips `attr_readonly`, so the app's `AGENTS.md`
+names each such collection; it also names each indirect collection over an optional immutable source, for its
+`delete_all(:nullify)`. A required Reference's `NOT NULL` rejects those writes, and a cascade carrier deletes the rows
+instead. These are per-Association shape rules, not per-Entity or per-Plan quotas. Author each traversal the product
+needs. Aliases, defaults, broader paths, cardinality, and unsupported predicates or consumers can produce exact gaps. Scaffold input support is a separate consumer decision
 from Reference storage. Preserve the authored relationship meaning and review the matching consequence.
 
 ### Counters
@@ -614,13 +653,18 @@ followers. It belongs to the Entity that owns the counted Association, is always
 `{"key": "likes_count", "name": "Likes", "type": "counter", "required": true, "settings": {"counts": "post.likes"}}`
 plus its own `subject_uuid`.
 
-The Compiler emits an integer column that starts at zero, maintained by Rails `counter_cache` on the counted
-record's `belongs_to`. Count a direct referenced-side Association over an ordinary single-target Reference, such as
-`post.likes` over `like.post`. For followers, count the direct `user.follower_links` over `follow.followed`, not an
-indirect `user.followers` through those links; when each pair is unique, both give the same number, and the gap
-reason for an indirect counter names the direct Association to count instead. Author one counter per Reference: two
-counters through the same Reference both remain gaps. Indirect, filtered (predicated), and polymorphic counts remain
-gaps.
+The Compiler always emits an integer column that starts at zero. Rails `counter_cache` on the counted record's
+`belongs_to` maintains it for a direct referenced-side Association over an ordinary single-target Reference, such as
+`post.likes` over `like.post`; for a polymorphic Reference when every target counts it in a column of the same name;
+and for each target of an exclusive arc. For followers, count the direct `user.follower_links` over
+`follow.followed`, not an indirect `user.followers` through those links; when each pair is unique, both give the same
+number. Any other counter, such as an indirect or filtered (predicated) count or a second counter through the same
+Reference, keeps its column, reading 0, while its maintenance is left out behind a model example that creates one
+counted record and expects the count to read 1. A filtered count, or one whose example would need a Reference the
+Compiler does not emit or setup that breaks a conditional Validation, gets a Test coverage to complete entry instead.
+The README's Behavior to write lists the counter, and the GapSet lists the Field as partially generated. A Policy that
+reads an unmaintained counter, directly, through the signed-in Account, or through an Association's Predicate, would
+decide access from that 0, so it becomes a Policy stub that denies until the counting is written.
 
 A counter is never a form input or a development-data value. An authored counter input is dropped with a gap while
 the rest of the form remains, and an assigned development value becomes a development-data gap. Explicit index,
@@ -632,9 +676,10 @@ counts stale; Rails `reset_counters` repairs one record, and no repair task is g
 
 The current Rails Validation subset admits:
 
-- unconditional or bounded conditional ordered literal comparisons on stored integer or date Fields, using
-  `greater_than`, `greater_than_or_equal_to`, `less_than`, or `less_than_or_equal_to`; date bounds start at
-  `1582-10-15` because earlier Gregorian values differ from ordinary Rails casting;
+- unconditional or conditional ordered literal comparisons on stored `integer`, `decimal`, `money`, or `date`
+  Fields, using `greater_than`, `greater_than_or_equal_to`, `less_than`, or `less_than_or_equal_to`; decimal and
+  money bounds are exact, and date bounds start at `1582-10-15` because earlier Gregorian values differ from
+  ordinary Rails casting;
 - an unconditional same-record comparison between two stored `date` Fields or two stored `datetime` Fields with
   those ordered operators, such as a check-out after its check-in. A Field-owned rule reports on its own Field and
   an Entity-owned rule on its error target. Each side's requiredness owns its missing value, and the comparison is
@@ -644,30 +689,42 @@ The current Rails Validation subset admits:
 - unconditional or conditional `length` on `short_text` or `long_text`, using `minimum`, `maximum`, or
   `exact_length`;
 - unconditional positive `format` on stored `short_text` in the bounded whole-value printable-ASCII grammar;
-- conditional `presence` or `absence` on text Fields;
-- conditional `presence` or `absence` on an admitted ordinary Reference;
-- unconditional Entity `uniqueness` over one or two required emitted `short_text` or `date` Fields or ordinary
-  one-column References, with a supported Field error target, or a logical-Reference target for a composite tuple; and
-- the exact three-member tuple of two required ordinary References plus one emitted required non-ordinal enum Field,
-  with a Reference error target.
+- conditional `presence` or `absence` on a text, `url`, `language_code`, `time_zone`, `integer`, `decimal`,
+  `money`, `date`, or `datetime` Field, or on an admitted ordinary Reference; and
+- Entity `uniqueness` over any number of required stored `short_text`, `integer`, `decimal`, `money`, `date`,
+  `datetime`, non-ordinal `enum`, `url`, `language_code`, `time_zone`, or `secure_token` Fields and ordinary
+  one-column References, with a Field error target or, for a composite tuple, a Reference error target.
 
-Conditions allow total direct same-record Field null tests and, for Reference presence or absence, equality to a
-required non-ordinal enum literal; `not`, `and`, and `or` combine the admitted atoms. Direct enum equality reuses
-the emitted predicate. Required numeric input uses Rails numericality, Boolean Fields use inclusion in
-`[true, false]`, and other required scalars use presence. Optional numeric input allows nil; unconditional integer
-bounds share numericality with requiredness. Date comparison and length rules leave missing-value feedback to
-requiredness. Admitted uniqueness uses a native Rails validator and a matching unique index, including logical
-Reference targets. Entity errors must target a Field or Reference; this Plan has no record-wide custom error target.
-Ordinary Rails application code can still use `errors[:base]` after Compilation. Conditional Field-to-Field
-comparisons, relationship-path or dynamic operands, `datetime` literal comparisons, broader comparisons, patterns,
-presence/absence, uniqueness tuples, conditions, owners, and `exclusion` can produce service- or target-support gaps.
-They remain invalid only when the admitted meaning itself violates semantic rules.
+Conditions allow direct same-record Field null tests and equality or membership (`in`) between a required
+non-ordinal enum or State Machine Field and literals in its domain; `not`, `and`, and `or` combine them. Direct enum
+equality reuses the emitted predicate. A conditional `uniqueness` admits only a conjunction: its validator adds
+`conditions:` and `if:`, and its unique index is partial over the same records, as
+`validates :venue, uniqueness: {conditions: -> { where(kind: "vip") }}, if: :vip?`. Required numeric input uses
+Rails numericality, Boolean Fields use inclusion in `[true, false]`, and other required scalars use presence.
+Optional numeric input allows nil; unconditional numeric bounds share numericality with requiredness. Date
+comparison and length rules leave missing-value feedback to requiredness. Admitted uniqueness uses a native Rails
+validator and a matching unique index, including logical Reference targets. Entity errors must target a Field or
+Reference; this Plan has no record-wide custom error target. Ordinary Rails application code can still use
+`errors[:base]` after Compilation.
 
-The current Analyzer cannot prove an admitted `format` or `not_equals` rule for development records. Each record
-the rule covers, and each record that references it, gets a
-`foundation_plan.gap.development_data.record.not_generated` gap and is left out of the seed, as the
-[modeling guide's example](modeling-guide.md#prepare-data-for-the-first-preview) shows. Name the dropped sample
-records in the read-back.
+A Validation the target cannot lower, such as an `exclusion`, a conditional Field-to-Field comparison, a
+relationship-path or dynamic operand, a `datetime` literal comparison, a pattern outside the grammar, or a
+conditional uniqueness outside a conjunction, is a skeleton. The model declares `validate :<key>` and an empty
+private method whose comment names the Validation and its spec, and the README's Behavior to write lists it. When the
+Compiler can build a record the rule rejects, the model spec gets an `enforces <path>` example that expects the Rails
+error kind, such as `:exclusion` or `:taken`, and fails until the method is written; otherwise the README's Test
+coverage to complete names the missing example. Until the method is written, the app accepts records the rule
+forbids. An unconditional left-out uniqueness still gets the unique index its tuple names when every member is an
+indexable, unencrypted Field column or an ordinary Reference foreign key, so the database refuses a duplicate; a
+conditional one gets no index. A Validation whose owner or error target has no emitted storage stays only in the
+GapSet. Schema-valid meaning remains invalid only when it violates semantic rules.
+
+Development seeds keep every record that no authored Validation, lowered or left out, is proven to reject. A
+record that breaks its own Validation gets a `foundation_plan.development_data.validation_violated` warning and is
+left out of the seed with a `foundation_plan.gap.development_data.record.not_generated` gap. A rule the Analyzer
+cannot decide keeps the record, so seeding raises if the record breaks it. A seed date before `1582-10-15` under a
+generated date comparison is still left out. Name each warned record in the read-back, as the
+[modeling guide's example](modeling-guide.md#prepare-data-for-the-first-preview) shows.
 
 ### Predicates
 
@@ -715,8 +772,8 @@ belongs to, such as a shop or team, [groups and memberships](#groups-and-members
 a membership record, so the Account Entity has no Reference to the group. The Compiler generates none of these
 sources yet. With a registration input or with no source, it generates the Reference with the partial gap above, so
 every sign-up fails until its control or default is added in Rails after Compile. A default on the Reference itself
-instead leaves the whole Reference out with a `foundation_plan.gap.reference.not_generated` record, so its column
-and relationship are Rails work after Compile.
+keeps the Reference's column and relationship while the default is left out, as [References and
+Associations](#references-and-associations) describes, so sign-up fails until the default is written in Rails.
 
 `account.verification` decides whether sign-up signs the person in. Without it, sign-up asks for the email twice and
 signs the person in, Change email takes effect at once, and the app can accept sign-ups before any email provider is
@@ -751,9 +808,11 @@ emits such a Policy with a stub. Its rule returns `false`, so every page, link, 
 relation scope raises `NotImplementedError`, so every page that lists or looks up records through it raises,
 including a parent's collection, Reference options on another Entity's form, and Home when Home shows that index.
 The Scaffolds and projections it guards are still generated, and the README's Behavior to write lists the stub with
-the pages it denies and raises on. A Policy that delegates to a stub follows it and is not a gap itself. Only a
-reserved rule name, a Policy class name collision, a delegation cycle, or an unmet Account prerequisite still omits
-a Policy, because nothing could hold the stub. Do not infer that all Policies are supported or that all Scaffolds
+the pages it denies and raises on. A Policy that delegates to a stub follows it and is not a gap itself. An operation
+that names a method every Policy already has, such as `present`, is defined privately as `present_rule?`, every
+generated caller uses that name, and the Analyzer warns with `foundation_plan.rails_target.policy.rule_renamed`.
+Only a Policy class name collision, a renamed rule that another Policy on the Entity already defines, a delegation
+cycle, or an unmet Account prerequisite still omits a Policy, because nothing could hold the stub. Do not infer that all Policies are supported or that all Scaffolds
 are public; inspect the whole matching GapSet.
 
 A Policy that compares nothing with `current_account` admits signed-out visitors too. A `read` Policy that compares
@@ -774,7 +833,9 @@ gate Policy on the Account Entity with a custom operation such as `use_app`, all
 displayed Association uses `"public"` when everyone who passes the page's gate may see its records, because that
 gate still applies. When those records need their own rule, bind that Policy to the nested record instead. A
 Policy on a record one level inside a collection can be generated; a gate binding there, or a protected item any
-deeper, is omitted with a gap. The [signed-in gate example](examples.md#signed-in-gate-and-one-tap-records) shows
+deeper, is omitted with a gap. A collection that applies a Policy owned by a different Entity than its records, such
+as a profile's Trips list under `user.read_self`, is left out alone, with a gap naming both Entities; the Policy and
+the pages it guards stay. When that Policy belongs to the page's own Entity, bind it to `"record": "scaffold_record"`. The [signed-in gate example](examples.md#signed-in-gate-and-one-tap-records) shows
 the shape.
 
 A Policy that compares a Reference with `current_account` admits only records whose Reference holds that Account. On
@@ -953,8 +1014,12 @@ An associated `create_form` can use that definition without selecting standalone
 The current Web target realizes bounded standard routes, public and Policy-controlled request checks, direct and
 recursive projections, Predicate and Ordering selection, cursor pagination, Field and Association inputs, server
 bindings, associated-create entry points, and optional return overrides. Account settings support the default
-signup Fields and bounded authored profile/update customizations described above. Each consumer still has shape-specific prerequisites. Unsupported children are omitted
-or partially generated with exact GapSet records; a supported sibling may survive.
+signup Fields and bounded authored profile/update customizations described above. Each consumer still has shape-specific prerequisites.
+An unsupported piece drops only itself: an input or binding the target cannot lower is left out and listed while the
+rest of the form stays, an authored return the target cannot emit falls back to the default destination and stays
+listed, and a create missing a required value is generated with a `partially_generated` gap. Bindings lower one hop
+from `current_account`, such as `current_account.merchant` or one Account Field of the same kind, plus
+`current_date` and `current_time`.
 
 An omitted index projection shows the primary descriptor. An explicit projection shows only its items and does not
 add the descriptor, so its rows show a View link in place of the record's name; put the descriptor first. A create
@@ -968,7 +1033,13 @@ searches its target's records on the server as the person types when the target'
 `short_text` or `long_text` Field, on the target or one hop away, that is neither redacted from logs nor encrypted.
 The page that renders the form answers that search behind its own checks, so it lists only records the form may
 offer, to people the page admits. Without JavaScript, a New form whose required Reference searches cannot create its
-record. Any other descriptor loads every target record into the form. A `current_account` binding may target only
+record. Any other descriptor loads every target record into the form. When the target is an Account Entity that has
+Policies and none of them decides which Accounts to offer, the form instead asks for the Account's exact sign-in
+email, normalized as the Account stores it, and create and update assign the Account it finds. An Account Entity
+without Policies, or an input whose options are public, keeps the ordinary picker. A required Reference
+that matches nothing fails its `belongs_to`, and an optional one reports that no account has that email. The
+Analyzer warns at each such input with `foundation_plan.rails_target.scaffold.account_lookup`, because whoever saves
+the form learns whether an address has an account. A `current_account` binding may target only
 the realized Account Reference in a non-public Account-backed context; it cannot silently turn a public create into an
 authenticated request.
 
@@ -977,8 +1048,8 @@ the standalone endpoint remains generated with its authored inputs and authoriza
 gap naming the missing value. No request to that endpoint can succeed, because nothing supplies the parent. That
 output conflicts with First Draft's code-worth-keeping rule and is tracked as a Compiler defect. Preserve working
 associated creation and record the unfinished standalone behavior for implementation; do not invent an editable
-parent or binding. Unrelated required values still need an admitted source, and a selected standalone create with
-no admitted associated form needs the complete source set.
+parent or binding. Any other required value without an admitted source makes a create partially generated the same
+way.
 
 New and Create share the create Policy. New authorizes after URL-parent assignment and explicit bindings, before
 editable values exist; Create authorizes the submitted record. A Policy requiring an editable `token.author` to
