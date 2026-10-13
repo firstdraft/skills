@@ -39,9 +39,8 @@ Use these distinctions:
 Ask whether a concept needs independent records, merely describes another record, or is derivable. Each structured
 subject becomes code: an Entity alone adds a model, migration, factory, and model spec, and a Field adds a column
 and a control on each form that lists it. An `image` or `attachment` Field adds `has_one_attached` in place of a
-column. A counter listed as a form input gets no control and a `foundation_plan.gap.scaffold.input.not_generated`
-record; a secure token listed as one also leaves out its whole form with
-`foundation_plan.gap.scaffold.definition.not_generated`.
+column. A counter or secure token listed as a form input gets no control and a
+`foundation_plan.gap.scaffold.input.not_generated` record, and the rest of the form stays.
 
 ## Interview toward one coherent candidate
 
@@ -141,18 +140,19 @@ validates :code, format: {
 }
 ```
 
-The current Analyzer cannot prove that rule, or a not-equal ("must be other than") comparison, against development
-records, so it drops every sample record the rule covers and every record that references one. With this rule, the
-sample team Rockets and Alice's membership in it are left out of `db/seeds/development.rb`, and a username pattern
-can drop every member and, with them, their posts and the demo sign-in. Say in the read-back which sample records
-the rule drops.
+The seed keeps every sample record that no rule is proven to reject. Rockets' code `rockets` matches, so the team and
+Alice's membership in it are seeded. A sample record that breaks its own rule, such as a code `Rockets!`, gets a
+`foundation_plan.development_data.validation_violated` warning and is left out of `db/seeds/development.rb` with the
+records that reference it. Fix the sample value, or say in the read-back which records the warning names. A rule the
+Analyzer cannot decide keeps the record, and seeding raises if the record breaks it.
 
 Make the dataset and any source reuse visible in the existing semantic read-back. Approve it with the Plan, not
 row by row. Honor an explicit empty-data choice, omitting `development_data` when there are no records. After
 Compile, development seeds are ordinary source.
 
 Keep Entity `reference_data` for facts the app needs in every environment and `development_data` for disposable
-development exploration. Reference-data Rails emission remains incomplete. Use supported typed literal Field
+development exploration. Reference data is seeded in every environment through `db/seeds.rb`, found by its identity
+Field so a rerun never duplicates it. Use supported typed literal Field
 assignments and `reference_record` links, not Faker, Ruby, file paths disguised as uploads, or new runtime-value
 syntax. Label historical dates honestly; a fixed literal does not remain “today.” Preserve structured requests and
 review actual data/dependency gaps. Keep outside-grammar media or import work in implementation notes rather than
@@ -227,7 +227,8 @@ Do not substitute another index or weaken access. See the
 For each Entity:
 
 1. Choose a stable lower-snake-case `key` and a human-facing singular `name`.
-2. Select a typed `primary_descriptor` that can identify a record to a person. A selected Field must be required.
+2. Select a typed `primary_descriptor` that can identify a record to a person. Prefer a required Field: an optional
+   one shows `Team #12` where it is blank, and a descriptor the target cannot show labels every record that way.
    The descriptor adds no unique index or uniqueness check, so two Teams may share a name.
 3. Choose a semantic Field `type`, not a target column type.
 4. Decide requiredness, immutability, default, normalization, and structured validations independently.
@@ -308,11 +309,12 @@ standard closed Validation families when they express the product requirement:
 | A retirement reason is needed only after `retired_at` is set | Optional text plus conditional `presence`; conditional `absence` expresses that a value must be missing in a particular condition. |
 | A title must contain at most 80 characters | `length`; use minimum, maximum, or exact length according to the actual rule. |
 | A product code contains only uppercase letters and digits | `format` on appropriate text; use the compatible pattern grammar, not arbitrary validation code. |
-| Usernames may not be `admin` or `support` | `exclusion` of a fixed typed literal set; this expresses meaning even when the current target reports a gap. |
+| Usernames may not be `admin` or `support` | `exclusion` of a fixed typed literal set; the current target declares it as an empty method, usually with a failing spec, until it is written in Rails. |
 | A rating is at least one, an end date follows a start date, or two selected people must differ | `comparison` with compatible values; use Entity ownership for a cross-value rule and select the input that should receive the error. |
 | A title and release date must be unique together | One Entity-owned `uniqueness` tuple, with an explicit participating Field or Reference as its error target and the intended null policy. |
 
-Today `format` and not-equal comparisons drop [sample records](#prepare-data-for-the-first-preview).
+A sample record that breaks one of these rules is left out of the seed with a warning; see
+[sample records](#prepare-data-for-the-first-preview).
 
 Select a useful Field or Reference for Entity-owned feedback; for example, attach an invalid end-date comparison
 to the end-date input. Plan error targets do not include the whole record. A complete sentence does not require a
@@ -321,8 +323,9 @@ comparison or uniqueness remains on the Entity when appropriate, independently o
 
 These examples explain kind selection, not a promise that every shape emits today. Read the compatible
 [Validation support reference](foundation-plan-023.md#validations), use the bundled schema for exact syntax, and
-inspect the real analysis result. Schema-valid cross-field comparisons, conditions, and exclusions can still be
-service or target gaps. No general Rails `validates` option or custom Ruby callback becomes Plan syntax merely
+inspect the real analysis result. A schema-valid rule the target cannot lower, such as an exclusion or a conditional
+Field-to-Field comparison, is declared as an empty method, with a failing spec where the Compiler can build a record
+it rejects, so the app accepts what it forbids until the method is written. No general Rails `validates` option or custom Ruby callback becomes Plan syntax merely
 because Rails supports it.
 
 Operation-specific checks and bespoke rules outside the grammar belong in
@@ -358,19 +361,22 @@ emits `has_many :members, -> { distinct }, through: :memberships, source: :user`
 them.
 
 The current Compiler emits a bounded single-target Reference slice with Boolean `required`, `one_to_one`, and
-`immutable`, plus its derived forward traversal and supported direct inverses. The supported catalog also includes
-selected required-immutable inverses and several direct, predicated, indirect, and nested-through consumers; these are
-per-relationship shape rules, not a quota. A multi-target Reference compiles under either realization, but consumers
-that cross it, aliases, defaults, broader paths, cardinality, and unsupported consumers can remain gaps. Scaffold
+`immutable`, plus its derived forward traversal and direct inverses over mutable and immutable References. The
+supported catalog also includes several direct, predicated, indirect, and nested-through consumers; these are
+per-relationship shape rules, not a quota. A Reference `default` keeps its storage while the default waits to be
+written in Rails. A multi-target Reference compiles under either realization, but consumers that cross it, aliases,
+broader paths, cardinality, and unsupported consumers can remain gaps. Scaffold
 input support is a separate consumer decision from Reference storage. Preserve broader product meaning and inspect the
 matching GapSet rather than applying an older blanket relationship limit.
 
 When people should see how many related records something has, such as likes on a post or a person's followers, add
 a [`counter` Field](foundation-plan-023.md#counters) on the record being counted for. Point it at the direct
 Association that holds the counted records: `user.follower_links`, not the indirect `user.followers` through them.
-Add that direct referenced-side Association when the Plan lacks it, author one counter per Reference, and keep an
-indirect, filtered, or polymorphic count in the Plan as a reviewed gap. An explicit list or details projection shows
-each counter after its authored items; people never type them.
+Add that direct referenced-side Association when the Plan lacks it. Rails maintains a direct count, including one
+over a polymorphic Reference whose targets share the column name or an exclusive arc. An indirect or filtered count
+keeps its column while its maintenance waits to be written in Rails: an indirect count behind a failing example, a
+filtered one as a Test coverage to complete entry. An explicit list or
+details projection shows each counter after its authored items; people never type them.
 
 ## Add behavior deliberately
 
@@ -385,8 +391,9 @@ each counter after its authored items; people never type them.
   record's consequence says what the generated app does. When it says the named scope raises `NotImplementedError`
   until it is written, the Compiler emitted that scope as a stub, with no database index for an Ordering, and the
   README's Behavior to write lists it; an index that selects it calls the stub, so the page raises until then.
-  Otherwise the scope is left out, as when the model cannot take that name, and the consequence says what the page
-  does without it. A Field followed by `id` also generates when both run in one
+  A key Rails reserves, such as `public`, becomes the key plus the table name, as `public_profiles`, with a warning.
+  Otherwise the scope is left out, as when even that name is taken, and the consequence says what the page does
+  without it. A Field followed by `id` also generates when both run in one
   direction: on Bulletin, `title`, then `id`, both ascending, emits
   `scope :by_title, -> { order(title: :asc, id: :asc) }` and `t.index ["title", "id"]`. The same terms with `id`
   descending are a `foundation_plan.gap.ordering.not_generated` record.
@@ -479,8 +486,7 @@ diagnostic reveals an ambiguous product decision, ask the user rather than optim
 
 In particular, do not remove or weaken modeled content solely because the reviewed GapSet reports a
 `service_support_gap` or `target_support_gap`. Preserve the local Plan and report the exact pointer and consequence.
-GapSet records are the output limitations; report an analysis warning as a warning. A `public_scaffold` warning on
-a Policy-protected page is not a reason to make it public. Report a gap as the analysis gives it, even when its
+GapSet records are the output limitations; report an analysis warning as a warning. Report a gap as the analysis gives it, even when its
 reason names no cause or contradicts these references. Do not trim the Plan or push trial or example Plans to find
 a cause: each push replaces the Project's current Plan.
 
@@ -513,7 +519,7 @@ Write it for a reader who is not technical, in this order:
    after signing up or confirm their email first, as the
    [Accounts reference](foundation-plan-023.md#accounts-and-policies) describes.
 2. What is not generated yet. Group the gaps by what the user will notice, lead with that effect, and say what
-   the app does instead, for example "Formatted descriptions aren't generated yet; posts start without one" or
+   the app does instead, for example "Descriptions are stored as plain text; formatting isn't generated yet" or
    "The rule that usernames can't be admin isn't generated yet; any username is accepted". Use one line per group
    rather than one per record, and say which groups you plan to build in Rails after Compile.
 3. What is built otherwise: outstanding implementation notes and any part of the idea outside First Draft, each
