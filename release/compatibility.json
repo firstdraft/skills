@@ -4,7 +4,7 @@
   "version": "0.8.17",
   "plugin_source": {
     "package": "@firstdraft.com/claude-code",
-    "tarball_sha256": "09bad8d5c841dc0c452672b5c8a4cdcc937947dd854f20922a0e3a08d5bf22ac"
+    "tarball_sha256": "ad602693013c87a0a549bf1d7023e15bb100dc1fd25be3b4467bcc8b32c0e439"
   },
   "requires": {
     "api_contract": [
