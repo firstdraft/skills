@@ -98,7 +98,7 @@ test("the bundled Plan contract replaces the previous input identity", () => {
   const validatePlan = ajv.getSchema(schema.$id);
   const plan = {
     format: foundationPlanFormat,
-    target: { id: "rails", profile: "rails-sketch/2026-09-bookmark-assets" },
+    target: { id: "rails", profile: "rails-sketch/2026-10" },
     application: { key: "theme_app", name: "Theme App", native: {}, delivery: {}, entities: [], appearance: { theme: "toggle" } },
   };
   assert(validatePlan(plan));

@@ -23,7 +23,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.8.17, CLI 0.8.2, API 0.7, Plan 0.23; catalog selection is separate.
+Targets plugin 0.9.0, CLI 0.9.0, API 0.8, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
@@ -117,6 +117,8 @@ firstdraft_cli generate application-key --name "<name>"
 If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
 directory. If `.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not
 reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
+A Plan whose `target.profile` is not `rails-sketch/2026-10` belongs to a retired profile; follow
+[retired target profile](references/diagnostics-and-recovery.md#retired-target-profile) instead of pushing it.
 
 ## Interview and author incrementally
 

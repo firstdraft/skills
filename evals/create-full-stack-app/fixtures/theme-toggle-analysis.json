@@ -6,31 +6,31 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000909",
     "graph_version": 1,
-    "head_source_sha256": "d9c3fe7a339e0fe9074e13fe3f24faf27ab4cfd5c428be0bcf13f19dfb34665b",
-    "analyzer_release": "foundation-plan-rails/application-2026-09-28-controller-create-context",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-09-28-controller-create-context",
+    "head_source_sha256": "3059c98470e8803daf1b819ba85b4ab36ac9e0951b6d9efca5e30337167a8d44",
+    "analyzer_release": "foundation-plan-rails/application-2026-10-20-rails-8-1-4",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4",
     "target": {
       "id": "rails",
-      "profile": "rails-sketch/2026-09-bookmark-assets"
+      "profile": "rails-sketch/2026-10"
     },
     "status": "valid",
     "diagnostics": [],
     "gap_set": {
       "format": "firstdraft.foundation-gaps/2",
       "source": {
-        "sha256": "d9c3fe7a339e0fe9074e13fe3f24faf27ab4cfd5c428be0bcf13f19dfb34665b"
+        "sha256": "3059c98470e8803daf1b819ba85b4ab36ac9e0951b6d9efca5e30337167a8d44"
       },
       "project": {
         "id": "01900000-0000-7000-8000-000000000024",
         "graph_version": 1
       },
       "analysis": {
-        "release": "foundation-plan-rails/application-2026-09-28-controller-create-context"
+        "release": "foundation-plan-rails/application-2026-10-20-rails-8-1-4"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-09-28-controller-create-context",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4",
       "target": {
         "id": "rails",
-        "profile": "rails-sketch/2026-09-bookmark-assets"
+        "profile": "rails-sketch/2026-10"
       },
       "gaps": [
         {
@@ -55,7 +55,7 @@
         }
       ]
     },
-    "gap_set_sha256": "f35279796f263ebbca731782444a38be445def7ff3606fc5c5b2cba265be63b8",
+    "gap_set_sha256": "96c179ea9b63477f7ce3f97926096bf04a089aeb95be35488e800740ff81882b",
     "started_at": "2026-07-30T12:03:00.000Z",
     "completed_at": "2026-07-30T12:03:01.000Z"
   }

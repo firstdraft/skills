@@ -30,7 +30,7 @@ smallest subset accepted by the reviewed conditional PUT.
   "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-09-bookmark-assets"
+    "profile": "rails-sketch/2026-10"
   },
   "application": {
     "key": "oscar_party",
@@ -49,7 +49,7 @@ that the application model is still empty.
 
 ## Bounded Rails and iOS application
 
-This complete document is the smallest canonical `rails-sketch/2026-09-bookmark-assets` Rails and iOS success candidate. It
+This complete document is the smallest canonical `rails-sketch/2026-10` Rails and iOS success candidate. It
 requests one read-only public web index and one selected iPhone project with the same navigation label and semantic
 icon. The domain supplies the native HTTPS origin and identifier prefix, plus the Rails production mailer host.
 The required title Field supplies the human-facing Primary Descriptor. The prepared analyzer is designed to
@@ -60,7 +60,7 @@ return `valid`; that result is still only the Compilation gate, not proof that o
   "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-09-bookmark-assets"
+    "profile": "rails-sketch/2026-10"
   },
   "application": {
     "key": "movie_catalog",
@@ -290,7 +290,7 @@ when the value is `false`; omitting it from the optional Details Field would be 
   "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-09-bookmark-assets"
+    "profile": "rails-sketch/2026-10"
   },
   "application": {
     "key": "tasks",
@@ -341,7 +341,7 @@ accepted by the reviewed bounded importer. Here, priority order carries semantic
   "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-09-bookmark-assets"
+    "profile": "rails-sketch/2026-10"
   },
   "application": {
     "key": "ranked_tasks",
@@ -441,7 +441,7 @@ choice emits.
   "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-09-bookmark-assets"
+    "profile": "rails-sketch/2026-10"
   },
   "application": {
     "key": "member_directory",
@@ -776,7 +776,7 @@ Association. The forward `task.project` Association is derived and therefore omi
   "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-09-bookmark-assets"
+    "profile": "rails-sketch/2026-10"
   },
   "application": {
     "key": "project_tasks",

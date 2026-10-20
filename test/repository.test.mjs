@@ -43,9 +43,9 @@ const reviewedFixtureAnalyzerRelease =
   "foundation-plan-rails/application-2026-08-28-reviewed-realization";
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
-const currentFoundationPlanServiceBaseline = "806090dd36113c856fbd63d702ee74e353e9a7e2";
+const currentFoundationPlanServiceBaseline = "43a80d35c371e876ec133e8da36abeaebc61dce8";
 const foundationPlanSchemaDigest =
-  "242889fae4e1031f3be7aa3d226a9966402e7516f0055f506bb40ce05d1430dd";
+  "1a47a87b31491c3ac0cad5801bb0bd3232b4666faad1d223f5b351da47a41681";
 const currentFoundationPlanSchemaBaseline = currentFoundationPlanServiceBaseline;
 const prettyJsonSha256 = (value) =>
   createHash("sha256")

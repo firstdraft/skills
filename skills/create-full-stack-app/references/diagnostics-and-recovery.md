@@ -8,8 +8,8 @@ JSON object. An unrecognized prefixed line, a progress line after the envelope, 
 interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
 human-readable `detail` or broad process exit status.
 
-This plugin bundles `@firstdraft.com/cli@0.8.2`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.17/script/cli-contract/config.mjs)
+This plugin bundles `@firstdraft.com/cli@0.9.0`. Its exact reviewed revision and runtime digest are owned by
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.9.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -42,7 +42,7 @@ Plans resumed without the flag.
 Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
 or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the token `firstdraft login` saved for that
 origin. The CLI never sends one environment's credential to another. The usual setup is one login per environment,
-which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.8.2 login`, with `--staging` added for
+which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.9.0 login`, with `--staging` added for
 staging, or `firstdraft login` from an installed CLI. It prints a URL to approve in a browser; on a machine without
 one, `--interactive` shows a device code to approve elsewhere. The login is saved outside the project, so every
 session and client on the machine shares it.
@@ -121,6 +121,32 @@ means the CLI and service contract must be reconciled.
 After `wait_timed_out`, `analysis_changed`, or a validated `superseded` result, a bounded read-only `plan status`
 follow-up may report the Project's current state. This follow-up is report-only: do not treat a replacement analysis
 as the submitted candidate, and do not edit, push, or Compile the replacement.
+
+### Retired target profile
+
+A Project keeps the target profile it was created with, and this plugin's CLI and First Draft accept only
+`rails-sketch/2026-10`. A Plan or Project that names an earlier profile fails at `/target/profile`:
+
+| Diagnostic code | Meaning |
+| --- | --- |
+| `foundation_plan.schema.const` | The Plan still names an earlier profile. |
+| `foundation_plan.import.target_profile_mismatch` | The Plan names the current profile, but its Project was created with an earlier one. |
+| `foundation_plan.analysis.unsupported_target_profile` | The Project was created with an earlier profile. |
+
+Retrying or editing only the profile cannot fix this. With the user's agreement, start a new Project for the same
+Plan:
+
+1. In the planning directory, which is `.firstdraft/design/` after root adoption, rename `.firstdraft` to a name such
+   as `.firstdraft-retired-profile`. Keep it: it holds the old Plan and the old Project's private state.
+2. Run `plan init` with the old Plan's `application.name` and `application.key`. It creates a new Project identity
+   and an empty Plan that targets `rails-sketch/2026-10`.
+3. Replace the new empty Plan with the old Plan, changing only `target.profile` to `rails-sketch/2026-10`. Keep
+   every subject UUID.
+4. Push and wait for analysis as usual. The new profile can change the GapSet, so read it back again before Compile.
+
+A Compile in the new Project does not upgrade an application generated under the earlier profile. From
+`.firstdraft/design/`, select an absent `--output` path, then bring what the user wants into the existing
+application through ordinary development.
 
 ## Product Compile
 
@@ -516,7 +542,7 @@ or provenance-changing response requires reconciling the CLI and service contrac
 4. requires the envelope's `head_source_sha256` to equal the retained
    `compilation.head_source_sha256`;
 5. verifies transport metadata and exact bytes against the retained artifact digest, then validates Plan format
-   `firstdraft.foundation-plan.sketch/0.23`, target profile `rails-sketch/2026-09-bookmark-assets`, the canonical Foundation Plan
+   `firstdraft.foundation-plan.sketch/0.23`, target profile `rails-sketch/2026-10`, the canonical Foundation Plan
    digest, envelope, manifest, paths, modes, Base64 contents, and file digests; and
 6. installs an absent private sibling tree with one atomic rename, or applies direct Compile's
    [current-root transaction and CLI compatibility boundary](#direct-local-output).
