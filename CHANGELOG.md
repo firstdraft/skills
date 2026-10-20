@@ -29,6 +29,23 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-10-20: Rails 8.1.4 and target profile rails-sketch/2026-10
+
+**Skills — released in plugin 0.9.0.** Once the First Draft service deploys the matching Compiler, generated apps use
+Rails 8.1.4 under the new target profile `rails-sketch/2026-10`. The plugin bundles CLI 0.9.0, which needs First Draft
+API 0.8; both accept only the new profile. Rails 8.1.4 writes `db/schema.rb` columns in table order, where 8.1.3.1
+sorted them alphabetically, so a new app's emitted schema lists them that way.
+
+**Existing Projects.** A Project keeps the target profile it was created with, so a Project created with
+`rails-sketch/2026-09-bookmark-assets` can no longer be analyzed or compiled. Its diagnostics point at
+`/target/profile`. The Skill now walks the agent through starting a new Project for the same Plan: set the old
+`.firstdraft` directory aside, run `plan init` with the same application name and key, copy the Plan in with the new
+profile, and push. Subject UUIDs carry over.
+
+**Existing apps.** An app generated earlier is unchanged and keeps working. Its Gemfile already allows Rails 8.1.4,
+a bug-fix release; `bundle update rails` followed by the app's tests moves it. Afterward a schema dump may reorder
+columns, which changes no behavior.
+
 ## 2026-10-12: More of the Plan reaches the generated app
 
 **Skills — released in plugin 0.8.17.** Once the First Draft service deploys the matching Compiler, more of an

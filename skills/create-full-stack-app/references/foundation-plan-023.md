@@ -42,7 +42,7 @@ generated output, not observed application behavior, device installation, or dep
 **Current design and machine authority**
 
 - The bundled JSON Schema owns v0.23 transport shape. This reference describes the bounded
-  `rails-sketch/2026-09-bookmark-assets` behavior; the public [Rails target profile](https://firstdraft.github.io/firstdraft/docs/architecture/targets/rails/profile.html)
+  `rails-sketch/2026-10` behavior; the public [Rails target profile](https://firstdraft.github.io/firstdraft/docs/architecture/targets/rails/profile.html)
   gives lowering details. The public guide can advance beyond an installed Skill, and neither establishes the
   deployed service revision. Use the matching results for the submitted Plan.
 - Read `analyzer_release` and `compiler_release` from the matching Analysis result; Compilation results carry
@@ -52,7 +52,7 @@ generated output, not observed application behavior, device installation, or dep
 - The importer preserves each schema-valid exact source as the Project Head and imports a bounded relational graph.
   Meaning skipped before semantic analysis remains in the Head and appears as ordered `service_support_gap` records.
   Admitted meaning that the selected target cannot fully realize appears as `target_support_gap` records.
-- Service API 0.7 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
+- Service API 0.8 returns the complete canonical `firstdraft.foundation-gaps/2` object and its SHA-256 for every valid
   AnalysisRun, including an empty `gaps` array. `valid` applies only to the admitted graph; it is not proof of
   Compilation or of meaning skipped before analysis.
 - Current public Compilation has bounded Field, relationship, Validation, Predicate, Ordering, State Machine,
@@ -76,18 +76,18 @@ generated output, not observed application behavior, device installation, or dep
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`806090dd36113c856fbd63d702ee74e353e9a7e2` and has SHA-256
-`242889fae4e1031f3be7aa3d226a9966402e7516f0055f506bb40ce05d1430dd`. This is exact contract provenance, not
+`43a80d35c371e876ec133e8da36abeaebc61dce8` and has SHA-256
+`1a47a87b31491c3ac0cad5801bb0bd3232b4666faad1d223f5b351da47a41681`. This is exact contract provenance, not
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.8.17/script/cli-contract/config.mjs)
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.9.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag, as contract provenance rather than release or execution evidence. The CLI
 exposes `generate uuid`, `generate application-key`, `plan init`, `plan push`,
 `plan status`, local `plan compile` (equivalent to `--output .`), explicit `plan compile --github`,
 `plan compile --output`, `compilation status`,
 `compilation download`, `compilation cancel`, and the user-run `login` and `logout`. It has no public `plan subject-id` or `plan publish`. The coordinated checkout declares the
-`@firstdraft.com/cli@0.8.2` package. Direct output accepts the ordinary absent destination and, on POSIX,
+`@firstdraft.com/cli@0.9.0` package. Direct output accepts the ordinary absent destination and, on POSIX,
 current-root adoption by default or with `--output .`; the recovery reference owns its preconditions. Check commands
 rather than inferring compatibility from a version number. These source checks do not prove plugin/catalog
 publication, authentication, staging compatibility, or a complete user journey.
@@ -133,7 +133,7 @@ The root contains exactly three required properties:
   "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-09-bookmark-assets"
+    "profile": "rails-sketch/2026-10"
   },
   "application": {}
 }

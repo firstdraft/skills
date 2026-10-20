@@ -99,7 +99,7 @@
         "profile": {
           "title": "Target profile",
           "description": "Pins the release of target defaults, supported lowerings, and verification expectations.",
-          "const": "rails-sketch/2026-09-bookmark-assets"
+          "const": "rails-sketch/2026-10"
         }
       }
     },

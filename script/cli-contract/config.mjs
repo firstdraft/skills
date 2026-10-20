@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "92f27714fecf45c44b19c52ed811889c5b81d5ae";
+export const cliRevision = "a71962a4f4643d0a1835a2309a29a21268ba61c0";
 export const cliRuntimeSha256 =
-  "d222a231e864151f33e074b08204a2c3457910b0a84637e61ba1103b2206f926";
+  "502b8d7502641e4109c12b312c1b51a9f89fef106cee1f94967c39c4873ab856";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.8.2";
+export const cliPackageVersion = "0.9.0";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
@@ -46,12 +46,12 @@ export const [foundationPlanFormat] = JSON.parse(
   readFileSync(new URL("../../release/compatibility.json", import.meta.url), "utf8"),
 ).requires.foundation_plan_formats;
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-09-28-controller-create-context";
+  "foundation-plan-rails/application-2026-10-20-rails-8-1-4";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-09-28-controller-create-context";
+  "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4";
 export const compilationTarget = {
   id: "rails",
-  profile: "rails-sketch/2026-09-bookmark-assets",
+  profile: "rails-sketch/2026-10",
 };
 export const artifactMediaType =
   "application/vnd.firstdraft.compilation-artifact+json";
