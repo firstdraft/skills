@@ -43,8 +43,9 @@ outside the sandbox; `sh script/check` runs inside it.
 
 The reviewer is the other vendor's agent, through [cross-review](https://github.com/raghubetina/cross-review).
 Install and sign in to both Claude Code (`claude auth login`) and the Codex CLI (`codex login`). Once you trust the
-checkout, the tracked `.claude/settings.json` and `.codex/config.toml` enable `codex-review` and `$claude-review`
-(Codex loads its plugin from the next session); otherwise install them as the cross-review README describes.
+checkout, the tracked `.claude/settings.json` and `.codex/config.toml` enable the `cross-review` plugin (Codex loads
+it from the next session); otherwise install it as the cross-review README describes. It takes the reviewer as its
+first argument: `codex` from Claude Code and `claude` from Codex.
 
 To run a review:
 
