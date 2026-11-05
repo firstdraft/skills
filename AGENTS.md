@@ -30,9 +30,9 @@ and release notes in `CHANGELOG.md`.
   `release/compatibility.json` or the bundled Plan schema in `skills/create-full-stack-app/references/`. An
   instruction-policy change alone, to `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `RELEASING.md`,
   `.claude/settings.json`, or `.codex/config.toml`, gets one session at `--effort high`. Mirror text, version pins,
-  catalog selections, and digest records get none. Use the `codex-review` Skill from Claude Code and
-  `$claude-review` from Codex; neither is a shell command. [`CONTRIBUTING.md`](CONTRIBUTING.md#independent-review)
-  covers setup, the service's focus file, and what the pull request body records.
+  catalog selections, and digest records get none. Use the `cross-review` Skill, with `codex` as the reviewer from
+  Claude Code and `claude` from Codex; it is not a shell command.
+  [`CONTRIBUTING.md`](CONTRIBUTING.md#independent-review) covers setup, the service's focus file, and what the pull request body records.
 
 ## Release coordination
 
