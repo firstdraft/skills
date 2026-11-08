@@ -12,6 +12,7 @@
   - [Choose text normalization](#choose-text-normalization)
 - [Choose validations](#choose-validations)
 - [Model relationships](#model-relationships)
+- [Group Entities into topics](#group-entities-into-topics)
 - [Add behavior deliberately](#add-behavior-deliberately)
 - [Preserve intent during diagnostics](#preserve-intent-during-diagnostics)
 - [Prepare the pre-Compile semantic read-back](#prepare-the-pre-compile-semantic-read-back)
@@ -377,6 +378,23 @@ over a polymorphic Reference whose targets share the column name or an exclusive
 keeps its column while its maintenance waits to be written in Rails: an indirect count behind a failing example, a
 filtered one as a Test coverage to complete entry. An explicit list or
 details projection shows each counter after its authored items; people never type them.
+
+## Group Entities into topics
+
+Topics let the person reviewing the Plan check its data model against their idea one subject at a time. Once the
+Plan has several Entities, write `application.topics`.
+
+1. Start from the groups that analysis suggests in its `foundation_plan.topics.missing` warning. Those groups come
+   from References alone, so they cannot see what the Entities mean.
+2. Check them against the idea: move Entities, merge or split groups, or keep them as they are, whichever fits
+   best. Use everything you know from the conversation, not only the stored `description`, which can lag behind.
+3. Do not aim for a number of topics. Put each Entity in exactly one topic.
+4. Name each topic in plain words that someone who doesn't write software would understand, such as "Members,
+   their watchlists, and their ratings".
+
+Write `application.description` as one or two sentences that state the idea the way the user would. When you add,
+rename, or remove an Entity, update its topic in the same snapshot, as you would its other readable links. Topics
+and the description request no generated behavior, so they never need a gap or a product decision of their own.
 
 ## Add behavior deliberately
 

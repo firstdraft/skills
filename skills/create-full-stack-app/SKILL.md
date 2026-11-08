@@ -138,7 +138,9 @@ apps show the same pages with the same sign-in. Keep private access and requeste
 Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
 incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails
 tables, macros, gems, callbacks, or arbitrary code. Keep capability gaps separate from product choices and never
-maintain a second flattened candidate merely for Compilation.
+maintain a second flattened candidate merely for Compilation. Keep the review metadata, `application.description`
+and `application.topics`, current as the Plan changes, as the
+[modeling guide](references/modeling-guide.md#group-entities-into-topics) describes.
 
 Generate a fresh UUIDv7 for each genuinely new independently mutable subject:
 

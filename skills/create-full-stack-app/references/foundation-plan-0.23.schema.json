@@ -105,7 +105,7 @@
     },
     "application": {
       "title": "Application",
-      "description": "The semantic application definition and sparse target choices for this Plan.",
+      "description": "The semantic application definition, sparse target choices, and review metadata for this Plan.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -124,6 +124,12 @@
         "name": {
           "title": "Application name",
           "$ref": "#/$defs/displayName"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Review metadata: a short statement of the idea for people reviewing the Plan. It does not request behavior.",
+          "type": "string",
+          "minLength": 1
         },
         "domain": {
           "title": "Application domain",
@@ -169,6 +175,15 @@
           },
           "minContains": 0,
           "maxContains": 1
+        },
+        "topics": {
+          "title": "Topics",
+          "description": "Review metadata: named groups of Entities that let a reviewer check the data model one subject at a time. An Entity belongs to at most one topic, and topic names differ. Topics do not request behavior.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/topic"
+          },
+          "minItems": 1
         },
         "development_data": {
           "title": "Development data",
@@ -361,6 +376,32 @@
           "description": "Requires a transactional mail provider.",
           "type": "object",
           "additionalProperties": false
+        }
+      }
+    },
+    "topic": {
+      "title": "Topic",
+      "description": "A named group of Entities for review.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "entities"
+      ],
+      "properties": {
+        "name": {
+          "title": "Topic name",
+          "$ref": "#/$defs/displayName"
+        },
+        "entities": {
+          "title": "Topic Entities",
+          "description": "Keys of the Entities in this topic.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/localKey"
+          },
+          "minItems": 1,
+          "uniqueItems": true
         }
       }
     },
