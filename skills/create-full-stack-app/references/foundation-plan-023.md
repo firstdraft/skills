@@ -76,8 +76,8 @@ generated output, not observed application behavior, device installation, or dep
 
 The bundled schema was copied byte-for-byte from
 `docs/architecture/design/foundation-plan.schema.json` at Service revision
-`43a80d35c371e876ec133e8da36abeaebc61dce8` and has SHA-256
-`1a47a87b31491c3ac0cad5801bb0bd3232b4666faad1d223f5b351da47a41681`. This is exact contract provenance, not
+`d523145a8f5bd47e5dc8fcd289e7e40321a1f983` and has SHA-256
+`c97f698155b8771818a04f648e0b18312fe451f558d0326c61d3275e66e52321`. This is exact contract provenance, not
 release or execution evidence.
 
 This plugin's bundled CLI and pinned contract check use the exact reviewed CLI revision and runtime digest in
@@ -227,10 +227,30 @@ App Schema artifact.
 ### Application and clients
 
 The reviewed importer accepts the required Application properties `key`, `name`, `native`, `delivery`, and
-`entities`, plus optional `domain`, `home_index`, `appearance`, and `development_data`. Nonempty delivery remains
+`entities`, plus optional `domain`, `home_index`, `appearance`, `development_data`, `description`, and `topics`.
+Nonempty delivery remains
 in the exact Head and appears as a service-support gap instead of being silently discarded. Development data is
 admitted record by record when its assignments and dependencies are realizable; unsupported assignments remain precise gaps rather
 than causing the whole development-data graph to disappear.
+
+Optional `application.description` and `application.topics` are review metadata: they help the person checking
+the Plan in First Draft, and the Compiler ignores both. `description` is a short statement of the idea in the
+user's terms. Each topic has a `name` and lists the keys of its Entities:
+
+```json
+{
+  "topics": [
+    { "name": "Movies and the people who made them", "entities": ["movie", "person", "credit"] },
+    { "name": "Members, their watchlists, and their ratings", "entities": ["user", "bookmark", "rating"] }
+  ]
+}
+```
+
+Every listed key must name an Entity in the Plan, an Entity belongs to at most one topic, and topic names differ;
+import rejects a topic that breaks these rules, even when the named Entity is a service-support gap. A topic is
+never a gap. Analysis warns with `foundation_plan.topics.missing` when a Plan with several Entities has no topics,
+and with `foundation_plan.topics.incomplete` when no topic lists some Entity. The
+[modeling guide](modeling-guide.md#group-entities-into-topics) owns how to write them.
 
 Optional `application.home_index` is a typed Entity link, written with the current local key, for example
 `"home_index": "movie"`. The Entity must select `index` in `scaffold.resource_routes` and define `scaffold.index`.
