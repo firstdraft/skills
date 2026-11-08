@@ -29,6 +29,19 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-11-08: A description and topics for reviewing the Plan
+
+**Skills — released in plugin 0.9.1.** A Foundation Plan can carry two optional keys written for the person who
+reviews it: `application.description`, a short statement of the idea, and `application.topics`, named groups of
+Entities. The Compiler ignores both. The First Draft service now draws a Plan's Entities and References as a diagram
+on its Project page and groups the cards by topic. The Skill keeps both keys current as the Plan changes. When a Plan
+with several Entities has no topics, analysis returns a warning that suggests groups computed from References, and
+the agent revises those groups from what the Entities mean, without aiming for a number of topics.
+
+**Existing Plans.** The format stays `firstdraft.foundation-plan.sketch/0.23` and both keys are optional, so a Plan
+that validated before still validates. Its analysis may now carry a warning about topics until every Entity belongs
+to one.
+
 ## 2026-10-20: Rails 8.1.4 and target profile rails-sketch/2026-10
 
 **Skills — released in plugin 0.9.0.** Once the First Draft service deploys the matching Compiler, generated apps use
