@@ -199,11 +199,12 @@
       "should_trigger": true,
       "prompt": "We're planning a recipe board for my cooking club. I told you members sign up, share recipes with a title and instructions, and every page needs sign-in. You just asked whether members can comment on recipes: yes. Now make the rest of the decisions for me. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
-        "Asks no further product or implementation questions.",
+        "Asks no further interview questions; its only questions are the read-back's yes-or-no confirmations.",
         "Chooses its recommendation for each remaining item, including product meaning such as who may edit or delete a comment and what happens to comments when a recipe is deleted, and records each as delegated.",
         "Writes those choices into .firstdraft/foundation-plan.json instead of leaving them open.",
         "Walks the coverage checklist without presenting it as questions, and writes the applicable After Compile items into implementation-notes.md.",
         "Gives the read-back, naming the delegated choices plainly, and invites changes before the app is built. Treats the delegation as ending the questions, not as a go-ahead: it would wait for the user's go-ahead even without this prompt's instruction, and it does not prompt for one.",
+        "Leads the read-back with at most three yes-or-no questions, one line each, about the delegated choices that would cost most if wrong, such as whether deleting a recipe should delete its comments.",
         "Makes no service request, Compile or remote write."
       ]
     },

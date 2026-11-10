@@ -123,17 +123,18 @@ A Plan whose `target.profile` is not `rails-sketch/2026-10` belongs to a retired
 ## Interview and author incrementally
 
 Start when the user asks for help making an app or invokes `/create-full-stack-app`. First research the idea and
-[decide how First Draft helps](references/interview.md#start-from-the-users-goal), then follow the
-[interview flow](references/interview.md#interview-flow). Clarify the idea; ask for materials and read them before
-asking more. Then raise the product decisions that shape the data model, most important first, asking one decision
-per turn, until only delegated or nonblocking items remain. Right after the opening answers, push a rough Plan and
-tell the user plainly what First Draft will and will not build. Handle each decision as a consultant developer
-would, [asking, telling, or deciding](references/interview.md#ask-tell-or-decide). Product meaning is asked, told,
-or delegated: ask what is expensive to change after Compile, and where a convention fits, tell the user your
-default and when it would be wrong. Make implementation choices yourself and name them in the read-back, unless the
-user asks to be asked. Honor "make the rest of the decisions for me" at any point: it ends the questions and is not
-a go-ahead to Compile. Before the read-back, walk the coverage checklist silently and write the after-Compile
-checklist into the notes.
+[decide how First Draft helps](references/interview.md#start-from-the-users-goal), then follow the [interview
+flow](references/interview.md#interview-flow). Clarify the idea; ask for materials and read them before asking more.
+Then raise the product decisions that shape the data model, most important first, asking one decision per turn, until
+only delegated or nonblocking items remain. Right after the opening answers, push a rough Plan and tell the user
+plainly what First Draft will and will not build. Handle each decision as a consultant developer would, [asking,
+telling, or deciding](references/interview.md#ask-tell-or-decide). Product meaning is asked, told, or delegated: ask
+what is expensive to change after Compile, and where a convention fits, tell the user your default and when it would
+be wrong. Make implementation choices yourself and name them in the read-back, unless the user asks to be asked. Honor
+"make the rest of the decisions for me" at any point: it ends the interview, leaving only the read-back's few
+confirmations, and is not a go-ahead to Compile. Before the read-back, walk the coverage checklist silently and write
+the after-Compile checklist into the notes. When your work between two messages to the user runs past about two
+minutes, such as writing and pushing the Plan, tell the user in one line what you are doing.
 
 State the access boundary precisely: Web pages may be public or use Accounts and Policies, and iPhone and Android
 apps show the same pages with the same sign-in. Keep private access and requested clients in the Plan.
