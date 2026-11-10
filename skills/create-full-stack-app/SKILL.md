@@ -116,8 +116,7 @@ firstdraft_cli generate application-key --name "<name>"
 
 If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
 directory. If `.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not
-reinitialize. Inspect private state only as the recovery reference allows: its `api_url`, for the read-back's page
-address or a recovery check that reference names.
+reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
 A Plan whose `target.profile` is not `rails-sketch/2026-10` belongs to a retired profile; follow
 [retired target profile](references/diagnostics-and-recovery.md#retired-target-profile) instead of pushing it.
 
@@ -210,13 +209,11 @@ Compile waits for the user's go-ahead: they approve the candidate and its gaps, 
 made before the read-back counts only when it said not to wait for them, as in "decide everything and build it
 without checking with me". Delegating decisions, as with "make the rest of the decisions for me", is not a go-ahead.
 
-End the read-back by giving the user the address of the Plan's page: the Project's site, followed by `/projects/`
-and the Project id that `plan push` printed. The site is the `api_url` that the push saved in
-`.firstdraft/state.json`: `https://firstdraft.com`, unless the Project uses staging or a custom server. Read only
-that value from the file. The page asks them to sign in first when they are not signed in. Say what the page shows:
-a diagram of the Plan, with a card for each kind of record that lists its fields, and a line for each link between
-records. If the user already said not to wait, Compile in the same turn. Otherwise ask what they
-would change and stop: do not prompt for a go-ahead, and require no digest echo or gap-acknowledgment field. When
+End the read-back by giving the user the address of the Plan's page: `https://firstdraft.com/projects/` followed
+by the Project id that `plan push` printed. The page asks them to sign in first when they are not signed in. Say
+what the page shows: a diagram of the Plan, with a card for each kind of record that lists its fields, and a line
+for each link between records. If the user already said not to wait, Compile in the same turn. Otherwise ask what
+they would change and stop: do not prompt for a go-ahead, and require no digest echo or gap-acknowledgment field. When
 a go-ahead comes from a user who has not said they looked at the page, remind them once that it is there and what
 it shows, then Compile in the same turn. Never hold Compile for the page. Ask only when new material scope or gap
 consequences need a user decision.
