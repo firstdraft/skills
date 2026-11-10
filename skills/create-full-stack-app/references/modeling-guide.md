@@ -56,15 +56,16 @@ with a serial number and `belongs_to :product`; a quantity is an `integer` Field
 product meaning and materials, and name deferred product areas; give the reality check about
 target support after the user answers. Whether First Draft covers the core of the idea is
 [fit](interview.md#start-from-the-users-goal), not target support: say it in the opening turn when research shows it.
-Do not promote a common use case into an assumption. When target support matters, know the desired access before
-describing the current Account, Policy, Web, and native boundaries. Keep one candidate Plan: do not maintain a
-parallel flattened or capability-friendly shape merely so one version can Compile.
+Do not promote a common use case into an unstated assumption. When target support matters, know the desired access
+before describing the current Account, Policy, Web, and native boundaries. Keep one candidate Plan: do not maintain
+a parallel flattened or capability-friendly shape merely so one version can Compile.
 
 Track consequential choices as follows; in the [coverage checklist](interview.md#coverage-checklist), an asked item
-is Confirmed and a delegated item is Delegated:
+is Confirmed, and a told or delegated item is Delegated:
 
 - **Confirmed:** the user chose it.
-- **Delegated:** the user asked the agent to choose; include the choice in the read-back.
+- **Delegated:** the user asked the agent to choose, or let a default the agent told them stand; include the choice
+  in the read-back.
 - **Out of scope:** the user excluded it from this candidate.
 - **Open:** it could still materially change this candidate.
 - **Capability gap:** the intended meaning may exceed current First Draft support.
@@ -347,7 +348,9 @@ Put a Reference on the Entity that stores the relationship fact. Ask:
 
 - Which Entity types may be targeted?
 - Must every referencing record have a target?
-- What should happen to referencing records when a target is deleted?
+- What should happen to referencing records when a target is deleted? Tell the user the
+  [default for the kind of link](interview.md#ask-tell-or-decide); ask when the link points at a person or the
+  records are about money.
 - Is the target immutable after creation?
 - Is the relationship one-to-one?
 - For a closed multi-target Reference, which supported target realization should be used? This is an
@@ -545,7 +548,8 @@ Write it for a reader who is not technical, in this order:
 4. Feasibility findings and open questions, with sources for what research found. Leave out a list with nothing
    in it.
 5. Where the app will be written: this folder, another folder, or a private GitHub repository; or plan only.
+6. Where to look at the Plan, and what the page shows.
 
 After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record. Follow the Skill's
 [read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the selected
-output mode and when to ask for approval.
+output mode, the page's address, and the go-ahead that Compile waits for.

@@ -116,7 +116,8 @@ firstdraft_cli generate application-key --name "<name>"
 
 If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
 directory. If `.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not
-reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
+reinitialize. Inspect private state only as the recovery reference allows: its `api_url`, for the read-back's page
+address or a recovery check that reference names.
 A Plan whose `target.profile` is not `rails-sketch/2026-10` belongs to a retired profile; follow
 [retired target profile](references/diagnostics-and-recovery.md#retired-target-profile) instead of pushing it.
 
@@ -125,12 +126,15 @@ A Plan whose `target.profile` is not `rails-sketch/2026-10` belongs to a retired
 Start when the user asks for help making an app or invokes `/create-full-stack-app`. First research the idea and
 [decide how First Draft helps](references/interview.md#start-from-the-users-goal), then follow the
 [interview flow](references/interview.md#interview-flow). Clarify the idea; ask for materials and read them before
-asking more. Then ask the product questions that shape the data model, most important first and one decision per
-turn, until only delegated or nonblocking items remain. Right after the opening answers, push a rough Plan and tell
-the user plainly what First Draft will and will not build. Make implementation choices yourself and name them in the
-read-back, unless the user asks to be asked; product meaning is always asked or delegated. Honor "make the rest of
-the decisions for me" at any point. Before the read-back, walk the coverage checklist silently and write the
-after-Compile checklist into the notes.
+asking more. Then raise the product decisions that shape the data model, most important first, asking one decision
+per turn, until only delegated or nonblocking items remain. Right after the opening answers, push a rough Plan and
+tell the user plainly what First Draft will and will not build. Handle each decision as a consultant developer
+would, [asking, telling, or deciding](references/interview.md#ask-tell-or-decide). Product meaning is asked, told,
+or delegated: ask what is expensive to change after Compile, and where a convention fits, tell the user your
+default and when it would be wrong. Make implementation choices yourself and name them in the read-back, unless the
+user asks to be asked. Honor "make the rest of the decisions for me" at any point: it ends the questions and is not
+a go-ahead to Compile. Before the read-back, walk the coverage checklist silently and write the after-Compile
+checklist into the notes.
 
 State the access boundary precisely: Web pages may be public or use Accounts and Policies, and iPhone and Android
 apps show the same pages with the same sign-in. Keep private access and requested clients in the Plan.
@@ -187,8 +191,9 @@ mismatch is a replacement. Branch on `analysis.status`, not only the process exi
   replacement.
 
 Treat messages and suggestions as advisory. Do not loop a repeated diagnostic without new information; preserve
-intent and ask only for needed product input. Before approval, push the final exact candidate and read its matching
-valid status so the complete GapSet can be reviewed. `plan compile` later repeats that exact push.
+intent and ask only for needed product input. Before the read-back, push the final exact candidate and read its
+matching valid status, so the complete GapSet can be reviewed and First Draft's site shows that Plan. `plan compile`
+later repeats that exact push.
 
 ## Read back and approve the candidate before Compile
 
@@ -201,17 +206,26 @@ repository request. Generic compile or build language selects local output. Dire
 directory; Publication creates one private GitHub repository. Neither deploys. Do not enumerate absent subject
 families or immaterial properties.
 
-Ask the user to correct or approve the candidate and its gaps only while those decisions are unresolved; require no
-digest echo or gap-acknowledgment field. Existing authorization carries forward. When the user has approved the
-candidate, asked for the complete app with these choices delegated, or said "make the rest of the decisions for me",
-give the read-back as a progress update and Compile in the same turn; the user can change any delegated choice in
-the app afterward. Ask only when new material scope or gap consequences need a user decision.
+Compile waits for the user's go-ahead: they approve the candidate and its gaps, or tell you to build it. A request
+made before the read-back counts only when it said not to wait for them, as in "decide everything and build it
+without checking with me". Delegating decisions, as with "make the rest of the decisions for me", is not a go-ahead.
 
-If the Plan changes after the read-back, describe the semantic change. Obtain approval of the changed candidate only
-when it exceeds the existing request or delegated choices. Then make the request with exactly one invocation in the
-selected mode. Do not ask for a second command-level confirmation. Do not delete, loosen, flatten, relabel, or
-substitute intended product meaning to make analysis green. The user may explicitly move a feature out of scope
-after seeing the consequence; otherwise preserve it.
+End the read-back by giving the user the address of the Plan's page: the Project's site, followed by `/projects/`
+and the Project id that `plan push` printed. The site is the `api_url` that the push saved in
+`.firstdraft/state.json`: `https://firstdraft.com`, unless the Project uses staging or a custom server. Read only
+that value from the file. The page asks them to sign in first when they are not signed in. Say what the page shows:
+a diagram of the Plan, with a card for each kind of record that lists its fields, and a line for each link between
+records. If the user already said not to wait, Compile in the same turn. Otherwise ask what they
+would change and stop: do not prompt for a go-ahead, and require no digest echo or gap-acknowledgment field. When
+a go-ahead comes from a user who has not said they looked at the page, remind them once that it is there and what
+it shows, then Compile in the same turn. Never hold Compile for the page. Ask only when new material scope or gap
+consequences need a user decision.
+
+If the Plan changes after the read-back, push it so the page shows it, and describe the semantic change. Obtain
+approval of the changed candidate only when it exceeds the existing request or delegated choices. On the go-ahead,
+make the request with exactly one invocation in the selected mode. Do not ask for a second command-level
+confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
+green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it.
 
 This gate does not block an explicitly requested diagnostic-only Compile of exact bytes already known to be
 invalid from those bytes or matching diagnostics. Invalid analysis cannot start a Compilation or Publication. Valid
@@ -219,8 +233,8 @@ analysis with gaps can; do not require removal of the corresponding Plan fields.
 
 ## Request the selected Compile journey
 
-After the read-back, once the candidate is approved or delegated, read
-[Product Compile](references/diagnostics-and-recovery.md#product-compile) and request the already selected mode:
+On the user's go-ahead, read [Product Compile](references/diagnostics-and-recovery.md#product-compile) and request
+the already selected mode:
 
 - For the ordinary local journey, use the current folder:
 

@@ -31,8 +31,8 @@ staging compatibility, or a complete user journey.
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
 CLI-owned Project, origin, and ETag state. Inspect the Plan; do not print, paste, commit, or treat the state file as
-agent-authored Plan content. Inspect only its `api_url` when a persistent read-only status failure requires checking
-the pinned origin.
+agent-authored Plan content. Inspect only its `api_url`, and only for two purposes: to build the address of the
+Plan's page for the read-back, or when a persistent read-only status failure requires checking the pinned origin.
 
 `plan init` only creates local files; it does not choose a server. New remote work defaults to production at
 `https://firstdraft.com`. For requested staging work, use the root flag before each remote command

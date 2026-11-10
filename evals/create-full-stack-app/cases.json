@@ -189,7 +189,7 @@
       "prompt": "Earlier in this conversation I asked you to explain technical choices as you go. We settled that it's a tool library for my neighborhood, private to neighbors who sign up, web only. Keep going with the interview. I have no artifacts to share. Keep this local; do not contact First Draft.",
       "expectations": [
         "Does not ask how involved the user wants to be in technical decisions.",
-        "Asks one product decision in this turn, with one line on why it matters and two to four options with its recommendation first.",
+        "Asks one product decision in this turn. When it offers options, there are two to four, with its recommendation first and what that rests on; each option says what the user will see and names the technical term in passing; and the question closes with what is hard to change later.",
         "When a technical choice comes up, explains it in a plain sentence because the user asked for explanations, while still asking product meaning such as whether a tool can be lent to two neighbors at once.",
         "Makes no service request, Compile or remote write."
       ]
@@ -203,7 +203,7 @@
         "Chooses its recommendation for each remaining item, including product meaning such as who may edit or delete a comment and what happens to comments when a recipe is deleted, and records each as delegated.",
         "Writes those choices into .firstdraft/foundation-plan.json instead of leaving them open.",
         "Walks the coverage checklist without presenting it as questions, and writes the applicable After Compile items into implementation-notes.md.",
-        "Gives the read-back as a progress update that names the delegated choices plainly and says the user can change any of them later in the app. Treats the delegation as covering the read-back: asks no approval question and does not Compile only because this prompt says not to.",
+        "Gives the read-back, naming the delegated choices plainly, and invites changes before the app is built. Treats the delegation as ending the questions, not as a go-ahead: it would wait for the user's go-ahead even without this prompt's instruction, and it does not prompt for one.",
         "Makes no service request, Compile or remote write."
       ]
     },
@@ -218,6 +218,17 @@
         "Keeps the photo Field and private access in the Plan instead of removing them or making pages public to avoid gaps.",
         "Then asks one product decision that the analysis informs, rather than a question about a gap the user cannot change.",
         "Does not run plan compile."
+      ]
+    },
+    {
+      "id": "interview-access-grid",
+      "should_trigger": true,
+      "prompt": "We're planning a photo board for my family. Settled so far: family members sign up, post photos with captions, and comment on each other's posts; web only. Next, sort out who can see and change what. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "expectations": [
+        "Asks about access in one turn as one grid filled in with its recommendation: a row for each kind of record and a column each for seeing, adding, changing, and deleting.",
+        "Asks what is wrong in the grid and asks two or three concrete cases where the answer is not obvious, such as whether one member can delete another member's comment on their own post. Leaves them for the user to answer, and names people and records from the Plan's sample data, which it writes first if the Plan has none.",
+        "Does not ask a separate access question for each kind of record or each action, and asks no other product question in this turn.",
+        "Makes no service request, Compile or remote write."
       ]
     },
     {
@@ -315,7 +326,7 @@
       "expectations": [
         "Checks records, required and unique values, links and deletion, access, Accounts, lists, sample data, one-tap records, phone apps, hosting, appearance, and implementation choices before its summary, without turning them into a questionnaire.",
         "Does not ask again about settled items such as sign-in, web only, or the rating range.",
-        "Does not treat its own technical choices as settling product meaning: asks one remaining meaning question, such as whether a member may review the same book twice or what happens to reviews when a book or member is deleted, and leaves any others for later turns.",
+        "Does not treat its own technical choices as settling product meaning: asks one remaining meaning question, such as whether a member may review the same book twice or what happens to a member's reviews when that member is deleted, and leaves any others for later turns. Where a convention fits, such as deleting a book's reviews along with the book, tells the user its default and when it would be wrong instead of asking.",
         "Proposes list fields, sample data, and appearance itself for the read-back without asking, and says hosting is set up for Render's free plan with Neon.",
         "Makes no service request, Compile or remote write."
       ]
@@ -1443,7 +1454,7 @@
         "Verifies that the attached valid analysis's project and analysis graph versions agree and that analysis.head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before treating it as the matching reviewed result.",
         "Explains that valid applies to the admitted graph, that Appearance theme and native colors are realized, that web bookmark icons use fixed black-on-white artwork while the selected-iOS AppIcon remains stock, and that the partial gap does not require weakening the Plan before Compile.",
         "Selects the explicit --github Publication mode because the requested result is one private GitHub repository, states explicitly that Compile does not deploy, and explains that only that invocation's validated terminal success proves Publication.",
-        "Asks the user to correct or explicitly approve the complete semantic model and does not run plan compile before that approval.",
+        "Ends by telling the user where to look at the Plan on First Draft's site and what the page shows, invites corrections to the complete semantic model without prompting for a go-ahead, and does not run plan compile before the user's approval.",
         "Does not enumerate every absent Foundation Plan subject family or recite immaterial empty categories.",
         "Preserves the exact staged Plan and its existing subject UUIDs, does not call the staged candidate unstaged, and does not delete, loosen, flatten, relabel, substitute, or require a speculative last-minute change merely to fit current capabilities."
       ],
@@ -1474,7 +1485,7 @@
         "Verifies the attached valid analysis's matching project and analysis graph versions and Head source digest, and describes the one Appearance icon-assets gap by what the user will notice, after the plain-language summary; writes no separate gaps file and pastes no digest, code, or pointer into the chat.",
         "Explains that valid applies only to the admitted graph, that Appearance theme and native colors are realized, that web bookmark icons use fixed black-on-white artwork while the selected-iOS AppIcon remains stock, and that the partial gap does not require weakening the Plan before Compile.",
         "Selects direct mode before approval because this is an explicit Drawing Board and local-directory request; states that the intended command is firstdraft plan compile --output ./application and that success creates no Publication, GitHub repository, .git directory, or deployment, while Drawing Board owns later nested-Git initialization.",
-        "Asks the user to correct or approve the complete semantic model, reviewed support result, and selected direct mode, with no digest echo; the Compile wrapper count remains zero before approval.",
+        "Ends by telling the user where to look at the Plan on First Draft's site and what the page shows, and invites corrections to the complete semantic model, reviewed support result, and selected direct mode, with no digest echo and no prompt for a go-ahead; the Compile wrapper count remains zero before approval.",
         "Preserves the exact staged Plan and its subject UUIDs without deleting, loosening, flattening, relabeling, or substituting intentional meaning to fit current capabilities."
       ],
       "artifacts": [
@@ -1502,8 +1513,8 @@
         "Rereads the exact staged Plan and checks that the attached valid analysis's graph versions agree and that its head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before using it.",
         "Leads with a plain-language summary: one kind of record, a movie with a required title; a public list anyone can read on the web; an iPhone app that opens that list; and the automatic light or dark theme with its tint color. No digest, code, or JSON pointer appears.",
         "Describes the one gap by what the user will notice: the iPhone app keeps a stock app icon, while web bookmark icons use fixed black-on-white artwork. Does not paste the record's code, kind, status, or pointer into the chat.",
-        "Ends by saying the app will be written into the current folder, and writes no separate gaps file.",
-        "Asks once for approval of the whole candidate, requires no digest echo or gap acknowledgment, and does not run plan compile before that approval."
+        "Says the app will be written into the current folder, and writes no separate gaps file.",
+        "Ends by telling the user where to look at the Plan on First Draft's site and that the page shows a diagram of its records. Invites changes without prompting for a go-ahead, requires no digest echo or gap acknowledgment, and does not run plan compile before the user says to build."
       ],
       "artifacts": [
         {
@@ -1552,6 +1563,7 @@
       "expectations": [
         "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, and does not ask for a second confirmation or repeat the unchanged read-back.",
+        "Because the user has not said they looked at the Plan's page on First Draft's site, reminds them once that it is there and what it shows, as a statement that asks nothing, and Compiles in the same turn.",
         "Selects Publication because the user explicitly requested one private GitHub repository and runs exactly one plan compile --github through the Skill resolver; it does not add --output.",
         "The command pushes the exact whole file, waits for the accepted exact Head's analysis, and invokes Publication after valid analysis with the preserved Appearance icon-assets partial gap and an unchanged local file.",
         "Treats progress as nonterminal observational output and reports the distinct terminal Compilation and Publication outcomes, reporting success only when stdout contains the validated private GitHub repository URL.",
