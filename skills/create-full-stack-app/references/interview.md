@@ -76,7 +76,9 @@ Steps 1 and 2 are the opening turn, after the research and any fit, with at most
    records and their key Fields, any Account, who can see what, and requested phone apps; for a backbone, only the
    part First Draft builds. Tell the user in a few plain lines what First Draft will build and what it will not
    build yet, for example "Descriptions are stored as plain text for now; I'll add formatting in Rails after" or
-   "The list of posts that mention a word is generated, and I'll write its search in Rails right after". Then let
+   "The list of posts that mention a word is generated, and I'll write its search in Rails right after". When the
+   user described moving a record from one state to another, such as approving a request, say that no generated
+   page has a button for it yet and that you will write it after Compile. Then let
    the analysis steer the remaining questions: ask about consequences the user can choose between,
    not about gaps they cannot change. Keep private access and requested phone apps in the Plan. Report each gap as
    the analysis gives it, even when its reason names no cause or contradicts these references; the deployed First
@@ -90,7 +92,9 @@ Steps 1 and 2 are the opening turn, after the research and any fit, with at most
 
 At any point the user may say "make the rest of the decisions for me". Stop asking. Choose your recommendation for
 every remaining item, including product meaning, and mark each one delegated. Walk the checklist and give the
-read-back, naming those choices. Delegating decisions is not a go-ahead: Compile waits for one, so the user can
+read-back, naming those choices. Lead it with the delegated choices that would cost most if wrong, at most three,
+each as a yes-or-no question on one line: a rule that deletes records, and access wider than the user described.
+Delegating decisions is not a go-ahead: Compile waits for one, so the user can
 [look at the Plan](../SKILL.md#read-back-and-approve-the-candidate-before-compile) while changing a choice still
 takes one edit to it.
 
@@ -124,7 +128,9 @@ the kind of link:
 | --- | --- | --- | --- |
 | The record means nothing without the one it points at | Comments on a post, items on an order | Tell: it is deleted along with the one it points at | `delete_referencing_record` |
 | The record stands by itself | Products in a category | Tell: the one it points at cannot be deleted while such records exist; when the link is optional, deleting it clears the link instead | `restrict`, or `nullify_reference` when the link is optional |
-| The link points at a person, or the records are about money | An Account's posts, a customer's orders | Ask | The user's answer |
+| The link points at a person, or the records are about money | An Account's posts, a customer's orders | Ask, and recommend that other people's records stay | The user's answer |
+
+Never call a rule that deletes records cheap to change later: changing the rule does not bring back what it deleted.
 
 **Decide** when the choice changes nothing the user can see, as an
 [implementation choice](#meaning-and-implementation) does. Name it with a one-line why in the read-back.
@@ -140,8 +146,9 @@ Ask who can see and change each kind of record in one turn, as one grid filled i
 
 Ask what is wrong in it. A filled-in grid is easy to accept unread, so also ask two or three concrete cases where
 the answer is not obvious, using records from the Plan's sample data, and leave them for the user to answer: "Can
-Maya delete Sam's comment on her own post?" Add sample records first if the Plan has none. Change the grid where
-an answer disagrees with it.
+Maya delete Sam's comment on her own post?" Make one case about someone other than its owner removing a record,
+such as an organizer removing spam. Add sample records first if the Plan has none. Change the grid where an answer
+disagrees with it.
 
 ## Meaning and implementation
 

@@ -448,7 +448,8 @@ page shows the Field, an image appears large on its details page and as a thumbn
 appears as a download link. A stored file satisfies a required Field on edit. An empty file input keeps the stored
 file, so the edit form of an optional upload adds a "Remove" checkbox once a file is stored; the model clears the file
 on save, and Active Storage deletes it afterward. Model several photos as a child Entity with one `image` Field, such
-as a Photo with its own caption.
+as a Photo with its own caption. Keep a file the user wants stored, such as a resume, as an upload Field even though
+uploads need a Cloudinary account first; a link to a file elsewhere escapes the app's Policies.
 
 Uploads are Cloudinary "authenticated" assets, and a file follows the Policies of the pages that show it. The
 Compiler adds a `show_files?` rule to the Policy of each Entity with an upload, and `ActiveStorage::Authorization`

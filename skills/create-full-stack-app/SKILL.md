@@ -133,7 +133,8 @@ or delegated: ask what is expensive to change after Compile, and where a convent
 default and when it would be wrong. Make implementation choices yourself and name them in the read-back, unless the
 user asks to be asked. Honor "make the rest of the decisions for me" at any point: it ends the questions and is not
 a go-ahead to Compile. Before the read-back, walk the coverage checklist silently and write the after-Compile
-checklist into the notes.
+checklist into the notes. When your work between two messages to the user runs past about two minutes, such as
+writing and pushing the Plan, tell the user in one line what you are doing.
 
 State the access boundary precisely: Web pages may be public or use Accounts and Policies, and iPhone and Android
 apps show the same pages with the same sign-in. Keep private access and requested clients in the Plan.

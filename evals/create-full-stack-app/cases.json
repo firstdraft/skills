@@ -204,6 +204,7 @@
         "Writes those choices into .firstdraft/foundation-plan.json instead of leaving them open.",
         "Walks the coverage checklist without presenting it as questions, and writes the applicable After Compile items into implementation-notes.md.",
         "Gives the read-back, naming the delegated choices plainly, and invites changes before the app is built. Treats the delegation as ending the questions, not as a go-ahead: it would wait for the user's go-ahead even without this prompt's instruction, and it does not prompt for one.",
+        "Leads the read-back with at most three yes-or-no questions, one line each, about the delegated choices that would cost most if wrong, such as whether deleting a recipe should delete its comments.",
         "Makes no service request, Compile or remote write."
       ]
     },
