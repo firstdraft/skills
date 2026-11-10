@@ -551,6 +551,10 @@ Write it for a reader who is not technical, in this order:
 5. Where the app will be written: this folder, another folder, or a private GitHub repository; or plan only.
 6. Where to look at the Plan, and what the page shows.
 
+When the user asks to see the code before Compile, such as the schema or the models, compile a preview into an
+absent folder beside the project, such as `--output ../<application key>-preview`, and show what they asked for. The
+preview is not the go-ahead: the project's own Compile still waits for one.
+
 After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record. Follow the Skill's
 [read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the selected
 output mode, the page's address, and the go-ahead that Compile waits for.

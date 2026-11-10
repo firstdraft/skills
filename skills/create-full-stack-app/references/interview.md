@@ -90,13 +90,13 @@ Steps 1 and 2 are the opening turn, after the research and any fit, with at most
 7. **Read back**, tell the user where to look at the Plan, and Compile on their go-ahead, as the Skill describes.
    For plan only, give the read-back and stop.
 
-At any point the user may say "make the rest of the decisions for me". Stop asking. Choose your recommendation for
-every remaining item, including product meaning, and mark each one delegated. Walk the checklist and give the
-read-back, naming those choices. Lead it with the delegated choices that would cost most if wrong, at most three,
-each as a yes-or-no question on one line: a rule that deletes records, and access wider than the user described.
-Delegating decisions is not a go-ahead: Compile waits for one, so the user can
-[look at the Plan](../SKILL.md#read-back-and-approve-the-candidate-before-compile) while changing a choice still
-takes one edit to it.
+At any point the user may say "make the rest of the decisions for me". Stop the interview. Choose your recommendation
+for every remaining item, including product meaning, and mark each one delegated. Walk the checklist and give the
+read-back, naming those choices. Lead it with the delegated choices that would cost most if wrong, at most three, each
+as a yes-or-no question on one line: a rule that deletes records, and access wider than the user described. These
+confirmations are the only questions after a delegation. Delegating decisions is not a go-ahead: Compile waits for
+one, so the user can [look at the Plan](../SKILL.md#read-back-and-approve-the-candidate-before-compile) while changing
+a choice still takes one edit to it.
 
 ## Ask, tell, or decide
 
