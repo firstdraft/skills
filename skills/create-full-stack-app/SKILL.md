@@ -209,9 +209,10 @@ Compile waits for the user's go-ahead: they approve the candidate and its gaps, 
 made before the read-back counts only when it said not to wait for them, as in "decide everything and build it
 without checking with me". Delegating decisions, as with "make the rest of the decisions for me", is not a go-ahead.
 
-End the read-back by giving the user the address of the Plan's page: `https://firstdraft.com/projects/` followed
-by the Project id that `plan push` printed. For staging or a custom site, use that site's address in place of
-`https://firstdraft.com`. The page asks them to sign in first when they are not signed in. Say what the page shows:
+End the read-back by giving the user the address of the Plan's page: the Project's site, followed by `/projects/`
+and the Project id that `plan push` printed. The site is the `api_url` that the push saved in
+`.firstdraft/state.json`: `https://firstdraft.com`, unless the Project uses staging or a custom server. Read only
+that value from the file. The page asks them to sign in first when they are not signed in. Say what the page shows:
 a diagram of the Plan, with a card for each kind of record that lists its fields, and a line for each link between
 records. If the user already said not to wait, Compile in the same turn. Otherwise ask what they
 would change and stop: do not prompt for a go-ahead, and require no digest echo or gap-acknowledgment field. When
