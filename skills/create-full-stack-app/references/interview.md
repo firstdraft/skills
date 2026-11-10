@@ -1,12 +1,13 @@
 # Interview
 
 This guide runs from the user's first request to the read-back. The [modeling guide](modeling-guide.md) covers how
-to model each answer. The Skill's read-back, approval, and Compile rules are unchanged.
+to model each answer. The Skill owns the read-back, the user's go-ahead, and Compile.
 
 ## Contents
 
 - [Start from the user's goal](#start-from-the-users-goal)
 - [Interview flow](#interview-flow)
+- [Ask, tell, or decide](#ask-tell-or-decide)
 - [Meaning and implementation](#meaning-and-implementation)
 - [See what First Draft emits](#see-what-first-draft-emits)
 - [Coverage checklist](#coverage-checklist)
@@ -61,10 +62,12 @@ Start when the user asks for help making an app, such as "help me make an app fo
 
 Steps 1 and 2 are the opening turn, after the research and any fit, with at most two questions.
 
-3. **Ask product questions** that decide the data model, most important first: which records exist and what one
-   record is, who can see and do what, and whether they want iPhone or Android apps. After the opening turn, ask
-   one decision per turn: one line on why it matters, then two to four options with your recommendation first, and
-   room for their own answer. A recommendation is a proposal until the user accepts it. Leave details such as list
+3. **Raise product decisions** that shape the data model, most important first: which records exist and what one
+   record is, [who can see and do what](#access), and whether they want iPhone or Android apps. Order the rest by
+   how likely your default is wrong for this app, times how costly the mistake is after Compile. A mistake costs
+   most when it shows records to the wrong people, then when it loses data, then when records must be
+   restructured, and least when it is cosmetic. After the opening turn, ask one decision per turn. Handle each
+   decision in the [form that fits it](#ask-tell-or-decide): ask, tell, or decide. Leave details such as list
    fields for later. Stop when only delegated or nonblocking items remain; there is no fixed number of questions.
    Do not ask about hosting. Say the app is set up for free hosting on Render's free plan with a free Neon
    database, and that a paid option is planned.
@@ -82,19 +85,70 @@ Steps 1 and 2 are the opening turn, after the research and any fit, with at most
 5. **Make implementation choices last**, as [meaning and implementation](#meaning-and-implementation) describes.
 6. **Walk the [coverage checklist](#coverage-checklist)** silently, and write the
    [after-Compile checklist](#after-compile-checklist) into the implementation notes.
-7. **Read back and approve** as the Skill describes, then Compile. For plan only, give the read-back and stop.
+7. **Read back**, tell the user where to look at the Plan, and Compile on their go-ahead, as the Skill describes.
+   For plan only, give the read-back and stop.
 
 At any point the user may say "make the rest of the decisions for me". Stop asking. Choose your recommendation for
-every remaining item, including product meaning, and mark each one delegated. Walk the checklist, give the read-back,
-naming those choices, as a progress update, then Compile in the same turn. The user can change any of them
-afterward in the app.
+every remaining item, including product meaning, and mark each one delegated. Walk the checklist and give the
+read-back, naming those choices. Delegating decisions is not a go-ahead: Compile waits for one, so the user can
+[look at the Plan](../SKILL.md#read-back-and-approve-the-candidate-before-compile) while changing a choice still
+takes one edit to it.
+
+## Ask, tell, or decide
+
+Handle each decision the way a consultant developer would with a client.
+
+**Ask** when the answer changes structure that is expensive to change after Compile and the user can answer from
+their own idea. Give two to four options with your recommendation first, and room for their own answer. Each option
+says what the user will see, then names the technical term in passing. The recommendation says what it rests on:
+something the user said, or what similar apps do. Close with what is hard to change later. For example:
+
+> Can a post have several photos, or just one?
+>
+> 1. Several (recommended, because you said it should feel like Instagram). The post's page shows all its photos
+>    and a way to add one. Each photo is its own record attached to the post, which developers call a one-to-many
+>    relationship.
+> 2. Just one. The form has one upload, and the photo is part of the post.
+>
+> Changing from one to several later means moving existing photos into new records, so it is worth deciding now.
+
+A recommendation is a proposal until the user accepts it.
+
+**Tell** when a convention fits most apps and you can name its exception. State your default and the condition under
+which it would be wrong, in the user's own terms, then continue without waiting for an answer: "Deleting a post
+deletes its comments, unless you would need to look at a deleted post's comments afterward, for example to review a
+report about one." The default stands unless the user says the condition applies. For deletion, the default follows
+the kind of link:
+
+| Kind of link | Example | Default | `on_referenced_deleted` |
+| --- | --- | --- | --- |
+| The record means nothing without the one it points at | Comments on a post, items on an order | Tell: it is deleted along with the one it points at | `delete_referencing_record` |
+| The record stands by itself | Products in a category | Tell: the one it points at cannot be deleted while such records exist; when the link is optional, deleting it clears the link instead | `restrict`, or `nullify_reference` when the link is optional |
+| The link points at a person, or the records are about money | An Account's posts, a customer's orders | Ask | The user's answer |
+
+**Decide** when the choice changes nothing the user can see, as an
+[implementation choice](#meaning-and-implementation) does. Name it with a one-line why in the read-back.
+
+### Access
+
+Ask who can see and change each kind of record in one turn, as one grid filled in with your recommendation:
+
+| | See | Add | Change | Delete |
+| --- | --- | --- | --- | --- |
+| Post | Anyone signed in | Anyone signed in | Its author | Its author |
+| Comment | Anyone signed in | Anyone signed in | Its author | Its author, or the post's author |
+
+Ask what is wrong in it. A filled-in grid is easy to accept unread, so also ask two or three concrete cases where
+the answer is not obvious, using records from the Plan's sample data, and leave them for the user to answer: "Can
+Maya delete Sam's comment on her own post?" Add sample records first if the Plan has none. Change the grid where
+an answer disagrees with it.
 
 ## Meaning and implementation
 
 **Meaning** is what the app does: which records it stores and how they link, which values are required or unique,
 who can see and do what, and what happens when something is deleted. "Can one comment belong to either a post or a
-photo?" is meaning. Ask it, or decide it only when the user delegated it with "you pick" or "make the rest of the
-decisions for me".
+photo?" is meaning. Ask it or tell it; decide it yourself only when the user delegated it with "you pick" or "make
+the rest of the decisions for me".
 
 **Implementation** is how First Draft emits that meaning in Rails. The target profile fixes almost all of it: the
 Plan has no property for gems, column types, or callbacks. Today the Plan exposes one real choice: a Reference
@@ -160,19 +214,22 @@ there is no option to leave a part out of the generated app.
 Walk this list silently before the read-back; it is not a questionnaire. Mark each item that applies:
 
 - **asked:** the user answered your question;
+- **told:** you told the user your default and when it would be wrong, and they let it stand;
 - **decided:** the user's request or materials settled it, or First Draft fixes it. State any meaning you inferred,
   such as "likes work as on Instagram", so the user can correct it; or
 - **delegated:** the user said "you pick" or "make the rest of the decisions for me". Implementation choices are
   yours to make unless the user asked to be asked.
 
-Ask about each unmarked item of meaning or product scope: what is stored, required, or unique; links and deletion;
-access; sign-up; and phone apps. Propose the rest yourself, such as list fields, sample data, and appearance. Name every delegated choice and
-proposal in the read-back.
+Ask or tell each unmarked item of meaning or product scope: what is stored, required, or unique; links and
+deletion; access; sign-up; and phone apps. Propose the rest yourself, such as list fields, sample data, and
+appearance. Name every default you told the user, delegated choice, and proposal in the read-back.
 
 - [ ] Records: what each kind of record stores, which values are required, and which must be unique, such as one
       like per person per post.
-- [ ] Links and deletion: which records belong to which, and what happens to them when that record is deleted.
-- [ ] Access: who can see, add, change, and delete each kind of record, with one Policy per operation.
+- [ ] Links and deletion: which records belong to which, and what happens to them when that record is deleted, by
+      the [kind of link](#ask-tell-or-decide).
+- [ ] Access: who can see, add, change, and delete each kind of record, asked as [one grid](#access), with one
+      Policy per operation.
 - [ ] Accounts: whether people sign up, and the Account Fields on the sign-up form. Do not ask about email
       confirmation: leave `verification` out unless the user asks for it, so sign-up signs people in at once and
       they can share the app with friends right away. "No sign-up" is supported: without `registration`, sign-in

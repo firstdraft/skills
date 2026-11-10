@@ -15,17 +15,20 @@ accepted, after the user has approved its semantic read-back.
 Track each consequential choice as one of:
 
 - **Confirmed:** the user chose it.
-- **Delegated:** the user asked the agent to choose. Record the choice in the read-back.
+- **Delegated:** the user asked the agent to choose, or let a default the agent told them stand. Record the choice
+  in the read-back.
 - **Out of scope:** the user excluded it from this candidate.
 - **Open:** it could still materially change the candidate.
 - **Capability gap:** the intended meaning may exceed current First Draft support. Keep the intent separate from the
   tooling limitation.
 
 Offer concrete alternatives when they make a question easier to answer, but label proposals as proposals. A missing
-answer is not a default; "you pick" or "make the rest of the decisions for me" delegates. The opening turn clarifies
-the idea and invites materials; the agent makes technical decisions itself unless asked otherwise, and later turns
-ask one decision at a time. Prioritize questions whose answers would change the graph,
-access, or requested clients. The ambiguity matrix guides the dialogue; it is not a one-message questionnaire.
+answer to a question is not a default; "you pick" or "make the rest of the decisions for me" delegates. Where a
+convention fits most apps, the agent may instead tell the user its default and the condition under which it would
+be wrong; that default stands unless the user objects. The opening turn clarifies the idea and invites materials;
+the agent makes technical decisions itself unless asked otherwise, and later turns ask one decision at a time, most
+important first. Prioritize questions whose answers would change the graph, access, or requested clients. The
+ambiguity matrix guides the dialogue; it is not a one-message questionnaire.
 
 ## Interview from product meaning
 
@@ -39,14 +42,16 @@ access, or requested clients. The ambiguity matrix guides the dialogue; it is no
    behavior, mutability, one-to-one meaning, and any required multi-target realization. Add reverse or indirect
    Associations only for a named product traversal or workflow.
 5. **Define use and access.** Establish requested list, detail, create, update, and delete experiences; who may use
-   each one; Account and sign-in intent; and whether any records are public.
+   each one, asked as one grid of the agent's recommendation with a few concrete cases; Account and sign-in intent;
+   and whether any records are public.
 6. **Resolve client consequences.** Establish requested web and native clients, domain handling, native capture or
    offline needs, delivery channels, notifications, and external prerequisites. A native client does not imply push
    notifications, and absent Account requirements do not imply public access.
 7. **Read back.** Summarize Entities and their material Fields, relationships, rules, behavior, and data; surfaces,
    access, native and delivery choices; explicit exclusions, delegated decisions, and open choices. For a matching
-   valid analysis, group the gaps by what the user will notice and say what the app does instead. Ask for approval or
-   give a progress update as [Read back and approve before Compile](#read-back-and-approve-before-compile) describes.
+   valid analysis, group the gaps by what the user will notice and say what the app does instead. End with where the
+   user can look at the Plan, and wait for their go-ahead, as
+   [Read back and approve before Compile](#read-back-and-approve-before-compile) describes.
 
 Capture intended product meaning before comparing it with current target support. A capability gap is not permission
 to silently delete, loosen, flatten, relabel, or substitute the user's intent merely to obtain `valid` analysis.
@@ -59,7 +64,7 @@ to silently delete, loosen, flatten, relabel, or substitute the user's intent me
 | Entities | Independent lifecycle and record granularity | Every noun is an Entity |
 | Primary descriptors | A value that is always present for every record; a selected Field must be required | The value is unique |
 | Fields | Type, requiredness, defaults, mutability, normalization, rules, protection, and derivation | Presence, uniqueness, defaults, or implementation column types |
-| References | Owner, targets, requiredness, deletion, mutability, multiplicity, and realization | Foreign-key placement or destructive deletion behavior |
+| References | Owner, targets, requiredness, deletion, mutability, multiplicity, and realization | Foreign-key placement or unstated deletion behavior |
 | Surfaces | Requested resource workflows and projections | Every Entity receives CRUD |
 | Access | Public, authenticated, or Policy-controlled use of each surface | No Account means public access |
 | Native | Requested platforms, capture and offline needs, navigation consequences, and domain handling | A native client is wanted or declined |
@@ -102,9 +107,12 @@ rules, behavior, and data; surfaces, access, and clients; material assumptions, 
 Then group the gaps by what the user will notice, then list what is built outside First Draft and the feasibility
 findings and open questions. State the selected completion mode: direct output creates only a verified local
 directory, while terminal successful Publication is intended to create one private GitHub repository. Neither
-deploys. Do not enumerate absent subject families or immaterial empty categories. Ask the user to correct or approve
-the model and reviewed gaps without requiring a digest echo or gap-specific field. When the user delegated the
-remaining decisions, give the read-back as a progress update and Compile in the same turn.
+deploys. Do not enumerate absent subject families or immaterial empty categories. End by telling the user where to
+look at the Plan on First Draft's site and what the page shows, and invite corrections without prompting for a
+go-ahead or requiring a digest echo or gap-specific field. Compile waits for the user's go-ahead: approval of the
+model and reviewed gaps, or an instruction to build. Delegating the remaining decisions is not one, and a request
+made before the read-back counts only when it said not to wait for the user. When the go-ahead comes from a user
+who has not said they looked at the page, remind them of it once, then Compile.
 
 The read-back reviews the staged candidate rather than reopening authoring. Preserve its existing subject UUIDs;
 do not require an edit without a user correction, a confirmed product decision, or a demonstrated diagnostic. If
