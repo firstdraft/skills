@@ -116,7 +116,8 @@ firstdraft_cli generate application-key --name "<name>"
 
 If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
 directory. If `.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not
-reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
+reinitialize. Inspect private state only as the recovery reference allows: its `api_url`, for the read-back's page
+address or a recovery check that reference names.
 A Plan whose `target.profile` is not `rails-sketch/2026-10` belongs to a retired profile; follow
 [retired target profile](references/diagnostics-and-recovery.md#retired-target-profile) instead of pushing it.
 
