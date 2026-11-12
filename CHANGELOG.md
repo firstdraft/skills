@@ -38,7 +38,7 @@ continues. It decides what the user cannot see and names the choice in the read-
 of link; when a link points at a person or the records are about money, the agent asks and recommends that other
 people's records stay. Access is asked as one grid, with a few concrete cases left for the user to answer.
 
-**Compile waits for a go-ahead.** "Make the rest of the decisions for me" now ends the questions without starting
+**Compile waits for a go-ahead.** "Make the rest of the decisions for me" now ends the interview without starting
 Compile. The read-back leads with at most three yes-or-no questions about the delegated choices that cost most if
 wrong, and ends with the address of the Plan's page on firstdraft.com, which shows the Plan as a diagram. The agent
 compiles when the user approves the candidate or tells it to build, or in the same turn when an earlier request said
