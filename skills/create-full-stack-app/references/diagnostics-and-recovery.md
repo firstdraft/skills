@@ -20,6 +20,7 @@ staging compatibility, or a complete user journey.
 - [Push and analysis](#push-and-analysis)
 - [Product Compile](#product-compile)
 - [Retained Compilation status](#retained-compilation-status)
+- [Failed Compilation](#failed-compilation)
 - [Retained Compilation download](#retained-compilation-download)
 - [Stable error families](#stable-error-families)
 - [Ambiguous mutations](#ambiguous-mutations)
@@ -523,7 +524,7 @@ coordinated CLI/service versions first, and do not start a competing or direct m
 `compilation status <id>` makes one metadata-only read. `--wait` polls the same retained lifecycle for at most
 ten minutes. Valid statuses are `queued`, `running`, `succeeded`, `failed`, and `cancelled`.
 `failed` and `cancelled` are successful reads, so branch on `compilation.status`. Inspect the bounded failure object
-for `failed`; `cancelled` carries `failure: null`.
+for `failed` and follow [Failed Compilation](#failed-compilation); `cancelled` carries `failure: null`.
 
 The CLI pins the Compilation ID, Project, analysis, graph version, Head digest, Compiler release, target, lifecycle
 progression, and artifact metadata across the wait. A mismatch returns `compilation_changed` rather than following
@@ -531,6 +532,24 @@ a replacement.
 
 `compilation_status_unavailable` is a read-only failure and is safe to retry a bounded number of times. An invalid
 or provenance-changing response requires reconciling the CLI and service contract instead of following it.
+
+## Failed Compilation
+
+A failed Compilation carries `failure.phase`, `failure.code`, and `failure.message`. Local `plan compile` reports it
+as `compilation_failed`, with the object in `current.compilation.failure`.
+
+First Draft starts a Compilation only from a Plan whose analysis is `valid`. A failed Compilation therefore does not
+mean the Plan is wrong, and a Plan change is not the fix:
+
+1. Do not edit the Plan in response. Tell the user that the Plan passed its checks, and give them the `message` and
+   the Compilation ID.
+2. Run the same `plan compile` once more with the unchanged Plan. The cause can be temporary, such as an
+   interrupted step or a Compiler release that changed while the Compilation waited.
+3. If that Compilation fails with the same `code`, stop. Do not compile a third time. Tell the user that First Draft
+   has to fix it and that they can compile again afterward.
+
+With `compilation.render_failed` or `compilation.compose_failed`, the failure happened while First Draft generated
+the application. First Draft is notified of these failures, so the user does not need to report it.
 
 ## Retained Compilation download
 
@@ -575,7 +594,7 @@ bytes and private state; create replacement work only within the user's authoriz
 | `plan compile` | `plan_not_valid` | The accepted graph did not reach `valid`; inspect `current`. |
 | `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before the selected mutation. |
 | local `plan compile` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | Direct Compilation start or status did not complete its validated contract. Do not infer Publication. A `compilation_active` start rejection starts [stuck Compilation recovery](#stuck-compilation-recovery). |
-| local `plan compile` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned direct Compilation changed, remained nonterminal, or reached a non-success terminal state. |
+| local `plan compile` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned direct Compilation changed, remained nonterminal, or reached a non-success terminal state. For `compilation_failed`, follow [Failed Compilation](#failed-compilation). |
 | local `plan compile` | `invalid_output_path` | Preflight makes no request; an absent-path post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve owner material and correct only the reported root precondition or choose an absent path. |
 | local `plan compile`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `materialization_failed` | No verified local tree was installed. |
 | `plan compile --github` | `publication_start_rejected` | First Draft returned a validated non-timeout 4xx rejection; Publication success was not verified. |

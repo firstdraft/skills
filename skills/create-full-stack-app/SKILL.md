@@ -262,7 +262,8 @@ Report direct output only after materialization verifies. On `request_outcome_un
 preserve Plan, private state, and the selected output; do not retry or switch modes. A validated retained ID permits
 status and, after success, download. In `--github` mode, require terminal Publication success and its validated URL;
 Compilation success alone is insufficient. Never Compile concurrently. Publication-singleton replay
-never applies to an ambiguous push or direct start.
+never applies to an ambiguous push or direct start. On a failed Compilation, read
+[Failed Compilation](references/diagnostics-and-recovery.md#failed-compilation) first; the Plan is not the cause.
 
 ## Inspect or download the retained Compilation
 
