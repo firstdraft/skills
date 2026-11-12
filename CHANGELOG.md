@@ -29,6 +29,36 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-11-12: Compile waits for a go-ahead, and a failed Compilation leaves the Plan alone
+
+**Skills — released in plugin 0.9.2.** The Skill now handles each product decision the way a consultant developer
+would with a client. It asks when the answer is expensive to change after Compile, and each option says what the user
+will see. Where a convention fits most apps, it tells the user its default and when that default would be wrong, then
+continues. It decides what the user cannot see and names the choice in the read-back. Deletion gets a default by kind
+of link; when a link points at a person or the records are about money, the agent asks and recommends that other
+people's records stay. Access is asked as one grid, with a few concrete cases left for the user to answer.
+
+**Compile waits for a go-ahead.** "Make the rest of the decisions for me" now ends the questions without starting
+Compile. The read-back leads with at most three yes-or-no questions about the delegated choices that cost most if
+wrong, and ends with the address of the Plan's page on firstdraft.com, which shows the Plan as a diagram. The agent
+compiles when the user approves the candidate or tells it to build, or in the same turn when an earlier request said
+not to wait. A user who asks to see the schema or the models first gets a preview compiled into a folder beside the
+project.
+
+**Before Compile.** When the user described moving a record from one state to another, such as approving a request,
+the agent says that no generated page has a button for it yet and that it will write that step afterward. A file the
+user wants stored stays an upload Field, because a link to a file elsewhere escapes the app's Policies. When the
+agent works for more than about two minutes between messages, it says in one line what it is doing.
+
+**A failed Compilation.** First Draft starts a Compilation only from a Plan that passed its checks, so a failed
+Compilation does not mean the Plan is wrong. The agent no longer edits the Plan in response. After a local
+`plan compile` it compiles the unchanged Plan once more, and stops if the Compilation fails with the same code. After
+`plan compile --github` it does not run the command again, which would return the same failed Publication. First
+Draft is notified when a Compilation fails while generating the application, so the user does not need to report it.
+
+**Existing Plans and apps.** Nothing changes for an existing Plan or a generated app. The plugin still bundles CLI
+0.9.0 and needs First Draft API 0.8 and `firstdraft.foundation-plan.sketch/0.23`.
+
 ## 2026-11-08: A description and topics for reviewing the Plan
 
 **Skills — released in plugin 0.9.1.** A Foundation Plan can carry two optional keys written for the person who
