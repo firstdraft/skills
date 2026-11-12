@@ -29,6 +29,53 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-11-12: Forged client address headers no longer cause a 500
+
+**Compiler — live on firstdraft.com since 2026-11-12.** A newly compiled app removes the `Client-Ip` and `Forwarded`
+request headers before Rails works out the client's address. Render and Cloudflare set neither header, so on Render
+they only ever come from the client. When one of them disagrees with `X-Forwarded-For`, Rails raises
+`ActionDispatch::RemoteIp::IpSpoofAttackError` before the app's error pages can handle it
+([rails/rails#46003](https://github.com/rails/rails/issues/46003)). A scanner that sent such a request got a bare
+500, and an app with error reporting turned on reported an uncaught error each time.
+
+**Existing apps.** An app whose `config/application.rb` has no `insert_before ActionDispatch::RemoteIp` line was
+compiled before this change. It does not need another Compilation. If it is deployed on Render, add this inside the
+`Application` class in `config/application.rb`:
+
+```ruby
+config.middleware.insert_before ActionDispatch::RemoteIp, Rack::Config do |env|
+  env.delete("HTTP_CLIENT_IP")
+  env.delete("HTTP_FORWARDED")
+end
+```
+
+Leave `config.action_dispatch.ip_spoofing_check` on. With the check off and `Forwarded` kept, a client chooses its
+own `request.remote_ip`, which `rate_limit` uses by default to tell clients apart. On another host, first find out
+whether its proxy sets either header, and keep a header the proxy sets.
+
+To check the change, add a request spec such as `spec/requests/forged_address_headers_spec.rb`. Both examples fail
+with `IpSpoofAttackError` before the change and pass after it:
+
+```ruby
+require "rails_helper"
+
+RSpec.describe "Forged client address headers", type: :request do
+  it "answers a request that carries a forged Client-Ip" do
+    get rails_health_check_path, headers: {"X-Forwarded-For" => "203.0.113.7", "Client-Ip" => "203.0.113.8"}
+
+    expect(response).to have_http_status(:ok)
+  end
+
+  it "answers a request that carries a forged Forwarded" do
+    get rails_health_check_path, headers: {"X-Forwarded-For" => "203.0.113.7", "Forwarded" => "for=203.0.113.8"}
+
+    expect(response).to have_http_status(:ok)
+  end
+end
+```
+
+`rails_health_check_path` is Rails' `/up` route. Any page that answers 200 without signing in works in its place.
+
 ## 2026-11-12: Compile waits for a go-ahead, and a failed Compilation leaves the Plan alone
 
 **Skills — released in plugin 0.9.2.** The Skill now handles each product decision the way a consultant developer
