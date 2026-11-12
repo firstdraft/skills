@@ -539,14 +539,18 @@ A failed Compilation carries `failure.phase`, `failure.code`, and `failure.messa
 as `compilation_failed`, with the object in `current.compilation.failure`.
 
 First Draft starts a Compilation only from a Plan whose analysis is `valid`. A failed Compilation therefore does not
-mean the Plan is wrong, and a Plan change is not the fix:
+mean the Plan is wrong, and a Plan change is not the fix. Do not edit the Plan in response. Tell the user that the
+Plan passed its checks, and give them the `message` and the Compilation ID.
 
-1. Do not edit the Plan in response. Tell the user that the Plan passed its checks, and give them the `message` and
-   the Compilation ID.
-2. Run the same `plan compile` once more with the unchanged Plan. The cause can be temporary, such as an
+After a local `plan compile` without `--github`:
+
+1. Run the same `plan compile` once more with the unchanged Plan. The cause can be temporary, such as an
    interrupted step or a Compiler release that changed while the Compilation waited.
-3. If that Compilation fails with the same `code`, stop. Do not compile a third time. Tell the user that First Draft
+2. If that Compilation fails with the same `code`, stop. Do not compile a third time. Tell the user that First Draft
    has to fix it and that they can compile again afterward.
+
+After `plan compile --github`, do not run it again. It returns the same failed Publication and starts no new
+Compilation. Report the failure as `publication_failed` under [Ambiguous mutations](#ambiguous-mutations) describes.
 
 With `compilation.render_failed` or `compilation.compose_failed`, the failure happened while First Draft generated
 the application. First Draft is notified of these failures, so the user does not need to report it.
