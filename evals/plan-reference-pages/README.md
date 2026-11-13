@@ -59,7 +59,8 @@ An observed result is the service's output for the example, described in its
   "Test coverage to complete" sections list. An item is a bold title in an entry. An entry names several when gap
   records share its text, and its prose can name another, such as a predicate method. Each record has the entry's
   section, its `###` group heading or `null`, the bold title as written, and the file the item names, or `null`. The
-  file is the first code span in parentheses after the title, before the next title or the end of its sentence.
+  file is the first code span in parentheses after the title, before the next title or the end of its sentence;
+  when the parentheses hold several, it is all of them, joined with a comma.
 
 ## Running the check
 

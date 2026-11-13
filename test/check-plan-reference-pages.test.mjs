@@ -311,6 +311,8 @@ test("README items keep their entry's section and group, their bold title, and t
       "`.firstdraft/submitted-foundation-plan.json`: Write it (`app/x.rb`).",
     "- **`item.starts_on`** (`app/models/item.rb`) at `/a`, **`item.zone`** at `/b`, and **`tag.name`** " +
       "(`app/models/tag.rb`) at `/c` in `.firstdraft/submitted-foundation-plan.json`: Write each default.",
+    "- **`project.tasks.predicate`** (`app/controllers/projects_controller.rb`, " +
+      "`app/controllers/projects/tasks_controller.rb`) at `/d`: The Tasks list has no filter.",
     "```sh",
     "## Not a heading",
     "```",
@@ -331,6 +333,12 @@ test("README items keep their entry's section and group, their bold title, and t
     { section: "Behavior to write", group: "Rules", title: "`item.starts_on`", file: "app/models/item.rb" },
     { section: "Behavior to write", group: "Rules", title: "`item.zone`", file: null },
     { section: "Behavior to write", group: "Rules", title: "`tag.name`", file: "app/models/tag.rb" },
+    {
+      section: "Behavior to write",
+      group: "Rules",
+      title: "`project.tasks.predicate`",
+      file: "app/controllers/projects_controller.rb, app/controllers/projects/tasks_controller.rb",
+    },
     { section: "Behavior to write", group: "Rules", title: "`/application/delivery`", file: null },
     { section: "What you supply", group: null, title: "`application.native.ios`", file: "ios/" },
     {

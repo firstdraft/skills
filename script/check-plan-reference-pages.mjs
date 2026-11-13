@@ -225,8 +225,9 @@ export function readmeItems(source) {
   return items;
 }
 
-// Each bold title in an entry, with the first code span in parentheses that follows it before the next title or
-// the end of its sentence, such as (`app/models/task.rb`).
+// Each bold title in an entry, with the first parenthesised code spans that follow it before the next title or
+// the end of its sentence, such as (`app/models/task.rb`). An entry that names two files, as in
+// (`app/controllers/projects_controller.rb`, `app/controllers/projects/tasks_controller.rb`), keeps both.
 function entryItems(text) {
   const items = [];
   let open;
@@ -240,8 +241,9 @@ function entryItems(text) {
     } else if (text[index] === "`") {
       const end = text.indexOf("`", index + 1);
       if (end === -1) break;
-      if (open && text[index - 1] === "(" && text[end + 1] === ")") {
-        open.file = text.slice(index + 1, end);
+      const files = open && text[index - 1] === "(" ? parenthesisedFiles(text, index) : null;
+      if (files) {
+        open.file = files.join(", ");
         open = undefined;
       }
       index = end + 1;
@@ -251,6 +253,21 @@ function entryItems(text) {
     }
   }
   return items;
+}
+
+// The code spans of a run such as `a`, `b`) that starts at index, or null when the run does not close with ")".
+function parenthesisedFiles(text, index) {
+  const files = [];
+  let cursor = index;
+  while (text[cursor] === "`") {
+    const end = text.indexOf("`", cursor + 1);
+    if (end === -1) return null;
+    files.push(text.slice(cursor + 1, end));
+    cursor = end + 1;
+    if (!text.startsWith(", ", cursor)) break;
+    cursor += 2;
+  }
+  return text[cursor] === ")" ? files : null;
 }
 
 // (b) What the pages state in prose: the analysis status, diagnostics, gap records, Compile outcome, and README
