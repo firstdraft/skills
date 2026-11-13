@@ -116,13 +116,13 @@ it lists none.
 | `required` | yes | `true`, `false` | | Write `true` for a required question. `true`: the control, required even when the Field is optional. `false` adds nothing: on an optional Field there is no control (`foundation_plan.gap.account.partially_generated`; see [Not generated](#not-generated)); on a required Field the control stays. |
 | `default` | no | `{"kind": "literal", "value": …}` | none | Used when the parameter is absent from the request. Generated only on `short_text` and `time_zone` Fields; on another kind it is a `partially_generated` gap. |
 
-`scaffold.profile` and `scaffold.update` on the Account Entity, for the `/account` page. Both are optional. Omit
-`resource_routes`: the page is `/account`, and it always loads the signed-in record.
+`scaffold.profile` and `scaffold.update` on the Account Entity, for the `/account` page. Both are optional. The
+page needs no `resource_routes`: it is `/account`, and it always loads the signed-in record.
 
 | Key | Required | Values | Default | Generates |
 | --- | --- | --- | --- | --- |
 | `profile` | no; needs `update` | `{"authorization": {"policy": …}, "projection": […]}` | the sign-up Fields | What `/account` shows, above the email. `"public"` is rejected. When the Policy denies, only the email and the credential links show. |
-| `profile.projection[]` | no | `{"field": …}`, or `{"association": …, "authorization": …, "projection": […]}` | | A detail per Field, and a list of related records with its own page at `/account/<association>`. |
+| `profile.projection[]` | no | `{"field": …}`, or `{"association": …, "authorization": …, "projection": […]}` | | A detail per Field, and a list of related records with its own page at `/account/<association>`. A `create_form` on an item gets no Add form; see [Not generated](#not-generated). |
 | `profile.return_to` | no | `{"kind": "resource", "entity": "<entity>", "route": "index"}`, or `"route": "profile"` | `/account` | Where saving **Edit details** goes. With a `profile`, `update.return_to` is ignored. |
 | `update` | no | `{"authorization": …, "inputs": […]}` | the sign-up Fields that are not `immutable` | What **Edit details** offers, and the permitted params. A Policy is checked with `authorize!`; `"public"` still requires sign-in and still edits only the signed-in account. |
 
@@ -295,6 +295,7 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
 | A [Reference](references.md) to the Account Entity | `"targets": ["user"]` on `note.author` | An ordinary `belongs_to`; set it with a create binding to `current_account`. |
 | `development_data` References | `{"kind": "reference_record", "record": "user.ada"}` | The note's seed uses the seeded account. |
 | A list of accounts | `index` and `show` in `resource_routes` with a gate Policy | `/users` and `/users/:id`, a directory, separate from `/account`. |
+| An account's own edit page | `edit` and `update` in `resource_routes`, with a Policy that compares `{"record": "current"}` with `current_account` | `resources :users, only: %i[edit update]` beside `/account/edit`. `/users/:id/edit` takes `scaffold.update`'s inputs and finds only the signed-in record: another id, or a guest, gets 404. |
 
 ## Not generated
 
@@ -302,19 +303,35 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   rejects them (`foundation_plan.schema.const`). Write them after Compile on Rodauth or OmniAuth.
 - **Choosing a record at sign-up,** such as a team or a language. An `association` input and a required Reference
   on the Account Entity are `foundation_plan.gap.account.partially_generated`: sign-up gets no control for it. Keep
-  the input in the Plan. Nothing is generated for it yet and the generated README does not list it, so add it to
-  your own list and write the control before the preview; `SKILL.md` has the order of work. Keep `required` as the
-  person asked: with a required Reference every sign-up fails until then, and the registration spec leaves out its
-  success example, so add that example with the control.
+  the input in the Plan. The README lists each one under "Behavior to write", in "Pages and actions"; for the
+  Reference the entry reads "Public signup generates no control for a required Reference on the Account Entity.
+  Signup cannot supply this Reference, so its validation rejects new Accounts." The entry names
+  `app/models/user.rb`, but the control goes in `app/views/rodauth/create_account.html.erb`, and
+  `app/misc/rodauth_main.rb` sets its value on the new account. Write it before the preview; `SKILL.md` has the
+  order of work. Keep `required` as the person asked: with a required Reference every sign-up fails until then. The
+  registration spec leaves out its success example, and the README lists that example under "Test coverage to
+  complete"; add it with the control.
 - **Optional questions at sign-up.** An input with `required: false` on an optional Field gets no control. Keep it
-  in the Plan: nothing is generated for it yet and the generated README does not list it, so add it to your own
-  list and add the optional control to `create_account.html.erb` before the preview.
+  in the Plan. The README lists it under "Behavior to write", in "Pages and actions": "This registration input has
+  no generated signup control; only required inputs for stored, non-derived Fields are generated. The signup form
+  omits this input." Add the optional control to `create_account.html.erb`, and set its value in
+  `rodauth_main.rb`, before the preview.
 - **Invitations, or an admin creating accounts from a page.** Without `registration`, the README gives the owner
   `bin/rails runner` commands; anything else you write.
 - **Deleting one's own account.** `destroy` in the Account Entity's `resource_routes` generates
-  `DELETE /users/:id`, but no page has the button. Keep `destroy` in the Plan when the person asks for it; the
-  generated README does not list the missing button, so add it to your own list and put it on `/account` before
-  the preview.
+  `DELETE /users/:id`, but no page has the button. Keep `destroy` in the Plan when the person asks for it. Analysis
+  reports no gap for the missing button, so the generated README does not list it: add it to your own list and put
+  it on `/account` before the preview.
+- **An Add form on `/account`.** A `create_form` on an Association item of `scaffold.profile.projection` is
+  `foundation_plan.gap.scaffold.associated_create.not_generated`: "Profile-associated create requires an unsupported
+  current_account parent context." `/account` and the full list, such as `/account/notes`, show the records with
+  no Add link. When no route or other form uses the child's `create`, it is left out too
+  (`foundation_plan.gap.scaffold.definition.not_generated`). README.md lists both under "Behavior to write", in
+  "Pages and actions". Keep the `create_form` in the Plan, and before the preview add `new` and `create` to the
+  nested `notes` route and `Accounts::NotesController`, building the note from `current_account.notes`, with an
+  Add link on both pages. With `new` and `create` in the child's `resource_routes` and a `current_account` binding
+  on its author Reference, a standalone New page is generated; offer it to the person if they would rather add
+  notes there.
 - **Granting a role.** No page sets an admin flag or role unless you put it in an `update`, which lets people give
   it to themselves. Set roles in seeds or with `bin/rails runner`, or write an admin page after Compile.
 - **A production email provider.** Verification, reset, and unlock mail is queued through Action Mailer, and
@@ -324,15 +341,13 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
 
 These pass analysis as `valid`:
 
-- **`edit` and `update` in the Account Entity's `resource_routes`, guarded by a Policy that compares
-  `{"record": "current"}` with `current_account`.** Compile fails with an exception and no app is produced. For the
-  person's own details, use `scaffold.update` with no `resource_routes`; it edits at `/account/edit`.
 - **A required Field that is not an input and has no `default`.** It becomes a sign-up control. For a role or an
   admin flag, anyone who signs up picks `admin`. Give such Fields a `default`.
 - **A role or admin Field in `update.inputs`.** Anyone can promote themselves on **Edit details**.
 - **`update` with no `inputs`.** `/account/edit` is a form with no fields, and its params are `user: []`.
-- **No `registration` with a required Field.** The README's production `bin/rails runner` command sets only email
-  and password, so it fails until you add the Field.
+- **No `registration` with a required Reference or upload on the Account Entity.** The README's commands for a new
+  account set every other required Field the app does not fill to a sample value, and say that the Reference and
+  the file must be set by hand. Until you set them, the commands fail.
 
 These pass as `valid` and are reported as a gap:
 
@@ -369,12 +384,12 @@ Plan change reaches that app only when you copy it across.
   `account` to another Entity starts the people over.
 - **After Compile:** Rodauth's configuration is in `app/misc/rodauth_main.rb`, its views in `app/views/rodauth/`,
   and labels in `config/locales/authentication.en.yml`. To let an admin grant a role, add a gate Policy and an
-  admin-only form; to create an account by hand, run the README's command with each required Field added to the
-  block, as the README says:
+  admin-only form. To create an account by hand, use the README's block, which sets each required Field the app
+  does not fill to a sample value, and replace the samples:
 
 ```ruby
 User.find_or_create_by!(email: "you@example.com") do |account|
   account.password = "a passphrase of at least 15 characters"
-  account.name = "You"
+  account.name = "name"
 end
 ```

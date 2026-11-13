@@ -358,8 +358,10 @@ root adoption, the [root handoff](references/diagnostics-and-recovery.md#root-ad
 where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner:
 
 1. Run setup and the specs, as the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) says.
-2. Tell the user what there is to write, one line per item: the README's "Behavior to write", each placeholder
-   example, and each request in the Plan that the GapSet shows First Draft left out.
+2. Tell the user what there is to write, one line per item: each entry under the README's "Behavior to write",
+   each placeholder example, each item a page told you to add to your own list, and each step the user described
+   that no generated page performs, such as approving a request. Also say what its "What you supply" section
+   asks of them.
 3. Write every item and fill in every placeholder example until the specs pass, telling the user in one line as
    each is finished.
 4. Start the [preview](references/diagnostics-and-recovery.md#verify-the-first-preview).
@@ -371,6 +373,6 @@ delete, or loosen an example to pass. Then tell the user, in plain words:
 - where the app is: its folder, or the private GitHub repository once Publication succeeds;
 - what works, as setup, the specs, and the preview actually showed;
 - what you will write next, such as agreed behavior from the implementation notes; and
-- how to open the preview.
+- how to open and restart the preview.
 
 Compilation and Publication do not deploy the app or make it ready for real users.

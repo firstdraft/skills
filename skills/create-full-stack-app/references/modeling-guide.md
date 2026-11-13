@@ -199,7 +199,7 @@ Keep these outcomes distinct:
 | Requirement | Where it belongs |
 | --- | --- |
 | Structured meaning the compatible Compiler generates | Author it in the Plan and verify the matching analysis and generated result. |
-| Structured meaning First Draft does not generate yet | Keep it in the Plan and review the actual GapSet; never move it into notes. Compile emits a stub with a failing placeholder example, or, where the GapSet says the request was left out, nothing. Either way, write it before the first preview. |
+| Structured meaning First Draft does not generate yet | Keep it in the Plan and review the actual GapSet; never move it into notes. Compile emits a stub with a failing placeholder example, or, where the GapSet says the request was left out, nothing. Either way the generated README lists it under Behavior to write; write it before the first preview. |
 | Behavior a Predicate, Ordering, Policy, Validation, or transition needs that the Plan's Expressions cannot say | An `owner` on that subject, describing the behavior in a sentence or two. Compile emits everything that uses it, a stub, and a failing placeholder example, and the README lists it under Behavior to write. |
 | Behavior the Plan has no words for, such as "show bookings as a calendar" | Implementation notes, with acceptance examples, for ordinary source development; analysis cannot report a gap for meaning it never received. |
 | Explicit user exclusion | Honor the agreed scope and retain the exclusion in the existing decisions/read-back; do not reintroduce it during a later revision. |
@@ -561,6 +561,7 @@ When the user asks to see the code before Compile, such as the schema or the mod
 absent folder beside the project, such as `--output ../<application key>-preview`, and show what they asked for. The
 preview is not the go-ahead: the project's own Compile still waits for one.
 
-After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record. Follow the Skill's
-[read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the selected
-output mode, the page's address, and the go-ahead that Compile waits for.
+After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record, and its README has an entry that names
+each one. Follow the Skill's
+[read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the
+selected output mode, the page's address, and the go-ahead that Compile waits for.

@@ -240,8 +240,7 @@ waiting, and an expense can be edited only while submitted. `escalate` has two e
         {"field": "expense.title"}, {"field": "expense.status"}, {"field": "expense.decided_at"}]},
       "show": {"authorization": "public", "projection": [
         {"field": "expense.title"}, {"field": "expense.status"}, {"field": "expense.decided_at"}]},
-      "create": {"authorization": "public",
-                 "inputs": [{"field": "expense.title"}, {"field": "expense.decline_reason"}]},
+      "create": {"authorization": "public", "inputs": [{"field": "expense.title"}]},
       "update": {"authorization": {"policy": "expense.editable"},
                  "inputs": [{"field": "expense.title"}, {"field": "expense.decline_reason"}]}
     }
@@ -260,9 +259,9 @@ waiting, and an expense can be edited only while submitted. `escalate` has two e
 }}
 ```
 
-`decline_reason` is in `create.inputs` although nobody fills it in on a new expense: a Field with a conditional
-presence rule has to be offered by the create form, or the New page is left out. The Policy is generated only
-because the Plan also has an Account Entity, left out here; see [Policies](policies.md).
+`decline_reason` is only in `update.inputs`. Its rule reads `declined`, a state no new expense is in, so the New
+page needs no control for it, and analysis reports nothing. The Policy is generated only because the Plan also has
+an Account Entity, left out here; see [Policies](policies.md).
 
 ### Generates
 
@@ -338,13 +337,13 @@ rows.
 | Where | Generates | Does not generate |
 | --- | --- | --- |
 | [Predicate](predicates.md) on the Field | `equals`: `where(status: "submitted")`. `not_equals`: `where.not(status: "done")`. `in`, with `"right": [<literal>, …]`: `where(status: ["open", "blocked"])`. | `less_than` and the other ordered operators: rejected (`foundation_plan.expression.operator_not_supported`). States have no order. |
-| [Validation](validations.md) `when` reading the Field | `validates :decline_reason, presence: true, if: …`, with `status == "declined"`. The generated spec fills the Field before it fires the event. | The New page, unless the Field is in `create.inputs`, even when the rule can never apply to a new record (`foundation_plan.gap.scaffold.definition.not_generated`). |
+| [Validation](validations.md) `when` reading the Field | `validates :decline_reason, presence: true, if: …`, with `status == "declined"`. The generated spec fills the Field before it fires the event. A rule on a state other than `initial_state` needs no control on the New page: no new record is in that state, and analysis reports nothing. | A rule on `initial_state` applies to every new record. Without the Field in `create.inputs`, the New page is still generated, every save from it fails, and analysis reports `foundation_plan.gap.scaffold.input.partially_generated`; list the Field in `create.inputs`. |
 | [Policy](policies.md) reading the Field | `record&.status == "submitted"` and `relation.where(status: "submitted")`. | Any Policy, when the Plan has no Account Entity (`foundation_plan.gap.policy.not_generated`). |
-| [Development data](development-data.md) in a later state | The record is created in the starting state with its other values, then the events that lead there are fired: `team_lunch.approve! if team_lunch.submitted?`. A record that leaves the state out, or names `initial_state`, fires no event. A value given for a Field that an effect sets is written after the events, with `update!`, so it wins. On an Entity with two machines, each machine's events are fired. | A record in a state that only a stub leads to, an `owner` event included, or that no event leads to: dropped (`foundation_plan.gap.development_data.record.not_generated`). A record that would break a Validation once in that state, such as a declined expense with no reason: dropped, with the same code. Keep such a record in the Plan; README.md says such records are left out but does not name them, so add it to your own list and write it in `db/seeds/development.rb` once its event works, before the preview. |
+| [Development data](development-data.md) in a later state | The record is created in the starting state with its other values, then the events that lead there are fired: `team_lunch.approve! if team_lunch.submitted?`. A record that leaves the state out, or names `initial_state`, fires no event. A value given for a Field that an effect sets is written after the events, with `update!`, so it wins. On an Entity with two machines, each machine's events are fired. | A record in a state that only a stub leads to, an `owner` event included, or that no event leads to: dropped (`foundation_plan.gap.development_data.record.not_generated`). A record that would break a Validation once in that state, such as a declined expense with no reason: dropped, with the same code. Keep such a record in the Plan. README.md lists it under "Behavior to write", in "Data", by its key, such as `expense.conference_ticket`, with `db/seeds/development.rb`. Write it there once its event works, before the preview. |
 | List and detail page columns ([Scaffold](scaffold-lists-and-details.md) `projection`) | The state's label, `task.aasm(:status).human_state`. | |
 | [Form](scaffold-forms.md) input | | The Field is left out of forms (`foundation_plan.gap.scaffold.input.not_generated`). The state changes through events. |
-| `create.bindings` setting the state | | The binding is left out (`foundation_plan.gap.scaffold.binding.not_generated`); new records start in `initial_state`. README.md does not list it. To start some records in a later state, fire the events that lead there in the create action you edit, before the preview. |
-| [Ordering](orderings.md) term on the Field | | A term on the state breaks analysis: with `{"field": "task.status", …}` followed by `{"system_field": "id", …}`, analysis stops with an internal error and returns no result. To sort by the state, write an `owner` Ordering whose description gives the order of the states. |
+| `create.bindings` setting the state | | The binding is left out (`foundation_plan.gap.scaffold.binding.not_generated`); new records start in `initial_state`. README.md lists it under "Behavior to write", in "Pages and actions" ("Only current_account, one of its Fields or References, current_date, or current_time is admitted."). To start some records in a later state, fire the events that lead there in the create action you edit, before the preview. |
+| [Ordering](orderings.md) term on the Field | | A term on the state makes the Ordering a stub, as a term on an enum without `ordinal` does. With `{"field": "task.status", …}` then `{"system_field": "id", …}`, `Task.by_status` raises `NotImplementedError`, the model spec has a placeholder example for it, and analysis reports `foundation_plan.gap.ordering.not_generated` at the Ordering and at each page's `ordering` key that names it. README.md lists the scope under "Behavior to write": "orders records by status ascending, then id ascending". To sort by the state, write an `owner` Ordering whose description gives the order of the states. |
 
 ## Optional machines
 
@@ -419,8 +418,8 @@ values and lose the state (`foundation_plan.gap.development_data.field_assignmen
   For a stub without `owner`, such as `escalate`, the placeholder names the effect instead: "checks that escalate!
   sets expense.escalated as the Plan says". Example records in a state that only a stub leads to are left out of
   `db/seeds/development.rb`: the declined `conference_ticket` is dropped
-  (`foundation_plan.gap.development_data.record.not_generated`). README.md says that such records are left out but
-  does not name them, so add each to your own list and seed it once its event works, before the preview.
+  (`foundation_plan.gap.development_data.record.not_generated`). README.md lists each under "Behavior to write", in
+  "Data", by its key with `db/seeds/development.rb`. Seed it there once its event works, before the preview.
 - **A condition on an event beyond its `from` states,** such as "only when the total is under 100". A transition
   has no key for it. Add `owner` to the transition with the condition in its description, as in
   [When the Plan cannot say an event](#when-the-plan-cannot-say-an-event). The whole event is a stub, as above;
@@ -448,9 +447,10 @@ These pass analysis as `valid`:
 
 These pass as `valid` and are reported as gaps:
 
-- **A Field required only in a later state, offered on Edit but not on New.** The whole New page and its Create
-  action are left out (`foundation_plan.gap.scaffold.definition.not_generated`, with a
-  `scaffold.input.not_generated` record naming the rule). List the Field in `create.inputs` too.
+- **A Field required in the starting state, offered on Edit but not on New.** Every new record meets the rule, so
+  every save from the New page fails (`foundation_plan.gap.scaffold.input.partially_generated`, naming the rule).
+  List the Field in `create.inputs` too. A rule on a later state needs no control on New, and analysis reports
+  nothing for it.
 - **An event with an effect the Compiler cannot generate.** It becomes a stub, and example records in the state it
   leads to are dropped. An `owner` event does the same, with gap records for its effects and the dropped records
   but none for the transition.

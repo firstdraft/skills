@@ -146,10 +146,11 @@ Ask who can see and change each kind of record in one turn, as one grid filled i
 | Comment | Anyone signed in | Anyone signed in | Its author | Its author, or the post's author |
 
 Ask what is wrong in it. A filled-in grid is easy to accept unread, so also ask two or three concrete cases where
-the answer is not obvious, using records from the Plan's sample data, and leave them for the user to answer: "Can
-Maya delete Sam's comment on her own post?" Make one case about someone other than its owner removing a record,
-such as an organizer removing spam. Add sample records first if the Plan has none. Change the grid where an answer
-disagrees with it.
+the answer is not obvious, about named people and records, and leave them for the user to answer: "Can Maya delete
+Sam's comment on her own post?" Use the Plan's sample records when it has them. When you ask before the rough Plan
+exists, name the people and records yourself, and make them its sample data. Make one case about someone other
+than its owner removing a record, such as an organizer removing spam. Change the grid where an answer disagrees
+with it.
 
 ## Meaning and implementation
 
@@ -172,7 +173,9 @@ with more than one target needs `realization.rails_association`. Both values com
   there is left to write after Compile, before the first preview; its deletion spec fails until then.
 
 Forms, selects, Policies, Predicates, and other screens that cross either shape remain gaps, and a standalone create
-that needs a required multi-target Reference is generated but cannot save until the Reference is supplied in Rails. A
+that needs a required multi-target Reference is generated but cannot save until the Reference is supplied in Rails.
+Whether to plan such a Reference at all is meaning, so ask first, as the
+[References page](plan/references.md#decisions-to-raise) says; only its realization is yours to choose. A
 Policy that crosses either shape is emitted as a stub:
 its rule denies and its scope raises until it is written, and the screens it guards are still generated. Its Policy
 spec has a placeholder example that fails until you write it, before the first preview. Say so.

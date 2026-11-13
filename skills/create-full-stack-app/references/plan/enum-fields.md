@@ -86,7 +86,7 @@ end
 | `default` | no | `{"kind": "literal", "value": "<key>"}` | none | `default: "<key>"` on the `enum` and the column, for a required or optional Field. New records, the new form's select (its blank option stays), and example records that omit the Field start on it. |
 | `immutable` | no | `true`, `false` | `false` | `attr_readonly :<field>`, on a required or optional enum. Offer it in `create.inputs` only; in `update.inputs` it is left out (`foundation_plan.gap.scaffold.input.not_generated`). The app loads Rails 8.1 defaults, so assigning to it on a saved record raises `ActiveRecord::ReadonlyAttributeError`; an optional value left empty at create stays empty. No spec covers it. |
 | `redact_from_logs` | no | `true`, `false` | `false` | `self.filter_attributes += [:<field>]` in the model. |
-| `encrypted_at_rest` | no | `true`, `false` | `false` | Nothing yet (`foundation_plan.gap.field_modifier.encrypted_at_rest`), and the generated README does not list it. Keep it when the person asks for it, add the encryption to your own list, and write it before the preview. Analysis rejects any Predicate on an encrypted Field, so a request to also filter by the Field conflicts with it: ask the person which matters. |
+| `encrypted_at_rest` | no | `true`, `false` | `false` | Nothing yet; the column stores plain text (`foundation_plan.gap.field_modifier.encrypted_at_rest`). The generated README lists it under "Behavior to write", in "Data". Keep it when the person asks for it, and write the encryption before the preview. Analysis rejects any Predicate on an encrypted Field, so a request to also filter by the Field conflicts with it: ask the person which matters. |
 | `validations` | no | `presence` or `absence` with `when`, `exclusion`, `comparison`, or `owner` | none | The model calls an empty method named after the Validation's key, and the model spec has an example that fails until you write the rule: one that builds a record breaking it, or a placeholder for a rule First Draft cannot build a record for, such as an `owner` one. No rule kind generates in an enum Field's own `validations`. See [Not generated](#not-generated). To make another Field depend on the enum's value, put a rule with `when` on that other Field, as `reason` does in the full example. |
 | `notes` | no | text | none | Nothing; shown to people reviewing the Plan. |
 
@@ -163,8 +163,10 @@ records.
 }}
 ```
 
-`reason` is in `create.inputs` although most new tasks leave it empty: a Field with a conditional presence rule has
-to be offered by the create form, or the New page is left out.
+`reason` is in `create.inputs` although most new tasks leave it empty. Left out of it, the New page and Create
+action are still generated, but a milestone cannot be saved from them until the form or your code supplies a
+reason (`foundation_plan.gap.scaffold.input.partially_generated`, listed in the README under "Behavior to write",
+in "Pages and actions").
 
 ### Generates
 
@@ -258,7 +260,7 @@ The full example shows the Plan shape for most rows. Every literal is `{"kind": 
 | --- | --- | --- |
 | [Predicate](predicates.md) comparing the Field | `equals`: `where(priority: "high")`. `not_equals`: `where.not(…)`, which on an optional enum also leaves out records where the Field is empty. `in` with a list of literals: `where(priority: ["high", "medium"])`. `{"kind": "is_null", "operand": {"target": {"field": "task.category"}}}`: `where(category: nil)`. | A rank comparison such as `greater_than`, even with `ordinal`: the scope raises `NotImplementedError` until you write it (`foundation_plan.gap.predicate.not_generated`), and its placeholder example in the model spec fails until you replace it. `in` with the values above the bar generates. |
 | [Ordering](orderings.md) by the Field | Exactly this shape: a required enum with `ordinal: true` as the first term, either direction, then `created_at` ascending, then `id` ascending. `in_order_of(…)` and an index; `descending` puts the last value first. | Any other Ordering by an enum, such as a non-ordinal or optional enum, a missing `created_at` term, or descending tie-breakers. Analysis accepts it, whether or not a page selects it, and the scope raises until you write it (`foundation_plan.gap.ordering.not_generated`); its placeholder example in the model spec fails until you replace it. |
-| List page, `scaffold.index.ordering` | `relation = Task.by_priority`. A request spec for the order, except when a Validation `when` reads the sorted Field: then `README.md` lists that spec for you to write, with no gap record. | A list page names one Ordering; a sort the viewer switches is not generated. With `"pagination": "cursor"`: the list sorts by `id` instead (`foundation_plan.gap.ordering.not_generated` at `<entity>.scaffold.index.ordering`). |
+| List page, `scaffold.index.ordering` | `relation = Task.by_priority`. A request spec for the order, except when a Validation `when` reads the sorted Field: then `README.md` lists that spec under "Test coverage to complete" for you to write, with no gap record. | A list page names one Ordering; a sort the viewer switches is not generated. With `"pagination": "cursor"`: the list sorts by `id` instead (`foundation_plan.gap.ordering.not_generated` at `<entity>.scaffold.index.ordering`). |
 | Related list, `{"association": "project.tasks", "authorization": "public", "ordering": "task.by_priority", "projection": […]}` in a `show.projection` | Over a direct Association: `@project.tasks.by_priority` on the details page and on the full related list. | With `"pagination": "cursor"`, or over an indirect Association through a join Entity: the list sorts by `id` (`foundation_plan.gap.ordering.not_generated`). |
 | [Validation](validations.md) `when` reading a required enum | `equals`: `validates :reason, presence: true, if: :milestone?`. `in`, or an `and`/`or` group of these: a private method such as `priority.in?(["high", "medium"])`. Ranked or not. | `not_equals`, a rank comparison, or `equals`/`in` on an optional enum: the model calls an empty method named after the Validation's key, so records that break the rule save, and a model spec example fails until you write it, a placeholder for a rank comparison (`foundation_plan.gap.validation.not_generated`). For `not_equals`, use `in` with the other values. |
 | Validation `when` testing emptiness | `{"kind": "is_null", "operand": {"target": {"field": "task.category"}}}`: a method returning `category.nil?`; wrapped in `{"kind": "not", "expression": …}`: `!category.nil?`. | |
@@ -308,8 +310,9 @@ These pass analysis as `valid` and show up only as gap codes:
   the `Task.high` scope Rails defines for the enum, with no warning and no gap. Name Predicates apart from values.
 - **A required enum with no default that the create form does not offer.** The New page stays, and saving it fails
   (`foundation_plan.gap.scaffold.route.partially_generated`). Offer the Field or give it a `default`.
-- **A Field with a rule that reads an enum, offered on Edit but not on New.** The New page and its Create action are
-  left out (`foundation_plan.gap.scaffold.definition.not_generated`).
+- **A Field required by a rule that reads an enum, offered on Edit but not on New,** such as `reason` above. The New
+  page and its Create action are generated, and saving fails while the rule's condition holds
+  (`foundation_plan.gap.scaffold.input.partially_generated` on `<entity>.scaffold.create.inputs`).
 
 This passes as `valid` with no gap: **two values with the same `name`.** The select shows two identical labels.
 

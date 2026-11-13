@@ -94,10 +94,10 @@ A counter takes no `default`, `immutable`, or `derivation`; import rejects each 
 
 Only the first three rows get `counter_cache`. Every other row is accepted by analysis: the column, pages, filters,
 and sort orders are generated, but nothing updates the number, so it reads 0. Analysis reports
-`foundation_plan.gap.field_kind.partially_generated` and README.md lists the Field under Behavior to write. For an
-indirect count or a second unfiltered counter, the parent's model spec has an example that creates one counted record
-and expects the count to read 1; it fails until you write the counting. For a filtered count, the example is a
-placeholder that you replace.
+`foundation_plan.gap.field_kind.partially_generated` and README.md lists the Field under "Behavior to write", in
+Data. For an indirect count or a second unfiltered counter, the parent's model spec has an example that creates one
+counted record and expects the count to read 1; it fails until you write the counting. For a filtered count, the
+example is a placeholder that you replace.
 
 
 | The counted Association | Kept current |
@@ -138,7 +138,7 @@ has_many :approved_comments, -> { approved }, class_name: "Comment"
 `comments_count` stays current; `approved_comments_count` reads 0. Declare a filtered counter whenever the person
 asks for the count, even when they only want to see it. The column, its place on pages, and any filter or sort that
 reads it are generated; you write callbacks on the child that keep it current, and replace the placeholder example
-in the post's model spec. README.md lists the counter under "Behavior to write":
+in the post's model spec. README.md lists the counter under "Behavior to write", in Data:
 
 ```markdown
 - **`Post#approved_comments_count`** (`app/models/post.rb`) holds the count of `approved_comments` that the Counter at `/application/entities/0/fields/2` in `.firstdraft/submitted-foundation-plan.json` defines. Rails counter_cache counts every child record; a Counter filtered by the Association's Predicate is not maintained. Until then it reads 0. `spec/models/post_spec.rb` has a placeholder example for it.
@@ -253,10 +253,11 @@ The schema allows a `derivation` on an `integer` or `decimal` Field (`average` n
 
 Analysis accepts it as `valid`, then drops the `derivation` (`foundation_plan.gap.service.unsupported_capability`,
 at `…/derivation`). The Field becomes an ordinary stored column that nothing calculates, and the pages that list it
-show it empty. Nothing is generated for the calculation yet, and the generated README does not list it. Keep the
-`derivation` in the Plan, add the calculation to your own list, and write it before the preview, such as
-`def total_hours = tasks.sum(:hours)` in `app/models/project.rb`. Tell the person so. An Ordering by it is not
-generated either.
+show it empty. Nothing is generated for the calculation yet. The generated README lists it under "Behavior to
+write", in Data, by the Entity's key and the `…/derivation` path: "First Draft did not import this part of the
+Plan, so the application has none of it." Keep the `derivation` in the Plan, and write the calculation before the
+preview, such as `def total_hours = tasks.sum(:hours)` in `app/models/project.rb`. Tell the person so. An Ordering
+by it is not generated either.
 
 Make a derived Field `required: false`, as above. With `required: true` the column is `null: false` with no default
 and the create action does not permit it, so the New page cannot save a record

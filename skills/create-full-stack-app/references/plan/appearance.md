@@ -190,7 +190,8 @@ green on a cream background (dark green-black in dark mode).
 
 `"native": {"ios": {}}` alone is enough to generate an iPhone project. Without `application.domain`, analysis still
 reports `valid` but adds the gap `foundation_plan.gap.native_client.partially_generated` at `application.native.ios`
-(or `.android`): the Release build points at a placeholder origin and bundle ID. Ask the person for the domain. A
+(or `.android`): the Release build points at a placeholder origin and bundle ID. The README lists it under "What
+you supply". Ask the person for the domain. A
 native client needs at least one `index` page; the rest of `native` is on [Native apps](native-apps.md).
 
 ### Generates
@@ -253,12 +254,13 @@ Nothing else in a Plan names `appearance`. Two other Application keys decide wha
   `foundation_plan.gap.appearance.native_theme_preference.not_generated`, status `partially_generated`, at
   `application.appearance.theme`. The Plan stays `valid` and Compile succeeds. The iPhone and Android apps and the
   web pages inside them follow the system setting, and the website's selector does not affect them. Keep
-  `"toggle"`; the website still gets its selector. When the person asked for the switch inside the phone apps,
-  the generated README does not list it, so add it to your own list. Native work takes a while: say so, and ask
+  `"toggle"`; the website still gets its selector. The README lists the missing control under "Behavior to write",
+  in "Pages and actions": "The emitted iOS and Android output does not provide the authored Light / Dark / System
+  preference control." (with one client, it names that client). Native work takes a while: say so, and ask
   whether the person wants to see the app first. The request stays in the Plan either way; `SKILL.md` has the
-  order of work. To add the control on iPhone, start from `ios/FoundationApp/SceneDelegate.swift`, which calls `AppAppearance.apply` (in `AppAppearance.swift`) to set the
-  window's `overrideUserInterfaceStyle`; on Android, from `FoundationApplication.kt`, which calls
-  `AppCompatDelegate.setDefaultNightMode`.
+  order of work. To add the control on iPhone, start from `ios/FoundationApp/SceneDelegate.swift`, which calls
+  `AppAppearance.apply` (in `AppAppearance.swift`) to set the window's `overrideUserInterfaceStyle`; on Android,
+  from `FoundationApplication.kt`, which calls `AppCompatDelegate.setDefaultNightMode`.
 - **A theme preference stored on the Account.** `"toggle"` remembers the choice per browser only. To save it per
   person, give the [Account](accounts.md) Entity an [enum Field](enum-fields.md) with `light`, `dark`, and
   `system`, a `default` of `system`, and list it in `scaffold.update.inputs`. The app gets the column and the
