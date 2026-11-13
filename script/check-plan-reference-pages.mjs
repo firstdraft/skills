@@ -39,7 +39,7 @@ const closingLines = new Set(["end", "}", "{", "]", "[", ")", "<% end %>", "do",
 const pageCommentPattern =
   /^#\s*(?:(?:app|spec|config|db|lib|test|bin|public|\.firstdraft|\.github|README|AGENTS|Gemfile|Dockerfile|Procfile)\b|=>|(?:and|then|or|with|from|in|the|a|an|for|after|before|when|where|not|only|each|every|same|other)\b)/;
 // A line the page rewrapped or condensed matches without the whitespace outside its string literals, when it is
-// long enough to be specific. A literal must match as written.
+// long enough to be specific. Apart from runs of whitespace, a literal must match as written.
 const squeezedMinimumLength = 12;
 const looseWhitespace = /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\s+/g;
 // The comment a page may add after quoted code, and the characters that open a string literal, by fence language.

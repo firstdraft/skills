@@ -123,7 +123,7 @@ test("a line the page rewrapped matches once whitespace is ignored, if it is lon
   assert.equal(holdsLine(model, lineCandidates("parts,dep", "ruby")), false);
 });
 
-test("a rewrapped line must match the inside of each string literal as written", () => {
+test("a rewrapped line must keep the words inside each string literal", () => {
   const schema = application('t.index ["post_id"], name: "index_comments_on_post_id",', 'where: "(post_id IS NOT NULL)"');
   const quoted = 't.index ["post_id"], name: "index_comments_on_post_id", where: "(post_id IS NOT NULL)"';
 

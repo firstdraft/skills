@@ -96,9 +96,14 @@ Blank lines, elided lines, the page's own comments, and lone closing tokens are 
 
 A line also matches without a trailing comment the page added. The comment starts at the fence language's marker
 outside every string literal: ` # ` for Ruby, YAML, and shell; ` <%# ` for ERB; ` // ` for JavaScript, Swift,
-Kotlin, and JSON; either ` # ` or ` // ` for text. XML, HTML, and CSS have none. When a line is at least 12
-characters, it also matches with the whitespace outside its string literals removed, so a page may rewrap or condense
-it. Here a literal is quoted with `"` or `'` and closes on the same line, and its text must still match as written.
+Kotlin, and JSON; either ` # ` or ` // ` for text. XML, HTML, and CSS have none. A quote character inside a Ruby
+regular expression counts as opening a literal, so a trailing comment on such a line is not removed: list that line
+in `page-lines.txt`.
+
+Every line is compared with each run of whitespace read as one space, inside literals too. When a line is at least
+12 characters, it also matches with the whitespace outside its string literals removed, so a page may rewrap or
+condense it. Here a literal is quoted with `"` or `'` and closes on the same line; apart from runs of whitespace,
+its text must match as written.
 
 ## Running a page test
 
