@@ -21,7 +21,9 @@ Use [Reference data](reference-data.md) or an Entity when people pick from a lis
   default, and encryption.
 
 Every `json` Field reports `foundation_plan.gap.field_kind.partially_generated` in the result of `plan push`. That
-gap is expected; keep the Field.
+gap is expected; keep the Field. The generated README lists each `json` Field under "Behavior to write", in
+"Data": forms edit the document as JSON text and accept any well-formed document, and key structure and schema
+validation are not generated.
 
 ## Simple example
 
@@ -199,7 +201,7 @@ whitespace; keep the original bytes in a `long_text` Field if they matter.
 - **Checks on the document's shape,** such as "must have a `weight` key". Any well-formed JSON is accepted
   (`foundation_plan.gap.field_kind.partially_generated`). Write the check as an `owner` Validation on the Field
   ([Validations](validations.md)). The model gets `validate :<key>` and an empty private method, the README lists
-  it under "Behavior to write", and the model spec has a placeholder example that fails until you replace it. Or
+  it under "Behavior to write", in "Rules", and the model spec has a placeholder example that fails until you replace it. Or
   make that value its own Field.
 - **Queries on values inside the document.** A Predicate's Expression cannot read a `json` Field. Write the query
   as an `owner` Predicate ([Predicates](predicates.md)). The model gets its named scope, which raises
@@ -207,12 +209,12 @@ whitespace; keep the original bytes in a `long_text` Field if they matter.
   spec has a placeholder example that fails until you replace it. A list that selects it shows only the matching
   records; a filter that people switch on and off is a control you write in the controller's `index`. Or make the
   value its own Field so an ordinary Predicate can filter on it.
-- **A default** (`foundation_plan.gap.field_modifier.default`). Keep it in the Plan: nothing is generated for it yet
-  and the generated README does not list it, so add it to your own list and set it in the model before the
-  preview; `SKILL.md` has the order of work.
+- **A default** (`foundation_plan.gap.field_modifier.default`). Keep it in the Plan: nothing is generated for it yet.
+  The generated README lists it under "Behavior to write", in "Data": "The authored default is not applied." Set it
+  in the model before the preview; `SKILL.md` has the order of work.
 - **Encryption at rest** (`foundation_plan.gap.field_modifier.encrypted_at_rest`): the value is stored in plain
-  text. Keep `encrypted_at_rest` in the Plan when the person asks for it; the generated README does not list it, so
-  add it to your own list and write the encryption before the preview.
+  text. The generated README lists it under "Behavior to write", in "Data": "Encryption at rest is not applied."
+  Keep `encrypted_at_rest` in the Plan when the person asks for it, and write the encryption before the preview.
 
 With an `owner` Validation `has_carrier` on `order.shipping_preferences` and an `owner` Predicate `ships_ups` added
 to the Full example, analysis is `valid` with no new gap, and Compile emits:
@@ -243,7 +245,8 @@ it "selects the records that order.ships_ups describes" do
 end
 ```
 
-The README lists both under "Behavior to write" with their descriptions.
+The README lists both under "Behavior to write" with their descriptions: `ships_ups` in "Pages and actions" and
+`has_carrier` in "Rules".
 
 
 ## Analysis does not catch

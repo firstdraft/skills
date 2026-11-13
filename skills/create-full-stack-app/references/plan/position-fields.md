@@ -19,7 +19,9 @@ hand. When the order follows from a value the record already has, such as a date
 
 Where analysis leaves something out, it reports a gap code such as
 `foundation_plan.gap.field_kind.partially_generated` in the result of `plan push`. A gap does not stop Compile. Every
-position Field reports that code, because the reordering above is left to you; keep the Field.
+position Field reports that code, because the reordering above is left to you; keep the Field. The generated README
+lists each position Field under "Behavior to write", in "Data": a new record without a number joins the end of its
+list, and renumbering after deletes, moving between lists, and drag reordering are not generated.
 
 ## Simple example
 

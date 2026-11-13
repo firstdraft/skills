@@ -129,7 +129,10 @@ Application keys the clients read:
 Without `domain`, the Release apps open `https://trail-log.invalid` and use the identifiers
 `invalid.firstdraft.trail-log` (iOS) and `invalid.firstdraft.trail_log` (Android). Analysis records
 `foundation_plan.gap.native_client.partially_generated` for each client, saying the Release build cannot reach a
-server or be submitted to a store. The Debug preview is unaffected, because it is given the Rails address at launch.
+server or be submitted to a store. The README lists each client under "What you supply"; the iOS entry ends "Supply
+the domain the application is served from and a bundle ID registered to you; the bundle ID cannot change after the
+app is published.", and the Android entry says the same of "an application ID". The first preview does not wait
+for them. The Debug preview is unaffected, because it is given the Rails address at launch.
 
 Domain labels map to Android identifiers with two rewrites: a hyphen becomes `_h`, and a label starting with a digit
 gets `d_`. Key `oscar_party` with domain `2-app.example.com` gives iOS `com.example.2-app.oscar-party` and Android
@@ -285,11 +288,12 @@ native layout hides the web header. Browsers keep their usual redirects.
 - **`application.delivery.ios_push` and `android_push`.** Each requires its client: `{"ios_push": {}}` without
   `native.ios` fails import with `foundation_plan.schema.required`. With the client, the whole `delivery` object is
   skipped (`foundation_plan.gap.service.unsupported_capability`, `skipped_at_import`), along with any other
-  channel in it. No push code is generated yet, and the generated README does not list it. When the person asks
-  for push, keep `ios_push` and `android_push` in the Plan and add push to your own list. Push needs credentials
-  only the person can supply, so tell them so and ask whether to see the app first; see
-  [Not generated](#not-generated). `SKILL.md` has the order of work. The Plan has no key for when a push is sent,
-  such as "when a new trail is added"; keep that in your notes.
+  channel in it. No push code is generated yet. The README lists the request under "What you supply", with what
+  each channel needs: "for `ios_push`, an APNs key, team identifier, and topic from your Apple Developer account;
+  for `android_push`, a Firebase project and its service account." When the person asks for push, keep `ios_push`
+  and `android_push` in the Plan. Push needs credentials only the person can supply, so tell them so and ask
+  whether to see the app first; see [Not generated](#not-generated). `SKILL.md` has the order of work. The Plan has
+  no key for when a push is sent, such as "when a new trail is added"; keep that in your notes.
 - **`application.appearance.theme`.** Omitted, the apps are fixed light (`INFOPLIST_KEY_UIUserInterfaceStyle =
   Light`). `toggle` makes both apps follow the system and adds
   `foundation_plan.gap.appearance.native_theme_preference.not_generated`. See [Appearance](appearance.md).
@@ -309,15 +313,16 @@ still compiles, when:
 | `domain` ending in `.invalid` | iOS only: "no .invalid suffix" |
 | `name` containing a backslash | iOS only: "must fit one Xcode configuration line" |
 
-The missing client has no folder, route, guide, or workflow. Fix the cause rather than drop the client: give the app a
-list or an Account, shorten the key, or change the name.
+The missing client has no folder, route, guide, or workflow. The README lists it under "Behavior to write", in
+"Pages and actions", with the reason from the gap record. Fix the cause in the Plan rather than drop the client:
+give the app a list or an Account, shorten the key, or change the domain or the name.
 
 Never generated:
 
-- **Push notifications.** Requested under `delivery`, they add only a skip gap (see
-  [Used elsewhere in the Plan](#used-elsewhere-in-the-plan)). Write them with Action Push Native or another
-  library: device-token storage, the trigger, and permission and token code in each project. Sending needs APNs
-  credentials for iOS and Firebase credentials for Android, which the person obtains.
+- **Push notifications.** Requested under `delivery`, they add only a skip gap, which the README lists under "What
+  you supply" (see [Used elsewhere in the Plan](#used-elsewhere-in-the-plan)). Write them with Action Push Native
+  or another library: device-token storage, the trigger, and permission and token code in each project. Sending
+  needs APNs credentials for iOS and Firebase credentials for Android, which the person obtains.
 
 These have no Plan key and no gap record:
 
@@ -331,11 +336,12 @@ These have no Plan key and no gap record:
 
 ## Analysis does not catch
 
-- **No `domain`.** Status is `valid`, with a `partially_generated` gap. The Release apps point at `.invalid` and
-  cannot be published. Set the domain before anyone builds for a store: a published identifier cannot change.
+- **No `domain`.** Status is `valid`, with a `partially_generated` gap that the README lists under "What you
+  supply". The Release apps point at `.invalid` and cannot be published. Set the domain before anyone builds for a
+  store: a published identifier cannot change.
 - **A `domain` ending in `.invalid` on Android.** iOS is left out with a gap, but the Android app is generated with
-  `https://trail.invalid` and identifier `invalid.trail.trail_log`, and no gap is recorded. Use a real domain or
-  omit it.
+  `https://trail.invalid` and identifier `invalid.trail.trail_log`, and no gap is recorded, so the README does not
+  list it. Use a real domain or omit it.
 - **An `icon` on an Entity with no `index`, or on the Account Entity.** Accepted and unused; the Account tab is
   always `person`.
 - **A protected list as Home.** The app opens on the sign-in page for a signed-out person.

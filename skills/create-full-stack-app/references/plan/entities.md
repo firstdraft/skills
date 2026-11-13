@@ -107,6 +107,7 @@ The Entity also holds `fields`, `references`, `associations`, `predicates`, `ord
 | a `boolean` Field | `t("shared.values.boolean.true")` or `.false` | |
 | a `money` or `image` Field | `"#{price.model_name.human} ##{price.id}"` | Gap `foundation_plan.gap.primary_descriptor.partially_generated`. |
 | `{"association": "book.author"}` | `book.author.name`, the target's own descriptor, with `preload(:author)` | Only the forward side of a required Reference on this Entity. An optional one fails with `foundation_plan.entity.primary_descriptor_association_ineligible`. |
+| `{"association": "planting.bed"}`, where the bed is itself named through an Association, or the target is named by a `money` Field | `"#{planting.model_name.human} ##{planting.id}"` in headings, links, and picker options | Gap `foundation_plan.gap.primary_descriptor.partially_generated`: a label goes through one Reference only. See [Not generated](#not-generated). |
 | `{"system_field": "id"}` | `book.id`, a 36-character UUID | Use only when no Field names the record. |
 | `{"system_field": "created_at"}` or `"updated_at"` | `l(book.created_at, format: :long)` | |
 
@@ -295,6 +296,13 @@ An unknown Entity key in any of these fails import with `foundation_plan.link.en
   that prints a record gets Rails's default `#<Book id: …>` until you add `to_s`.
 - **A descriptor for a `money` or `image` Field.** Pages say `Price #<uuid>`
   (`foundation_plan.gap.primary_descriptor.partially_generated`). Pick a text Field instead.
+- **A label through two links.** When a descriptor's target is itself named through an Association, or by a `money`
+  Field, pages say `Planting #<uuid>`, and a picker of plantings lists every planting by that label, with no search
+  (`foundation_plan.gap.primary_descriptor.partially_generated`). README.md lists it under "Behavior to write", in
+  "Pages and actions". Keep the descriptor in the Plan, and before the preview write the label, such as
+  `planting.bed.garden.name` with `preload(bed: :garden)`, in each view and option list that builds it from
+  `model_name.human` and `id`; `SKILL.md` has the order of work. Or offer the person to name plantings by a Field of
+  their own.
 - **A table, class, or plural that differs from what Rails derives from the key.** Choose the key so the Rails names
   read well; the `name` carries the product's word.
 - **Another primary key type.** Every table uses a UUIDv7 `id`.

@@ -119,6 +119,9 @@ A record's Policy never sends a guest on a list to sign in, and a gated list is 
 for both. For a filtered list that also sends guests to sign in, keep the record's Policy and add
 `before_action :authenticate` to the controller after Compile. The generated `ApplicationController` defines
 `authenticate` (it calls `rodauth.require_account`), and it works on any action, including a nested controller's.
+The generated request example "index prevents a guest from accessing protected records" expects the list without
+the record, so it then fails: change it to expect the redirect to sign-in. This changes what a guest sees, so tell
+the person.
 
 ### When `allow_when` cannot say the rule
 
@@ -160,6 +163,10 @@ README.md lists it under "Behavior to write": "Until then, the Note New page den
 the Note index (`/notes`), the Note page, and the Note edit page raise until the scope is written. Home (`/`) shows
 the Note index, so it raises too." No request spec is generated for those pages; README.md lists each missing
 example under "Test coverage to complete".
+
+Write the rule so that it also answers for a record with no values yet. The New page checks it against a new,
+empty record before anyone fills in the form, so a rule that reads a value the form sets denies everyone there.
+Create checks it again with the submitted values.
 
 ## Keys
 
@@ -441,8 +448,10 @@ its scope before the preview; `SKILL.md` has the order of work.
   [State Machine Fields](state-machine-fields.md) covers events.
 - **Any Policy, in a Plan with no Account Entity.** Even a rule that never reads the signed-in person is left out,
   with every part that uses it and Home when Home is one of them (`foundation_plan.gap.policy.not_generated`,
-  `foundation_plan.gap.home_index.not_generated`). Nothing is generated for them and README.md does not list them.
-  Add an Account Entity ([Accounts](accounts.md)) so that the Policy and its parts generate.
+  `foundation_plan.gap.home_index.not_generated`). Nothing is generated for them. README.md lists each under
+  "Behavior to write", in "Pages and actions": the Policy, each part, and Home, whose entry says "The default welcome
+  Home remains instead of the selected index." Add an Account Entity ([Accounts](accounts.md)) so that the Policy
+  and its parts generate.
 
 ## Analysis does not catch
 
@@ -452,7 +461,9 @@ These pass analysis as `valid`:
   published recipes. When a part needs sign-in, compare with `current_account` or bind a signed-in gate.
 - **A misspelled Policy name in an `authorization`, even in one part.** The Entity's whole `scaffold` is left out of
   the app, and Home with it when Home is that list, with gap codes under `foundation_plan.gap.service` whose reason
-  says the release "cannot yet import this Foundation Plan capability". Check every name against the Policy keys.
+  says the release "cannot yet import this Foundation Plan capability". README.md lists each under "Behavior to
+  write" with "First Draft did not import this part of the Plan"; no entry says that a name is misspelled. Check
+  every name against the Policy keys.
 - **An update Policy that admits people the read Policy does not.** They never see the record in a list, and its
   page returns 404, though Edit opens by URL. Put the read condition inside the update rule with `and`:
   `matches_policy` with the parent's read Policy for a child record, as in the nested rule above, or a copy of the

@@ -106,7 +106,7 @@ In `application.entities[].scaffold`, and one key on `application`:
 | Key | Required | Values | Default | Generates |
 | --- | --- | --- | --- | --- |
 | `authorization` | yes | see [Authorization](#authorization) | | Who may open a record. |
-| `projection` | no | one or more items | heading only | The primary descriptor is always the page heading. Each other item is a label and value; listing the descriptor Field adds no second copy. |
+| `projection` | no | one or more items | heading only | The primary descriptor is the page heading; for a descriptor Association shown under its own rule, see [Projection](#projection). Each other item is a label and value; listing the descriptor Field adds no second copy. |
 
 ### Projection
 
@@ -121,6 +121,29 @@ A `projection` is an ordered list. An empty list is rejected (`foundation_plan.s
 A forward Association for each Reference exists without being declared: Reference `project.owner` gives
 Association `project.owner`. Many-record Associations are the ones in the Entity's `associations[]`; see
 [Associations](associations.md). An index row without the descriptor Field gets a **View** button in its place.
+
+An item may name the record's own descriptor Association: a booking named after its slot
+(`"primary_descriptor": {"association": "booking.slot"}`), with
+`{"association": "booking.slot", "authorization": {"policy": "slot.read_hosted"}}` in the booking's `show`
+projection. The item is generated under its own rule, and so is the page heading. An account the rule denies sees
+the Entity's name, "Booking", as the heading and the page title, and an empty Slot entry; in a list row it sees a
+**View** button in place of the slot's label. With `"authorization": "public"` on the item, the heading is always
+the slot's label.
+
+```erb
+<%# app/views/bookings/show.html.erb; _booking.html.erb has the same with booking %>
+<%
+  descriptor = if allowed_to?(:read?, @booking.slot, with: SlotPolicy)
+    @booking.slot.label
+  else
+    Booking.model_name.human
+  end
+%>
+<% content_for :title, t(".title", descriptor: descriptor) %>
+```
+
+The generated request specs create the slot with the signed-in account as its host, so no example sees the Entity's
+name in place of the label.
 
 Keys on an Association item, in addition to `association`:
 
@@ -298,9 +321,10 @@ Predicate, the Ordering, or the related list.
 - **A related list inside a list row**, such as each project's tasks on the projects list, or a list inside a related
   list's rows. The Plan can state it as a many-record Association item in `index.projection`, and the item is left
   out (`foundation_plan.gap.scaffold.projection.not_generated`); the rest of the list stays. Nothing is generated
-  for it yet, and the generated README does not list it. Keep the item when the person asked for it, add it to your
-  own list, and write the query and partial before the preview, or show the related list on the details page if
-  the person agrees. When every item of an `index` projection is left out, the whole list is too, so keep at least
+  for it yet. README.md lists it under "Behavior to write", in "Pages and actions", with the reason "Collection
+  projections require a root show or profile set-based query plan." Keep the item when the person asked for it, and
+  write the query and partial before the preview, or show the related list on the details page if the person
+  agrees. When every item of an `index` projection is left out, the whole list is too, so keep at least
   one Field item beside it.
 - **Search and filter controls.** A list has at most one fixed `predicate`; the Plan has no key for a value a person
   types or picks. Add a `params`-driven scope to the controller after Compile.
@@ -356,7 +380,8 @@ These pass analysis as `valid`. Read the gap list after every push.
   `foundation_plan.gap.scaffold.definition.not_generated`). A gate takes a Policy of the Account Entity; a record
   rule takes no `record`.
 - **A misspelled Predicate or Ordering name.** The list shows every record in `id` order
-  (`foundation_plan.gap.service.unsupported_capability`).
+  (`foundation_plan.gap.service.unsupported_capability`). README.md lists it under "Behavior to write", in "Data",
+  by the Entity's key and the path, with "First Draft did not import this part of the Plan".
 - **A Predicate or Ordering of another Entity**, such as `task.open` on the projects list, or a parent's Predicate on
   a related list. The filter or sort is dropped (`foundation_plan.gap.predicate.not_generated` or
   `foundation_plan.gap.ordering.not_generated`). A related list takes the related Entity's Predicates and Orderings.

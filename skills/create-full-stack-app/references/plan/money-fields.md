@@ -16,8 +16,10 @@ needs its own currency, the Plan cannot say so; see [Decisions to raise](#decisi
 - **You write after Compile:** arithmetic on amounts (totals, splitting, allocation, rounding), currency conversion,
   a currency chosen per record, and any rule that compares one amount with another Field.
 
-Every money Field is reported once as `foundation_plan.gap.field_kind.partially_generated`: the amount is stored,
-entered, and shown, and the app has no Money object. That gap is expected; keep the Field.
+Every money Field is reported once as `foundation_plan.gap.field_kind.partially_generated`, and the generated
+README lists it under "Behavior to write", in "Data": the amount is stored, entered, and shown, and currency-aware
+arithmetic, allocation, and rounding are not generated. The app has no Money object. That gap is expected; keep the
+Field.
 
 ## Simple example
 
@@ -266,15 +268,16 @@ currency, or with a `decimal` Field, is rejected with `foundation_plan.expressio
 ## Not generated
 
 - **Arithmetic on amounts.** Totals, splitting an amount among people, allocation, tax, and rounding policy. The
-  partial gap names them. Write them in the model or a plain Ruby object after Compile; `BigDecimal` keeps cents
-  exact.
+  Field's README entry names splitting, allocation, and rounding. Write them in the model or a plain Ruby object
+  after Compile; `BigDecimal` keeps cents exact.
 - **A currency per record, and conversion.** `currency` is fixed per Field. See
   [Decisions to raise](#decisions-to-raise).
 - **Currency-aware display.** Every currency shows two decimal places, including ones without minor units such as
   `JPY` (`1,234.00 JPY`), and the input steps by 0.01. Change `number_to_currency` and `step:` after Compile.
 - **Encryption at rest** (`foundation_plan.gap.field_modifier.encrypted_at_rest`). Keep `encrypted_at_rest` in the
-  Plan when the person asks for it: nothing is generated for it yet and the generated README does not list it, so
-  add it to your own list and write the encryption before the preview; `SKILL.md` has the order of work.
+  Plan when the person asks for it: nothing is generated for it yet, and the generated README lists it under
+  "Behavior to write", in "Data", as a second entry for the Field: "Encryption at rest is not applied." Write the
+  encryption before the preview; `SKILL.md` has the order of work.
 - **Rules that compare an amount with another Field, or that depend on an amount**, as listed above
   (`foundation_plan.gap.validation.not_generated`). Write the method body. The model spec's example for a rule
   fails until you do; a rule whose `when` compares an amount has a placeholder example instead, which you replace.

@@ -104,7 +104,7 @@ No other root key is allowed. Do not add `id`, `project_id`, or `revision`: the 
 | `key` | yes | lower snake case: `^[a-z][a-z0-9_]*$` | | The Ruby module (`reading_club` → `ReadingClub`), database names, and the Render service name. |
 | `name` | yes | text with a non-space character | | `app_name` in `config/locales/en.yml`, used in the header, page titles, the welcome page, and the manifest; the README heading; and the icon monogram. |
 | `native` | yes | `{}`, or with `"ios": {}` and/or `"android": {}` | | `{}`: no native projects. A member requests that client; see [Native apps](native-apps.md). |
-| `delivery` | yes | `{}`, or with any of `"email"`, `"web_push"`, `"ios_push"`, `"android_push"`, each `{}` | | Nothing. A nonempty map is valid, adds one gap, and changes no generated file; see [Not generated](#not-generated). |
+| `delivery` | yes | `{}`, or with any of `"email"`, `"web_push"`, `"ios_push"`, `"android_push"`, each `{}` | | No code. A nonempty map is valid and adds one gap, which the README lists under "What you supply"; see [Not generated](#not-generated). |
 | `entities` | yes | array of Entities, may be `[]` | | One model, migration, factory, and model spec per Entity; see [Entities](entities.md). |
 | `description` | no | nonempty text | none | Nothing. A one-sentence statement of the idea for people reviewing the Plan. |
 | `topics` | no | one or more `{name, entities}` | none | Nothing. Groups Entities for review; see [Topics](#topics). |
@@ -191,9 +191,13 @@ pushed.
 - **Warning:** a `warning` diagnostic, such as `foundation_plan.topics.missing`. The status stays `valid` and the
   app compiles.
 - **Gap:** the status is `valid`, the app compiles, and one part is left out or partly generated. Each gap has a
-  code and a JSON pointer, and is listed in `.firstdraft/gaps.json` in the app. A part `skipped_at_import`, such as a
-  nonempty `delivery`, changes no generated file. Keep such a part in the Plan when the person asked for it: the
-  generated README does not list it, so add it to your own list and write it before the preview.
+  code and a JSON pointer, is listed in `.firstdraft/gaps.json` in the app, and has an entry in the generated
+  README: under "Behavior to write", or under "What you supply" when it needs something only the person can
+  provide, such as a native client's domain and bundle ID or the credentials for a `delivery` channel. A part
+  `skipped_at_import`, such as a nonempty `delivery`, changes no generated code. Keep such a part in the Plan when
+  the person asked for it. The first preview waits for "Behavior to write" and not for "What you supply";
+  `SKILL.md` has the order of work. A request that is not generated and has no gap is in neither list, so add it to
+  your own; the page for that part says when this happens.
 - **Stub:** behavior First Draft cannot generate yet, such as a Predicate it cannot turn into a scope, is emitted as
   a stub with its gap: a scope that raises `NotImplementedError`, a Policy rule that returns `false`, or an empty
   validation method. A list page that uses it is emitted and calls it. Its spec file has an example that fails
@@ -343,7 +347,7 @@ and `DEPLOY.md` lists `APP_HOST`.
 
 | Where | Plan shape | Generates |
 | --- | --- | --- |
-| [Native apps](native-apps.md) | `native.ios`, `native.android` | Bundle and application IDs from `key` and `domain`. Without `domain`, a selected client is `partially_generated` with placeholder `.invalid` identifiers. |
+| [Native apps](native-apps.md) | `native.ios`, `native.android` | Bundle and application IDs from `key` and `domain`. Without `domain`, a selected client is `partially_generated` with placeholder `.invalid` identifiers, and the README lists it under "What you supply". |
 | [Accounts](accounts.md) | an Entity with `account` | Account emails build their links with the production mailer host that `domain` sets. |
 | [References](references.md) | `"targets": ["book"]` | `belongs_to :book`. An unknown key is rejected (`foundation_plan.reference.target_not_found`). |
 | [Development data](development-data.md) | `"entity": "book"`, `"record": "book.dune"` | `dune = Book.find_or_create_by!(title: "Dune")` and `Loan.find_or_create_by!(book: dune)`. |
@@ -353,10 +357,12 @@ and `DEPLOY.md` lists `APP_HOST`.
 
 - **Notifications.** A nonempty `delivery` is skipped at import: the gap is
   `foundation_plan.gap.service.unsupported_capability` at `/application/delivery`, and the app has no mailer, push
-  setup, or job for it. The generated README does not list it. Keep each channel the person asked for in
-  `delivery` and add the sending to your own list: the mailer, job, and provider configuration. Sending needs
-  credentials only the person can supply, such as a mail provider's, so tell them so and ask whether to see the app
-  first. When and to whom a message goes, such as "a week after sign-up", has no Plan key; keep that in your notes.
+  setup, or job for it. The README lists it under "What you supply": the entry says the application delivers no
+  notifications, names what each channel needs, such as "an account with a transactional mail provider" for
+  `email`, and ends "With those, add the delivery code." Keep each channel the person asked for in `delivery`. The
+  sending is yours to write: the mailer, job, and provider configuration. Sending needs credentials only the person
+  can supply, such as a mail provider's, so tell them so and ask whether to see the app first. When and to whom a
+  message goes, such as "a week after sign-up", has no Plan key; keep that in your notes.
 - **Review metadata.** `description` and `topics` generate nothing. Replace the README's placeholder paragraph
   yourself.
 - **Pages for an Entity without `scaffold`.** It gets a model, migration, factory, and model spec only.
@@ -390,8 +396,9 @@ These pass analysis as `valid`:
   exists; see below.
 - **Domain:** ask whether they own one for this app. If not, omit it; add it before a native release.
 - **Notifications:** when they ask for email or push messages, say First Draft generates none today. Put each
-  channel they ask for in `delivery`, such as `"email": {}`; a nonempty map generates the same app plus a gap. Tell
-  them sending needs a provider's credentials from them, and ask whether to see the app before you write it. For push, ask whether they mean browser push (`web_push`) or a
+  channel they ask for in `delivery`, such as `"email": {}`; a nonempty map generates the same code, plus a gap that
+  the README lists under "What you supply". Tell them sending needs a provider's credentials from them, and ask
+  whether to see the app before you write it. For push, ask whether they mean browser push (`web_push`) or a
   native app (`ios_push`, `android_push`, each needing its client). Never add a native client only to make a push
   channel valid.
 - **No need to ask:** `description` and `topics`. Write them from what the person said, and let them correct the

@@ -243,7 +243,8 @@ No other part of a Plan names a development record. These parts change what a re
 
 ## Not generated
 
-Each left-out value or record is one gap record with a `reason`:
+Each left-out value or record is one gap record with a `reason`. The README lists each one under "Behavior to
+write", in "Data", with `db/seeds/development.rb` as its file:
 
 | Gap code | What it means | Reasons |
 | --- | --- | --- |

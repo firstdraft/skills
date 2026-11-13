@@ -14,14 +14,15 @@ kind. When records belong to a record of another Entity, such as tasks in a proj
 - **First Draft generates:** for the parent Reference, the `parent_id` column with its foreign key, `belongs_to
   :parent`, the children `has_many` when you declare that Association, the parent on pages and in forms, a children
   list with an Add link on each record's page, and example records linked to their parents. All of this comes from
-  the Reference and the Association; the Tree entry itself changes no generated file.
+  the Reference and the Association. The Tree entry itself adds only a gap record and its README entry; it changes
+  no application code.
 - **You write after Compile:** everything the hierarchy needs beyond one parent link: rejecting cycles, keeping a
   parent in the same scope, top-level-only lists, ancestors and descendants, deleting a whole subtree, and any
   Ordering that reads the Tree.
 
 Always declare the Tree. Analysis reports it as `foundation_plan.gap.tree.partially_generated` in the result of
-`plan push`, whose consequence names the rules left to write, so the Tree puts them on the list of work after
-Compile.
+`plan push`, whose reason and consequence name the rules left to write. The generated README lists it under
+"Behavior to write", in Rules, so the Tree puts those rules on the list of work after Compile.
 
 ## Simple example
 
@@ -64,7 +65,8 @@ has_many :children, class_name: "Category", foreign_key: "parent_id", dependent:
  "consequence": "A record can be saved with a parent that makes a cycle."}
 ```
 
-Remove the `trees` entry and every generated file stays the same; only the gap record goes away.
+README.md lists it under "Behavior to write", in Rules, with the same reason and consequence. Remove the `trees`
+entry and the application code stays the same; only the gap record and that README entry go away.
 
 ## Keys
 
@@ -256,8 +258,9 @@ docs = Folder.find_or_create_by!(name: "Docs", project: alpha)
 Folder.find_or_create_by!(name: "Specs", project: alpha, parent: docs)
 ```
 
-The README lists both Validations under "Behavior to write". Analysis reports four gaps, none for the `owner`
-Validation:
+README.md lists both Validations and the other gaps below under "Behavior to write": the Add form in Pages and
+actions; the two Validations, the deletion outcome, and the Tree in Rules. Analysis reports four gaps, none for the
+`owner` Validation:
 
 - `foundation_plan.gap.tree.partially_generated`: nothing rejects a cycle or a parent in another project.
 - `foundation_plan.gap.validation.not_generated` at `folder.parent_in_same_project`, with the warning
@@ -280,7 +283,7 @@ Validation:
 | [Ordering](orderings.md) term | `{"tree": "<entity>.<tree key>", "value": "root_created_at" or "root_first", "direction": "ascending" or "descending"}`, followed by other terms such as `{"system_field": "id", "direction": "ascending"}`. `nulls` is not allowed. | A scope that raises `NotImplementedError` (`foundation_plan.gap.ordering.not_generated`), with its meaning in `README.md`. A list or children list whose `ordering` names it raises until you write the scope. The model spec has a placeholder example that fails until you replace it. Analysis rejects a Tree of another Entity (`foundation_plan.ordering.tree_owner_incompatible`) or an unknown one (`foundation_plan.link.tree_not_found`). |
 | [Development data](development-data.md) | `"references": [{"reference": "<entity>.parent", "value": {"kind": "reference_record", "record": "<entity>.<record key>"}}]` | Records created parents first, each with `parent:`. A record that names itself, or closes a cycle, loses its parent (`foundation_plan.gap.development_data.reference_assignment.not_generated`). |
 | [Predicate](predicates.md) on the parent or children | `{"kind": "not", "expression": {"kind": "exists", "association": "<entity>.parent"}}` for top-level records; `exists` on the children for records that have some; a comparison through the parent | A scope that raises `NotImplementedError` (`foundation_plan.gap.predicate.not_generated`); the model spec has a placeholder example that fails until you replace it. On a list with a `create_form`, the predicate also removes the Add form (`foundation_plan.gap.scaffold.associated_create.not_generated`). |
-| [Association](associations.md) `kind: "indirect"` through the parent twice, or the children twice | `{"kind": "indirect", "through": "<entity>.children", "source": "<entity>.children"}` | Nothing (`foundation_plan.gap.association.not_generated`). Keep it when the person asked for grandchildren: the generated README does not list it, so add it to your own list and write the `has_many … through:` before the preview. |
+| [Association](associations.md) `kind: "indirect"` through the parent twice, or the children twice | `{"kind": "indirect", "through": "<entity>.children", "source": "<entity>.children"}` | Nothing (`foundation_plan.gap.association.not_generated`). The generated README lists the Association under "Behavior to write", in Data ("The Association declaration is omitted."), and each page item that names it in Pages and actions. Keep it when the person asked for grandchildren, and write the `has_many … through:` before the preview. |
 | [Policy](policies.md) | `matches_policy` through the parent to the same Policy, for "whoever may see the parent" | Nothing: warning `foundation_plan.policy.dependency_cycle`, and every part the Policy guards is left out. Write an `owner` Policy for such a rule instead: its rule returns `false` and its relation scope raises until you write them, and the parts it guards are generated. A rule on the record's own Reference, such as its owner, generates, and then the parent select offers only records that rule admits. |
 
 ## Not generated
@@ -310,16 +313,18 @@ These have no Plan shape that generates them. Write them after Compile:
   such as `@project.folders.top_level.order(:id).preload(:parent)`, which raises `NotImplementedError` until you write
   `where(parent_id: nil)`; the model spec has a placeholder example that fails until you replace it. A related
   list with a `predicate` loses its `create_form` (`foundation_plan.gap.scaffold.associated_create.not_generated`):
-  no Add link, nested New page, or Create action, and the generated README does not list them. Keep the
-  `create_form` in the Plan and write them before the preview, or offer the person an unfiltered list with an Add
-  form instead; the Plan states what the person chooses.
+  no Add link, nested New page, or Create action. The generated README lists the `create_form` under "Behavior to
+  write", in Pages and actions, by its place in the Plan and the generic name `scaffold.associated_create_form`.
+  Keep the `create_form` in the Plan and write them before the preview, or offer the person an unfiltered list with
+  an Add form instead; the Plan states what the person chooses.
 - **Ancestors and descendants**: a breadcrumb trail, a whole subtree, an indented outline, a depth limit. Rails gives
   one level each way (`folder.parent`, `folder.subfolders`); write a recursive query or add a gem such as
   `ancestry` or `closure_tree`. State a depth limit as an `owner` Validation on the parent Reference, like the
   cycle check.
 - **Deleting a subtree with its record.** Write `delete_referencing_record` on the parent Reference. Nothing
-  deletes the subtree yet and the generated README does not list it, so add it to your own list and write the
-  cascade in the model before the preview. Until then, deleting a record that has children raises.
+  deletes the subtree yet (`foundation_plan.gap.reference.deletion_not_generated`). The generated README lists the
+  deletion outcome under "Behavior to write", in Rules; write the cascade in the model before the preview. Until
+  then, deleting a record that has children raises.
 - **The scope on the Add form of a scoped Tree's children list**; see the full example.
 
 ## Analysis does not catch
@@ -354,9 +359,10 @@ A later Compile does not touch the app you already have. It writes a complete ne
 refuses a folder that already holds a compiled app. Code you wrote after Compile is never overwritten; a later
 Plan change reaches that app only when you copy it across.
 
-- **In the Plan:** adding, renaming, or removing a Tree changes no generated file. Removing a Tree that an Ordering
-  names fails analysis until the Ordering changes in the same push. Changing the parent's `on_referenced_deleted`
-  changes the children Association's `dependent:` option and, for a scoped Tree, the scope's.
+- **In the Plan:** adding, renaming, or removing a Tree changes no application code; its gap record and README
+  entry follow it. Removing a Tree that an Ordering names fails analysis until the Ordering changes in the same
+  push. Changing the parent's `on_referenced_deleted` changes the children Association's `dependent:` option and,
+  for a scoped Tree, the scope's.
 - **After Compile:** the cycle and same-scope rules go in `app/models/<entity>.rb`, with model specs. To store a
   cached root or a materialized path, add the column in a migration and maintain it in the model; the Plan has no
   key for it.

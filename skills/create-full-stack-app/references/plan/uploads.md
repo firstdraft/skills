@@ -88,14 +88,15 @@ Upload Fields have no `settings`. Each key below is on the Field object.
 | `required` | yes | `true`, `false` | | `true`: `validates :<key>, presence: true`; the file input is required until a file is stored. `false`: no presence check, plus a removal flag on the model and a "Remove" checkbox on the edit form; see below. |
 | `subject_uuid`, `key`, `name` | yes | UUIDv7, lower snake case, text | | `key` names the attachment; `name` is the label, at `activerecord.attributes.<model>.<key>`. |
 | `notes` | no | text | none | Nothing; shown to people reviewing the Plan. |
-| `validations` | no | `presence` or `absence`, each with `when`; or `owner` | none | Not generated. The model calls an empty method named after the Validation's key, and the model spec has an example that fails until you write the rule: one that builds a breaking record for `presence` or `absence`, a placeholder for `owner` (`foundation_plan.gap.validation.not_generated`; an `owner` Validation has no gap record). README.md lists each under "Behavior to write". Use `owner` for size and type limits, and `required` for an unconditional rule. |
+| `validations` | no | `presence` or `absence`, each with `when`; or `owner` | none | Not generated. The model calls an empty method named after the Validation's key, and the model spec has an example that fails until you write the rule: one that builds a breaking record for `presence` or `absence`, a placeholder for `owner` (`foundation_plan.gap.validation.not_generated`; an `owner` Validation has no gap record). README.md lists each under "Behavior to write", in "Rules". Use `owner` for size and type limits, and `required` for an unconditional rule. |
 | `default` | no | any value | none | Not generated (`foundation_plan.gap.field_modifier.default`). |
 | `immutable` | no | `true`, `false` | `false` | Not generated (`foundation_plan.gap.field_modifier.immutable`). See [Analysis does not catch](#analysis-does-not-catch). |
 | `encrypted_at_rest`, `redact_from_logs` | no | `true`, `false` | `false` | Not generated (`foundation_plan.gap.field_modifier.encrypted_at_rest`, `….redact_from_logs`). |
 
 "Not generated" for `default`, `immutable`, `encrypted_at_rest`, and `redact_from_logs` means nothing is generated
-for the key yet and the generated README does not list it. When the person asked for it, keep the key in the Plan,
-add it to your own list, and write it before the preview.
+for the key yet. The generated README lists each under "Behavior to write": `immutable` in "Rules" ("Immutability
+is not enforced."), and the other three in "Data". When the person asked for it, keep the key in the Plan, and
+write it before the preview.
 
 Import rejects `settings`, `comparison`, `normalizations`, and `derivation` on an upload Field, any type name other
 than these two (such as `"file"`), and any Validation kind other than `presence` and `absence`.
@@ -318,8 +319,8 @@ same. Never ask for, print, or commit its value.
 
 - **File size limits and allowed types** other than "an image". State each as an `owner` Validation on the Field,
   as `pdf_only` in the full example. Compile emits an empty method and a placeholder example in the model spec that
-  fails until you replace it; README.md lists it under "Behavior to write", and no gap lists it. Write the method
-  with `brochure.blob.byte_size` and `brochure.content_type`. The image input's `accept` stays `"image/*"`; narrow
+  fails until you replace it; README.md lists it under "Behavior to write", in "Rules", and no gap lists it. Write
+  the method with `brochure.blob.byte_size` and `brochure.content_type`. The image input's `accept` stays `"image/*"`; narrow
   it in the form partial to match.
 - **Several files on one Field.** Use a child Entity, as in the full example.
 - **Direct uploads from the browser.** Generated forms send files with the record, and

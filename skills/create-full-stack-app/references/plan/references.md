@@ -321,13 +321,15 @@ end
 
 Pages and Expressions name a Reference with the `association` locator, `{"association": "<entity>.<key>"}`, the
 same locator an authored Association uses. Bindings and example records name it as `"reference": "<entity>.<key>"`.
+A [Validation](validations.md) names it the same way, as `{"reference": "<entity>.<key>"}`, in `targets`,
+`error_target`, and a comparison's operands.
 
 | Where | Plan shape | Generates |
 | --- | --- | --- |
-| Form input, in `scaffold.create.inputs` or `update.inputs` ([Scaffold forms](scaffold-forms.md)) | `{"association": "lease.tenant"}` | A picker that searches the target by its primary descriptor, 20 matches at a time, and the `<key>_id` strong parameter. An optional one has a "None" choice that clears it. The pickers go in `_form.html.erb` when create and update have the same inputs, otherwise in `_new_form.html.erb` and `_edit_form.html.erb`. When the target's descriptor is a system Field such as `id`, a plain select of every target record instead. `{"field": "lease.tenant"}` and `{"reference": "lease.tenant"}` do not work; see below. |
+| Form input, in `scaffold.create.inputs` or `update.inputs` ([Scaffold forms](scaffold-forms.md)) | `{"association": "lease.tenant"}` | A picker that searches the target by its primary descriptor, 20 matches at a time, and the `<key>_id` strong parameter. An optional one has a "None" choice that clears it. The pickers go in `_form.html.erb` when create and update have the same inputs, otherwise in `_new_form.html.erb` and `_edit_form.html.erb`. When the target's descriptor is a system Field such as `id`, a plain select of every target record instead. Which records it offers, and when it is left out, follow the target's Policies; see [Scaffold forms](scaffold-forms.md#keys). `{"field": "lease.tenant"}` and `{"reference": "lease.tenant"}` do not work; see below. |
 | List or details page, in `projection` ([Scaffold lists and details](scaffold-lists-and-details.md)) | `{"association": "lease.tenant", "authorization": "public"}`; `authorization` is required | The target's descriptor, linked to its page when it has a `show` route, plain text otherwise, and a `preload`. With `"projection": [{"field": "unit.label"}, …]` inside, the target's Fields are listed, followed by a View link when it has a `show` route. An empty optional Reference shows nothing. |
 | Create binding, in `scaffold.create.bindings` ([Policies](policies.md)) | `{"reference": "note.author", "value": {"kind": "environment", "name": "current_account"}}` | `@note.author = current_account` before save. Not under `"public"` authorization: there the binding is left out (`foundation_plan.gap.scaffold.binding.not_generated`). |
-| `primary_descriptor` of the referencing Entity ([Entities](entities.md)) | `{"association": "lease.unit"}`, on a required single-target Reference | Pages name a lease by `lease.unit.label`. An optional Reference is rejected (`foundation_plan.entity.primary_descriptor_association_ineligible`). |
+| `primary_descriptor` of the referencing Entity ([Entities](entities.md)) | `{"association": "lease.unit"}`, on a required single-target Reference | Pages name a lease by `lease.unit.label`. An optional Reference is rejected (`foundation_plan.entity.primary_descriptor_association_ineligible`). One link only: when the unit is itself named through an Association, pages say `Lease #<uuid>`; see [Entities](entities.md#primary-descriptor). |
 | Example record, in `application.development_data[]` ([Development data](development-data.md)) | `"references": [{"reference": "lease.unit", "value": {"kind": "reference_record", "record": "unit.flat_2b"}}]` | `find_or_create_by!(…, unit: flat_2b)`. Works for both multi-target realizations. |
 | [Predicate](predicates.md) | see below | Two narrow shapes only. |
 | [Policy](policies.md) rule | `{"target": {"association": "note.author"}}` compared with `current_account` | Described on the Policies page. |
@@ -396,14 +398,15 @@ path `{"through": [{"association": "task.project"}], "target": {"field": "projec
 
 - **Pages for a Reference with several targets.** No input, column, or link
   (`foundation_plan.gap.scaffold.input.not_generated`, `foundation_plan.gap.scaffold.projection.not_generated`).
-  Nothing is generated for them yet, and README.md does not list them; for a required one it lists only the create
-  request specs left missing, under "Test coverage to complete". Keep the input and projection items in the Plan
-  when the person asked for them, add them to your own list, and write the picker, the strong parameter, and the
-  page columns before the preview.
+  README.md lists each item under "Behavior to write", in Pages and actions. For a required one it also lists the
+  standalone create there as incomplete, and the create request specs left missing under "Test coverage to
+  complete". Keep the input and projection items in the Plan when the person asked for them, and write the picker,
+  the strong parameter, and the page columns before the preview.
 - **A deletion outcome whose inverse name is taken.** When the target already has a Field or member named like the
   inverse (`tasks`), no inverse is added (`foundation_plan.gap.reference.deletion_not_generated`). For `restrict`, the
   destroy action raises `ActiveRecord::InvalidForeignKey`, an error page. For the other outcomes, the target's model
-  spec fails and README.md lists it. Rename the Field, or declare the inverse under another name after Compile.
+  spec fails. README.md lists either under "Behavior to write", in Rules. Rename the Field, or declare the inverse
+  under another name after Compile.
 - **Nullifying a one-to-one immutable Reference.** Rails's `has_one` clears it with `update_columns`, which
   `attr_readonly` refuses, so no inverse is added (`foundation_plan.gap.reference.deletion_not_generated`).
 - **Example records for a one-to-one Reference with several targets**
@@ -416,8 +419,9 @@ path `{"through": [{"association": "task.project"}], "target": {"field": "projec
 These pass analysis as `valid`:
 
 - **A required Reference that nothing sets on create.** When it is in neither `create.inputs` nor `create.bindings`,
-  the New page renders but every save fails "must exist" (`foundation_plan.gap.scaffold.route.partially_generated`,
-  and README.md lists the missing request specs). Add the input, or a binding.
+  the New page renders but every save fails "must exist" (`foundation_plan.gap.scaffold.route.partially_generated`).
+  README.md lists the create under "Behavior to write", in Pages and actions, and the missing request specs under
+  "Test coverage to complete". Add the input, or a binding.
 - **A Reference input written as `{"field": "task.project"}`.** The input is dropped with the misleading gap
   `foundation_plan.gap.service.unsupported_capability`, and for a required Reference the create cannot save. Write
   `{"association": "task.project"}`.

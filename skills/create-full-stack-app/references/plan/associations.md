@@ -117,7 +117,7 @@ An Association, in `application.entities[].associations[]` of the Entity the rea
 | `through` | indirect only | `"<this entity>.<association key>"` | | The first step: a direct `has_many` on this Entity, filtered or not. |
 | `source` | indirect only | `"<join entity>.<reference key>"` | | The second step, read from each join record: the join's Reference to the result Entity, such as `"tagging.tag"`; do not author an Association for it. Gives `has_many :tags, -> { distinct }, through: :taggings`, with `source:` when Rails cannot infer it. |
 | `predicate` | no | `"<result entity>.<predicate key>"` | none | A filtered direct reader: `has_many :open_tasks, -> { open }, class_name: "Task"`. On an indirect Association, nothing is generated. |
-| `cardinality` | no | `{"minimum": n}`, `{"maximum": n}`, or both | none | Nothing. Analysis accepts it and import drops it (`foundation_plan.gap.service.unsupported_capability`); the generated README does not list it. State a count limit as an `owner` Validation on the child Entity; see [Not generated](#not-generated). |
+| `cardinality` | no | `{"minimum": n}`, `{"maximum": n}`, or both | none | Nothing. Analysis accepts it and import drops it (`foundation_plan.gap.service.unsupported_capability`). The generated README lists it under "Behavior to write", in Rules: "First Draft did not import this part of the Plan, so the application has none of it." State a count limit as an `owner` Validation on the child Entity; see [Not generated](#not-generated). |
 
 A direct Association rejects `through` and `source`; an indirect one rejects `reference` and `side`.
 
@@ -330,7 +330,7 @@ Every one of these names an authored Association, or a Reference's forward reade
   ```
 
   Compile emits the call and an empty private method on Task, and a placeholder example that fails until you
-  replace it. README.md lists it under "Behavior to write". See [Validations](validations.md).
+  replace it. README.md lists it under "Behavior to write", in Rules. See [Validations](validations.md).
 
   ```ruby
   # app/models/task.rb

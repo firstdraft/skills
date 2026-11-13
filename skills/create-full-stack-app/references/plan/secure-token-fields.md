@@ -19,7 +19,8 @@ another system, such as a device token or an OAuth credential. Sign-in tokens an
 
 Every `secure_token` Field reports `foundation_plan.gap.field_kind.partially_generated` in the result of `plan push`:
 "finding a record by token, regenerating it, and expiring it remain work after compilation." That gap is expected;
-keep the Field.
+keep the Field. The generated README lists each `secure_token` Field under "Behavior to write", in "Data": the
+entry says Rails fills the token and no lookup, rotation, or expiry flow is generated, and ends with that sentence.
 
 ## Simple example
 
@@ -189,8 +190,9 @@ These pass analysis as `valid`:
 - **An example token that is not a non-empty string.** `""` or a number drops the whole record
   (`foundation_plan.gap.development_data.record.not_generated`). Omit the Field instead.
 - **`encrypted_at_rest: true`.** The column stays plain text (`foundation_plan.gap.field_modifier.encrypted_at_rest`).
-  Keep it in the Plan when the person asks for it: the generated README does not list it, so add it to your own
-  list and write the encryption before the preview; `SKILL.md` has the order of work.
+  The generated README lists it under "Behavior to write", in "Data", as a second entry for the token Field:
+  "Encryption at rest is not applied." Keep it in the Plan when the person asks for it, and write the encryption
+  before the preview; `SKILL.md` has the order of work.
 
 ## Decisions to raise
 

@@ -23,7 +23,8 @@ token Fields fill themselves; none of those four takes a `default`.
 Analysis never rejects a Field or Reference default for its value. A default that is not generated shows up only as
 a gap, `foundation_plan.gap.field_modifier.default` on a Field or
 `foundation_plan.gap.reference.default_not_generated` on a Reference. The gap list is in the result of `plan push`
-and, after Compile, in the app's `.firstdraft/gaps.json`; the two are the same list. Read it after every push.
+and, after Compile, in the app's `.firstdraft/gaps.json`; the two are the same list. Read it after every push. The
+generated README lists each of these gaps under "Behavior to write", in "Data".
 
 ## Simple example
 
@@ -215,7 +216,7 @@ follow a local zone.
 
 | Where | Plan shape | Generates |
 | --- | --- | --- |
-| Create form | A required Field with a generated default left out of `scaffold.create.inputs` | The create route is generated and the default fills the Field. A required Field without a generated default left out of `inputs` makes the create route partial (`foundation_plan.gap.scaffold.route.partially_generated`), and its create specs move to the README's "Test coverage to complete". |
+| Create form | A required Field with a generated default left out of `scaffold.create.inputs` | The create route is generated and the default fills the Field. A required Field without a generated default left out of `inputs` makes the create route partial (`foundation_plan.gap.scaffold.route.partially_generated`): the README lists the route under "Behavior to write", in "Pages and actions", and its create specs move to the README's "Test coverage to complete". |
 | Create form | The Field listed in `inputs` | The input starts on the default. A person who clears an optional input saves it empty; clearing a required one fails its presence validation. |
 | Create and update forms | A Field in `update.inputs` but not in `create.inputs`, or the reverse | Valid. The controller gets `create_<entity>_params` and `update_<entity>_params` with the two lists; with the same list it gets one `<entity>_params`. |
 | [Example records](development-data.md) | A record in `development_data` that omits the Field | The seed omits it and the default fills it. If the Field is required and its default is a gap, the record is dropped (`foundation_plan.gap.development_data.record.not_generated`). |
@@ -229,7 +230,7 @@ follow a local zone.
 - **A Reference default of any kind.** The column, `belongs_to`, and pages are generated; nothing fills the
   Reference (`foundation_plan.gap.reference.default_not_generated`). A required one fails `must exist` on every
   record created without it, and a required one left out of `create.inputs` also makes the create route partial.
-  The README lists it under "Behavior to write". For a `reference_record` default, a model spec "defaults
+  The README lists it under "Behavior to write", in "Data". For a `reference_record` default, a model spec "defaults
   <reference> when none is given" fails until you write it; for `current_account`, the spec is listed under "Test
   coverage to complete". To set the owner to the signed-in Account, use a create binding instead. It needs an
   Account Entity ([Accounts](accounts.md)), a Reference to it ([References](references.md)), and a create route
@@ -259,9 +260,10 @@ follow a local zone.
   ```
 
 Keep each Field default above in the Plan; only the computed value goes in `notes`. Nothing is generated for these
-defaults yet: each is listed only in the gap list, the generated README does not mention it, no spec fails, and the
-factory supplies a value of its own. Add each to your own list and write it before the preview; `SKILL.md` has the
-order of work. A rule kept only in `notes` produces no gap at all, so add it to your list too.
+defaults yet. Each is in the gap list, and the generated README lists it under "Behavior to write", in "Data": "The
+authored default is not applied." No spec fails, and the factory supplies a value of its own. Write each before the
+preview; `SKILL.md` has the order of work. A rule kept only in `notes` produces no gap and no README entry, so add
+it to your own list.
 
 ## Analysis does not catch
 

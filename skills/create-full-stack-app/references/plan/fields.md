@@ -164,8 +164,8 @@ stub raises, so the whole page fails. For a rule no Expression can say, write an
 | `integer` | `equals`, `not_equals`, `in`, `less_than` and the other ordered operators | required Field only | `comparison` with a literal; `exclusion` is a stub | a JSON integer from -2147483648 to 2147483647 |
 | `decimal` | as `integer`; literals are decimal strings | required Field only | `comparison` with a literal | a decimal string |
 | `boolean` | `equals`, `not_equals`, `in` | required Field only | `comparison` and `exclusion` are stubs | `true` or `false` |
-| `date` | as `integer`, with a literal or `current_date` | required Field only | `comparison` with a literal; with `current_date` it is a stub | `"2026-03-01"` |
-| `datetime` | as `integer`, with a literal or `current_time` | required Field; optional only as below | `comparison` is a stub | `"2026-11-02T18:30:00Z"` or `"…-06:00"` |
+| `date` | as `integer`, with a literal or `current_date` | required Field only | `comparison` with a literal or another `date` Field; with `current_date` it is a stub | `"2026-03-01"` |
+| `datetime` | as `integer`, with a literal or `current_time` | required Field; optional only as below | `comparison` with another `datetime` Field; with a literal or `current_time` it is a stub | `"2026-11-02T18:30:00Z"` or `"…-06:00"` |
 | `url` | `equals`, `not_equals`, `in`; `contains` rejected | required Field only | `presence` or `absence` only | an `http` or `https` address with a host |
 | `language_code`, `time_zone` | `equals`, `not_equals`, `in` | required Field only | `presence` or `absence` only | a string, not checked |
 
@@ -355,8 +355,10 @@ Member.find_or_create_by!(handle: "ada", joined_on: Date.iso8601("2026-03-01"), 
   types the text, is not a Predicate, and the Plan has no key for it: write it after Compile, for example
   `where("description ILIKE ?", "%#{sanitize_sql_like(term)}%")` and the field.
 - **Formatted rich text.** A `rich_text` Field is a plain `text` column and textarea
-  (`foundation_plan.gap.field_kind.partially_generated`). When the person asked for formatting, keep `rich_text`
-  and add Action Text before the preview.
+  (`foundation_plan.gap.field_kind.partially_generated`). The generated README lists each `rich_text` Field under
+  "Behavior to write", in "Data": text is entered, stored, and shown as plain text, and the rich-text editor,
+  embedded attachments, and formatted display are not generated. When the person asked for formatting, keep
+  `rich_text` and add Action Text.
 - **Times in a stored time zone.** Every `datetime` is shown and entered in the app's time zone, UTC. A `time_zone`
   Field is stored and shown as its name; nothing reads it. After Compile, write
   `l(event.starts_at.in_time_zone(event.time_zone), format: :long)` in the details view (`_event.html.erb`) and the
@@ -365,9 +367,10 @@ Member.find_or_create_by!(handle: "ada", joined_on: Date.iso8601("2026-03-01"), 
   `ActiveSupport::TimeZone[time_zone].parse(value)` and fill the edit form with the converted value.
 - **Checking a language code or time zone.** Any string is accepted by the model and by example records. The time zone
   select offers only real zones; a language code is free text.
-- **Encryption at rest** (`foundation_plan.gap.field_modifier.encrypted_at_rest`). Nothing is generated for it yet,
-  and the generated README does not list it. Keep `encrypted_at_rest` in the Plan when the person asks for it, add
-  it to your own list, and write it with Active Record Encryption before the preview.
+- **Encryption at rest** (`foundation_plan.gap.field_modifier.encrypted_at_rest`). Nothing is generated for it yet;
+  the column stores plain text. The generated README lists the Field under "Behavior to write", in "Data":
+  "Encryption at rest is not applied." Keep `encrypted_at_rest` in the Plan when the person asks for it, and write
+  it with Active Record Encryption before the preview.
 - **Decimal precision.** `decimal` columns have no precision or scale; add them in the migration if the value needs
   them. Use a [Money Field](money-fields.md) for amounts of money.
 
@@ -378,7 +381,8 @@ These pass analysis as `valid`:
 - **A Predicate or Ordering that compiles to a stub, selected by a list page.** The list page raises
   `NotImplementedError`, and the scope's placeholder example in the model spec fails until you replace it. With a
   stubbed Ordering the list's request spec fails too. The gap list names it at `<entity>.scaffold.index.predicate`
-  or `.ordering`. Check the rules in [Where each type works](#where-each-type-works) so you know which ones you will
+  or `.ordering`, and the generated README lists the scope under "Behavior to write" with the list page that calls
+  it. Check the rules in [Where each type works](#where-each-type-works) so you know which ones you will
   write.
 - **An example record value that the Field cannot hold:** a decimal not in shortest form, an integer outside the
   32-bit range, a datetime without a zone, a URL the validator rejects, `null` on a required Field, or text that the
