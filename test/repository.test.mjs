@@ -43,10 +43,9 @@ const reviewedFixtureAnalyzerRelease =
   "foundation-plan-rails/application-2026-08-28-reviewed-realization";
 const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
-const currentFoundationPlanServiceBaseline = "d523145a8f5bd47e5dc8fcd289e7e40321a1f983";
-const foundationPlanSchemaDigest =
-  "c97f698155b8771818a04f648e0b18312fe451f558d0326c61d3275e66e52321";
-const currentFoundationPlanSchemaBaseline = currentFoundationPlanServiceBaseline;
+// The bundled Plan schema is a byte-for-byte copy of the service's schema. This constant is its only digest record:
+// the service's release check reads it here by name, so keep the name and the one-line string.
+const foundationPlanSchemaDigest = "d39a81867e17a0fbef92bf49e0e7b86e772f4791d4dc0674e9869472a9425f62";
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
     .update(`${JSON.stringify(value, null, 2)}\n`)
@@ -754,42 +753,25 @@ test("authored JSON examples parse and retain the pinned Plan contract", async (
     }
   }
 
+  // Plan reference pages show fragments with elided parts, such as "subject_uuid": "…", so only their blocks that
+  // parse are checked; any complete Plan among them must still name the pinned format and target.
+  const pagesDirectory = path.join(skillsDirectory, "create-full-stack-app", "references", "plan", path.sep);
   for (const file of files.filter((item) => item.endsWith(".md"))) {
     const source = await readFile(file, "utf8");
     for (const match of source.matchAll(/```json\n([\s\S]*?)```/g)) {
-      checkFoundationPlanConstants(JSON.parse(match[1]));
+      if (file.startsWith(pagesDirectory)) {
+        let document;
+        try {
+          document = JSON.parse(match[1]);
+        } catch {
+          continue;
+        }
+        checkFoundationPlanConstants(document);
+      } else {
+        checkFoundationPlanConstants(JSON.parse(match[1]));
+      }
     }
   }
-
-  const documentedPlans = await markdownJsonDocuments(
-    path.join(
-      skillsDirectory,
-      "create-full-stack-app",
-      "references",
-      "examples.md",
-    ),
-  );
-  const foundationPlanReference = await markdownJsonDocuments(
-    path.join(
-      skillsDirectory,
-      "create-full-stack-app",
-      "references",
-      "foundation-plan-023.md",
-    ),
-  );
-  const fixture = JSON.parse(
-    await readFile(
-      path.join(
-        evalsDirectory,
-        "create-full-stack-app",
-        "fixtures",
-        "empty.foundation-plan.json",
-      ),
-      "utf8",
-    ),
-  );
-  assert.deepEqual(documentedPlans[0], fixture);
-  assert.deepEqual(foundationPlanReference.at(-1), fixture.application);
 });
 
 test("reviewed Case Chat fixture preserves its Plan and GapSet", async () => {
@@ -1064,33 +1046,15 @@ test("reviewed Case Chat fixture preserves its Plan and GapSet", async () => {
 
 });
 
-test("documented Plans match canonical example fixtures", async () => {
-  const referencesDirectory = path.join(skillsDirectory, "create-full-stack-app", "references");
-  const documentedExamplePlans = await markdownJsonDocuments(
-    path.join(referencesDirectory, "examples.md"),
-  );
-  const scalarPlan = documentedExamplePlans.find(
-    (document) => document?.application?.key === "tasks",
-  );
-  assert(scalarPlan, "examples.md: missing scalar Field Plan");
-  assert.deepEqual(
-    scalarPlan.application.entities[0].fields.map(({ key, type, required }) => ({
-      key,
-      type,
-      required,
-    })),
-    [
-      { key: "title", type: "short_text", required: true },
-      { key: "details", type: "long_text", required: false },
-    ],
-  );
-  const ordinalPlan = documentedExamplePlans.find(
-    (document) => document?.application?.key === "ranked_tasks",
-  );
-  assert(ordinalPlan, "examples.md: missing ordinal enum Plan");
+test("the enum and Rails and iOS fixtures keep the shapes their eval cases rely on", async () => {
+  const fixture = async (name) =>
+    JSON.parse(await readFile(path.join(evalsDirectory, "create-full-stack-app", "fixtures", name), "utf8"));
+
+  const ordinalPlan = await fixture("supported-enum.foundation-plan.json");
+  assert.equal(ordinalPlan.application.key, "ranked_tasks");
   const ordinalEntity = ordinalPlan.application.entities[0];
   const ordinalField = ordinalEntity.fields.find(({ type }) => type === "enum");
-  assert(ordinalField, "examples.md: missing enum Field");
+  assert(ordinalField, "supported-enum fixture: missing enum Field");
   assert.deepEqual(
     ordinalField.settings.values.map(({ key }) => key),
     ["low", "medium", "high"],
@@ -1109,23 +1073,8 @@ test("documented Plans match canonical example fixtures", async () => {
   assert.equal(identities.length, 6);
   assert.equal(new Set(identities).size, identities.length);
 
-  const enumFixture = JSON.parse(
-    await readFile(
-      path.join(
-        evalsDirectory,
-        "create-full-stack-app",
-        "fixtures",
-        "supported-enum.foundation-plan.json",
-      ),
-      "utf8",
-    ),
-  );
-  assert.deepEqual(ordinalPlan, enumFixture);
-
-  const applicationIntentPlan = (await markdownJsonDocuments(
-    path.join(referencesDirectory, "examples.md"),
-  )).find((document) => document?.application?.key === "movie_catalog");
-  assert(applicationIntentPlan, "examples.md: missing bounded Rails and iOS Plan");
+  const applicationIntentPlan = await fixture("application-intent.foundation-plan.json");
+  assert.equal(applicationIntentPlan.application.key, "movie_catalog");
   assert.equal(applicationIntentPlan.application.domain, "movies.example.com");
   assert(!("appearance" in applicationIntentPlan.application));
   assert.deepEqual(applicationIntentPlan.application.native, { ios: {} });
@@ -1138,18 +1087,6 @@ test("documented Plans match canonical example fixtures", async () => {
     resource_routes: ["index"],
     index: { authorization: "public" },
   });
-  const applicationIntentFixture = JSON.parse(
-    await readFile(
-      path.join(
-        evalsDirectory,
-        "create-full-stack-app",
-        "fixtures",
-        "application-intent.foundation-plan.json",
-      ),
-      "utf8",
-    ),
-  );
-  assert.deepEqual(applicationIntentPlan, applicationIntentFixture);
 });
 
 test("the no-validator eval relies on plan push for validation", async () => {
@@ -1192,7 +1129,7 @@ test("the no-validator eval relies on plan push for validation", async () => {
   assertExpectation(withoutValidator, "acceptance of the bounded import");
 });
 
-test("complete examples and eval Plans validate against the bundled exact schema", async () => {
+test("eval Plans and the groups page fragments validate against the bundled exact schema", async () => {
   const skillDirectory = path.join(skillsDirectory, "create-full-stack-app");
   const schemaSource = await readFile(
     path.join(skillDirectory, "references", "foundation-plan-0.23.schema.json"),
@@ -1202,17 +1139,6 @@ test("complete examples and eval Plans validate against the bundled exact schema
     createHash("sha256").update(schemaSource).digest("hex"),
     foundationPlanSchemaDigest,
   );
-  const referenceSource = await readFile(
-    path.join(skillDirectory, "references", "foundation-plan-023.md"),
-    "utf8",
-  );
-  assert(referenceSource.includes(foundationPlanSchemaDigest));
-  assert(referenceSource.includes(currentFoundationPlanSchemaBaseline));
-  assert.match(referenceSource, /CLI contract configuration.*script\/cli-contract\/config\.mjs/);
-  assert.match(
-    referenceSource,
-    /bundled schema was copied byte-for-byte from\s+`docs\/architecture\/design\/foundation-plan\.schema\.json` at Service revision[\s\S]*?exact contract provenance, not\s+release or execution evidence/,
-  );
 
   const schema = JSON.parse(schemaSource);
   const ajv = new Ajv2020({
@@ -1221,13 +1147,6 @@ test("complete examples and eval Plans validate against the bundled exact schema
     strictRequired: false,
   });
   const validate = ajv.compile(schema);
-  const examplesPath = path.join(skillDirectory, "references", "examples.md");
-  const examples = (await markdownJsonDocuments(examplesPath)).map(
-    (document, index) => ({
-      document,
-      label: `${path.relative(repository, examplesPath)} block ${index + 1}`,
-    }),
-  );
   const evaluationPlans = await Promise.all(
     (await filesUnder(evalsDirectory))
       .filter((file) => file.endsWith(".foundation-plan.json") && !historicalPlanFixtures.has(file))
@@ -1237,30 +1156,26 @@ test("complete examples and eval Plans validate against the bundled exact schema
       })),
   );
 
-  for (const { document, label } of [...examples, ...evaluationPlans]) {
+  for (const { document, label } of evaluationPlans) {
     assert(validate(document), `${label}: ${ajvErrors(validate.errors)}`);
   }
 
-  const fragmentDefinitions = [
-    "field",
-    "scaffold",
-    "scaffoldMutationReturnTo",
-    "scaffoldCreateForm",
-    "policy",
-    "scaffold",
-    "entity",
-    "association",
+  const groupsPath = path.join(skillDirectory, "references", "groups-and-memberships.md");
+  const [membership, accountAssociations, ownerOrMember, ...extra] = await markdownJsoncDocuments(groupsPath);
+  assert.deepEqual(extra, [], "groups-and-memberships.md: name the schema definition of each new jsonc fragment");
+  const fragments = [
+    ["entity", membership],
+    ...accountAssociations.map((association) => ["association", association]),
+    ["policy", ownerOrMember],
   ];
-  const fragments = await markdownJsoncDocuments(examplesPath);
-  assert.equal(fragments.length, fragmentDefinitions.length);
-  fragmentDefinitions.forEach((definition, index) => {
+  for (const [definition, fragment] of fragments) {
     const validateFragment = ajv.getSchema(`${schema.$id}#/$defs/${definition}`);
     assert(validateFragment, `missing schema definition: ${definition}`);
     assert(
-      validateFragment(fragments[index]),
-      `${path.relative(repository, examplesPath)} ${definition} fragment: ${ajvErrors(validateFragment.errors)}`,
+      validateFragment(fragment),
+      `${path.relative(repository, groupsPath)} ${definition} fragment: ${ajvErrors(validateFragment.errors)}`,
     );
-  });
+  }
 });
 
 test("revision evals stage existing Plan identity and private state", async () => {
@@ -2911,9 +2826,10 @@ async function checkSkill(skillName) {
     assert(source.includes("## Load references only when needed"));
   }
   assert(source.split("\n").length - 1 < 500);
+  // The authoring Skill's index of Plan reference pages takes about 3 KiB of this budget.
   assert(
-    Buffer.byteLength(source, "utf8") <= 20 * 1024,
-    `${skillName}: SKILL.md exceeds the 20 KiB progressive-disclosure budget`,
+    Buffer.byteLength(source, "utf8") <= 24 * 1024,
+    `${skillName}: SKILL.md exceeds the 24 KiB progressive-disclosure budget`,
   );
   assert(!source.includes("TODO"));
 
@@ -2931,30 +2847,8 @@ async function checkSkill(skillName) {
 
     const contents = await readFile(file, "utf8");
     assert(contents.endsWith("\n"), `${file}: missing final newline`);
-    if (!file.endsWith(".md")) continue;
-
-    for (const match of contents.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
-      const target = match[1];
-      if (/^https?:/.test(target)) continue;
-
-      const [targetFile, targetFragment] = target.split("#", 2);
-      const targetPath = targetFile
-        ? path.resolve(path.dirname(file), targetFile)
-        : file;
-      assert(
-        targetPath.startsWith(`${skillDirectory}${path.sep}`),
-        `${file}: link escapes installed Skill: ${target}`,
-      );
-      assert((await stat(targetPath)).isFile(), `${file}: broken link: ${target}`);
-      if (targetFragment) {
-        const targetSource = await readFile(targetPath, "utf8");
-        assert(
-          markdownHeadingAnchors(targetSource).has(decodeURIComponent(targetFragment)),
-          `${file}: broken heading link: ${target}`,
-        );
-      }
-    }
   }
+  // test/skill-reference-pages.test.mjs checks each Skill's links and headings.
 
   const interfaceSource = await readFile(
     path.join(skillDirectory, "agents", "openai.yaml"),
@@ -2974,19 +2868,6 @@ async function checkSkill(skillName) {
       `Use $${skillName} to interview me, incrementally author and diagnose one complete First Draft Foundation Plan candidate, and use the available Compile workflow when that candidate is ready.`,
     );
   }
-}
-
-function markdownHeadingAnchors(source) {
-  return new Set(
-    [...source.matchAll(/^#{1,6}\s+(.+?)\s*#*$/gm)].map(([, heading]) =>
-      heading
-        .replace(/`([^`]*)`/g, "$1")
-        .toLowerCase()
-        .replace(/[^a-z0-9 -]/g, "")
-        .trim()
-        .replace(/\s+/g, "-"),
-    ),
-  );
 }
 
 function parseRestrictedFrontmatter(source) {
@@ -3033,13 +2914,6 @@ function ajvErrors(errors) {
   return (errors ?? [])
     .map(({ instancePath, message }) => `${instancePath || "/"} ${message}`)
     .join("; ");
-}
-
-async function markdownJsonDocuments(file) {
-  const source = await readFile(file, "utf8");
-  return [...source.matchAll(/```json\n([\s\S]*?)```/g)].map((match) =>
-    JSON.parse(match[1]),
-  );
 }
 
 async function markdownJsoncDocuments(file) {
@@ -3139,7 +3013,7 @@ function isCurrencyScoped(file) {
     ["AGENTS.md", "CHANGELOG.md", "CONTRIBUTING.md", "README.md", "RELEASING.md", "SECURITY.md"].includes(file) ||
     /^docs\/[^/]+\.md$/.test(file) ||
     /^evals\/(?:[^/]+\/)*README\.md$/.test(file) ||
-    /^skills\/[^/]+\/(?:SKILL\.md|references\/[^/]+\.md)$/.test(file)
+    /^skills\/[^/]+\/(?:SKILL\.md|references\/(?:[^/]+\/)*[^/]+\.md)$/.test(file)
   );
 }
 

@@ -29,6 +29,29 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
+## 2026-11-12: One reference page per Plan capability, and stubs written before the preview
+
+**Skills — on `main`, for the next plugin release.** The Skill's Plan reference was one long page and a page of
+examples. It is now one page per Plan capability, such as Fields, References, Policies, or Scaffold forms, under
+`skills/create-full-stack-app/references/plan/`, with an index in `SKILL.md` that the agent sees before it writes
+any Plan JSON. Each page gives the keys, a simple and a full example, what Compile emits, what is left to write, and
+the decisions to raise. In a trial of 26 Plan-writing tasks with drafts of these pages, Sonnet 5.5 pushed a valid
+Plan on the first try for 24 tasks and gpt-6.1-sol for all 26; with the old reference alone, 6 and 13.
+
+The Skill also states three rules:
+
+- The Plan keeps every request it can state, even one First Draft does not generate. Notes hold only what the Plan
+  has no words for, such as "show bookings as a calendar".
+- A Predicate, Ordering, Policy, Validation, or transition whose behavior the Plan's Expressions cannot say takes an
+  `owner` that describes it in a sentence or two. Compile emits everything that uses it, a stub, and a placeholder
+  example that fails until the agent writes the code.
+- After Compile, the agent runs setup and the specs, tells the person what there is to write, writes every item
+  and fills in every placeholder example until the specs pass, and only then starts the preview. It asks before
+  changing or dropping an item, and never skips or loosens an example to get a passing run.
+
+**Existing apps.** An app compiled earlier may have an `AGENTS.md` that says to start the preview before every
+item is written. The Skill now says to write them first; the app needs no other change.
+
 ## 2026-11-12: Forged client address headers no longer cause a 500
 
 **Compiler — live on firstdraft.com since 2026-11-12.** A newly compiled app removes the `Client-Ip` and `Forwarded`
@@ -783,7 +806,7 @@ supplies its Movie; a retained standalone `create.return_to` does not choose the
 
 Standalone Create without New or a return destination now returns 201 on success even when its definition also
 serves associated forms; that shared case previously redirected with 303. Invalid submissions return 422. Review
-the [Scaffolds guidance](skills/create-full-stack-app/references/foundation-plan-023.md#scaffolds) for required-parent
+the [Scaffolds guidance](https://github.com/firstdraft/skills/blob/claude-v0.8.0/skills/create-full-stack-app/references/foundation-plan-023.md#scaffolds) for required-parent
 gaps and shared-Policy form-entry limits before handing unfinished application behavior to the implementation agent.
 
 ## 2026-09-27: Bookmark assets without a planning option

@@ -428,7 +428,7 @@
       "prompt": "Continue the same local habit draft. Change that last rule: only creating a new HabitLog requires an active Habit; existing logs must remain editable after the Habit is paused. Also record that CSV imports must show all row errors first and save a valid file in one transaction, with no partial saves. All previous choices, especially no notes fields, stay settled. Update the local draft and summarize only the meaningful changes. Do not submit or Compile.",
       "expectations": [
         "Runs in the continuing session from reconcile-habit-requirements and preserves its output as the starting candidate.",
-        "Does not claim the every-save comparison expresses creation-only behavior; removes or revises the now-contradicted rule because the user changed its meaning, and preserves the new intent in existing implementation notes when the grammar lacks the needed phase.",
+        "Does not claim the every-save comparison expresses creation-only behavior; removes or revises the now-contradicted rule because the user changed its meaning, and keeps the new intent in the Plan as an owner Validation on HabitLog whose description says it applies only when a log is created, rather than moving it to implementation notes.",
         "Records the agreed transactional CSV behavior and concrete acceptance examples in implementation-notes.md rather than fake Plan syntax or an invented Analyzer gap.",
         "Keeps rejected notes Fields absent and all unrelated identities stable; does not repeat settled questions or require separate approval of the authorized revision.",
         "Discloses the selected handoff boundary if discussing another implementation agent, without treating local notes as proof of GitHub Publication transport."
@@ -589,7 +589,7 @@
       "expectations": [
         "Reads the staged README and takes its commands from it: bin/setup --skip-server, then the Checks section's npm run build, npm run build:css, and bundle exec rspec, all before booting bin/dev for the preview.",
         "Uses --skip-server because plain bin/setup starts bin/dev and does not return; does not substitute bin/ci or a guessed command for the spec run.",
-        "Says it would treat the results as the staged AGENTS.md says: a spec that fails through the README's Behavior to write is work to write, so the Movie index example in spec/requests/movies_spec.rb fails until Movie.highest_rated is written, and it debugs any other failure without skipping, deleting, or loosening an example. Says the preview need not wait for that work: Home does not raise here, so it would start bin/dev and name /movies as raising until Movie.highest_rated is written, without asking first.",
+        "Says a spec that fails through the README's Behavior to write is work to write, so the Movie index example in spec/requests/movies_spec.rb fails until Movie.highest_rated is written, and that it debugs any other failure without skipping, deleting, or loosening an example. Follows the Skill's order of work even though the staged AGENTS.md says the preview need not wait: tells the user what there is to write, one line per item, writes Movie.highest_rated until the specs pass with one line when it is finished, and only then starts bin/dev for the preview.",
         "Does not claim setup, the specs, or the preview have run.",
         "Makes no First Draft request, Compile, remote write, or file change, and starts no setup, tests, or server."
       ],
@@ -613,7 +613,7 @@
       "expectations": [
         "Treats the Movie index example, whose NotImplementedError names movie.highest_rated from the README's Behavior to write, as work to write. Treats the Bookmark example, rerun line rspec ./spec/system/bookmarks_spec.rb:4 with Capybara::ElementNotFound for the Bookmark button, as a failure to debug like its own: it would find the cause and fix the code.",
         "Never edits spec/requests/movies_spec.rb or any other generated spec to get a green run, and does not skip, exclude, or loosen an example or change the spec command. If the cause is generated code, would add one line under First Draft defects in .firstdraft/design/implementation-notes.md and tell the user in a sentence. Does not hand the failure back for the user to decide.",
-        "Does not ask whether to preview: tells the user in one line that the Movie index page (/movies) raises until Movie.highest_rated is written and that bookmarking fails until the Bookmark failure is fixed. With no application source staged, says it could not start the preview or fix the code here instead of claiming either.",
+        "Tells the user what there is to write and fix, one line per item: Movie.highest_rated, which the Movie index page (/movies) raises on until it is written, and the Bookmark failure. Follows the Skill's order of work even though the staged AGENTS.md says to preview sooner: it would start the preview only once both are done and the specs pass. With no application source staged, says it could not fix the code or start the preview here instead of claiming either.",
         "Does not call either failure a missing local prerequisite, because setup and the other 39 examples ran.",
         "Makes no First Draft request, Compile, or remote write."
       ],
@@ -1167,7 +1167,7 @@
       "should_trigger": true,
       "prompt": "Use First Draft to create and send a Foundation Plan for Scalar Showcase, application key scalar_showcase. Model one Movie Entity with one Field of each currently importable scalar type, using a required short_text title as its Primary Descriptor and a decimal rating defaulting to 7.5. The compatible firstdraft CLI is installed, but no JSON Schema 2020-12 validator is available. Do not install or implement one.",
       "expectations": [
-        "Uses Foundation Plan 0.23, the Modeling guide, and Examples for authoring without opening the complete bundled schema.",
+        "Uses the Plan reference pages and the Modeling guide for authoring without opening the complete bundled schema.",
         "Runs plan init with the provided application key and name, then runs generate uuid --count 11 through the Skill resolver exactly once for one Entity and ten Fields.",
         "Authors one Movie Entity with exactly one Field of each supported scalar type and a required movie.title Field Primary Descriptor.",
         "Authors movie.rating as a decimal with literal default value \"7.5\" as a canonical string, never the JSON number 7.5.",
