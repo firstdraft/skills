@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [],
   "gaps": [
@@ -24,14 +24,14 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.associated_create_form`",
-      "file": null
+      "title": "`user.bookmarks.create_form`",
+      "file": "app/controllers/accounts/bookmarks_controller.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
       "title": "`bookmark.scaffold.create`",
-      "file": "app/controllers/bookmarks_controller.rb"
+      "file": "app/controllers/accounts/bookmarks_controller.rb"
     }
   ]
 }

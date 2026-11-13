@@ -344,10 +344,13 @@ These pass analysis as `valid`:
 - **A stub on a page.** The list or details page raises on every request until you write the scope. The gap at the
   page's `ordering` key says so, and README.md lists the scope under "Behavior to write" with the page that calls it;
   an `owner` Ordering has no gap, and README.md lists it the same way.
-- **A page that names an Ordering that does not exist, or one on another Entity.** The selection is dropped with the
-  gap `foundation_plan.gap.service.unsupported_capability`, whose message does not mention the Ordering, and the page
-  sorts by `id`. README.md lists it under "Behavior to write", in "Data", by the Entity's key and the path, with
-  "First Draft did not import this part of the Plan"; it does not name the Ordering either.
+- **A page that names an Ordering that does not exist, or one on another Entity.** The selection is dropped, and the
+  page sorts by `id`. `plan push` warns `foundation_plan.import.unsupported_capability` at the page's `ordering`
+  key, with the gap `foundation_plan.gap.service.unsupported_capability`, whose message does not mention the
+  Ordering. README.md lists it under "Behavior to write", in "Pages and actions", titled with that path, such as
+  `task.scaffold.index.ordering`, with the list's controller: "The Task index (`/tasks`) lists its records without
+  the sort the Plan names: First Draft did not import its `ordering`." It does not name the Ordering either, so
+  check every `ordering` against the Entity's Ordering keys.
 - **An Ordering with the same key as a [Predicate](predicates.md) on the Entity.** The Predicate keeps the scope
   name; the Ordering gets no scope at all, and a page that names it sorts by `id`. Give Orderings keys such as
   `by_title` or `newest_first`.
@@ -361,8 +364,9 @@ These pass analysis as `valid`:
   it. When the person asked for the enum, keep it in the Plan. README.md does not list it, so add it to your own
   list and write `self.implicit_order_column` and its index before the preview.
 - **Cursor pagination or an indirect Association with a rank Ordering.** The page sorts by `id`. README.md lists
-  the gap under "Behavior to write", in "Pages and actions", with a reason that ends "the surface falls back to
-  id". Write the order for that page before the preview, or, for a cursor list, use page numbers.
+  the gap under "Behavior to write", in "Pages and actions", with the controllers that load the page and a reason
+  that ends "the surface falls back to id". Write the order in those controllers before the preview, or, for a
+  cursor list, use page numbers.
 
 Analysis rejects, at import: a Field that does not exist or a Reference key in `field`
 (`foundation_plan.link.field_not_found`); a Field of another Entity

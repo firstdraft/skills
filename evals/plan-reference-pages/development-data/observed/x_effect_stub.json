@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -30,7 +30,7 @@
       "code": "foundation_plan.gap.state_transition.effects_not_generated",
       "pointer": "/application/entities/2/fields/3/settings/transitions/0",
       "readable_path": "task.status.finish",
-      "reason": "The finish event sets priority, a enum Field. This release generates at most one effect per event, setting an optional datetime Field on the same record to the current time or nil.",
+      "reason": "The finish event sets priority, an enum Field. This release generates at most one effect per event, setting an optional datetime Field on the same record to the current time or nil.",
       "consequence": "`Task#finish!`, `#finish`, and `#may_finish?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
     },
     {

@@ -379,9 +379,11 @@ These pass analysis as `valid`. Read the gap list after every push.
   page is left out (`foundation_plan.gap.scaffold.authorization.not_generated` and
   `foundation_plan.gap.scaffold.definition.not_generated`). A gate takes a Policy of the Account Entity; a record
   rule takes no `record`.
-- **A misspelled Predicate or Ordering name.** The list shows every record in `id` order
-  (`foundation_plan.gap.service.unsupported_capability`). README.md lists it under "Behavior to write", in "Data",
-  by the Entity's key and the path, with "First Draft did not import this part of the Plan".
+- **A misspelled Predicate or Ordering name.** The filter or sort is dropped: the list shows every record, or sorts
+  by `id` (`foundation_plan.gap.service.unsupported_capability`). README.md lists it under "Behavior to write", in
+  "Pages and actions", titled with the list's path, such as `task.scaffold.index.predicate`, with the list's
+  controller: "The Task index (`/tasks`) lists its records without the filter the Plan names: First Draft did not
+  import its `predicate`." No entry names the Predicate or Ordering.
 - **A Predicate or Ordering of another Entity**, such as `task.open` on the projects list, or a parent's Predicate on
   a related list. The filter or sort is dropped (`foundation_plan.gap.predicate.not_generated` or
   `foundation_plan.gap.ordering.not_generated`). A related list takes the related Entity's Predicates and Orderings.

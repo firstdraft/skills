@@ -21,10 +21,10 @@
   `validates :<source field>, presence: true, if: :adapted?` (or an equivalent `if:` on the adapted value).
 - `app/models/recipe.rb` has a second enum whose default is the untested value, and a presence validation on a
   `date` Field conditioned on the tested value.
-- The recipe create's strong parameters (`Cookbooks::RecipesController`) permit the conditionally required tested
-  date. The gap list has no record with code `foundation_plan.gap.scaffold.definition.not_generated`,
+- The gap list has no record with code `foundation_plan.gap.scaffold.definition.not_generated`,
   `foundation_plan.gap.scaffold.associated_create.not_generated`, or
-  `foundation_plan.gap.scaffold.binding.not_generated`.
+  `foundation_plan.gap.scaffold.binding.not_generated`. Whether the recipe create
+  (`Cookbooks::RecipesController`) also offers the tested date is not checked.
 - The recipe update's strong parameters (`RecipesController`) permit the tested/untested enum and the tested date.
   Whether the create form also offers the enum is not checked.
 - The starter has only `show` for `resources :recipes`; the solution's routes have `show`, `edit`, `update`, and
@@ -39,8 +39,7 @@
 
 - Says that nothing in the Plan sends email, and that the reader will write the email (a model callback, job, or
   mailer call) after Compile.
-- Says that the tested date also appears on the add-recipe form, because without it analysis reports
-  `foundation_plan.gap.scaffold.input.partially_generated` for that form, even though every new recipe starts
-  Untested; or tells the person this before building.
+- Says whether the tested date appears on the add-recipe form. If it does not, says that every new recipe starts
+  Untested, so no new recipe needs it; or tells the person this before building.
 - Says how the Untested start is achieved: an enum `default`, with no server literal binding (a literal binding is
   not generated).

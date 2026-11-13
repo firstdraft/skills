@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -68,7 +68,7 @@
       "section": "Behavior to write",
       "group": "Pages and actions",
       "title": "`product.read_with_specs`",
-      "file": "app/models/product.rb"
+      "file": "app/policies/product_policy.rb"
     },
     {
       "section": "Behavior to write",
@@ -85,14 +85,14 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.authorization`",
-      "file": null
+      "title": "`product.scaffold.index.authorization`",
+      "file": "app/policies/product_policy.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.authorization`",
-      "file": null
+      "title": "`product.scaffold.show.authorization`",
+      "file": "app/policies/product_policy.rb"
     },
     {
       "section": "Behavior to write",

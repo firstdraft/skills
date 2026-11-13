@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -40,18 +40,6 @@
       "group": "Pages and actions",
       "title": "`ticket.scaffold.update.inputs`",
       "file": "app/controllers/tickets_controller.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Ticket: create form browser coverage",
-      "file": "spec/system/tickets_spec.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Ticket: update form browser coverage",
-      "file": "spec/system/tickets_spec.rb"
     }
   ]
 }

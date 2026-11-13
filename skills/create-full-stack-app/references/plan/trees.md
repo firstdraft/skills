@@ -314,9 +314,10 @@ These have no Plan shape that generates them. Write them after Compile:
   `where(parent_id: nil)`; the model spec has a placeholder example that fails until you replace it. A related
   list with a `predicate` loses its `create_form` (`foundation_plan.gap.scaffold.associated_create.not_generated`):
   no Add link, nested New page, or Create action. The generated README lists the `create_form` under "Behavior to
-  write", in Pages and actions, by its place in the Plan and the generic name `scaffold.associated_create_form`.
-  Keep the `create_form` in the Plan and write them before the preview, or offer the person an unfiltered list with
-  an Add form instead; the Plan states what the person chooses.
+  write", in Pages and actions, as `project.folders.create_form`, naming the nested controller
+  `app/controllers/projects/folders_controller.rb`. Keep the `create_form` in the Plan and write them before the
+  preview, or offer the person an unfiltered list with an Add form instead; the Plan states what the person
+  chooses.
 - **Ancestors and descendants**: a breadcrumb trail, a whole subtree, an indented outline, a depth limit. Rails gives
   one level each way (`folder.parent`, `folder.subfolders`); write a recursive query or add a gem such as
   `ancestry` or `closure_tree`. State a depth limit as an `owner` Validation on the parent Reference, like the

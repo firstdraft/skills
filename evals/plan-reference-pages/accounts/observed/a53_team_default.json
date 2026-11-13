@@ -1,0 +1,51 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.account.partially_generated",
+      "pointer": "/application/entities/0/references/0",
+      "readable_path": "user.account",
+      "reason": "Public signup generates no control for a required Reference on the Account Entity.",
+      "consequence": "Signup cannot supply this Reference, so its validation rejects new Accounts."
+    },
+    {
+      "code": "foundation_plan.gap.reference.default_not_generated",
+      "pointer": "/application/entities/0/references/0/default",
+      "readable_path": "user.team.default",
+      "reason": "The current Rails Compiler does not apply Reference defaults.",
+      "consequence": "Reference storage, its belongs_to, and its consumers remain generated, but nothing applies the authored default, so a User created without team fails its \"must exist\" validation until application code applies it."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.team`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`User#team`",
+      "file": "app/models/user.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Account registration: persists submitted registration values",
+      "file": "spec/requests/account_registration_spec.rb"
+    }
+  ]
+}
