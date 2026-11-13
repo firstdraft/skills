@@ -1,0 +1,69 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/1/fields/1",
+      "readable_path": "post.comments_count",
+      "reason": "Rails counter_cache counts every child record; a Counter filtered by the Association's Predicate is not maintained.",
+      "consequence": "The integer column is generated, defaults to 0, and is read wherever the Plan reads it, but nothing updates it, so it reads 0 until application code maintains it."
+    },
+    {
+      "code": "foundation_plan.gap.policy.not_generated",
+      "pointer": "/application/entities/1/policies/0",
+      "readable_path": "post.quiet",
+      "reason": "Its Expression reads Post.comments_count, a Counter whose counting is not written yet, so it reads 0.",
+      "consequence": "PostPolicy is emitted with a stub: `PostPolicy#update?` returns false and its `:update` relation scope raises NotImplementedError until they are written. Pages, links, and controls that ask the rule deny until then, pages that list or look up records through the scope raise, and the specs that request those pages fail."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`PostPolicy#update?`",
+      "file": "app/policies/post_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`Post#comments_count`",
+      "file": "app/models/post.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Post: edit accepts a permitted edit request",
+      "file": "spec/requests/posts_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Post: update persists the submitted changes",
+      "file": "spec/requests/posts_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Post: update rejects a missing title without persisting changes",
+      "file": "spec/requests/posts_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Post: update form browser coverage",
+      "file": "spec/system/posts_spec.rb"
+    }
+  ]
+}

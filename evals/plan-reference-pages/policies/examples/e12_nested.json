@@ -1,0 +1,436 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "notes",
+  "name": "Notes",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-000000000098",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-000000000099",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-00000000009a",
+      "key": "admin",
+      "name": "Admin",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-00000000009b",
+      "key": "lists",
+      "kind": "direct",
+      "name": "Lists",
+      "reference": "list.owner",
+      "side": "referenced"
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-00000000009c",
+      "key": "notes",
+      "kind": "direct",
+      "name": "Notes",
+      "reference": "note.author",
+      "side": "referenced"
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-00000000009d",
+    "key": "list",
+    "name": "List",
+    "primary_descriptor": {
+     "field": "list.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-00000000009e",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0780-7000-8000-000000000001",
+      "key": "open",
+      "name": "Open",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-00000000009f",
+      "key": "owner",
+      "name": "Owner",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000000a0",
+      "key": "notes",
+      "kind": "direct",
+      "name": "Notes",
+      "reference": "note.list",
+      "side": "referenced"
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000000a1",
+      "key": "manage_own",
+      "operation": "manage",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "association": "list.owner"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0780-7000-8000-000000000002",
+      "key": "read_open_or_own",
+      "operation": "read",
+      "allow_when": {
+       "kind": "or",
+       "expressions": [
+        {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "list.open"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": true
+         }
+        },
+        {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "association": "list.owner"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "environment",
+          "name": "current_account"
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create"
+     ],
+     "index": {
+      "authorization": {
+       "policy": "list.manage_own"
+      },
+      "projection": [
+       {
+        "field": "list.title"
+       }
+      ]
+     },
+     "show": {
+      "authorization": {
+       "policy": "list.manage_own"
+      },
+      "projection": [
+       {
+        "field": "list.title"
+       }
+      ]
+     },
+     "create": {
+      "authorization": {
+       "policy": "list.manage_own"
+      },
+      "inputs": [
+       {
+        "field": "list.title"
+       }
+      ],
+      "bindings": [
+       {
+        "reference": "list.owner",
+        "value": {
+         "kind": "environment",
+         "name": "current_account"
+        }
+       }
+      ]
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-0000000000a2",
+    "key": "note",
+    "name": "Note",
+    "primary_descriptor": {
+     "field": "note.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000000a3",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000000a4",
+      "key": "shared",
+      "name": "Shared",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000000a5",
+      "key": "list",
+      "name": "List",
+      "targets": [
+       "list"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000000a6",
+      "key": "author",
+      "name": "Author",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0780-7000-8000-000000000003",
+      "key": "read_with_list",
+      "operation": "read",
+      "allow_when": {
+       "kind": "matches_policy",
+       "association": "note.list",
+       "policy": "list.read_open_or_own"
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0780-7000-8000-000000000004",
+      "key": "author_or_list_owner",
+      "operation": "manage",
+      "allow_when": {
+       "kind": "and",
+       "expressions": [
+        {
+         "kind": "matches_policy",
+         "association": "note.list",
+         "policy": "list.read_open_or_own"
+        },
+        {
+         "kind": "or",
+         "expressions": [
+          {
+           "kind": "comparison",
+           "left": {
+            "target": {
+             "association": "note.author"
+            }
+           },
+           "operator": "equals",
+           "right": {
+            "kind": "environment",
+            "name": "current_account"
+           }
+          },
+          {
+           "kind": "comparison",
+           "left": {
+            "through": [
+             {
+              "association": "note.list"
+             }
+            ],
+            "target": {
+             "association": "list.owner"
+            }
+           },
+           "operator": "equals",
+           "right": {
+            "kind": "environment",
+            "name": "current_account"
+           }
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "index": {
+      "authorization": {
+       "policy": "note.read_with_list"
+      },
+      "projection": [
+       {
+        "field": "note.title"
+       }
+      ]
+     },
+     "show": {
+      "authorization": {
+       "policy": "note.read_with_list"
+      },
+      "projection": [
+       {
+        "field": "note.title"
+       },
+       {
+        "field": "note.shared"
+       }
+      ]
+     },
+     "create": {
+      "authorization": {
+       "policy": "note.author_or_list_owner"
+      },
+      "inputs": [
+       {
+        "field": "note.title"
+       },
+       {
+        "field": "note.shared"
+       },
+       {
+        "association": "note.list"
+       }
+      ],
+      "bindings": [
+       {
+        "reference": "note.author",
+        "value": {
+         "kind": "environment",
+         "name": "current_account"
+        }
+       }
+      ]
+     },
+     "update": {
+      "authorization": {
+       "policy": "note.author_or_list_owner"
+      },
+      "inputs": [
+       {
+        "field": "note.title"
+       },
+       {
+        "field": "note.shared"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": {
+       "policy": "note.author_or_list_owner"
+      }
+     }
+    }
+   }
+  ]
+ }
+}

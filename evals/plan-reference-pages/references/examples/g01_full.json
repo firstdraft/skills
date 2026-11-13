@@ -1,0 +1,408 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1e9a1-0000-7000-8000-000000000002",
+        "key": "person",
+        "name": "Person",
+        "primary_descriptor": {
+          "field": "person.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e9a1-0000-7000-8000-000000000001",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "person.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "person.name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "person.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "person.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1e9a1-0000-7000-8000-000000000004",
+        "key": "unit",
+        "name": "Unit",
+        "primary_descriptor": {
+          "field": "unit.label"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e9a1-0000-7000-8000-000000000003",
+            "key": "label",
+            "name": "Label",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "unit.label"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "unit.label"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "unit.label"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "unit.label"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1e9a1-0000-7000-8000-00000000000a",
+        "key": "lease",
+        "name": "Lease",
+        "primary_descriptor": {
+          "association": "lease.unit"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e9a1-0000-7000-8000-000000000005",
+            "key": "starts_on",
+            "name": "Starts on",
+            "type": "date",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1e9a1-0000-7000-8000-000000000006",
+            "key": "unit",
+            "name": "Unit",
+            "targets": [
+              "unit"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "immutable": true
+          },
+          {
+            "subject_uuid": "01a1e9a1-0000-7000-8000-000000000007",
+            "key": "landlord",
+            "name": "Landlord",
+            "targets": [
+              "person"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict"
+          },
+          {
+            "subject_uuid": "01a1e9a1-0000-7000-8000-000000000008",
+            "key": "tenant",
+            "name": "Tenant",
+            "targets": [
+              "person"
+            ],
+            "required": false,
+            "on_referenced_deleted": "nullify_reference"
+          },
+          {
+            "subject_uuid": "01a1e9a1-0000-7000-8000-000000000009",
+            "key": "renewal_of",
+            "name": "Renewal of",
+            "targets": [
+              "lease"
+            ],
+            "required": false,
+            "on_referenced_deleted": "nullify_reference",
+            "one_to_one": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "lease.starts_on"
+              },
+              {
+                "association": "lease.unit",
+                "authorization": "public"
+              },
+              {
+                "association": "lease.tenant",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "lease.starts_on"
+              },
+              {
+                "association": "lease.unit",
+                "authorization": "public"
+              },
+              {
+                "association": "lease.landlord",
+                "authorization": "public"
+              },
+              {
+                "association": "lease.tenant",
+                "authorization": "public"
+              },
+              {
+                "association": "lease.renewal_of",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "lease.starts_on"
+              },
+              {
+                "association": "lease.unit"
+              },
+              {
+                "association": "lease.landlord"
+              },
+              {
+                "association": "lease.tenant"
+              },
+              {
+                "association": "lease.renewal_of"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "lease.starts_on"
+              },
+              {
+                "association": "lease.landlord"
+              },
+              {
+                "association": "lease.tenant"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1e9a1-0000-7000-8000-00000000000b",
+        "key": "ada",
+        "entity": "person",
+        "fields": [
+          {
+            "field": "person.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ada Okafor"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e9a1-0000-7000-8000-00000000000c",
+        "key": "ben",
+        "entity": "person",
+        "fields": [
+          {
+            "field": "person.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ben Li"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e9a1-0000-7000-8000-00000000000d",
+        "key": "flat_2b",
+        "entity": "unit",
+        "fields": [
+          {
+            "field": "unit.label",
+            "value": {
+              "kind": "literal",
+              "value": "Flat 2B"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e9a1-0000-7000-8000-00000000000e",
+        "key": "first",
+        "entity": "lease",
+        "fields": [
+          {
+            "field": "lease.starts_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-01-01"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "lease.unit",
+            "value": {
+              "kind": "reference_record",
+              "record": "unit.flat_2b"
+            }
+          },
+          {
+            "reference": "lease.landlord",
+            "value": {
+              "kind": "reference_record",
+              "record": "person.ada"
+            }
+          },
+          {
+            "reference": "lease.tenant",
+            "value": {
+              "kind": "reference_record",
+              "record": "person.ben"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e9a1-0000-7000-8000-00000000000f",
+        "key": "renewal",
+        "entity": "lease",
+        "fields": [
+          {
+            "field": "lease.starts_on",
+            "value": {
+              "kind": "literal",
+              "value": "2027-01-01"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "lease.unit",
+            "value": {
+              "kind": "reference_record",
+              "record": "unit.flat_2b"
+            }
+          },
+          {
+            "reference": "lease.landlord",
+            "value": {
+              "kind": "reference_record",
+              "record": "person.ada"
+            }
+          },
+          {
+            "reference": "lease.renewal_of",
+            "value": {
+              "kind": "reference_record",
+              "record": "lease.first"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

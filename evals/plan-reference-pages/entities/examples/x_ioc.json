@@ -1,0 +1,44 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe_app",
+    "name": "Probe app",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0e00-7000-8000-000000000010",
+        "key": "message",
+        "name": "Message",
+        "primary_descriptor": {
+          "field": "message.body"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-00000000000e",
+            "key": "body",
+            "name": "Body",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-00000000000f",
+            "key": "sent_at",
+            "name": "Sent at",
+            "type": "datetime",
+            "required": true
+          }
+        ],
+        "implicit_order_column": [
+          {
+            "field": "message.sent_at"
+          }
+        ]
+      }
+    ]
+  }
+}

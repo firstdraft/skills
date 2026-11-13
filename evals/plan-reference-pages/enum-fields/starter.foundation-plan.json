@@ -1,0 +1,74 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "helpdesk",
+    "name": "Helpdesk",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0759-7000-8000-000000000032",
+        "key": "ticket",
+        "name": "Ticket",
+        "primary_descriptor": {
+          "field": "ticket.subject"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0759-7000-8000-000000000033",
+            "key": "subject",
+            "name": "Subject",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.subject"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.subject"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "ticket.subject"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "ticket.subject"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

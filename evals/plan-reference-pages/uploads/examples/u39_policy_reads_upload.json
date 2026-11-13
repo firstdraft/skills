@@ -1,0 +1,215 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "listings",
+    "name": "Listings",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa300-0000-7000-8000-000000000002",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000001",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "verification": {
+            "kind": "email"
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        }
+      },
+      {
+        "subject_uuid": "019fa300-0000-7000-8000-000000000006",
+        "key": "listing",
+        "name": "Listing",
+        "primary_descriptor": {
+          "field": "listing.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000003",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000004",
+            "key": "photo",
+            "name": "Photo",
+            "type": "image",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000005",
+            "key": "brochure",
+            "name": "Brochure",
+            "type": "attachment",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000007",
+            "key": "owner",
+            "name": "Owner",
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000008",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "and",
+              "expressions": [
+                {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "association": "listing.owner"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "environment",
+                    "name": "current_account"
+                  }
+                },
+                {
+                  "kind": "is_null",
+                  "operand": {
+                    "target": {
+                      "field": "listing.brochure"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "listing.manage_own"
+            },
+            "projection": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "listing.manage_own"
+            },
+            "projection": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              },
+              {
+                "field": "listing.brochure"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "listing.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              },
+              {
+                "field": "listing.brochure"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "listing.owner",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "listing.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              },
+              {
+                "field": "listing.brochure"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "listing.manage_own"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

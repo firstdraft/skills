@@ -1,0 +1,216 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "catalog",
+    "name": "Catalog",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbae-9475-7000-8000-000000000901",
+        "key": "product",
+        "name": "Product",
+        "primary_descriptor": {
+          "field": "product.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-000000000902",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-000000000903",
+            "key": "sku",
+            "name": "SKU",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-000000000904",
+            "key": "specifications",
+            "name": "Specifications",
+            "type": "json",
+            "required": true,
+            "notes": "Attributes that differ by product, such as RAM for a laptop or fabric for a shirt.",
+            "validations": [
+              {
+                "subject_uuid": "01a1cbae-9475-7000-8000-000000000908",
+                "key": "has_weight",
+                "owner": {
+                  "description": "The specifications include a weight."
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-000000000905",
+            "key": "supplier_record",
+            "name": "Supplier record",
+            "type": "json",
+            "required": false,
+            "immutable": true,
+            "notes": "The record the supplier feed sent, pasted in when the product is added."
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-000000000909",
+            "key": "red",
+            "name": "Red",
+            "owner": {
+              "description": "Products whose specifications say the color is red."
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.sku"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.sku"
+              },
+              {
+                "field": "product.specifications"
+              },
+              {
+                "field": "product.supplier_record"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.sku"
+              },
+              {
+                "field": "product.specifications"
+              },
+              {
+                "field": "product.supplier_record"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.sku"
+              },
+              {
+                "field": "product.specifications"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbae-9475-7000-8000-000000000906",
+        "key": "laptop",
+        "entity": "product",
+        "fields": [
+          {
+            "field": "product.name",
+            "value": {
+              "kind": "literal",
+              "value": "Laptop"
+            }
+          },
+          {
+            "field": "product.sku",
+            "value": {
+              "kind": "literal",
+              "value": "LT-14"
+            }
+          },
+          {
+            "field": "product.specifications",
+            "value": {
+              "kind": "literal",
+              "value": {
+                "ram_gb": 16,
+                "screen_inches": 14
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbae-9475-7000-8000-000000000907",
+        "key": "t_shirt",
+        "entity": "product",
+        "fields": [
+          {
+            "field": "product.name",
+            "value": {
+              "kind": "literal",
+              "value": "T-shirt"
+            }
+          },
+          {
+            "field": "product.sku",
+            "value": {
+              "kind": "literal",
+              "value": "TS-01"
+            }
+          },
+          {
+            "field": "product.specifications",
+            "value": {
+              "kind": "literal",
+              "value": {
+                "fabric": "cotton",
+                "sizes": [
+                  "S",
+                  "M",
+                  "L"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

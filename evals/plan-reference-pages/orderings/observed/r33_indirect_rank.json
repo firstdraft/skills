@@ -1,0 +1,32 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1/ordering",
+      "readable_path": "project.linked_tasks.ordering",
+      "reason": "This indirect collection loads with DISTINCT, which PostgreSQL cannot order by the emitted named Ordering scope's rank expression; the surface falls back to id.",
+      "consequence": "Any surviving Scaffold consumer remains otherwise generated with deterministic id ordering."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.linked_tasks.ordering`",
+      "file": "app/models/project.rb"
+    }
+  ]
+}

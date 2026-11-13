@@ -1,0 +1,61 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/1/orderings/3",
+      "readable_path": "project.mixed",
+      "reason": "This named Ordering is outside the current simple indexed-scope release.",
+      "consequence": "`Project.mixed` raises NotImplementedError until it is written, and no database index is emitted for it. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/ordering",
+      "readable_path": "project.scaffold.index.ordering",
+      "reason": "The selected named Ordering has no target scope lowering.",
+      "consequence": "This surface calls `Project.mixed`, which raises NotImplementedError until it is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": null,
+      "title": "`Project.mixed`",
+      "file": "app/models/project.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: index lists accessible records",
+      "file": "spec/requests/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update redirects to a page that loads",
+      "file": "spec/requests/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: update form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

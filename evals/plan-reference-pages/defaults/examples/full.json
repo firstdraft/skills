@@ -1,0 +1,385 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "expenses",
+    "name": "Expenses",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbaa-460c-785c-8d27-2258931a6335",
+        "key": "expense",
+        "name": "Expense",
+        "primary_descriptor": {
+          "field": "expense.description"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbaa-460c-7196-9633-edcdd07b18e3",
+            "key": "description",
+            "name": "Description",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-70a6-be34-d1b8ef84bb4b",
+            "key": "amount",
+            "name": "Amount",
+            "type": "money",
+            "required": true,
+            "settings": {
+              "currency": "USD"
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7926-9361-e4f2c225a8a9",
+            "key": "mileage_rate",
+            "name": "Mileage rate",
+            "type": "money",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "0.7"
+            },
+            "settings": {
+              "currency": "USD"
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-74d5-8d76-e0f59d344a3a",
+            "key": "receipts",
+            "name": "Receipts",
+            "type": "integer",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": 1
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7ae1-888b-044761e0e633",
+            "key": "reimbursable",
+            "name": "Reimbursable",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7d2d-b876-71e383404808",
+            "key": "tax_rate",
+            "name": "Tax rate",
+            "type": "decimal",
+            "required": false,
+            "default": {
+              "kind": "literal",
+              "value": "8.25"
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7005-83de-df3b6eef281b",
+            "key": "category",
+            "name": "Category",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "travel"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cbaa-460c-7bfe-956d-7c848058d6e8",
+                  "key": "travel",
+                  "name": "Travel"
+                },
+                {
+                  "subject_uuid": "01a1cbaa-460c-7a85-86e1-0086960ebfe1",
+                  "key": "meals",
+                  "name": "Meals"
+                },
+                {
+                  "subject_uuid": "01a1cbaa-460c-7e2e-b69c-bc80d273ad4b",
+                  "key": "supplies",
+                  "name": "Supplies"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7c00-b06a-4deb13048bc3",
+            "key": "cost_center",
+            "name": "Cost center",
+            "type": "short_text",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "General"
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7b7c-bf3b-dc484748785a",
+            "key": "comment",
+            "name": "Comment",
+            "type": "long_text",
+            "required": false,
+            "default": {
+              "kind": "literal",
+              "value": "No comment."
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7477-a3c6-d3c6db19eced",
+            "key": "spent_on",
+            "name": "Spent on",
+            "type": "date",
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_date"
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7bd6-8668-4194fac80621",
+            "key": "submitted_at",
+            "name": "Submitted at",
+            "type": "datetime",
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_time"
+            },
+            "immutable": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.description"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.mileage_rate"
+              },
+              {
+                "field": "expense.receipts"
+              },
+              {
+                "field": "expense.reimbursable"
+              },
+              {
+                "field": "expense.tax_rate"
+              },
+              {
+                "field": "expense.category"
+              },
+              {
+                "field": "expense.cost_center"
+              },
+              {
+                "field": "expense.comment"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.submitted_at"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.description"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.mileage_rate"
+              },
+              {
+                "field": "expense.receipts"
+              },
+              {
+                "field": "expense.reimbursable"
+              },
+              {
+                "field": "expense.tax_rate"
+              },
+              {
+                "field": "expense.category"
+              },
+              {
+                "field": "expense.cost_center"
+              },
+              {
+                "field": "expense.comment"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.submitted_at"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.description"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.mileage_rate"
+              },
+              {
+                "field": "expense.receipts"
+              },
+              {
+                "field": "expense.reimbursable"
+              },
+              {
+                "field": "expense.tax_rate"
+              },
+              {
+                "field": "expense.category"
+              },
+              {
+                "field": "expense.cost_center"
+              },
+              {
+                "field": "expense.comment"
+              },
+              {
+                "field": "expense.spent_on"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.description"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.mileage_rate"
+              },
+              {
+                "field": "expense.receipts"
+              },
+              {
+                "field": "expense.reimbursable"
+              },
+              {
+                "field": "expense.tax_rate"
+              },
+              {
+                "field": "expense.category"
+              },
+              {
+                "field": "expense.cost_center"
+              },
+              {
+                "field": "expense.comment"
+              },
+              {
+                "field": "expense.spent_on"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbaa-460c-7cdd-a86a-dc23b6931c02",
+        "key": "taxi",
+        "entity": "expense",
+        "fields": [
+          {
+            "field": "expense.description",
+            "value": {
+              "kind": "literal",
+              "value": "Taxi to airport"
+            }
+          },
+          {
+            "field": "expense.amount",
+            "value": {
+              "kind": "literal",
+              "value": "42.5"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbaa-460c-77a5-9e25-015688de3a20",
+        "key": "lunch",
+        "entity": "expense",
+        "fields": [
+          {
+            "field": "expense.description",
+            "value": {
+              "kind": "literal",
+              "value": "Team lunch"
+            }
+          },
+          {
+            "field": "expense.amount",
+            "value": {
+              "kind": "literal",
+              "value": "120"
+            }
+          },
+          {
+            "field": "expense.category",
+            "value": {
+              "kind": "literal",
+              "value": "meals"
+            }
+          },
+          {
+            "field": "expense.reimbursable",
+            "value": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          {
+            "field": "expense.spent_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-10-02"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

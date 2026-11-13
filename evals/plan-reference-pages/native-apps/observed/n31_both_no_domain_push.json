@@ -1,0 +1,58 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "import",
+      "code": "foundation_plan.import.unsupported_capability",
+      "severity": "warning",
+      "pointer": "/application/delivery",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.service.unsupported_capability",
+      "pointer": "/application/delivery",
+      "readable_path": null,
+      "reason": "This First Draft release cannot yet import this Foundation Plan capability.",
+      "consequence": "This Plan path is omitted from the admitted Project graph and generated application."
+    },
+    {
+      "code": "foundation_plan.gap.native_client.partially_generated",
+      "pointer": "/application/native/android",
+      "readable_path": "application.native.android",
+      "reason": "The Plan sets no application.domain, so the Android Release build uses the placeholder origin https://trail-log.invalid and the placeholder application ID invalid.firstdraft.trail_log.",
+      "consequence": "The Release build points at these placeholders, so it cannot reach a server or be submitted to Google Play. Set application.domain, or replace both values, before a Release build; the application ID cannot change after the app is published."
+    },
+    {
+      "code": "foundation_plan.gap.native_client.partially_generated",
+      "pointer": "/application/native/ios",
+      "readable_path": "application.native.ios",
+      "reason": "The Plan sets no application.domain, so the iOS Release build uses the placeholder origin https://trail-log.invalid and the placeholder bundle ID invalid.firstdraft.trail-log.",
+      "consequence": "The Release build points at these placeholders, so it cannot reach a server or be submitted to the App Store. Set application.domain, or replace both values, before a Release build; the bundle ID cannot change after the app is published."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "What you supply",
+      "group": null,
+      "title": "`/application/delivery`",
+      "file": null
+    },
+    {
+      "section": "What you supply",
+      "group": null,
+      "title": "`application.native.android`",
+      "file": "android/"
+    },
+    {
+      "section": "What you supply",
+      "group": null,
+      "title": "`application.native.ios`",
+      "file": "ios/"
+    }
+  ]
+}

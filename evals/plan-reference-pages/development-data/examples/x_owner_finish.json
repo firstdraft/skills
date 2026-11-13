@@ -1,0 +1,499 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "launch_tracker",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cba6-b572-7d58-a244-b55b1e644d85",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cba6-b572-7697-8b80-b5be74d0b67c",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "verification": {
+            "kind": "email"
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        }
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-7afb-8501-b1d05874085e",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cba6-b572-7789-91ed-72f55ae3cd3c",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cba6-b572-7bed-99ee-0c29547aaffe",
+            "key": "owner",
+            "name": "Owner",
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          }
+        },
+        "validations": [
+          {
+            "subject_uuid": "01a1cba6-b572-7d28-a80a-ccf1bf4b8ca5",
+            "key": "unique_name",
+            "kind": "uniqueness",
+            "targets": [
+              {
+                "field": "project.name"
+              }
+            ],
+            "nulls": "distinct",
+            "error_target": {
+              "field": "project.name"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-73ab-b6b7-55e98dc342fe",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cba6-b572-7903-8e09-db09645e92b9",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-075b-7000-8000-0000000055f1",
+                "key": "not_shouting",
+                "owner": {
+                  "description": "The title is not written in capitals only."
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-7e96-99fb-be25a009e03a",
+            "key": "priority",
+            "name": "Priority",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "medium"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cba6-b572-7488-8139-774979450fc3",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "01a1cba6-b572-7546-8b85-6328d13d541a",
+                  "key": "medium",
+                  "name": "Medium"
+                },
+                {
+                  "subject_uuid": "01a1cba6-b572-7957-8a84-667ab4afc12c",
+                  "key": "high",
+                  "name": "High"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-787a-b279-08d14f2785cd",
+            "key": "due_on",
+            "name": "Due On",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-78aa-aaac-5660dff5b17f",
+            "key": "status",
+            "name": "Status",
+            "type": "state_machine",
+            "required": true,
+            "settings": {
+              "initial_state": "open",
+              "states": [
+                {
+                  "subject_uuid": "01a1cba6-b572-7dbb-a2bb-b532dcf838ae",
+                  "key": "open",
+                  "name": "Open"
+                },
+                {
+                  "subject_uuid": "01a1cba6-b572-77d1-a0eb-7263870b7601",
+                  "key": "done",
+                  "name": "Done"
+                }
+              ],
+              "transitions": [
+                {
+                  "subject_uuid": "01a1cba6-b572-70f5-b3c3-f182901fea51",
+                  "key": "finish",
+                  "from": [
+                    "open"
+                  ],
+                  "to": "done",
+                  "effects": [
+                    {
+                      "kind": "set_field",
+                      "field": "task.finished_at",
+                      "value": {
+                        "kind": "environment",
+                        "name": "current_time"
+                      }
+                    }
+                  ],
+                  "owner": {
+                    "description": "Mark the task done once its checklist is complete."
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-7be5-8cc9-94dda323d1ba",
+            "key": "finished_at",
+            "name": "Finished At",
+            "type": "datetime",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cba6-b572-78e7-90ae-fa14c97eb0a7",
+            "key": "project",
+            "name": "Project",
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "project"
+            ]
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-7d67-9fce-46dc20ea4818",
+            "key": "assignee",
+            "name": "Assignee",
+            "required": false,
+            "on_referenced_deleted": "nullify_reference",
+            "targets": [
+              "user"
+            ]
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-7918-a43b-958fa4cd46fe",
+            "key": "category",
+            "name": "Category",
+            "required": false,
+            "on_referenced_deleted": "nullify_reference",
+            "targets": [
+              "category"
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.due_on"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.due_on"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-7a1a-946f-1c27122192fc",
+        "key": "category",
+        "name": "Category",
+        "primary_descriptor": {
+          "field": "category.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cba6-b572-7959-b0c9-1ace651919a9",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "reference_data": {
+          "identity": {
+            "field": "category.name"
+          },
+          "records": [
+            {
+              "subject_uuid": "01a1cba6-b572-73f5-a599-f8e3f43f1bdd",
+              "key": "design",
+              "fields": [
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Design"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cba6-b572-7e6b-b123-906ada02e892",
+        "key": "ada",
+        "entity": "user",
+        "fields": [
+          {
+            "field": "user.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ada"
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "value": "ada@example.com"
+            }
+          ],
+          "credentials": [
+            {
+              "kind": "password",
+              "value": "password"
+            }
+          ]
+        }
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-7871-b676-28787cb70b34",
+        "key": "ben",
+        "entity": "user",
+        "fields": [
+          {
+            "field": "user.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ben"
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "value": "ben@example.com"
+            }
+          ],
+          "credentials": [
+            {
+              "kind": "password",
+              "value": "password"
+            }
+          ]
+        }
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-7bd4-8738-3ffa0797b010",
+        "key": "launch",
+        "entity": "project",
+        "fields": [
+          {
+            "field": "project.name",
+            "value": {
+              "kind": "literal",
+              "value": "Launch"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "project.owner",
+            "value": {
+              "kind": "reference_record",
+              "record": "user.ada"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-7fea-8aaf-3be62d7018ae",
+        "key": "write_copy",
+        "entity": "task",
+        "fields": [
+          {
+            "field": "task.title",
+            "value": {
+              "kind": "literal",
+              "value": "Write copy"
+            }
+          },
+          {
+            "field": "task.priority",
+            "value": {
+              "kind": "literal",
+              "value": "high"
+            }
+          },
+          {
+            "field": "task.due_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-12-01"
+            }
+          },
+          {
+            "field": "task.status",
+            "value": {
+              "kind": "literal",
+              "value": "done"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "task.project",
+            "value": {
+              "kind": "reference_record",
+              "record": "project.launch"
+            }
+          },
+          {
+            "reference": "task.assignee",
+            "value": {
+              "kind": "reference_record",
+              "record": "user.ben"
+            }
+          },
+          {
+            "reference": "task.category",
+            "value": {
+              "kind": "reference_record",
+              "record": "category.design"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-7312-9222-ae174e69f12a",
+        "key": "book_venue",
+        "entity": "task",
+        "fields": [
+          {
+            "field": "task.title",
+            "value": {
+              "kind": "literal",
+              "value": "Book venue"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "task.project",
+            "value": {
+              "kind": "reference_record",
+              "record": "project.launch"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

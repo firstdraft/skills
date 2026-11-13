@@ -1,0 +1,460 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "club",
+    "name": "Club",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0773-7000-8000-000000000001",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "field": "member.handle"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-000000000002",
+            "key": "handle",
+            "name": "Handle",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "trim"
+            ],
+            "comparison": "case_insensitive",
+            "immutable": true,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-0773-7000-8000-000000000003",
+                "key": "short_enough",
+                "kind": "length",
+                "minimum": 3,
+                "maximum": 20
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-000000000004",
+            "key": "bio",
+            "name": "Bio",
+            "type": "long_text",
+            "required": false,
+            "normalizations": [
+              "collapse_whitespace",
+              "blank_to_null"
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-000000000005",
+            "key": "joined_on",
+            "name": "Joined on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-000000000006",
+            "key": "last_seen_at",
+            "name": "Last seen at",
+            "type": "datetime",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-000000000007",
+            "key": "visits",
+            "name": "Visits",
+            "type": "integer",
+            "required": true,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-0773-7000-8000-000000000008",
+                "key": "not_negative",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "greater_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": 0
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-000000000009",
+            "key": "rating",
+            "name": "Rating",
+            "type": "decimal",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-00000000000a",
+            "key": "active",
+            "name": "Active",
+            "type": "boolean",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-00000000000b",
+            "key": "website",
+            "name": "Website",
+            "type": "url",
+            "required": false,
+            "normalizations": [
+              "trim",
+              "blank_to_null"
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-00000000000c",
+            "key": "language",
+            "name": "Language",
+            "type": "language_code",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-00000000000d",
+            "key": "time_zone",
+            "name": "Time zone",
+            "type": "time_zone",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-00000000000e",
+            "key": "phone",
+            "name": "Phone",
+            "type": "short_text",
+            "required": false,
+            "redact_from_logs": true,
+            "notes": "Staff call members about schedule changes."
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-00000000000f",
+            "key": "active",
+            "name": "Active",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "member.active"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": true
+              }
+            }
+          }
+        ],
+        "orderings": [
+          {
+            "subject_uuid": "01a0caf3-0773-7000-8000-000000000010",
+            "key": "newest",
+            "terms": [
+              {
+                "field": "member.joined_on",
+                "direction": "descending"
+              },
+              {
+                "system_field": "id",
+                "direction": "descending"
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000059d9",
+            "key": "by_bio",
+            "terms": [
+              {
+                "field": "member.bio",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "id",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "member.handle"
+              },
+              {
+                "field": "member.joined_on"
+              },
+              {
+                "field": "member.visits"
+              },
+              {
+                "field": "member.active"
+              },
+              {
+                "field": "member.website"
+              }
+            ],
+            "predicate": "member.active",
+            "ordering": "member.by_bio"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "member.handle"
+              },
+              {
+                "field": "member.bio"
+              },
+              {
+                "field": "member.joined_on"
+              },
+              {
+                "field": "member.last_seen_at"
+              },
+              {
+                "field": "member.visits"
+              },
+              {
+                "field": "member.rating"
+              },
+              {
+                "field": "member.active"
+              },
+              {
+                "field": "member.website"
+              },
+              {
+                "field": "member.language"
+              },
+              {
+                "field": "member.time_zone"
+              },
+              {
+                "field": "member.phone"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "member.handle"
+              },
+              {
+                "field": "member.bio"
+              },
+              {
+                "field": "member.joined_on"
+              },
+              {
+                "field": "member.last_seen_at"
+              },
+              {
+                "field": "member.visits"
+              },
+              {
+                "field": "member.rating"
+              },
+              {
+                "field": "member.active"
+              },
+              {
+                "field": "member.website"
+              },
+              {
+                "field": "member.language"
+              },
+              {
+                "field": "member.time_zone"
+              },
+              {
+                "field": "member.phone"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "member.bio"
+              },
+              {
+                "field": "member.joined_on"
+              },
+              {
+                "field": "member.last_seen_at"
+              },
+              {
+                "field": "member.visits"
+              },
+              {
+                "field": "member.rating"
+              },
+              {
+                "field": "member.active"
+              },
+              {
+                "field": "member.website"
+              },
+              {
+                "field": "member.language"
+              },
+              {
+                "field": "member.time_zone"
+              },
+              {
+                "field": "member.phone"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf3-0773-7000-8000-000000000011",
+        "key": "ada",
+        "entity": "member",
+        "fields": [
+          {
+            "field": "member.handle",
+            "value": {
+              "kind": "literal",
+              "value": "ada"
+            }
+          },
+          {
+            "field": "member.joined_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-03-01"
+            }
+          },
+          {
+            "field": "member.last_seen_at",
+            "value": {
+              "kind": "literal",
+              "value": "2026-11-02T18:30:00Z"
+            }
+          },
+          {
+            "field": "member.visits",
+            "value": {
+              "kind": "literal",
+              "value": 12
+            }
+          },
+          {
+            "field": "member.rating",
+            "value": {
+              "kind": "literal",
+              "value": "4.5"
+            }
+          },
+          {
+            "field": "member.active",
+            "value": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          {
+            "field": "member.website",
+            "value": {
+              "kind": "literal",
+              "value": "https://ada.example"
+            }
+          },
+          {
+            "field": "member.language",
+            "value": {
+              "kind": "literal",
+              "value": "en"
+            }
+          },
+          {
+            "field": "member.time_zone",
+            "value": {
+              "kind": "literal",
+              "value": "Europe/London"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0773-7000-8000-000000000012",
+        "key": "grace",
+        "entity": "member",
+        "fields": [
+          {
+            "field": "member.handle",
+            "value": {
+              "kind": "literal",
+              "value": "grace"
+            }
+          },
+          {
+            "field": "member.joined_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-05-14"
+            }
+          },
+          {
+            "field": "member.visits",
+            "value": {
+              "kind": "literal",
+              "value": 0
+            }
+          },
+          {
+            "field": "member.active",
+            "value": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          {
+            "field": "member.language",
+            "value": {
+              "kind": "literal",
+              "value": "pt-BR"
+            }
+          },
+          {
+            "field": "member.time_zone",
+            "value": {
+              "kind": "literal",
+              "value": "America/Sao_Paulo"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

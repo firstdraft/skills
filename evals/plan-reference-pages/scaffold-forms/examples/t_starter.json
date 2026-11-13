@@ -1,0 +1,241 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "recipe_box",
+    "name": "Recipe box",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000701",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000702",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000703",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000704",
+        "key": "cookbook",
+        "name": "Cookbook",
+        "primary_descriptor": {
+          "field": "cookbook.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000705",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000706",
+            "key": "owner",
+            "name": "Owner",
+            "targets": [
+              "user"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000707",
+            "key": "recipes",
+            "name": "Recipes",
+            "kind": "direct",
+            "reference": "recipe.cookbook",
+            "side": "referenced"
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000708",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "cookbook.owner"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "cookbook.manage_own"
+            },
+            "projection": [
+              {
+                "field": "cookbook.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "cookbook.manage_own"
+            },
+            "projection": [
+              {
+                "field": "cookbook.name"
+              },
+              {
+                "association": "cookbook.recipes",
+                "authorization": {
+                  "policy": "recipe.manage_with_cookbook"
+                },
+                "projection": [
+                  {
+                    "field": "recipe.title"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000709",
+        "key": "recipe",
+        "name": "Recipe",
+        "primary_descriptor": {
+          "field": "recipe.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070a",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070b",
+            "key": "instructions",
+            "name": "Instructions",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070c",
+            "key": "cookbook",
+            "name": "Cookbook",
+            "targets": [
+              "cookbook"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070d",
+            "key": "manage_with_cookbook",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "matches_policy",
+              "association": "recipe.cookbook",
+              "policy": "cookbook.manage_own"
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show"
+          ],
+          "show": {
+            "authorization": {
+              "policy": "recipe.manage_with_cookbook"
+            },
+            "projection": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "home_index": "cookbook"
+  }
+}

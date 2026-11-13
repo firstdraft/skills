@@ -1,0 +1,442 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "workshops",
+  "name": "Workshops",
+  "native": {},
+  "delivery": {},
+  "home_index": "workshop",
+  "entities": [
+   {
+    "subject_uuid": "01a1cba7-b691-743b-984d-9d3d06652df1",
+    "key": "instructor",
+    "name": "Instructor",
+    "primary_descriptor": {
+     "field": "instructor.name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cba7-b691-7216-b069-b6fb6e5cfc7e",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "instructor.name"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "instructor.name"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "instructor.name"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "instructor.name"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a1cba7-b691-7364-8564-40b55120ba48",
+    "key": "workshop",
+    "name": "Workshop",
+    "primary_descriptor": {
+     "field": "workshop.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cba7-b691-738d-b48a-81e204ec5bbf",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7b20-af34-ca35f1e8cef1",
+      "key": "code",
+      "name": "Code",
+      "type": "short_text",
+      "required": true,
+      "validations": [
+       {
+        "subject_uuid": "01a1cba7-b691-732a-8825-054d467df86e",
+        "key": "code_length",
+        "kind": "length",
+        "minimum": 4,
+        "maximum": 8
+       },
+       {
+        "subject_uuid": "01a1cba7-b691-7fda-b0a6-caf6e654f81c",
+        "key": "code_characters",
+        "kind": "format",
+        "matches": {
+         "source": "\\A[A-Z0-9]+\\z"
+        }
+       },
+       {
+        "subject_uuid": "01a1cba7-b691-7fa2-b80c-25ecad0f5cce",
+        "key": "code_not_reserved",
+        "kind": "exclusion",
+        "forbidden_values": [
+         {
+          "kind": "literal",
+          "value": "TEST"
+         },
+         {
+          "kind": "literal",
+          "value": "DEMO"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7ae9-bf36-35e9853b8a3e",
+      "key": "kind",
+      "name": "Kind",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "01a1cba7-b691-7c85-9966-78ebde85c479",
+         "key": "online",
+         "name": "Online"
+        },
+        {
+         "subject_uuid": "01a1cba7-b691-72db-b65d-275f4d63dd0d",
+         "key": "in_person",
+         "name": "In person"
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7d33-be02-cb5178ec5edc",
+      "key": "room",
+      "name": "Room",
+      "type": "short_text",
+      "required": false,
+      "validations": [
+       {
+        "subject_uuid": "01a1cba7-b691-749b-87e0-224d7aaef373",
+        "key": "room_for_in_person",
+        "kind": "presence",
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "workshop.kind"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "in_person"
+         }
+        }
+       },
+       {
+        "subject_uuid": "01a1cba7-b691-7980-8088-4c01548e299b",
+        "key": "no_room_online",
+        "kind": "absence",
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "workshop.kind"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "online"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-78a1-8075-ade798c97147",
+      "key": "capacity",
+      "name": "Capacity",
+      "type": "integer",
+      "required": false,
+      "validations": [
+       {
+        "subject_uuid": "01a1cba7-b691-73db-b78b-c609be5b29bc",
+        "key": "capacity_range",
+        "kind": "comparison",
+        "comparisons": [
+         {
+          "operator": "greater_than_or_equal_to",
+          "right": {
+           "kind": "literal",
+           "value": 1
+          }
+         },
+         {
+          "operator": "less_than_or_equal_to",
+          "right": {
+           "kind": "literal",
+           "value": 200
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7446-871c-25c3ec6ffd70",
+      "key": "starts_on",
+      "name": "Starts on",
+      "type": "date",
+      "required": true,
+      "notes": "Not in the past applies on create only; add on: :create after Compile.",
+      "validations": [
+       {
+        "subject_uuid": "01a1cbcc-7619-7eb5-9c4b-f12d40e3ca96",
+        "key": "not_in_past",
+        "kind": "comparison",
+        "comparisons": [
+         {
+          "operator": "greater_than_or_equal_to",
+          "right": {
+           "kind": "environment",
+           "name": "current_date"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-768c-b692-4d0c3885e223",
+      "key": "ends_on",
+      "name": "Ends on",
+      "type": "date",
+      "required": false,
+      "validations": [
+       {
+        "subject_uuid": "01a1cba7-b691-7bcd-a89b-5cc9a119c33e",
+        "key": "ends_after_start",
+        "kind": "comparison",
+        "comparisons": [
+         {
+          "operator": "greater_than_or_equal_to",
+          "right": {
+           "target": {
+            "field": "workshop.starts_on"
+           }
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a1cba7-b691-7fd8-893c-272c22da8153",
+      "key": "instructor",
+      "name": "Instructor",
+      "targets": [
+       "instructor"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "restrict"
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "workshop.title"
+       },
+       {
+        "field": "workshop.code"
+       },
+       {
+        "field": "workshop.starts_on"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "workshop.title"
+       },
+       {
+        "field": "workshop.code"
+       },
+       {
+        "field": "workshop.kind"
+       },
+       {
+        "field": "workshop.room"
+       },
+       {
+        "field": "workshop.capacity"
+       },
+       {
+        "field": "workshop.starts_on"
+       },
+       {
+        "field": "workshop.ends_on"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "workshop.title"
+       },
+       {
+        "field": "workshop.code"
+       },
+       {
+        "field": "workshop.kind"
+       },
+       {
+        "field": "workshop.room"
+       },
+       {
+        "field": "workshop.capacity"
+       },
+       {
+        "field": "workshop.starts_on"
+       },
+       {
+        "field": "workshop.ends_on"
+       },
+       {
+        "association": "workshop.instructor"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "workshop.title"
+       },
+       {
+        "field": "workshop.code"
+       },
+       {
+        "field": "workshop.kind"
+       },
+       {
+        "field": "workshop.room"
+       },
+       {
+        "field": "workshop.capacity"
+       },
+       {
+        "field": "workshop.starts_on"
+       },
+       {
+        "field": "workshop.ends_on"
+       },
+       {
+        "association": "workshop.instructor"
+       }
+      ]
+     }
+    },
+    "validations": [
+     {
+      "subject_uuid": "01a1cba7-b691-7fe5-a720-fd3d6c817f9c",
+      "key": "unique_code",
+      "kind": "uniqueness",
+      "targets": [
+       {
+        "field": "workshop.code"
+       }
+      ],
+      "nulls": "distinct",
+      "error_target": {
+       "field": "workshop.code"
+      }
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7fcc-bee0-f793bbcce48b",
+      "key": "one_in_person_per_day",
+      "kind": "uniqueness",
+      "targets": [
+       {
+        "reference": "workshop.instructor"
+       },
+       {
+        "field": "workshop.starts_on"
+       }
+      ],
+      "nulls": "distinct",
+      "error_target": {
+       "reference": "workshop.instructor"
+      },
+      "when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "workshop.kind"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": "in_person"
+       }
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

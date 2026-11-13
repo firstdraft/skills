@@ -1,0 +1,89 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/1/predicates/0",
+      "readable_path": "task.in_active_project"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.route.partially_generated",
+      "pointer": "/application/entities/0/scaffold/resource_routes/3",
+      "readable_path": "project.scaffold.resource_routes.create",
+      "reason": "Standalone creation is incomplete. Required Field \"archived\" has no generated create author or realized target default.",
+      "consequence": "The selected standalone route retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/1/predicates/0",
+      "readable_path": "task.in_active_project",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Task.in_active_project` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/predicate",
+      "readable_path": "task.scaffold.index.predicate",
+      "reason": "The selected named Predicate has no target scope lowering.",
+      "consequence": "This surface calls `Task.in_active_project`, which raises NotImplementedError until it is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.scaffold.resource_routes.create`",
+      "file": "app/controllers/projects_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task.in_active_project`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create persists the submitted values",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create rejects a missing name without persisting changes",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: new accepts a permitted new-record request",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: index lists accessible records",
+      "file": "spec/requests/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.development_data.record.not_generated",
+      "pointer": "/application/development_data/0",
+      "readable_path": "user.ada",
+      "reason": "The generated Account requires usable development identifiers and credentials.",
+      "consequence": "The generated development seed omits this record and dependent links."
+    },
+    {
+      "code": "foundation_plan.gap.development_data.account.not_generated",
+      "pointer": "/application/development_data/0/account",
+      "readable_path": "user.ada",
+      "reason": "The development Account payload does not match the generated email/password Account.",
+      "consequence": "The generated development seed omits this Account payload."
+    },
+    {
+      "code": "foundation_plan.gap.development_data.reference_assignment.not_generated",
+      "pointer": "/application/development_data/2/references/1/value",
+      "readable_path": "note.grace_note",
+      "reason": "The referenced seeded record is omitted from generated seeds.",
+      "consequence": "The generated development seed omits this Reference value."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`user.ada`",
+      "file": "db/seeds/development.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`user.ada`",
+      "file": "db/seeds/development.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`note.grace_note`",
+      "file": "db/seeds/development.rb"
+    }
+  ]
+}

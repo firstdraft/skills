@@ -1,0 +1,113 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "catalog",
+    "name": "Catalog",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbae-9475-7000-8000-0000000000b0",
+        "key": "product",
+        "name": "Product",
+        "primary_descriptor": {
+          "field": "product.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000af",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000ae",
+            "key": "specifications",
+            "name": "Specifications",
+            "type": "json",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.specifications"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.specifications"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.specifications"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.specifications"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "validations": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000b1",
+            "key": "unique_specs",
+            "kind": "uniqueness",
+            "targets": [
+              {
+                "field": "product.specifications"
+              }
+            ],
+            "nulls": "distinct",
+            "error_target": {
+              "field": "product.specifications"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

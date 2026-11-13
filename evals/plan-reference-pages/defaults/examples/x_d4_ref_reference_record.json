@@ -1,0 +1,166 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa2dd-0001-7000-8000-000000000010",
+        "key": "category",
+        "name": "Category",
+        "primary_descriptor": {
+          "field": "category.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000011",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "reference_data": {
+          "identity": {
+            "field": "category.name"
+          },
+          "records": [
+            {
+              "subject_uuid": "019fa2dd-0001-7000-8000-000000000012",
+              "key": "general",
+              "fields": [
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "General"
+                  }
+                }
+              ]
+            },
+            {
+              "subject_uuid": "019fa2dd-0001-7000-8000-000000000013",
+              "key": "urgent",
+              "fields": [
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Urgent"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "subject_uuid": "019fa2dd-0001-7000-8000-000000000016",
+        "key": "item",
+        "name": "Item",
+        "primary_descriptor": {
+          "field": "item.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000015",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000014",
+            "key": "category",
+            "name": "Category",
+            "targets": [
+              "category"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict",
+            "default": {
+              "kind": "reference_record",
+              "record": "category.general"
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "association": "item.category"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "association": "item.category"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "019fa2dd-0001-7000-8000-000000000017",
+        "key": "only_title",
+        "entity": "item",
+        "fields": [
+          {
+            "field": "item.title",
+            "value": {
+              "kind": "literal",
+              "value": "First"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

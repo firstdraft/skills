@@ -1,0 +1,58 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/0/predicates/0",
+      "readable_path": "category.top_level"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/0/predicates/0",
+      "readable_path": "category.top_level",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Category.top_level` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/0/scaffold/index/predicate",
+      "readable_path": "category.scaffold.index.predicate",
+      "reason": "The selected named Predicate has no target scope lowering.",
+      "consequence": "This surface calls `Category.top_level`, which raises NotImplementedError until it is written."
+    },
+    {
+      "code": "foundation_plan.gap.tree.partially_generated",
+      "pointer": "/application/entities/0/trees/0",
+      "readable_path": "category.hierarchy",
+      "reason": "The parent Reference category.parent is generated, but the Tree's rules are not: nothing keeps the hierarchy free of cycles.",
+      "consequence": "A record can be saved with a parent that makes a cycle."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Category.top_level`",
+      "file": "app/models/category.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`category.hierarchy`",
+      "file": "app/models/category.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Category: index lists accessible records",
+      "file": "spec/requests/categories_spec.rb"
+    }
+  ]
+}

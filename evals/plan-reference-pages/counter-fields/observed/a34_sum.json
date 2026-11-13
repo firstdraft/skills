@@ -1,0 +1,76 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "import",
+      "code": "foundation_plan.import.unsupported_capability",
+      "severity": "warning",
+      "pointer": "/application/entities/0/fields/1/derivation",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.service.unsupported_capability",
+      "pointer": "/application/entities/0/fields/1/derivation",
+      "readable_path": "project",
+      "reason": "This First Draft release cannot yet import this Foundation Plan capability.",
+      "consequence": "This Plan path is omitted from the admitted Project graph and generated application."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.route.partially_generated",
+      "pointer": "/application/entities/0/scaffold/resource_routes/3",
+      "readable_path": "project.scaffold.resource_routes.create",
+      "reason": "Standalone creation is incomplete. Required Field \"total_hours\" has no generated create author or realized target default.",
+      "consequence": "The selected standalone route retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.scaffold.resource_routes.create`",
+      "file": "app/controllers/projects_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`project`",
+      "file": "app/models/project.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create persists the submitted values",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create rejects a missing name without persisting changes",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: new accepts a permitted new-record request",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    }
+  ]
+}

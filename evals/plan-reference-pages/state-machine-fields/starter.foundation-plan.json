@@ -1,0 +1,93 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "bookings",
+    "name": "Bookings",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0770-7000-8000-0000000007d1",
+        "key": "booking",
+        "name": "Booking",
+        "primary_descriptor": {
+          "field": "booking.guest_name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0770-7000-8000-0000000007d2",
+            "key": "guest_name",
+            "name": "Guest name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0770-7000-8000-0000000007d3",
+            "key": "starts_on",
+            "name": "Starts on",
+            "type": "date",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "booking.guest_name"
+              },
+              {
+                "field": "booking.starts_on"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "booking.guest_name"
+              },
+              {
+                "field": "booking.starts_on"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "booking.guest_name"
+              },
+              {
+                "field": "booking.starts_on"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "booking.guest_name"
+              },
+              {
+                "field": "booking.starts_on"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

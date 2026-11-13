@@ -1,0 +1,52 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.uniqueness_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/1/validations/0/targets/1",
+      "readable_path": "card.unique_position"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/1/fields/1",
+      "readable_path": "card.position",
+      "reason": "The Field is stored as an integer, and a new record without one joins the end of its list, but positions are not kept contiguous or reordered.",
+      "consequence": "Records can be sorted by the stored number; renumbering after deletes, moving between lists, and drag reordering remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/1/validations/0",
+      "readable_path": "card.unique_position",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "A unique index over its tuple is emitted, so the database rejects a duplicate. The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Card#unique_position`",
+      "file": "app/models/card.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`card.position`",
+      "file": "app/models/card.rb"
+    }
+  ]
+}

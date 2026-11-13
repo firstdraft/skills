@@ -1,0 +1,531 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "field_service",
+    "name": "Field service",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1e7a0-0000-7000-8000-000000000003",
+        "key": "customer",
+        "name": "Customer",
+        "primary_descriptor": {
+          "field": "customer.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e7a0-0000-7000-8000-000000000001",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1e7a0-0000-7000-8000-000000000002",
+            "key": "priority",
+            "name": "Priority customer",
+            "type": "boolean",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "customer.name"
+              },
+              {
+                "field": "customer.priority"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "customer.name"
+              },
+              {
+                "field": "customer.priority"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "customer.name"
+              },
+              {
+                "field": "customer.priority"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "customer.name"
+              },
+              {
+                "field": "customer.priority"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1e7a0-0000-7000-8000-000000000005",
+        "key": "technician",
+        "name": "Technician",
+        "primary_descriptor": {
+          "field": "technician.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e7a0-0000-7000-8000-000000000004",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "technician.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "technician.name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "technician.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "technician.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1e7a0-0000-7000-8000-000000000007",
+        "key": "van",
+        "name": "Van",
+        "primary_descriptor": {
+          "field": "van.plate"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e7a0-0000-7000-8000-000000000006",
+            "key": "plate",
+            "name": "Licence plate",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "van.plate"
+              },
+              {
+                "association": "van.technician",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "van.plate"
+              },
+              {
+                "association": "van.technician",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "van.plate"
+              },
+              {
+                "association": "van.technician"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "van.plate"
+              },
+              {
+                "association": "van.technician"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "references": [
+          {
+            "subject_uuid": "01a1e7b0-0000-7000-8000-000000000003",
+            "key": "technician",
+            "name": "Technician",
+            "targets": [
+              "technician"
+            ],
+            "required": false,
+            "on_referenced_deleted": "nullify_reference",
+            "one_to_one": true
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e7a0-0000-7000-8000-00000000000a",
+        "key": "job",
+        "name": "Job",
+        "primary_descriptor": {
+          "field": "job.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e7a0-0000-7000-8000-000000000008",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1e7a0-0000-7000-8000-000000000009",
+            "key": "scheduled_on",
+            "name": "Scheduled on",
+            "type": "date",
+            "required": true
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a1d27e-1863-7a9b-b666-983fe65f785b",
+            "key": "for_priority_customers",
+            "name": "For priority customers",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "through": [
+                  {
+                    "association": "job.customer"
+                  }
+                ],
+                "target": {
+                  "field": "customer.priority"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": true
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "predicate": "job.for_priority_customers",
+            "projection": [
+              {
+                "field": "job.title"
+              },
+              {
+                "field": "job.scheduled_on"
+              },
+              {
+                "association": "job.customer",
+                "authorization": "public"
+              },
+              {
+                "association": "job.technician",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "job.title"
+              },
+              {
+                "field": "job.scheduled_on"
+              },
+              {
+                "association": "job.customer",
+                "authorization": "public"
+              },
+              {
+                "association": "job.technician",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "job.title"
+              },
+              {
+                "field": "job.scheduled_on"
+              },
+              {
+                "association": "job.customer"
+              },
+              {
+                "association": "job.technician"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "job.title"
+              },
+              {
+                "field": "job.scheduled_on"
+              },
+              {
+                "association": "job.technician"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "references": [
+          {
+            "subject_uuid": "01a1e7b0-0000-7000-8000-000000000001",
+            "key": "customer",
+            "name": "Customer",
+            "targets": [
+              "customer"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict",
+            "immutable": true
+          },
+          {
+            "subject_uuid": "01a1e7b0-0000-7000-8000-000000000002",
+            "key": "technician",
+            "name": "Technician",
+            "targets": [
+              "technician"
+            ],
+            "required": false,
+            "on_referenced_deleted": "nullify_reference"
+          }
+        ]
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1e7b0-0000-7000-8000-000000000004",
+        "key": "acme",
+        "entity": "customer",
+        "fields": [
+          {
+            "field": "customer.name",
+            "value": {
+              "kind": "literal",
+              "value": "Acme Bakery"
+            }
+          },
+          {
+            "field": "customer.priority",
+            "value": {
+              "kind": "literal",
+              "value": true
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e7b0-0000-7000-8000-000000000005",
+        "key": "birch",
+        "entity": "customer",
+        "fields": [
+          {
+            "field": "customer.name",
+            "value": {
+              "kind": "literal",
+              "value": "Birch Dental"
+            }
+          },
+          {
+            "field": "customer.priority",
+            "value": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e7b0-0000-7000-8000-000000000006",
+        "key": "sam",
+        "entity": "technician",
+        "fields": [
+          {
+            "field": "technician.name",
+            "value": {
+              "kind": "literal",
+              "value": "Sam Ortiz"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e7b0-0000-7000-8000-000000000007",
+        "key": "oven_repair",
+        "entity": "job",
+        "fields": [
+          {
+            "field": "job.title",
+            "value": {
+              "kind": "literal",
+              "value": "Oven repair"
+            }
+          },
+          {
+            "field": "job.scheduled_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-12-01"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "job.customer",
+            "value": {
+              "kind": "reference_record",
+              "record": "customer.acme"
+            }
+          },
+          {
+            "reference": "job.technician",
+            "value": {
+              "kind": "reference_record",
+              "record": "technician.sam"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1e7b0-0000-7000-8000-000000000008",
+        "key": "chair_service",
+        "entity": "job",
+        "fields": [
+          {
+            "field": "job.title",
+            "value": {
+              "kind": "literal",
+              "value": "Chair service"
+            }
+          },
+          {
+            "field": "job.scheduled_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-12-03"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "job.customer",
+            "value": {
+              "kind": "reference_record",
+              "record": "customer.birch"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

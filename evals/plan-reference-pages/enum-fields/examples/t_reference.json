@@ -1,0 +1,288 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "helpdesk",
+    "name": "Helpdesk",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0759-7000-8000-000000000032",
+        "key": "ticket",
+        "name": "Ticket",
+        "primary_descriptor": {
+          "field": "ticket.subject"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0759-7000-8000-000000000033",
+            "key": "subject",
+            "name": "Subject",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cba6-62d2-76c7-bd2e-4ba6d62de3a9",
+            "key": "severity",
+            "name": "Severity",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "minor"
+            },
+            "settings": {
+              "ordinal": true,
+              "values": [
+                {
+                  "subject_uuid": "01a1cba6-62d2-72c2-ae2f-31fecc7e3815",
+                  "key": "minor",
+                  "name": "Minor"
+                },
+                {
+                  "subject_uuid": "01a1cba6-62d2-7252-b247-7f5f55126070",
+                  "key": "major",
+                  "name": "Major"
+                },
+                {
+                  "subject_uuid": "01a1cba6-62d2-781a-9620-4050a7be81b4",
+                  "key": "critical",
+                  "name": "Critical"
+                }
+              ]
+            },
+            "validations": [
+              {
+                "subject_uuid": "01a1d27a-efde-7fc9-8218-c7c96a5d20e9",
+                "key": "never_lowered",
+                "owner": {
+                  "description": "Once a ticket is saved, its severity may stay the same or rise, never fall: compare the new value with severity_was by rank (minor, major, critical)."
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a1cba6-62d2-76fe-bbe4-22ddcd589eed",
+            "key": "channel",
+            "name": "Channel",
+            "type": "enum",
+            "required": false,
+            "immutable": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cba6-62d2-7349-ab43-ba1f684e1a9e",
+                  "key": "email",
+                  "name": "Email"
+                },
+                {
+                  "subject_uuid": "01a1cba6-62d2-7680-a6b8-1ca3457463be",
+                  "key": "chat",
+                  "name": "Chat"
+                },
+                {
+                  "subject_uuid": "01a1cba6-62d2-785d-9603-21e62e816e28",
+                  "key": "phone",
+                  "name": "Phone"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a1cba6-62d2-747e-a17f-90a575f816ee",
+            "key": "impact_summary",
+            "name": "Impact summary",
+            "type": "short_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a1cba6-62d2-71c5-98c6-63272ae2f521",
+                "key": "required_when_critical",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "ticket.severity"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "critical"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.subject"
+              },
+              {
+                "field": "ticket.severity"
+              },
+              {
+                "field": "ticket.channel"
+              }
+            ],
+            "ordering": "ticket.most_severe_first"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.subject"
+              },
+              {
+                "field": "ticket.severity"
+              },
+              {
+                "field": "ticket.channel"
+              },
+              {
+                "field": "ticket.impact_summary"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "ticket.subject"
+              },
+              {
+                "field": "ticket.severity"
+              },
+              {
+                "field": "ticket.channel"
+              },
+              {
+                "field": "ticket.impact_summary"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "ticket.subject"
+              },
+              {
+                "field": "ticket.severity"
+              },
+              {
+                "field": "ticket.impact_summary"
+              }
+            ]
+          }
+        },
+        "orderings": [
+          {
+            "subject_uuid": "01a1cba6-62d2-7344-9719-3b815a79af0d",
+            "key": "most_severe_first",
+            "terms": [
+              {
+                "field": "ticket.severity",
+                "direction": "descending"
+              },
+              {
+                "system_field": "created_at",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "id",
+                "direction": "ascending"
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a1d27a-efde-7c98-b64e-749682ae1fb0",
+            "key": "by_channel",
+            "terms": [
+              {
+                "field": "ticket.channel",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "created_at",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "id",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cba6-62d2-7c18-ac5c-7b02adde2bbe",
+        "key": "checkout_outage",
+        "entity": "ticket",
+        "fields": [
+          {
+            "field": "ticket.subject",
+            "value": {
+              "kind": "literal",
+              "value": "Checkout fails for every customer"
+            }
+          },
+          {
+            "field": "ticket.severity",
+            "value": {
+              "kind": "literal",
+              "value": "critical"
+            }
+          },
+          {
+            "field": "ticket.channel",
+            "value": {
+              "kind": "literal",
+              "value": "phone"
+            }
+          },
+          {
+            "field": "ticket.impact_summary",
+            "value": {
+              "kind": "literal",
+              "value": "No orders since 9:00"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cba6-62d2-7b25-994d-d0ce598f6fc8",
+        "key": "invoice_question",
+        "entity": "ticket",
+        "fields": [
+          {
+            "field": "ticket.subject",
+            "value": {
+              "kind": "literal",
+              "value": "Question about last month's invoice"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

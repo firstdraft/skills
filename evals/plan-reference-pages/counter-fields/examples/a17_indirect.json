@@ -1,0 +1,144 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000004269",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000426a",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000004271",
+            "key": "followers_count",
+            "name": "Followers",
+            "type": "counter",
+            "required": true,
+            "settings": {
+              "counts": "user.followers"
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000426b",
+            "key": "follower_links",
+            "kind": "direct",
+            "name": "Follower links",
+            "reference": "follow.followed",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000426c",
+            "key": "following_links",
+            "kind": "direct",
+            "name": "Following links",
+            "reference": "follow.follower",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000426d",
+            "key": "followers",
+            "kind": "indirect",
+            "name": "Followers",
+            "through": "user.follower_links",
+            "source": "follow.follower"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "user.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "user.name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "user.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "user.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-00000000426e",
+        "key": "follow",
+        "name": "Follow",
+        "primary_descriptor": {
+          "system_field": "id"
+        },
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000426f",
+            "key": "follower",
+            "name": "Follower",
+            "required": true,
+            "targets": [
+              "user"
+            ],
+            "on_referenced_deleted": "delete_referencing_record"
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000004270",
+            "key": "followed",
+            "name": "Followed",
+            "required": true,
+            "targets": [
+              "user"
+            ],
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.kind_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/0/fields/1/validations/0/kind",
+      "readable_path": "item.value.rule"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/0/fields/1/validations/0",
+      "readable_path": "item.value.rule",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Item#rule`",
+      "file": "app/models/item.rb"
+    }
+  ]
+}

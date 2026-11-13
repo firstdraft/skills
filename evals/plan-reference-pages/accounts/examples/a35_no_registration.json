@@ -1,0 +1,315 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "notebook",
+    "name": "Notebook",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cb96-b9bf-715e-a7dc-ba74e66076d9",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb96-b9bf-715e-a7dc-ba750f14b1d0",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000007919",
+            "key": "role",
+            "name": "Role",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-00000000791a",
+                  "key": "member",
+                  "name": "Member"
+                },
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-00000000791b",
+                  "key": "admin",
+                  "name": "Admin"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000791c",
+            "key": "avatar",
+            "name": "Avatar",
+            "type": "image",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000791d",
+            "key": "joined_on",
+            "name": "Joined on",
+            "type": "date",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a1cb96-b9bf-715e-a7dc-ba76442ddd35",
+            "key": "notes",
+            "kind": "direct",
+            "name": "Notes",
+            "reference": "note.author",
+            "side": "referenced"
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ]
+        },
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000791e",
+            "key": "team",
+            "name": "Team",
+            "required": true,
+            "on_referenced_deleted": "restrict",
+            "targets": [
+              "team"
+            ]
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cb96-b9bf-715e-a7dc-ba778bbf2dc6",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb96-b9bf-715e-a7dc-ba789e8d8248",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cb96-b9bf-715e-a7dc-ba79e615db01",
+            "key": "author",
+            "name": "Author",
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a1cb96-b9bf-715e-a7dc-ba7a84dfc87d",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "note.author"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "note.author",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "note.manage_own"
+            }
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000791f",
+        "key": "team",
+        "name": "Team",
+        "primary_descriptor": {
+          "field": "team.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000007920",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "team.name"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "home_index": "note",
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-000000007921",
+        "key": "core",
+        "entity": "team",
+        "fields": [
+          {
+            "field": "team.name",
+            "value": {
+              "kind": "literal",
+              "value": "Core"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-000000007922",
+        "key": "ada",
+        "entity": "user",
+        "fields": [
+          {
+            "field": "user.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ada"
+            }
+          },
+          {
+            "field": "user.role",
+            "value": {
+              "kind": "literal",
+              "value": "admin"
+            }
+          },
+          {
+            "field": "user.joined_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-01-05"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "user.team",
+            "value": {
+              "kind": "reference_record",
+              "record": "team.core"
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "value": "ada@example.com"
+            }
+          ],
+          "credentials": [
+            {
+              "kind": "password",
+              "value": "a development passphrase"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

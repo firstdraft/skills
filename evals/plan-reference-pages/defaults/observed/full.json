@@ -1,0 +1,31 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "expense.amount",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are entered, stored, and displayed; splitting, rounding, and currency handling remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/2",
+      "readable_path": "expense.mileage_rate",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are entered, stored, and displayed; splitting, rounding, and currency handling remain work after compilation."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`expense.amount`",
+      "file": "app/models/expense.rb"
+    }
+  ]
+}

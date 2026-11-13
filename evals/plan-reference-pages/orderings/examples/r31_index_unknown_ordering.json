@@ -1,0 +1,253 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "orderings_probe",
+    "name": "Orderings probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000359",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000035a",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000035b",
+            "key": "tasks",
+            "name": "Tasks",
+            "kind": "direct",
+            "reference": "task.project",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000035c",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000035d",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000035e",
+            "key": "code",
+            "name": "Code",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000362",
+            "key": "priority",
+            "name": "Priority",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "ordinal": true,
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000035f",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000360",
+                  "key": "medium",
+                  "name": "Medium"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000361",
+                  "key": "high",
+                  "name": "High"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000365",
+            "key": "status",
+            "name": "Status",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000363",
+                  "key": "open",
+                  "name": "Open"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000364",
+                  "key": "closed",
+                  "name": "Closed"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000368",
+            "key": "size",
+            "name": "Size",
+            "type": "enum",
+            "required": false,
+            "settings": {
+              "ordinal": true,
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000366",
+                  "key": "small",
+                  "name": "Small"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000367",
+                  "key": "large",
+                  "name": "Large"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000369",
+            "key": "points",
+            "name": "Points",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000036a",
+            "key": "starts_on",
+            "name": "Starts on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000036b",
+            "key": "due_on",
+            "name": "Due on",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000036c",
+            "key": "finished_at",
+            "name": "Finished at",
+            "type": "datetime",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000036d",
+            "key": "description",
+            "name": "Description",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000036e",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.due_on"
+              }
+            ],
+            "ordering": "task.nope"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              }
+            ]
+          }
+        },
+        "orderings": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000358",
+            "key": "by_title",
+            "terms": [
+              {
+                "field": "task.title",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "id",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.development_data.record.not_generated",
+      "pointer": "/application/development_data/2",
+      "readable_path": "post.preset",
+      "reason": "Required Field post.comments_count has no target-compatible seed value.",
+      "consequence": "The generated development seed omits this record and dependent links."
+    },
+    {
+      "code": "foundation_plan.gap.development_data.field_assignment.not_generated",
+      "pointer": "/application/development_data/2/fields/1/value",
+      "readable_path": "post.preset",
+      "reason": "Rails counter_cache maintains this Counter from its counted records, so a seed cannot assign it.",
+      "consequence": "The generated development seed omits this Field value."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`post.preset`",
+      "file": "db/seeds/development.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`post.preset`",
+      "file": "db/seeds/development.rb"
+    }
+  ]
+}

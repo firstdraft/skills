@@ -1,0 +1,132 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "northside_readers",
+    "name": "Northside Readers",
+    "description": "A neighborhood book club's shared list of books to read.",
+    "home_index": "book",
+    "native": {
+      "ios": {}
+    },
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb6-6cf3-7af0-96e0-4d1d915b2463",
+        "key": "book",
+        "name": "Book",
+        "primary_descriptor": {
+          "field": "book.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb6-6cf3-7a1d-84d6-020bb82731f6",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb6-6cf3-72bd-9a07-ac6c668917ea",
+            "key": "author",
+            "name": "Author",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbb6-6cf3-725b-b009-86b3483ad463",
+        "key": "middlemarch",
+        "entity": "book",
+        "fields": [
+          {
+            "field": "book.title",
+            "value": {
+              "kind": "literal",
+              "value": "Middlemarch"
+            }
+          },
+          {
+            "field": "book.author",
+            "value": {
+              "kind": "literal",
+              "value": "George Eliot"
+            }
+          }
+        ]
+      }
+    ],
+    "appearance": {
+      "theme": "toggle",
+      "tint_color": "#2F6B3A",
+      "background_color": {
+        "light": "#F7F5EF",
+        "dark": "#1B1D17"
+      }
+    }
+  }
+}

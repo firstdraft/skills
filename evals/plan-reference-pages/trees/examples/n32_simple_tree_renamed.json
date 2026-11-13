@@ -1,0 +1,131 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tree_probe",
+    "name": "Tree probe",
+    "entities": [
+      {
+        "subject_uuid": "019fa300-2000-7000-8001-000000000002",
+        "key": "category",
+        "name": "Category",
+        "primary_descriptor": {
+          "field": "category.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8001-000000000003",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8001-000000000001",
+            "key": "parent",
+            "name": "Parent",
+            "targets": [
+              "category"
+            ],
+            "required": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8001-000000000004",
+            "key": "children",
+            "name": "Subcategories",
+            "kind": "direct",
+            "reference": "category.parent",
+            "side": "referenced"
+          }
+        ],
+        "trees": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8001-000000000005",
+            "key": "nesting",
+            "parent_reference": "category.parent"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "category.name"
+              },
+              {
+                "association": "category.parent",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "category.name"
+              },
+              {
+                "association": "category.parent",
+                "authorization": "public"
+              },
+              {
+                "association": "category.children",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "category.name"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "category.name"
+              },
+              {
+                "association": "category.parent"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "category.name"
+              },
+              {
+                "association": "category.parent"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "native": {},
+    "delivery": {}
+  }
+}

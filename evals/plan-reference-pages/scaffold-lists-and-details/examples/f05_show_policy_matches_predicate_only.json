@@ -1,0 +1,548 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tracker",
+  "name": "Tracker",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0790-7000-8000-000000000065",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000066",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000067",
+      "key": "admin",
+      "name": "Admin",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000068",
+      "key": "projects",
+      "kind": "direct",
+      "name": "Projects",
+      "reference": "project.owner",
+      "side": "referenced"
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000069",
+      "key": "signed_in",
+      "operation": "use_app",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "record": "current"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000006a",
+      "key": "admins_only",
+      "operation": "administer",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "user.admin"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": true
+       }
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0790-7000-8000-00000000006b",
+    "key": "project",
+    "name": "Project",
+    "primary_descriptor": {
+     "field": "project.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000006c",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000006d",
+      "key": "summary",
+      "name": "Summary",
+      "type": "long_text",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000006e",
+      "key": "archived",
+      "name": "Archived",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000006f",
+      "key": "due_on",
+      "name": "Due on",
+      "type": "date",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000073",
+      "key": "priority",
+      "name": "Priority",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "ordinal": true,
+       "values": [
+        {
+         "subject_uuid": "01a0caf3-0790-7000-8000-000000000070",
+         "key": "low",
+         "name": "Low"
+        },
+        {
+         "subject_uuid": "01a0caf3-0790-7000-8000-000000000071",
+         "key": "normal",
+         "name": "Normal"
+        },
+        {
+         "subject_uuid": "01a0caf3-0790-7000-8000-000000000072",
+         "key": "high",
+         "name": "High"
+        }
+       ]
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000074",
+      "key": "owner",
+      "name": "Owner",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000075",
+      "key": "tasks",
+      "kind": "direct",
+      "name": "Tasks",
+      "reference": "task.project",
+      "side": "referenced"
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000076",
+      "key": "active",
+      "name": "Active",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "project.archived"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": false
+       }
+      }
+     }
+    ],
+    "orderings": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000077",
+      "key": "by_title",
+      "terms": [
+       {
+        "field": "project.title",
+        "direction": "ascending"
+       },
+       {
+        "system_field": "id",
+        "direction": "ascending"
+       }
+      ]
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000078",
+      "key": "newest",
+      "terms": [
+       {
+        "system_field": "created_at",
+        "direction": "descending"
+       },
+       {
+        "system_field": "id",
+        "direction": "descending"
+       }
+      ]
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000079",
+      "key": "by_priority",
+      "terms": [
+       {
+        "field": "project.priority",
+        "direction": "descending"
+       },
+       {
+        "system_field": "created_at",
+        "direction": "ascending"
+       },
+       {
+        "system_field": "id",
+        "direction": "ascending"
+       }
+      ]
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000007a",
+      "key": "read_own",
+      "operation": "read",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "project.archived"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": false
+       }
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000007b",
+      "key": "manage_own",
+      "operation": "manage",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "association": "project.owner"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "index": {
+      "authorization": "public",
+      "predicate": "project.active",
+      "ordering": "project.by_title"
+     },
+     "show": {
+      "authorization": {
+       "policy": "project.read_own"
+      },
+      "projection": [
+       {
+        "field": "project.title"
+       },
+       {
+        "field": "project.summary"
+       }
+      ]
+     },
+     "create": {
+      "authorization": {
+       "policy": "project.manage_own"
+      },
+      "inputs": [
+       {
+        "field": "project.title"
+       },
+       {
+        "field": "project.summary"
+       },
+       {
+        "field": "project.priority"
+       }
+      ],
+      "bindings": [
+       {
+        "reference": "project.owner",
+        "value": {
+         "kind": "environment",
+         "name": "current_account"
+        }
+       }
+      ]
+     },
+     "update": {
+      "authorization": {
+       "policy": "project.manage_own"
+      },
+      "inputs": [
+       {
+        "field": "project.title"
+       },
+       {
+        "field": "project.summary"
+       },
+       {
+        "field": "project.archived"
+       },
+       {
+        "field": "project.priority"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": {
+       "policy": "project.manage_own"
+      }
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0790-7000-8000-00000000007c",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000007d",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000007e",
+      "key": "done",
+      "name": "Done",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000007f",
+      "key": "due_on",
+      "name": "Due on",
+      "type": "date",
+      "required": false
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000080",
+      "key": "project",
+      "name": "Project",
+      "targets": [
+       "project"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000081",
+      "key": "assignee",
+      "name": "Assignee",
+      "targets": [
+       "user"
+      ],
+      "required": false,
+      "one_to_one": false,
+      "on_referenced_deleted": "nullify_reference"
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000082",
+      "key": "open",
+      "name": "Open",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "task.done"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": false
+       }
+      }
+     }
+    ],
+    "orderings": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000083",
+      "key": "by_title",
+      "terms": [
+       {
+        "field": "task.title",
+        "direction": "ascending"
+       },
+       {
+        "system_field": "id",
+        "direction": "ascending"
+       }
+      ]
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000084",
+      "key": "read_with_project",
+      "operation": "read",
+      "allow_when": {
+       "kind": "matches_policy",
+       "association": "task.project",
+       "policy": "project.read_own"
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "show",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.done"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.done"
+       },
+       {
+        "field": "task.due_on"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": "public"
+     }
+    }
+   }
+  ],
+  "topics": [
+   {
+    "name": "Work",
+    "entities": [
+     "user",
+     "project",
+     "task"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,105 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.development_data.record.not_generated",
+      "pointer": "/application/development_data/0",
+      "readable_path": "item.only_title",
+      "reason": "Required Field item.starts_on has no target-compatible seed value.",
+      "consequence": "The generated development seed omits this record and dependent links."
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/1/default",
+      "readable_path": "item.starts_on",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/2/default",
+      "readable_path": "item.happens_at",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/3/default",
+      "readable_path": "item.zone",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/4/default",
+      "readable_path": "item.site",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/5/default",
+      "readable_path": "item.lang",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/6",
+      "readable_path": "item.body",
+      "reason": "The Field is stored as a text column and edited as plain text; Action Text formatting, embedded attachments, and sanitized HTML display are not generated.",
+      "consequence": "Text is entered, stored, and displayed as plain text; a rich-text editor and formatted display remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/6/default",
+      "readable_path": "item.body",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/7",
+      "readable_path": "item.meta",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Generated forms edit the document as JSON text, and any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/7/default",
+      "readable_path": "item.meta",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.only_title`",
+      "file": "db/seeds/development.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.starts_on`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.body`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.meta`",
+      "file": "app/models/item.rb"
+    }
+  ]
+}

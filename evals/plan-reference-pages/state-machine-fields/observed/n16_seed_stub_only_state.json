@@ -1,0 +1,64 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.development_data.record.not_generated",
+      "pointer": "/application/development_data/0",
+      "readable_path": "task.y",
+      "reason": "Required Field task.status has no target-compatible seed value.",
+      "consequence": "The generated development seed omits this record and dependent links."
+    },
+    {
+      "code": "foundation_plan.gap.development_data.field_assignment.not_generated",
+      "pointer": "/application/development_data/0/fields/1/value",
+      "readable_path": "task.y",
+      "reason": "Reaching the authored State Machine value fires task.status.archive, which First Draft did not write.",
+      "consequence": "The generated development seed omits this Field value."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition.effects_not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/2",
+      "readable_path": "task.status.archive",
+      "reason": "The archive event has 2 effects. This release generates at most one effect per event, setting an optional datetime Field on the same record to the current time or nil.",
+      "consequence": "`Task#archive!`, `#archive`, and `#may_archive?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/2/effects/0",
+      "readable_path": "task.status.archive/effects/0",
+      "reason": "The transition effect is not generated.",
+      "consequence": "The generated application does not apply this effect."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/2/effects/1",
+      "readable_path": "task.status.archive/effects/1",
+      "reason": "The transition effect is not generated.",
+      "consequence": "The generated application does not apply this effect."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Task#archive!`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`task.y`",
+      "file": "db/seeds/development.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`task.y`",
+      "file": "db/seeds/development.rb"
+    }
+  ]
+}

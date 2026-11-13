@@ -1,0 +1,48 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.route.partially_generated",
+      "pointer": "/application/entities/0/scaffold/resource_routes/3",
+      "readable_path": "listing.scaffold.resource_routes.create",
+      "reason": "Standalone creation is incomplete. Required Field \"photo\" has no generated create author or realized target default.",
+      "consequence": "The selected standalone route retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.resource_routes.create`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Listing: create persists the submitted values",
+      "file": "spec/requests/listings_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Listing: create rejects a missing title without persisting changes",
+      "file": "spec/requests/listings_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Listing: new accepts a permitted new-record request",
+      "file": "spec/requests/listings_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Listing: create form browser coverage",
+      "file": "spec/system/listings_spec.rb"
+    }
+  ]
+}

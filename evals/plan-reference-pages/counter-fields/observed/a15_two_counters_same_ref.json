@@ -1,0 +1,58 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "post.comments_count",
+      "reason": "Another Counter counts through the same Reference, and one belongs_to declares only one counter_cache column.",
+      "consequence": "The integer column is generated, defaults to 0, and is read wherever the Plan reads it, but nothing updates it, so it reads 0 until application code maintains it."
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/2",
+      "readable_path": "post.responses_count",
+      "reason": "Another Counter counts through the same Reference, and one belongs_to declares only one counter_cache column.",
+      "consequence": "The integer column is generated, defaults to 0, and is read wherever the Plan reads it, but nothing updates it, so it reads 0 until application code maintains it."
+    },
+    {
+      "code": "foundation_plan.gap.reference.deletion_not_generated",
+      "pointer": "/application/entities/1/references/0/on_referenced_deleted",
+      "readable_path": "comment.post.on_referenced_deleted",
+      "reason": "The authored restriction has multiple admitted unpredicated inverse Associations, so this release does not choose an arbitrary model-level restrict_with_error carrier.",
+      "consequence": "Reference storage, traversal, and the ordinary non-deferrable foreign key remain generated; deleting the referenced record is rejected, but the generated model does not add restrict_with_error to an arbitrary inverse."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`comment.post.on_referenced_deleted`",
+      "file": "app/models/comment.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`Post#comments_count`",
+      "file": "app/models/post.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`Post#responses_count`",
+      "file": "app/models/post.rb"
+    }
+  ]
+}

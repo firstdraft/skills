@@ -1,0 +1,104 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cba6-b565-753d-828b-edfecc73035f",
+        "key": "book",
+        "name": "Book",
+        "primary_descriptor": {
+          "field": "book.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cba6-b565-74ec-9b19-7ffc36239819",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cba6-b565-79f1-aa7c-b69e6f05723b",
+            "key": "pages",
+            "name": "Pages",
+            "type": "integer",
+            "required": false
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.pages"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.pages"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cba6-b565-70b0-aa9f-5e55281fcc77",
+        "key": "dune",
+        "entity": "book",
+        "fields": [
+          {
+            "field": "book.title",
+            "value": {
+              "kind": "literal",
+              "value": "Dune"
+            }
+          },
+          {
+            "field": "book.pages",
+            "value": {
+              "kind": "literal",
+              "value": 412
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cba6-b565-7b3c-8954-3825d7070935",
+        "key": "emma",
+        "entity": "book",
+        "fields": [
+          {
+            "field": "book.title",
+            "value": {
+              "kind": "literal",
+              "value": "Emma"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

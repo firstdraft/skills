@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "issues_found",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/0/predicates/0",
+      "readable_path": "listing.without_brochure"
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.expression.field_not_queryable",
+      "severity": "error",
+      "pointer": "/application/entities/0/predicates/0/expression/operand/target/field",
+      "readable_path": "listing.without_brochure"
+    }
+  ],
+  "gaps": [],
+  "compile": null,
+  "readme": []
+}

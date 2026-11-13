@@ -1,0 +1,95 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.kind_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/1/fields/1/validations/2/kind",
+      "readable_path": "workshop.code.code_not_reserved"
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.comparison_clause_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/1/fields/5/validations/0/comparisons/0/right",
+      "readable_path": "workshop.starts_on.not_in_past"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/1/fields/1/validations/2",
+      "readable_path": "workshop.code.code_not_reserved",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/1/fields/5/validations/0",
+      "readable_path": "workshop.starts_on.not_in_past",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Workshop#not_in_past`",
+      "file": "app/models/workshop.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Workshop#code_not_reserved`",
+      "file": "app/models/workshop.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Workshop: create persists the submitted values",
+      "file": "spec/requests/workshops_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Workshop: create rejects a missing title without persisting changes",
+      "file": "spec/requests/workshops_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Workshop: update persists the submitted changes",
+      "file": "spec/requests/workshops_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Workshop: update rejects a missing title without persisting changes",
+      "file": "spec/requests/workshops_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Workshop: create form browser coverage",
+      "file": "spec/system/workshops_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Workshop: update form browser coverage",
+      "file": "spec/system/workshops_spec.rb"
+    }
+  ]
+}

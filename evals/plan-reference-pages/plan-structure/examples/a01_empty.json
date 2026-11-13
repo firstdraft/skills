@@ -1,0 +1,14 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "reading_club",
+    "name": "Reading Club",
+    "native": {},
+    "delivery": {},
+    "entities": []
+  }
+}

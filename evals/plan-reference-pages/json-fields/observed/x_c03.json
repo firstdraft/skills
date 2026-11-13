@@ -1,0 +1,45 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.field_presence_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/0/fields/1/validations/0/kind",
+      "readable_path": "product.specifications.needed_without_summary"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "product.specifications",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Generated forms edit the document as JSON text, and any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/0/fields/1/validations/0",
+      "readable_path": "product.specifications.needed_without_summary",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Product#needed_without_summary`",
+      "file": "app/models/product.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`product.specifications`",
+      "file": "app/models/product.rb"
+    }
+  ]
+}

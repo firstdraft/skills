@@ -1,0 +1,87 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa2dd-0001-7000-8000-000000000056",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000057",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000055",
+            "key": "role",
+            "name": "Role",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "019fa2dd-0001-7000-8000-000000000053",
+                  "key": "member",
+                  "name": "Member"
+                },
+                {
+                  "subject_uuid": "019fa2dd-0001-7000-8000-000000000054",
+                  "key": "admin",
+                  "name": "Admin"
+                }
+              ]
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {},
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              },
+              {
+                "field": "user.role",
+                "required": false,
+                "default": {
+                  "kind": "literal",
+                  "value": 5
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

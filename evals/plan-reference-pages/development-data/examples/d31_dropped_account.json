@@ -1,0 +1,282 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "notebook",
+    "name": "Notebook",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cb99-ff9a-76ce-96fa-8f5f7b259c62",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb99-ff9a-76ce-96fa-8f60393cfe5b",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a1cb99-ff9a-76ce-96fa-8f613cacc141",
+            "key": "notes",
+            "kind": "direct",
+            "name": "Notes",
+            "reference": "note.author",
+            "side": "referenced"
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        }
+      },
+      {
+        "subject_uuid": "01a1cb99-ff9a-76ce-96fa-8f62df785584",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb99-ff9a-76ce-96fa-8f638c40b16a",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cb99-ff9a-76ce-96fa-8f64532c8014",
+            "key": "author",
+            "name": "Author",
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000007d01",
+            "key": "reviewer",
+            "name": "Reviewer",
+            "required": false,
+            "on_referenced_deleted": "nullify_reference",
+            "targets": [
+              "user"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a1cb99-ff9a-76ce-96fa-8f65503ca26c",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "note.author"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "note.author",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "note.manage_own"
+            }
+          }
+        }
+      }
+    ],
+    "home_index": "note",
+    "development_data": [
+      {
+        "subject_uuid": "01a1cb99-ff9a-76ce-96fa-8f66f69cd0fd",
+        "key": "ada",
+        "entity": "user",
+        "fields": [
+          {
+            "field": "user.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ada"
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "value": "Ada@Example.com"
+            }
+          ],
+          "credentials": [
+            {
+              "kind": "password",
+              "value": "a development passphrase"
+            }
+          ]
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-000000007d02",
+        "key": "grace",
+        "entity": "user",
+        "fields": [
+          {
+            "field": "user.name",
+            "value": {
+              "kind": "literal",
+              "value": "Grace"
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "value": "grace@example.com"
+            }
+          ],
+          "credentials": [
+            {
+              "kind": "password",
+              "value": "a development passphrase"
+            }
+          ]
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-000000007d03",
+        "key": "grace_note",
+        "entity": "note",
+        "fields": [
+          {
+            "field": "note.title",
+            "value": {
+              "kind": "literal",
+              "value": "Grace's note"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "note.author",
+            "value": {
+              "kind": "reference_record",
+              "record": "user.grace"
+            }
+          },
+          {
+            "reference": "note.reviewer",
+            "value": {
+              "kind": "reference_record",
+              "record": "user.ada"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

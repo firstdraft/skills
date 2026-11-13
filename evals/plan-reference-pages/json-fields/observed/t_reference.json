@@ -1,0 +1,43 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/2",
+      "readable_path": "product.specifications",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Generated forms edit the document as JSON text, and any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/3",
+      "readable_path": "product.supplier_record",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Generated forms edit the document as JSON text, and any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Product.red`",
+      "file": "app/models/product.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Product#has_weight`",
+      "file": "app/models/product.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`product.specifications`",
+      "file": "app/models/product.rb"
+    }
+  ]
+}

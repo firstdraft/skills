@@ -1,0 +1,266 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf09",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf0a",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf0b",
+        "key": "question",
+        "name": "Question",
+        "primary_descriptor": {
+          "field": "question.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf0c",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf0d",
+            "key": "answers_count",
+            "name": "Answers",
+            "type": "counter",
+            "required": true,
+            "settings": {
+              "counts": "question.answers"
+            },
+            "notes": "Shown on the list so people can find questions nobody has answered."
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf0e",
+            "key": "answers",
+            "kind": "direct",
+            "name": "Answers",
+            "reference": "answer.question",
+            "side": "referenced"
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf0f",
+            "key": "unanswered",
+            "name": "Unanswered",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "question.answers_count"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": 0
+              }
+            }
+          }
+        ],
+        "orderings": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf10",
+            "key": "most_answered",
+            "terms": [
+              {
+                "field": "question.answers_count",
+                "direction": "descending"
+              },
+              {
+                "system_field": "id",
+                "direction": "descending"
+              }
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf11",
+            "key": "editable",
+            "operation": "update",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "question.answers_count"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": 0
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "question.title"
+              },
+              {
+                "field": "question.answers_count"
+              }
+            ],
+            "ordering": "question.most_answered"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "question.title"
+              },
+              {
+                "field": "question.answers_count"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "question.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "question.editable"
+            },
+            "inputs": [
+              {
+                "field": "question.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf12",
+        "key": "answer",
+        "name": "Answer",
+        "primary_descriptor": {
+          "field": "answer.body"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf13",
+            "key": "body",
+            "name": "Body",
+            "type": "long_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000cf14",
+            "key": "question",
+            "name": "Question",
+            "required": true,
+            "targets": [
+              "question"
+            ],
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "new",
+            "create",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "answer.body"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "answer.body"
+              },
+              {
+                "association": "answer.question"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

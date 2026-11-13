@@ -1,0 +1,144 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "expenses",
+    "name": "Expenses",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0990-7000-8000-0000000000f6",
+        "key": "expense",
+        "name": "Expense",
+        "primary_descriptor": {
+          "field": "expense.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000000f7",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000000f4",
+            "key": "amount",
+            "name": "Amount",
+            "type": "money",
+            "required": true,
+            "settings": {
+              "currency": "USD"
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000000f3",
+            "key": "tip",
+            "name": "Tip",
+            "type": "money",
+            "required": false,
+            "settings": {
+              "currency": "USD"
+            }
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000000f5",
+            "key": "chosen",
+            "name": "Chosen",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "expense.tip"
+                }
+              },
+              "operator": "greater_than",
+              "right": {
+                "target": {
+                  "field": "expense.amount"
+                }
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.tip"
+              }
+            ],
+            "predicate": "expense.chosen"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.tip"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.tip"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.tip"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

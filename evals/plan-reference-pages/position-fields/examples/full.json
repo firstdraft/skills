@@ -1,0 +1,286 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "boards",
+  "name": "Boards",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0c11-7000-8000-000000000137",
+    "key": "board",
+    "name": "Board",
+    "primary_descriptor": {
+     "field": "board.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0c11-7000-8000-000000000138",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0c11-7000-8000-000000000139",
+      "key": "cards",
+      "name": "Cards",
+      "kind": "direct",
+      "reference": "card.board",
+      "side": "referenced"
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "board.title"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "board.title"
+       },
+       {
+        "association": "board.cards",
+        "authorization": "public",
+        "projection": [
+         {
+          "field": "card.title"
+         },
+         {
+          "field": "card.position"
+         }
+        ],
+        "ordering": "card.by_position",
+        "create_form": {}
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "board.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "board.title"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": "public"
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0c11-7000-8000-000000000131",
+    "key": "card",
+    "name": "Card",
+    "primary_descriptor": {
+     "field": "card.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0c11-7000-8000-000000000132",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0c11-7000-8000-00000000012e",
+      "key": "position",
+      "name": "Position",
+      "type": "position",
+      "required": true,
+      "notes": "Cards are dragged into order after Compile.",
+      "settings": {
+       "within": [
+        {
+         "reference": "card.board"
+        }
+       ]
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0c11-7000-8000-000000000133",
+      "key": "board",
+      "name": "Board",
+      "targets": [
+       "board"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record"
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-0c11-7000-8000-00000000012f",
+      "key": "top_three",
+      "name": "Top three",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "card.position"
+        }
+       },
+       "operator": "less_than_or_equal_to",
+       "right": {
+        "kind": "literal",
+        "value": 3
+       }
+      }
+     }
+    ],
+    "orderings": [
+     {
+      "subject_uuid": "01a0caf3-0c11-7000-8000-000000000130",
+      "key": "by_position",
+      "terms": [
+       {
+        "field": "card.position",
+        "direction": "ascending"
+       },
+       {
+        "system_field": "id",
+        "direction": "ascending"
+       }
+      ]
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "show",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "card.title"
+       },
+       {
+        "field": "card.position"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "card.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "card.title"
+       },
+       {
+        "field": "card.position"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": "public"
+     }
+    }
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a0caf3-0c11-7000-8000-000000000134",
+    "key": "roadmap",
+    "entity": "board",
+    "fields": [
+     {
+      "field": "board.title",
+      "value": {
+       "kind": "literal",
+       "value": "Roadmap"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0c11-7000-8000-000000000135",
+    "key": "write_spec",
+    "entity": "card",
+    "fields": [
+     {
+      "field": "card.title",
+      "value": {
+       "kind": "literal",
+       "value": "Write spec"
+      }
+     }
+    ],
+    "references": [
+     {
+      "reference": "card.board",
+      "value": {
+       "kind": "reference_record",
+       "record": "board.roadmap"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0c11-7000-8000-000000000136",
+    "key": "ship",
+    "entity": "card",
+    "fields": [
+     {
+      "field": "card.title",
+      "value": {
+       "kind": "literal",
+       "value": "Ship"
+      }
+     }
+    ],
+    "references": [
+     {
+      "reference": "card.board",
+      "value": {
+       "kind": "reference_record",
+       "record": "board.roadmap"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

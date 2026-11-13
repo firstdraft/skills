@@ -1,0 +1,524 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "recipes",
+  "name": "Recipes",
+  "home_index": "recipe",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-0000000001f5",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001f6",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001f7",
+      "key": "admin",
+      "name": "Admin",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001f8",
+      "key": "recipes",
+      "kind": "direct",
+      "name": "Recipes",
+      "reference": "recipe.author",
+      "side": "referenced"
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001f9",
+      "key": "comments",
+      "kind": "direct",
+      "name": "Comments",
+      "reference": "comment.author",
+      "side": "referenced"
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001fa",
+      "key": "signed_in",
+      "operation": "use_app",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "record": "current"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001fb",
+      "key": "admins_only",
+      "operation": "administer",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "user.admin"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": true
+       }
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-0000000001fc",
+    "key": "recipe",
+    "name": "Recipe",
+    "primary_descriptor": {
+     "field": "recipe.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001fd",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001fe",
+      "key": "published",
+      "name": "Published",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000001ff",
+      "key": "author",
+      "name": "Author",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-000000000200",
+      "key": "comments",
+      "kind": "direct",
+      "name": "Comments",
+      "reference": "comment.recipe",
+      "side": "referenced"
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-000000000201",
+      "key": "read_published_or_own",
+      "operation": "read",
+      "owner": {
+       "description": "Published recipes, the author's own recipes, and every recipe for an admin."
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-000000000202",
+      "key": "manage_own",
+      "operation": "manage",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "association": "recipe.author"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "index": {
+      "authorization": {
+       "policy": "recipe.read_published_or_own"
+      },
+      "projection": [
+       {
+        "field": "recipe.title"
+       }
+      ]
+     },
+     "show": {
+      "authorization": {
+       "policy": "recipe.read_published_or_own"
+      },
+      "projection": [
+       {
+        "field": "recipe.title"
+       },
+       {
+        "field": "recipe.published"
+       },
+       {
+        "association": "recipe.comments",
+        "authorization": {
+         "policy": "comment.read_with_recipe"
+        },
+        "projection": [
+         {
+          "field": "comment.body"
+         }
+        ],
+        "create_form": {}
+       }
+      ]
+     },
+     "create": {
+      "authorization": {
+       "policy": "recipe.manage_own"
+      },
+      "inputs": [
+       {
+        "field": "recipe.title"
+       },
+       {
+        "field": "recipe.published"
+       }
+      ],
+      "bindings": [
+       {
+        "reference": "recipe.author",
+        "value": {
+         "kind": "environment",
+         "name": "current_account"
+        }
+       }
+      ]
+     },
+     "update": {
+      "authorization": {
+       "policy": "recipe.manage_own"
+      },
+      "inputs": [
+       {
+        "field": "recipe.title"
+       },
+       {
+        "field": "recipe.published"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": {
+       "policy": "user.admins_only",
+       "record": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-000000000204",
+    "key": "comment",
+    "name": "Comment",
+    "primary_descriptor": {
+     "field": "comment.body"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-000000000205",
+      "key": "body",
+      "name": "Body",
+      "type": "short_text",
+      "required": true
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-000000000206",
+      "key": "recipe",
+      "name": "Recipe",
+      "targets": [
+       "recipe"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-000000000207",
+      "key": "author",
+      "name": "Author",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-000000000208",
+      "key": "read_with_recipe",
+      "operation": "read",
+      "allow_when": {
+       "kind": "matches_policy",
+       "association": "comment.recipe",
+       "policy": "recipe.read_published_or_own"
+      }
+     }
+    ],
+    "scaffold": {
+     "create": {
+      "authorization": {
+       "policy": "user.signed_in",
+       "record": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      },
+      "inputs": [
+       {
+        "field": "comment.body"
+       }
+      ],
+      "bindings": [
+       {
+        "reference": "comment.author",
+        "value": {
+         "kind": "environment",
+         "name": "current_account"
+        }
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-00000000020a",
+    "key": "ana",
+    "entity": "user",
+    "fields": [
+     {
+      "field": "user.name",
+      "value": {
+       "kind": "literal",
+       "value": "Ana"
+      }
+     },
+     {
+      "field": "user.admin",
+      "value": {
+       "kind": "literal",
+       "value": true
+      }
+     }
+    ],
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "value": "ana@example.com"
+      }
+     ],
+     "credentials": [
+      {
+       "kind": "password",
+       "value": "password123"
+      }
+     ]
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-00000000020b",
+    "key": "ben",
+    "entity": "user",
+    "fields": [
+     {
+      "field": "user.name",
+      "value": {
+       "kind": "literal",
+       "value": "Ben"
+      }
+     }
+    ],
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "value": "ben@example.com"
+      }
+     ],
+     "credentials": [
+      {
+       "kind": "password",
+       "value": "password123"
+      }
+     ]
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-00000000020c",
+    "key": "pancakes",
+    "entity": "recipe",
+    "fields": [
+     {
+      "field": "recipe.title",
+      "value": {
+       "kind": "literal",
+       "value": "Pancakes"
+      }
+     },
+     {
+      "field": "recipe.published",
+      "value": {
+       "kind": "literal",
+       "value": true
+      }
+     }
+    ],
+    "references": [
+     {
+      "reference": "recipe.author",
+      "value": {
+       "kind": "reference_record",
+       "record": "user.ana"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-00000000020d",
+    "key": "draft_stew",
+    "entity": "recipe",
+    "fields": [
+     {
+      "field": "recipe.title",
+      "value": {
+       "kind": "literal",
+       "value": "Stew, still testing"
+      }
+     }
+    ],
+    "references": [
+     {
+      "reference": "recipe.author",
+      "value": {
+       "kind": "reference_record",
+       "record": "user.ben"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-00000000020e",
+    "key": "nice",
+    "entity": "comment",
+    "fields": [
+     {
+      "field": "comment.body",
+      "value": {
+       "kind": "literal",
+       "value": "Made these on Sunday."
+      }
+     }
+    ],
+    "references": [
+     {
+      "reference": "comment.recipe",
+      "value": {
+       "kind": "reference_record",
+       "record": "recipe.pancakes"
+      }
+     },
+     {
+      "reference": "comment.author",
+      "value": {
+       "kind": "reference_record",
+       "record": "user.ben"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

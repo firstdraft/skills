@@ -1,0 +1,37 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/4",
+      "readable_path": "event.price",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are stored; splitting, rounding, and currency handling remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/15",
+      "readable_path": "event.details",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`event.price`",
+      "file": "app/models/event.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`event.details`",
+      "file": "app/models/event.rb"
+    }
+  ]
+}

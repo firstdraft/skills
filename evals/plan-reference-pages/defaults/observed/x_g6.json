@@ -1,0 +1,17 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "issues_found",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.account.registration_default_current_account_unavailable",
+      "severity": "error",
+      "pointer": "/application/entities/0/account/registration/inputs/1/default/name",
+      "readable_path": "user"
+    }
+  ],
+  "gaps": [],
+  "compile": null,
+  "readme": []
+}

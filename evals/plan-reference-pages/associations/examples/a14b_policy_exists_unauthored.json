@@ -1,0 +1,155 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "projects",
+    "name": "Projects",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000007",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000008",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000005",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000006",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "project.read_member"
+            },
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "project.read_member"
+            },
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          }
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000004",
+            "key": "read_member",
+            "operation": "read",
+            "allow_when": {
+              "kind": "exists",
+              "association": "project.memberships",
+              "where": {
+                "kind": "comparison",
+                "left": {
+                  "target": {
+                    "association": "membership.user"
+                  }
+                },
+                "operator": "equals",
+                "right": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000001",
+        "key": "membership",
+        "name": "Membership",
+        "primary_descriptor": {
+          "system_field": "id"
+        },
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000002",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000003",
+            "key": "user",
+            "name": "User",
+            "targets": [
+              "user"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ]
+      }
+    ]
+  }
+}

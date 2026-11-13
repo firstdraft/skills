@@ -1,0 +1,43 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/0/orderings/0",
+      "readable_path": "task.by_priority",
+      "reason": "This named Ordering is outside the current simple indexed-scope release.",
+      "consequence": "`Task.by_priority` raises NotImplementedError until it is written, and no database index is emitted for it. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/0/scaffold/index/ordering",
+      "readable_path": "task.scaffold.index.ordering",
+      "reason": "The selected named Ordering has no target scope lowering.",
+      "consequence": "This surface calls `Task.by_priority`, which raises NotImplementedError until it is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": null,
+      "title": "`Task.by_priority`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: create form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

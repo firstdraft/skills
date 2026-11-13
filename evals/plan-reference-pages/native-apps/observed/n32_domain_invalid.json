@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.native_client.not_generated",
+      "pointer": "/application/native/ios",
+      "readable_path": "application.native.ios",
+      "reason": "The iOS client could not be generated for this Plan: The application domain cannot form the iOS application identity: The selected iOS client requires an application domain with a final label beginning with a letter, at most 253 bytes total, labels of at most 63 bytes, and no .invalid suffix.",
+      "consequence": "No iOS client is emitted."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`application.native.ios`",
+      "file": "ios/"
+    }
+  ]
+}

@@ -1,0 +1,547 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "probe",
+  "name": "Probe",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "019fa300-0075-7000-8000-000000000001",
+    "key": "venue",
+    "name": "Venue",
+    "primary_descriptor": {
+     "field": "venue.name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000002",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ]
+   },
+   {
+    "subject_uuid": "019fa300-0075-7000-8000-000000000003",
+    "key": "person",
+    "name": "Person",
+    "primary_descriptor": {
+     "field": "person.name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000004",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ]
+   },
+   {
+    "subject_uuid": "019fa300-0075-7000-8000-000000000005",
+    "key": "event",
+    "name": "Event",
+    "primary_descriptor": {
+     "field": "event.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000006",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true,
+      "validations": [
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-000000000007",
+        "key": "title_length",
+        "kind": "length",
+        "maximum": 120
+       }
+      ]
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000008",
+      "key": "code",
+      "name": "Code",
+      "type": "short_text",
+      "required": false,
+      "normalizations": [
+       "trim",
+       "blank_to_null"
+      ],
+      "validations": [
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-000000000009",
+        "key": "code_length",
+        "kind": "length",
+        "minimum": 3,
+        "maximum": 8
+       },
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-00000000000a",
+        "key": "code_characters",
+        "kind": "format",
+        "matches": {
+         "source": "\\A[A-Z0-9]+\\z"
+        }
+       }
+      ]
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-00000000000b",
+      "key": "kind",
+      "name": "Kind",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "019fa300-0075-7000-8000-00000000000c",
+         "key": "standard",
+         "name": "Standard"
+        },
+        {
+         "subject_uuid": "019fa300-0075-7000-8000-00000000000d",
+         "key": "vip",
+         "name": "Vip"
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-00000000000e",
+      "key": "dress_code",
+      "name": "Dress code",
+      "type": "short_text",
+      "required": false,
+      "normalizations": [
+       "trim",
+       "blank_to_null"
+      ],
+      "validations": [
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-00000000000f",
+        "key": "needed_for_vip",
+        "kind": "presence",
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "event.kind"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "vip"
+         }
+        }
+       },
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-000000000010",
+        "key": "blank_for_standard",
+        "kind": "absence",
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "event.kind"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "standard"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000011",
+      "key": "seats",
+      "name": "Seats",
+      "type": "integer",
+      "required": true,
+      "validations": [
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-000000000012",
+        "key": "seats_range",
+        "kind": "comparison",
+        "comparisons": [
+         {
+          "operator": "greater_than_or_equal_to",
+          "right": {
+           "kind": "literal",
+           "value": 1
+          }
+         },
+         {
+          "operator": "less_than_or_equal_to",
+          "right": {
+           "kind": "literal",
+           "value": 500
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000013",
+      "key": "price",
+      "name": "Price",
+      "type": "money",
+      "required": false,
+      "settings": {
+       "currency": "USD"
+      },
+      "validations": [
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-000000000014",
+        "key": "vip_minimum",
+        "kind": "comparison",
+        "comparisons": [
+         {
+          "operator": "greater_than_or_equal_to",
+          "right": {
+           "kind": "literal",
+           "value": "50"
+          }
+         }
+        ],
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "event.kind"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "vip"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000015",
+      "key": "starts_on",
+      "name": "Starts on",
+      "type": "date",
+      "required": true,
+      "validations": [
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-000000000016",
+        "key": "after_launch",
+        "kind": "comparison",
+        "comparisons": [
+         {
+          "operator": "greater_than_or_equal_to",
+          "right": {
+           "kind": "literal",
+           "value": "2026-01-01"
+          }
+         }
+        ]
+       },
+       {
+        "subject_uuid": "01a0caf3-075b-7000-8000-000000005209",
+        "key": "not_in_past",
+        "owner": {
+         "description": "Starts on is today or later. Checked only when an event is created."
+        }
+       }
+      ]
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000017",
+      "key": "ends_on",
+      "name": "Ends on",
+      "type": "date",
+      "required": false
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000018",
+      "key": "venue",
+      "name": "Venue",
+      "targets": [
+       "venue"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "restrict"
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000019",
+      "key": "host",
+      "name": "Host",
+      "targets": [
+       "person"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "restrict"
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-00000000001a",
+      "key": "co_host",
+      "name": "Co_host",
+      "targets": [
+       "person"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "restrict"
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-00000000001b",
+      "key": "sponsor",
+      "name": "Sponsor",
+      "targets": [
+       "person"
+      ],
+      "required": false,
+      "one_to_one": false,
+      "on_referenced_deleted": "nullify_reference",
+      "validations": [
+       {
+        "subject_uuid": "019fa300-0075-7000-8000-00000000001c",
+        "key": "needed_for_vip",
+        "kind": "presence",
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "event.kind"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "vip"
+         }
+        }
+       }
+      ]
+     }
+    ],
+    "validations": [
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-00000000001d",
+      "key": "ends_after_start",
+      "kind": "comparison",
+      "left": {
+       "target": {
+        "field": "event.ends_on"
+       }
+      },
+      "comparisons": [
+       {
+        "operator": "greater_than_or_equal_to",
+        "right": {
+         "target": {
+          "field": "event.starts_on"
+         }
+        }
+       }
+      ],
+      "error_target": {
+       "field": "event.ends_on"
+      }
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-00000000001e",
+      "key": "co_host_not_host",
+      "kind": "comparison",
+      "left": {
+       "target": {
+        "reference": "event.co_host"
+       }
+      },
+      "comparisons": [
+       {
+        "operator": "not_equals",
+        "right": {
+         "target": {
+          "reference": "event.host"
+         }
+        }
+       }
+      ],
+      "error_target": {
+       "reference": "event.co_host"
+      }
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-00000000001f",
+      "key": "unique_title_per_day",
+      "kind": "uniqueness",
+      "targets": [
+       {
+        "field": "event.title"
+       },
+       {
+        "field": "event.starts_on"
+       }
+      ],
+      "nulls": "distinct",
+      "error_target": {
+       "field": "event.title"
+      }
+     },
+     {
+      "subject_uuid": "019fa300-0075-7000-8000-000000000020",
+      "key": "one_vip_event_per_venue_day",
+      "kind": "uniqueness",
+      "targets": [
+       {
+        "reference": "event.venue"
+       },
+       {
+        "field": "event.starts_on"
+       }
+      ],
+      "nulls": "distinct",
+      "error_target": {
+       "reference": "event.venue"
+      },
+      "when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "event.kind"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": "vip"
+       }
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "event.title"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "event.title"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "event.title"
+       },
+       {
+        "field": "event.code"
+       },
+       {
+        "field": "event.kind"
+       },
+       {
+        "field": "event.dress_code"
+       },
+       {
+        "field": "event.seats"
+       },
+       {
+        "field": "event.price"
+       },
+       {
+        "field": "event.starts_on"
+       },
+       {
+        "field": "event.ends_on"
+       },
+       {
+        "association": "event.venue"
+       },
+       {
+        "association": "event.host"
+       },
+       {
+        "association": "event.co_host"
+       },
+       {
+        "association": "event.sponsor"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "event.title"
+       },
+       {
+        "field": "event.code"
+       },
+       {
+        "field": "event.kind"
+       },
+       {
+        "field": "event.dress_code"
+       },
+       {
+        "field": "event.seats"
+       },
+       {
+        "field": "event.price"
+       },
+       {
+        "field": "event.starts_on"
+       },
+       {
+        "field": "event.ends_on"
+       },
+       {
+        "association": "event.venue"
+       },
+       {
+        "association": "event.host"
+       },
+       {
+        "association": "event.co_host"
+       },
+       {
+        "association": "event.sponsor"
+       }
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

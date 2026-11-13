@@ -1,0 +1,36 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.input.partially_generated",
+      "pointer": "/application/entities/0/scaffold/create/inputs",
+      "readable_path": "task.scaffold.create.inputs",
+      "reason": "Conditional presence Validation \"task.reason.required_for_milestones\" requires Field \"reason\" when its condition holds, and no create input or binding supplies it.",
+      "consequence": "The create keeps its authored inputs and authorization. Saving fails validation while the condition holds, until the form or application code supplies the value."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.scaffold.create.inputs`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: create form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

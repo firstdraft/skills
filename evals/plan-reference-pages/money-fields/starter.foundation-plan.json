@@ -1,0 +1,135 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "team_expenses",
+    "name": "Team expenses",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb0-d40b-7ec5-95a1-8c68a0d5a18c",
+        "key": "expense",
+        "name": "Expense",
+        "primary_descriptor": {
+          "field": "expense.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb0-d40b-7c42-9c1a-3a374f186de4",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-d40b-777c-b544-d939d072c44e",
+            "key": "spent_on",
+            "name": "Spent on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-d40b-7cde-9b81-13e72503af12",
+            "key": "category",
+            "name": "Category",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cbb0-d40b-7b8d-b92e-d5c02f9f04f4",
+                  "key": "travel",
+                  "name": "Travel"
+                },
+                {
+                  "subject_uuid": "01a1cbb0-d40b-74d4-96ee-6e26e6a299ed",
+                  "key": "meal",
+                  "name": "Meal"
+                },
+                {
+                  "subject_uuid": "01a1cbb0-d40b-7e22-8f25-7f8a78e0da04",
+                  "key": "office",
+                  "name": "Office supplies"
+                }
+              ]
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.category"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.category"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.category"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.category"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

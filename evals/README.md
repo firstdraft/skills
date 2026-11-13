@@ -11,7 +11,9 @@ Plan/GapSet retains its eval-case and repository-test digest bindings, including
 review case reads the attached August 28 result as dated evidence; it does not claim the current Compiler produced
 that result.
 
-For existing-app UI work, use the separate [UI continuation corpus](ui-continuation/README.md).
+For existing-app UI work, use the separate [UI continuation corpus](ui-continuation/README.md). The Plan reference
+pages' example Plans, what the Service reported for each, and the page tests are in
+[Plan reference page examples](plan-reference-pages/README.md).
 
 ## Running a case
 

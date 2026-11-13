@@ -1,0 +1,404 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tasks",
+    "name": "Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbae-fb3e-7abe-9e48-2d6983e84d40",
+        "key": "category",
+        "name": "Category",
+        "primary_descriptor": {
+          "field": "category.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-75d8-8138-665477f4dd99",
+            "key": "code",
+            "name": "Code",
+            "type": "short_text",
+            "required": true,
+            "immutable": true
+          },
+          {
+            "subject_uuid": "01a1cbae-fb3e-70f1-9162-64f339162577",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-fb3e-7221-817b-8007f6a6b84c",
+            "key": "description",
+            "name": "Description",
+            "type": "long_text",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a1cbae-fb3e-72ba-8b1b-c3df3c05673f",
+            "key": "active",
+            "name": "Active",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": true
+            }
+          }
+        ],
+        "validations": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-7aa5-9705-912225b309aa",
+            "key": "unique_code",
+            "kind": "uniqueness",
+            "targets": [
+              {
+                "field": "category.code"
+              }
+            ],
+            "nulls": "distinct",
+            "error_target": {
+              "field": "category.code"
+            }
+          }
+        ],
+        "reference_data": {
+          "identity": {
+            "field": "category.code"
+          },
+          "records": [
+            {
+              "subject_uuid": "01a1cbae-fb3e-7ca0-bb36-6471d1e0c9ad",
+              "key": "general",
+              "fields": [
+                {
+                  "field": "category.code",
+                  "value": {
+                    "kind": "literal",
+                    "value": "general"
+                  }
+                },
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "General"
+                  }
+                }
+              ]
+            },
+            {
+              "subject_uuid": "01a1cbae-fb3e-7c25-8270-3f3964f822ee",
+              "key": "billing",
+              "fields": [
+                {
+                  "field": "category.code",
+                  "value": {
+                    "kind": "literal",
+                    "value": "billing"
+                  }
+                },
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Billing"
+                  }
+                },
+                {
+                  "field": "category.description",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Invoices, refunds, and payment methods"
+                  }
+                }
+              ]
+            },
+            {
+              "subject_uuid": "01a1cbae-fb3e-76e3-8eb9-f1236eafa31a",
+              "key": "legacy",
+              "fields": [
+                {
+                  "field": "category.code",
+                  "value": {
+                    "kind": "literal",
+                    "value": "legacy"
+                  }
+                },
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Legacy"
+                  }
+                },
+                {
+                  "field": "category.active",
+                  "value": {
+                    "kind": "literal",
+                    "value": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "category.name"
+              },
+              {
+                "field": "category.description"
+              },
+              {
+                "field": "category.active"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "category.name"
+              },
+              {
+                "field": "category.description"
+              },
+              {
+                "field": "category.active"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbae-fb3e-7277-8352-6c4836900187",
+        "key": "topic",
+        "name": "Topic",
+        "primary_descriptor": {
+          "field": "topic.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-7cf7-8441-0ef9bf7ae41e",
+            "key": "code",
+            "name": "Code",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-fb3e-7ba8-9794-fd7d518c8118",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-7d94-ac02-d91a67f24d4e",
+            "key": "category",
+            "name": "Category",
+            "targets": [
+              "category"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "reference_data": {
+          "identity": {
+            "field": "topic.code"
+          },
+          "records": [
+            {
+              "subject_uuid": "01a1cbae-fb3e-75bf-bd1e-8968e0ba3523",
+              "key": "refunds",
+              "fields": [
+                {
+                  "field": "topic.code",
+                  "value": {
+                    "kind": "literal",
+                    "value": "refunds"
+                  }
+                },
+                {
+                  "field": "topic.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Refunds"
+                  }
+                }
+              ],
+              "references": [
+                {
+                  "reference": "topic.category",
+                  "value": {
+                    "kind": "reference_record",
+                    "record": "category.billing"
+                  }
+                }
+              ]
+            },
+            {
+              "subject_uuid": "01a1cbae-fb3e-7617-9be3-a2664cfdd306",
+              "key": "invoices",
+              "fields": [
+                {
+                  "field": "topic.code",
+                  "value": {
+                    "kind": "literal",
+                    "value": "invoices"
+                  }
+                },
+                {
+                  "field": "topic.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Invoices"
+                  }
+                }
+              ],
+              "references": [
+                {
+                  "reference": "topic.category",
+                  "value": {
+                    "kind": "reference_record",
+                    "record": "category.billing"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "subject_uuid": "01a1cbae-fb3e-74c5-a814-6ca45b5f3a84",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-7260-acfa-f785c6f1eb44",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-7c0a-8763-dc71f7c0e2bf",
+            "key": "category",
+            "name": "Category",
+            "targets": [
+              "category"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "association": "task.category",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "association": "task.category",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "association": "task.category"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "association": "task.category"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbae-fb3e-7609-987a-1f23d068242b",
+        "key": "refund_request",
+        "entity": "task",
+        "fields": [
+          {
+            "field": "task.title",
+            "value": {
+              "kind": "literal",
+              "value": "Refund order 1042"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "task.category",
+            "value": {
+              "kind": "reference_record",
+              "record": "category.billing"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

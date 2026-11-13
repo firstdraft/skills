@@ -1,0 +1,2 @@
+user&.admin? || (user&.id.present? && record&.author_id == user.id)
+next relation if user&.admin?

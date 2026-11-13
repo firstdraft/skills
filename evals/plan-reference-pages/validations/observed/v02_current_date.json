@@ -1,0 +1,88 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.comparison_clause_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/2/fields/6/validations/1/comparisons/0/right",
+      "readable_path": "event.starts_on.not_in_past"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/2/fields/5",
+      "readable_path": "event.price",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are entered and stored; splitting, rounding, and currency handling remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/2/fields/6/validations/1",
+      "readable_path": "event.starts_on.not_in_past",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Event#not_in_past`",
+      "file": "app/models/event.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`event.price`",
+      "file": "app/models/event.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: create persists the submitted values",
+      "file": "spec/requests/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: create rejects a missing title without persisting changes",
+      "file": "spec/requests/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: update persists the submitted changes",
+      "file": "spec/requests/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: update rejects a missing title without persisting changes",
+      "file": "spec/requests/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: create form browser coverage",
+      "file": "spec/system/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: update form browser coverage",
+      "file": "spec/system/events_spec.rb"
+    }
+  ]
+}

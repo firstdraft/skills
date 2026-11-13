@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/3",
+      "readable_path": "event.share_code",
+      "reason": "Rails has_secure_token fills the Field with a unique random token that no form edits, but no lookup, rotation, or expiry flow is generated.",
+      "consequence": "Each new record receives a token; finding a record by token, regenerating it, and expiring it remain work after compilation."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`event.share_code`",
+      "file": "app/models/event.rb"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.account.partially_generated",
+      "pointer": "/application/entities/0/references/0",
+      "readable_path": "user.account",
+      "reason": "Public signup generates no control for a required Reference on the Account Entity.",
+      "consequence": "Signup cannot supply this Reference, so its validation rejects new Accounts."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.account`",
+      "file": "app/models/user.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Account registration: persists submitted registration values",
+      "file": "spec/requests/account_registration_spec.rb"
+    }
+  ]
+}
