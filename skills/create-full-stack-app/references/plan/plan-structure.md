@@ -193,11 +193,20 @@ pushed.
 - **Gap:** the status is `valid`, the app compiles, and one part is left out or partly generated. Each gap has a
   code and a JSON pointer, is listed in `.firstdraft/gaps.json` in the app, and has an entry in the generated
   README: under "Behavior to write", or under "What you supply" when it needs something only the person can
-  provide, such as a native client's domain and bundle ID or the credentials for a `delivery` channel. A part
-  `skipped_at_import`, such as a nonempty `delivery`, changes no generated code. Keep such a part in the Plan when
-  the person asked for it. The first preview waits for "Behavior to write" and not for "What you supply";
-  `SKILL.md` has the order of work. A request that is not generated and has no gap is in neither list, so add it to
-  your own; the page for that part says when this happens.
+  provide, such as a native client's domain and bundle ID or the credentials for a `delivery` channel. The first
+  preview waits for "Behavior to write" and not for "What you supply"; `SKILL.md` has the order of work. A request
+  that is not generated and has no gap is in neither list, so add it to your own; the page for that part says when
+  this happens.
+- **Skipped at import:** a part that First Draft does not import generates nothing, and `plan push` warns about
+  it; the status stays `valid`. `foundation_plan.import.unsupported_capability` marks a part this release cannot
+  import, such as a nonempty `delivery`, a sum or average `derivation`, or an Association's `cardinality`; import
+  also skips a misspelled Predicate, Ordering, or Policy name in a Scaffold this way, with the same message. Check
+  the path first and fix a misspelling; keep a real request in the Plan. `foundation_plan.import.skipped_dependent`
+  marks a part skipped because it names a skipped part, such as an Entity's whole `scaffold` when one
+  `authorization` names a misspelled Policy, and `home_index` when that list goes with it. When the part it
+  depends on is a misspelling, fixing that brings it back. Each skip is also a gap, such as
+  `foundation_plan.gap.service.unsupported_capability` or `foundation_plan.gap.service.depends_on_skipped`, and its
+  README entry, in one of the two lists above, says what was not imported.
 - **Stub:** behavior First Draft cannot generate yet, such as a Predicate it cannot turn into a scope, is emitted as
   a stub with its gap: a scope that raises `NotImplementedError`, a Policy rule that returns `false`, or an empty
   validation method. A list page that uses it is emitted and calls it. Its spec file has an example that fails

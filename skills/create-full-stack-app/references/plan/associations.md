@@ -370,8 +370,12 @@ Every one of these names an authored Association, or a Reference's forward reade
 - **A filtered Association whose Predicate First Draft cannot generate,** such as a rank comparison on an
   [enum Field](enum-fields.md). The Association and its page items are left out
   (`foundation_plan.gap.association.not_generated`, with `foundation_plan.gap.scaffold.projection.not_generated`
-  for each page item), and the Predicate's scope is a stub. When no Expression the Compiler generates can say the
-  filter, make the Predicate an `owner` one, below.
+  for each page item), and the Predicate's scope is a stub. Analysis also warns
+  `foundation_plan.rails_target.compiler.unsupported_association` at the Association's `predicate`: a filtered
+  Association needs a generated scope. README.md lists the Association under "Behavior to write", in "Data" ("The
+  Association declaration is omitted."), and each page item in "Pages and actions". Keep both in the Plan, and write
+  the scope, the `has_many`, and its page sections before the preview. When no Expression the Compiler generates
+  can say the filter, make the Predicate an `owner` one, below.
 - **A filtered Association whose Predicate is `owner`.** The Association, its page items, and the nested list are
   generated and call the stub scope, so the details page raises `NotImplementedError` until you write it. The
   placeholder example fails until you replace it. With `task.open` in the full example made `owner`:

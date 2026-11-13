@@ -343,7 +343,7 @@ rows.
 | List and detail page columns ([Scaffold](scaffold-lists-and-details.md) `projection`) | The state's label, `task.aasm(:status).human_state`. | |
 | [Form](scaffold-forms.md) input | | The Field is left out of forms (`foundation_plan.gap.scaffold.input.not_generated`). The state changes through events. |
 | `create.bindings` setting the state | | The binding is left out (`foundation_plan.gap.scaffold.binding.not_generated`); new records start in `initial_state`. README.md lists it under "Behavior to write", in "Pages and actions" ("Only current_account, one of its Fields or References, current_date, or current_time is admitted."). To start some records in a later state, fire the events that lead there in the create action you edit, before the preview. |
-| [Ordering](orderings.md) term on the Field | | A term on the state makes the Ordering a stub, as a term on an enum without `ordinal` does. With `{"field": "task.status", …}` then `{"system_field": "id", …}`, `Task.by_status` raises `NotImplementedError`, the model spec has a placeholder example for it, and analysis reports `foundation_plan.gap.ordering.not_generated` at the Ordering and at each page's `ordering` key that names it. README.md lists the scope under "Behavior to write": "orders records by status ascending, then id ascending". To sort by the state, write an `owner` Ordering whose description gives the order of the states. |
+| [Ordering](orderings.md) term on the Field | | A term on the state makes the Ordering a stub, as a term on an enum without `ordinal` does. With `{"field": "task.status", …}` then `{"system_field": "id", …}`, `Task.by_status` raises `NotImplementedError`, the model spec has a placeholder example for it, and analysis reports `foundation_plan.gap.ordering.not_generated` at the Ordering and at each page's `ordering` key that names it. README.md lists the scope under "Behavior to write", in "Pages and actions": "orders records by status ascending, then id ascending". To sort by the state, write an `owner` Ordering whose description gives the order of the states. |
 
 ## Optional machines
 
@@ -380,7 +380,10 @@ end
 
 Every new record has a `nil` state until you write the callback and the events. Example records keep their other
 values and lose the state (`foundation_plan.gap.development_data.field_assignment.not_generated`). Analysis reports
-`foundation_plan.gap.state_machine.partially_generated`. Prefer a required machine with a state such as
+`foundation_plan.gap.state_machine.partially_generated` for the machine, and
+`foundation_plan.gap.state_machine_applicability.not_generated` at `task.status.when` for the empty callback.
+README.md lists the callback under "Behavior to write", in "Data", as `Task#assign_initial_status`: write it to set
+the starting state where `when` holds, before the preview. Prefer a required machine with a state such as
 `not_applicable`.
 
 ## Not generated
@@ -449,8 +452,10 @@ These pass as `valid` and are reported as gaps:
 
 - **A Field required in the starting state, offered on Edit but not on New.** Every new record meets the rule, so
   every save from the New page fails (`foundation_plan.gap.scaffold.input.partially_generated`, naming the rule).
-  List the Field in `create.inputs` too. A rule on a later state needs no control on New, and analysis reports
-  nothing for it.
+  README.md also lists the create request examples and the New form's browser example under "Test coverage to
+  complete", each with the reason "this write needs input satisfying <entity>.<field>.<rule key> and its
+  condition". List the Field in `create.inputs` too. A rule on a later state needs no control on New, analysis
+  reports nothing for it, and the examples are generated.
 - **An event with an effect the Compiler cannot generate.** It becomes a stub, and example records in the state it
   leads to are dropped. An `owner` event does the same, with gap records for its effects and the dropped records
   but none for the transition.

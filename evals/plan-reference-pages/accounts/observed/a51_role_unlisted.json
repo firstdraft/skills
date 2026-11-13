@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.account.registration_member_unlisted",
+      "severity": "warning",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "user.role"
+    }
+  ],
+  "gaps": [],
+  "compile": "succeeded",
+  "readme": []
+}

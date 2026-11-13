@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [],
   "gaps": [
@@ -45,18 +45,6 @@
       "group": "Data",
       "title": "`rental.deposit`",
       "file": "app/models/rental.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Rental: create form browser coverage",
-      "file": "spec/system/rentals_spec.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Rental: update form browser coverage",
-      "file": "spec/system/rentals_spec.rb"
     }
   ]
 }

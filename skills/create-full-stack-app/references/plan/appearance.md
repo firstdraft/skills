@@ -255,10 +255,10 @@ Nothing else in a Plan names `appearance`. Two other Application keys decide wha
   `application.appearance.theme`. The Plan stays `valid` and Compile succeeds. The iPhone and Android apps and the
   web pages inside them follow the system setting, and the website's selector does not affect them. Keep
   `"toggle"`; the website still gets its selector. The README lists the missing control under "Behavior to write",
-  in "Pages and actions": "The emitted iOS and Android output does not provide the authored Light / Dark / System
-  preference control." (with one client, it names that client). Native work takes a while: say so, and ask
-  whether the person wants to see the app first. The request stays in the Plan either way; `SKILL.md` has the
-  order of work. To add the control on iPhone, start from `ios/FoundationApp/SceneDelegate.swift`, which calls
+  in "Pages and actions", naming the client folders `ios/` and `android/`: "The emitted iOS and Android output does
+  not provide the authored Light / Dark / System preference control." (with one client, it names that client and
+  its folder). Native work takes a while: say so, and ask whether the person wants to see the app first. The
+  request stays in the Plan either way; `SKILL.md` has the order of work. To add the control on iPhone, start from `ios/FoundationApp/SceneDelegate.swift`, which calls
   `AppAppearance.apply` (in `AppAppearance.swift`) to set the window's `overrideUserInterfaceStyle`; on Android,
   from `FoundationApplication.kt`, which calls `AppCompatDelegate.setDefaultNightMode`.
 - **A theme preference stored on the Account.** `"toggle"` remembers the choice per browser only. To save it per

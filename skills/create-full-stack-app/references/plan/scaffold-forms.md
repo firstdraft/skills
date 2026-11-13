@@ -199,12 +199,16 @@ rule the person has no control to meet. Analysis status stays `valid`, and the g
 presence Validation "task.reason.required_for_bugs" requires Field "reason" when its condition holds, and no create
 input or binding supplies it." For an update form the reason ends "no update input supplies it." README.md lists it
 under "Behavior to write", in "Pages and actions". List the Field in both forms; on the New page it is an ordinary
-optional control. The Field the rule reads need not be an input: an enum with a `default` that only `update.inputs`
-offers works, and every new record starts at the default. The conditional Field still belongs on New then: without
-it the gap is reported, although no new record can meet the rule. One case has no gap: a rule on a
-[State Machine](state-machine-fields.md) state other than its `initial_state`. No new record is in that state, so
-the New page needs no control for the Field. The rule's Plan shape, on the Field, comparing with an enum value's
-`key`:
+optional control. Two cases have no gap, because no new record can meet the rule, so the New page needs no control
+for the Field:
+
+- a condition on a [State Machine](state-machine-fields.md) state other than its `initial_state`;
+- a condition on a Field the create neither offers nor binds, when that Field's literal `default` leaves the
+  condition off ([Defaults](defaults.md) lists the literals First Draft generates). A recipe's `tested_on`, required
+  when `status` is `tested`, can stay off New when `status` defaults to `untested` and only `update.inputs` offers
+  it.
+
+The rule's Plan shape, on the Field, comparing with an enum value's `key`:
 
 ```json
 {"subject_uuid": "…", "key": "reason", "name": "Reason", "type": "long_text", "required": false,
@@ -457,8 +461,9 @@ These pass analysis as `valid`:
 These pass as `valid` and are reported as gaps:
 
 - **A conditionally required Field or Reference missing from a form's `inputs`.** The form is generated, and a save
-  from it fails while the condition holds (`foundation_plan.gap.scaffold.input.partially_generated`). A rule on a
-  State Machine state other than `initial_state` gets no record on the New form. See
+  from it fails while the condition holds (`foundation_plan.gap.scaffold.input.partially_generated`). A rule no new
+  record can meet gets no record on the New form: one on a State Machine state other than `initial_state`, or one
+  that a Field's literal default turns off when the create does not set that Field. See
   [What a form needs from the Entity](#what-a-form-needs-from-the-entity).
 - **A required value with no source.** The form stays, and every save fails.
 - **A binding First Draft cannot generate**, listed under [Bindings](#bindings).
@@ -477,9 +482,9 @@ a missing `authorization`, `"inputs": []`, `bindings` on `update`, `inputs` on `
 - **Ask:** for each kind of record, who may add, edit, and delete it, and whether it is added from a parent's page,
   on its own, or both. Recommend the parent's page for records that cannot exist without the parent.
 - **Ask:** which values the person types and which the app fills in, such as who made it and when.
-- **Tell:** that a Field required only in some cases appears on both the New and Edit forms, even when no new record
-  can meet the case, unless the case is a State Machine state no new record is in, and that you can remove it from
-  the New form after Compile.
+- **Tell:** that a Field required only in some cases appears on both the New and Edit forms, unless no new record
+  can meet the case: a State Machine state no new record is in, or a value other than the default of a Field that
+  the New form does not offer.
 - **Tell:** where each form goes after saving, when it differs from the defaults above.
 - **Tell:** any value the app must set to a constant, and that you will write it after Compile or use a default.
 

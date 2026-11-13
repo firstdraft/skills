@@ -290,8 +290,8 @@ end
 Name the Predicate on the list anyway, as above: the Plan then says what the person asked for. The list, and Home
 when Home shows it, raises until you write the scope, such as
 `scope :bug_reports, -> { joins(:category).where(categories: {code: "bugs"}) }`. The model spec has a placeholder
-example for the scope that fails until you replace it, and README.md lists the scope under "Behavior to write".
-Write it before the preview. [Predicates](predicates.md#not-generated) has the rule.
+example for the scope that fails until you replace it, and README.md lists the scope under "Behavior to write", in
+Pages and actions. Write it before the preview. [Predicates](predicates.md#not-generated) has the rule.
 
 ## Not generated
 

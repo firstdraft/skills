@@ -393,8 +393,9 @@ path `{"through": [{"association": "task.project"}], "target": {"field": "projec
   end
   ```
 
-  README.md lists the scope under "Behavior to write" and says the Task index raises until it is written. No
-  request spec covers that list; README.md lists the missing index example under "Test coverage to complete".
+  README.md lists the scope under "Behavior to write", in Pages and actions, and says the Task index raises until
+  it is written. No request spec covers that list; README.md lists the missing index example under "Test coverage
+  to complete".
 
 - **Pages for a Reference with several targets.** No input, column, or link
   (`foundation_plan.gap.scaffold.input.not_generated`, `foundation_plan.gap.scaffold.projection.not_generated`).

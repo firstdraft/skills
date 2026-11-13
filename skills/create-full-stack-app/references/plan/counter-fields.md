@@ -84,7 +84,7 @@ creating a comment raises the count.
 | `key` | yes | lower snake case | | The column name. With a key other than `<association>_count`, both sides name it: `belongs_to :post, counter_cache: :replies` and `has_many :comments, …, counter_cache: :replies`. |
 | `name` | yes | text | | The label in `config/locales/scaffolds.en.yml`. |
 | `notes` | no | text | none | Nothing; shown to people reviewing the Plan. |
-| `validations` | no | `comparison`, `exclusion`, or `owner` | none | Each becomes an empty `validate` method, with a model spec example that fails until you write the rule (`foundation_plan.gap.validation.not_generated`; an `owner` Validation has no gap record). The example builds a record that breaks the rule, or is a placeholder where First Draft cannot build one. Keep a rule the person asked for. |
+| `validations` | no | `comparison`, `exclusion`, or `owner` | none | Each becomes an empty `validate` method, with a model spec example that fails until you write the rule (`foundation_plan.gap.validation.not_generated`; an `owner` Validation has no gap record). The example builds a record that breaks the rule, or is a placeholder where First Draft cannot build one. A `comparison` also reports the warning `foundation_plan.rails_target.validation.comparison_owner_unsupported`: no comparison is generated on a counter. Keep a rule the person asked for, and write it in the empty method before the preview. |
 
 A counter takes no `default`, `immutable`, or `derivation`; import rejects each (`foundation_plan.schema.not` or
 `foundation_plan.schema.enum`). A `counts` path that names no Association fails with
@@ -251,13 +251,14 @@ The schema allows a `derivation` on an `integer` or `decimal` Field (`average` n
  "derivation": {"aggregate": {"association": "project.tasks", "operation": "sum", "field": "task.hours"}}}
 ```
 
-Analysis accepts it as `valid`, then drops the `derivation` (`foundation_plan.gap.service.unsupported_capability`,
-at `…/derivation`). The Field becomes an ordinary stored column that nothing calculates, and the pages that list it
-show it empty. Nothing is generated for the calculation yet. The generated README lists it under "Behavior to
-write", in Data, by the Entity's key and the `…/derivation` path: "First Draft did not import this part of the
-Plan, so the application has none of it." Keep the `derivation` in the Plan, and write the calculation before the
-preview, such as `def total_hours = tasks.sum(:hours)` in `app/models/project.rb`. Tell the person so. An Ordering
-by it is not generated either.
+Import drops the `derivation` with the warning `foundation_plan.import.unsupported_capability`, and analysis accepts
+the Plan as `valid` with the gap `foundation_plan.gap.service.unsupported_capability` at `…/derivation`. The Field
+becomes an ordinary stored column that nothing calculates, and the pages that list it show it empty. Nothing is
+generated for the calculation yet. The generated README lists it under "Behavior to write", in Data, titled with the
+Field, such as `project.total_hours`, at its `…/derivation` path: "First Draft did not import this Field's
+`derivation`, so nothing in the application computes it." Keep the `derivation` in the Plan, and write the
+calculation before the preview, such as `def total_hours = tasks.sum(:hours)` in `app/models/project.rb`. Tell the
+person so. An Ordering by it is not generated either.
 
 Make a derived Field `required: false`, as above. With `required: true` the column is `null: false` with no default
 and the create action does not permit it, so the New page cannot save a record

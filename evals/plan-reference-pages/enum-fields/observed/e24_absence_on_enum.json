@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -27,18 +27,6 @@
       "group": "Rules",
       "title": "`Task#absent_for_milestones`",
       "file": "app/models/task.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Task: create form browser coverage",
-      "file": "spec/system/tasks_spec.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Task: update form browser coverage",
-      "file": "spec/system/tasks_spec.rb"
     }
   ]
 }

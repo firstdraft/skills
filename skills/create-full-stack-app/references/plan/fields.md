@@ -381,9 +381,9 @@ These pass analysis as `valid`:
 - **A Predicate or Ordering that compiles to a stub, selected by a list page.** The list page raises
   `NotImplementedError`, and the scope's placeholder example in the model spec fails until you replace it. With a
   stubbed Ordering the list's request spec fails too. The gap list names it at `<entity>.scaffold.index.predicate`
-  or `.ordering`, and the generated README lists the scope under "Behavior to write" with the list page that calls
-  it. Check the rules in [Where each type works](#where-each-type-works) so you know which ones you will
-  write.
+  or `.ordering`, and the generated README lists the scope under "Behavior to write", in Pages and actions, with the
+  list page that calls it. Check the rules in [Where each type works](#where-each-type-works) so you know which
+  ones you will write.
 - **An example record value that the Field cannot hold:** a decimal not in shortest form, an integer outside the
   32-bit range, a datetime without a zone, a URL the validator rejects, `null` on a required Field, or text that the
   Field's `normalizations` would change, such as `"RUBY-27"` on a Field with `downcase`. The value is dropped

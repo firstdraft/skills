@@ -147,12 +147,12 @@ are not asked for, and appear on `/account` only through a `profile`.
 | Account Entity Field | Listed as an input | On the sign-up form |
 | --- | --- | --- |
 | `name`, required `short_text` | yes or no | Text box, required. |
-| `role`, required `enum` with no `default` | no | A select of every value, chosen by the person signing up. |
-| `role`, required `enum` with `"default": {"kind": "literal", "value": "member"}` | no | Not shown; new accounts get `member`. The [Full example](#full-example) declares one. |
+| `role`, required `enum` with no `default` | no | A select of every value, chosen by the person signing up. Analysis warns `foundation_plan.account.registration_member_unlisted`; see [Analysis does not catch](#analysis-does-not-catch). |
+| `role`, required `enum` with `"default": {"kind": "literal", "value": "member"}` | no | Not shown; new accounts get `member`, and there is no warning. The [Full example](#full-example) declares one. |
 | `bio`, optional `long_text` | no | Not shown. |
 | `bio`, optional `long_text` | `required: true` | Shown, required. |
 | `status`, `state_machine` | yes | Analysis rejects the Plan: `foundation_plan.account.registration_field_not_creatable`. |
-| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails. |
+| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails. Not listed, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`. |
 
 Every value on the form goes through the model's validations before the account is saved; an invalid value returns
 422 with the error on its control.
@@ -303,19 +303,19 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   rejects them (`foundation_plan.schema.const`). Write them after Compile on Rodauth or OmniAuth.
 - **Choosing a record at sign-up,** such as a team or a language. An `association` input and a required Reference
   on the Account Entity are `foundation_plan.gap.account.partially_generated`: sign-up gets no control for it. Keep
-  the input in the Plan. The README lists each one under "Behavior to write", in "Pages and actions"; for the
-  Reference the entry reads "Public signup generates no control for a required Reference on the Account Entity.
-  Signup cannot supply this Reference, so its validation rejects new Accounts." The entry names
-  `app/models/user.rb`, but the control goes in `app/views/rodauth/create_account.html.erb`, and
-  `app/misc/rodauth_main.rb` sets its value on the new account. Write it before the preview; `SKILL.md` has the
-  order of work. Keep `required` as the person asked: with a required Reference every sign-up fails until then. The
-  registration spec leaves out its success example, and the README lists that example under "Test coverage to
-  complete"; add it with the control.
+  the input in the Plan. The README lists each one under "Behavior to write", in "Pages and actions", by the
+  Reference's path, such as `user.preferred_language`, with the two files to change:
+  `app/views/rodauth/create_account.html.erb` for the control, and `app/misc/rodauth_main.rb`, which sets its value
+  on the new account. For the Reference the entry reads "Public signup generates no control for a required
+  Reference on the Account Entity. Signup cannot supply this Reference, so its validation rejects new Accounts."
+  Write it before the preview; `SKILL.md` has the order of work. Keep `required` as the person asked: with a
+  required Reference every sign-up fails until then. The registration spec leaves out its success example, and the
+  README lists that example under "Test coverage to complete"; add it with the control.
 - **Optional questions at sign-up.** An input with `required: false` on an optional Field gets no control. Keep it
-  in the Plan. The README lists it under "Behavior to write", in "Pages and actions": "This registration input has
-  no generated signup control; only required inputs for stored, non-derived Fields are generated. The signup form
-  omits this input." Add the optional control to `create_account.html.erb`, and set its value in
-  `rodauth_main.rb`, before the preview.
+  in the Plan. The README lists it under "Behavior to write", in "Pages and actions", by the Field's path, such as
+  `user.bio`, with the same two files: "This registration input has no generated signup control; only required
+  inputs for stored, non-derived Fields are generated. The signup form omits this input." Add the optional control
+  to `create_account.html.erb`, and set its value in `rodauth_main.rb`, before the preview.
 - **Invitations, or an admin creating accounts from a page.** Without `registration`, the README gives the owner
   `bin/rails runner` commands; anything else you write.
 - **Deleting one's own account.** `destroy` in the Account Entity's `resource_routes` generates
@@ -327,11 +327,12 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   current_account parent context." `/account` and the full list, such as `/account/notes`, show the records with
   no Add link. When no route or other form uses the child's `create`, it is left out too
   (`foundation_plan.gap.scaffold.definition.not_generated`). README.md lists both under "Behavior to write", in
-  "Pages and actions". Keep the `create_form` in the Plan, and before the preview add `new` and `create` to the
-  nested `notes` route and `Accounts::NotesController`, building the note from `current_account.notes`, with an
-  Add link on both pages. With `new` and `create` in the child's `resource_routes` and a `current_account` binding
-  on its author Reference, a standalone New page is generated; offer it to the person if they would rather add
-  notes there.
+  "Pages and actions", as `user.notes.create_form` and `note.scaffold.create`, each naming the nested controller,
+  `app/controllers/accounts/notes_controller.rb`. Keep the `create_form` in the Plan, and before the preview add
+  `new` and `create` to the nested `notes` route and `Accounts::NotesController`, building the note from
+  `current_account.notes`, with an Add link on both pages. With `new` and `create` in the child's
+  `resource_routes` and a `current_account` binding on its author Reference, a standalone New page is generated;
+  offer it to the person if they would rather add notes there.
 - **Granting a role.** No page sets an admin flag or role unless you put it in an `update`, which lets people give
   it to themselves. Set roles in seeds or with `bin/rails runner`, or write an admin page after Compile.
 - **A production email provider.** Verification, reset, and unlock mail is queued through Action Mailer, and
@@ -341,16 +342,30 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
 
 These pass analysis as `valid`:
 
-- **A required Field that is not an input and has no `default`.** It becomes a sign-up control. For a role or an
-  admin flag, anyone who signs up picks `admin`. Give such Fields a `default`.
 - **A role or admin Field in `update.inputs`.** Anyone can promote themselves on **Edit details**.
 - **`update` with no `inputs`.** `/account/edit` is a form with no fields, and its params are `user: []`.
 - **No `registration` with a required Reference or upload on the Account Entity.** The README's commands for a new
   account set every other required Field the app does not fill to a sample value, and say that the Reference and
   the file must be set by hand. Until you set them, the commands fail.
 
-These pass as `valid` and are reported as a gap:
+These pass as `valid` and are reported as a warning or a gap:
 
+- **A required Field that is not an input and has no `default`.** Warning
+  `foundation_plan.account.registration_member_unlisted` at the Field: the Sign up page asks every visitor for it,
+  because it is required and nothing fills it. On an enum, each person picks their own value, so with a role or an
+  admin flag anyone who signs up can pick `admin`. Give the Field a `default` that First Draft applies
+  ([Defaults](defaults.md)), and the warning goes. When the person wants sign-up to ask for it, list it under
+  `registration.inputs` instead.
+- **A required Reference on the Account Entity that sign-up cannot supply.** Warning
+  `foundation_plan.account.registration_required_reference_unsupplied` at the Reference, beside its gap
+  `foundation_plan.gap.account.partially_generated`: no one can sign up, because the model rejects every new
+  Account without it. Its message offers three ways out: a `reference_record` default on the Reference; a
+  registration input over records a signed-out visitor may read; or, when people belong to a group such as a
+  team, a membership Entity with a role, so that sign-up creates only the Account. For a group, propose the
+  membership Entity to the person. The first two clear the warning, but First Draft generates neither yet: the
+  sign-up gap stays, and a default adds `foundation_plan.gap.reference.default_not_generated`
+  ([Defaults](defaults.md)). Write the control or the default before the preview; see
+  [Not generated](#not-generated).
 - **A Field named `email`, `password`, or `account_status` on the Account Entity, or an Entity named `sequel`.**
   The whole Account is left out (`foundation_plan.gap.account.not_generated`), and with it every Policy and every
   page that names one. The `/account` page already shows the email; name a contact Field `contact_email`.
@@ -372,6 +387,8 @@ These pass as `valid` and are reported as a gap:
   email provider is set up, a forgotten password cannot be reset and a locked account waits 24 hours.
 - **Tell:** who becomes an admin or gets a role, and that you will set it in example data or by command, since no
   page grants it.
+- **No need to ask:** give a role Field a `default`, such as `member`, unless the person wants people to choose
+  their own role at sign-up; then list it under `registration.inputs`.
 
 ## Changing it later
 

@@ -91,7 +91,7 @@ Upload Fields have no `settings`. Each key below is on the Field object.
 | `validations` | no | `presence` or `absence`, each with `when`; or `owner` | none | Not generated. The model calls an empty method named after the Validation's key, and the model spec has an example that fails until you write the rule: one that builds a breaking record for `presence` or `absence`, a placeholder for `owner` (`foundation_plan.gap.validation.not_generated`; an `owner` Validation has no gap record). README.md lists each under "Behavior to write", in "Rules". Use `owner` for size and type limits, and `required` for an unconditional rule. |
 | `default` | no | any value | none | Not generated (`foundation_plan.gap.field_modifier.default`). |
 | `immutable` | no | `true`, `false` | `false` | Not generated (`foundation_plan.gap.field_modifier.immutable`). See [Analysis does not catch](#analysis-does-not-catch). |
-| `encrypted_at_rest`, `redact_from_logs` | no | `true`, `false` | `false` | Not generated (`foundation_plan.gap.field_modifier.encrypted_at_rest`, `….redact_from_logs`). |
+| `encrypted_at_rest`, `redact_from_logs` | no | `true`, `false` | `false` | Not generated (`foundation_plan.gap.field_modifier.encrypted_at_rest`, `foundation_plan.gap.field_modifier.redact_from_logs`). Unlike `redact_from_logs` on a text Field ([Fields](fields.md)), on an upload it adds nothing to the model. |
 
 "Not generated" for `default`, `immutable`, `encrypted_at_rest`, and `redact_from_logs` means nothing is generated
 for the key yet. The generated README lists each under "Behavior to write": `immutable` in "Rules" ("Immutability

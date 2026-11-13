@@ -136,7 +136,7 @@ Settings for each kind:
 
 | Kind | Settings | Generates |
 | --- | --- | --- |
-| `presence`, `absence` | `when`, required | `validates :dress_code, presence: true, if: :vip?`. Text counts as absent when blank. No model spec. A conditional `absence` on a Field the form offers also costs the create and update request specs, and a conditional `presence` on a Field or Reference that a form leaves out is a gap on that form (see [Analysis does not catch](#analysis-does-not-catch)). |
+| `presence`, `absence` | `when`, required | `validates :dress_code, presence: true, if: :vip?`. Text counts as absent when blank. No model spec. A form's request and browser examples that would break the rule are listed for you to write, and a conditional `presence` on a Field or Reference that a form leaves out is a gap on that form (see [Analysis does not catch](#analysis-does-not-catch)). |
 | `length` | at least one of `minimum`, `maximum` (whole numbers), or `exact_length` alone | `length: {minimum: 3, maximum: 8, allow_nil: true}` or `{is: 6, allow_nil: true}`. An unconditional `maximum` or `exact_length` on `short_text` also sets the column `limit` and the input `maxlength`. Analysis rejects `minimum` above `maximum` (`foundation_plan.validation.length_bounds_inconsistent`) and `exact_length` with a bound (import). |
 | `format` | exactly one of `matches` or `does_not_match`, each `{"source": "<Ruby regexp>"}` with optional `"case_insensitive"` (default `false`) | `format: {with: Regexp.new("\\A[A-Z0-9]+\\z", 0, timeout: 1.0), allow_nil: true}`; `case_insensitive: true` gives option `1`. No model spec. Only `matches` in the narrow grammar below generates. |
 | `comparison` on a Field | `comparisons`: one or more `{"operator": …, "right": …}` | See [Comparisons](#comparisons). |
@@ -359,8 +359,9 @@ t.index ["venue_id", "starts_on"], name: "events_one_vip_event_per_venue_day", u
 
 Model specs cover the seat range, the title and code lengths, the start-date bound, the end-date comparison, and the
 title-per-day uniqueness. No spec covers the format, the conditional rules, the co-host comparison, or the VIP
-uniqueness. Because of `blank_for_standard`, the create and update request specs are not generated; README's Test
-coverage to complete lists them (see [Scaffold forms](scaffold-forms.md)).
+uniqueness. Because of `blank_for_standard`, the create and update request examples and both forms' browser examples
+are not generated. README's Test coverage to complete lists each, with the reason "this write needs input satisfying
+event.dress_code.blank_for_standard and its condition" (see [Analysis does not catch](#analysis-does-not-catch)).
 
 ## Used elsewhere in the Plan
 
@@ -386,10 +387,16 @@ Keep the rule in the Plan even when First Draft cannot generate it yet: it recor
 a later release may generate it. Each of these is reported with a `foundation_plan.rails_target.validation.*`
 warning that names the reason, and listed as `foundation_plan.gap.validation.not_generated`:
 
-- `exclusion`, `does_not_match`, a pattern outside the grammar, `format` with `when` or on `long_text`.
+- `exclusion`, `does_not_match`, a pattern outside the grammar, `format` with `when` or on `long_text`. An
+  `exclusion` is reported as `foundation_plan.rails_target.validation.kind_unsupported` at its `kind`, since no
+  Field type generates that kind.
 - Presence or absence on `boolean`, `enum`, `json`, `attachment`, `image`, or `secure_token` Fields.
-- Comparisons and conditions outside the tables above, including any rule that reads today's date or the time.
-- Uniqueness outside the admitted shape.
+- Comparisons and conditions outside the tables above, including any rule that reads today's date or the time. A
+  `comparison` on a Field that takes no literal bound, such as an `enum`, a text Field's `not_equals`, a `counter`,
+  or a `position`, is reported as `foundation_plan.rails_target.validation.comparison_owner_unsupported` at the
+  Field's `type`: only `integer`, `decimal`, `money`, and `date` Fields take one.
+- Uniqueness outside the admitted shape, reported as `foundation_plan.rails_target.validation.uniqueness_unsupported`
+  at the part outside it, such as a `json` or `position` member.
 
 For an `exclusion` with key `reserved` on `event.code` and
 `"forbidden_values": [{"kind": "literal", "value": "ADMIN"}, …]`:
@@ -490,10 +497,16 @@ These pass as `valid`:
   error.
 - **`"maximum": 0`.** Generates `length: {maximum: 0}`, which accepts only an empty value.
 - **A uniqueness rule over a single Reference.** Left out, with a unique index. Use `"one_to_one": true`.
-- **A conditional absence rule on a Field a form offers.** First Draft does not build request input that satisfies
-  the rule and its condition, so the create and update request specs, and the form's system specs, move to README's
-  Test coverage to complete. A conditional `presence` rule keeps the request specs, but the forms' system specs
-  move there too.
+- **A conditional rule that a form's examples would break.** The create and update request examples and each form's
+  browser example submit a sample value for every input the form offers. A create keeps the defaults and the starting
+  state for the rest, and an update starts from a factory record. Each example is generated when those values leave
+  every conditional rule off or satisfy it. Otherwise README lists it under "Test coverage to complete", and the
+  reason names the rule: "this write needs input satisfying event.dress_code.blank_for_standard and its condition."
+  A `presence` rule on a Field the form offers is met by its sample. An `absence` rule on such a Field breaks
+  whenever the submitted values meet its condition, as `blank_for_standard` does in the full example. A `presence`
+  rule on a Field the form leaves out breaks the same way: for the New form, when every new record meets the
+  condition, such as a rule on a State Machine's `initial_state`. Write each listed example with values that meet
+  the rule.
 - **A conditional `presence` rule on a Field or Reference that a form leaves out of its `inputs`.** The form is
   generated with its page, route, and actions, and a save fails the rule whenever its condition holds, since no
   input can meet it (`foundation_plan.gap.scaffold.input.partially_generated`). README.md lists the form under
@@ -502,8 +515,10 @@ These pass as `valid`:
   "steps" when its condition holds, and no create input or binding supplies it.` For an update form the reason ends
   `no update input supplies it.` There is no gap when the condition cannot hold for a new record, such as a State
   Machine Field compared with a state other than its initial state: a decline reason required when an expense is
-  declined can stay off the New form, though not off the edit form. Add the input to the form, or write code that
-  supplies the value, before the preview.
+  declined can stay off the New form, though not off the edit form. The same holds for a condition on a Field the
+  create neither offers nor binds, when that Field's literal default leaves the condition off (see
+  [Scaffold forms](scaffold-forms.md#what-a-form-needs-from-the-entity)). Add the input to the form, or write code
+  that supplies the value, before the preview.
 
 Analysis does reject: a literal outside an enum's values or of the wrong type
 (`foundation_plan.expression.literal_type_incompatible`), a misspelled Field (`foundation_plan.link.field_not_found`),
