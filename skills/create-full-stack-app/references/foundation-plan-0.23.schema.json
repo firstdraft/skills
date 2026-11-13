@@ -67,6 +67,22 @@
       "type": "string",
       "pattern": "[^\\u0009-\\u000D\\u0020\\u0085\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000]"
     },
+    "owner": {
+      "title": "Owner",
+      "description": "Behavior the user's agent writes after Compile. It stands in place of the keys that would state the behavior.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "title": "Description",
+          "description": "What the behavior does, in a sentence or two.",
+          "$ref": "#/$defs/nonblankString"
+        }
+      }
+    },
     "nonnegativeCount": {
       "title": "Nonnegative count",
       "description": "A whole-number count within JSON's exactly interoperable integer range.",
@@ -1771,23 +1787,32 @@
             ]
           },
           "then": {
-            "not": {
-              "anyOf": [
-                {
-                  "required": [
-                    "validations"
-                  ]
-                },
-                {
+            "properties": {
+              "validations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
                   "properties": {
-                    "on_referenced_deleted": {
-                      "const": "nullify_reference"
+                    "kind": {
+                      "not": {
+                        "enum": [
+                          "absence",
+                          "presence"
+                        ]
+                      }
                     }
-                  },
-                  "required": [
-                    "on_referenced_deleted"
-                  ]
+                  }
                 }
+              }
+            },
+            "not": {
+              "properties": {
+                "on_referenced_deleted": {
+                  "const": "nullify_reference"
+                }
+              },
+              "required": [
+                "on_referenced_deleted"
               ]
             }
           }
@@ -1990,8 +2015,7 @@
       "required": [
         "subject_uuid",
         "key",
-        "name",
-        "expression"
+        "name"
       ],
       "properties": {
         "subject_uuid": {
@@ -2012,8 +2036,25 @@
           "title": "Expression",
           "description": "The recursive Boolean expression that classifies a record.",
           "$ref": "#/$defs/expression"
+        },
+        "owner": {
+          "title": "Owner",
+          "description": "Stands in place of expression when the user's agent writes the classification.",
+          "$ref": "#/$defs/owner"
         }
-      }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "expression"
+          ]
+        },
+        {
+          "required": [
+            "owner"
+          ]
+        }
+      ]
     },
     "implicitOrderColumnSource": {
       "title": "Implicit order column source",
@@ -2059,8 +2100,7 @@
       "additionalProperties": false,
       "required": [
         "subject_uuid",
-        "key",
-        "terms"
+        "key"
       ],
       "properties": {
         "subject_uuid": {
@@ -2081,8 +2121,25 @@
           },
           "minItems": 1,
           "uniqueItems": true
+        },
+        "owner": {
+          "title": "Owner",
+          "description": "Stands in place of terms when the user's agent writes the sequence.",
+          "$ref": "#/$defs/owner"
         }
-      }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "terms"
+          ]
+        },
+        {
+          "required": [
+            "owner"
+          ]
+        }
+      ]
     },
     "orderingTerm": {
       "title": "Ordering term",
@@ -2454,41 +2511,100 @@
               }
             ]
           }
+        },
+        {
+          "title": "Owner",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "owner"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Field validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Field validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Field validation key",
+              "description": "The lower-snake-case readable key local to its Field.",
+              "$ref": "#/$defs/localKey"
+            },
+            "owner": {
+              "title": "Owner",
+              "description": "Stands in place of kind, its keys, and any when condition. The user's agent writes the rule.",
+              "$ref": "#/$defs/owner"
+            }
+          }
         }
       ]
     },
     "referenceValidation": {
       "title": "Reference validation",
-      "description": "A conditional presence or absence rule whose error belongs to the containing Reference.",
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "subject_uuid",
-        "key",
-        "kind",
-        "when"
-      ],
-      "properties": {
-        "subject_uuid": {
-          "title": "Reference validation subject UUID",
-          "description": "Stable Project-scoped identity for this independently mutable Reference validation.",
-          "$ref": "#/$defs/subjectUuid"
+      "description": "A conditional presence or absence rule, or an owner rule, whose error belongs to the containing Reference.",
+      "oneOf": [
+        {
+          "title": "Presence or absence",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "kind",
+            "when"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Reference validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Reference validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Reference validation key",
+              "description": "The lower-snake-case readable key local to its Reference.",
+              "$ref": "#/$defs/localKey"
+            },
+            "kind": {
+              "enum": [
+                "presence",
+                "absence"
+              ]
+            },
+            "when": {
+              "$ref": "#/$defs/expression"
+            }
+          }
         },
-        "key": {
-          "title": "Reference validation key",
-          "description": "The lower-snake-case readable key local to its Reference.",
-          "$ref": "#/$defs/localKey"
-        },
-        "kind": {
-          "enum": [
-            "presence",
-            "absence"
-          ]
-        },
-        "when": {
-          "$ref": "#/$defs/expression"
+        {
+          "title": "Owner",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "owner"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Reference validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Reference validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Reference validation key",
+              "description": "The lower-snake-case readable key local to its Reference.",
+              "$ref": "#/$defs/localKey"
+            },
+            "owner": {
+              "title": "Owner",
+              "description": "Stands in place of kind, its keys, and any when condition. The user's agent writes the rule.",
+              "$ref": "#/$defs/owner"
+            }
+          }
         }
-      }
+      ]
     },
     "entityValidation": {
       "title": "Entity validation",
@@ -2587,6 +2703,33 @@
               "$ref": "#/$defs/expression"
             }
           }
+        },
+        {
+          "title": "Owner",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject_uuid",
+            "key",
+            "owner"
+          ],
+          "properties": {
+            "subject_uuid": {
+              "title": "Entity validation subject UUID",
+              "description": "Stable Project-scoped identity for this independently mutable Entity validation.",
+              "$ref": "#/$defs/subjectUuid"
+            },
+            "key": {
+              "title": "Entity validation key",
+              "description": "The lower-snake-case readable key local to its Entity.",
+              "$ref": "#/$defs/localKey"
+            },
+            "owner": {
+              "title": "Owner",
+              "description": "Stands in place of kind, its keys, and any when condition. The user's agent writes the rule.",
+              "$ref": "#/$defs/owner"
+            }
+          }
         }
       ]
     },
@@ -2637,6 +2780,11 @@
             "$ref": "#/$defs/transitionEffect"
           },
           "minItems": 1
+        },
+        "owner": {
+          "title": "Owner",
+          "description": "Behavior of this transition that the user's agent writes, beside from, to, and any effects.",
+          "$ref": "#/$defs/owner"
         }
       }
     },
@@ -2681,8 +2829,7 @@
       "required": [
         "subject_uuid",
         "key",
-        "operation",
-        "allow_when"
+        "operation"
       ],
       "properties": {
         "subject_uuid": {
@@ -2704,8 +2851,25 @@
           "title": "Allow when",
           "description": "The sole allowing Policy Expression. Every projection derives from it; otherwise deny.",
           "$ref": "#/$defs/policyExpression"
+        },
+        "owner": {
+          "title": "Owner",
+          "description": "Stands in place of allow_when when the user's agent writes the decision.",
+          "$ref": "#/$defs/owner"
         }
-      }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "allow_when"
+          ]
+        },
+        {
+          "required": [
+            "owner"
+          ]
+        }
+      ]
     },
     "referenceData": {
       "title": "Reference data",

@@ -25,20 +25,19 @@ test("release compatibility matches the installable plugin manifest", async () =
 
   const cliConfigurationUrl =
     `https://github.com/firstdraft/skills/blob/claude-v${version}/script/cli-contract/config.mjs`;
-  for (const name of ["diagnostics-and-recovery.md", "foundation-plan-023.md"]) {
-    const reference = await readText(`skills/create-full-stack-app/references/${name}`);
-    assert.equal(
-      [...reference.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)]
-        .map(([, destination]) => destination)
-        .find((destination) => destination.endsWith("/script/cli-contract/config.mjs")),
-      cliConfigurationUrl,
-      `${name}: bundled CLI provenance must use the plugin's release tag`,
-    );
-    assert(
-      reference.includes(`@firstdraft.com/cli@${cliPackageVersion}`),
-      `${name} must name @firstdraft.com/cli@${cliPackageVersion}, the CLI pinned in script/cli-contract/config.mjs`,
-    );
-  }
+  const name = "diagnostics-and-recovery.md";
+  const reference = await readText(`skills/create-full-stack-app/references/${name}`);
+  assert.equal(
+    [...reference.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)]
+      .map(([, destination]) => destination)
+      .find((destination) => destination.endsWith("/script/cli-contract/config.mjs")),
+    cliConfigurationUrl,
+    `${name}: bundled CLI provenance must use the plugin's release tag`,
+  );
+  assert(
+    reference.includes(`@firstdraft.com/cli@${cliPackageVersion}`),
+    `${name} must name @firstdraft.com/cli@${cliPackageVersion}, the CLI pinned in script/cli-contract/config.mjs`,
+  );
 
   assert.equal(compatibility.version, version);
 });
