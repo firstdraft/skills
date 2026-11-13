@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -32,14 +32,14 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`user.account`",
-      "file": "app/models/user.rb"
+      "title": "`user.preferred_language`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`user.account`",
-      "file": "app/models/user.rb"
+      "title": "`user.preferred_language`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
     },
     {
       "section": "Test coverage to complete",

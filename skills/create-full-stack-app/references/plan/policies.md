@@ -447,11 +447,13 @@ its scope before the preview; `SKILL.md` has the order of work.
 - **Who may fire a State Machine event.** A transition has no key that names a Policy;
   [State Machine Fields](state-machine-fields.md) covers events.
 - **Any Policy, in a Plan with no Account Entity.** Even a rule that never reads the signed-in person is left out,
-  with every part that uses it and Home when Home is one of them (`foundation_plan.gap.policy.not_generated`,
-  `foundation_plan.gap.home_index.not_generated`). Nothing is generated for them. README.md lists each under
-  "Behavior to write", in "Pages and actions": the Policy, each part, and Home, whose entry says "The default welcome
-  Home remains instead of the selected index." Add an Account Entity ([Accounts](accounts.md)) so that the Policy
-  and its parts generate.
+  with every part that uses it and Home when Home is one of them (`foundation_plan.gap.policy.not_generated`;
+  for each part, `foundation_plan.gap.scaffold.definition.not_generated` and
+  `foundation_plan.gap.scaffold.authorization.not_generated`; `foundation_plan.gap.home_index.not_generated`).
+  Nothing is generated for them. README.md lists each under "Behavior to write", in "Pages and actions": the Policy
+  and each part's authorization, such as `note.scaffold.index.authorization`, in `app/policies/note_policy.rb`; each
+  part, in its controller; and Home, whose entry says "The default welcome Home remains instead of the selected
+  index." Add an Account Entity ([Accounts](accounts.md)) so that the Policy and its parts generate.
 
 ## Analysis does not catch
 
@@ -460,10 +462,13 @@ These pass analysis as `valid`:
 - **A rule, or a branch of `or`, that never reads `current_account` admits signed-out visitors.** That is right for
   published recipes. When a part needs sign-in, compare with `current_account` or bind a signed-in gate.
 - **A misspelled Policy name in an `authorization`, even in one part.** The Entity's whole `scaffold` is left out of
-  the app, and Home with it when Home is that list, with gap codes under `foundation_plan.gap.service` whose reason
-  says the release "cannot yet import this Foundation Plan capability". README.md lists each under "Behavior to
-  write" with "First Draft did not import this part of the Plan"; no entry says that a name is misspelled. Check
-  every name against the Policy keys.
+  the app, and Home with it when Home is that list. `plan push` warns `foundation_plan.import.unsupported_capability`
+  at the name and `foundation_plan.import.skipped_dependent` at the Scaffold and at Home, with gap codes under
+  `foundation_plan.gap.service`. README.md lists each under "Behavior to write", in "Pages and actions": the
+  Scaffold ("Note has no pages"), the part that names the Policy, that part's authorization
+  (`note.scaffold.destroy.authorization`, in `app/policies/note_policy.rb`: "First Draft did not import the Policy
+  that the Note `destroy` authorization names."), and Home. No entry names the Policy or says that a name is
+  misspelled. Check every name against the Policy keys.
 - **An update Policy that admits people the read Policy does not.** They never see the record in a list, and its
   page returns 404, though Edit opens by URL. Put the read condition inside the update rule with `and`:
   `matches_policy` with the parent's read Policy for a child record, as in the nested rule above, or a copy of the

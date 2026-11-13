@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [],
   "gaps": [
@@ -8,8 +8,8 @@
       "code": "foundation_plan.gap.account.partially_generated",
       "pointer": "/application/entities/0/account/registration/inputs/1",
       "readable_path": "user.account",
-      "reason": "This registration input has no generated signup control; only required inputs for stored, non-derived Fields are generated.",
-      "consequence": "The signup form omits this input."
+      "reason": "This registration input is optional, but its Field is required, so signup generates the Field's required control in its place.",
+      "consequence": "The signup form shows this Field as a required control, without the authored default, instead of the optional input the Plan lists."
     }
   ],
   "compile": "succeeded",
@@ -17,8 +17,8 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`user.account`",
-      "file": "app/models/user.rb"
+      "title": "`user.role`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
     }
   ]
 }

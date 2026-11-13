@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -45,13 +45,13 @@
   "readme": [
     {
       "section": "Behavior to write",
-      "group": null,
+      "group": "Pages and actions",
       "title": "`Task.mine`",
       "file": "app/models/task.rb"
     },
     {
       "section": "Behavior to write",
-      "group": null,
+      "group": "Pages and actions",
       "title": "`Task.urgent`",
       "file": "app/models/task.rb"
     },

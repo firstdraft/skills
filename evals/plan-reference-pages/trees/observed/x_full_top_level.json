@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -74,14 +74,14 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.associated_create_form`",
-      "file": null
+      "title": "`project.folders.create_form`",
+      "file": "app/controllers/projects/folders_controller.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
       "title": "`folder.subfolders.create_form`",
-      "file": "app/controllers/folders_controller.rb"
+      "file": "app/controllers/folders/subfolders_controller.rb"
     },
     {
       "section": "Behavior to write",

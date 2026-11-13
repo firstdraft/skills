@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -110,7 +110,7 @@
       "section": "Behavior to write",
       "group": "Pages and actions",
       "title": "`category.manage_tree`",
-      "file": "app/models/category.rb"
+      "file": "app/policies/category_policy.rb"
     },
     {
       "section": "Behavior to write",
@@ -145,32 +145,32 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.authorization`",
-      "file": null
+      "title": "`category.scaffold.create.authorization`",
+      "file": "app/policies/category_policy.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.authorization`",
-      "file": null
+      "title": "`category.scaffold.destroy.authorization`",
+      "file": "app/policies/category_policy.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.authorization`",
-      "file": null
+      "title": "`category.scaffold.index.authorization`",
+      "file": "app/policies/category_policy.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.authorization`",
-      "file": null
+      "title": "`category.scaffold.show.authorization`",
+      "file": "app/policies/category_policy.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`scaffold.authorization`",
-      "file": null
+      "title": "`category.scaffold.update.authorization`",
+      "file": "app/policies/category_policy.rb"
     },
     {
       "section": "Behavior to write",

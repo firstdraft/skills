@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
   "status": "valid",
   "diagnostics": [
     {
@@ -67,26 +67,26 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
-      "title": "`note`",
+      "title": "`note.scaffold`",
       "file": "app/controllers/notes_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`note.scaffold.destroy`",
+      "file": "app/controllers/notes_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`note.scaffold.destroy.authorization`",
+      "file": "app/policies/note_policy.rb"
     },
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
       "title": "`application.home_index`",
       "file": "config/routes.rb"
-    },
-    {
-      "section": "Behavior to write",
-      "group": "Data",
-      "title": "`note`",
-      "file": "app/models/note.rb"
-    },
-    {
-      "section": "Behavior to write",
-      "group": "Data",
-      "title": "`note`",
-      "file": "app/models/note.rb"
     }
   ]
 }

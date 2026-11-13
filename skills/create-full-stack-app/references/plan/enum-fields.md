@@ -312,7 +312,9 @@ These pass analysis as `valid` and show up only as gap codes:
   (`foundation_plan.gap.scaffold.route.partially_generated`). Offer the Field or give it a `default`.
 - **A Field required by a rule that reads an enum, offered on Edit but not on New,** such as `reason` above. The New
   page and its Create action are generated, and saving fails while the rule's condition holds
-  (`foundation_plan.gap.scaffold.input.partially_generated` on `<entity>.scaffold.create.inputs`).
+  (`foundation_plan.gap.scaffold.input.partially_generated` on `<entity>.scaffold.create.inputs`). When the New form
+  does not offer the enum and its `default` leaves the rule off, no new record can meet the rule, and analysis
+  reports nothing.
 
 This passes as `valid` with no gap: **two values with the same `name`.** The select shows two identical labels.
 

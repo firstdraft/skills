@@ -376,9 +376,13 @@ First Draft then writes the scope, now or in a later release.
 These pass analysis as `valid`. Some report a gap, but the gap does not say what goes wrong in the app:
 
 - **A misspelled Predicate path on a list or related list.** The filter is dropped and the page shows every record.
-  Analysis reports only `foundation_plan.gap.service.unsupported_capability` at that path, and README.md lists it
-  under "Behavior to write", in "Data", by the Entity's key and the path, with "First Draft did not import this part
-  of the Plan"; neither names the Predicate. A misspelled path in an Association or in `matches_predicate` is rejected.
+  `plan push` warns `foundation_plan.import.unsupported_capability` at that path, and analysis reports only the gap
+  `foundation_plan.gap.service.unsupported_capability` there. README.md lists it under "Behavior to write", in
+  "Pages and actions", titled with the list's path, such as `task.scaffold.index.predicate` or
+  `project.tasks.predicate`, with the controllers that load the list: "The Task index (`/tasks`) lists its records
+  without the filter the Plan names: First Draft did not import its `predicate`." None of them names the Predicate,
+  so check every path against the Predicate keys. A misspelled path in an Association or in `matches_predicate` is
+  rejected.
 - **Another Entity's Predicate on a list,** such as `task.open` on the project list. The list is generated without
   the filter (`foundation_plan.gap.predicate.not_generated`).
 - **A Predicate key equal to an enum value key, or `not_` and a value key,** such as `high` or `not_low` beside a

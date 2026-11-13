@@ -1,0 +1,205 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "notebook",
+    "name": "Notebook",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000dea9",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000deaa",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000deab",
+            "key": "role",
+            "name": "Role",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-00000000deac",
+                  "key": "member",
+                  "name": "Member"
+                },
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-00000000dead",
+                  "key": "admin",
+                  "name": "Admin"
+                }
+              ]
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000deae",
+            "key": "notes",
+            "kind": "direct",
+            "name": "Notes",
+            "reference": "note.author",
+            "side": "referenced"
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000deaf",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000deb0",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000deb1",
+            "key": "author",
+            "name": "Author",
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000deb2",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "note.author"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "note.author",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "note.manage_own"
+            }
+          }
+        }
+      }
+    ],
+    "home_index": "note"
+  }
+}
