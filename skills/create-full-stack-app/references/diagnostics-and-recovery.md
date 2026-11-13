@@ -297,8 +297,8 @@ If creation succeeded but pushing failed, retain the repository and resolve the 
 another one. This publishes the existing Git history; do not invoke `plan compile --github` or First Draft Publication
 to publish an already-compiled workspace.
 
-Then follow the [application handoff](#application-handoff): it runs setup and the generated tests and starts the
-preview before requested feature work in ordinary Rails source.
+Then follow the [application handoff](#application-handoff): setup and the generated tests, every item left to
+write, then the preview, all before requested feature work in ordinary Rails source.
 Do not run Drawing Board's moved `.firstdraft/design/script/initialize-application` or
 `.firstdraft/design/script/application-smoke`: those helpers belong to the optional nested `./application` mode.
 Use ordinary generated application and platform commands for preview and tests rather than archived helpers.
@@ -308,18 +308,20 @@ Adding application features does not require First Draft Capabilities, Plan edit
 
 After verified local materialization, or after opening the successfully published repository, inspect the reviewed
 gaps and replace the short product-description placeholder near the top of `README.md`, or add a description below
-its title when there is no placeholder. The placeholder is current output that conflicts with First Draft's
-code-worth-keeping rule. Use the agreed product decisions, retained Plan, and implementation notes to describe its
-purpose, intended users, and main workflows. Check those claims against the actual emitted source and reviewed gaps.
-Distinguish the generated starting point from behavior still to implement; do not turn Plan subjects into an
-automatic feature catalogue. Preserve applicable setup, run, test, and preview instructions. This step creates no
-new Plan field or separate description artifact.
+its title when there is no placeholder. Use the agreed product decisions, retained Plan, and implementation notes
+to describe its purpose, intended users, and main workflows. Check those claims against the actual emitted source
+and reviewed gaps. Distinguish the generated starting point from behavior still to implement; do not turn Plan
+subjects into an automatic feature catalogue. Preserve applicable setup, run, test, and preview instructions. This
+step creates no new Plan field or separate description artifact.
 
 This is ordinary application documentation after Compile. Keep the generated baseline checkpoint reviewable and
 follow the existing Git workflow for later commits and authorized pushes. Preserve optional planning context and
-immutable Plan/GapSet provenance. Then follow the [notes handoff](#implementation-notes-handoff), the
-[test run](#run-the-generated-tests), and [first-preview verification](#verify-the-first-preview), followed by
-[UI continuation](#ui-continuation) for the requested work.
+immutable Plan/GapSet provenance: `.firstdraft/submitted-foundation-plan.json` and `.firstdraft/gaps.json` record
+what was compiled and are never updated, so where code you write disagrees with them, the code wins. Then follow
+the [notes handoff](#implementation-notes-handoff) and the Skill's
+[order of work](../SKILL.md#hand-off-the-result): the [test run](#run-the-generated-tests), every item left to
+write, and [first-preview verification](#verify-the-first-preview), followed by [UI continuation](#ui-continuation)
+for the requested work.
 
 For later improvements, the public [First Draft changelog](https://github.com/firstdraft/skills/blob/main/CHANGELOG.md)
 provides an ordinary review prompt and an optional reading checkpoint at `.firstdraft/updates.md`.
@@ -341,13 +343,19 @@ Run these rather than `bin/ci`, whose lint and dependency audits are not tests a
 Compile. A missing README prerequisite, such as PostgreSQL 18 or Chrome for system specs, is a local blocker. Ask
 once before installing system software, naming the exact command.
 
-Then follow the app's `AGENTS.md` for the results. It says which failures are behavior to write, how to debug any
-other failure without weakening a spec, and how to start the preview before every item is written. Do not ask
-whether to preview.
+Behavior left to write fails on purpose. Each unwritten behavior, from an `owner` subject or one First Draft cannot
+generate yet, is a stub with one placeholder example in the spec file where its real example belongs; the example
+raises `NotImplementedError` and says what to write. A request spec that reaches a stub fails until the stub is
+written. Tell the user what there is to write, one line per item, then write each item and fill in its placeholder
+example until the specs pass, with one line to the user as each is finished. Debug any other failure as your own,
+as the app's `AGENTS.md` describes. Only then start the preview, even where an app's `AGENTS.md` from an earlier
+Compile says to preview before every item is written. If you come to think an item should change or go, stop and
+ask, with your reasons and what you found; without the user's yes, never skip, delete, or loosen an example to get
+a passing run.
 
 ### Verify the first preview
 
-After the test run, boot with the README's `bin/dev`. Compare the approved data with the reviewed gaps and
+After every item is written and the specs pass, boot `bin/dev`. Compare the approved data with the reviewed gaps and
 actual `db/seeds/development.rb`; report omitted records or dependencies instead of fabricating replacements.
 `bin/setup` prepares the database and seeds a newly initialized development database. An existing database may
 need an explicit development `bin/rails db:seed` to load added samples. Do not reset a database to hide missing data.
@@ -355,7 +363,7 @@ Inspect the existing data first: ordinary seeds match their generated attribute 
 can make a later seed run recreate the original sample. Reseeding does not reconcile customized records.
 
 If the app has image or attachment Fields, uploads need the user's Cloudinary `CLOUDINARY_URL`
-([setup](foundation-plan-023.md#photos-and-files)) before you check them. Seeded samples attach a placeholder file
+([setup](plan/uploads.md#setup-after-compile)) before you check them. Seeded samples attach a placeholder file
 only to a required upload, and the README's Uploaded files section names each one; an optional upload starts empty.
 
 Open the running app in a browser and check representative visible records, their relationships, and relevant
@@ -369,6 +377,13 @@ secrets, First Draft tokens, and production passwords out of documentation. The 
 password; initial credentials may no longer work after it changes. Do not reset it merely to match the README.
 Keep the development preview private and demo data development-only. Report which setup, browser, and sign-in
 steps actually ran, plus any remaining gaps or unavailable verification.
+
+For iPhone and Android, follow the [native preview steps](plan/native-apps.md#previewing-after-compile). A quick
+tunnel makes the development app public, so keep disposable sample data and stop the tunnel when finished. Closing
+the Revyl Viewer does not stop its device: run `bin/<platform> preview revyl stop` before starting the other
+platform. Revyl is the Android preview too: its Android device reported System WebView 152 on 2026-10-03, above the
+required 120, so an `ANDROID_PREVIEW.md` that leads with the Emulator or says Revyl's Android image has an outdated
+WebView predates that check.
 
 ### Implementation notes handoff
 
@@ -406,8 +421,8 @@ or tests depend on them.
 
 #### UI continuation
 
-After the applicable GitHub checkpoint, app setup, and the [test run](#run-the-generated-tests), continue already
-requested UI work in generated source.
+After the applicable GitHub checkpoint and [first-preview verification](#verify-the-first-preview), continue
+already requested UI work in generated source.
 Read the app's `UI.md` and actual shared components. Carry the user's design references into the first
 scaffold-shaping task. The app owns its theme, component contracts, and examples; neither this authoring Skill nor
 an upstream registry replaces that authority. Additional UI Skills are optional and are not included in this package.

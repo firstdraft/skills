@@ -12,9 +12,14 @@ publication, and native preview are optional. Compilation does not deploy.
 
 ## Preserve implementation requirements
 
-Maintain planning-root `implementation-notes.md` for behavior outside the Plan vocabulary, separating agreed
-requirements and acceptance examples from open questions. Review outstanding notes alongside the Plan and its
-gaps; structured requests stay in the Plan even when unsupported. Notes are not Compiler input.
+The Plan keeps every request it can state, even one First Draft does not generate; never leave one out or move it
+to notes. Prefer an Expression where the Plan has one. When a Predicate, Ordering, Policy, Validation, or transition
+needs behavior its Expressions cannot say, or you would rather write it, give it an `owner` describing the behavior
+in a sentence or two: Compile emits a stub and a failing placeholder example for you to write.
+
+Keep planning-root `implementation-notes.md` for what the Plan has no words for, such as "show bookings as a
+calendar", separating agreed requirements and acceptance examples from open questions; review them with the Plan
+and its gaps. Notes are not Compiler input.
 
 Carry them into the resulting repository for an implementation agent without this conversation; locate and read
 them on continuation. Root adoption preserves `.firstdraft/design/implementation-notes.md`; other modes need an
@@ -26,27 +31,65 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 Targets plugin 0.9.2, CLI 0.9.0, API 0.8, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
-  clients. [Appearance](references/foundation-plan-023.md#application-and-clients) controls theme and native colors,
-  with explicit gaps for native launcher artwork.
+  clients. [Appearance](references/plan/appearance.md) controls theme and native colors.
 - iPhone and Android apps mirror Web navigation, including protected lists and Account, and sign in on web pages.
 - Preserve unsupported requests and their gaps, including selected clients and access. Artifacts retain the Plan and GapSet.
-- Preview iPhone and Android apps in [Revyl](references/foundation-plan-023.md#preview-generated-native-apps); Rails
+- Preview iPhone and Android apps in [Revyl](references/plan/native-apps.md#previewing-after-compile); Rails
   work needs only the local web app.
 
-Before support claims, read [current evidence](references/foundation-plan-023.md#current-evidence-boundary).
+Support claims rest on the matching analysis, its GapSet, and its `analyzer_release` and `compiler_release`, not on
+these pages or the public Guide. `valid` does not prove Compilation, and Compilation does not prove behavior.
 
 ## Load references only when needed
 
-For authoring, choose the relevant section:
+Before writing any Plan JSON, open the page for each part you write: its keys, examples, what Compile emits, what
+is left to write, and decisions to raise.
 
-- [Foundation Plan reference](references/foundation-plan-023.md): exact envelope, identity, ownership, presence,
-  current evidence, and target support for Application/clients, Fields, relationships, Validations, Accounts/Policies,
-  and Scaffolds.
-- [Interview](references/interview.md): flow, meaning versus implementation, what each option emits, and checklists.
-- [Modeling guide](references/modeling-guide.md): decision ledger, Entities/Fields, validations, relationships,
-  behavior, and [candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back).
-- [Examples](references/examples.md): concrete Application, scalar Field, enum, Account/Policy, signed-in gate,
-  one-tap create, Scaffold, and relationship shapes.
+Plan and records:
+
+- [Plan structure](references/plan/plan-structure.md): root and Application keys, names, paths, omission; open first.
+- [Entities](references/plan/entities.md): `key`, `name`, `primary_descriptor`, `icon`; adding or naming a record type.
+- [Fields](references/plan/fields.md): shared Field keys; text, number, date, URL, and zone types; any stored value.
+- [Defaults](references/plan/defaults.md): `default` on a Field or Reference; a value a new record starts with.
+- [Validations](references/plan/validations.md): length, format, ranges, uniqueness, `owner`; rules a record must pass.
+
+Field types:
+
+- [Enum Fields](references/plan/enum-fields.md): `enum` values, `ordinal`; one choice from a fixed list.
+- [State Machine Fields](references/plan/state-machine-fields.md): states, events, `owner`; approve, cancel, a workflow.
+- [Money Fields](references/plan/money-fields.md): `money`, one currency per Field; prices, fees, budgets.
+- [Position Fields](references/plan/position-fields.md): `position`; steps, cards, or tracks people order by hand.
+- [Counter Fields](references/plan/counter-fields.md): `counter`, `derivation`; counts and sums of related records.
+- [Secure token Fields](references/plan/secure-token-fields.md): `secure_token`; share links, invite codes, API keys.
+- [JSON Fields](references/plan/json-fields.md): `json`; a payload or free-form attributes.
+- [Uploads](references/plan/uploads.md): `image`, `attachment`, Cloudinary; photos, documents, other files.
+
+Links between records:
+
+- [References](references/plan/references.md): `targets`, deletion, several targets; one record points at another.
+- [Associations](references/plan/associations.md): has-many, filtered, and through readers; related lists, many-to-many.
+- [Trees](references/plan/trees.md): `trees`; folders, nested categories, threaded replies.
+- [Groups and memberships](references/groups-and-memberships.md): teams, shops, households; people in a group.
+
+Lists, filters, and pages:
+
+- [Predicates](references/plan/predicates.md): named filters, Expressions, `owner`; lists or rules with some records.
+- [Orderings](references/plan/orderings.md): named sort orders, `owner`; records in a stated order.
+- [Scaffold lists and details](references/plan/scaffold-lists-and-details.md): lists, details, related lists, Home.
+- [Scaffold forms](references/plan/scaffold-forms.md): create, update, delete, Add forms, one-tap buttons.
+
+People, access, and the app:
+
+- [Accounts](references/plan/accounts.md): `account`, sign-up, sign-in, reset, `/account`, demo logins.
+- [Policies](references/plan/policies.md): who may see, add, change, delete; `owner`; before any authorization.
+- [Appearance](references/plan/appearance.md): `theme`, `tint_color`, icons; dark mode, brand colors, app icons.
+- [Native apps](references/plan/native-apps.md): `native.ios`, `native.android`, tabs, Revyl; iPhone and Android.
+- [Development data](references/plan/development-data.md): `development_data`, demo Accounts; preview samples.
+- [Reference data](references/plan/reference-data.md): `reference_data`; fixed records in every environment.
+
+For the conversation: the [interview](references/interview.md) for its flow, what each option emits, and the
+checklists; the [modeling guide](references/modeling-guide.md) for modeling choices and
+[candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back).
 
 For CLI work:
 
@@ -59,7 +102,8 @@ For CLI work:
   requires it.
 
 The bundled [JSON Schema](references/foundation-plan-0.23.schema.json) is reference data, not prose: never read it
-end to end. `plan push` validates the Plan, so install nothing and add no local validation.
+end to end; for a question the pages leave open, read only the definition of the exact property or `$defs` name.
+`plan push` validates the Plan, so install nothing and add no local validation.
 
 ## Verify the local capability
 
@@ -310,14 +354,23 @@ repository requires a separate user request and an exact verified identity.
 
 After Compile, follow the [application handoff](references/diagnostics-and-recovery.md#application-handoff): after
 root adoption, the [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) first, then the
-[notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff), setup, the
-[test run](references/diagnostics-and-recovery.md#run-the-generated-tests), and the preview. Then tell the user, in
-plain words:
+[notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff). Then work in this order, even
+where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner:
+
+1. Run setup and the specs, as the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) says.
+2. Tell the user what there is to write, one line per item: the README's "Behavior to write", each placeholder
+   example, and each request in the Plan that the GapSet shows First Draft left out.
+3. Write every item and fill in every placeholder example until the specs pass, telling the user in one line as
+   each is finished.
+4. Start the [preview](references/diagnostics-and-recovery.md#verify-the-first-preview).
+
+If you come to think an item should change or go, stop and ask, with your reasons and what you found. The user
+decides or asks you to; after a yes, remove what you judge right, specs included. Without that yes, never skip,
+delete, or loosen an example to pass. Then tell the user, in plain words:
 
 - where the app is: its folder, or the private GitHub repository once Publication succeeds;
 - what works, as setup, the specs, and the preview actually showed;
-- what you will write next: the README's Behavior to write, agreed behavior from the implementation notes, and any
-  gap the user will notice; and
+- what you will write next, such as agreed behavior from the implementation notes; and
 - how to open the preview.
 
 Compilation and Publication do not deploy the app or make it ready for real users.

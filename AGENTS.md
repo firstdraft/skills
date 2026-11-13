@@ -4,7 +4,7 @@
 
 | Task or question | Route |
 |---|---|
-| Plan authoring or Compile behavior | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md), then only its routed reference section |
+| Plan authoring or Compile behavior | [`skills/create-full-stack-app/SKILL.md`](skills/create-full-stack-app/SKILL.md), then only the pages its index routes to |
 | Release work, the plugin version, or the catalog selection | [`RELEASING.md`](RELEASING.md), [`release/compatibility.json`](release/compatibility.json), and [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) |
 | Moving `latest` on a published package | [Dist-tag repair](docs/dist-tag-repair.md) |
 | Behavioral evals | [`evals/README.md`](evals/README.md), then one case and its declared artifacts |
@@ -18,6 +18,17 @@ depend on a link into it.
 
 Commit no run receipts or per-release reports. Record run proof in the commit message of the change it supports,
 and release notes in `CHANGELOG.md`.
+
+## Plan reference pages
+
+`skills/create-full-stack-app/references/plan/` holds one page per Plan capability, each linked from the index in
+`SKILL.md`. When you edit one:
+
+- Never tell the agent to leave out, or move to notes, a request the Plan can state. Notes hold only what the Plan
+  has no words for.
+- Make each "Not generated" entry say what the app gets (a stub, an empty method, a column, or nothing) and what the
+  agent writes.
+- Take every example of generated code from a real Compile of the Plan the page shows, never from memory.
 
 ## Checks and review
 
