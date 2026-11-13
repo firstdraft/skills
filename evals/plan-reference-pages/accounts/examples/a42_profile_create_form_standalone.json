@@ -1,0 +1,243 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "reading_list",
+    "name": "Reading List",
+    "native": {},
+    "delivery": {},
+    "home_index": "bookmark",
+    "topics": [
+      {
+        "name": "People and their bookmarks",
+        "entities": [
+          "user",
+          "bookmark"
+        ]
+      }
+    ],
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe1",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe2",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe3",
+            "key": "bookmarks",
+            "name": "Bookmarks",
+            "kind": "direct",
+            "reference": "bookmark.owner",
+            "side": "referenced"
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          }
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe4",
+            "key": "read_self",
+            "operation": "read",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe5",
+            "key": "update_self",
+            "operation": "update",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "profile": {
+            "authorization": {
+              "policy": "user.read_self"
+            },
+            "projection": [
+              {
+                "field": "user.name"
+              },
+              {
+                "association": "user.bookmarks",
+                "authorization": {
+                  "policy": "bookmark.manage_own"
+                },
+                "projection": [
+                  {
+                    "field": "bookmark.title"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "user.update_self"
+            },
+            "inputs": [
+              {
+                "field": "user.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe6",
+        "key": "bookmark",
+        "name": "Bookmark",
+        "primary_descriptor": {
+          "field": "bookmark.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe7",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe8",
+            "key": "owner",
+            "name": "Owner",
+            "targets": [
+              "user"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "immutable": true
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000abe9",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "bookmark.owner"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "bookmark.manage_own"
+            },
+            "projection": [
+              {
+                "field": "bookmark.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "bookmark.manage_own"
+            },
+            "projection": [
+              {
+                "field": "bookmark.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "bookmark.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "bookmark.title"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "bookmark.owner",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

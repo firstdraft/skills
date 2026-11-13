@@ -1,0 +1,76 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.development_data.record.not_generated",
+      "pointer": "/application/development_data/2",
+      "readable_path": "booking.alan",
+      "reason": "Required Field booking.status has no target-compatible seed value.",
+      "consequence": "The generated development seed omits this record and dependent links."
+    },
+    {
+      "code": "foundation_plan.gap.development_data.field_assignment.not_generated",
+      "pointer": "/application/development_data/2/fields/2/value",
+      "readable_path": "booking.alan",
+      "reason": "Reaching the authored State Machine value fires booking.status.decline, which First Draft did not write.",
+      "consequence": "The generated development seed omits this Field value."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition.effects_not_generated",
+      "pointer": "/application/entities/0/fields/2/settings/transitions/1",
+      "readable_path": "booking.status.decline",
+      "reason": "The decline event has 2 effects. This release generates at most one effect per event, setting an optional datetime Field on the same record to the current time or nil.",
+      "consequence": "`Booking#decline!`, `#decline`, and `#may_decline?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/0/fields/2/settings/transitions/1/effects/0",
+      "readable_path": "booking.status.decline/effects/0",
+      "reason": "The transition effect is not generated.",
+      "consequence": "The generated application does not apply this effect."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/0/fields/2/settings/transitions/1/effects/1",
+      "readable_path": "booking.status.decline/effects/1",
+      "reason": "The transition effect is not generated.",
+      "consequence": "The generated application does not apply this effect."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Booking#decline!`",
+      "file": "app/models/booking.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`booking.alan`",
+      "file": "db/seeds/development.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`booking.alan`",
+      "file": "db/seeds/development.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Booking: create form browser coverage",
+      "file": "spec/system/bookings_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Booking: update form browser coverage",
+      "file": "spec/system/bookings_spec.rb"
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "help_desk",
+  "name": "Help desk",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a1cba8-d591-7a1f-90fc-ac1ff5a74b41",
+    "key": "board",
+    "name": "Board",
+    "primary_descriptor": {
+     "field": "board.name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cba8-d591-7653-98aa-fabc64f6ab3e",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a1cba8-d591-7bdd-803f-243940aa343a",
+      "key": "tickets",
+      "name": "Tickets",
+      "kind": "direct",
+      "reference": "ticket.board",
+      "side": "referenced"
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "board.name"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "board.name"
+       },
+       {
+        "association": "board.tickets",
+        "authorization": "public",
+        "projection": [
+         {
+          "field": "ticket.subject"
+         },
+         {
+          "field": "ticket.severity"
+         }
+        ]
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "board.name"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a1cba8-d591-7bb9-8082-78fcb5a7fca7",
+    "key": "ticket",
+    "name": "Ticket",
+    "primary_descriptor": {
+     "field": "ticket.subject"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cba8-d591-7640-9943-18d0fba2300c",
+      "key": "subject",
+      "name": "Subject",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cba8-d591-7f7a-a462-05f2620a4bcd",
+      "key": "severity",
+      "name": "Severity",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "01a1cba8-d591-72de-a251-49eb3f0fb6c2",
+         "key": "low",
+         "name": "Low"
+        },
+        {
+         "subject_uuid": "01a1cba8-d591-74c3-83de-a5056753e9bc",
+         "key": "normal",
+         "name": "Normal"
+        },
+        {
+         "subject_uuid": "01a1cba8-d591-7a64-95ca-2031d7667a91",
+         "key": "high",
+         "name": "High"
+        },
+        {
+         "subject_uuid": "01a1cba8-d591-78e3-b174-c3eb8a114b6b",
+         "key": "critical",
+         "name": "Critical"
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a1cba8-d591-7056-b5ef-4e3bbb595027",
+      "key": "reported_on",
+      "name": "Reported on",
+      "type": "date",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cba8-d591-7be9-980d-765d31a3f6be",
+      "key": "due_on",
+      "name": "Due on",
+      "type": "date",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a1cba8-d591-7465-9abb-a95465003b72",
+      "key": "closed_at",
+      "name": "Closed at",
+      "type": "datetime",
+      "required": false
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a1cba8-d591-753c-80aa-1e19bc381f62",
+      "key": "board",
+      "name": "Board",
+      "targets": [
+       "board"
+      ],
+      "required": true,
+      "on_referenced_deleted": "delete_referencing_record"
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "ticket.subject"
+       },
+       {
+        "field": "ticket.severity"
+       },
+       {
+        "field": "ticket.due_on"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "ticket.subject"
+       },
+       {
+        "field": "ticket.severity"
+       },
+       {
+        "field": "ticket.reported_on"
+       },
+       {
+        "field": "ticket.due_on"
+       },
+       {
+        "field": "ticket.closed_at"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "association": "ticket.board"
+       },
+       {
+        "field": "ticket.subject"
+       },
+       {
+        "field": "ticket.severity"
+       },
+       {
+        "field": "ticket.reported_on"
+       },
+       {
+        "field": "ticket.due_on"
+       },
+       {
+        "field": "ticket.closed_at"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "ticket.subject"
+       },
+       {
+        "field": "ticket.severity"
+       },
+       {
+        "field": "ticket.reported_on"
+       },
+       {
+        "field": "ticket.due_on"
+       },
+       {
+        "field": "ticket.closed_at"
+       }
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

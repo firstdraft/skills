@@ -1,0 +1,144 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-0000000084d1",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-0000000084d2",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-0000000084d3",
+            "key": "total_hours",
+            "name": "Total hours",
+            "type": "decimal",
+            "required": true,
+            "derivation": {
+              "aggregate": {
+                "association": "project.tasks",
+                "operation": "sum",
+                "field": "task.hours"
+              }
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-0000000084d4",
+            "key": "tasks",
+            "kind": "direct",
+            "name": "Tasks",
+            "reference": "task.project",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              },
+              {
+                "field": "project.total_hours"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              },
+              {
+                "field": "project.total_hours"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-0000000084d5",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-0000000084d6",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-0000000084d7",
+            "key": "hours",
+            "name": "Hours",
+            "type": "decimal",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-0000000084d8",
+            "key": "project",
+            "name": "Project",
+            "required": true,
+            "targets": [
+              "project"
+            ],
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ]
+      }
+    ]
+  }
+}

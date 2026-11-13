@@ -1,0 +1,280 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "book_club",
+    "name": "Book Club",
+    "native": {},
+    "delivery": {},
+    "home_index": "book",
+    "entities": [
+      {
+        "subject_uuid": "01a1cb9a-fef5-7290-bfa1-023dffd139d8",
+        "key": "book",
+        "name": "Book",
+        "primary_descriptor": {
+          "field": "book.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-023eb7bf30c1",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-023f76326972",
+            "key": "author_name",
+            "name": "Author",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author_name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author_name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author_name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cb9a-fef5-7290-bfa1-023589abfe08",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "field": "member.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-02365b7d95e6",
+            "key": "name",
+            "name": "Display name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-02379d8c240f",
+            "key": "bio",
+            "name": "Bio",
+            "type": "long_text",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-0238f6734270",
+            "key": "role",
+            "name": "Role",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "reader"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cb9a-fef5-7290-bfa1-023916bdc7ef",
+                  "key": "reader",
+                  "name": "Reader"
+                },
+                {
+                  "subject_uuid": "01a1cb9a-fef5-7290-bfa1-023a561526b1",
+                  "key": "moderator",
+                  "name": "Moderator"
+                }
+              ]
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "member.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-023bf929f0cd",
+            "key": "read_self",
+            "operation": "read",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          },
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-023c4723195f",
+            "key": "update_self",
+            "operation": "update",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "profile": {
+            "authorization": {
+              "policy": "member.read_self"
+            },
+            "projection": [
+              {
+                "field": "member.name"
+              },
+              {
+                "field": "member.bio"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "member.update_self"
+            },
+            "inputs": [
+              {
+                "field": "member.name"
+              },
+              {
+                "field": "member.bio"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cb9a-fef5-7290-bfa1-02401b347765",
+        "key": "ada",
+        "entity": "member",
+        "fields": [
+          {
+            "field": "member.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ada"
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "value": "ada@example.com"
+            }
+          ],
+          "credentials": [
+            {
+              "kind": "password",
+              "value": "a development passphrase"
+            }
+          ]
+        }
+      },
+      {
+        "subject_uuid": "01a1cb9a-fef5-7290-bfa1-02415a97e34e",
+        "key": "grace",
+        "entity": "member",
+        "fields": [
+          {
+            "field": "member.name",
+            "value": {
+              "kind": "literal",
+              "value": "Grace"
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "value": "grace@example.com"
+            }
+          ],
+          "credentials": [
+            {
+              "kind": "password",
+              "value": "a development passphrase"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

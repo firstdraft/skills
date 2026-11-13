@@ -1,0 +1,136 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0770-7000-8000-000000000005",
+        "key": "item",
+        "name": "Item",
+        "primary_descriptor": {
+          "field": "item.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0770-7000-8000-000000000004",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0770-7000-8000-000000000001",
+            "key": "value",
+            "name": "Value",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0770-7000-8000-000000000002",
+            "key": "note",
+            "name": "Note",
+            "type": "short_text",
+            "required": false,
+            "validations": [
+              {
+                "key": "needed",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "item.value"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "x"
+                  }
+                },
+                "subject_uuid": "01a0caf3-0770-7000-8000-000000000003"
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.value"
+              },
+              {
+                "field": "item.note"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.value"
+              },
+              {
+                "field": "item.note"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.value"
+              },
+              {
+                "field": "item.note"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.value"
+              },
+              {
+                "field": "item.note"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

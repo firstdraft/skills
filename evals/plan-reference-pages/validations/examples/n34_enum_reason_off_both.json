@@ -1,0 +1,219 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d1",
+        "key": "person",
+        "name": "Person",
+        "primary_descriptor": {
+          "field": "person.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d2",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "person.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "person.name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "person.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d3",
+        "key": "ticket",
+        "name": "Ticket",
+        "primary_descriptor": {
+          "field": "ticket.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d4",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d5",
+            "key": "kind",
+            "name": "Kind",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "feature"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d6",
+                  "key": "feature",
+                  "name": "Feature"
+                },
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d7",
+                  "key": "bug",
+                  "name": "Bug"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d8",
+            "key": "steps",
+            "name": "Steps to reproduce",
+            "type": "long_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-075b-7000-8000-0000000084d9",
+                "key": "needed_for_bugs",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "ticket.kind"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "bug"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.title"
+              },
+              {
+                "field": "ticket.kind"
+              },
+              {
+                "field": "ticket.steps"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "ticket.title"
+              },
+              {
+                "field": "ticket.kind"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "ticket.title"
+              },
+              {
+                "field": "ticket.kind"
+              }
+            ]
+          }
+        },
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000084da",
+            "key": "reviewer",
+            "name": "Reviewer",
+            "targets": [
+              "person"
+            ],
+            "required": false,
+            "on_referenced_deleted": "nullify_reference",
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-075b-7000-8000-0000000084db",
+                "key": "needed_for_bugs",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "ticket.kind"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "bug"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

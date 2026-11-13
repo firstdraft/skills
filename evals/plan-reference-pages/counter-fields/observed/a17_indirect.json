@@ -1,0 +1,32 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "user.followers_count",
+      "reason": "Rails counter_cache counts one direct referenced-side Association, not the indirect Association user.followers. Counting the direct Association it goes through, user.follower_links, generates the same count when each joined pair is unique.",
+      "consequence": "The integer column is generated, defaults to 0, and is read wherever the Plan reads it, but nothing updates it, so it reads 0 until application code maintains it."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`User#followers_count`",
+      "file": "app/models/user.rb"
+    }
+  ]
+}

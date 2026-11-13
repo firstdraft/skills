@@ -1,0 +1,97 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "orders",
+    "name": "Orders",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbae-9475-7000-8000-0000000000cc",
+        "key": "order",
+        "name": "Order",
+        "primary_descriptor": {
+          "field": "order.customer_name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000ca",
+            "key": "customer_name",
+            "name": "Customer name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000cb",
+            "key": "shipping_preferences",
+            "name": "Shipping preferences",
+            "type": "json",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "order.customer_name"
+              },
+              {
+                "field": "order.shipping_preferences"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "order.customer_name"
+              },
+              {
+                "field": "order.shipping_preferences"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "order.customer_name"
+              },
+              {
+                "field": "order.shipping_preferences"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "order.customer_name"
+              },
+              {
+                "field": "order.shipping_preferences"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

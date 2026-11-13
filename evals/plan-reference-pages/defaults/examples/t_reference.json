@@ -1,0 +1,270 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "team_tasks",
+    "name": "Team tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbaa-460c-75e4-9c75-8b42778a087f",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbaa-460c-77fe-a534-279bcb68cb85",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7cb6-9fb7-2781385f52ca",
+            "key": "done",
+            "name": "Done",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-777f-b7fe-11a2979ac2b6",
+            "key": "priority",
+            "name": "Priority",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "normal"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cbaa-460c-70bc-a63e-199d4400e565",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "01a1cbaa-460c-76dc-b3b8-ad4a85958db4",
+                  "key": "normal",
+                  "name": "Normal"
+                },
+                {
+                  "subject_uuid": "01a1cbaa-460c-7357-941b-416a75799115",
+                  "key": "high",
+                  "name": "High"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7c1f-bf8d-629613ca35af",
+            "key": "budget",
+            "name": "Budget",
+            "type": "money",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "25"
+            },
+            "settings": {
+              "currency": "USD"
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7958-a9ed-a31252246b65",
+            "key": "opened_on",
+            "name": "Opened on",
+            "type": "date",
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_date"
+            }
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-70ab-96bd-c1bec687e2be",
+            "key": "logged_at",
+            "name": "Logged at",
+            "type": "datetime",
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_time"
+            },
+            "immutable": true
+          },
+          {
+            "subject_uuid": "01a1cbaa-460c-7328-9920-60ae4c0cfbb4",
+            "key": "due_on",
+            "name": "Due on",
+            "type": "date",
+            "required": false,
+            "notes": "Defaults to one week after opened_on; set in the model after Compile."
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.budget"
+              },
+              {
+                "field": "task.opened_on"
+              },
+              {
+                "field": "task.logged_at"
+              },
+              {
+                "field": "task.due_on"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.budget"
+              },
+              {
+                "field": "task.opened_on"
+              },
+              {
+                "field": "task.logged_at"
+              },
+              {
+                "field": "task.due_on"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.budget"
+              },
+              {
+                "field": "task.opened_on"
+              },
+              {
+                "field": "task.due_on"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.budget"
+              },
+              {
+                "field": "task.opened_on"
+              },
+              {
+                "field": "task.due_on"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbaa-460c-7f07-84ff-1baa05a1bba5",
+        "key": "write_brief",
+        "entity": "task",
+        "fields": [
+          {
+            "field": "task.title",
+            "value": {
+              "kind": "literal",
+              "value": "Write the brief"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbaa-460c-7963-a070-f00e345b20b6",
+        "key": "book_room",
+        "entity": "task",
+        "fields": [
+          {
+            "field": "task.title",
+            "value": {
+              "kind": "literal",
+              "value": "Book the room"
+            }
+          },
+          {
+            "field": "task.done",
+            "value": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          {
+            "field": "task.priority",
+            "value": {
+              "kind": "literal",
+              "value": "high"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

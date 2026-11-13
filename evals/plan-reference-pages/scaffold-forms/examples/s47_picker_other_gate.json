@@ -1,0 +1,371 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "purchasing",
+    "name": "Purchasing",
+    "native": {},
+    "delivery": {},
+    "home_index": "purchase",
+    "topics": [
+      {
+        "name": "Purchases",
+        "entities": [
+          "user",
+          "supplier",
+          "depot",
+          "purchase"
+        ]
+      }
+    ],
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000b799",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b79a",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b79b",
+            "key": "role",
+            "name": "Role",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "member"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-00000000b79c",
+                  "key": "member",
+                  "name": "Member"
+                },
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-00000000b79d",
+                  "key": "clerk",
+                  "name": "Clerk"
+                },
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-00000000b79e",
+                  "key": "buyer",
+                  "name": "Buyer"
+                }
+              ]
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          }
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b79f",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a0",
+            "key": "is_buyer",
+            "operation": "is_buyer",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "user.role"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": "buyer"
+              }
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a1",
+            "key": "is_clerk",
+            "operation": "is_clerk",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "user.role"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": "clerk"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a2",
+        "key": "supplier",
+        "name": "Supplier",
+        "primary_descriptor": {
+          "field": "supplier.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a3",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "user.is_buyer",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "supplier.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "user.is_buyer",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "supplier.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a4",
+        "key": "depot",
+        "name": "Depot",
+        "primary_descriptor": {
+          "field": "depot.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a5",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "user.is_buyer",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "depot.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "user.is_buyer",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "depot.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a6",
+        "key": "purchase",
+        "name": "Purchase",
+        "primary_descriptor": {
+          "field": "purchase.number"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a7",
+            "key": "number",
+            "name": "Number",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a8",
+            "key": "supplier",
+            "name": "Supplier",
+            "targets": [
+              "supplier"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict"
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000b7a9",
+            "key": "depot",
+            "name": "Depot",
+            "targets": [
+              "depot"
+            ],
+            "required": false,
+            "on_referenced_deleted": "nullify_reference"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "user.is_clerk",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "purchase.number"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "user.is_clerk",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "purchase.number"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "user.is_clerk",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "purchase.number"
+              },
+              {
+                "association": "purchase.supplier"
+              },
+              {
+                "association": "purchase.depot"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "user.is_clerk",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "purchase.number"
+              },
+              {
+                "association": "purchase.supplier"
+              },
+              {
+                "association": "purchase.depot"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

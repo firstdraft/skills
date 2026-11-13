@@ -1,0 +1,131 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "catalog",
+    "name": "Catalog",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbae-9475-7000-8000-00000000009f",
+        "key": "product",
+        "name": "Product",
+        "primary_descriptor": {
+          "field": "product.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-00000000009e",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-00000000009c",
+            "key": "specifications",
+            "name": "Specifications",
+            "type": "json",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a1cbae-9475-7000-8000-00000000009b",
+                "key": "needed_without_summary",
+                "kind": "presence",
+                "when": {
+                  "kind": "is_null",
+                  "operand": {
+                    "target": {
+                      "field": "product.summary"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-00000000009d",
+            "key": "summary",
+            "name": "Summary",
+            "type": "short_text",
+            "required": false
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.specifications"
+              },
+              {
+                "field": "product.summary"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.specifications"
+              },
+              {
+                "field": "product.summary"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.specifications"
+              },
+              {
+                "field": "product.summary"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "product.name"
+              },
+              {
+                "field": "product.specifications"
+              },
+              {
+                "field": "product.summary"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

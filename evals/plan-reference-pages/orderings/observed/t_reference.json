@@ -1,0 +1,32 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/1/orderings/3",
+      "readable_path": "ticket.by_due_on",
+      "reason": "This named Ordering is outside the current simple indexed-scope release.",
+      "consequence": "`Ticket.by_due_on` raises NotImplementedError until it is written, and no database index is emitted for it. Pages that call it raise until then, and the specs that request those pages fail."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": null,
+      "title": "`Ticket.by_due_on`",
+      "file": "app/models/ticket.rb"
+    }
+  ]
+}

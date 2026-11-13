@@ -1,0 +1,128 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "invites",
+    "name": "Invites",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb1-d6ec-7088-8a66-8497b5da7f39",
+        "key": "invite",
+        "name": "Invite",
+        "primary_descriptor": {
+          "field": "invite.email"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb1-d6ec-7089-b0f0-3284a9608618",
+            "key": "email",
+            "name": "Email",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb1-d6ec-7087-a27a-bcaf79662810",
+            "key": "token",
+            "name": "Token",
+            "type": "secure_token",
+            "required": true,
+            "immutable": true,
+            "redact_from_logs": true,
+            "notes": "Sent in the invite email; anyone holding it can accept."
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "invite.email"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "invite.email"
+              },
+              {
+                "field": "invite.token"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "invite.email"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "invite.email"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbb1-d6ec-708a-b2d8-ac4312471631",
+        "key": "demo_invite",
+        "entity": "invite",
+        "fields": [
+          {
+            "field": "invite.email",
+            "value": {
+              "kind": "literal",
+              "value": "demo@example.com"
+            }
+          },
+          {
+            "field": "invite.token",
+            "value": {
+              "kind": "literal",
+              "value": "demo-invite-2027"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb1-d6ec-708b-a77e-58ea120fcf9d",
+        "key": "other_invite",
+        "entity": "invite",
+        "fields": [
+          {
+            "field": "invite.email",
+            "value": {
+              "kind": "literal",
+              "value": "guest@example.com"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

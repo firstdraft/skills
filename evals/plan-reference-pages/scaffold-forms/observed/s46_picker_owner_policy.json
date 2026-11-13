@@ -1,0 +1,226 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`DepotPolicy#read?`",
+      "file": "app/policies/depot_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`SupplierPolicy#read?`",
+      "file": "app/policies/supplier_policy.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Depot: index lists accessible records",
+      "file": "spec/requests/depots_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Depot: show shows the requested record",
+      "file": "spec/requests/depots_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: create persists the submitted values",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: create rejects a missing number without persisting changes",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: create rejects an inaccessible depot",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: create rejects an inaccessible supplier",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_depot_options ignores a NUL byte in the search",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_depot_options lists at most 20 depots",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_depot_options lists the depots whose name contains the search, ignoring case",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_depot_options matches % and _ in the search literally",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_depot_options never lists another account's depots",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_supplier_options ignores a NUL byte in the search",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_supplier_options lists at most 20 suppliers",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_supplier_options lists the suppliers whose name contains the search, ignoring case",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_supplier_options matches % and _ in the search literally",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: edit_supplier_options never lists another account's suppliers",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_depot_options ignores a NUL byte in the search",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_depot_options lists at most 20 depots",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_depot_options lists the depots whose name contains the search, ignoring case",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_depot_options matches % and _ in the search literally",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_depot_options never lists another account's depots",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_supplier_options ignores a NUL byte in the search",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_supplier_options lists at most 20 suppliers",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_supplier_options lists the suppliers whose name contains the search, ignoring case",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_supplier_options matches % and _ in the search literally",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new_supplier_options never lists another account's suppliers",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: update persists the submitted changes",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: update rejects a missing number without persisting changes",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: update rejects an inaccessible depot",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: update rejects an inaccessible supplier",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Supplier: index lists accessible records",
+      "file": "spec/requests/suppliers_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Supplier: show shows the requested record",
+      "file": "spec/requests/suppliers_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: create form browser coverage",
+      "file": "spec/system/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: update form browser coverage",
+      "file": "spec/system/purchases_spec.rb"
+    }
+  ]
+}

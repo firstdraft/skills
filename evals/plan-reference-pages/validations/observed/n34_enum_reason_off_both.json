@@ -1,0 +1,57 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.input.partially_generated",
+      "pointer": "/application/entities/1/scaffold/create/inputs",
+      "readable_path": "ticket.scaffold.create.inputs",
+      "reason": "Conditional presence Validation \"ticket.steps.needed_for_bugs\" requires Field \"steps\" when its condition holds, and no create input or binding supplies it. Conditional presence Validation \"ticket.reviewer.needed_for_bugs\" requires Reference \"reviewer\" when its condition holds, and no create input or binding supplies it.",
+      "consequence": "The create keeps its authored inputs and authorization. Saving fails validation while the condition holds, until the form or application code supplies the value."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.input.partially_generated",
+      "pointer": "/application/entities/1/scaffold/update/inputs",
+      "readable_path": "ticket.scaffold.update.inputs",
+      "reason": "Conditional presence Validation \"ticket.steps.needed_for_bugs\" requires Field \"steps\" when its condition holds, and no update input supplies it. Conditional presence Validation \"ticket.reviewer.needed_for_bugs\" requires Reference \"reviewer\" when its condition holds, and no update input supplies it.",
+      "consequence": "The update keeps its authored inputs and authorization. Saving fails validation while the condition holds, until the form or application code supplies the value."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`ticket.scaffold.create.inputs`",
+      "file": "app/controllers/tickets_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`ticket.scaffold.update.inputs`",
+      "file": "app/controllers/tickets_controller.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Ticket: create form browser coverage",
+      "file": "spec/system/tickets_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Ticket: update form browser coverage",
+      "file": "spec/system/tickets_spec.rb"
+    }
+  ]
+}

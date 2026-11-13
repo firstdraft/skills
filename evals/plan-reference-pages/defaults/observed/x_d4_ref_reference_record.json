@@ -1,0 +1,45 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.development_data.record.not_generated",
+      "pointer": "/application/development_data/0",
+      "readable_path": "item.only_title",
+      "reason": "Required Reference item.category has no available seed target.",
+      "consequence": "The generated development seed omits this record and dependent links."
+    },
+    {
+      "code": "foundation_plan.gap.reference.default_not_generated",
+      "pointer": "/application/entities/1/references/0/default",
+      "readable_path": "item.category.default",
+      "reason": "The current Rails Compiler does not apply Reference defaults.",
+      "consequence": "Reference storage, its belongs_to, and its consumers remain generated, but nothing applies the authored default, so a Item created without category fails its \"must exist\" validation until application code applies it."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`Item#category`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.only_title`",
+      "file": "db/seeds/development.rb"
+    }
+  ]
+}

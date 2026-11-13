@@ -1,0 +1,297 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tree_probe",
+    "name": "Tree probe",
+    "entities": [
+      {
+        "subject_uuid": "019fa300-2000-7000-8037-000000000001",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8037-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8037-000000000003",
+            "key": "folders",
+            "name": "Folders",
+            "kind": "direct",
+            "reference": "folder.project",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              },
+              {
+                "association": "project.folders",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "folder.name"
+                  },
+                  {
+                    "association": "folder.parent",
+                    "authorization": "public"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "019fa300-2000-7000-8037-000000000004",
+        "key": "folder",
+        "name": "Folder",
+        "primary_descriptor": {
+          "field": "folder.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8037-000000000005",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8037-000000000006",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          },
+          {
+            "subject_uuid": "019fa300-2000-7000-8037-000000000007",
+            "key": "parent",
+            "name": "Parent folder",
+            "targets": [
+              "folder"
+            ],
+            "required": false,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8037-000000000008",
+            "key": "subfolders",
+            "name": "Subfolders",
+            "kind": "direct",
+            "reference": "folder.parent",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "folder.name"
+              },
+              {
+                "association": "folder.project",
+                "authorization": "public"
+              },
+              {
+                "association": "folder.parent",
+                "authorization": "public"
+              },
+              {
+                "association": "folder.subfolders",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "folder.name"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "folder.name"
+              },
+              {
+                "association": "folder.parent"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "folder.name"
+              },
+              {
+                "association": "folder.parent"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "trees": [
+          {
+            "subject_uuid": "019fa300-2000-7000-8037-000000000009",
+            "key": "tree",
+            "parent_reference": "folder.parent",
+            "scope_reference": "folder.project"
+          }
+        ]
+      }
+    ],
+    "native": {},
+    "delivery": {},
+    "development_data": [
+      {
+        "subject_uuid": "019fa300-2000-7000-8037-00000000000a",
+        "key": "alpha",
+        "entity": "project",
+        "fields": [
+          {
+            "field": "project.name",
+            "value": {
+              "kind": "literal",
+              "value": "Alpha"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "019fa300-2000-7000-8037-00000000000b",
+        "key": "docs",
+        "entity": "folder",
+        "fields": [
+          {
+            "field": "folder.name",
+            "value": {
+              "kind": "literal",
+              "value": "Docs"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "folder.project",
+            "value": {
+              "kind": "reference_record",
+              "record": "project.alpha"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "019fa300-2000-7000-8037-00000000000c",
+        "key": "specs",
+        "entity": "folder",
+        "fields": [
+          {
+            "field": "folder.name",
+            "value": {
+              "kind": "literal",
+              "value": "Specs"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "folder.project",
+            "value": {
+              "kind": "reference_record",
+              "record": "project.alpha"
+            }
+          },
+          {
+            "reference": "folder.parent",
+            "value": {
+              "kind": "reference_record",
+              "record": "folder.docs"
+            }
+          }
+        ]
+      }
+    ],
+    "topics": [
+      {
+        "name": "Files",
+        "entities": [
+          "project",
+          "folder"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "reading_club",
+    "name": "Reading Club",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cb96-2704-712a-acc3-456ce93b2851",
+        "key": "book",
+        "name": "Book",
+        "primary_descriptor": {
+          "system_field": "id"
+        }
+      }
+    ]
+  }
+}

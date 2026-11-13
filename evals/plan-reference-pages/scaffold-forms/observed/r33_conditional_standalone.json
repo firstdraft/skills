@@ -1,0 +1,36 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.input.partially_generated",
+      "pointer": "/application/entities/0/scaffold/create/inputs",
+      "readable_path": "note.scaffold.create.inputs",
+      "reason": "Conditional presence Validation \"note.remind_on.required_for_reminders\" requires Field \"remind_on\" when its condition holds, and no create input or binding supplies it.",
+      "consequence": "The create keeps its authored inputs and authorization. Saving fails validation while the condition holds, until the form or application code supplies the value."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`note.scaffold.create.inputs`",
+      "file": "app/controllers/notes_controller.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create form browser coverage",
+      "file": "spec/system/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: update form browser coverage",
+      "file": "spec/system/notes_spec.rb"
+    }
+  ]
+}

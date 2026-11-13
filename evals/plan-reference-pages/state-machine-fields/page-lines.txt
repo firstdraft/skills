@@ -1,0 +1,8 @@
+# complete! and may_complete? raise the same way
+# escalate and may_escalate? raise the same way
+# complete, may_complete?, and each other event raise the same way
+resources :expenses do
+member { post :approve }
+def approve
+@expense.approve!
+<%= button_to "Approve", approve_expense_path(expense), class: "btn" if expense.may_approve? %>

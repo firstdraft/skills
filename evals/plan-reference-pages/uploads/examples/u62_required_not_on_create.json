@@ -1,0 +1,94 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "listings",
+    "name": "Listings",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa300-0000-7000-8000-000000000001",
+        "key": "listing",
+        "name": "Listing",
+        "primary_descriptor": {
+          "field": "listing.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000002",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000003",
+            "key": "photo",
+            "name": "Photo",
+            "type": "image",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "listing.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

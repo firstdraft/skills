@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "order.shipping_preferences",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Generated forms edit the document as JSON text, and any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.shipping_preferences`",
+      "file": "app/models/order.rb"
+    }
+  ]
+}

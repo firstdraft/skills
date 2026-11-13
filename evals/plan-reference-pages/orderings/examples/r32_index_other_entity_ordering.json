@@ -1,0 +1,237 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "orderings_probe",
+    "name": "Orderings probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000036f",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000370",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000371",
+            "key": "tasks",
+            "name": "Tasks",
+            "kind": "direct",
+            "reference": "task.project",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000372",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000373",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000374",
+            "key": "code",
+            "name": "Code",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000378",
+            "key": "priority",
+            "name": "Priority",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "ordinal": true,
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000375",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000376",
+                  "key": "medium",
+                  "name": "Medium"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000377",
+                  "key": "high",
+                  "name": "High"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000037b",
+            "key": "status",
+            "name": "Status",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000379",
+                  "key": "open",
+                  "name": "Open"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000037a",
+                  "key": "closed",
+                  "name": "Closed"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000037e",
+            "key": "size",
+            "name": "Size",
+            "type": "enum",
+            "required": false,
+            "settings": {
+              "ordinal": true,
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000037c",
+                  "key": "small",
+                  "name": "Small"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000037d",
+                  "key": "large",
+                  "name": "Large"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-00000000037f",
+            "key": "points",
+            "name": "Points",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000380",
+            "key": "starts_on",
+            "name": "Starts on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000381",
+            "key": "due_on",
+            "name": "Due on",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000382",
+            "key": "finished_at",
+            "name": "Finished at",
+            "type": "datetime",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000383",
+            "key": "description",
+            "name": "Description",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0a0d-7000-8000-000000000384",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.due_on"
+              }
+            ],
+            "ordering": "project.by_name"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

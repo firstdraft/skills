@@ -1,0 +1,90 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/1/predicates/0",
+      "readable_path": "article.top_level"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.associated_create.not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1/create_form",
+      "readable_path": "scaffold.associated_create_form",
+      "reason": "Predicated collections lack proof that inverse assignment satisfies the authored Predicate.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1/predicate",
+      "readable_path": "space.articles.predicate",
+      "reason": "The selected named Predicate has no target scope lowering.",
+      "consequence": "This surface calls `Article.top_level`, which raises NotImplementedError until it is written."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/1/predicates/0",
+      "readable_path": "article.top_level",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Article.top_level` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.associated_create.partially_generated",
+      "pointer": "/application/entities/1/scaffold/show/projection/4/create_form",
+      "readable_path": "article.subarticles.create_form",
+      "reason": "Associated creation is incomplete. Required Reference \"space\" has no generated create author.",
+      "consequence": "The associated create form retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    },
+    {
+      "code": "foundation_plan.gap.tree.partially_generated",
+      "pointer": "/application/entities/1/trees/0",
+      "readable_path": "article.outline",
+      "reason": "The parent Reference article.parent is generated, but the Tree's rules are not: nothing keeps the hierarchy free of cycles or keeps a parent within the same article.space.",
+      "consequence": "A record can be saved with a parent that makes a cycle or that belongs to another article.space."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`scaffold.associated_create_form`",
+      "file": null
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`article.subarticles.create_form`",
+      "file": "app/controllers/articles_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Article.top_level`",
+      "file": "app/models/article.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`article.outline`",
+      "file": "app/models/article.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Article subarticles: create persists the submitted values",
+      "file": "spec/requests/articles/subarticles_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Article subarticles: create form browser coverage",
+      "file": "spec/system/articles/subarticles_spec.rb"
+    }
+  ]
+}

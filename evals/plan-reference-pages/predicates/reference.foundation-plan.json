@@ -1,0 +1,382 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tasks",
+  "name": "Tasks",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0790-7000-8000-000000000001",
+    "key": "project",
+    "name": "Project",
+    "primary_descriptor": {
+     "field": "project.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000002",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000003",
+      "key": "archived",
+      "name": "Archived",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000004",
+      "key": "tasks",
+      "kind": "direct",
+      "name": "Tasks",
+      "reference": "task.project",
+      "side": "referenced"
+     },
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002ee1",
+      "key": "open_tasks",
+      "kind": "direct",
+      "name": "Open tasks",
+      "reference": "task.project",
+      "side": "referenced",
+      "predicate": "task.open"
+     },
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002ee2",
+      "key": "overdue_tasks",
+      "kind": "direct",
+      "name": "Overdue tasks",
+      "reference": "task.project",
+      "side": "referenced",
+      "predicate": "task.overdue"
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002ee3",
+      "key": "active",
+      "name": "Has unfinished tasks",
+      "expression": {
+       "kind": "exists",
+       "association": "project.open_tasks"
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "predicate": "project.active",
+      "projection": [
+       {
+        "field": "project.title"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "project.title"
+       },
+       {
+        "field": "project.archived"
+       },
+       {
+        "association": "project.overdue_tasks",
+        "authorization": "public",
+        "projection": [
+         {
+          "field": "task.title"
+         },
+         {
+          "field": "task.due_on"
+         }
+        ]
+       },
+       {
+        "association": "project.tasks",
+        "authorization": "public",
+        "predicate": "task.urgent",
+        "projection": [
+         {
+          "field": "task.title"
+         },
+         {
+          "field": "task.done"
+         },
+         {
+          "field": "task.due_on"
+         }
+        ]
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "project.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "project.title"
+       },
+       {
+        "field": "project.archived"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0790-7000-8000-000000000005",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000006",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000007",
+      "key": "done",
+      "name": "Done",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000008",
+      "key": "due_on",
+      "name": "Due on",
+      "type": "date",
+      "required": false
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000009",
+      "key": "project",
+      "name": "Project",
+      "targets": [
+       "project"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002ee4",
+      "key": "open",
+      "name": "Open",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "task.done"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": false
+       }
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002ee5",
+      "key": "listed",
+      "name": "Open, in a project that is not archived",
+      "expression": {
+       "kind": "and",
+       "expressions": [
+        {
+         "kind": "matches_predicate",
+         "predicate": "task.open"
+        },
+        {
+         "kind": "comparison",
+         "left": {
+          "through": [
+           {
+            "association": "task.project"
+           }
+          ],
+          "target": {
+           "field": "project.archived"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": false
+         }
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002ee6",
+      "key": "overdue",
+      "name": "Overdue",
+      "expression": {
+       "kind": "and",
+       "expressions": [
+        {
+         "kind": "matches_predicate",
+         "predicate": "task.open"
+        },
+        {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "task.due_on"
+          }
+         },
+         "operator": "less_than",
+         "right": {
+          "kind": "environment",
+          "name": "current_date"
+         }
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002ee7",
+      "key": "urgent",
+      "name": "Title mentions urgent",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "task.title"
+        }
+       },
+       "operator": "contains",
+       "right": {
+        "kind": "literal",
+        "value": "urgent"
+       }
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002ee8",
+      "key": "due_soon",
+      "name": "Due soon",
+      "owner": {
+       "description": "Tasks that are not done and are due today or in the next seven days."
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "index": {
+      "authorization": "public",
+      "predicate": "task.listed",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.due_on"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.done"
+       },
+       {
+        "field": "task.due_on"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.due_on"
+       },
+       {
+        "association": "task.project"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.done"
+       },
+       {
+        "field": "task.due_on"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": "public"
+     }
+    }
+   }
+  ],
+  "home_index": "task"
+ }
+}

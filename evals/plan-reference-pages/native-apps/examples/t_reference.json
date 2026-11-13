@@ -1,0 +1,267 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "trail_log",
+    "name": "Trail Log",
+    "domain": "traillog.example",
+    "home_index": "trail",
+    "topics": [
+      {
+        "name": "Members and their hikes",
+        "entities": [
+          "member",
+          "hike"
+        ]
+      },
+      {
+        "name": "Trails",
+        "entities": [
+          "trail"
+        ]
+      }
+    ],
+    "native": {
+      "ios": {},
+      "android": {}
+    },
+    "delivery": {
+      "ios_push": {},
+      "android_push": {}
+    },
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-00500000004f",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "field": "member.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-005000000050",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "member.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-005000000051",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-00500000004b",
+        "key": "hike",
+        "name": "Hike",
+        "primary_descriptor": {
+          "field": "hike.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-005000000049",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-00500000004a",
+            "key": "summary",
+            "name": "Summary",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "hike.title"
+              },
+              {
+                "field": "hike.summary"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "hike.title"
+              },
+              {
+                "field": "hike.summary"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "hike.title"
+              },
+              {
+                "field": "hike.summary"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "hike.title"
+              },
+              {
+                "field": "hike.summary"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        },
+        "icon": "map_pin"
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-00500000004e",
+        "key": "trail",
+        "name": "Trail",
+        "primary_descriptor": {
+          "field": "trail.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-00500000004c",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-00500000004d",
+            "key": "region",
+            "name": "Region",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "trail.name"
+              },
+              {
+                "field": "trail.region"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "trail.name"
+              },
+              {
+                "field": "trail.region"
+              }
+            ]
+          }
+        },
+        "icon": "globe"
+      }
+    ]
+  }
+}

@@ -1,0 +1,393 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "events",
+    "name": "Events",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0775-7000-8000-000000000001",
+        "key": "event",
+        "name": "Event",
+        "primary_descriptor": {
+          "field": "event.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-000000000003",
+            "key": "description",
+            "name": "Description",
+            "type": "rich_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-000000000004",
+            "key": "starts_at",
+            "name": "Starts at",
+            "type": "datetime",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-000000000005",
+            "key": "seats",
+            "name": "Seats",
+            "type": "integer",
+            "required": true,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-0775-7000-8000-000000000006",
+                "key": "at_least_one",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "greater_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": 1
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-000000000007",
+            "key": "online",
+            "name": "Online",
+            "type": "boolean",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-000000000008",
+            "key": "website",
+            "name": "Website",
+            "type": "url",
+            "required": false,
+            "normalizations": [
+              "trim",
+              "blank_to_null"
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-000000000009",
+            "key": "code",
+            "name": "Code",
+            "type": "short_text",
+            "required": true,
+            "normalizations": [
+              "trim"
+            ],
+            "comparison": "case_insensitive",
+            "immutable": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-00000000000a",
+            "key": "time_zone",
+            "name": "Time zone",
+            "type": "time_zone",
+            "required": true,
+            "notes": "Show starts_at in this zone on the event page; written after Compile."
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-00000000000b",
+            "key": "upcoming",
+            "name": "Upcoming",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "event.starts_at"
+                }
+              },
+              "operator": "greater_than",
+              "right": {
+                "kind": "environment",
+                "name": "current_time"
+              }
+            }
+          }
+        ],
+        "orderings": [
+          {
+            "subject_uuid": "01a0caf3-0775-7000-8000-00000000000c",
+            "key": "soonest",
+            "terms": [
+              {
+                "field": "event.starts_at",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "id",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "event.name"
+              },
+              {
+                "field": "event.description"
+              },
+              {
+                "field": "event.starts_at"
+              },
+              {
+                "field": "event.seats"
+              },
+              {
+                "field": "event.online"
+              },
+              {
+                "field": "event.website"
+              },
+              {
+                "field": "event.code"
+              },
+              {
+                "field": "event.time_zone"
+              }
+            ],
+            "predicate": "event.upcoming",
+            "ordering": "event.soonest"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "event.name"
+              },
+              {
+                "field": "event.description"
+              },
+              {
+                "field": "event.starts_at"
+              },
+              {
+                "field": "event.seats"
+              },
+              {
+                "field": "event.online"
+              },
+              {
+                "field": "event.website"
+              },
+              {
+                "field": "event.code"
+              },
+              {
+                "field": "event.time_zone"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "event.name"
+              },
+              {
+                "field": "event.description"
+              },
+              {
+                "field": "event.starts_at"
+              },
+              {
+                "field": "event.seats"
+              },
+              {
+                "field": "event.online"
+              },
+              {
+                "field": "event.website"
+              },
+              {
+                "field": "event.code"
+              },
+              {
+                "field": "event.time_zone"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "event.name"
+              },
+              {
+                "field": "event.description"
+              },
+              {
+                "field": "event.starts_at"
+              },
+              {
+                "field": "event.seats"
+              },
+              {
+                "field": "event.online"
+              },
+              {
+                "field": "event.website"
+              },
+              {
+                "field": "event.time_zone"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf3-0775-7000-8000-00000000000d",
+        "key": "ruby_meetup",
+        "entity": "event",
+        "fields": [
+          {
+            "field": "event.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ruby meetup"
+            }
+          },
+          {
+            "field": "event.description",
+            "value": {
+              "kind": "literal",
+              "value": "Talks and pizza."
+            }
+          },
+          {
+            "field": "event.starts_at",
+            "value": {
+              "kind": "literal",
+              "value": "2027-01-14T18:00:00Z"
+            }
+          },
+          {
+            "field": "event.seats",
+            "value": {
+              "kind": "literal",
+              "value": 40
+            }
+          },
+          {
+            "field": "event.online",
+            "value": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          {
+            "field": "event.website",
+            "value": {
+              "kind": "literal",
+              "value": "https://venue.example"
+            }
+          },
+          {
+            "field": "event.code",
+            "value": {
+              "kind": "literal",
+              "value": "RUBY-27"
+            }
+          },
+          {
+            "field": "event.time_zone",
+            "value": {
+              "kind": "literal",
+              "value": "America/Chicago"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0775-7000-8000-00000000000e",
+        "key": "rails_webinar",
+        "entity": "event",
+        "fields": [
+          {
+            "field": "event.name",
+            "value": {
+              "kind": "literal",
+              "value": "Rails webinar"
+            }
+          },
+          {
+            "field": "event.description",
+            "value": {
+              "kind": "literal",
+              "value": "An hour on Hotwire."
+            }
+          },
+          {
+            "field": "event.starts_at",
+            "value": {
+              "kind": "literal",
+              "value": "2027-02-03T16:00:00Z"
+            }
+          },
+          {
+            "field": "event.seats",
+            "value": {
+              "kind": "literal",
+              "value": 500
+            }
+          },
+          {
+            "field": "event.online",
+            "value": {
+              "kind": "literal",
+              "value": true
+            }
+          },
+          {
+            "field": "event.code",
+            "value": {
+              "kind": "literal",
+              "value": "HOTWIRE"
+            }
+          },
+          {
+            "field": "event.time_zone",
+            "value": {
+              "kind": "literal",
+              "value": "Europe/Berlin"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

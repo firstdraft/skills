@@ -1,0 +1,326 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tasks",
+    "name": "Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0758-7000-8000-000000000065",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0758-7000-8000-000000000066",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0758-7000-8000-000000000067",
+            "key": "priority",
+            "name": "Priority",
+            "type": "enum",
+            "required": true,
+            "notes": "Triage sets this; most tasks stay Medium.",
+            "default": {
+              "kind": "literal",
+              "value": "medium"
+            },
+            "settings": {
+              "ordinal": true,
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0758-7000-8000-000000000068",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0758-7000-8000-000000000069",
+                  "key": "medium",
+                  "name": "Medium"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0758-7000-8000-00000000006a",
+                  "key": "high",
+                  "name": "High"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0758-7000-8000-00000000006b",
+            "key": "category",
+            "name": "Category",
+            "type": "enum",
+            "required": false,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0758-7000-8000-00000000006c",
+                  "key": "bug",
+                  "name": "Bug"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0758-7000-8000-00000000006d",
+                  "key": "feature",
+                  "name": "Feature"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0758-7000-8000-00000000006e",
+                  "key": "chore",
+                  "name": "Chore"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0758-7000-8000-00000000006f",
+            "key": "kind",
+            "name": "Kind",
+            "type": "enum",
+            "required": true,
+            "immutable": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0758-7000-8000-000000000070",
+                  "key": "task",
+                  "name": "Task"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0758-7000-8000-000000000071",
+                  "key": "milestone",
+                  "name": "Milestone"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075a-7000-8000-000000000002",
+            "key": "reason",
+            "name": "Reason",
+            "type": "long_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-075a-7000-8000-000000000003",
+                "key": "required_for_milestones",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "task.kind"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "milestone"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0758-7000-8000-000000000072",
+            "key": "urgent",
+            "name": "Urgent",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "task.priority"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": "high"
+              }
+            }
+          }
+        ],
+        "orderings": [
+          {
+            "subject_uuid": "01a0caf3-0758-7000-8000-000000000073",
+            "key": "by_priority",
+            "terms": [
+              {
+                "field": "task.priority",
+                "direction": "descending"
+              },
+              {
+                "system_field": "id",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "ordering": "task.by_priority",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.category"
+              },
+              {
+                "field": "task.kind"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.category"
+              },
+              {
+                "field": "task.kind"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.category"
+              },
+              {
+                "field": "task.kind"
+              },
+              {
+                "field": "task.reason"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.priority"
+              },
+              {
+                "field": "task.category"
+              },
+              {
+                "field": "task.reason"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf3-0758-7000-8000-000000000078",
+        "key": "login_bug",
+        "entity": "task",
+        "fields": [
+          {
+            "field": "task.title",
+            "value": {
+              "kind": "literal",
+              "value": "Login fails on Safari"
+            }
+          },
+          {
+            "field": "task.priority",
+            "value": {
+              "kind": "literal",
+              "value": "high"
+            }
+          },
+          {
+            "field": "task.category",
+            "value": {
+              "kind": "literal",
+              "value": "bug"
+            }
+          },
+          {
+            "field": "task.kind",
+            "value": {
+              "kind": "literal",
+              "value": "task"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0758-7000-8000-000000000079",
+        "key": "beta_launch",
+        "entity": "task",
+        "fields": [
+          {
+            "field": "task.title",
+            "value": {
+              "kind": "literal",
+              "value": "Beta launch"
+            }
+          },
+          {
+            "field": "task.kind",
+            "value": {
+              "kind": "literal",
+              "value": "milestone"
+            }
+          },
+          {
+            "field": "task.reason",
+            "value": {
+              "kind": "literal",
+              "value": "Investor demo"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

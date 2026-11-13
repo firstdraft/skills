@@ -1,0 +1,103 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "reading_club",
+    "name": "Northside Readers",
+    "description": "A reading club that picks a book each month and keeps a shared journal of what members thought.",
+    "domain": "northsidereaders.example.com",
+    "topics": [
+      {
+        "name": "Books and journal",
+        "entities": [
+          "book",
+          "journal_page"
+        ]
+      },
+      {
+        "name": "People",
+        "entities": [
+          "member"
+        ]
+      }
+    ],
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbc5-ecfb-799c-b499-11621b84ac0b",
+        "key": "book",
+        "name": "Book",
+        "primary_descriptor": {
+          "field": "book.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbc5-ecfb-783b-9cf6-1664febe1a4c",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbc5-ecfb-724c-a6ad-2a3bea05c101",
+            "key": "summary",
+            "name": "Summary",
+            "type": "long_text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbc5-ecfb-796c-86b4-78f0f093666a",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "system_field": "id"
+        }
+      },
+      {
+        "subject_uuid": "01a1cbc5-ecfb-79ec-868e-6060c98cc402",
+        "key": "journal_page",
+        "name": "Page",
+        "primary_descriptor": {
+          "field": "journal_page.heading"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbc5-ecfb-77f3-8f82-ac6c79899d8a",
+            "key": "heading",
+            "name": "Heading",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "journal_page.heading"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "journal_page.heading"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

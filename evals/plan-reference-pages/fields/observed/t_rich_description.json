@@ -1,0 +1,30 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "event.description",
+      "reason": "The Field is stored as a text column and edited as plain text; Action Text formatting, embedded attachments, and sanitized HTML display are not generated.",
+      "consequence": "Text is entered, stored, and displayed as plain text; a rich-text editor and formatted display remain work after compilation."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`event.description`",
+      "file": "app/models/event.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: index lists accessible records",
+      "file": "spec/requests/events_spec.rb"
+    }
+  ]
+}

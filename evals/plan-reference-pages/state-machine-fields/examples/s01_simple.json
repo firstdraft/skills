@@ -1,0 +1,190 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tasks",
+  "name": "Tasks",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-000000000006",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000007",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000005",
+      "key": "status",
+      "name": "Status",
+      "type": "state_machine",
+      "required": true,
+      "settings": {
+       "initial_state": "open",
+       "states": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000001",
+         "key": "open",
+         "name": "Open"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000002",
+         "key": "done",
+         "name": "Done"
+        }
+       ],
+       "transitions": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000003",
+         "key": "complete",
+         "from": [
+          "open"
+         ],
+         "to": "done",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000004",
+         "key": "reopen",
+         "from": [
+          "done"
+         ],
+         "to": "open",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "literal",
+            "value": null
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000008",
+      "key": "completed_at",
+      "name": "Completed at",
+      "type": "datetime",
+      "required": false
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-000000000009",
+    "key": "write_report",
+    "entity": "task",
+    "fields": [
+     {
+      "field": "task.title",
+      "value": {
+       "kind": "literal",
+       "value": "Write the report"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000000a",
+    "key": "book_room",
+    "entity": "task",
+    "fields": [
+     {
+      "field": "task.title",
+      "value": {
+       "kind": "literal",
+       "value": "Book the room"
+      }
+     },
+     {
+      "field": "task.status",
+      "value": {
+       "kind": "literal",
+       "value": "done"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

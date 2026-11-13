@@ -1,0 +1,166 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tasks",
+  "name": "Tasks",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c6",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c7",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c5",
+      "key": "status",
+      "name": "Status",
+      "type": "state_machine",
+      "required": true,
+      "settings": {
+       "initial_state": "open",
+       "states": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c1",
+         "key": "open",
+         "name": "Open"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c2",
+         "key": "done",
+         "name": "Done"
+        }
+       ],
+       "transitions": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c3",
+         "key": "complete",
+         "from": [
+          "open"
+         ],
+         "to": "done",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c4",
+         "key": "reopen",
+         "from": [
+          "done"
+         ],
+         "to": "open",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "literal",
+            "value": null
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "validations": [
+       {
+        "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c0",
+        "key": "never_done",
+        "kind": "exclusion",
+        "forbidden_values": [
+         {
+          "kind": "literal",
+          "value": "done"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-0000000000c8",
+      "key": "completed_at",
+      "name": "Completed at",
+      "type": "datetime",
+      "required": false
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

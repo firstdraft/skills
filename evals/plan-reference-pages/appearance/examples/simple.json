@@ -1,0 +1,58 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "garden_log",
+    "name": "Garden Log",
+    "native": {},
+    "delivery": {},
+    "home_index": "plant",
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-1a00-7000-8000-000000000001",
+        "key": "plant",
+        "name": "Plant",
+        "primary_descriptor": {
+          "field": "plant.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-1a00-7000-8000-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "plant.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "plant.name"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "appearance": {
+      "theme": "toggle"
+    }
+  }
+}

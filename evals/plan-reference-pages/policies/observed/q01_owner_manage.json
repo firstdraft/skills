@@ -1,0 +1,90 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`NotePolicy#manage?`",
+      "file": "app/policies/note_policy.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create persists the submitted values",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create rejects a missing title without persisting changes",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: destroy removes the requested record",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: edit accepts a permitted edit request",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: index lists accessible records",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: new accepts a permitted new-record request",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: show shows the requested record",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: update persists the submitted changes",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: update rejects a missing title without persisting changes",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create form browser coverage",
+      "file": "spec/system/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: update form browser coverage",
+      "file": "spec/system/notes_spec.rb"
+    }
+  ]
+}

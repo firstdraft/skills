@@ -1,0 +1,117 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "transit",
+    "name": "Transit",
+    "native": {},
+    "delivery": {},
+    "topics": [
+      {
+        "name": "Fares",
+        "entities": [
+          "fare",
+          "ticket"
+        ]
+      }
+    ],
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000a029",
+        "key": "fare",
+        "name": "Fare",
+        "primary_descriptor": {
+          "field": "fare.amount"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02a",
+            "key": "amount",
+            "name": "Amount",
+            "type": "money",
+            "required": true,
+            "settings": {
+              "currency": "USD"
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "fare.amount"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "fare.amount"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02b",
+        "key": "ticket",
+        "name": "Ticket",
+        "primary_descriptor": {
+          "association": "ticket.fare"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02c",
+            "key": "seat",
+            "name": "Seat",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02d",
+            "key": "fare",
+            "name": "Fare",
+            "targets": [
+              "fare"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.seat"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.seat"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

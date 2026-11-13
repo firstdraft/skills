@@ -1,0 +1,382 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tasks",
+  "name": "Tasks",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0790-7000-8000-000000000001",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000002",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000003",
+      "key": "admin",
+      "name": "Admin",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000004",
+      "key": "projects",
+      "kind": "direct",
+      "name": "Projects",
+      "reference": "project.owner",
+      "side": "referenced"
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000005",
+      "key": "assigned_tasks",
+      "kind": "direct",
+      "name": "Assigned tasks",
+      "reference": "task.assignee",
+      "side": "referenced"
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0790-7000-8000-000000000006",
+    "key": "project",
+    "name": "Project",
+    "primary_descriptor": {
+     "field": "project.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000007",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000008",
+      "key": "archived",
+      "name": "Archived",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000009",
+      "key": "owner",
+      "name": "Owner",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000000a",
+      "key": "tasks",
+      "kind": "direct",
+      "name": "Tasks",
+      "reference": "task.project",
+      "side": "referenced"
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "project.title"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "project.title"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "project.title"
+       },
+       {
+        "field": "project.archived"
+       },
+       {
+        "association": "project.owner"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0790-7000-8000-00000000000b",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000000c",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000000d",
+      "key": "details",
+      "name": "Details",
+      "type": "long_text",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-00000000000e",
+      "key": "priority",
+      "name": "Priority",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "01a0caf3-0790-7000-8000-00000000000f",
+         "key": "low",
+         "name": "Low"
+        },
+        {
+         "subject_uuid": "01a0caf3-0790-7000-8000-000000000010",
+         "key": "medium",
+         "name": "Medium"
+        },
+        {
+         "subject_uuid": "01a0caf3-0790-7000-8000-000000000011",
+         "key": "high",
+         "name": "High"
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000012",
+      "key": "done",
+      "name": "Done",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000013",
+      "key": "due_on",
+      "name": "Due on",
+      "type": "date",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000014",
+      "key": "completed_at",
+      "name": "Completed at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000015",
+      "key": "estimate",
+      "name": "Estimate",
+      "type": "integer",
+      "required": false
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000016",
+      "key": "project",
+      "name": "Project",
+      "targets": [
+       "project"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000017",
+      "key": "assignee",
+      "name": "Assignee",
+      "targets": [
+       "user"
+      ],
+      "required": false,
+      "one_to_one": false,
+      "on_referenced_deleted": "nullify_reference",
+      "immutable": false
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.done"
+       }
+      ],
+      "predicate": "task.open"
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.done"
+       },
+       {
+        "field": "task.due_on"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.priority"
+       },
+       {
+        "field": "task.done"
+       },
+       {
+        "field": "task.due_on"
+       },
+       {
+        "association": "task.project"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.priority"
+       },
+       {
+        "field": "task.done"
+       },
+       {
+        "field": "task.due_on"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": "public"
+     }
+    },
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-0790-7000-8000-000000000018",
+      "key": "open",
+      "name": "Open",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "task.done"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": false
+       }
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

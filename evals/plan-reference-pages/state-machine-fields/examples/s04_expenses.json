@@ -1,0 +1,432 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "expenses",
+  "name": "Expenses",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-0000000002bd",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-0000000002be",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-000000000015",
+    "key": "expense",
+    "name": "Expense",
+    "primary_descriptor": {
+     "field": "expense.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000016",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000014",
+      "key": "status",
+      "name": "Status",
+      "type": "state_machine",
+      "required": true,
+      "settings": {
+       "initial_state": "submitted",
+       "states": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000b",
+         "key": "submitted",
+         "name": "Submitted"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000c",
+         "key": "approved",
+         "name": "Approved"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000d",
+         "key": "declined",
+         "name": "Declined"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000e",
+         "key": "cancelled",
+         "name": "Cancelled"
+        }
+       ],
+       "transitions": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000f",
+         "key": "approve",
+         "from": [
+          "submitted"
+         ],
+         "to": "approved",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "expense.decided_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000010",
+         "key": "decline",
+         "from": [
+          "submitted"
+         ],
+         "to": "declined",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "expense.decided_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000011",
+         "key": "cancel",
+         "from": [
+          "submitted",
+          "approved"
+         ],
+         "to": "cancelled"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000012",
+         "key": "resubmit",
+         "from": [
+          "declined"
+         ],
+         "to": "submitted",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "expense.decided_at",
+           "value": {
+            "kind": "literal",
+            "value": null
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000013",
+         "key": "escalate",
+         "from": [
+          "submitted"
+         ],
+         "to": "approved",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "expense.decided_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          },
+          {
+           "kind": "set_field",
+           "field": "expense.escalated",
+           "value": {
+            "kind": "literal",
+            "value": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000017",
+      "key": "decided_at",
+      "name": "Decided at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000018",
+      "key": "escalated",
+      "name": "Escalated",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000001a",
+      "key": "decline_reason",
+      "name": "Decline reason",
+      "type": "long_text",
+      "required": false,
+      "validations": [
+       {
+        "subject_uuid": "01a0caf3-0770-7000-8000-000000000019",
+        "key": "required_when_declined",
+        "kind": "presence",
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "expense.status"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "declined"
+         }
+        }
+       }
+      ]
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000001b",
+      "key": "waiting",
+      "name": "Waiting",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "expense.status"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": "submitted"
+       }
+      }
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000001c",
+      "key": "editable",
+      "operation": "update",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "expense.status"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": "submitted"
+       }
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "expense.title"
+       },
+       {
+        "field": "expense.status"
+       },
+       {
+        "field": "expense.decided_at"
+       }
+      ],
+      "predicate": "expense.waiting"
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "expense.title"
+       },
+       {
+        "field": "expense.status"
+       },
+       {
+        "field": "expense.decided_at"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "expense.title"
+       },
+       {
+        "field": "expense.decline_reason"
+       }
+      ]
+     },
+     "update": {
+      "authorization": {
+       "policy": "expense.editable"
+      },
+      "inputs": [
+       {
+        "field": "expense.title"
+       },
+       {
+        "field": "expense.decline_reason"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000001d",
+    "key": "laptop",
+    "entity": "expense",
+    "fields": [
+     {
+      "field": "expense.title",
+      "value": {
+       "kind": "literal",
+       "value": "Laptop"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000001e",
+    "key": "team_lunch",
+    "entity": "expense",
+    "fields": [
+     {
+      "field": "expense.title",
+      "value": {
+       "kind": "literal",
+       "value": "Team lunch"
+      }
+     },
+     {
+      "field": "expense.status",
+      "value": {
+       "kind": "literal",
+       "value": "approved"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000001f",
+    "key": "conference_ticket",
+    "entity": "expense",
+    "fields": [
+     {
+      "field": "expense.title",
+      "value": {
+       "kind": "literal",
+       "value": "Conference ticket"
+      }
+     },
+     {
+      "field": "expense.status",
+      "value": {
+       "kind": "literal",
+       "value": "declined"
+      }
+     },
+     {
+      "field": "expense.decline_reason",
+      "value": {
+       "kind": "literal",
+       "value": "Over budget this quarter"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-000000000020",
+    "key": "taxi",
+    "entity": "expense",
+    "fields": [
+     {
+      "field": "expense.title",
+      "value": {
+       "kind": "literal",
+       "value": "Taxi"
+      }
+     },
+     {
+      "field": "expense.status",
+      "value": {
+       "kind": "literal",
+       "value": "cancelled"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

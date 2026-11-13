@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/ordering",
+      "readable_path": "project.scaffold.index.ordering",
+      "reason": "Cursor pagination needs an order of plain columns, which the emitted named Ordering scope is not; the surface falls back to id.",
+      "consequence": "Any surviving Scaffold consumer remains otherwise generated with deterministic id ordering."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.scaffold.index.ordering`",
+      "file": "app/models/project.rb"
+    }
+  ]
+}
