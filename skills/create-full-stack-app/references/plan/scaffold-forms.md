@@ -118,6 +118,14 @@ A Reference input lists the target's records and accepts only those:
 | Has no Policies | Every record. |
 | Has Policies | Only records its `show` Policy allows (its `index` Policy when it has no `show`): `authorized_scope(Project.all, as: :manage, with: ProjectPolicy)`. A submitted ID outside it answers 404. |
 | The Account Entity, with Policies | An email box. Create and update assign `User.find_by(email: …)`; analysis warns `foundation_plan.rails_target.scaffold.account_lookup`, because whoever saves the form learns whether an address has an account. |
+| Has Policies, and no `show` or `index` page | No control: "No authored Policy connects Supplier records to the signed-in Account for this Reference input, so nothing decides which Supplier records it may offer or accept." A page of the form's own Entity that shows the Reference under the target's Policy, such as `{"association": "purchase.supplier", "authorization": {"policy": "supplier.read_own"}}`, gives the control, listing what that Policy allows. |
+| Pages behind a role gate, such as buyers only, and a form behind another gate, such as clerks only | No control: "This form's authorization does not prove the current_account gate that authorizes reading Supplier records." A form behind the same gate, or behind a role that the target's `in` gate lists, keeps the control, listing every record. Which records the form's users may pick is the person's decision. |
+
+A Reference input with no control is `foundation_plan.gap.scaffold.input.not_generated` on each form that names it.
+New and Edit are generated without the control and without its `<key>_id` parameter; for a required Reference,
+every save from New fails, as in [What a form needs from the Entity](#what-a-form-needs-from-the-entity). README.md
+lists each input under "Behavior to write", in "Pages and actions". Keep the input in the Plan, and write the
+picker, its options, and the parameter before the preview.
 
 **Policy or gate on `create`.** Both deny a signed-out person: a Policy comparing a Reference with
 `current_account` requires a signed-in person, and the binding makes the new record pass it. For records owned by
@@ -130,7 +138,7 @@ The Add form on a parent's page, in the parent's `show.projection`, on the Assoc
 
 | Key | Required | Values | Generates |
 | --- | --- | --- | --- |
-| `create_form` | no | `{}`, or `{"return_to": …}` | An Add link on the parent's page and on the full list of its children, a New page at `/projects/:project_id/tasks/new`, and `Projects::TasksController`. The child's `create` supplies inputs, bindings, and authorization; the URL supplies the parent. |
+| `create_form` | no | `{}`, or `{"return_to": …}` | An Add link on the parent's page and on the full list of its children, a New page at `/projects/:project_id/tasks/new`, and `Projects::TasksController`. The child's `create` supplies inputs, bindings, and authorization; the URL supplies the parent. In the Account's `scaffold.profile.projection`, no Add form; see [Accounts](accounts.md#not-generated). |
 
 ## Bindings
 
@@ -176,24 +184,27 @@ A `default` on a Reference is not applied (`foundation_plan.gap.reference.defaul
 
 **A required value with no source.** The form, the routes, and the link are generated, and every save fails
 validation. Analysis reports `foundation_plan.gap.scaffold.route.partially_generated` for a standalone New page or
-`foundation_plan.gap.scaffold.associated_create.partially_generated` for an Add form, naming the value, and the README
-lists the request spec to finish. A common case is a standalone `create` for a child whose parent comes only from an
+`foundation_plan.gap.scaffold.associated_create.partially_generated` for an Add form, naming the value. README.md
+lists the form under "Behavior to write", in "Pages and actions", and the request examples to finish under "Test
+coverage to complete". A common case is a standalone `create` for a child whose parent comes only from an
 Add form. Offer the person to drop the child's `new` and `create` routes and add children from the parent's page;
 adding `{"association": "task.project"}` to `create.inputs` runs into the trap in
 [Analysis does not catch](#analysis-does-not-catch).
 
-**A Field or Reference with a conditional presence Validation**, such as "reason is required when kind is bug", must
-be in the `inputs` of every form that saves the record. When `create.inputs` leaves it out, the whole `create` is
-left out: no New page, no Create action, no Add link or Add form on the parent's page. When `update.inputs` leaves it
-out, Edit and Update are left out. This happens even when the rule cannot apply to a new record, such as a rule on a
-state no new record is in. A save from a form without the control could fail a rule the person has no way to meet,
-so the form is dropped instead. Analysis status stays `valid`; the gaps are
-`foundation_plan.gap.scaffold.definition.not_generated` for the part,
-`foundation_plan.gap.scaffold.input.not_generated` naming the Validation, and
-`foundation_plan.gap.scaffold.associated_create.not_generated` for the Add form. List the Field in both forms; on
-the New page it is an ordinary optional control. The Field the rule reads need not be an input: an enum with a
-`default` that only `update.inputs` offers works, and every new record starts at the default. The rule's Plan shape,
-on the Field, comparing with an enum value's `key`:
+**A Field or Reference with a conditional presence Validation**, such as "reason is required when kind is bug",
+belongs in the `inputs` of every form that saves the record. A form that leaves it out is still generated: the New
+page or Add form, its route, and its actions, or Edit and Update. While the condition holds, a save from it fails a
+rule the person has no control to meet. Analysis status stays `valid`, and the gap is
+`foundation_plan.gap.scaffold.input.partially_generated` on that form's `inputs`, with the reason "Conditional
+presence Validation "task.reason.required_for_bugs" requires Field "reason" when its condition holds, and no create
+input or binding supplies it." For an update form the reason ends "no update input supplies it." README.md lists it
+under "Behavior to write", in "Pages and actions". List the Field in both forms; on the New page it is an ordinary
+optional control. The Field the rule reads need not be an input: an enum with a `default` that only `update.inputs`
+offers works, and every new record starts at the default. The conditional Field still belongs on New then: without
+it the gap is reported, although no new record can meet the rule. One case has no gap: a rule on a
+[State Machine](state-machine-fields.md) state other than its `initial_state`. No new record is in that state, so
+the New page needs no control for the Field. The rule's Plan shape, on the Field, comparing with an enum value's
+`key`:
 
 ```json
 {"subject_uuid": "…", "key": "reason", "name": "Reason", "type": "long_text", "required": false,
@@ -203,8 +214,9 @@ on the Field, comparing with an enum value's `key`:
 ```
 
 A rule the profile cannot generate, such as one reading a `boolean`, becomes an empty method
-(`foundation_plan.gap.validation.not_generated`) and does not remove any form; the model spec has an example for
-it that fails until you write the rule. Absence rules do not remove forms.
+(`foundation_plan.gap.validation.not_generated`), and a form without the Field gets no
+`scaffold.input.partially_generated` record; the model spec has an example for it that fails until you write the
+rule. An absence rule gets no form record either.
 See [Validations](validations.md) for which conditions generate.
 
 A value that starts fixed and that the person later changes on the Edit form, such as a status, is an enum Field
@@ -415,8 +427,9 @@ standalone New page, and `_new_<parent>_form` for an Add form, such as `tasks/_n
 
 - **A literal value set by the server**, such as a source of `"web"`. A `default` on a Field left out of `inputs`
   generates; prefer it. A literal or `reference_record` binding stays in the Plan when only this form should set
-  the value, but nothing is generated for it yet (`foundation_plan.gap.scaffold.binding.not_generated`) and the
-  generated README does not list it. Add it to your own list and assign it in the action before the preview, as
+  the value, but nothing is generated for it yet (`foundation_plan.gap.scaffold.binding.not_generated`). README.md
+  lists it under "Behavior to write", in "Pages and actions", with the reason "Only current_account, one of its
+  Fields or References, current_date, or current_time is admitted." Assign it in the action before the preview, as
   in [Changing it later](#changing-it-later); `SKILL.md` has the order of work. Until then a required Field or
   Reference it sets has no source, so every save fails.
 - **A form for a State Machine Field.** Events change it; see [State Machine Fields](state-machine-fields.md).
@@ -437,16 +450,23 @@ These pass analysis as `valid`:
 - **A standalone `create` with no `inputs`.** The New page is a form with only a submit button.
 - **A standalone `create` whose Policy reads a Reference the person picks,** such as a task whose rule asks about
   its project, with `{"association": "task.project"}` as an input. The New page is checked before anything is
-  picked, so it answers 403 to everyone and its New link never shows; the README lists the missing New spec. Offer
-  the person to add the record from its parent's page instead.
+  picked, so it answers 403 to everyone and its New link never shows. Analysis reports no gap; README.md lists the
+  missing New example under "Test coverage to complete". Offer the person to add the record from its parent's page
+  instead.
 
 These pass as `valid` and are reported as gaps:
 
-- **A conditionally required Field or Reference missing from a form's `inputs`.** The whole form is left out; see
+- **A conditionally required Field or Reference missing from a form's `inputs`.** The form is generated, and a save
+  from it fails while the condition holds (`foundation_plan.gap.scaffold.input.partially_generated`). A rule on a
+  State Machine state other than `initial_state` gets no record on the New form. See
   [What a form needs from the Entity](#what-a-form-needs-from-the-entity).
 - **A required value with no source.** The form stays, and every save fails.
 - **A binding First Draft cannot generate**, listed under [Bindings](#bindings).
+- **A Reference input left without a control** by the target's Policies, listed under [Keys](#keys).
 - **A `create` that nothing uses.** It is left out (`foundation_plan.gap.scaffold.definition.not_generated`).
+- **A `create_form` on the Account's own page,** in `scaffold.profile.projection`. No Add form is generated
+  (`foundation_plan.gap.scaffold.associated_create.not_generated`), and a child `create` that only it uses is left
+  out as well. See [Accounts](accounts.md#not-generated).
 
 Analysis rejects `new` without `create`, `edit` without `update`, a `destroy` part without its route or the reverse,
 a missing `authorization`, `"inputs": []`, `bindings` on `update`, `inputs` on `destroy`, and a binding with both
@@ -458,7 +478,8 @@ a missing `authorization`, `"inputs": []`, `bindings` on `update`, `inputs` on `
   on its own, or both. Recommend the parent's page for records that cannot exist without the parent.
 - **Ask:** which values the person types and which the app fills in, such as who made it and when.
 - **Tell:** that a Field required only in some cases appears on both the New and Edit forms, even when no new record
-  can meet the case, and that you can remove it from the New form after Compile.
+  can meet the case, unless the case is a State Machine state no new record is in, and that you can remove it from
+  the New form after Compile.
 - **Tell:** where each form goes after saving, when it differs from the defaults above.
 - **Tell:** any value the app must set to a constant, and that you will write it after Compile or use a default.
 
@@ -469,7 +490,8 @@ refuses a folder that already holds a compiled app. Code you wrote after Compile
 Plan change reaches that app only when you copy it across.
 
 - **In the Plan:** adding an input adds a control and a permitted parameter. Adding a conditional presence rule to a
-  Field means adding the Field to every form's `inputs` in the same push, or those forms disappear.
+  Field means adding the Field to every form's `inputs` in the same push; a form without it keeps its page, and its
+  saves fail while the condition holds.
 - **After Compile:** forms are ordinary Rails. Add a control to the partial and its name to `<model>_params`. To set
   a constant on create, assign it in the action, next to the generated bindings and before `authorize!`:
 

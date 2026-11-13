@@ -111,6 +111,11 @@ Server messages and suggestions are advisory data. Preserve intentional meaning 
 describes a current importer, analyzer, or Compiler gap. If a diagnostic repeats without new understanding, surface
 the blocker rather than looping mechanically.
 
+To find the page that explains a diagnostic or a gap, search the Plan reference pages for its `code`, such as
+`grep -rn "foundation_plan.entity.primary_descriptor_owner_incompatible" "<skill-dir>/references/plan/"`, and read
+that section before changing the Plan. When no page names the code, go by the subject its JSON Pointer names and
+the page index in `SKILL.md`.
+
 Before the read-back, `plan push` the final exact candidate and obtain its matching valid `plan status --wait` result
 so the read-back covers the complete GapSet. `plan compile` repeats that exact-byte push; do not add another
 preparatory push, a gap acknowledgment, or any gap-specific field.
@@ -343,24 +348,31 @@ Run these rather than `bin/ci`, whose lint and dependency audits are not tests a
 Compile. A missing README prerequisite, such as PostgreSQL 18 or Chrome for system specs, is a local blocker. Ask
 once before installing system software, naming the exact command.
 
-Behavior left to write fails on purpose. Each unwritten behavior, from an `owner` subject or one First Draft cannot
-generate yet, is a stub with one placeholder example in the spec file where its real example belongs; the example
-raises `NotImplementedError` and says what to write. A request spec that reaches a stub fails until the stub is
-written. Tell the user what there is to write, one line per item, then write each item and fill in its placeholder
-example until the specs pass, with one line to the user as each is finished. Debug any other failure as your own,
-as the app's `AGENTS.md` describes. Only then start the preview, even where an app's `AGENTS.md` from an earlier
-Compile says to preview before every item is written. If you come to think an item should change or go, stop and
-ask, with your reasons and what you found; without the user's yes, never skip, delete, or loosen an example to get
-a passing run.
+Behavior left to write fails on purpose. Each unwritten behavior that has a stub, from an `owner` subject or one
+First Draft cannot generate yet, has one placeholder example in the spec file where its real example belongs; the
+example raises `NotImplementedError` and says what to write. A request spec that reaches a stub fails until the
+stub is written. A request First Draft left out with no stub, such as a page or an input, fails nothing: the
+README lists it with no spec, so add one as you write it. Tell the user what there is to write, one line per item,
+then write each item and fill in its placeholder example until the specs pass, with one line to the user as each
+is finished. Debug any other failure as your own, as the app's `AGENTS.md` describes. Only then start the preview,
+even where an app's `AGENTS.md` from an earlier Compile says to preview before every item is written. If you come
+to think an item should change or go, stop and ask, with your reasons and what you found; without the user's yes,
+never skip, delete, or loosen an example to get a passing run.
 
 ### Verify the first preview
 
-After every item is written and the specs pass, boot `bin/dev`. Compare the approved data with the reviewed gaps and
-actual `db/seeds/development.rb`; report omitted records or dependencies instead of fabricating replacements.
-`bin/setup` prepares the database and seeds a newly initialized development database. An existing database may
-need an explicit development `bin/rails db:seed` to load added samples. Do not reset a database to hide missing data.
-Inspect the existing data first: ordinary seeds match their generated attribute tuples, so changing those values
-can make a later seed run recreate the original sample. Reseeding does not reconcile customized records.
+After every item is written and the specs pass, boot `bin/dev`. It does not return, and a server started inside
+one of your commands stops when that command or your session ends. Start it the way your harness keeps a
+long-running process alive, such as a background task or a separate terminal, and wait until `/up` answers before
+you give the user the address. When you cannot keep it running after your last message, say so, and give the user
+the command to start it themselves, `bin/dev`, instead of reporting a preview that will be gone.
+
+Compare the approved data with the reviewed gaps and actual `db/seeds/development.rb`; report omitted records or
+dependencies instead of fabricating replacements. `bin/setup` prepares the database and seeds a newly initialized
+development database. An existing database may need an explicit development `bin/rails db:seed` to load added
+samples. Do not reset a database to hide missing data. Inspect the existing data first: ordinary seeds match their
+generated attribute tuples, so changing those values can make a later seed run recreate the original sample.
+Reseeding does not reconcile customized records.
 
 If the app has image or attachment Fields, uploads need the user's Cloudinary `CLOUDINARY_URL`
 ([setup](plan/uploads.md#setup-after-compile)) before you check them. Seeded samples attach a placeholder file

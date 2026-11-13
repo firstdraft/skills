@@ -91,8 +91,8 @@ it "enforces event.starts_on.not_in_past" do
 end
 ```
 
-Analysis reports no gap for it. README.md lists `Event#not_in_past` under "Behavior to write" with the description,
-"adding its error to `starts_on`", and says that until then the model accepts records it should reject.
+Analysis reports no gap for it. README.md lists `Event#not_in_past` under "Behavior to write", in Rules, with the
+description, "adding its error to `starts_on`", and says that until then the model accepts records it should reject.
 
 ## Keys
 
@@ -136,12 +136,12 @@ Settings for each kind:
 
 | Kind | Settings | Generates |
 | --- | --- | --- |
-| `presence`, `absence` | `when`, required | `validates :dress_code, presence: true, if: :vip?`. Text counts as absent when blank. No model spec. A conditional `absence` on a Field the form offers also costs the create and update request specs (see [Analysis does not catch](#analysis-does-not-catch)). |
+| `presence`, `absence` | `when`, required | `validates :dress_code, presence: true, if: :vip?`. Text counts as absent when blank. No model spec. A conditional `absence` on a Field the form offers also costs the create and update request specs, and a conditional `presence` on a Field or Reference that a form leaves out is a gap on that form (see [Analysis does not catch](#analysis-does-not-catch)). |
 | `length` | at least one of `minimum`, `maximum` (whole numbers), or `exact_length` alone | `length: {minimum: 3, maximum: 8, allow_nil: true}` or `{is: 6, allow_nil: true}`. An unconditional `maximum` or `exact_length` on `short_text` also sets the column `limit` and the input `maxlength`. Analysis rejects `minimum` above `maximum` (`foundation_plan.validation.length_bounds_inconsistent`) and `exact_length` with a bound (import). |
 | `format` | exactly one of `matches` or `does_not_match`, each `{"source": "<Ruby regexp>"}` with optional `"case_insensitive"` (default `false`) | `format: {with: Regexp.new("\\A[A-Z0-9]+\\z", 0, timeout: 1.0), allow_nil: true}`; `case_insensitive: true` gives option `1`. No model spec. Only `matches` in the narrow grammar below generates. |
 | `comparison` on a Field | `comparisons`: one or more `{"operator": …, "right": …}` | See [Comparisons](#comparisons). |
 | `exclusion` | `forbidden_values`: one or more literals, `[{"kind": "literal", "value": "ADMIN"}]` | Never; left out. |
-| `uniqueness` (Entity) | `targets` (Fields and References of this Entity), `nulls` (`"distinct"` or `"not_distinct"`), `error_target` (one of `targets`) | See [Uniqueness](#uniqueness). |
+| `uniqueness` (Entity) | `targets` (Fields and References of this Entity, each `{"field": "<entity>.<key>"}` or `{"reference": "<entity>.<key>"}`), `nulls` (`"distinct"` or `"not_distinct"`), `error_target` (one of `targets`) | See [Uniqueness](#uniqueness). |
 | `comparison` (Entity) | `left` (a path such as `{"target": {"field": "event.ends_on"}}`), `comparisons`, `error_target` | See [Comparisons](#comparisons). |
 
 ### Format patterns that generate
@@ -377,7 +377,7 @@ coverage to complete lists them (see [Scaffold forms](scaffold-forms.md)).
 
 Each rule in this section is accepted, and the model gets a `validate` line and an empty private method named after
 the rule's `key`. Records the rule should reject save until you write the method. The model spec has an example for
-it that fails until then. README.md lists the rule under "Behavior to write". Write it before the preview;
+it that fails until then. README.md lists the rule under "Behavior to write", in Rules. Write it before the preview;
 `SKILL.md` has the order of work.
 
 ### A rule a kind can say
@@ -492,7 +492,18 @@ These pass as `valid`:
 - **A uniqueness rule over a single Reference.** Left out, with a unique index. Use `"one_to_one": true`.
 - **A conditional absence rule on a Field a form offers.** First Draft does not build request input that satisfies
   the rule and its condition, so the create and update request specs, and the form's system specs, move to README's
-  Test coverage to complete. A conditional `presence` rule keeps them.
+  Test coverage to complete. A conditional `presence` rule keeps the request specs, but the forms' system specs
+  move there too.
+- **A conditional `presence` rule on a Field or Reference that a form leaves out of its `inputs`.** The form is
+  generated with its page, route, and actions, and a save fails the rule whenever its condition holds, since no
+  input can meet it (`foundation_plan.gap.scaffold.input.partially_generated`). README.md lists the form under
+  "Behavior to write", in Pages and actions. For a ticket's steps, required when the ticket is a bug and left off
+  the New form, its reason reads `Conditional presence Validation "ticket.steps.needed_for_bugs" requires Field
+  "steps" when its condition holds, and no create input or binding supplies it.` For an update form the reason ends
+  `no update input supplies it.` There is no gap when the condition cannot hold for a new record, such as a State
+  Machine Field compared with a state other than its initial state: a decline reason required when an expense is
+  declined can stay off the New form, though not off the edit form. Add the input to the form, or write code that
+  supplies the value, before the preview.
 
 Analysis does reject: a literal outside an enum's values or of the wrong type
 (`foundation_plan.expression.literal_type_incompatible`), a misspelled Field (`foundation_plan.link.field_not_found`),
@@ -526,6 +537,9 @@ Plan change reaches that app only when you copy it across.
   index or a column limit in the create migration.
 - **After Compile:** each generated rule is an ordinary `validates` line in `app/models/<model>.rb`; change it and its
   spec together. To write a left-out or `owner` rule, fill in its empty method, and replace its placeholder example,
-  if it has one, with a record that breaks the rule and one that passes. An index or column limit change in an app
-  with data needs a new migration. Custom wording goes in `config/locales/en.yml` under
+  if it has one, with a record that breaks the rule and one that passes. The rule can then reject values First
+  Draft chose before the rule existed: a factory's samples in `spec/factories/`, the values a request or system
+  example submits, and the sample records in `db/seeds/development.rb`. Change those values so that they pass the
+  rule, and keep each example's expectations. An index or column limit change in an app with data needs a new
+  migration. Custom wording goes in `config/locales/en.yml` under
   `activerecord.errors.models.<model>.attributes.<attribute>.<error>`.

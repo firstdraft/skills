@@ -16,9 +16,9 @@ development belong in [development data](development-data.md).
   reference records, and Reference form inputs that offer the seeded rows.
 - **You write after Compile:** the code behind a Reference default that names a record, and behind every Predicate,
   Validation, Policy, or create binding that names a record; and any change to rows that already exist. Declare
-  the default, Predicate, Validation, Policy, or binding in the Plan anyway. All but the binding become a failing
-  spec and a README entry that tell you what to write. The README does not list a binding as behavior to write, so
-  add it to your own list. Write them before the preview; `SKILL.md` has the order of work.
+  the default, Predicate, Validation, Policy, or binding in the Plan anyway. Each becomes a README entry under
+  "Behavior to write" that tells you what to write, and all but the binding also get a failing spec. Write them
+  before the preview; `SKILL.md` has the order of work.
 
 ## Simple example
 
@@ -225,11 +225,11 @@ Every place a Plan names a record writes `{"kind": "reference_record", "record":
 | A [development record](development-data.md)'s `references[]` | `billing = Category.find_by!(code: "billing")` in `db/seeds/development.rb`, then `Task.find_or_create_by!(…, category: billing)` with every value of the record in the lookup. | |
 | Another reference record's `references[]` | `topic.category = billing` in `db/seeds.rb`. | A link to a development record: the reference record is left out (`foundation_plan.gap.reference_data.record.not_generated`). |
 | A Reference input in a [Scaffold form](scaffold-forms.md) | A searchable select of every row of the target table. | A way to offer only some rows, such as active ones. |
-| A [Reference](references.md) `default`, such as new tasks starting in General (shape below) | The column, `belongs_to`, a failing spec, and a README entry under "Behavior to write". | The default (`foundation_plan.gap.reference.default_not_generated`). Until you write it, a record saved without the Reference fails `must exist`. |
+| A [Reference](references.md) `default`, such as new tasks starting in General (shape below) | The column, `belongs_to`, a failing spec, and a README entry under "Behavior to write", in Data. | The default (`foundation_plan.gap.reference.default_not_generated`). Until you write it, a record saved without the Reference fails `must exist`. |
 | A [Predicate](predicates.md) comparing a Reference with a record, by `equals`, `not_equals`, or `in` (shape below) | The scope, as a stub that raises `NotImplementedError`, and a placeholder example in the model spec that fails until you replace it. | The filter (`foundation_plan.gap.predicate.not_generated`). A list whose `scaffold.index.predicate` names it raises on every visit. A Predicate through the Reference to the identity Field, such as `category.code` equals `"billing"`, is not generated either. |
 | A [Validation](validations.md) `when` comparing a Reference with a record | An empty method named after the Validation, and a placeholder example in the model spec. | The rule (`foundation_plan.gap.validation.not_generated`). |
 | A [Policy](policies.md) rule comparing a Reference with a record | A rule that returns `false`, a scope that raises, and a placeholder example in the Policy spec. | The rule (`foundation_plan.gap.policy.not_generated`). The gap's reason says reference data is not generated; the seeds are, and only the rule is missing. |
-| A `create.bindings[]` value | Nothing. | The binding (`foundation_plan.gap.scaffold.binding.not_generated`). README.md does not list it as behavior to write; it lists the create request specs left missing under "Test coverage to complete". Keep it in the Plan when the person asked for it, and write it in the create action. Create is reported `foundation_plan.gap.scaffold.route.partially_generated`; with a required Reference, every create fails `must exist` until you do. |
+| A `create.bindings[]` value | Nothing. | The binding (`foundation_plan.gap.scaffold.binding.not_generated`). README.md lists it under "Behavior to write", in Pages and actions, and the create request specs left missing under "Test coverage to complete". Keep it in the Plan when the person asked for it, and write it in the create action. Create is reported `foundation_plan.gap.scaffold.route.partially_generated`; with a required Reference, every create fails `must exist` until you do. |
 
 A Reference `default` sits on the Reference:
 
