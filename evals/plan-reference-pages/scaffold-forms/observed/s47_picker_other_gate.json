@@ -51,6 +51,18 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
+      "title": "`purchase.supplier`",
+      "file": "app/controllers/purchases_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`purchase.depot`",
+      "file": "app/controllers/purchases_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
       "title": "`purchase.depot`",
       "file": "app/controllers/purchases_controller.rb"
     },

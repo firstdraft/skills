@@ -44,6 +44,12 @@
       "group": "Data",
       "title": "`order.shipping_preferences`",
       "file": "app/models/order.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.gateway_response`",
+      "file": "app/models/order.rb"
     }
   ]
 }

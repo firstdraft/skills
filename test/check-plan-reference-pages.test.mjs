@@ -10,8 +10,9 @@ import {
   checkPlanReferencePages,
   holdsLine,
   lineCandidates,
-  readmeEntries,
+  readmeItems,
   skipsLine,
+  squeeze,
 } from "../script/check-plan-reference-pages.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -111,13 +112,51 @@ test("a block that one compiled example holds passes, with the page's own lines 
   assert.deepEqual(check(), { findings: [], notes: [], pageCount: 1, exampleCount: 2 });
 });
 
-test("a line the page rewrapped matches once whitespace is ignored, if it is long enough", () => {
-  const application = { text: "has_many :parts,\ndependent: :destroy", squeezed: "has_many:parts,dependent::destroy" };
+const application = (...lines) => ({ text: lines.join("\n"), squeezed: lines.map(squeeze).join("") });
 
-  assert.equal(application.text.includes("has_many :parts, dependent: :destroy"), false);
-  assert.equal(holdsLine(application, lineCandidates("  has_many :parts, dependent: :destroy")), true);
-  assert.equal(holdsLine(application, lineCandidates("parts,depend")), true);
-  assert.equal(holdsLine(application, lineCandidates("parts,dep")), false);
+test("a line the page rewrapped matches once whitespace is ignored, if it is long enough", () => {
+  const model = application("has_many :parts,", "dependent: :destroy");
+
+  assert.equal(model.text.includes("has_many :parts, dependent: :destroy"), false);
+  assert.equal(holdsLine(model, lineCandidates("  has_many :parts, dependent: :destroy", "ruby")), true);
+  assert.equal(holdsLine(model, lineCandidates("parts,depend", "ruby")), true);
+  assert.equal(holdsLine(model, lineCandidates("parts,dep", "ruby")), false);
+});
+
+test("a rewrapped line must match the inside of each string literal as written", () => {
+  const schema = application('t.index ["post_id"], name: "index_comments_on_post_id",', 'where: "(post_id IS NOT NULL)"');
+  const quoted = 't.index ["post_id"], name: "index_comments_on_post_id", where: "(post_id IS NOT NULL)"';
+
+  assert.equal(holdsLine(schema, lineCandidates(quoted, "ruby")), true);
+  assert.equal(holdsLine(schema, lineCandidates(quoted.replace("IS NOT", "IS NOT "), "ruby")), true);
+  assert.equal(holdsLine(schema, lineCandidates(quoted.replace("NOT NULL", "NOTNULL"), "ruby")), false);
+  assert.equal(holdsLine(schema, lineCandidates(quoted.replace("index_comments", "index _comments"), "ruby")), false);
+});
+
+test("a comment marker inside a string literal does not end the line", () => {
+  const seeds = application('ada.password = "a development passphrase" if ada.new_record? || !ada.password?');
+  const changed = 'ada.password = "a development # different passphrase" if ada.new_record? || !ada.password?';
+
+  assert.deepEqual(lineCandidates(changed, "ruby"), [changed]);
+  assert.equal(holdsLine(seeds, lineCandidates(changed, "ruby")), false);
+  assert.equal(holdsLine(seeds, lineCandidates('ada.password = "a development passphrase" # set once', "ruby")), true);
+  assert.deepEqual(lineCandidates("it 'ends # here' # a note # and more", "ruby"), [
+    "it 'ends # here' # a note # and more",
+    "it 'ends # here' # a note",
+    "it 'ends # here'",
+  ]);
+});
+
+test("each fence language removes only its own trailing comment", () => {
+  assert.deepEqual(lineCandidates('<%= link_to "Edit" %> <%# shown to owners %>', "erb"), [
+    '<%= link_to "Edit" %> <%# shown to owners %>',
+    '<%= link_to "Edit" %>',
+  ]);
+  assert.deepEqual(lineCandidates("<%= link_to 'Edit' # shown %>", "erb"), ["<%= link_to 'Edit' # shown %>"]);
+  assert.deepEqual(lineCandidates('let path = "/notes" // tab', "swift"), ['let path = "/notes" // tab', 'let path = "/notes"']);
+  assert.deepEqual(lineCandidates('let path = "/notes" # tab', "swift"), ['let path = "/notes" # tab']);
+  assert.deepEqual(lineCandidates("let title = \"Don't\" // tab", "swift"), ["let title = \"Don't\" // tab", "let title = \"Don't\""]);
+  assert.deepEqual(lineCandidates("<p class=\"note\"> # x</p>", "html"), ["<p class=\"note\"> # x</p>"]);
 });
 
 test("a block whose lines only two examples together hold names the other example", (t) => {
@@ -176,13 +215,30 @@ test("a changed status, diagnostic, and Compile outcome are listed in the exampl
   ]);
 });
 
-test("a README entry that moved is listed with where it was and where it is", (t) => {
+test("a README item that moved is listed with where it was and where it is", (t) => {
   const { write, check } = fixture(t);
   write("compiled/widgets/examples/plain/README.md", readme.replace("### Data", "### Rules"));
 
   assert.deepEqual(check().findings, [
-    "widgets/plain: 1 README entry changed (Behavior to write > Data: `widget.shine` in app/models/widget.rb: " +
+    "widgets/plain: 1 README item changed (Behavior to write > Data: `widget.shine` in app/models/widget.rb: " +
       "group from Data to Rules): reread widgets.md",
+  ]);
+});
+
+test("an item removed from an entry that names several is listed", (t) => {
+  const { write, check } = fixture(t);
+  const second = " and **`widget.gloss`** (`app/models/widget.rb`) at `/application/entities/0/fields/2`";
+  write("examples/widgets/observed/plain.json", {
+    ...result({ gaps: [gap] }),
+    readme: [readmeEntry, { ...readmeEntry, title: "`widget.gloss`" }],
+  });
+  write("compiled/widgets/examples/plain/README.md", readme.replace("fields/1`", `fields/1\`${second}`));
+  assert.deepEqual(check().findings, []);
+
+  write("compiled/widgets/examples/plain/README.md", readme);
+  assert.deepEqual(check().findings, [
+    "widgets/plain: 1 README item removed (Behavior to write > Data: `widget.gloss` in app/models/widget.rb): " +
+      "reread widgets.md",
   ]);
 });
 
@@ -241,15 +297,20 @@ test("a missing result or observed file is a finding", (t) => {
   ]);
 });
 
-test("README entries keep their section, group, bold title, and the file their subject names", () => {
+test("README items keep their entry's section and group, their bold title, and the file each names", () => {
   const source = [
     "## Setup and run",
     "- **Not an entry** (`bin/setup`)",
     "## Behavior to write",
     "- **`Task#archive!`** (`app/models/task.rb`) raises until you write it.",
+    "- **`Task.due_soon`** (`app/models/task.rb`) returns what `task.due_soon` describes: Tasks due soon. " +
+      "**`Task#due_soon?`** answers the same for one record. Home (`/`) raises.",
     "### Rules",
     "- **`TaskPolicy#read?`** and its `:read` relation scope (`app/policies/task_policy.rb`) allow it. Home (`/`) raises.",
-    "- **`scaffold.authorization`** at `/application/entities/1` and **`scaffold.authorization`** at `/b` in `.firstdraft/submitted-foundation-plan.json`: Write it (`app/x.rb`).",
+    "- **`scaffold.authorization`** at `/application/entities/1` and **`scaffold.authorization`** at `/b` in " +
+      "`.firstdraft/submitted-foundation-plan.json`: Write it (`app/x.rb`).",
+    "- **`item.starts_on`** (`app/models/item.rb`) at `/a`, **`item.zone`** at `/b`, and **`tag.name`** " +
+      "(`app/models/tag.rb`) at `/c` in `.firstdraft/submitted-foundation-plan.json`: Write each default.",
     "```sh",
     "## Not a heading",
     "```",
@@ -260,10 +321,16 @@ test("README entries keep their section, group, bold title, and the file their s
     "- **Project tasks: index lists accessible records** (`spec/requests/projects/tasks_spec.rb`): needs setup.",
   ].join("\n");
 
-  assert.deepEqual(readmeEntries(source), [
+  assert.deepEqual(readmeItems(source), [
     { section: "Behavior to write", group: null, title: "`Task#archive!`", file: "app/models/task.rb" },
+    { section: "Behavior to write", group: null, title: "`Task.due_soon`", file: "app/models/task.rb" },
+    { section: "Behavior to write", group: null, title: "`Task#due_soon?`", file: null },
     { section: "Behavior to write", group: "Rules", title: "`TaskPolicy#read?`", file: "app/policies/task_policy.rb" },
     { section: "Behavior to write", group: "Rules", title: "`scaffold.authorization`", file: null },
+    { section: "Behavior to write", group: "Rules", title: "`scaffold.authorization`", file: null },
+    { section: "Behavior to write", group: "Rules", title: "`item.starts_on`", file: "app/models/item.rb" },
+    { section: "Behavior to write", group: "Rules", title: "`item.zone`", file: null },
+    { section: "Behavior to write", group: "Rules", title: "`tag.name`", file: "app/models/tag.rb" },
     { section: "Behavior to write", group: "Rules", title: "`/application/delivery`", file: null },
     { section: "What you supply", group: null, title: "`application.native.ios`", file: "ios/" },
     {
@@ -296,14 +363,10 @@ test("the page's notes, elisions, and closing tokens are not checked, and a trai
   for (const line of ["# frozen_string_literal: true", 'BigDecimal("1")...BigDecimal("2")', "def (...)"]) {
     assert.equal(skipsLine(line), false, line);
   }
-  assert.deepEqual(lineCandidates("  validates :name # the page's note # and more"), [
+  assert.deepEqual(lineCandidates("  validates :name # the page's note # and more", "ruby"), [
     "validates :name # the page's note # and more",
     "validates :name # the page's note",
     "validates :name",
-  ]);
-  assert.deepEqual(lineCandidates('<%= link_to "Edit" %> <%# shown to owners %>'), [
-    '<%= link_to "Edit" %> <%# shown to owners %>',
-    '<%= link_to "Edit" %>',
   ]);
 });
 

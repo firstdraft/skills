@@ -35,6 +35,18 @@
       "file": "app/models/rental.rb"
     },
     {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`rental.cleaning_fee`",
+      "file": "app/models/rental.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`rental.deposit`",
+      "file": "app/models/rental.rb"
+    },
+    {
       "section": "Test coverage to complete",
       "group": null,
       "title": "Rental: create form browser coverage",

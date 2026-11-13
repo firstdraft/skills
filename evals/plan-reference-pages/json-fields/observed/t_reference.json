@@ -38,6 +38,12 @@
       "group": "Data",
       "title": "`product.specifications`",
       "file": "app/models/product.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`product.supplier_record`",
+      "file": "app/models/product.rb"
     }
   ]
 }

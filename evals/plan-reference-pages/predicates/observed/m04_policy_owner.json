@@ -38,6 +38,12 @@
     {
       "section": "Behavior to write",
       "group": null,
+      "title": "`Task#due_soon?`",
+      "file": null
+    },
+    {
+      "section": "Behavior to write",
+      "group": null,
       "title": "`Task.urgent`",
       "file": "app/models/task.rb"
     },

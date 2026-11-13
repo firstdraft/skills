@@ -56,6 +56,18 @@
       "file": "app/controllers/tasks_controller.rb"
     },
     {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.source`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.stage`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
       "section": "Test coverage to complete",
       "group": null,
       "title": "Project tasks: create persists the submitted values",

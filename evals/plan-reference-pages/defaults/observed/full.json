@@ -26,6 +26,12 @@
       "group": "Data",
       "title": "`expense.amount`",
       "file": "app/models/expense.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`expense.mileage_rate`",
+      "file": "app/models/expense.rb"
     }
   ]
 }

@@ -55,9 +55,11 @@ An observed result is the service's output for the example, described in its
   (`"stage": "analysis"`). `pointer` is the JSON Pointer into the Plan, or `null` for a position in malformed JSON.
 - `gaps` holds the GapSet's records in order. `compile` is `succeeded`, or `null` when analysis did not find the Plan
   valid.
-- `readme` holds each entry of the generated README's "Behavior to write", "What you supply", and "Test coverage to
-  complete" sections: its section, its `###` group heading or `null`, its bold title as written, and the file in
-  parentheses before the entry's first sentence, or `null`.
+- `readme` holds one record for each item that the generated README's "Behavior to write", "What you supply", and
+  "Test coverage to complete" sections list. An item is a bold title in an entry. An entry names several when gap
+  records share its text, and its prose can name another, such as a predicate method. Each record has the entry's
+  section, its `###` group heading or `null`, the bold title as written, and the file the item names, or `null`. The
+  file is the first code span in parentheses after the title, before the next title or the end of its sentence.
 
 ## Running the check
 
@@ -79,7 +81,7 @@ Name pages after `--compiled <dir>` to check only those. The check exits 1 when 
   application. List the line in `page-lines.txt` only when the page wrote it on purpose.
 - **A stale `page-lines.txt` entry.** The page no longer quotes the line in a block of generated code: delete it.
 - **A reported result** (`<page>/<example>: ...: reread <page>.md`). The status, a diagnostic, a gap record, the
-  Compile outcome, or a README entry changed. Reread the page's prose about that example and fix what is false. Then
+  Compile outcome, or a README item changed. Reread the page's prose about that example and fix what is false. Then
   run the check again with `--update`, which rewrites `observed/` from `<dir>` and prints each change; it never edits
   a page. A missing observed file, or one without an example, also asks for `--update`.
 - **A code** (`<code>: no reference page names this code`). An example reported a diagnostic or gap code that no
@@ -90,8 +92,13 @@ A missing result for an example means the service did not write one: compile the
 
 The rules for which quoted lines count are in the script. A block quotes generated code when its fence names a code
 language, or names `json` or `jsonc` and opens with a `//` path comment; a fence without a language counts too.
-Blank lines, elided lines, the page's own comments, and lone closing tokens are not checked. A line also matches
-without a trailing comment the page added, and, when it is at least 12 characters, with all whitespace removed.
+Blank lines, elided lines, the page's own comments, and lone closing tokens are not checked.
+
+A line also matches without a trailing comment the page added. The comment starts at the fence language's marker
+outside every string literal: ` # ` for Ruby, YAML, and shell; ` <%# ` for ERB; ` // ` for JavaScript, Swift,
+Kotlin, and JSON; either ` # ` or ` // ` for text. XML, HTML, and CSS have none. When a line is at least 12
+characters, it also matches with the whitespace outside its string literals removed, so a page may rewrap or condense
+it. Here a literal is quoted with `"` or `'` and closes on the same line, and its text must still match as written.
 
 ## Running a page test
 

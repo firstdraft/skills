@@ -79,6 +79,18 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
+      "title": "`product.scaffold.show`",
+      "file": "app/controllers/products_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`scaffold.authorization`",
+      "file": null
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
       "title": "`scaffold.authorization`",
       "file": null
     },

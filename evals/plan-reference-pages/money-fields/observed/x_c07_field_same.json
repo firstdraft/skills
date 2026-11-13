@@ -56,6 +56,12 @@
       "file": "app/models/expense.rb"
     },
     {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`expense.tip`",
+      "file": "app/models/expense.rb"
+    },
+    {
       "section": "Test coverage to complete",
       "group": null,
       "title": "Expense: index lists accessible records",

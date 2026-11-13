@@ -21,6 +21,12 @@
       "file": "app/models/note.rb"
     },
     {
+      "section": "Behavior to write",
+      "group": null,
+      "title": "`Note#pinned?`",
+      "file": null
+    },
+    {
       "section": "Test coverage to complete",
       "group": null,
       "title": "Note: manage allows the authorized account and denies other accounts",

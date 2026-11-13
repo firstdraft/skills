@@ -49,6 +49,12 @@
       "file": "app/models/item.rb"
     },
     {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.owner_name`",
+      "file": "app/models/item.rb"
+    },
+    {
       "section": "Test coverage to complete",
       "group": null,
       "title": "Item: create persists the submitted values",

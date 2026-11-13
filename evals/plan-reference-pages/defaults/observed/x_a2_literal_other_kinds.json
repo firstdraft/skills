@@ -92,6 +92,42 @@
     {
       "section": "Behavior to write",
       "group": "Data",
+      "title": "`item.happens_at`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.zone`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.site`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.lang`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.body`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.meta`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
       "title": "`item.body`",
       "file": "app/models/item.rb"
     },

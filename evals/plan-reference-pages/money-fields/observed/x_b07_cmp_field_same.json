@@ -47,6 +47,12 @@
       "group": "Data",
       "title": "`expense.amount`",
       "file": "app/models/expense.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`expense.tip`",
+      "file": "app/models/expense.rb"
     }
   ]
 }

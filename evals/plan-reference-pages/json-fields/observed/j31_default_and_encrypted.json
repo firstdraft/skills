@@ -59,6 +59,18 @@
       "group": "Data",
       "title": "`order.card_details`",
       "file": "app/models/order.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.extras`",
+      "file": "app/models/order.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.card_details`",
+      "file": "app/models/order.rb"
     }
   ]
 }

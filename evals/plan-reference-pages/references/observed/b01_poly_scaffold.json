@@ -58,6 +58,12 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
+      "title": "`comment.commentable`",
+      "file": "app/controllers/comments_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
       "title": "`comment.scaffold.resource_routes.create`",
       "file": "app/controllers/comments_controller.rb"
     },

@@ -53,6 +53,24 @@
       "group": "Data",
       "title": "`item.seen_at`",
       "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.due_on`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.day_from_time`",
+      "file": "app/models/item.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`item.time_from_day`",
+      "file": "app/models/item.rb"
     }
   ]
 }

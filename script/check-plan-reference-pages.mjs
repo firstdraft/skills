@@ -21,7 +21,7 @@ For each page, or only the named ones, it prints:
     block lacks and page-lines.txt does not list, and each page-lines.txt
     entry the page no longer quotes;
   - each example whose analysis status, diagnostics, gap records, Compile
-    outcome, or README entries differ from its observed/<name>.json;
+    outcome, or README items differ from its observed/<name>.json;
   - each diagnostic or gap code an example reported that no page names.
 
 It exits 1 when it printed a finding. --update rewrites observed/ from <dir>
@@ -38,11 +38,20 @@ const closingLines = new Set(["end", "}", "{", "]", "[", ")", "<% end %>", "do",
 // A whole-line # comment that names a file or reads as the page's own prose ("# then ...", "# => ...").
 const pageCommentPattern =
   /^#\s*(?:(?:app|spec|config|db|lib|test|bin|public|\.firstdraft|\.github|README|AGENTS|Gemfile|Dockerfile|Procfile)\b|=>|(?:and|then|or|with|from|in|the|a|an|for|after|before|when|where|not|only|each|every|same|other)\b)/;
-// A line the page rewrapped or condensed matches with all whitespace removed, when it is long enough to be specific.
+// A line the page rewrapped or condensed matches without the whitespace outside its string literals, when it is
+// long enough to be specific. A literal must match as written.
 const squeezedMinimumLength = 12;
+const looseWhitespace = /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\s+/g;
+// The comment a page may add after quoted code, and the characters that open a string literal, by fence language.
+const trailingCommentMarkers = {
+  ruby: [" # "], yaml: [" # "], yml: [" # "], sh: [" # "], erb: [" <%# "], text: [" # ", " // "],
+  js: [" // "], javascript: [" // "], swift: [" // "], kotlin: [" // "], json: [" // "], jsonc: [" // "],
+};
+const stringQuotes = { js: "\"'`", javascript: "\"'`", swift: "\"", json: "\"", jsonc: "\"" };
 const readmeSections = new Set(["Behavior to write", "What you supply", "Test coverage to complete"]);
 
 export const normalize = (text) => text.trim().replace(/\s+/g, " ");
+export const squeeze = (line) => line.replace(looseWhitespace, (whitespace, literal) => literal ?? "");
 
 export function fencedBlocks(source) {
   const blocks = [];
@@ -78,16 +87,27 @@ export function skipsLine(text) {
   return closingLines.has(line);
 }
 
-// The line as the page wrote it, then without each trailing comment the page may have added, longest first.
-export function lineCandidates(text) {
-  const found = [normalize(text)];
-  for (const marker of [" # ", " <%# ", " // "]) {
-    let position = text.lastIndexOf(marker);
-    while (position > 0) {
-      const head = normalize(text.slice(0, position));
-      if (head && !found.includes(head)) found.push(head);
-      position = position < marker.length ? -1 : text.lastIndexOf(marker, position - marker.length);
+// The line as the page wrote it, then without each trailing comment the page may have added, longest first. A
+// comment starts at its language's marker outside every string literal; inside the comment, quotes mean nothing.
+export function lineCandidates(text, language = "text") {
+  const markers = trailingCommentMarkers[language] ?? [];
+  const quotes = stringQuotes[language] ?? "\"'";
+  const cuts = [];
+  let quote;
+  for (let index = 0; index < text.length; index += 1) {
+    if (quote) {
+      if (text[index] === "\\") index += 1;
+      else if (text[index] === quote) quote = undefined;
+    } else if (cuts.length === 0 && quotes.includes(text[index])) {
+      quote = text[index];
+    } else if (index > 0 && markers.some((marker) => text.startsWith(marker, index))) {
+      cuts.push(index);
     }
+  }
+  const found = [normalize(text)];
+  for (const cut of cuts.reverse()) {
+    const head = normalize(text.slice(0, cut));
+    if (head && !found.includes(head)) found.push(head);
   }
   return found;
 }
@@ -109,15 +129,14 @@ export function loadApplication(directory) {
     }
   };
   visit(directory);
-  const text = lines.join("\n");
-  return { text, squeezed: text.replace(/\s+/g, "") };
+  return { text: lines.join("\n"), squeezed: lines.map(squeeze).join("") };
 }
 
 export function holdsLine(application, candidates) {
   if (candidates.some((candidate) => application.text.includes(candidate))) return true;
   return candidates.some(
     (candidate) =>
-      [...candidate].length >= squeezedMinimumLength && application.squeezed.includes(candidate.replace(/\s+/g, "")),
+      [...candidate].length >= squeezedMinimumLength && application.squeezed.includes(squeeze(candidate)),
   );
 }
 
@@ -134,7 +153,7 @@ export function quotedLineFindings({ slug, source, applications, pageLines }) {
 
     for (const { text } of lines) checkedLines.add(text.trim());
     const holders = lines.map(({ text }) => {
-      const candidates = lineCandidates(text);
+      const candidates = lineCandidates(text, block.language);
       return new Set(names.filter((name) => holdsLine(applications.get(name), candidates)));
     });
     let best;
@@ -172,10 +191,11 @@ export function quotedLineFindings({ slug, source, applications, pageLines }) {
   return findings;
 }
 
-// The entries of the generated README's three sections that list what First Draft left out: each entry's section,
-// its group heading, its bold title, and the file its subject names before the entry's first sentence.
-export function readmeEntries(source) {
-  const entries = [];
+// The items that the generated README's three sections list as left out. An entry names one item in bold, or
+// several when gap records share its text, and may name another in its prose. Each item keeps its entry's section
+// and group heading, its bold title, and the file it names.
+export function readmeItems(source) {
+  const items = [];
   let section;
   let group = null;
   let fence;
@@ -199,16 +219,42 @@ export function readmeEntries(source) {
       }
       continue;
     }
-    const entry = section && text.match(/^- \*\*(.+?)\*\*(.*)$/);
-    if (!entry) continue;
-    const subject = entry[2].split(/: |\. /, 1)[0];
-    entries.push({ section, group, title: entry[1], file: subject.match(/\(`([^`]+)`\)/)?.[1] ?? null });
+    if (!section || !text.startsWith("- **")) continue;
+    for (const { title, file } of entryItems(text.slice(2))) items.push({ section, group, title, file });
   }
-  return entries;
+  return items;
+}
+
+// Each bold title in an entry, with the first code span in parentheses that follows it before the next title or
+// the end of its sentence, such as (`app/models/task.rb`).
+function entryItems(text) {
+  const items = [];
+  let open;
+  for (let index = 0; index < text.length; ) {
+    if (text.startsWith("**", index)) {
+      const end = text.indexOf("**", index + 2);
+      if (end === -1) break;
+      open = { title: text.slice(index + 2, end), file: null };
+      items.push(open);
+      index = end + 2;
+    } else if (text[index] === "`") {
+      const end = text.indexOf("`", index + 1);
+      if (end === -1) break;
+      if (open && text[index - 1] === "(" && text[end + 1] === ")") {
+        open.file = text.slice(index + 1, end);
+        open = undefined;
+      }
+      index = end + 1;
+    } else {
+      if (/^[:.] /.test(text.slice(index, index + 2))) open = undefined;
+      index += 1;
+    }
+  }
+  return items;
 }
 
 // (b) What the pages state in prose: the analysis status, diagnostics, gap records, Compile outcome, and README
-// entries. Release identities are recorded but not compared, since every release changes them.
+// items. Release identities are recorded but not compared, since every release changes them.
 export function resultDifferences(observed, current) {
   const differences = [];
   if (observed.status !== current.status) {
@@ -236,7 +282,7 @@ export function resultDifferences(observed, current) {
       describe: ({ code, pointer }) => `${code} at ${pointer}`,
     }),
     ...listDifferences({
-      noun: ["README entry", "README entries"],
+      noun: ["README item", "README items"],
       observed: observed.readme,
       current: current.readme,
       fields: ["section", "group", "title", "file"],
@@ -342,7 +388,7 @@ export function checkPlanReferencePages({
       if (existsSync(applicationDirectory)) applications.set(name, loadApplication(applicationDirectory));
       const record = {
         ...JSON.parse(readFileSync(resultPath, "utf8")),
-        readme: existsSync(readmePath) ? readmeEntries(readFileSync(readmePath, "utf8")) : [],
+        readme: existsSync(readmePath) ? readmeItems(readFileSync(readmePath, "utf8")) : [],
       };
       currentRecords.set(name, record);
       for (const { code } of [...record.diagnostics, ...record.gaps]) {

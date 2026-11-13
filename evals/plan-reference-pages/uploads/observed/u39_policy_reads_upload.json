@@ -114,6 +114,54 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
+      "title": "`listing.scaffold.destroy`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.index`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.show`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.update`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`scaffold.authorization`",
+      "file": null
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`scaffold.authorization`",
+      "file": null
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`scaffold.authorization`",
+      "file": null
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`scaffold.authorization`",
+      "file": null
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
       "title": "`scaffold.authorization`",
       "file": null
     }

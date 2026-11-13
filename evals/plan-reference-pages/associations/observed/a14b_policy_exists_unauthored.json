@@ -72,6 +72,18 @@
     {
       "section": "Behavior to write",
       "group": "Pages and actions",
+      "title": "`project.scaffold.show`",
+      "file": "app/controllers/projects_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`scaffold.authorization`",
+      "file": null
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
       "title": "`scaffold.authorization`",
       "file": null
     }
