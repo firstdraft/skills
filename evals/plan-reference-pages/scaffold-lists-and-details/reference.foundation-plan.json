@@ -1,0 +1,487 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "garden",
+  "name": "Community Garden",
+  "native": {},
+  "delivery": {},
+  "topics": [
+   {
+    "name": "Members",
+    "entities": [
+     "user"
+    ]
+   },
+   {
+    "name": "Garden",
+    "entities": [
+     "plot",
+     "planting"
+    ]
+   }
+  ],
+  "entities": [
+   {
+    "subject_uuid": "01a1cb9e-8665-7330-ac36-d49835df2efb",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cb9e-8665-78e6-83f8-73755314c11e",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7e20-a456-66e6992cbc33",
+      "key": "plots",
+      "kind": "direct",
+      "name": "Plots",
+      "reference": "plot.gardener",
+      "side": "referenced"
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7b9f-86c4-0b159e1d26b6",
+      "key": "signed_in",
+      "operation": "use_app",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "record": "current"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a1cb9e-8665-7e7e-85f9-6552a13f8fff",
+    "key": "plot",
+    "name": "Plot",
+    "primary_descriptor": {
+     "field": "plot.name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7367-829a-fa397501bd37",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cb9e-8665-767a-8454-30e990ea99ba",
+      "key": "notes",
+      "name": "Notes",
+      "type": "long_text",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a1cb9e-8665-7fa7-9018-b6f4c403d8e9",
+      "key": "active",
+      "name": "Active",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": true
+      }
+     },
+     {
+      "subject_uuid": "01a1cb9e-8665-79bf-af56-f831e7283818",
+      "key": "size",
+      "name": "Size",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "01a1cb9e-8665-7739-96ed-cc48b08c1ae6",
+         "key": "small",
+         "name": "Small"
+        },
+        {
+         "subject_uuid": "01a1cb9e-8665-7c8b-986b-b7497f4e5c83",
+         "key": "medium",
+         "name": "Medium"
+        },
+        {
+         "subject_uuid": "01a1cb9e-8665-72c1-9cb6-7ff5cfb374bf",
+         "key": "large",
+         "name": "Large"
+        }
+       ]
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a1cb9e-8665-74de-aa74-3cb2d123c1a3",
+      "key": "gardener",
+      "name": "Gardener",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a1cb9e-8665-71a7-9d57-bd0ec6375922",
+      "key": "plantings",
+      "kind": "direct",
+      "name": "Plantings",
+      "reference": "planting.plot",
+      "side": "referenced"
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7a45-8d7d-c40f3b088e38",
+      "key": "active_plots",
+      "name": "Active plots",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "plot.active"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": true
+       }
+      }
+     }
+    ],
+    "orderings": [
+     {
+      "subject_uuid": "01a1cb9e-8665-783b-bbc1-09353319ce52",
+      "key": "by_name",
+      "terms": [
+       {
+        "field": "plot.name",
+        "direction": "ascending"
+       },
+       {
+        "system_field": "id",
+        "direction": "ascending"
+       }
+      ]
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7efd-ab16-db0a0502a162",
+      "key": "manage_own",
+      "operation": "manage",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "association": "plot.gardener"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "create": {
+      "authorization": {
+       "policy": "plot.manage_own"
+      },
+      "inputs": [
+       {
+        "field": "plot.name"
+       },
+       {
+        "field": "plot.size"
+       },
+       {
+        "field": "plot.notes"
+       }
+      ],
+      "bindings": [
+       {
+        "reference": "plot.gardener",
+        "value": {
+         "kind": "environment",
+         "name": "current_account"
+        }
+       }
+      ]
+     },
+     "update": {
+      "authorization": {
+       "policy": "plot.manage_own"
+      },
+      "inputs": [
+       {
+        "field": "plot.name"
+       },
+       {
+        "field": "plot.size"
+       },
+       {
+        "field": "plot.notes"
+       },
+       {
+        "field": "plot.active"
+       }
+      ]
+     },
+     "index": {
+      "authorization": "public",
+      "predicate": "plot.active_plots",
+      "ordering": "plot.by_name",
+      "projection": [
+       {
+        "field": "plot.name"
+       },
+       {
+        "field": "plot.size"
+       },
+       {
+        "association": "plot.gardener",
+        "authorization": "public"
+       },
+       {
+        "association": "plot.plantings",
+        "authorization": {
+         "policy": "user.signed_in",
+         "record": {
+          "kind": "environment",
+          "name": "current_account"
+         }
+        },
+        "ordering": "planting.newest",
+        "projection": [
+         {
+          "field": "planting.crop"
+         },
+         {
+          "field": "planting.planted_on"
+         }
+        ]
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "plot.name"
+       },
+       {
+        "field": "plot.size"
+       },
+       {
+        "field": "plot.notes"
+       },
+       {
+        "association": "plot.gardener",
+        "authorization": "public"
+       },
+       {
+        "association": "plot.plantings",
+        "authorization": {
+         "policy": "user.signed_in",
+         "record": {
+          "kind": "environment",
+          "name": "current_account"
+         }
+        },
+        "predicate": "planting.growing",
+        "ordering": "planting.newest",
+        "projection": [
+         {
+          "field": "planting.crop"
+         },
+         {
+          "field": "planting.planted_on"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a1cb9e-8665-790c-942c-601c4cd4434a",
+    "key": "planting",
+    "name": "Planting",
+    "primary_descriptor": {
+     "field": "planting.crop"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7161-879b-cd5e4bcf1b4f",
+      "key": "crop",
+      "name": "Crop",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cb9e-8665-7e19-85e0-c9651d840492",
+      "key": "planted_on",
+      "name": "Planted on",
+      "type": "date",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cb9e-8665-7058-82ee-f9d60e848f2e",
+      "key": "harvested",
+      "name": "Harvested",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7104-aef5-5c6c4fed8a38",
+      "key": "plot",
+      "name": "Plot",
+      "targets": [
+       "plot"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7dac-802c-ba56d534975f",
+      "key": "growing",
+      "name": "Growing",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "planting.harvested"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": false
+       }
+      }
+     }
+    ],
+    "orderings": [
+     {
+      "subject_uuid": "01a1cb9e-8665-7ca5-878a-2eb4e5ce7732",
+      "key": "newest",
+      "terms": [
+       {
+        "field": "planting.planted_on",
+        "direction": "descending"
+       },
+       {
+        "system_field": "id",
+        "direction": "descending"
+       }
+      ]
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "show"
+     ],
+     "show": {
+      "authorization": {
+       "policy": "user.signed_in",
+       "record": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      },
+      "projection": [
+       {
+        "field": "planting.crop"
+       },
+       {
+        "field": "planting.planted_on"
+       },
+       {
+        "field": "planting.harvested"
+       },
+       {
+        "association": "planting.plot",
+        "authorization": "public"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "home_index": "plot"
+ }
+}

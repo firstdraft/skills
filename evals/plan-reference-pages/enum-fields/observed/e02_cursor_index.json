@@ -1,0 +1,36 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/0/scaffold/index/ordering",
+      "readable_path": "task.scaffold.index.ordering",
+      "reason": "Cursor pagination needs an order of plain columns, which the emitted named Ordering scope is not; the surface falls back to id.",
+      "consequence": "Any surviving Scaffold consumer remains otherwise generated with deterministic id ordering."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.scaffold.index.ordering`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: create form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

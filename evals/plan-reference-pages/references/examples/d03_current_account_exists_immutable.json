@@ -1,0 +1,196 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1ed03-0000-7000-8000-000000000002",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1ed03-0000-7000-8000-000000000001",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "verification": {
+            "kind": "email"
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a1ed03-0000-7000-8000-000000000006",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1ed03-0000-7000-8000-000000000005",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1ed03-0000-7000-8000-000000000004",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1ed03-0000-7000-8000-000000000003",
+            "key": "owner",
+            "name": "Owner",
+            "targets": [
+              "user"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "immutable": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "user.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "note.owner",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "predicates": [
+          {
+            "subject_uuid": "01a1ed03-0000-7000-8000-000000000007",
+            "key": "mine",
+            "name": "Mine",
+            "expression": {
+              "kind": "exists",
+              "association": "note.owner",
+              "where": {
+                "kind": "comparison",
+                "left": {
+                  "target": {
+                    "record": "current"
+                  }
+                },
+                "operator": "equals",
+                "right": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "import",
+      "code": "foundation_plan.import.unsupported_capability",
+      "severity": "warning",
+      "pointer": "/application/entities/0/fields/4/derivation",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/3",
+      "readable_path": "recipe.five_star_reviews_count",
+      "reason": "Rails counter_cache counts every child record; a Counter filtered by the Association's Predicate is not maintained.",
+      "consequence": "The integer column is generated, defaults to 0, and is read wherever the Plan reads it, but nothing updates it, so it reads 0 until application code maintains it."
+    },
+    {
+      "code": "foundation_plan.gap.service.unsupported_capability",
+      "pointer": "/application/entities/0/fields/4/derivation",
+      "readable_path": "recipe",
+      "reason": "This First Draft release cannot yet import this Foundation Plan capability.",
+      "consequence": "This Plan path is omitted from the admitted Project graph and generated application."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`Recipe#five_star_reviews_count`",
+      "file": "app/models/recipe.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`recipe`",
+      "file": "app/models/recipe.rb"
+    }
+  ]
+}

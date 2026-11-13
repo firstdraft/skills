@@ -30,6 +30,15 @@ and release notes in `CHANGELOG.md`.
   agent writes.
 - Take every example of generated code from a real Compile of the Plan the page shows, never from memory.
 
+Each page's example Plans, what the First Draft service reported for each, and its page test are in
+`evals/plan-reference-pages/<page>/`. Add the Plan behind a new statement there. After you edit a page, and when the
+service changes what it emits or reports, run [the check](evals/plan-reference-pages/README.md#running-the-check):
+
+- **A quoted line:** requote it from one compiled example. List it in `page-lines.txt` only if the page wrote it.
+- **A stale `page-lines.txt` entry:** delete it.
+- **A changed result:** reread the page's prose about that example, fix what is false, then rerun with `--update`.
+- **An unnamed code:** say on the page that owns the subject what the code means and what the agent does.
+
 ## Checks and review
 
 - Run `npm ci --ignore-scripts && npm audit && sh script/check` before committing. Leave

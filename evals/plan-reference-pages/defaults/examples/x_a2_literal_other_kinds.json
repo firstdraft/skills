@@ -1,0 +1,257 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa2dd-0001-7000-8000-00000000001c",
+        "key": "item",
+        "name": "Item",
+        "primary_descriptor": {
+          "field": "item.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000014",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000015",
+            "key": "starts_on",
+            "name": "Starts on",
+            "type": "date",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "2026-01-01"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000016",
+            "key": "happens_at",
+            "name": "Happens at",
+            "type": "datetime",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "2026-01-01T09:00:00Z"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000017",
+            "key": "zone",
+            "name": "Zone",
+            "type": "time_zone",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "UTC"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000018",
+            "key": "site",
+            "name": "Site",
+            "type": "url",
+            "required": false,
+            "default": {
+              "kind": "literal",
+              "value": "https://example.com"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-000000000019",
+            "key": "lang",
+            "name": "Lang",
+            "type": "language_code",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "en"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-00000000001a",
+            "key": "body",
+            "name": "Body",
+            "type": "rich_text",
+            "required": false,
+            "default": {
+              "kind": "literal",
+              "value": "Hello"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0001-7000-8000-00000000001b",
+            "key": "meta",
+            "name": "Meta",
+            "type": "json",
+            "required": false,
+            "default": {
+              "kind": "literal",
+              "value": {
+                "a": 1
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.starts_on"
+              },
+              {
+                "field": "item.happens_at"
+              },
+              {
+                "field": "item.zone"
+              },
+              {
+                "field": "item.site"
+              },
+              {
+                "field": "item.lang"
+              },
+              {
+                "field": "item.body"
+              },
+              {
+                "field": "item.meta"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.starts_on"
+              },
+              {
+                "field": "item.happens_at"
+              },
+              {
+                "field": "item.zone"
+              },
+              {
+                "field": "item.site"
+              },
+              {
+                "field": "item.lang"
+              },
+              {
+                "field": "item.body"
+              },
+              {
+                "field": "item.meta"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.starts_on"
+              },
+              {
+                "field": "item.happens_at"
+              },
+              {
+                "field": "item.zone"
+              },
+              {
+                "field": "item.site"
+              },
+              {
+                "field": "item.lang"
+              },
+              {
+                "field": "item.body"
+              },
+              {
+                "field": "item.meta"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.starts_on"
+              },
+              {
+                "field": "item.happens_at"
+              },
+              {
+                "field": "item.zone"
+              },
+              {
+                "field": "item.site"
+              },
+              {
+                "field": "item.lang"
+              },
+              {
+                "field": "item.body"
+              },
+              {
+                "field": "item.meta"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "019fa2dd-0001-7000-8000-00000000001d",
+        "key": "only_title",
+        "entity": "item",
+        "fields": [
+          {
+            "field": "item.title",
+            "value": {
+              "kind": "literal",
+              "value": "First"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

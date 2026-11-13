@@ -1,0 +1,36 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: index lists accessible records",
+      "file": "spec/requests/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: create form browser coverage",
+      "file": "spec/system/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

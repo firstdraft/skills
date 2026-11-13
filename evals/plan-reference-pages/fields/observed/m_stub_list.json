@@ -1,0 +1,45 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/0/predicates/1",
+      "readable_path": "member.mentions_urgent"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/0/predicates/1",
+      "readable_path": "member.mentions_urgent",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Member.mentions_urgent` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/0/scaffold/index/predicate",
+      "readable_path": "member.scaffold.index.predicate",
+      "reason": "The selected named Predicate has no target scope lowering.",
+      "consequence": "This surface calls `Member.mentions_urgent`, which raises NotImplementedError until it is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": null,
+      "title": "`Member.mentions_urgent`",
+      "file": "app/models/member.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Member: index lists accessible records",
+      "file": "spec/requests/members_spec.rb"
+    }
+  ]
+}

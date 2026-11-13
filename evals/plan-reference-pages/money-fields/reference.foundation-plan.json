@@ -1,0 +1,329 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "team_expenses",
+    "name": "Team expenses",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb0-d40b-7ec5-95a1-8c68a0d5a18c",
+        "key": "expense",
+        "name": "Expense",
+        "primary_descriptor": {
+          "field": "expense.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb0-d40b-7c42-9c1a-3a374f186de4",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-d40b-777c-b544-d939d072c44e",
+            "key": "spent_on",
+            "name": "Spent on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-d40b-7cde-9b81-13e72503af12",
+            "key": "category",
+            "name": "Category",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cbb0-d40b-7b8d-b92e-d5c02f9f04f4",
+                  "key": "travel",
+                  "name": "Travel"
+                },
+                {
+                  "subject_uuid": "01a1cbb0-d40b-74d4-96ee-6e26e6a299ed",
+                  "key": "meal",
+                  "name": "Meal"
+                },
+                {
+                  "subject_uuid": "01a1cbb0-d40b-7e22-8f25-7f8a78e0da04",
+                  "key": "office",
+                  "name": "Office supplies"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a1cbb0-d40b-7e2f-abd7-ffb32a8f7626",
+            "key": "amount",
+            "name": "Amount",
+            "type": "money",
+            "required": true,
+            "notes": "One fixed currency. Splitting an expense among people, with rounding, is written after Compile.",
+            "settings": {
+              "currency": "USD"
+            },
+            "validations": [
+              {
+                "subject_uuid": "01a1cbb0-d40b-7b47-93bd-6220eab7e91f",
+                "key": "positive",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "greater_than",
+                    "right": {
+                      "kind": "literal",
+                      "value": "0"
+                    }
+                  }
+                ]
+              },
+              {
+                "subject_uuid": "01a1cbb0-d40b-757f-b321-b73c8b9e2a5d",
+                "key": "meal_cap",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "less_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": "75"
+                    }
+                  }
+                ],
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "expense.category"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "meal"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.category"
+              },
+              {
+                "field": "expense.amount"
+              }
+            ],
+            "ordering": "expense.largest_first"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.category"
+              },
+              {
+                "field": "expense.amount"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.category"
+              },
+              {
+                "field": "expense.amount"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.spent_on"
+              },
+              {
+                "field": "expense.category"
+              },
+              {
+                "field": "expense.amount"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "orderings": [
+          {
+            "subject_uuid": "01a1cbb0-d40b-7ebf-a154-afd0b94f1558",
+            "key": "largest_first",
+            "terms": [
+              {
+                "field": "expense.amount",
+                "direction": "descending"
+              },
+              {
+                "system_field": "created_at",
+                "direction": "descending"
+              },
+              {
+                "system_field": "id",
+                "direction": "descending"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbb0-d40b-7c8b-8677-3193011691a1",
+        "key": "team_lunch",
+        "entity": "expense",
+        "fields": [
+          {
+            "field": "expense.title",
+            "value": {
+              "kind": "literal",
+              "value": "Team lunch"
+            }
+          },
+          {
+            "field": "expense.spent_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-11-02"
+            }
+          },
+          {
+            "field": "expense.category",
+            "value": {
+              "kind": "literal",
+              "value": "meal"
+            }
+          },
+          {
+            "field": "expense.amount",
+            "value": {
+              "kind": "literal",
+              "value": "62.5"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb0-d40b-7a00-830a-5a832f33c7f9",
+        "key": "flight_to_denver",
+        "entity": "expense",
+        "fields": [
+          {
+            "field": "expense.title",
+            "value": {
+              "kind": "literal",
+              "value": "Flight to Denver"
+            }
+          },
+          {
+            "field": "expense.spent_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-11-04"
+            }
+          },
+          {
+            "field": "expense.category",
+            "value": {
+              "kind": "literal",
+              "value": "travel"
+            }
+          },
+          {
+            "field": "expense.amount",
+            "value": {
+              "kind": "literal",
+              "value": "340"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb0-d40b-7b37-93d8-db3549c9089e",
+        "key": "printer_paper",
+        "entity": "expense",
+        "fields": [
+          {
+            "field": "expense.title",
+            "value": {
+              "kind": "literal",
+              "value": "Printer paper"
+            }
+          },
+          {
+            "field": "expense.spent_on",
+            "value": {
+              "kind": "literal",
+              "value": "2026-11-05"
+            }
+          },
+          {
+            "field": "expense.category",
+            "value": {
+              "kind": "literal",
+              "value": "office"
+            }
+          },
+          {
+            "field": "expense.amount",
+            "value": {
+              "kind": "literal",
+              "value": "12.99"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

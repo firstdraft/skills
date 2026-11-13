@@ -1,0 +1,278 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "volunteer_shifts",
+    "name": "Volunteer Shifts",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cba6-b572-7f68-93f5-0afbcee1bed6",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cba6-b572-7da2-b0fb-d0b5abf15c82",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "verification": {
+            "kind": "email"
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "associations": [
+          {
+            "subject_uuid": "01a1cba6-b572-744a-9e7a-d7bce41e586d",
+            "key": "signups",
+            "kind": "direct",
+            "name": "Signups",
+            "reference": "signup.volunteer",
+            "side": "referenced"
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-712a-9f2b-a00b4fbafcc5",
+        "key": "event",
+        "name": "Event",
+        "primary_descriptor": {
+          "field": "event.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cba6-b572-79f5-b6f8-ec7453984ab6",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-701c-ae17-6fc5da1aff9f",
+            "key": "starts_on",
+            "name": "Starts On",
+            "type": "date",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-7884-a7f9-1b71ae9b4e9d",
+            "key": "spots",
+            "name": "Spots",
+            "type": "integer",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-73dc-8710-93230a2ee46e",
+            "key": "flyer",
+            "name": "Flyer",
+            "type": "image",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-7092-bfdf-3409bb41ec2b",
+            "key": "status",
+            "name": "Status",
+            "type": "state_machine",
+            "required": true,
+            "settings": {
+              "initial_state": "scheduled",
+              "states": [
+                {
+                  "subject_uuid": "01a1cba6-b572-770a-ba3e-aaacdb9fc013",
+                  "key": "scheduled",
+                  "name": "Scheduled"
+                },
+                {
+                  "subject_uuid": "01a1cba6-b572-7318-840a-aa1cad566cc2",
+                  "key": "cancelled",
+                  "name": "Cancelled"
+                }
+              ],
+              "transitions": [
+                {
+                  "subject_uuid": "01a1cba6-b572-7682-9618-93232529f669",
+                  "key": "cancel",
+                  "from": [
+                    "scheduled"
+                  ],
+                  "to": "cancelled"
+                }
+              ]
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a1cba6-b572-7b88-91fd-cf50ba4d7e29",
+            "key": "signups",
+            "kind": "direct",
+            "name": "Signups",
+            "reference": "signup.event",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "event.title"
+              },
+              {
+                "field": "event.starts_on"
+              },
+              {
+                "field": "event.status"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "event.title"
+              },
+              {
+                "field": "event.starts_on"
+              },
+              {
+                "field": "event.spots"
+              },
+              {
+                "field": "event.flyer"
+              },
+              {
+                "field": "event.status"
+              },
+              {
+                "association": "event.signups",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "signup.role"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cba6-b572-72be-84e9-6bc45414af04",
+        "key": "signup",
+        "name": "Signup",
+        "primary_descriptor": {
+          "system_field": "id"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cba6-b572-7ead-a17a-ca5b34a8c713",
+            "key": "role",
+            "name": "Role",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "helper"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cba6-b572-7a2d-b5ec-34fe259c60c5",
+                  "key": "helper",
+                  "name": "Helper"
+                },
+                {
+                  "subject_uuid": "01a1cba6-b572-74e4-9032-761d01988d86",
+                  "key": "lead",
+                  "name": "Lead"
+                }
+              ]
+            }
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cba6-b572-7889-af72-61631f3173aa",
+            "key": "event",
+            "name": "Event",
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "event"
+            ]
+          },
+          {
+            "subject_uuid": "01a1cba6-b572-770d-88dd-c071bf2629c0",
+            "key": "volunteer",
+            "name": "Volunteer",
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          }
+        ],
+        "validations": [
+          {
+            "subject_uuid": "01a1cba6-b572-7aab-820a-12165c1e92a4",
+            "key": "once_per_event",
+            "kind": "uniqueness",
+            "targets": [
+              {
+                "reference": "signup.event"
+              },
+              {
+                "reference": "signup.volunteer"
+              }
+            ],
+            "nulls": "distinct",
+            "error_target": {
+              "reference": "signup.volunteer"
+            }
+          }
+        ]
+      }
+    ],
+    "home_index": "event",
+    "topics": [
+      {
+        "name": "Volunteers and the events they sign up for",
+        "entities": [
+          "user",
+          "event",
+          "signup"
+        ]
+      }
+    ]
+  }
+}

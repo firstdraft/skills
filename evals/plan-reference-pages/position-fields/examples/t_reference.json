@@ -1,0 +1,288 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "recipes",
+    "name": "Recipes",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0c12-7000-8000-000000000001",
+        "key": "recipe",
+        "name": "Recipe",
+        "primary_descriptor": {
+          "field": "recipe.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c12-7000-8000-000000000002",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c12-7000-8000-000000000003",
+            "key": "steps",
+            "name": "Steps",
+            "kind": "direct",
+            "reference": "step.recipe",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "recipe.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "association": "recipe.steps",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "step.position"
+                  },
+                  {
+                    "field": "step.instruction"
+                  }
+                ],
+                "create_form": {},
+                "ordering": "step.in_order"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "recipe.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "recipe.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c12-7000-8000-000000000004",
+        "key": "step",
+        "name": "Step",
+        "primary_descriptor": {
+          "field": "step.instruction"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c12-7000-8000-000000000005",
+            "key": "instruction",
+            "name": "Instruction",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c12-7000-8000-000000000007",
+            "key": "position",
+            "name": "Step number",
+            "type": "position",
+            "required": true,
+            "settings": {
+              "within": [
+                {
+                  "reference": "step.recipe"
+                }
+              ]
+            }
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0c12-7000-8000-000000000006",
+            "key": "recipe",
+            "name": "Recipe",
+            "targets": [
+              "recipe"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "step.instruction"
+              },
+              {
+                "field": "step.position"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "step.instruction"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "step.instruction"
+              },
+              {
+                "field": "step.position"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "orderings": [
+          {
+            "subject_uuid": "01a0caf3-0c12-7000-8000-000000000008",
+            "key": "in_order",
+            "terms": [
+              {
+                "field": "step.position",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "id",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf3-0c12-7000-8000-000000000009",
+        "key": "pancakes",
+        "entity": "recipe",
+        "fields": [
+          {
+            "field": "recipe.title",
+            "value": {
+              "kind": "literal",
+              "value": "Pancakes"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0c12-7000-8000-00000000000a",
+        "key": "mix",
+        "entity": "step",
+        "fields": [
+          {
+            "field": "step.instruction",
+            "value": {
+              "kind": "literal",
+              "value": "Mix the batter"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "step.recipe",
+            "value": {
+              "kind": "reference_record",
+              "record": "recipe.pancakes"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0c12-7000-8000-00000000000b",
+        "key": "heat",
+        "entity": "step",
+        "fields": [
+          {
+            "field": "step.instruction",
+            "value": {
+              "kind": "literal",
+              "value": "Heat the pan"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "step.recipe",
+            "value": {
+              "kind": "reference_record",
+              "record": "recipe.pancakes"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0c12-7000-8000-00000000000c",
+        "key": "cook",
+        "entity": "step",
+        "fields": [
+          {
+            "field": "step.instruction",
+            "value": {
+              "kind": "literal",
+              "value": "Cook both sides"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "step.recipe",
+            "value": {
+              "kind": "reference_record",
+              "record": "recipe.pancakes"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

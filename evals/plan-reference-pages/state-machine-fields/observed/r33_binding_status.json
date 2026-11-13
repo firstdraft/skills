@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.binding.not_generated",
+      "pointer": "/application/entities/0/scaffold/create/bindings/0",
+      "readable_path": "task.status",
+      "reason": "Only current_account, one of its Fields or References, current_date, or current_time is admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.status`",
+      "file": "app/controllers/tasks_controller.rb"
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e21",
+        "key": "post",
+        "name": "Post",
+        "primary_descriptor": {
+          "field": "post.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e22",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e23",
+            "key": "comments_count",
+            "name": "Comments",
+            "type": "counter",
+            "required": true,
+            "settings": {
+              "counts": "post.comments"
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e24",
+            "key": "comments",
+            "kind": "direct",
+            "name": "Comments",
+            "reference": "comment.post",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e25",
+        "key": "comment",
+        "name": "Comment",
+        "primary_descriptor": {
+          "field": "comment.body"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e26",
+            "key": "body",
+            "name": "Body",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e27",
+            "key": "post",
+            "name": "Post",
+            "required": true,
+            "targets": [
+              "post"
+            ],
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "comment.body"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "comment.body"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "comment.body"
+              },
+              {
+                "association": "comment.post"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e28",
+        "key": "hello",
+        "entity": "post",
+        "fields": [
+          {
+            "field": "post.title",
+            "value": {
+              "kind": "literal",
+              "value": "Hello"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e29",
+        "key": "first",
+        "entity": "comment",
+        "fields": [
+          {
+            "field": "comment.body",
+            "value": {
+              "kind": "literal",
+              "value": "First"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "comment.post",
+            "value": {
+              "kind": "reference_record",
+              "record": "post.hello"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000004e2a",
+        "key": "preset",
+        "entity": "post",
+        "fields": [
+          {
+            "field": "post.title",
+            "value": {
+              "kind": "literal",
+              "value": "Preset"
+            }
+          },
+          {
+            "field": "post.comments_count",
+            "value": {
+              "kind": "literal",
+              "value": 5
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

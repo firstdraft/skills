@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_modifier.immutable",
+      "pointer": "/application/entities/0/fields/2/immutable",
+      "readable_path": "listing.brochure",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "immutability is not enforced"
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`listing.brochure`",
+      "file": "app/models/listing.rb"
+    }
+  ]
+}

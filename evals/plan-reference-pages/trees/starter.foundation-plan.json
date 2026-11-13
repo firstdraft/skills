@@ -1,0 +1,192 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "handbook",
+    "name": "Handbook",
+    "native": {},
+    "delivery": {},
+    "topics": [
+      {
+        "name": "Knowledge base",
+        "entities": [
+          "space",
+          "article"
+        ]
+      }
+    ],
+    "entities": [
+      {
+        "subject_uuid": "019fa3ff-3000-7000-8000-000000000001",
+        "key": "space",
+        "name": "Space",
+        "primary_descriptor": {
+          "field": "space.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000003",
+            "key": "articles",
+            "name": "Articles",
+            "kind": "direct",
+            "reference": "article.space",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "space.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "space.name"
+              },
+              {
+                "association": "space.articles",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "article.title"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "space.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "space.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "019fa3ff-3000-7000-8000-000000000004",
+        "key": "article",
+        "name": "Article",
+        "primary_descriptor": {
+          "field": "article.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000005",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000006",
+            "key": "body",
+            "name": "Body",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000007",
+            "key": "space",
+            "name": "Space",
+            "targets": [
+              "space"
+            ],
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "article.title"
+              },
+              {
+                "field": "article.body"
+              },
+              {
+                "association": "article.space",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "article.title"
+              },
+              {
+                "field": "article.body"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "article.title"
+              },
+              {
+                "field": "article.body"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

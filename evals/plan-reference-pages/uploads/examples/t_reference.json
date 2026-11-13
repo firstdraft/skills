@@ -1,0 +1,301 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "adoptions",
+    "name": "Adoptions",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbaf-a010-746d-8df2-4b3ceef70770",
+        "key": "pet",
+        "name": "Pet",
+        "primary_descriptor": {
+          "field": "pet.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbaf-a010-7ee7-b07a-6a14ef9ed79a",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbaf-a010-701b-b012-72b8a957c25e",
+            "key": "species",
+            "name": "Species",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbaf-a010-737c-9cc3-9edbc02527bf",
+            "key": "photo",
+            "name": "Photo",
+            "type": "image",
+            "required": true,
+            "validations": [
+              {
+                "subject_uuid": "01a1d27c-bced-7b85-bb91-0f14c2486245",
+                "key": "jpeg_or_png_up_to_5_mb",
+                "owner": {
+                  "description": "Accept only JPEG or PNG files of at most 5 MB."
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a1cbaf-a010-7de3-aff3-0cbd0c920abc",
+            "key": "vaccination_record",
+            "name": "Vaccination record",
+            "type": "attachment",
+            "required": false
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a1cbaf-a010-727d-be74-60024fbd55e0",
+            "key": "gallery_photos",
+            "name": "Gallery photos",
+            "kind": "direct",
+            "reference": "gallery_photo.pet",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "pet.name"
+              },
+              {
+                "field": "pet.species"
+              },
+              {
+                "field": "pet.photo"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "pet.name"
+              },
+              {
+                "field": "pet.species"
+              },
+              {
+                "field": "pet.photo"
+              },
+              {
+                "field": "pet.vaccination_record"
+              },
+              {
+                "association": "pet.gallery_photos",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "gallery_photo.image"
+                  },
+                  {
+                    "field": "gallery_photo.caption"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "pet.name"
+              },
+              {
+                "field": "pet.species"
+              },
+              {
+                "field": "pet.photo"
+              },
+              {
+                "field": "pet.vaccination_record"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "pet.name"
+              },
+              {
+                "field": "pet.species"
+              },
+              {
+                "field": "pet.photo"
+              },
+              {
+                "field": "pet.vaccination_record"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbaf-a010-70d1-8387-1d20a5dcf3e1",
+        "key": "gallery_photo",
+        "name": "Gallery photo",
+        "primary_descriptor": {
+          "field": "gallery_photo.caption"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbaf-a010-7a8d-a728-02587d674fd6",
+            "key": "image",
+            "name": "Image",
+            "type": "image",
+            "required": true,
+            "validations": [
+              {
+                "subject_uuid": "01a1d27c-bced-714e-9cc2-1a946fdda684",
+                "key": "jpeg_or_png_up_to_5_mb",
+                "owner": {
+                  "description": "Accept only JPEG or PNG files of at most 5 MB."
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a1cbaf-a010-7055-ab79-f151b27bc4fa",
+            "key": "caption",
+            "name": "Caption",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cbaf-a010-78f1-ab6f-0037bcf4f6a0",
+            "key": "pet",
+            "name": "Pet",
+            "targets": [
+              "pet"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "gallery_photo.image"
+              },
+              {
+                "field": "gallery_photo.caption"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "gallery_photo.image"
+              },
+              {
+                "field": "gallery_photo.caption"
+              },
+              {
+                "association": "gallery_photo.pet"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "gallery_photo.image"
+              },
+              {
+                "field": "gallery_photo.caption"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbaf-a010-73aa-a72d-43393920ed37",
+        "key": "biscuit",
+        "entity": "pet",
+        "fields": [
+          {
+            "field": "pet.name",
+            "value": {
+              "kind": "literal",
+              "value": "Biscuit"
+            }
+          },
+          {
+            "field": "pet.species",
+            "value": {
+              "kind": "literal",
+              "value": "Dog"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbaf-a010-77fc-815d-55cd70296291",
+        "key": "miso",
+        "entity": "pet",
+        "fields": [
+          {
+            "field": "pet.name",
+            "value": {
+              "kind": "literal",
+              "value": "Miso"
+            }
+          },
+          {
+            "field": "pet.species",
+            "value": {
+              "kind": "literal",
+              "value": "Cat"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

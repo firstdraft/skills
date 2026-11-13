@@ -1,0 +1,97 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "adoptions",
+    "name": "Adoptions",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbaf-a010-746d-8df2-4b3ceef70770",
+        "key": "pet",
+        "name": "Pet",
+        "primary_descriptor": {
+          "field": "pet.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbaf-a010-7ee7-b07a-6a14ef9ed79a",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbaf-a010-701b-b012-72b8a957c25e",
+            "key": "species",
+            "name": "Species",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "pet.name"
+              },
+              {
+                "field": "pet.species"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "pet.name"
+              },
+              {
+                "field": "pet.species"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "pet.name"
+              },
+              {
+                "field": "pet.species"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "pet.name"
+              },
+              {
+                "field": "pet.species"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

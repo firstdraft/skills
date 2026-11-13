@@ -1,0 +1,376 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "bookings",
+  "name": "Bookings",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-0000000007d1",
+    "key": "booking",
+    "name": "Booking",
+    "primary_descriptor": {
+     "field": "booking.guest_name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-0000000007d2",
+      "key": "guest_name",
+      "name": "Guest name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-0000000007d3",
+      "key": "starts_on",
+      "name": "Starts on",
+      "type": "date",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cba6-7e02-7aa2-939a-02f18f6a0f98",
+      "key": "status",
+      "name": "Status",
+      "type": "state_machine",
+      "required": true,
+      "settings": {
+       "initial_state": "requested",
+       "states": [
+        {
+         "subject_uuid": "01a1cba6-7e02-7827-9f10-d59c5f7d18b5",
+         "key": "requested",
+         "name": "Requested"
+        },
+        {
+         "subject_uuid": "01a1cba6-7e02-7bc9-92dc-5b9ba4464e8e",
+         "key": "confirmed",
+         "name": "Confirmed"
+        },
+        {
+         "subject_uuid": "01a1cba6-7e02-7f9c-8bc0-3a09a9e196ec",
+         "key": "declined",
+         "name": "Declined"
+        },
+        {
+         "subject_uuid": "01a1cba6-7e02-78b6-b8f0-cca9f91d6e87",
+         "key": "cancelled",
+         "name": "Cancelled"
+        }
+       ],
+       "transitions": [
+        {
+         "subject_uuid": "01a1cba6-7e02-7fb0-9225-88f7ce1655a5",
+         "key": "confirm",
+         "from": [
+          "requested"
+         ],
+         "to": "confirmed",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "booking.confirmed_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a1cba6-7e02-7a5e-bb6d-439ed171ef38",
+         "key": "decline",
+         "from": [
+          "requested"
+         ],
+         "to": "declined",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "booking.declined_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          },
+          {
+           "kind": "set_field",
+           "field": "booking.follow_up_needed",
+           "value": {
+            "kind": "literal",
+            "value": true
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a1cba6-7e02-7767-80b5-ad4016b833db",
+         "key": "cancel",
+         "from": [
+          "confirmed"
+         ],
+         "to": "cancelled"
+        },
+        {
+         "subject_uuid": "01a1cba6-7e02-7772-9e1b-431e89c3a0e7",
+         "key": "request_again",
+         "from": [
+          "declined"
+         ],
+         "to": "requested"
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a1cba6-7e02-764a-921b-76c9d2c5db51",
+      "key": "confirmed_at",
+      "name": "Confirmed at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a1cba6-7e02-72e8-80fd-9a12168402b1",
+      "key": "declined_at",
+      "name": "Declined at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a1cba6-7e02-7136-8322-4aaca06a9b1b",
+      "key": "follow_up_needed",
+      "name": "Follow-up needed",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     },
+     {
+      "subject_uuid": "01a1cba6-7e02-7f78-929a-dde998b347b3",
+      "key": "decline_reason",
+      "name": "Decline reason",
+      "type": "long_text",
+      "required": false,
+      "validations": [
+       {
+        "subject_uuid": "01a1cba6-7e02-7b4f-9c3e-10735bfb7909",
+        "key": "required_when_declined",
+        "kind": "presence",
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "booking.status"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "declined"
+         }
+        }
+       }
+      ]
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "booking.guest_name"
+       },
+       {
+        "field": "booking.starts_on"
+       },
+       {
+        "field": "booking.status"
+       },
+       {
+        "field": "booking.confirmed_at"
+       }
+      ],
+      "predicate": "booking.waiting"
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "booking.guest_name"
+       },
+       {
+        "field": "booking.starts_on"
+       },
+       {
+        "field": "booking.status"
+       },
+       {
+        "field": "booking.confirmed_at"
+       },
+       {
+        "field": "booking.declined_at"
+       },
+       {
+        "field": "booking.decline_reason"
+       },
+       {
+        "field": "booking.follow_up_needed"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "booking.guest_name"
+       },
+       {
+        "field": "booking.starts_on"
+       },
+       {
+        "field": "booking.decline_reason"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "booking.guest_name"
+       },
+       {
+        "field": "booking.starts_on"
+       },
+       {
+        "field": "booking.decline_reason"
+       },
+       {
+        "field": "booking.follow_up_needed"
+       }
+      ]
+     }
+    },
+    "predicates": [
+     {
+      "subject_uuid": "01a1cba6-7e02-790b-bf67-0644afbb686b",
+      "key": "waiting",
+      "name": "Waiting",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "booking.status"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": "requested"
+       }
+      }
+     }
+    ]
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a1cba6-7e02-74de-a061-2484f04e25d0",
+    "key": "ada",
+    "entity": "booking",
+    "fields": [
+     {
+      "field": "booking.guest_name",
+      "value": {
+       "kind": "literal",
+       "value": "Ada Lovelace"
+      }
+     },
+     {
+      "field": "booking.starts_on",
+      "value": {
+       "kind": "literal",
+       "value": "2026-12-01"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a1cba6-7e02-71ce-839b-49240359f573",
+    "key": "grace",
+    "entity": "booking",
+    "fields": [
+     {
+      "field": "booking.guest_name",
+      "value": {
+       "kind": "literal",
+       "value": "Grace Hopper"
+      }
+     },
+     {
+      "field": "booking.starts_on",
+      "value": {
+       "kind": "literal",
+       "value": "2026-12-05"
+      }
+     },
+     {
+      "field": "booking.status",
+      "value": {
+       "kind": "literal",
+       "value": "confirmed"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a1cba6-7e02-7820-b87a-be156678aaf2",
+    "key": "alan",
+    "entity": "booking",
+    "fields": [
+     {
+      "field": "booking.guest_name",
+      "value": {
+       "kind": "literal",
+       "value": "Alan Turing"
+      }
+     },
+     {
+      "field": "booking.starts_on",
+      "value": {
+       "kind": "literal",
+       "value": "2026-12-09"
+      }
+     },
+     {
+      "field": "booking.status",
+      "value": {
+       "kind": "literal",
+       "value": "declined"
+      }
+     },
+     {
+      "field": "booking.decline_reason",
+      "value": {
+       "kind": "literal",
+       "value": "Fully booked that week"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

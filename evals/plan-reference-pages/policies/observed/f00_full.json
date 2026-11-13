@@ -1,0 +1,48 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Recipe comments: index lists accessible records",
+      "file": "spec/requests/recipes/comments_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Recipe: create redirects to a page that loads",
+      "file": "spec/requests/recipes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Recipe: update redirects to a page that loads",
+      "file": "spec/requests/recipes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Recipe: create form browser coverage",
+      "file": "spec/system/recipes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Recipe: update form browser coverage",
+      "file": "spec/system/recipes_spec.rb"
+    }
+  ]
+}

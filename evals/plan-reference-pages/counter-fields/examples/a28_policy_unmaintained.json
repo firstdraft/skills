@@ -1,0 +1,271 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d6b",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d6c",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d61",
+        "key": "post",
+        "name": "Post",
+        "primary_descriptor": {
+          "field": "post.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d62",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d63",
+            "key": "comments_count",
+            "name": "Comments",
+            "type": "counter",
+            "required": true,
+            "settings": {
+              "counts": "post.approved_comments"
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d64",
+            "key": "comments",
+            "kind": "direct",
+            "name": "Comments",
+            "reference": "comment.post",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d6a",
+            "key": "approved_comments",
+            "kind": "direct",
+            "name": "Approved comments",
+            "reference": "comment.post",
+            "side": "referenced",
+            "predicate": "comment.approved"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "post.quiet"
+            },
+            "inputs": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d6d",
+            "key": "quiet",
+            "operation": "update",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "post.comments_count"
+                }
+              },
+              "operator": "less_than",
+              "right": {
+                "kind": "literal",
+                "value": 10
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d65",
+        "key": "comment",
+        "name": "Comment",
+        "primary_descriptor": {
+          "field": "comment.body"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d66",
+            "key": "body",
+            "name": "Body",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d68",
+            "key": "approved",
+            "name": "Approved",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d67",
+            "key": "post",
+            "name": "Post",
+            "required": true,
+            "targets": [
+              "post"
+            ],
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "comment.body"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "comment.body"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "comment.body"
+              },
+              {
+                "association": "comment.post"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000006d69",
+            "key": "approved",
+            "name": "Approved",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "comment.approved"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": true
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

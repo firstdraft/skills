@@ -1,0 +1,526 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "trail_log",
+    "name": "Trail Log",
+    "domain": "traillog.example",
+    "home_index": "trail",
+    "native": {
+      "ios": {},
+      "android": {}
+    },
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000011",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "field": "member.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000012",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "member.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000013",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000015",
+        "key": "hike",
+        "name": "Hike",
+        "primary_descriptor": {
+          "field": "hike.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000014",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "icon": "map_pin",
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000017",
+        "key": "trail",
+        "name": "Trail",
+        "primary_descriptor": {
+          "field": "trail.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000016",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "icon": "globe",
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "trail.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "trail.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "trail.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "trail.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000019",
+        "key": "photo",
+        "name": "Photo",
+        "primary_descriptor": {
+          "field": "photo.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000800000018",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "icon": "photo",
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "photo.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "photo.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "photo.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "photo.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-00080000001b",
+        "key": "gear_item",
+        "name": "Gear item",
+        "primary_descriptor": {
+          "field": "gear_item.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-00080000001a",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "icon": "gear",
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "gear_item.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "gear_item.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "gear_item.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "gear_item.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-00080000001d",
+        "key": "partner",
+        "name": "Partner",
+        "primary_descriptor": {
+          "field": "partner.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-00080000001c",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "icon": "people",
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "partner.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "partner.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "partner.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "partner.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-00080000001f",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-00080000001e",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

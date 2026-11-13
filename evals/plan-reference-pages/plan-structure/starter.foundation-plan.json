@@ -1,0 +1,80 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "supper_club",
+    "name": "Supper Club",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cb9b-fac9-7c2a-8620-29692e5a1af8",
+        "key": "supper",
+        "name": "Supper",
+        "primary_descriptor": {
+          "field": "supper.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb9b-fac9-7a6d-a554-96814c4562cb",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cb9b-fac9-7808-b398-2e483b342287",
+            "key": "held_on",
+            "name": "Held on",
+            "type": "date",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "supper.title"
+              },
+              {
+                "field": "supper.held_on"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "supper.title"
+              },
+              {
+                "field": "supper.held_on"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "supper.title"
+              },
+              {
+                "field": "supper.held_on"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

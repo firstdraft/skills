@@ -1,0 +1,81 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "book_club",
+    "name": "Book Club",
+    "native": {},
+    "delivery": {},
+    "home_index": "book",
+    "entities": [
+      {
+        "subject_uuid": "01a1cb9a-fef5-7290-bfa1-0232715ea32d",
+        "key": "book",
+        "name": "Book",
+        "primary_descriptor": {
+          "field": "book.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-0233aba7b1d9",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cb9a-fef5-7290-bfa1-0234174b92bd",
+            "key": "author_name",
+            "name": "Author",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author_name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author_name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "book.title"
+              },
+              {
+                "field": "book.author_name"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

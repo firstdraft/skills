@@ -1,0 +1,118 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "invites",
+    "name": "Invites",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbaf-0032-7022-a2fb-9e32cf501b4d",
+        "key": "invite",
+        "name": "Invite",
+        "primary_descriptor": {
+          "field": "invite.email"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbaf-0032-7023-a64c-344750f3ad97",
+            "key": "email",
+            "name": "Email",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbaf-0032-7021-afb4-e22516b1754b",
+            "key": "token",
+            "name": "Token",
+            "type": "secure_token",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a1cbaf-0032-7020-9231-23395ffa68df",
+                "key": "needed_when_shared",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "invite.shared"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": true
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a1cbaf-0032-701f-a831-63fe175f7188",
+            "key": "shared",
+            "name": "Shared",
+            "type": "boolean",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "invite.email"
+              },
+              {
+                "field": "invite.token"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "invite.email"
+              },
+              {
+                "field": "invite.token"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "invite.email"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "invite.email"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

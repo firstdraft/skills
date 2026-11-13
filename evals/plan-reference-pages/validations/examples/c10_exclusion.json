@@ -1,0 +1,205 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "probe",
+  "name": "Probe",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "019fa300-0036-7000-8000-000000000001",
+    "key": "event",
+    "name": "Event",
+    "primary_descriptor": {
+     "field": "event.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000002",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000003",
+      "key": "code",
+      "name": "Code",
+      "type": "short_text",
+      "required": false,
+      "validations": [
+       {
+        "subject_uuid": "019fa300-0036-7000-8000-000000000004",
+        "key": "reserved",
+        "kind": "exclusion",
+        "forbidden_values": [
+         {
+          "kind": "literal",
+          "value": "ADMIN"
+         },
+         {
+          "kind": "literal",
+          "value": "ROOT"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000005",
+      "key": "summary",
+      "name": "Summary",
+      "type": "long_text",
+      "required": false
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000006",
+      "key": "seats",
+      "name": "Seats",
+      "type": "integer",
+      "required": false
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000007",
+      "key": "price",
+      "name": "Price",
+      "type": "money",
+      "required": false,
+      "settings": {
+       "currency": "USD"
+      }
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000008",
+      "key": "rating",
+      "name": "Rating",
+      "type": "decimal",
+      "required": false
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000009",
+      "key": "starts_on",
+      "name": "Starts on",
+      "type": "date",
+      "required": false
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-00000000000a",
+      "key": "ends_on",
+      "name": "Ends on",
+      "type": "date",
+      "required": false
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-00000000000b",
+      "key": "starts_at",
+      "name": "Starts at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-00000000000c",
+      "key": "ends_at",
+      "name": "Ends at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-00000000000d",
+      "key": "published",
+      "name": "Published",
+      "type": "boolean",
+      "required": true
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-00000000000e",
+      "key": "website",
+      "name": "Website",
+      "type": "url",
+      "required": false
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-00000000000f",
+      "key": "kind",
+      "name": "Kind",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "019fa300-0036-7000-8000-000000000010",
+         "key": "standard",
+         "name": "Standard"
+        },
+        {
+         "subject_uuid": "019fa300-0036-7000-8000-000000000011",
+         "key": "vip",
+         "name": "Vip"
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000012",
+      "key": "tier",
+      "name": "Tier",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "019fa300-0036-7000-8000-000000000013",
+         "key": "bronze",
+         "name": "Bronze"
+        },
+        {
+         "subject_uuid": "019fa300-0036-7000-8000-000000000014",
+         "key": "silver",
+         "name": "Silver"
+        },
+        {
+         "subject_uuid": "019fa300-0036-7000-8000-000000000015",
+         "key": "gold",
+         "name": "Gold"
+        }
+       ],
+       "ordinal": true
+      }
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000016",
+      "key": "category",
+      "name": "Category",
+      "type": "enum",
+      "required": false,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "019fa300-0036-7000-8000-000000000017",
+         "key": "talk",
+         "name": "Talk"
+        },
+        {
+         "subject_uuid": "019fa300-0036-7000-8000-000000000018",
+         "key": "workshop",
+         "name": "Workshop"
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "019fa300-0036-7000-8000-000000000019",
+      "key": "details",
+      "name": "Details",
+      "type": "json",
+      "required": false
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,52 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/3/predicates/0",
+      "readable_path": "job.for_priority_customers"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/3/predicates/0",
+      "readable_path": "job.for_priority_customers",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Job.for_priority_customers` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/3/scaffold/index/predicate",
+      "readable_path": "job.scaffold.index.predicate",
+      "reason": "The selected named Predicate has no target scope lowering.",
+      "consequence": "This surface calls `Job.for_priority_customers`, which raises NotImplementedError until it is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": null,
+      "title": "`Job.for_priority_customers`",
+      "file": "app/models/job.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Job: index lists accessible records",
+      "file": "spec/requests/jobs_spec.rb"
+    }
+  ]
+}

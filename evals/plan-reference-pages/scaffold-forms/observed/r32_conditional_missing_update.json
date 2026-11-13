@@ -1,0 +1,50 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.input.partially_generated",
+      "pointer": "/application/entities/2/scaffold/update/inputs",
+      "readable_path": "task.scaffold.update.inputs",
+      "reason": "Conditional presence Validation \"task.reason.required_for_bugs\" requires Field \"reason\" when its condition holds, and no update input supplies it.",
+      "consequence": "The update keeps its authored inputs and authorization. Saving fails validation while the condition holds, until the form or application code supplies the value."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.scaffold.update.inputs`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: index lists accessible records",
+      "file": "spec/requests/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: create form browser coverage",
+      "file": "spec/system/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

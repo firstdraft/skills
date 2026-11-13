@@ -1,0 +1,170 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa2dd-0000-7000-8000-000000000001",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa2dd-0000-7000-8000-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {},
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "019fa2dd-0000-7000-8000-000000000005",
+        "key": "item",
+        "name": "Item",
+        "primary_descriptor": {
+          "field": "item.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa2dd-0000-7000-8000-000000000004",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000008ca1",
+            "key": "made_by",
+            "name": "Made by",
+            "type": "short_text",
+            "required": false,
+            "default": {
+              "kind": "environment",
+              "name": "current_account"
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000008ca2",
+            "key": "owner_name",
+            "name": "Owner name",
+            "type": "short_text",
+            "required": false,
+            "default": {
+              "kind": "environment_path",
+              "name": "current_account",
+              "path": {
+                "target": {
+                  "field": "user.name"
+                }
+              }
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000008ca3",
+            "key": "code",
+            "name": "Code",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.made_by"
+              },
+              {
+                "field": "item.owner_name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.made_by"
+              },
+              {
+                "field": "item.owner_name"
+              },
+              {
+                "field": "item.code"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

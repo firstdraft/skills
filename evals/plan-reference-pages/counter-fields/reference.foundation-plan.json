@@ -1,0 +1,406 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "recipe_box",
+    "name": "Recipe box",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb0-2194-7ced-9078-47e9574f02f3",
+        "key": "recipe",
+        "name": "Recipe",
+        "primary_descriptor": {
+          "field": "recipe.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb0-2194-7e2b-b09d-d65fcd5ff394",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-2194-734b-aafd-0268b3803380",
+            "key": "instructions",
+            "name": "Instructions",
+            "type": "long_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-2194-7991-8a88-364fc25b23cb",
+            "key": "reviews_count",
+            "name": "Reviews",
+            "type": "counter",
+            "required": true,
+            "settings": {
+              "counts": "recipe.reviews"
+            }
+          },
+          {
+            "subject_uuid": "01a1d279-f8f9-7f90-8f33-a6338fa585fe",
+            "key": "five_star_reviews_count",
+            "name": "Five-star reviews",
+            "type": "counter",
+            "required": true,
+            "settings": {
+              "counts": "recipe.five_star_reviews"
+            }
+          },
+          {
+            "subject_uuid": "01a1d279-f8f9-776a-9d50-1b874b794b5a",
+            "key": "average_stars",
+            "name": "Average rating",
+            "type": "decimal",
+            "required": false,
+            "derivation": {
+              "aggregate": {
+                "association": "recipe.reviews",
+                "operation": "average",
+                "field": "review.stars"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.reviews_count"
+              }
+            ],
+            "ordering": "recipe.most_reviewed"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              },
+              {
+                "field": "recipe.reviews_count"
+              },
+              {
+                "field": "recipe.five_star_reviews_count"
+              },
+              {
+                "field": "recipe.average_stars"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "associations": [
+          {
+            "subject_uuid": "01a1cbb0-2194-7b88-938f-78b8607d80c8",
+            "key": "reviews",
+            "kind": "direct",
+            "name": "Reviews",
+            "reference": "review.recipe",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a1d279-f8f9-7637-bcb4-7649b10ae9bb",
+            "key": "five_star_reviews",
+            "kind": "direct",
+            "name": "Five-star reviews",
+            "reference": "review.recipe",
+            "side": "referenced",
+            "predicate": "review.five_star"
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a1cbb0-2194-7796-a8c3-47b6e2dff4ce",
+            "key": "popular",
+            "name": "Popular",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "recipe.reviews_count"
+                }
+              },
+              "operator": "greater_than_or_equal_to",
+              "right": {
+                "kind": "literal",
+                "value": 5
+              }
+            }
+          }
+        ],
+        "orderings": [
+          {
+            "subject_uuid": "01a1cbb0-2194-7da4-90c3-374a7ca1c285",
+            "key": "most_reviewed",
+            "terms": [
+              {
+                "field": "recipe.reviews_count",
+                "direction": "descending"
+              },
+              {
+                "system_field": "id",
+                "direction": "descending"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb0-2194-756d-a751-7acd9163b49a",
+        "key": "review",
+        "name": "Review",
+        "primary_descriptor": {
+          "field": "review.body"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb0-2194-7cd4-889e-de6a17680608",
+            "key": "body",
+            "name": "Review",
+            "type": "long_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-2194-7444-99fb-79d362ef413d",
+            "key": "stars",
+            "name": "Stars",
+            "type": "integer",
+            "required": true,
+            "validations": [
+              {
+                "subject_uuid": "01a1cbb0-2194-75f3-a0b6-03cea9e3e67c",
+                "key": "one_to_five",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "greater_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "operator": "less_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": 5
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cbb0-2194-78f7-b708-475a6064aedc",
+            "key": "recipe",
+            "name": "Recipe",
+            "required": true,
+            "targets": [
+              "recipe"
+            ],
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a1d279-f8f9-779b-92de-2cc2406de3b8",
+            "key": "five_star",
+            "name": "Five-star",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "review.stars"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": 5
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "review.body"
+              },
+              {
+                "field": "review.stars"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "review.body"
+              },
+              {
+                "field": "review.stars"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "review.body"
+              },
+              {
+                "field": "review.stars"
+              },
+              {
+                "association": "review.recipe"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbb0-2194-7891-958e-dbb8c4cd8b89",
+        "key": "shakshuka",
+        "entity": "recipe",
+        "fields": [
+          {
+            "field": "recipe.title",
+            "value": {
+              "kind": "literal",
+              "value": "Shakshuka"
+            }
+          },
+          {
+            "field": "recipe.instructions",
+            "value": {
+              "kind": "literal",
+              "value": "Simmer tomatoes, crack in eggs, cover."
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb0-2194-7377-a3a0-34775d76cba3",
+        "key": "loved_it",
+        "entity": "review",
+        "fields": [
+          {
+            "field": "review.body",
+            "value": {
+              "kind": "literal",
+              "value": "Loved it."
+            }
+          },
+          {
+            "field": "review.stars",
+            "value": {
+              "kind": "literal",
+              "value": 5
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "review.recipe",
+            "value": {
+              "kind": "reference_record",
+              "record": "recipe.shakshuka"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb0-2194-7db8-800b-40f208ef4bc0",
+        "key": "too_salty",
+        "entity": "review",
+        "fields": [
+          {
+            "field": "review.body",
+            "value": {
+              "kind": "literal",
+              "value": "Too salty for me."
+            }
+          },
+          {
+            "field": "review.stars",
+            "value": {
+              "kind": "literal",
+              "value": 3
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "review.recipe",
+            "value": {
+              "kind": "reference_record",
+              "record": "recipe.shakshuka"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

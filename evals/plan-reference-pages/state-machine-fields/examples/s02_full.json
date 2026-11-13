@@ -1,0 +1,389 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "requests",
+  "name": "Requests",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-000000000015",
+    "key": "request",
+    "name": "Request",
+    "primary_descriptor": {
+     "field": "request.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000016",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000014",
+      "key": "status",
+      "name": "Status",
+      "type": "state_machine",
+      "required": true,
+      "settings": {
+       "initial_state": "submitted",
+       "states": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000b",
+         "key": "submitted",
+         "name": "Submitted"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000c",
+         "key": "approved",
+         "name": "Approved"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000d",
+         "key": "declined",
+         "name": "Declined"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000e",
+         "key": "cancelled",
+         "name": "Cancelled"
+        }
+       ],
+       "transitions": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000000f",
+         "key": "approve",
+         "from": [
+          "submitted"
+         ],
+         "to": "approved",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "request.decided_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000010",
+         "key": "decline",
+         "from": [
+          "submitted"
+         ],
+         "to": "declined",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "request.decided_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000011",
+         "key": "cancel",
+         "from": [
+          "submitted",
+          "approved"
+         ],
+         "to": "cancelled"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000012",
+         "key": "resubmit",
+         "from": [
+          "declined"
+         ],
+         "to": "submitted",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "request.decided_at",
+           "value": {
+            "kind": "literal",
+            "value": null
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000013",
+         "key": "escalate",
+         "from": [
+          "submitted"
+         ],
+         "to": "approved",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "request.decided_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          },
+          {
+           "kind": "set_field",
+           "field": "request.escalated",
+           "value": {
+            "kind": "literal",
+            "value": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000017",
+      "key": "decided_at",
+      "name": "Decided at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000018",
+      "key": "escalated",
+      "name": "Escalated",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000001a",
+      "key": "decline_reason",
+      "name": "Decline reason",
+      "type": "long_text",
+      "required": false,
+      "validations": [
+       {
+        "subject_uuid": "01a0caf3-0770-7000-8000-000000000019",
+        "key": "required_when_declined",
+        "kind": "presence",
+        "when": {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "field": "request.status"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "literal",
+          "value": "declined"
+         }
+        }
+       }
+      ]
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000001b",
+      "key": "waiting",
+      "name": "Waiting",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "request.status"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": "submitted"
+       }
+      }
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000001c",
+      "key": "editable",
+      "operation": "update",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "request.status"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": "submitted"
+       }
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "request.title"
+       },
+       {
+        "field": "request.status"
+       },
+       {
+        "field": "request.decided_at"
+       }
+      ],
+      "predicate": "request.waiting"
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "request.title"
+       },
+       {
+        "field": "request.status"
+       },
+       {
+        "field": "request.decided_at"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "request.title"
+       },
+       {
+        "field": "request.decline_reason"
+       }
+      ]
+     },
+     "update": {
+      "authorization": {
+       "policy": "request.editable"
+      },
+      "inputs": [
+       {
+        "field": "request.title"
+       },
+       {
+        "field": "request.decline_reason"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000001d",
+    "key": "laptop",
+    "entity": "request",
+    "fields": [
+     {
+      "field": "request.title",
+      "value": {
+       "kind": "literal",
+       "value": "New laptop"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000001e",
+    "key": "monitor",
+    "entity": "request",
+    "fields": [
+     {
+      "field": "request.title",
+      "value": {
+       "kind": "literal",
+       "value": "Second monitor"
+      }
+     },
+     {
+      "field": "request.status",
+      "value": {
+       "kind": "literal",
+       "value": "approved"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000001f",
+    "key": "standing_desk",
+    "entity": "request",
+    "fields": [
+     {
+      "field": "request.title",
+      "value": {
+       "kind": "literal",
+       "value": "Standing desk"
+      }
+     },
+     {
+      "field": "request.status",
+      "value": {
+       "kind": "literal",
+       "value": "declined"
+      }
+     },
+     {
+      "field": "request.decline_reason",
+      "value": {
+       "kind": "literal",
+       "value": "Over budget this quarter"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-000000000020",
+    "key": "chair",
+    "entity": "request",
+    "fields": [
+     {
+      "field": "request.title",
+      "value": {
+       "kind": "literal",
+       "value": "Chair"
+      }
+     },
+     {
+      "field": "request.status",
+      "value": {
+       "kind": "literal",
+       "value": "cancelled"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,44 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.field_presence_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/0/fields/2/validations/0/kind",
+      "readable_path": "task.category.absent_for_milestones"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/0/fields/2/validations/0",
+      "readable_path": "task.category.absent_for_milestones",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Task#absent_for_milestones`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: create form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

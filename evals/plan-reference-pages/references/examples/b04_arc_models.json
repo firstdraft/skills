@@ -1,0 +1,174 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1e104-0000-7000-8000-000000000002",
+        "key": "post",
+        "name": "Post",
+        "primary_descriptor": {
+          "field": "post.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e104-0000-7000-8000-000000000001",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1e104-0000-7000-8000-000000000004",
+        "key": "photo",
+        "name": "Photo",
+        "primary_descriptor": {
+          "field": "photo.caption"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e104-0000-7000-8000-000000000003",
+            "key": "caption",
+            "name": "Caption",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "photo.caption"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "photo.caption"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "photo.caption"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "photo.caption"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1e104-0000-7000-8000-000000000007",
+        "key": "comment",
+        "name": "Comment",
+        "primary_descriptor": {
+          "field": "comment.body"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1e104-0000-7000-8000-000000000006",
+            "key": "body",
+            "name": "Body",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1e104-0000-7000-8000-000000000005",
+            "key": "commentable",
+            "name": "Commentable",
+            "targets": [
+              "post",
+              "photo"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict",
+            "realization": {
+              "rails_association": "exclusive_arc"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

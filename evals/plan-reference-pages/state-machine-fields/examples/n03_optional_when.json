@@ -1,0 +1,207 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tasks",
+  "name": "Tasks",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000009b",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000009c",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000009a",
+      "key": "status",
+      "name": "Status",
+      "type": "state_machine",
+      "required": false,
+      "settings": {
+       "initial_state": "open",
+       "states": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000096",
+         "key": "open",
+         "name": "Open"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000097",
+         "key": "done",
+         "name": "Done"
+        }
+       ],
+       "transitions": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000098",
+         "key": "complete",
+         "from": [
+          "open"
+         ],
+         "to": "done",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000099",
+         "key": "reopen",
+         "from": [
+          "done"
+         ],
+         "to": "open",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "literal",
+            "value": null
+           }
+          }
+         ]
+        }
+       ],
+       "when": {
+        "kind": "comparison",
+        "left": {
+         "target": {
+          "field": "task.tracked"
+         }
+        },
+        "operator": "equals",
+        "right": {
+         "kind": "literal",
+         "value": true
+        }
+       }
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000009d",
+      "key": "completed_at",
+      "name": "Completed at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000095",
+      "key": "tracked",
+      "name": "Tracked",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000009e",
+    "key": "x",
+    "entity": "task",
+    "fields": [
+     {
+      "field": "task.title",
+      "value": {
+       "kind": "literal",
+       "value": "Optional done"
+      }
+     },
+     {
+      "field": "task.tracked",
+      "value": {
+       "kind": "literal",
+       "value": true
+      }
+     },
+     {
+      "field": "task.status",
+      "value": {
+       "kind": "literal",
+       "value": "done"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

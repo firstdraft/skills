@@ -1,0 +1,262 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "allotment",
+    "name": "Allotment",
+    "native": {},
+    "delivery": {},
+    "topics": [
+      {
+        "name": "Gardens",
+        "entities": [
+          "garden",
+          "bed",
+          "planting",
+          "harvest"
+        ]
+      }
+    ],
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000a029",
+        "key": "garden",
+        "name": "Garden",
+        "primary_descriptor": {
+          "field": "garden.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02a",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "garden.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "garden.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02b",
+        "key": "bed",
+        "name": "Bed",
+        "primary_descriptor": {
+          "association": "bed.garden"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02c",
+            "key": "soil",
+            "name": "Soil",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02d",
+            "key": "garden",
+            "name": "Garden",
+            "targets": [
+              "garden"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "bed.soil"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "bed.soil"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02e",
+        "key": "planting",
+        "name": "Planting",
+        "primary_descriptor": {
+          "association": "planting.bed"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a02f",
+            "key": "crop",
+            "name": "Crop",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a030",
+            "key": "bed",
+            "name": "Bed",
+            "targets": [
+              "bed"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "planting.crop"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "planting.crop"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "planting.crop"
+              },
+              {
+                "association": "planting.bed"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "planting.crop"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000a031",
+        "key": "harvest",
+        "name": "Harvest",
+        "primary_descriptor": {
+          "field": "harvest.label"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a032",
+            "key": "label",
+            "name": "Label",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000a033",
+            "key": "planting",
+            "name": "Planting",
+            "targets": [
+              "planting"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "harvest.label"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "harvest.label"
+              },
+              {
+                "association": "harvest.planting",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "harvest.label"
+              },
+              {
+                "association": "harvest.planting"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

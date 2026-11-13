@@ -1,0 +1,201 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "recipe_box",
+    "name": "Recipe box",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb0-2194-7ced-9078-47e9574f02f3",
+        "key": "recipe",
+        "name": "Recipe",
+        "primary_descriptor": {
+          "field": "recipe.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb0-2194-7e2b-b09d-d65fcd5ff394",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-2194-734b-aafd-0268b3803380",
+            "key": "instructions",
+            "name": "Instructions",
+            "type": "long_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "recipe.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbb0-2194-756d-a751-7acd9163b49a",
+        "key": "review",
+        "name": "Review",
+        "primary_descriptor": {
+          "field": "review.body"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb0-2194-7cd4-889e-de6a17680608",
+            "key": "body",
+            "name": "Review",
+            "type": "long_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb0-2194-7444-99fb-79d362ef413d",
+            "key": "stars",
+            "name": "Stars",
+            "type": "integer",
+            "required": true,
+            "validations": [
+              {
+                "subject_uuid": "01a1cbb0-2194-75f3-a0b6-03cea9e3e67c",
+                "key": "one_to_five",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "greater_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "operator": "less_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": 5
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cbb0-2194-78f7-b708-475a6064aedc",
+            "key": "recipe",
+            "name": "Recipe",
+            "required": true,
+            "targets": [
+              "recipe"
+            ],
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "review.body"
+              },
+              {
+                "field": "review.stars"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "review.body"
+              },
+              {
+                "field": "review.stars"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "review.body"
+              },
+              {
+                "field": "review.stars"
+              },
+              {
+                "association": "review.recipe"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

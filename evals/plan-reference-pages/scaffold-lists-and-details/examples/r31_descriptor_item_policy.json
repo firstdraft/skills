@@ -1,0 +1,290 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "bookings",
+  "name": "Bookings",
+  "native": {},
+  "delivery": {},
+  "home_index": "booking",
+  "topics": [
+   {
+    "name": "Bookings",
+    "entities": [
+     "user",
+     "slot",
+     "booking"
+    ]
+   }
+  ],
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-075b-7000-8000-000000007919",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-00000000791a",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-00000000791b",
+      "key": "signed_in",
+      "operation": "use_app",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "record": "current"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-075b-7000-8000-00000000791c",
+    "key": "slot",
+    "name": "Slot",
+    "primary_descriptor": {
+     "field": "slot.label"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-00000000791d",
+      "key": "label",
+      "name": "Label",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-00000000791e",
+      "key": "starts_at",
+      "name": "Starts at",
+      "type": "datetime",
+      "required": true
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-00000000791f",
+      "key": "host",
+      "name": "Host",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000007920",
+      "key": "bookings",
+      "kind": "direct",
+      "name": "Bookings",
+      "reference": "booking.slot",
+      "side": "referenced"
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000007921",
+      "key": "read_hosted",
+      "operation": "read",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "association": "slot.host"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show"
+     ],
+     "index": {
+      "authorization": {
+       "policy": "slot.read_hosted"
+      },
+      "projection": [
+       {
+        "field": "slot.label"
+       },
+       {
+        "field": "slot.starts_at"
+       }
+      ]
+     },
+     "show": {
+      "authorization": {
+       "policy": "slot.read_hosted"
+      },
+      "projection": [
+       {
+        "field": "slot.label"
+       },
+       {
+        "field": "slot.starts_at"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-075b-7000-8000-000000007922",
+    "key": "booking",
+    "name": "Booking",
+    "primary_descriptor": {
+     "association": "booking.slot"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000007923",
+      "key": "note",
+      "name": "Note",
+      "type": "long_text",
+      "required": false
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000007924",
+      "key": "slot",
+      "name": "Slot",
+      "targets": [
+       "slot"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     },
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000007925",
+      "key": "guest",
+      "name": "Guest",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000007926",
+      "key": "read_own",
+      "operation": "read",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "association": "booking.guest"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show"
+     ],
+     "index": {
+      "authorization": {
+       "policy": "booking.read_own"
+      },
+      "projection": [
+       {
+        "association": "booking.slot",
+        "authorization": {
+         "policy": "slot.read_hosted"
+        }
+       },
+       {
+        "field": "booking.note"
+       }
+      ]
+     },
+     "show": {
+      "authorization": {
+       "policy": "booking.read_own"
+      },
+      "projection": [
+       {
+        "association": "booking.slot",
+        "authorization": {
+         "policy": "slot.read_hosted"
+        }
+       },
+       {
+        "field": "booking.note"
+       }
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

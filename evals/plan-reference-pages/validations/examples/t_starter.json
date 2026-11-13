@@ -1,0 +1,269 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "workshops",
+  "name": "Workshops",
+  "native": {},
+  "delivery": {},
+  "home_index": "workshop",
+  "entities": [
+   {
+    "subject_uuid": "01a1cba7-b691-743b-984d-9d3d06652df1",
+    "key": "instructor",
+    "name": "Instructor",
+    "primary_descriptor": {
+     "field": "instructor.name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cba7-b691-7216-b069-b6fb6e5cfc7e",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "instructor.name"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "instructor.name"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "instructor.name"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "instructor.name"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a1cba7-b691-7364-8564-40b55120ba48",
+    "key": "workshop",
+    "name": "Workshop",
+    "primary_descriptor": {
+     "field": "workshop.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cba7-b691-738d-b48a-81e204ec5bbf",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7b20-af34-ca35f1e8cef1",
+      "key": "code",
+      "name": "Code",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7ae9-bf36-35e9853b8a3e",
+      "key": "kind",
+      "name": "Kind",
+      "type": "enum",
+      "required": true,
+      "settings": {
+       "values": [
+        {
+         "subject_uuid": "01a1cba7-b691-7c85-9966-78ebde85c479",
+         "key": "online",
+         "name": "Online"
+        },
+        {
+         "subject_uuid": "01a1cba7-b691-72db-b65d-275f4d63dd0d",
+         "key": "in_person",
+         "name": "In person"
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7d33-be02-cb5178ec5edc",
+      "key": "room",
+      "name": "Room",
+      "type": "short_text",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-78a1-8075-ade798c97147",
+      "key": "capacity",
+      "name": "Capacity",
+      "type": "integer",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-7446-871c-25c3ec6ffd70",
+      "key": "starts_on",
+      "name": "Starts on",
+      "type": "date",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cba7-b691-768c-b692-4d0c3885e223",
+      "key": "ends_on",
+      "name": "Ends on",
+      "type": "date",
+      "required": false
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a1cba7-b691-7fd8-893c-272c22da8153",
+      "key": "instructor",
+      "name": "Instructor",
+      "targets": [
+       "instructor"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "restrict"
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "workshop.title"
+       },
+       {
+        "field": "workshop.code"
+       },
+       {
+        "field": "workshop.starts_on"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "workshop.title"
+       },
+       {
+        "field": "workshop.code"
+       },
+       {
+        "field": "workshop.kind"
+       },
+       {
+        "field": "workshop.room"
+       },
+       {
+        "field": "workshop.capacity"
+       },
+       {
+        "field": "workshop.starts_on"
+       },
+       {
+        "field": "workshop.ends_on"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "workshop.title"
+       },
+       {
+        "field": "workshop.code"
+       },
+       {
+        "field": "workshop.kind"
+       },
+       {
+        "field": "workshop.room"
+       },
+       {
+        "field": "workshop.capacity"
+       },
+       {
+        "field": "workshop.starts_on"
+       },
+       {
+        "field": "workshop.ends_on"
+       },
+       {
+        "association": "workshop.instructor"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "workshop.title"
+       },
+       {
+        "field": "workshop.code"
+       },
+       {
+        "field": "workshop.kind"
+       },
+       {
+        "field": "workshop.room"
+       },
+       {
+        "field": "workshop.capacity"
+       },
+       {
+        "field": "workshop.starts_on"
+       },
+       {
+        "field": "workshop.ends_on"
+       },
+       {
+        "association": "workshop.instructor"
+       }
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

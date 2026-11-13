@@ -1,0 +1,494 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "recipe_box",
+    "name": "Recipe box",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000701",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000702",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000703",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000704",
+        "key": "cookbook",
+        "name": "Cookbook",
+        "primary_descriptor": {
+          "field": "cookbook.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000705",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000706",
+            "key": "owner",
+            "name": "Owner",
+            "targets": [
+              "user"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000707",
+            "key": "recipes",
+            "name": "Recipes",
+            "kind": "direct",
+            "reference": "recipe.cookbook",
+            "side": "referenced"
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000708",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "cookbook.owner"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "cookbook.manage_own"
+            },
+            "projection": [
+              {
+                "field": "cookbook.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "cookbook.manage_own"
+            },
+            "projection": [
+              {
+                "field": "cookbook.name"
+              },
+              {
+                "association": "cookbook.recipes",
+                "authorization": {
+                  "policy": "recipe.manage_with_cookbook"
+                },
+                "projection": [
+                  {
+                    "field": "recipe.title"
+                  }
+                ],
+                "create_form": {
+                  "return_to": {
+                    "kind": "resource",
+                    "entity": "cookbook",
+                    "route": "show",
+                    "record": {
+                      "from": "scaffold_record"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "cookbook.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "cookbook.name"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "cookbook.owner",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "cookbook.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "cookbook.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "cookbook.manage_own"
+            }
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000709",
+        "key": "recipe",
+        "name": "Recipe",
+        "primary_descriptor": {
+          "field": "recipe.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070a",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070b",
+            "key": "instructions",
+            "name": "Instructions",
+            "type": "long_text",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070e",
+            "key": "added_on",
+            "name": "Added on",
+            "type": "date",
+            "required": true,
+            "immutable": true
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000711",
+            "key": "kind",
+            "name": "Kind",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070f",
+                  "key": "original",
+                  "name": "Original"
+                },
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-000000000710",
+                  "key": "adapted",
+                  "name": "Adapted"
+                }
+              ]
+            },
+            "default": {
+              "kind": "literal",
+              "value": "original"
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000713",
+            "key": "source",
+            "name": "Source",
+            "type": "short_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-07f0-7000-8000-000000000712",
+                "key": "required_when_adapted",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "recipe.kind"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "adapted"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000716",
+            "key": "status",
+            "name": "Status",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-000000000714",
+                  "key": "untested",
+                  "name": "Untested"
+                },
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-000000000715",
+                  "key": "tested",
+                  "name": "Tested"
+                }
+              ]
+            },
+            "default": {
+              "kind": "literal",
+              "value": "untested"
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000718",
+            "key": "tested_on",
+            "name": "Tested on",
+            "type": "date",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-07f0-7000-8000-000000000717",
+                "key": "required_when_tested",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "recipe.status"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "tested"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070c",
+            "key": "cookbook",
+            "name": "Cookbook",
+            "targets": [
+              "cookbook"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000070d",
+            "key": "manage_with_cookbook",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "matches_policy",
+              "association": "recipe.cookbook",
+              "policy": "cookbook.manage_own"
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": {
+              "policy": "recipe.manage_with_cookbook"
+            },
+            "projection": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              },
+              {
+                "field": "recipe.added_on"
+              },
+              {
+                "field": "recipe.kind"
+              },
+              {
+                "field": "recipe.source"
+              },
+              {
+                "field": "recipe.status"
+              },
+              {
+                "field": "recipe.tested_on"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "recipe.manage_with_cookbook"
+            },
+            "inputs": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              },
+              {
+                "field": "recipe.kind"
+              },
+              {
+                "field": "recipe.source"
+              },
+              {
+                "field": "recipe.tested_on"
+              }
+            ],
+            "bindings": [
+              {
+                "field": "recipe.added_on",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_date"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "recipe.manage_with_cookbook"
+            },
+            "inputs": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.instructions"
+              },
+              {
+                "field": "recipe.kind"
+              },
+              {
+                "field": "recipe.source"
+              },
+              {
+                "field": "recipe.status"
+              },
+              {
+                "field": "recipe.tested_on"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "recipe.manage_with_cookbook"
+            },
+            "return_to": {
+              "kind": "resource",
+              "entity": "cookbook",
+              "route": "show",
+              "record": {
+                "from": "mutation_record",
+                "through": [
+                  {
+                    "association": "recipe.cookbook"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ],
+    "home_index": "cookbook"
+  }
+}

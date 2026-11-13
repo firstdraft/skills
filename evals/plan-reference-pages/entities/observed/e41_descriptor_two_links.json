@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.primary_descriptor.partially_generated",
+      "pointer": "/application/entities/2/primary_descriptor/association",
+      "readable_path": "planting",
+      "reason": "The Rails target shows a label through one Reference only, and this Primary Descriptor's target labels its own records through another Association or a Field it cannot show.",
+      "consequence": "Generated pages label each Planting as \"Planting #<id>\" until a reader for the authored descriptor is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`planting`",
+      "file": "app/models/planting.rb"
+    }
+  ]
+}

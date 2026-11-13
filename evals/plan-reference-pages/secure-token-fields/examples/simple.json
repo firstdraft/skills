@@ -1,0 +1,91 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "invites",
+    "name": "Invites",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbaf-0032-7002-9d84-712a761bb891",
+        "key": "invite",
+        "name": "Invite",
+        "primary_descriptor": {
+          "field": "invite.email"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbaf-0032-7003-8f33-8e4bbf8c36a1",
+            "key": "email",
+            "name": "Email",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbaf-0032-7001-9d93-874ebc571a68",
+            "key": "token",
+            "name": "Token",
+            "type": "secure_token",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "invite.email"
+              },
+              {
+                "field": "invite.token"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "invite.email"
+              },
+              {
+                "field": "invite.token"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "invite.email"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "invite.email"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

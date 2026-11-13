@@ -1,0 +1,57 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "reading_club",
+    "name": "Reading Club",
+    "native": {
+      "ios": {},
+      "android": {}
+    },
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cb96-2704-712a-acc3-456ce93b2851",
+        "key": "book",
+        "name": "Book",
+        "primary_descriptor": {
+          "field": "book.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb96-2704-769e-861e-ecda03660efd",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "book.title"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

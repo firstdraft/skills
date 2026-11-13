@@ -1,0 +1,371 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "rentals",
+    "name": "Expenses",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d0",
+        "key": "rental",
+        "name": "Rental",
+        "primary_descriptor": {
+          "field": "rental.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d1",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001cf",
+            "key": "tier",
+            "name": "Tier",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0990-7000-8000-0000000001cd",
+                  "key": "standard",
+                  "name": "Standard"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0990-7000-8000-0000000001ce",
+                  "key": "premium",
+                  "name": "Premium"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d4",
+            "key": "nightly_rate",
+            "name": "Nightly rate",
+            "type": "money",
+            "required": true,
+            "settings": {
+              "currency": "USD"
+            },
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d2",
+                "key": "positive",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "greater_than",
+                    "right": {
+                      "kind": "literal",
+                      "value": "0"
+                    }
+                  }
+                ]
+              },
+              {
+                "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d3",
+                "key": "standard_cap",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "less_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": "400"
+                    }
+                  }
+                ],
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "rental.tier"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "standard"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d5",
+            "key": "cleaning_fee",
+            "name": "Cleaning fee",
+            "type": "money",
+            "required": true,
+            "settings": {
+              "currency": "USD"
+            },
+            "default": {
+              "kind": "literal",
+              "value": "0"
+            },
+            "immutable": true,
+            "notes": "Set when the listing is created; changing it later is a support request."
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d8",
+            "key": "deposit",
+            "name": "Deposit",
+            "type": "money",
+            "required": false,
+            "settings": {
+              "currency": "EUR"
+            },
+            "redact_from_logs": true,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d6",
+                "key": "required_for_premium",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "rental.tier"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "premium"
+                  }
+                }
+              },
+              {
+                "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d7",
+                "key": "at_most_2000",
+                "kind": "comparison",
+                "comparisons": [
+                  {
+                    "operator": "less_than_or_equal_to",
+                    "right": {
+                      "kind": "literal",
+                      "value": "2000"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001d9",
+            "key": "luxury",
+            "name": "Luxury",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "rental.nightly_rate"
+                }
+              },
+              "operator": "greater_than_or_equal_to",
+              "right": {
+                "kind": "literal",
+                "value": "500"
+              }
+            }
+          }
+        ],
+        "orderings": [
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001da",
+            "key": "cheapest_first",
+            "terms": [
+              {
+                "field": "rental.nightly_rate",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "created_at",
+                "direction": "ascending"
+              },
+              {
+                "system_field": "id",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "rental.title"
+              },
+              {
+                "field": "rental.tier"
+              },
+              {
+                "field": "rental.nightly_rate"
+              },
+              {
+                "field": "rental.cleaning_fee"
+              },
+              {
+                "field": "rental.deposit"
+              }
+            ],
+            "ordering": "rental.cheapest_first"
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "rental.title"
+              },
+              {
+                "field": "rental.tier"
+              },
+              {
+                "field": "rental.nightly_rate"
+              },
+              {
+                "field": "rental.cleaning_fee"
+              },
+              {
+                "field": "rental.deposit"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "rental.title"
+              },
+              {
+                "field": "rental.tier"
+              },
+              {
+                "field": "rental.nightly_rate"
+              },
+              {
+                "field": "rental.cleaning_fee"
+              },
+              {
+                "field": "rental.deposit"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "rental.title"
+              },
+              {
+                "field": "rental.tier"
+              },
+              {
+                "field": "rental.nightly_rate"
+              },
+              {
+                "field": "rental.deposit"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf3-0990-7000-8000-0000000001db",
+        "key": "lake_cabin",
+        "entity": "rental",
+        "fields": [
+          {
+            "field": "rental.title",
+            "value": {
+              "kind": "literal",
+              "value": "Lake cabin"
+            }
+          },
+          {
+            "field": "rental.tier",
+            "value": {
+              "kind": "literal",
+              "value": "standard"
+            }
+          },
+          {
+            "field": "rental.nightly_rate",
+            "value": {
+              "kind": "literal",
+              "value": "149.99"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0990-7000-8000-0000000001dc",
+        "key": "city_loft",
+        "entity": "rental",
+        "fields": [
+          {
+            "field": "rental.title",
+            "value": {
+              "kind": "literal",
+              "value": "City loft"
+            }
+          },
+          {
+            "field": "rental.tier",
+            "value": {
+              "kind": "literal",
+              "value": "premium"
+            }
+          },
+          {
+            "field": "rental.nightly_rate",
+            "value": {
+              "kind": "literal",
+              "value": "520"
+            }
+          },
+          {
+            "field": "rental.cleaning_fee",
+            "value": {
+              "kind": "literal",
+              "value": "75"
+            }
+          },
+          {
+            "field": "rental.deposit",
+            "value": {
+              "kind": "literal",
+              "value": "500"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

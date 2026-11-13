@@ -1,0 +1,90 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.development_data.field_assignment.not_generated",
+      "pointer": "/application/development_data/0/fields/2/value",
+      "readable_path": "task.x",
+      "reason": "The authored State Machine value is not reachable through generated behavior.",
+      "consequence": "The generated development seed omits this Field value."
+    },
+    {
+      "code": "foundation_plan.gap.state_machine.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "task.status",
+      "reason": "AASM 6.0.0 gives every blank state its initial state, so the current release keeps an optional State Machine out of AASM.",
+      "consequence": "A nullable string column without a default and a closed-domain validation that permits nil are emitted. Each event is a stub that raises NotImplementedError, and an empty callback stands in for conditional applicability; AASM behavior is omitted."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition.effects_not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/0",
+      "readable_path": "task.status.complete",
+      "reason": "task.status is optional, and AASM 6.0.0 gives every blank state its initial state, so this release generates no events for an optional State Machine.",
+      "consequence": "`Task#complete!`, `#complete`, and `#may_complete?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/0/effects/0",
+      "readable_path": "task.status.complete/effects/0",
+      "reason": "The transition effect is not generated.",
+      "consequence": "The generated application does not apply this effect."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition.effects_not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/1",
+      "readable_path": "task.status.reopen",
+      "reason": "task.status is optional, and AASM 6.0.0 gives every blank state its initial state, so this release generates no events for an optional State Machine.",
+      "consequence": "`Task#reopen!`, `#reopen`, and `#may_reopen?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/1/effects/0",
+      "readable_path": "task.status.reopen/effects/0",
+      "reason": "The transition effect is not generated.",
+      "consequence": "The generated application does not apply this effect."
+    },
+    {
+      "code": "foundation_plan.gap.state_machine_applicability.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/when",
+      "readable_path": "task.status.when",
+      "reason": "The optional State Machine applicability condition is not generated.",
+      "consequence": "`Task#assign_initial_status` runs before validation on create and is empty, so a new record gets no status where the authored condition holds until it is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Task#complete!`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Task#reopen!`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`task.status`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`Task#assign_initial_status`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`task.x`",
+      "file": "db/seeds/development.rb"
+    }
+  ]
+}

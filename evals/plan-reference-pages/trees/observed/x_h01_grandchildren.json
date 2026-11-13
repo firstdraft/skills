@@ -1,0 +1,58 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_association",
+      "severity": "warning",
+      "pointer": "/application/entities/0/associations/1/source",
+      "readable_path": "category.grandchildren"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.association.not_generated",
+      "pointer": "/application/entities/0/associations/1",
+      "readable_path": "category.grandchildren",
+      "reason": "A direct collection source must be an admitted predicated required immutable has-many Association.",
+      "consequence": "The Association declaration is omitted."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/3",
+      "readable_path": "category.grandchildren",
+      "reason": "The selected Association is not target-admitted here.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.tree.partially_generated",
+      "pointer": "/application/entities/0/trees/0",
+      "readable_path": "category.hierarchy",
+      "reason": "The parent Reference category.parent is generated, but the Tree's rules are not: nothing keeps the hierarchy free of cycles.",
+      "consequence": "A record can be saved with a parent that makes a cycle."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.grandchildren`",
+      "file": "app/controllers/categories_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`category.hierarchy`",
+      "file": "app/models/category.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`category.grandchildren`",
+      "file": "app/models/category.rb"
+    }
+  ]
+}

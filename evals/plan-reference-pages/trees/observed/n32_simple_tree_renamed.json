@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-lists-every-gap",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-lists-every-gap",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.tree.partially_generated",
+      "pointer": "/application/entities/0/trees/0",
+      "readable_path": "category.nesting",
+      "reason": "The parent Reference category.parent is generated, but the Tree's rules are not: nothing keeps the hierarchy free of cycles.",
+      "consequence": "A record can be saved with a parent that makes a cycle."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`category.nesting`",
+      "file": "app/models/category.rb"
+    }
+  ]
+}
