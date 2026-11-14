@@ -364,7 +364,8 @@ authoring that Association again is skipped at import with a service-support gap
 adds the reverse `has_many` or `has_one` on the target. An indirect Association composes two Associations: a team's
 `members` through its [memberships](groups-and-memberships.md), with source `membership.user`,
 emits `has_many :members, -> { distinct }, through: :memberships, source: :user`, and a team's show page can list
-them.
+them. Author each Association you expect to need, from either side of a join or both;
+[Associations](plan/associations.md#across-a-join-entity) says how to name one and where to list it.
 
 The current Compiler emits a bounded single-target Reference slice with Boolean `required`, `one_to_one`, and
 `immutable`, plus its derived forward traversal and direct inverses over mutable and immutable References. The

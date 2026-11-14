@@ -13,7 +13,9 @@ it gives the target a plain `has_many` whenever deleting the target has to reach
 Plan cannot name that inferred `has_many`. Author an Association, even with the same key, when the Plan has to name
 the reader: to show related records on a details page, to add a record from its parent's page, to count related
 records in a [counter Field](counter-fields.md), or to test them in a Predicate or [Policy](policies.md) with
-`exists`. A Reference with no authored Association is enough when no part of the Plan names the reader.
+`exists`. Author one as well for a reader that only the code you write after Compile will use: include every
+Association you expect to need. A Reference with no authored Association is enough when neither the Plan nor your own
+code reads it from the target's side.
 
 - **First Draft generates:** `has_many`, `has_one`, filtered `has_many` and `has_many …, -> { distinct }, through:`;
   a section on the parent's details page with five records and a link to a full nested list; an Add link with a
@@ -144,6 +146,22 @@ An item in `scaffold.show.projection`, beside the Field items:
 A projection `predicate` filters what one page shows. An Association `predicate` names a reader that the Plan, and
 your code, can reuse. A filtered list, filtered either way, gets no Add link from `create_form`; see
 [Not generated](#not-generated).
+
+### Across a join Entity
+
+A join Entity, such as Tagging between Project and Tag, gives each side a direct Association to the join's own
+records, `project.taggings`. An indirect Association through it reads the records on the far side, `project.tags`.
+Author the ones you expect to need, from one side or from both.
+
+- **Its key.** Use the related Entity's plural when that says what the records are: `project.tags`, `tag.projects`.
+  Choose a role name when that key is taken or says too little. A member who writes posts and likes posts already
+  has `member.posts` for the posts they wrote, so the posts they liked are `member.liked_posts`, and `post.likers`
+  says more than `post.members`. The Compiler adds `source:` for a role name:
+  `has_many :liked_posts, -> { distinct }, through: :likes, source: :post`.
+- **On a page.** Where a page should list the related records, such as a tag's projects or the posts a member liked,
+  list the indirect Association. List the join's own records where people add them, because an indirect Association
+  gets no Add link, and where the link has Fields of its own to show, such as a role or an answer. A join row shows
+  the related record through a forward item, such as `{"association": "tagging.tag", "authorization": "public"}`.
 
 ## Full example
 
@@ -308,7 +326,7 @@ Every one of these names an authored Association, or a Reference's forward reade
 | --- | --- | --- |
 | Details page | `{"association": "project.tasks", …}` in `scaffold.show.projection` | A section, as above. |
 | Row of a list page | the same item in `scaffold.index.projection` | Nothing: the item is left out (`foundation_plan.gap.scaffold.projection.not_generated`); the list stays. |
-| A collection inside a collection's rows | `{"association": "task.comments", …}` inside `project.tasks`'s `projection` | Nothing: that inner item is left out with the same gap code. A forward item, such as `tagging.tag` in the full example, works. |
+| A collection inside a collection's rows | `{"association": "task.comments", …}` inside `project.tasks`'s `projection` | Nothing: that inner item is left out with the same gap code. A `"public"` forward item, such as `tagging.tag` in the full example, works. |
 | [Counter Field](counter-fields.md) | `"settings": {"counts": "project.tasks"}` | A count kept by Rails. The project's `has_many :tasks` then carries `dependent: :destroy`. |
 | [Policy](policies.md) rule | `{"kind": "exists", "association": "project.memberships", "where": {…}}` | `record&.memberships&.any? { … }` and `relation.where(id: Membership.where(user_id: user.id).select(:project_id))`. |
 | [Predicate](predicates.md) | `{"kind": "exists", "association": "project.tasks"}`, with or without `where` | A stub: `scope :has_tasks` raises `NotImplementedError` until you write it (`foundation_plan.gap.predicate.not_generated`), and a list page that uses it raises too. The model spec has a placeholder example for the scope that fails until you replace it. |
@@ -361,6 +379,12 @@ Every one of these names an authored Association, or a Reference's forward reade
   `destroy` route on the join without `show` is reachable by URL only. Write the button, route, and action after
   Compile. As an interim you can offer the person a join with `show` and `destroy`: each row then gets a View link to
   the join's page, which has Delete.
+- **A forward item in a collection's rows whose `authorization` is a Policy or a gate.** The item is left out
+  (`foundation_plan.gap.scaffold.projection.not_generated`). When that leaves the rows with no item, the whole
+  section is left out with the same code, and README.md lists both under "Behavior to write", in "Pages and
+  actions". The collection's own `authorization` decides who sees its rows; a `"public"` forward item then shows the
+  related record's descriptor to each of them. To show the related records under a Policy of their own, list an
+  indirect Association: its page item takes a Policy or a gate.
 - **A filter on an indirect Association.** The Association and every page item that uses it are left out
   (`foundation_plan.gap.association.not_generated`). Filter the `through` step instead: a filtered
   `project.pinned_taggings` with `source: "tagging.tag"` generates
@@ -445,8 +469,9 @@ Predicates; fix the key and it goes away.
   collection elsewhere.
 - **Tell:** that count limits and Remove buttons are not generated. A count limit is in the Plan as an `owner`
   Validation, and you write it before the preview; you write a Remove button after Compile.
-- **No need to ask:** the Association keys, a uniqueness Validation on a join with only two References, and
-  authoring the inverse of every Reference that a page or rule reads from the target's side.
+- **No need to ask:** the Association keys, a uniqueness Validation on a join with only two References, authoring
+  the inverse of every Reference that a page or rule reads from the target's side, and authoring an indirect
+  Association wherever a page, a rule, or your own code will read the records across a join.
 
 ## Changing it later
 
