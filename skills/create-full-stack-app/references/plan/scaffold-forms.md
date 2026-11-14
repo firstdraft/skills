@@ -199,8 +199,8 @@ rule the person has no control to meet. Analysis status stays `valid`, and the g
 presence Validation "task.reason.required_for_bugs" requires Field "reason" when its condition holds, and no create
 input or binding supplies it." For an update form the reason ends "no update input supplies it." README.md lists it
 under "Behavior to write", in "Pages and actions". List the Field in both forms; on the New page it is an ordinary
-optional control. Two cases have no gap, because no new record can meet the rule, so the New page needs no control
-for the Field:
+optional control. Two cases get no `scaffold.input.partially_generated` record, because no new record can meet the
+rule, so the New page needs no control for the Field:
 
 - a condition on a [State Machine](state-machine-fields.md) state other than its `initial_state`;
 - a condition on a Field the create neither offers nor binds, when that Field's literal `default` leaves the

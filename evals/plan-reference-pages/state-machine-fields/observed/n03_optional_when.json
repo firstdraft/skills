@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
   "status": "valid",
   "diagnostics": [],
   "gaps": [
@@ -26,6 +26,13 @@
       "consequence": "`Task#complete!`, `#complete`, and `#may_complete?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
     },
     {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/0",
+      "readable_path": "task.status.complete",
+      "reason": "No generated page, route, or action fires the complete event.",
+      "consequence": "A record changes state through `Task#complete!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
       "code": "foundation_plan.gap.state_transition_effect.not_generated",
       "pointer": "/application/entities/0/fields/1/settings/transitions/0/effects/0",
       "readable_path": "task.status.complete/effects/0",
@@ -38,6 +45,13 @@
       "readable_path": "task.status.reopen",
       "reason": "task.status is optional, and AASM 6.0.0 gives every blank state its initial state, so this release generates no events for an optional State Machine.",
       "consequence": "`Task#reopen!`, `#reopen`, and `#may_reopen?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/1",
+      "readable_path": "task.status.reopen",
+      "reason": "No generated page, route, or action fires the reopen event.",
+      "consequence": "A record changes state through `Task#reopen!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
     },
     {
       "code": "foundation_plan.gap.state_transition_effect.not_generated",
@@ -56,6 +70,18 @@
   ],
   "compile": "succeeded",
   "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#complete!`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#reopen!`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
     {
       "section": "Behavior to write",
       "group": "Rules",

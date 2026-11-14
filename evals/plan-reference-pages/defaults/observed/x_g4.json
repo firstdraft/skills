@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
   "status": "issues_found",
   "diagnostics": [
     {

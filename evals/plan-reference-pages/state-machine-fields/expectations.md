@@ -30,7 +30,7 @@
 ## Notes
 
 - Says that no generated page, route, or controller action fires the confirm event, and that the reader will add
-  the button, route, and controller action after Compile (item 7).
+  the button, route, and controller action before the preview (item 7).
 - Says that one event generates only one timestamp effect, so stating the follow-up flag as a second effect (item 5)
   makes the decline event a stub that the reader writes before the preview, and that the declined example booking
   is not seeded until then.

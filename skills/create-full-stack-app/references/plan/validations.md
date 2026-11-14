@@ -513,10 +513,10 @@ These pass as `valid`:
   "Behavior to write", in Pages and actions. For a ticket's steps, required when the ticket is a bug and left off
   the New form, its reason reads `Conditional presence Validation "ticket.steps.needed_for_bugs" requires Field
   "steps" when its condition holds, and no create input or binding supplies it.` For an update form the reason ends
-  `no update input supplies it.` There is no gap when the condition cannot hold for a new record, such as a State
-  Machine Field compared with a state other than its initial state: a decline reason required when an expense is
-  declined can stay off the New form, though not off the edit form. The same holds for a condition on a Field the
-  create neither offers nor binds, when that Field's literal default leaves the condition off (see
+  `no update input supplies it.` The New form has no gap when the condition cannot hold for a new record, such as
+  a State Machine Field compared with a state other than its initial state: a decline reason required when an
+  expense is declined can stay off the New form, though not off the edit form. The same holds for a condition on a
+  Field the create neither offers nor binds, when that Field's literal default leaves the condition off (see
   [Scaffold forms](scaffold-forms.md#what-a-form-needs-from-the-entity)). Add the input to the form, or write code
   that supplies the value, before the preview.
 
