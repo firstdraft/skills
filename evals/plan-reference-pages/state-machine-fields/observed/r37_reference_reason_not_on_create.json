@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
   "status": "valid",
   "diagnostics": [],
   "gaps": [
@@ -19,11 +19,25 @@
       "consequence": "The generated development seed omits this Field value."
     },
     {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/2/settings/transitions/0",
+      "readable_path": "booking.status.confirm",
+      "reason": "No generated page, route, or action fires the confirm event.",
+      "consequence": "A record changes state through `Booking#confirm!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
       "code": "foundation_plan.gap.state_transition.effects_not_generated",
       "pointer": "/application/entities/0/fields/2/settings/transitions/1",
       "readable_path": "booking.status.decline",
       "reason": "The decline event has 2 effects. This release generates at most one effect per event, setting an optional datetime Field on the same record to the current time or nil.",
       "consequence": "`Booking#decline!`, `#decline`, and `#may_decline?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/2/settings/transitions/1",
+      "readable_path": "booking.status.decline",
+      "reason": "No generated page, route, or action fires the decline event.",
+      "consequence": "A record changes state through `Booking#decline!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
     },
     {
       "code": "foundation_plan.gap.state_transition_effect.not_generated",
@@ -38,10 +52,48 @@
       "readable_path": "booking.status.decline/effects/1",
       "reason": "The transition effect is not generated.",
       "consequence": "The generated application does not apply this effect."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/2/settings/transitions/2",
+      "readable_path": "booking.status.cancel",
+      "reason": "No generated page, route, or action fires the cancel event.",
+      "consequence": "A record changes state through `Booking#cancel!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/2/settings/transitions/3",
+      "readable_path": "booking.status.request_again",
+      "reason": "No generated page, route, or action fires the request_again event.",
+      "consequence": "A record changes state through `Booking#request_again!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
     }
   ],
   "compile": "succeeded",
   "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Booking#confirm!`",
+      "file": "app/controllers/bookings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Booking#decline!`",
+      "file": "app/controllers/bookings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Booking#cancel!`",
+      "file": "app/controllers/bookings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Booking#request_again!`",
+      "file": "app/controllers/bookings_controller.rb"
+    },
     {
       "section": "Behavior to write",
       "group": "Rules",
