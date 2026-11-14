@@ -1,0 +1,237 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "projects",
+    "name": "Projects",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000f231",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f232",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f233",
+            "key": "memberships",
+            "name": "Memberships",
+            "kind": "direct",
+            "reference": "membership.user",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f234",
+            "key": "projects",
+            "name": "Projects",
+            "kind": "indirect",
+            "through": "user.memberships",
+            "source": "membership.project"
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f235",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000f236",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f237",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f238",
+            "key": "memberships",
+            "name": "Memberships",
+            "kind": "direct",
+            "reference": "membership.project",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f239",
+            "key": "members",
+            "name": "Members",
+            "kind": "indirect",
+            "through": "project.memberships",
+            "source": "membership.user"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "project.read_member"
+            },
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "project.read_member"
+            },
+            "projection": [
+              {
+                "field": "project.name"
+              },
+              {
+                "association": "project.memberships",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "association": "membership.user",
+                    "authorization": {
+                      "policy": "user.signed_in",
+                      "record": {
+                        "kind": "environment",
+                        "name": "current_account"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "association": "project.members",
+                "authorization": {
+                  "policy": "user.signed_in",
+                  "record": {
+                    "kind": "environment",
+                    "name": "current_account"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f23a",
+            "key": "read_member",
+            "operation": "read",
+            "allow_when": {
+              "kind": "exists",
+              "association": "project.memberships",
+              "where": {
+                "kind": "comparison",
+                "left": {
+                  "target": {
+                    "association": "membership.user"
+                  }
+                },
+                "operator": "equals",
+                "right": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000f23b",
+        "key": "membership",
+        "name": "Membership",
+        "primary_descriptor": {
+          "system_field": "id"
+        },
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f23c",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000f23d",
+            "key": "user",
+            "name": "User",
+            "targets": [
+              "user"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ]
+      }
+    ]
+  }
+}

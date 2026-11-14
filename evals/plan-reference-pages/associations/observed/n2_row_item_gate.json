@@ -1,0 +1,45 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "pointer": "/application/entities/1/scaffold/show/projection/1",
+      "readable_path": "project.memberships",
+      "reason": "Every authored nested projection item was omitted; descriptor fallback would change meaning.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "pointer": "/application/entities/1/scaffold/show/projection/1/projection/0",
+      "readable_path": "membership.user",
+      "reason": "Nested non-public Association presentation lacks a root-qualified conditional preload plan.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.memberships`",
+      "file": "app/controllers/projects_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`membership.user`",
+      "file": "app/controllers/projects_controller.rb"
+    }
+  ]
+}
