@@ -22,7 +22,7 @@ code reads it from the target's side.
   nested New page and Create action; a one-to-one record shown among the parent's details.
 - **You write after Compile:** count limits, which the Plan states as `owner` Validations; buttons that remove a
   join record, such as removing a tag; adding through an indirect or filtered Association; filters on an indirect
-  Association; and any reader you use only in your own code. Write the `owner` Validations before the preview;
+  Association; and any reader the Plan does not author. Write the `owner` Validations before the preview;
   `SKILL.md` has the order of work.
 
 Where analysis leaves something out, it reports a gap code such as `foundation_plan.gap.association.not_generated`
@@ -161,7 +161,9 @@ Author the ones you expect to need, from one side or from both.
 - **On a page.** Where a page should list the related records, such as a tag's projects or the posts a member liked,
   list the indirect Association. List the join's own records where people add them, because an indirect Association
   gets no Add link, and where the link has Fields of its own to show, such as a role or an answer. A join row shows
-  the related record through a forward item, such as `{"association": "tagging.tag", "authorization": "public"}`.
+  the related record through a forward item, such as `{"association": "tagging.tag", "authorization": "public"}`;
+  its `authorization` is `"public"` or the related Entity's own Policy. A gate there is left out; see
+  [Not generated](#not-generated).
 
 ## Full example
 
@@ -326,7 +328,7 @@ Every one of these names an authored Association, or a Reference's forward reade
 | --- | --- | --- |
 | Details page | `{"association": "project.tasks", …}` in `scaffold.show.projection` | A section, as above. |
 | Row of a list page | the same item in `scaffold.index.projection` | Nothing: the item is left out (`foundation_plan.gap.scaffold.projection.not_generated`); the list stays. |
-| A collection inside a collection's rows | `{"association": "task.comments", …}` inside `project.tasks`'s `projection` | Nothing: that inner item is left out with the same gap code. A `"public"` forward item, such as `tagging.tag` in the full example, works. |
+| A collection inside a collection's rows | `{"association": "task.comments", …}` inside `project.tasks`'s `projection` | Nothing: that inner item is left out with the same gap code. A forward item, such as `tagging.tag` in the full example, works unless its `authorization` is a gate. |
 | [Counter Field](counter-fields.md) | `"settings": {"counts": "project.tasks"}` | A count kept by Rails. The project's `has_many :tasks` then carries `dependent: :destroy`. |
 | [Policy](policies.md) rule | `{"kind": "exists", "association": "project.memberships", "where": {…}}` | `record&.memberships&.any? { … }` and `relation.where(id: Membership.where(user_id: user.id).select(:project_id))`. |
 | [Predicate](predicates.md) | `{"kind": "exists", "association": "project.tasks"}`, with or without `where` | A stub: `scope :has_tasks` raises `NotImplementedError` until you write it (`foundation_plan.gap.predicate.not_generated`), and a list page that uses it raises too. The model spec has a placeholder example for the scope that fails until you replace it. |
@@ -379,12 +381,12 @@ Every one of these names an authored Association, or a Reference's forward reade
   `destroy` route on the join without `show` is reachable by URL only. Write the button, route, and action after
   Compile. As an interim you can offer the person a join with `show` and `destroy`: each row then gets a View link to
   the join's page, which has Delete.
-- **A forward item in a collection's rows whose `authorization` is a Policy or a gate.** The item is left out
-  (`foundation_plan.gap.scaffold.projection.not_generated`). When that leaves the rows with no item, the whole
-  section is left out with the same code, and README.md lists both under "Behavior to write", in "Pages and
-  actions". The collection's own `authorization` decides who sees its rows; a `"public"` forward item then shows the
-  related record's descriptor to each of them. To show the related records under a Policy of their own, list an
-  indirect Association: its page item takes a Policy or a gate.
+- **A forward item in a collection's rows whose `authorization` is a gate,** a Policy bound to `current_account`.
+  The item is left out (`foundation_plan.gap.scaffold.projection.not_generated`). When that leaves the rows with no
+  item, the whole section is left out with the same code, and README.md lists both under "Behavior to write", in
+  "Pages and actions". Give the forward item `"public"`, which shows the related record's descriptor to everyone who
+  sees the row, or the related Entity's own Policy, which shows it only where that Policy allows. An indirect
+  Association's page item takes a gate.
 - **A filter on an indirect Association.** The Association and every page item that uses it are left out
   (`foundation_plan.gap.association.not_generated`). Filter the `through` step instead: a filtered
   `project.pinned_taggings` with `source: "tagging.tag"` generates
