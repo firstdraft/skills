@@ -14,15 +14,18 @@ pick the value freely in a form.
   timestamp effect per event; a guard against assigning the state directly; state labels on list and detail pages;
   Predicates and Validation conditions that read the state; Policies that read it, when the Plan has an Account
   Entity; example records moved into later states; a spec for each event from each state.
-- **You write after Compile:** the button, route, and controller action for every event. No generated page fires an
-  event, so until you add them the state never changes in the app. You also write every event that is a stub: one
-  whose effects go beyond one timestamp, and one marked `owner` for an effect or a condition the Plan cannot state.
-  Its three methods raise `NotImplementedError`, and its specs fail until you write it. Write it before the preview;
-  `SKILL.md` has the order of work. Who may fire each event is yours to check in the action you write.
+- **You write after Compile:** what fires each event: a button with its route and controller action, or another
+  caller such as a job. No generated page fires an event, so until you add one the state never changes in the app.
+  README.md lists every event, and its placeholder example in the state machine spec fails until you replace it. You
+  also write every event that is a stub: one whose effects go beyond one timestamp, and one marked `owner` for an
+  effect or a condition the Plan cannot state. Its three methods raise `NotImplementedError`, and its specs fail
+  until you write it. Write both before the preview; `SKILL.md` has the order of work. Who may fire each event is
+  yours to check in the action you write.
 
 Where analysis leaves something out, it reports a gap code such as
-`foundation_plan.gap.state_transition.effects_not_generated` in the result of `plan push`. An `owner` transition is
-your choice, so it has no gap record.
+`foundation_plan.gap.state_transition.effects_not_generated` in the result of `plan push`. Every transition also has
+`foundation_plan.gap.state_transition_control.not_generated`, because nothing generated fires it. An `owner`
+transition is your choice, so it has no other gap record.
 
 ## Simple example
 
@@ -82,7 +85,8 @@ status/done: Done
 
 `spec/models/task_state_machine_spec.rb` checks the starting state, the closed list, that direct assignment raises
 `AASM::NoDirectAssignmentError`, and each event from each state: "complete transitions status from open",
-"complete rejects status from done".
+"complete rejects status from done". It also has one placeholder example per event, such as "a caller fires
+task.status.complete", that fails until you write what fires the event; see [Not generated](#not-generated).
 
 ### When the Plan cannot say an event
 
@@ -116,12 +120,13 @@ it "complete does what task.status.complete describes" do
 end
 ```
 
-README.md lists it under "Behavior to write": "**`Task#complete!`** (`app/models/task.rb`) moves `status` from
-`open` to `done` and sets `completed_at` to the current time, as the transition `task.status.complete` … says. Its
-`owner` description says the rest: Only when none of the task's checklist items is open. Until then, `complete!`,
-`complete`, and `may_complete?` raise. Add `event :complete` to the `aasm :status` block and delete the three stub
-methods below it." The transition itself has no gap record; each effect beside it is reported as
-`foundation_plan.gap.state_transition_effect.not_generated`.
+README.md lists it under "Behavior to write", in "Rules": "**`Task#complete!`** (`app/models/task.rb`) moves
+`status` from `open` to `done` and sets `completed_at` to the current time, as the transition `task.status.complete`
+… says. Its `owner` description says the rest: Only when none of the task's checklist items is open. Until then,
+`complete!`, `complete`, and `may_complete?` raise. Add `event :complete` to the `aasm :status` block and delete the
+three stub methods below it." As for every event, it also lists `Task#complete!` in "Pages and actions", for what
+fires it. The transition's only gap record is `foundation_plan.gap.state_transition_control.not_generated`, which
+every transition has; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`.
 
 ## Keys
 
@@ -155,7 +160,7 @@ A State Machine Field takes no `default` and no `immutable`; analysis rejects ei
 | `from` | yes | one or more state keys | | `transitions from: :open` or `from: [:submitted, :approved]`. `from` may include `to`. |
 | `to` | yes | one state key | | `to: :done`. |
 | `effects[]` | no | `{"kind": "set_field", "field": "<entity>.<field>", "value": …}` | none | One effect that sets an optional `datetime` Field on the same record to `{"kind": "environment", "name": "current_time"}` or `{"kind": "literal", "value": null}` gives `after: -> { self.completed_at = Time.current }`. Any other effect, or a second one, makes the whole event a [stub](#not-generated). |
-| `owner` | no | `{"description": "<a sentence or two>"}`, beside `from` and `to`; `effects` may stay beside it | none | The event as a stub: its bang method, its non-bang form, and its `may_` predicate raise `NotImplementedError`. README.md lists it under "Behavior to write" with the description, and the state machine spec gets a placeholder example. The transition has no gap record; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`. Use it for an effect or a condition the Plan cannot state; see [Not generated](#not-generated). |
+| `owner` | no | `{"description": "<a sentence or two>"}`, beside `from` and `to`; `effects` may stay beside it | none | The event as a stub: its bang method, its non-bang form, and its `may_` predicate raise `NotImplementedError`. README.md lists it under "Behavior to write" with the description, and the state machine spec gets a placeholder example. The transition's only gap record is `foundation_plan.gap.state_transition_control.not_generated`, which every transition has; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`. Use it for an effect or a condition the Plan cannot state; see [Not generated](#not-generated). |
 
 ## Method names
 
@@ -166,10 +171,10 @@ a method the model already has:
 
 - The Entity has more than one State Machine Field. Every machine on it is prefixed: `task.complete_status!`,
   `task.may_complete_status?`, `task.status_open?`. Adding a second machine renames the first machine's methods.
-- An event key names a Rails method, such as `save` or `update`. Analysis reports nothing; the model gets
+- An event key names a Rails method, such as `save` or `update`. Analysis does not warn about it; the model gets
   `save_status!`.
 - A state or event key matches another Field's methods, such as a state `done` beside a boolean Field `done` (both
-  want `done?`). Analysis reports nothing; the model gets `status_done?` and `complete_status!`.
+  want `done?`). Analysis does not warn about it; the model gets `status_done?` and `complete_status!`.
 - An event key names a private Ruby method, such as `fail`. Analysis warns with
   `foundation_plan.rails_target.state_machine.event_name_collision`, and the warning names the method,
   `fail_status!`.
@@ -260,7 +265,7 @@ waiting, and an expense can be edited only while submitted. `escalate` has two e
 ```
 
 `decline_reason` is only in `update.inputs`. Its rule reads `declined`, a state no new expense is in, so the New
-page needs no control for it, and analysis reports nothing. The Policy is generated only because the Plan also has
+page needs no control for it, and analysis reports no gap for it. The Policy is generated only because the Plan also has
 an Account Entity, left out here; see [Policies](policies.md).
 
 ### Generates
@@ -337,7 +342,7 @@ rows.
 | Where | Generates | Does not generate |
 | --- | --- | --- |
 | [Predicate](predicates.md) on the Field | `equals`: `where(status: "submitted")`. `not_equals`: `where.not(status: "done")`. `in`, with `"right": [<literal>, …]`: `where(status: ["open", "blocked"])`. | `less_than` and the other ordered operators: rejected (`foundation_plan.expression.operator_not_supported`). States have no order. |
-| [Validation](validations.md) `when` reading the Field | `validates :decline_reason, presence: true, if: …`, with `status == "declined"`. The generated spec fills the Field before it fires the event. A rule on a state other than `initial_state` needs no control on the New page: no new record is in that state, and analysis reports nothing. | A rule on `initial_state` applies to every new record. Without the Field in `create.inputs`, the New page is still generated, every save from it fails, and analysis reports `foundation_plan.gap.scaffold.input.partially_generated`; list the Field in `create.inputs`. |
+| [Validation](validations.md) `when` reading the Field | `validates :decline_reason, presence: true, if: …`, with `status == "declined"`. The generated spec fills the Field before it fires the event. A rule on a state other than `initial_state` needs no control on the New page: no new record is in that state, and analysis reports no gap for it. | A rule on `initial_state` applies to every new record. Without the Field in `create.inputs`, the New page is still generated, every save from it fails, and analysis reports `foundation_plan.gap.scaffold.input.partially_generated`; list the Field in `create.inputs`. |
 | [Policy](policies.md) reading the Field | `record&.status == "submitted"` and `relation.where(status: "submitted")`. | Any Policy, when the Plan has no Account Entity (`foundation_plan.gap.policy.not_generated`). |
 | [Development data](development-data.md) in a later state | The record is created in the starting state with its other values, then the events that lead there are fired: `team_lunch.approve! if team_lunch.submitted?`. A record that leaves the state out, or names `initial_state`, fires no event. A value given for a Field that an effect sets is written after the events, with `update!`, so it wins. On an Entity with two machines, each machine's events are fired. | A record in a state that only a stub leads to, an `owner` event included, or that no event leads to: dropped (`foundation_plan.gap.development_data.record.not_generated`). A record that would break a Validation once in that state, such as a declined expense with no reason: dropped, with the same code. Keep such a record in the Plan. README.md lists it under "Behavior to write", in "Data", by its key, such as `expense.conference_ticket`, with `db/seeds/development.rb`. Write it there once its event works, before the preview. |
 | List and detail page columns ([Scaffold](scaffold-lists-and-details.md) `projection`) | The state's label, `task.aasm(:status).human_state`. | |
@@ -389,8 +394,28 @@ the starting state where `when` holds, before the preview. Prefer a required mac
 ## Not generated
 
 - **A way to fire an event.** No page has a button, and no route or controller action exists, and the Plan has no
-  key for one. Keep each button the person asked for in your notes, and add it after Compile, as in
-  [Changing it later](#changing-it-later).
+  key for one. Analysis reports `foundation_plan.gap.state_transition_control.not_generated` at every transition,
+  whether its event is generated, a stub, or `owner`. README.md lists each event under "Behavior to write", in
+  "Pages and actions", by its bang method, and the state machine spec has a placeholder example for each that raises
+  `NotImplementedError`. In the simple example:
+
+  ```text
+  - **`Task#complete!`** (`app/controllers/tasks_controller.rb`) moves `status` from `open` to `done`, as the transition `task.status.complete` at `/application/entities/0/fields/1/settings/transitions/0` in `.firstdraft/submitted-foundation-plan.json` says, but no generated page, route, or action calls it. Add the code that calls it: a button with its route and controller action, or another caller such as a job. `spec/models/task_state_machine_spec.rb` has a placeholder example for it.
+  ```
+
+  ```ruby
+  # spec/models/task_state_machine_spec.rb
+  it "a caller fires task.status.complete" do
+    raise NotImplementedError,
+      "What fires task.status.complete is not written yet. No generated page, route, or action calls Task#complete!. Write an example that checks that what you add moves status from open to done, here or in a request or system spec, then delete this placeholder."
+  end
+  ```
+
+  Before the preview, write what fires each event: a button, route, and controller action for an action people
+  take, as in [Changing it later](#changing-it-later), or a job or another caller for one that happens on its own.
+  Write a real example of what you add, in this spec or a request or system spec, and delete the placeholder. For a
+  stub, also write the event itself, as its entry under "Rules" says. Keep each button the person asked for in your
+  notes, since the README does not say which events get one, and ask the person before dropping an event.
 - **An event that does more than one timestamp.** One event generates one effect: a timestamp on the same record.
   Anything more makes the whole event a stub. Its bang method, its non-bang form, and its `may_` predicate raise
   `NotImplementedError` until you write the event, including the `from`, `to`, and timestamp that First Draft would
@@ -399,7 +424,8 @@ the starting state where `when` holds, before the preview. Prefer a required mac
     Field, or a Field on another Entity: list it in `effects`. Analysis reports
     `foundation_plan.gap.state_transition.effects_not_generated`.
   - An effect `effects` cannot state, such as sending an email or creating another record: add `owner` to the
-    transition, and keep beside it the effects the Plan can state. The transition has no gap record of its own.
+    transition, and keep beside it the effects the Plan can state. The transition's only gap record is the
+    `state_transition_control` one that every transition has.
 
   ```json
   {"subject_uuid": "…", "key": "decline", "from": ["submitted"], "to": "declined",
@@ -428,8 +454,9 @@ the starting state where `when` holds, before the preview. Prefer a required mac
   [When the Plan cannot say an event](#when-the-plan-cannot-say-an-event). The whole event is a stub, as above;
   write it with the condition as an AASM guard (`guard:` on its `transitions` line).
 - **Who may fire an event.** The Plan has no shape for it, because no generated page fires events. Write it in the
-  Field's `notes`, and check it in the controller action you write. Without an Account Entity the app has no
-  sign-in and no Policies, so nothing can check it until you add accounts; see [Accounts](accounts.md).
+  Field's `notes`, and check it in the controller action you write before the preview. Without an Account Entity
+  the app has no sign-in and no Policies, so nothing can check it until you add accounts; see
+  [Accounts](accounts.md).
 - **A history of transitions** (who moved the record, and when, beyond the effect's timestamp). Declare the history
   as its own Entity when people need to see it. Writing a row on an event is an effect `effects` cannot state, so
   add `owner` to each transition that records history. Each of those events is then a stub; you can write the
@@ -457,8 +484,8 @@ These pass as `valid` and are reported as gaps:
   condition". List the Field in `create.inputs` too. A rule on a later state needs no control on New, analysis
   reports nothing for it, and the examples are generated.
 - **An event with an effect the Compiler cannot generate.** It becomes a stub, and example records in the state it
-  leads to are dropped. An `owner` event does the same, with gap records for its effects and the dropped records
-  but none for the transition.
+  leads to are dropped. An `owner` event does the same, with gap records for its effects and the dropped records;
+  the transition has only the `state_transition_control` record that every transition has.
 
 Analysis rejects an `initial_state`, `from`, or `to` that names no state
 (`foundation_plan.state_machine.state_not_found`); two states or two events with one `key`
@@ -472,8 +499,9 @@ Analysis rejects an `initial_state`, `from`, or `to` that names no state
   machine per Entity unless two workflows are independent.
 - **Ask:** what each action records, and any condition on when it may happen. One timestamp per action generates.
   For more, say which events you will write yourself before the preview.
-- **Tell:** you will add a button, route, and controller action for each action people take, after Compile; no
-  generated page fires one.
+- **Tell:** no generated page fires an event, so before the preview you will write what fires each one: a button,
+  route, and controller action for each action people take, and a job or another caller for the rest. Ask before
+  dropping an event.
 
 ## Changing it later
 
@@ -489,7 +517,9 @@ Plan change reaches that app only when you copy it across.
   the `aasm` block and delete its three stub methods; they are defined below the block and would hide the event.
   Then make its examples in the state machine spec pass, and replace any placeholder example there with one that
   checks what the description asks for.
-- **To let people fire an event,** write a route, an action, and a button. This code is yours, not generated:
+- **To let people fire an event,** write a route, an action, and a button before the preview, then replace the
+  event's placeholder example with a real one, in the state machine spec or a request or system spec. This code is
+  yours, not generated:
 
 ```ruby
 # config/routes.rb

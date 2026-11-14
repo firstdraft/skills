@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-readme-entry-subjects",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-readme-entry-subjects",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
   "status": "valid",
   "diagnostics": [],
   "gaps": [
@@ -19,15 +19,41 @@
       "consequence": "The generated development seed omits this Field value."
     },
     {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/0",
+      "readable_path": "task.status.complete",
+      "reason": "No generated page, route, or action fires the complete event.",
+      "consequence": "A record changes state through `Task#complete!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
       "code": "foundation_plan.gap.state_transition_effect.not_generated",
       "pointer": "/application/entities/0/fields/1/settings/transitions/0/effects/0",
       "readable_path": "task.status.complete/effects/0",
       "reason": "task.status.complete is marked owner, so application code writes the event and this effect.",
       "consequence": "The generated application does not apply this effect."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/1",
+      "readable_path": "task.status.reopen",
+      "reason": "No generated page, route, or action fires the reopen event.",
+      "consequence": "A record changes state through `Task#reopen!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
     }
   ],
   "compile": "succeeded",
   "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#complete!`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#reopen!`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
     {
       "section": "Behavior to write",
       "group": "Rules",
