@@ -1,0 +1,109 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tasks",
+    "name": "Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0758-7000-8000-000000000065",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0758-7000-8000-000000000066",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cba2-0000-7000-8000-000000000001",
+            "key": "effort",
+            "name": "Effort",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a1cba2-0000-7000-8000-000000000002",
+                  "key": "small",
+                  "name": "Small"
+                },
+                {
+                  "subject_uuid": "01a1cba2-0000-7000-8000-000000000003",
+                  "key": "medium",
+                  "name": "Medium"
+                },
+                {
+                  "subject_uuid": "01a1cba2-0000-7000-8000-000000000004",
+                  "key": "large",
+                  "name": "Large"
+                }
+              ]
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.effort"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.effort"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.effort"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

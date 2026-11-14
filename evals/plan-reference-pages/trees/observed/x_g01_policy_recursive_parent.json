@@ -1,0 +1,182 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.policy.dependency_cycle",
+      "severity": "warning",
+      "pointer": "/application/entities/1/policies/0/allow_when",
+      "readable_path": "category.manage_tree"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.policy.not_generated",
+      "pointer": "/application/entities/1/policies/0",
+      "readable_path": "category.manage_tree",
+      "reason": "Its Expression did not resolve or type-check: Policy Expression dependencies form a cycle (/application/entities/1/policies/0/allow_when).",
+      "consequence": "This release emits no record rule, relation scope, or dependent protected surface for this Policy."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/create",
+      "readable_path": "category.scaffold.create",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/create/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/destroy",
+      "readable_path": "category.scaffold.destroy",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/destroy/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/index",
+      "readable_path": "category.scaffold.index",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/show",
+      "readable_path": "category.scaffold.show",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/show/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/update",
+      "readable_path": "category.scaffold.update",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/update/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.tree.partially_generated",
+      "pointer": "/application/entities/1/trees/0",
+      "readable_path": "category.hierarchy",
+      "reason": "The parent Reference category.parent is generated, but the Tree's rules are not: nothing keeps the hierarchy free of cycles.",
+      "consequence": "A record can be saved with a parent that makes a cycle."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.manage_tree`",
+      "file": "app/policies/category_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.create`",
+      "file": "app/controllers/categories_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.destroy`",
+      "file": "app/controllers/categories_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.index`",
+      "file": "app/controllers/categories_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.show`",
+      "file": "app/controllers/categories_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.update`",
+      "file": "app/controllers/categories_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.create.authorization`",
+      "file": "app/policies/category_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.destroy.authorization`",
+      "file": "app/policies/category_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.index.authorization`",
+      "file": "app/policies/category_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.show.authorization`",
+      "file": "app/policies/category_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`category.scaffold.update.authorization`",
+      "file": "app/policies/category_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`category.hierarchy`",
+      "file": "app/models/category.rb"
+    }
+  ]
+}

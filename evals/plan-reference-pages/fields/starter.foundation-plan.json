@@ -1,0 +1,78 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "events",
+    "name": "Events",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0774-7000-8000-000000000001",
+        "key": "event",
+        "name": "Event",
+        "primary_descriptor": {
+          "field": "event.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0774-7000-8000-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "event.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "event.name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "event.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "event.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

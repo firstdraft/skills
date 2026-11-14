@@ -1,0 +1,57 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/2/fields/7/validations/0",
+      "readable_path": "task.reason.needed_when_open",
+      "reason": "This Validation's condition reads task.open, which is marked owner, so application code writes that Predicate and this Validation.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/2/fields/8/validations/0",
+      "readable_path": "task.bug_note.needed_for_bugs",
+      "reason": "This Validation's condition reads task.mentions_bug, which is marked owner, so application code writes that Predicate and this Validation.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task.mentions_bug`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task.open`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Task#needed_when_open`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Task#needed_for_bugs`",
+      "file": "app/models/task.rb"
+    }
+  ]
+}

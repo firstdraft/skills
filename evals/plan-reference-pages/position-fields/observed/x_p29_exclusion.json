@@ -1,0 +1,65 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.kind_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/1/fields/1/validations/0/kind",
+      "readable_path": "card.position.not_zero"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/1/fields/1",
+      "readable_path": "card.position",
+      "reason": "The Field is stored as an integer, and a new record without one joins the end of its list, but positions are not kept contiguous or reordered.",
+      "consequence": "Records can be sorted by the stored number; renumbering after deletes, moving between lists, and drag reordering remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/1/fields/1/validations/0",
+      "readable_path": "card.position.not_zero",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    },
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/1/orderings/0",
+      "readable_path": "card.by_position",
+      "reason": "This named Ordering is outside the current simple indexed-scope release.",
+      "consequence": "`Card.by_position` raises NotImplementedError until it is written, and no database index is emitted for it. Pages that call it raise until then, and the specs that request those pages fail."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Card.by_position`",
+      "file": "app/models/card.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Card#not_zero`",
+      "file": "app/models/card.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`card.position`",
+      "file": "app/models/card.rb"
+    }
+  ]
+}

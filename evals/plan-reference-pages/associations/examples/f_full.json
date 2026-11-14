@@ -1,0 +1,427 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "projects",
+    "name": "Projects",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000011",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000012",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000c",
+            "key": "tasks",
+            "name": "Tasks",
+            "kind": "direct",
+            "reference": "task.project",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000d",
+            "key": "open_tasks",
+            "name": "Open tasks",
+            "kind": "direct",
+            "reference": "task.project",
+            "side": "referenced",
+            "predicate": "task.open"
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000e",
+            "key": "charter",
+            "name": "Charter",
+            "kind": "direct",
+            "reference": "charter.project",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000f",
+            "key": "taggings",
+            "name": "Taggings",
+            "kind": "direct",
+            "reference": "tagging.project",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000010",
+            "key": "tags",
+            "name": "Tags",
+            "kind": "indirect",
+            "through": "project.taggings",
+            "source": "tagging.tag"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              },
+              {
+                "association": "project.charter",
+                "authorization": "public"
+              },
+              {
+                "association": "project.open_tasks",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "task.title"
+                  },
+                  {
+                    "field": "task.done"
+                  }
+                ]
+              },
+              {
+                "association": "project.tasks",
+                "authorization": "public",
+                "create_form": {}
+              },
+              {
+                "association": "project.taggings",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "association": "tagging.tag",
+                    "authorization": "public"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000013",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000014",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000015",
+            "key": "done",
+            "name": "Done",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000016",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000017",
+            "key": "open",
+            "name": "Open",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "task.done"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": false
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000009",
+        "key": "charter",
+        "name": "Charter",
+        "primary_descriptor": {
+          "field": "charter.goal"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000a",
+            "key": "goal",
+            "name": "Goal",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000b",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "one_to_one": true
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000001",
+        "key": "tag",
+        "name": "Tag",
+        "primary_descriptor": {
+          "field": "tag.label"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000002",
+            "key": "label",
+            "name": "Label",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000003",
+            "key": "taggings",
+            "name": "Taggings",
+            "kind": "direct",
+            "reference": "tagging.tag",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000004",
+            "key": "projects",
+            "name": "Projects",
+            "kind": "indirect",
+            "through": "tag.taggings",
+            "source": "tagging.project"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "tag.label"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "tag.label"
+              },
+              {
+                "association": "tag.projects",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "tag.label"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "tag.label"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000005",
+        "key": "tagging",
+        "name": "Tagging",
+        "primary_descriptor": {
+          "system_field": "id"
+        },
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000006",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000007",
+            "key": "tag",
+            "name": "Tag",
+            "targets": [
+              "tag"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "validations": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000008",
+            "key": "one_per_project",
+            "kind": "uniqueness",
+            "targets": [
+              {
+                "reference": "tagging.project"
+              },
+              {
+                "reference": "tagging.tag"
+              }
+            ],
+            "nulls": "distinct",
+            "error_target": {
+              "reference": "tagging.tag"
+            }
+          }
+        ],
+        "scaffold": {
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "association": "tagging.tag"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

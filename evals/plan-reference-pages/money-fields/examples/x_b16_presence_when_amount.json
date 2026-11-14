@@ -1,0 +1,139 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "expenses",
+    "name": "Expenses",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0990-7000-8000-0000000001ab",
+        "key": "expense",
+        "name": "Expense",
+        "primary_descriptor": {
+          "field": "expense.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001ac",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001a8",
+            "key": "amount",
+            "name": "Amount",
+            "type": "money",
+            "required": true,
+            "settings": {
+              "currency": "USD"
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000001aa",
+            "key": "receipt_note",
+            "name": "Receipt note",
+            "type": "long_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-0990-7000-8000-0000000001a9",
+                "key": "needed_over_75",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "expense.amount"
+                    }
+                  },
+                  "operator": "greater_than",
+                  "right": {
+                    "kind": "literal",
+                    "value": "75"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.receipt_note"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.receipt_note"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.receipt_note"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.receipt_note"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

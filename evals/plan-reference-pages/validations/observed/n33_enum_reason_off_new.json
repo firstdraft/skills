@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.input.partially_generated",
+      "pointer": "/application/entities/0/scaffold/create/inputs",
+      "readable_path": "ticket.scaffold.create.inputs",
+      "reason": "Conditional presence Validation \"ticket.steps.needed_for_bugs\" requires Field \"steps\" when its condition holds, and no create input or binding supplies it.",
+      "consequence": "The create keeps its authored inputs and authorization. Saving fails validation while the condition holds, until the form or application code supplies the value."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`ticket.scaffold.create.inputs`",
+      "file": "app/controllers/tickets_controller.rb"
+    }
+  ]
+}

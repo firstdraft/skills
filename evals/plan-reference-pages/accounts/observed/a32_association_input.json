@@ -1,0 +1,51 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.account.partially_generated",
+      "pointer": "/application/entities/0/account/registration/inputs/1",
+      "readable_path": "user.account",
+      "reason": "Association registration inputs are not generated for public signup.",
+      "consequence": "The signup form omits this choice."
+    },
+    {
+      "code": "foundation_plan.gap.account.partially_generated",
+      "pointer": "/application/entities/0/references/0",
+      "readable_path": "user.account",
+      "reason": "Public signup generates no control for a required Reference on the Account Entity.",
+      "consequence": "Signup cannot supply this Reference, so its validation rejects new Accounts."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.preferred_language`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.preferred_language`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Account registration: persists submitted registration values",
+      "file": "spec/requests/account_registration_spec.rb"
+    }
+  ]
+}

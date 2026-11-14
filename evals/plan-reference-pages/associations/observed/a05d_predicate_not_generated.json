@@ -1,0 +1,85 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_association",
+      "severity": "warning",
+      "pointer": "/application/entities/0/associations/1/predicate",
+      "readable_path": "project.important_tasks"
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/1/predicates/1",
+      "readable_path": "task.important"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.association.not_generated",
+      "pointer": "/application/entities/0/associations/1",
+      "readable_path": "project.important_tasks",
+      "reason": "A predicated Association requires an admitted Predicate scope on its result Entity.",
+      "consequence": "The Association declaration is omitted."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1",
+      "readable_path": "project.important_tasks",
+      "reason": "The selected Association is not target-admitted here.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/1/predicates/1",
+      "readable_path": "task.important",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Task.important` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/create",
+      "readable_path": "task.scaffold.create",
+      "reason": "The create definition has no selected route or associated-form consumer.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.important_tasks`",
+      "file": "app/controllers/projects_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.scaffold.create`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task.important`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`project.important_tasks`",
+      "file": "app/models/project.rb"
+    }
+  ]
+}

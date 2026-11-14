@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/1/default",
+      "readable_path": "listing.photo",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`listing.photo`",
+      "file": "app/models/listing.rb"
+    }
+  ]
+}

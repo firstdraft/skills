@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "issues_found",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/0/predicates/0",
+      "readable_path": "task.urgent"
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.expression.field_not_queryable",
+      "severity": "error",
+      "pointer": "/application/entities/0/predicates/0/expression/left/target/field",
+      "readable_path": "task.urgent"
+    }
+  ],
+  "gaps": [],
+  "compile": null,
+  "readme": []
+}

@@ -1,0 +1,92 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "import",
+      "code": "foundation_plan.import.skipped_dependent",
+      "severity": "warning",
+      "pointer": "/application/entities/1/scaffold",
+      "readable_path": null
+    },
+    {
+      "stage": "import",
+      "code": "foundation_plan.import.unsupported_capability",
+      "severity": "warning",
+      "pointer": "/application/entities/1/scaffold/destroy/authorization/policy",
+      "readable_path": null
+    },
+    {
+      "stage": "import",
+      "code": "foundation_plan.import.skipped_dependent",
+      "severity": "warning",
+      "pointer": "/application/home_index",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.service.depends_on_skipped",
+      "pointer": "/application/entities/1/scaffold",
+      "readable_path": "note",
+      "reason": "This Foundation Plan element was not imported because it depends on skipped meaning.",
+      "consequence": "This Plan path is omitted from the admitted Project graph and generated application."
+    },
+    {
+      "code": "foundation_plan.gap.service.pruned_scope",
+      "pointer": "/application/entities/1/scaffold/destroy",
+      "readable_path": "note",
+      "reason": "This authored Scaffold definition is omitted because it contains or depends on skipped meaning.",
+      "consequence": "The entire Scaffold definition, including all nested meaning, is absent from the admitted Project graph and generated application."
+    },
+    {
+      "code": "foundation_plan.gap.service.unsupported_capability",
+      "pointer": "/application/entities/1/scaffold/destroy/authorization/policy",
+      "readable_path": "note",
+      "reason": "This First Draft release cannot yet import this Foundation Plan capability.",
+      "consequence": "This Plan path is omitted from the admitted Project graph and generated application."
+    },
+    {
+      "code": "foundation_plan.gap.service.depends_on_skipped",
+      "pointer": "/application/home_index",
+      "readable_path": "application.home_index",
+      "reason": "This Foundation Plan element was not imported because it depends on skipped meaning.",
+      "consequence": "The selected Home index is omitted; the default welcome Home remains."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`note.scaffold`",
+      "file": "app/controllers/notes_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`note.scaffold.destroy`",
+      "file": "app/controllers/notes_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`note.scaffold.destroy.authorization`",
+      "file": "app/policies/note_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`application.home_index`",
+      "file": "config/routes.rb"
+    }
+  ]
+}

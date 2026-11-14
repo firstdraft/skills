@@ -1,0 +1,378 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tasks",
+    "name": "Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000001",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000003",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000004",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000005",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000006",
+            "key": "owner",
+            "name": "Owner",
+            "targets": [
+              "user"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict",
+            "immutable": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000007",
+            "key": "tasks",
+            "name": "Tasks",
+            "kind": "direct",
+            "reference": "task.project",
+            "side": "referenced"
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000008",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "project.owner"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "project.manage_own"
+            },
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "project.manage_own"
+            },
+            "projection": [
+              {
+                "field": "project.name"
+              },
+              {
+                "association": "project.tasks",
+                "authorization": {
+                  "policy": "task.manage_with_project"
+                },
+                "projection": [
+                  {
+                    "field": "task.title"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "project.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "project.owner",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "project.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "project.manage_own"
+            }
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000009",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000000a",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000000b",
+            "key": "notes",
+            "name": "Notes",
+            "type": "long_text",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000011",
+            "key": "status",
+            "name": "Status",
+            "type": "state_machine",
+            "required": true,
+            "settings": {
+              "initial_state": "open",
+              "states": [
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-00000000000e",
+                  "key": "open",
+                  "name": "Open"
+                },
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-00000000000f",
+                  "key": "done",
+                  "name": "Done"
+                }
+              ],
+              "transitions": [
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-000000000010",
+                  "key": "complete",
+                  "from": [
+                    "open"
+                  ],
+                  "to": "done"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000013",
+            "key": "reason",
+            "name": "Reason",
+            "type": "long_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-07f0-7000-8000-000000000012",
+                "key": "required_when_done",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "task.status"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "done"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000000c",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-00000000000d",
+            "key": "manage_with_project",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "matches_policy",
+              "association": "task.project",
+              "policy": "project.manage_own"
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": {
+              "policy": "task.manage_with_project"
+            },
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.notes"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "task.manage_with_project"
+            },
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.notes"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "task.manage_with_project"
+            },
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.notes"
+              },
+              {
+                "field": "task.reason"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "task.manage_with_project"
+            }
+          }
+        }
+      }
+    ],
+    "home_index": "project"
+  }
+}

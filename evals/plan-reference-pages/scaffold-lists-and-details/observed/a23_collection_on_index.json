@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/projection/1",
+      "readable_path": "project.tasks",
+      "reason": "Collection projections require a root show or profile set-based query plan.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.tasks`",
+      "file": "app/controllers/projects_controller.rb"
+    }
+  ]
+}

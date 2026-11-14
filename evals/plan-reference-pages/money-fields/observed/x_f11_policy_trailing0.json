@@ -1,0 +1,78 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.expression.literal_type_incompatible",
+      "severity": "warning",
+      "pointer": "/application/entities/1/policies/0/allow_when/right/value",
+      "readable_path": "expense.small"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/1/fields/1",
+      "readable_path": "expense.amount",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are entered, stored, and displayed; splitting, rounding, and currency handling remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.policy.not_generated",
+      "pointer": "/application/entities/1/policies/0",
+      "readable_path": "expense.small",
+      "reason": "Its Expression did not resolve or type-check: The literal is not valid for the expected semantic type (/application/entities/1/policies/0/allow_when/right/value).",
+      "consequence": "This release emits no record rule, relation scope, or dependent protected surface for this Policy."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/update",
+      "readable_path": "expense.scaffold.update",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/update/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`expense.small`",
+      "file": "app/policies/expense_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`expense.scaffold.update`",
+      "file": "app/controllers/expenses_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`expense.scaffold.update.authorization`",
+      "file": "app/policies/expense_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`expense.amount`",
+      "file": "app/models/expense.rb"
+    }
+  ]
+}

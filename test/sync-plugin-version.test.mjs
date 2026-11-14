@@ -10,7 +10,6 @@ import { checkSkillsReleaseCompatibility } from "../script/check-release-compati
 import { applyPluginVersion, planPluginVersion } from "../script/sync-plugin-version.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const planReference = canonicalPluginSkillPaths.find((file) => /\/references\/foundation-plan-\d+\.md$/.test(file));
 
 test("every plugin version location names the package.json version", async () => {
   const { changes } = await planPluginVersion(repository);
@@ -49,7 +48,6 @@ test("the version script previews a target version, then writes every location w
       ["packages/claude-plugin/.claude-plugin/plugin.json", `version ${current}`, "version 0.99.0"],
       ["skills/create-full-stack-app/SKILL.md", `plugin ${current}`, "plugin 0.99.0"],
       ["skills/create-full-stack-app/references/diagnostics-and-recovery.md", `claude-v${current}`, "claude-v0.99.0"],
-      [planReference, `claude-v${current}`, "claude-v0.99.0"],
     ],
   );
   assert.equal(await read("package.json"), before.packageJson, "a plan writes nothing");
@@ -82,7 +80,6 @@ test("without a target, the version script copies the version that npm set in pa
       "packages/claude-plugin/.claude-plugin/plugin.json",
       "skills/create-full-stack-app/SKILL.md",
       "skills/create-full-stack-app/references/diagnostics-and-recovery.md",
-      planReference,
     ],
   );
 });

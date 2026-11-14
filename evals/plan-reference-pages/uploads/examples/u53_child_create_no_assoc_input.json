@@ -1,0 +1,257 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "listings",
+    "name": "Listings",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa300-0000-7000-8000-000000000004",
+        "key": "listing",
+        "name": "Listing",
+        "primary_descriptor": {
+          "field": "listing.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000001",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000002",
+            "key": "photo",
+            "name": "Photo",
+            "type": "image",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000003",
+            "key": "brochure",
+            "name": "Brochure",
+            "type": "attachment",
+            "required": false,
+            "notes": "PDF only; add the content-type check after Compile."
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000005",
+            "key": "photos",
+            "name": "Photos",
+            "kind": "direct",
+            "reference": "listing_photo.listing",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              },
+              {
+                "field": "listing.brochure"
+              },
+              {
+                "association": "listing.photos",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "listing_photo.image"
+                  },
+                  {
+                    "field": "listing_photo.caption"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              },
+              {
+                "field": "listing.brochure"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "listing.title"
+              },
+              {
+                "field": "listing.photo"
+              },
+              {
+                "field": "listing.brochure"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "019fa300-0000-7000-8000-000000000006",
+        "key": "listing_photo",
+        "name": "Listing photo",
+        "primary_descriptor": {
+          "field": "listing_photo.caption"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000007",
+            "key": "image",
+            "name": "Image",
+            "type": "image",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000008",
+            "key": "caption",
+            "name": "Caption",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000009",
+            "key": "listing",
+            "name": "Listing",
+            "targets": [
+              "listing"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "listing_photo.image"
+              },
+              {
+                "field": "listing_photo.caption"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "listing_photo.image"
+              },
+              {
+                "field": "listing_photo.caption"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "listing_photo.image"
+              },
+              {
+                "field": "listing_photo.caption"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "019fa300-0000-7000-8000-00000000000a",
+        "key": "loft",
+        "entity": "listing",
+        "fields": [
+          {
+            "field": "listing.title",
+            "value": {
+              "kind": "literal",
+              "value": "Sunny loft"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "019fa300-0000-7000-8000-00000000000b",
+        "key": "loft_kitchen",
+        "entity": "listing_photo",
+        "fields": [
+          {
+            "field": "listing_photo.caption",
+            "value": {
+              "kind": "literal",
+              "value": "Kitchen"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "listing_photo.listing",
+            "value": {
+              "kind": "reference_record",
+              "record": "listing.loft"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

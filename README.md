@@ -23,7 +23,7 @@ local folder; a Drawing Board clone and GitHub push are unnecessary. The
 - the portable create-full-stack-app Skill and its task routing;
 - deferred UI extension and consistency-review Skill auditions;
 - beginner-to-machine-reference authoring guidance for Foundation Plan 0.23;
-- the exact schema, examples, and review checklists packaged with the Skill;
+- the exact schema, one reference page per Plan capability, and review checklists packaged with the Skill;
 - behavioral evaluations for agent workflow changes;
 - shared Claude/Codex plugin assembly around the canonical Skills and reviewed CLI package; and
 - release compatibility checks and release runbooks.
@@ -40,7 +40,7 @@ behavior. This repository teaches an agent how to use those contracts without cr
 | Continue or review an app's UI | The app's `UI.md` and shared components; [UI Skill status](#ui-continuation) |
 | Review improvements for an existing app or workflow | [First Draft changelog](CHANGELOG.md) |
 | Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [interview guide](skills/create-full-stack-app/references/interview.md) or [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
-| Check current Foundation Plan capability | [Foundation Plan reference](skills/create-full-stack-app/references/foundation-plan-023.md) |
+| Check current Foundation Plan capability | The [index of Plan reference pages](skills/create-full-stack-app/SKILL.md#load-references-only-when-needed), one per capability |
 | Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.23.schema.json) |
 | Add or run behavioral evaluations | [Evaluation guide](evals/README.md) |
 | Prepare or publish a release | [Release runbook](RELEASING.md) |

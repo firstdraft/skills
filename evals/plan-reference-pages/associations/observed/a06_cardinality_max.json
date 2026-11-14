@@ -1,0 +1,52 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "import",
+      "code": "foundation_plan.import.unsupported_capability",
+      "severity": "warning",
+      "pointer": "/application/entities/0/associations/0/cardinality",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.service.unsupported_capability",
+      "pointer": "/application/entities/0/associations/0/cardinality",
+      "readable_path": "project.tasks",
+      "reason": "This First Draft release cannot yet import this Foundation Plan capability.",
+      "consequence": "This Plan path is omitted from the admitted Project graph and generated application."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/create",
+      "readable_path": "task.scaffold.create",
+      "reason": "The create definition has no selected route or associated-form consumer.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.scaffold.create`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`project.tasks`",
+      "file": "app/models/project.rb"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.reference.deletion_not_generated",
+      "pointer": "/application/entities/1/references/0/on_referenced_deleted",
+      "readable_path": "task.project.on_referenced_deleted",
+      "reason": "The authored deletion outcome has no authored inverse Association, and the conventional inverse tasks would reuse a model member of Project, so this release adds no lifecycle carrier.",
+      "consequence": "Reference storage, traversal, and the ordinary non-deferrable foreign key remain generated. Deleting a Project while any Task references it through project raises ActiveRecord::InvalidForeignKey until application code implements the authored deletion behavior."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "Deleting a `Project`",
+      "file": "app/models/project.rb"
+    }
+  ]
+}

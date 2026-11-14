@@ -1,0 +1,89 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.associated_create.partially_generated",
+      "pointer": "/application/entities/1/scaffold/show/projection/1/create_form",
+      "readable_path": "project.tasks.create_form",
+      "reason": "Associated creation is incomplete. Required Field \"flagged\" has no generated create author or realized target default. Required Field \"source\" has no generated create author or realized target default. Required Field \"stage\" has no generated create author or realized target default.",
+      "consequence": "The associated create form retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.binding.not_generated",
+      "pointer": "/application/entities/2/scaffold/create/bindings/2",
+      "readable_path": "task.flagged",
+      "reason": "Only current_account, one of its Fields or References, current_date, or current_time is admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.binding.not_generated",
+      "pointer": "/application/entities/2/scaffold/create/bindings/3",
+      "readable_path": "task.source",
+      "reason": "Only current_account, one of its Fields or References, current_date, or current_time is admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.binding.not_generated",
+      "pointer": "/application/entities/2/scaffold/create/bindings/4",
+      "readable_path": "task.stage",
+      "reason": "Only current_account, one of its Fields or References, current_date, or current_time is admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.tasks.create_form`",
+      "file": "app/controllers/projects/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.flagged`",
+      "file": "app/controllers/projects/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.source`",
+      "file": "app/controllers/projects/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`task.stage`",
+      "file": "app/controllers/projects/tasks_controller.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: create persists the submitted values",
+      "file": "spec/requests/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: index lists accessible records",
+      "file": "spec/requests/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: create form browser coverage",
+      "file": "spec/system/projects/tasks_spec.rb"
+    }
+  ]
+}

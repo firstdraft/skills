@@ -1,0 +1,329 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tracker",
+  "name": "Tracker",
+  "home_index": "project",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-0000000005dd",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005de",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005df",
+      "key": "admin",
+      "name": "Admin",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e0",
+      "key": "owned_projects",
+      "kind": "direct",
+      "name": "Owned projects",
+      "reference": "project.owner",
+      "side": "referenced"
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e1",
+      "key": "memberships",
+      "kind": "direct",
+      "name": "Memberships",
+      "reference": "membership.user",
+      "side": "referenced"
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e2",
+      "key": "tasks",
+      "kind": "direct",
+      "name": "Tasks",
+      "reference": "task.author",
+      "side": "referenced"
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e3",
+    "key": "project",
+    "name": "Project",
+    "primary_descriptor": {
+     "field": "project.name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e4",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e5",
+      "key": "owner",
+      "name": "Owner",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "associations": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e6",
+      "key": "memberships",
+      "kind": "direct",
+      "name": "Memberships",
+      "reference": "membership.project",
+      "side": "referenced"
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e7",
+      "key": "tasks",
+      "kind": "direct",
+      "name": "Tasks",
+      "reference": "task.project",
+      "side": "referenced"
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "project.name"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "project.name"
+       },
+       {
+        "association": "project.tasks",
+        "authorization": "public",
+        "projection": [
+         {
+          "field": "task.title"
+         },
+         {
+          "field": "task.done"
+         }
+        ],
+        "create_form": {}
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "project.name"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "project.name"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": "public"
+     }
+    }
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e8",
+    "key": "membership",
+    "name": "Membership",
+    "primary_descriptor": {
+     "association": "membership.user"
+    },
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005e9",
+      "key": "project",
+      "name": "Project",
+      "targets": [
+       "project"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005ea",
+      "key": "user",
+      "name": "User",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0761-7000-8000-0000000005eb",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005ec",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005ed",
+      "key": "done",
+      "name": "Done",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "references": [
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005ee",
+      "key": "project",
+      "name": "Project",
+      "targets": [
+       "project"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0761-7000-8000-0000000005ef",
+      "key": "author",
+      "name": "Author",
+      "targets": [
+       "user"
+      ],
+      "required": true,
+      "one_to_one": false,
+      "on_referenced_deleted": "delete_referencing_record",
+      "immutable": true
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "show",
+      "edit",
+      "update"
+     ],
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.done"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.done"
+       }
+      ]
+     }
+    }
+   }
+  ]
+ }
+}

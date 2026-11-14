@@ -1,0 +1,5 @@
+# android_v1.json rules, as pattern → properties (ios_v1.json has the same rules but the last)
+.*                                   context default, pull_to_refresh_enabled true
+^/trails, ^/hikes, ^/photos, ^/gear_items   presentation replace_root    (the four direct tabs)
+^/native\-session\-changed           reset_navigation true
+^/__firstdraft_android_more__        uri hotwire://fragment/firstdraft-more, presentation replace_root, title More

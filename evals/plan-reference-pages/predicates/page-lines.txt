@@ -1,0 +1,1 @@
+scope :urgent, -> { where(arel_table[:title].matches("%#{sanitize_sql_like("urgent")}%", nil, true)) }

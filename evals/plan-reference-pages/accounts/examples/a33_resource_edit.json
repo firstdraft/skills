@@ -1,0 +1,244 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "notebook",
+    "name": "Notebook",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cb99-ff9b-7436-b32f-bbfff6697bbc",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb99-ff9b-7436-b32f-bbfdd7a2f516",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cb99-ff9b-7436-b32f-bbfea83ecf2b",
+            "key": "bio",
+            "name": "Bio",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a1cb99-ff9b-7436-b32f-bc007e667283",
+            "key": "notes",
+            "kind": "direct",
+            "name": "Notes",
+            "reference": "note.author",
+            "side": "referenced"
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a1cb99-ff9b-7436-b32f-bbfc70233a4e",
+            "key": "update_self",
+            "operation": "update",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update"
+          ],
+          "show": {
+            "authorization": {
+              "policy": "user.update_self"
+            },
+            "projection": [
+              {
+                "field": "user.name"
+              },
+              {
+                "field": "user.bio"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "user.update_self"
+            },
+            "inputs": [
+              {
+                "field": "user.name"
+              },
+              {
+                "field": "user.bio"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cb99-ff9b-7436-b32f-bc0109b18403",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb99-ff9b-7436-b32f-bc022cd84876",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cb99-ff9b-7436-b32f-bc03be41e0fb",
+            "key": "author",
+            "name": "Author",
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a1cb99-ff9b-7436-b32f-bc040dbb2ada",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "note.author"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "note.author",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "note.manage_own"
+            }
+          }
+        }
+      }
+    ],
+    "home_index": "note"
+  }
+}

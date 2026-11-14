@@ -1,0 +1,139 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-000000007d01",
+        "key": "expense",
+        "name": "Expense",
+        "primary_descriptor": {
+          "field": "expense.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000007d02",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000007d03",
+            "key": "status",
+            "name": "Status",
+            "type": "state_machine",
+            "required": true,
+            "settings": {
+              "initial_state": "submitted",
+              "states": [
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-000000007d04",
+                  "key": "submitted",
+                  "name": "Submitted"
+                },
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-000000007d05",
+                  "key": "declined",
+                  "name": "Declined"
+                }
+              ],
+              "transitions": [
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-000000007d06",
+                  "key": "decline",
+                  "from": [
+                    "submitted"
+                  ],
+                  "to": "declined"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-000000007d07",
+            "key": "decline_reason",
+            "name": "Decline reason",
+            "type": "long_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-075b-7000-8000-000000007d08",
+                "key": "needed_when_declined",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "expense.status"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "declined"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.status"
+              },
+              {
+                "field": "expense.decline_reason"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

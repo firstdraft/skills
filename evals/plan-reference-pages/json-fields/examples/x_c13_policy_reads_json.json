@@ -1,0 +1,126 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "catalog",
+    "name": "Catalog",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbae-9475-7000-8000-0000000000c4",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "field": "member.display_name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000c5",
+            "key": "display_name",
+            "name": "Display name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "member.display_name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        }
+      },
+      {
+        "subject_uuid": "01a1cbae-9475-7000-8000-0000000000c8",
+        "key": "product",
+        "name": "Product",
+        "primary_descriptor": {
+          "field": "product.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000c7",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000c6",
+            "key": "specifications",
+            "name": "Specifications",
+            "type": "json",
+            "required": false
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a1cbae-9475-7000-8000-0000000000c9",
+            "key": "read_with_specs",
+            "operation": "read",
+            "allow_when": {
+              "kind": "not",
+              "expression": {
+                "kind": "is_null",
+                "operand": {
+                  "target": {
+                    "field": "product.specifications"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "product.read_with_specs"
+            },
+            "projection": [
+              {
+                "field": "product.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "product.read_with_specs"
+            },
+            "projection": [
+              {
+                "field": "product.name"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

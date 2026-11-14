@@ -1,0 +1,87 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/1/predicates/1",
+      "readable_path": "project.above_low"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/1/predicates/1",
+      "readable_path": "project.above_low",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Project.above_low` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/predicate",
+      "readable_path": "project.scaffold.index.predicate",
+      "reason": "The selected named Predicate has no target scope lowering.",
+      "consequence": "This surface calls `Project.above_low`, which raises NotImplementedError until it is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Project.above_low`",
+      "file": "app/models/project.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: index lists accessible records",
+      "file": "spec/requests/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: index lists accessible records",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: index prevents a guest from accessing protected records",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: index prevents another account from accessing protected records",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update redirects to a page that loads",
+      "file": "spec/requests/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: update form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

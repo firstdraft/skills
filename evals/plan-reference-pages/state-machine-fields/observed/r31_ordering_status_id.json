@@ -1,0 +1,57 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/0",
+      "readable_path": "task.status.complete",
+      "reason": "No generated page, route, or action fires the complete event.",
+      "consequence": "A record changes state through `Task#complete!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/1",
+      "readable_path": "task.status.reopen",
+      "reason": "No generated page, route, or action fires the reopen event.",
+      "consequence": "A record changes state through `Task#reopen!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/0/orderings/0",
+      "readable_path": "task.by_status",
+      "reason": "This named Ordering is outside the current simple indexed-scope release.",
+      "consequence": "`Task.by_status` raises NotImplementedError until it is written, and no database index is emitted for it. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.ordering.not_generated",
+      "pointer": "/application/entities/0/scaffold/index/ordering",
+      "readable_path": "task.scaffold.index.ordering",
+      "reason": "The selected named Ordering has no target scope lowering.",
+      "consequence": "This surface calls `Task.by_status`, which raises NotImplementedError until it is written."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task.by_status`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#complete!`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#reopen!`",
+      "file": "app/controllers/tasks_controller.rb"
+    }
+  ]
+}

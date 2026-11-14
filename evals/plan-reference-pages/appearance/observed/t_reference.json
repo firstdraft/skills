@@ -1,0 +1,37 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.appearance.native_theme_preference.not_generated",
+      "pointer": "/application/appearance/theme",
+      "readable_path": "application.appearance.theme",
+      "reason": "The emitted iOS output does not provide the authored Light / Dark / System preference control.",
+      "consequence": "These native clients and their embedded Rails responses follow system appearance. The browser selector and saved browser preference do not change the native clients."
+    },
+    {
+      "code": "foundation_plan.gap.native_client.partially_generated",
+      "pointer": "/application/native/ios",
+      "readable_path": "application.native.ios",
+      "reason": "The Plan sets no application.domain, so the iOS Release build uses the placeholder origin https://northside-readers.invalid and the placeholder bundle ID invalid.firstdraft.northside-readers.",
+      "consequence": "The Release build points at these placeholders, so it cannot reach a server or be submitted to the App Store. Set application.domain, or replace both values, before a Release build; the bundle ID cannot change after the app is published."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`application.appearance.theme`",
+      "file": "ios/"
+    },
+    {
+      "section": "What you supply",
+      "group": null,
+      "title": "`application.native.ios`",
+      "file": "ios/"
+    }
+  ]
+}

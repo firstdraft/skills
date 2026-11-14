@@ -1,0 +1,58 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe_app",
+    "name": "Probe app",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0e00-7000-8000-000000000005",
+        "key": "message",
+        "name": "Message",
+        "primary_descriptor": {
+          "field": "message.body"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-000000000004",
+            "key": "body",
+            "name": "Body",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-000000000003",
+            "key": "level",
+            "name": "Level",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0e00-7000-8000-000000000001",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0e00-7000-8000-000000000002",
+                  "key": "high",
+                  "name": "High"
+                }
+              ]
+            }
+          }
+        ],
+        "implicit_order_column": [
+          {
+            "field": "message.level"
+          }
+        ]
+      }
+    ]
+  }
+}

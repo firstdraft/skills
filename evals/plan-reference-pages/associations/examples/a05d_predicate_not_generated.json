@@ -1,0 +1,248 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "projects",
+    "name": "Projects",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000c",
+        "key": "project",
+        "name": "Project",
+        "primary_descriptor": {
+          "field": "project.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000d",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000a",
+            "key": "tasks",
+            "name": "Tasks",
+            "kind": "direct",
+            "reference": "task.project",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-00000000000b",
+            "key": "important_tasks",
+            "name": "Important tasks",
+            "kind": "direct",
+            "reference": "task.project",
+            "side": "referenced",
+            "predicate": "task.important"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "project.name"
+              },
+              {
+                "association": "project.important_tasks",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "project.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0a55-7000-8000-000000000001",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000002",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000003",
+            "key": "done",
+            "name": "Done",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": false
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000008",
+            "key": "priority",
+            "name": "Priority",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "ordinal": true,
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-0a55-7000-8000-000000000006",
+                  "key": "low",
+                  "name": "Low"
+                },
+                {
+                  "subject_uuid": "01a0caf3-0a55-7000-8000-000000000007",
+                  "key": "high",
+                  "name": "High"
+                }
+              ]
+            }
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000004",
+            "key": "project",
+            "name": "Project",
+            "targets": [
+              "project"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000005",
+            "key": "open",
+            "name": "Open",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "task.done"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": false
+              }
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0a55-7000-8000-000000000009",
+            "key": "important",
+            "name": "Important",
+            "expression": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "task.priority"
+                }
+              },
+              "operator": "greater_than",
+              "right": {
+                "kind": "literal",
+                "value": "low"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.done"
+              },
+              {
+                "association": "task.project"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

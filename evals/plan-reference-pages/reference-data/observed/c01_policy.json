@@ -1,0 +1,38 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.policy.not_generated",
+      "pointer": "/application/entities/2/policies/0",
+      "readable_path": "task.read_bugs",
+      "reason": "The Rails target cannot lower its Expression: the Rails target does not generate reference data, so no row exists to compare (/application/entities/2/policies/0/allow_when).",
+      "consequence": "TaskPolicy is emitted with a stub: `TaskPolicy#read?` returns false and its `:read` relation scope raises NotImplementedError until they are written. Pages, links, and controls that ask the rule deny until then, pages that list or look up records through the scope raise, and the specs that request those pages fail."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`TaskPolicy#read?`",
+      "file": "app/policies/task_policy.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: index lists accessible records",
+      "file": "spec/requests/tasks_spec.rb"
+    }
+  ]
+}

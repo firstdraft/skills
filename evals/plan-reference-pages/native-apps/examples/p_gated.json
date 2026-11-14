@@ -1,0 +1,176 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "trail_log",
+    "name": "Trail Log",
+    "domain": "traillog.example",
+    "native": {
+      "ios": {},
+      "android": {}
+    },
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-000f0000002d",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "field": "member.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000f0000002e",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "member.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "policies": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000f0000002f",
+            "key": "signed_in",
+            "operation": "use_app",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "record": "current"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-000f00000031",
+        "key": "hike",
+        "name": "Hike",
+        "primary_descriptor": {
+          "field": "hike.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000f00000030",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "icon": "map_pin",
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "projection": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "member.signed_in",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

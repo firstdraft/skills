@@ -1,0 +1,111 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/1/fields/1/settings/transitions/0",
+      "readable_path": "expense.status.approve",
+      "reason": "No generated page, route, or action fires the approve event.",
+      "consequence": "A record changes state through `Expense#approve!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/1/fields/1/settings/transitions/1",
+      "readable_path": "expense.status.decline",
+      "reason": "No generated page, route, or action fires the decline event.",
+      "consequence": "A record changes state through `Expense#decline!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/1/fields/1/settings/transitions/2",
+      "readable_path": "expense.status.cancel",
+      "reason": "No generated page, route, or action fires the cancel event.",
+      "consequence": "A record changes state through `Expense#cancel!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/1/fields/1/settings/transitions/3",
+      "readable_path": "expense.status.resubmit",
+      "reason": "No generated page, route, or action fires the resubmit event.",
+      "consequence": "A record changes state through `Expense#resubmit!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition.effects_not_generated",
+      "pointer": "/application/entities/1/fields/1/settings/transitions/4",
+      "readable_path": "expense.status.escalate",
+      "reason": "The escalate event has 2 effects. This release generates at most one effect per event, setting an optional datetime Field on the same record to the current time or nil.",
+      "consequence": "`Expense#escalate!`, `#escalate`, and `#may_escalate?` are emitted as stubs that raise NotImplementedError until the event is written, and the State Machine examples that call them fail until then."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/1/fields/1/settings/transitions/4",
+      "readable_path": "expense.status.escalate",
+      "reason": "No generated page, route, or action fires the escalate event.",
+      "consequence": "A record changes state through `Expense#escalate!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/1/fields/1/settings/transitions/4/effects/0",
+      "readable_path": "expense.status.escalate/effects/0",
+      "reason": "The transition effect is not generated.",
+      "consequence": "The generated application does not apply this effect."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/1/fields/1/settings/transitions/4/effects/1",
+      "readable_path": "expense.status.escalate/effects/1",
+      "reason": "The transition effect is not generated.",
+      "consequence": "The generated application does not apply this effect."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Expense#approve!`",
+      "file": "app/controllers/expenses_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Expense#decline!`",
+      "file": "app/controllers/expenses_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Expense#cancel!`",
+      "file": "app/controllers/expenses_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Expense#resubmit!`",
+      "file": "app/controllers/expenses_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Expense#escalate!`",
+      "file": "app/controllers/expenses_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Expense#escalate!`",
+      "file": "app/models/expense.rb"
+    }
+  ]
+}

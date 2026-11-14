@@ -1,0 +1,141 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-0000000080e9",
+        "key": "ticket",
+        "name": "Ticket",
+        "primary_descriptor": {
+          "field": "ticket.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000080ea",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000080eb",
+            "key": "kind",
+            "name": "Kind",
+            "type": "enum",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": "feature"
+            },
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-0000000080ec",
+                  "key": "feature",
+                  "name": "Feature"
+                },
+                {
+                  "subject_uuid": "01a0caf3-075b-7000-8000-0000000080ed",
+                  "key": "bug",
+                  "name": "Bug"
+                }
+              ]
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-0000000080ee",
+            "key": "steps",
+            "name": "Steps to reproduce",
+            "type": "long_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-075b-7000-8000-0000000080ef",
+                "key": "needed_for_bugs",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "ticket.kind"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "bug"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "ticket.title"
+              },
+              {
+                "field": "ticket.kind"
+              },
+              {
+                "field": "ticket.steps"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "ticket.title"
+              },
+              {
+                "field": "ticket.kind"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "ticket.title"
+              },
+              {
+                "field": "ticket.kind"
+              },
+              {
+                "field": "ticket.steps"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

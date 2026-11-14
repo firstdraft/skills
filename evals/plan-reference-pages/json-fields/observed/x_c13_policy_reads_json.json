@@ -1,0 +1,104 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.expression.field_not_queryable",
+      "severity": "warning",
+      "pointer": "/application/entities/1/policies/0/allow_when/expression/operand/target/field",
+      "readable_path": "product.read_with_specs"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/1/fields/1",
+      "readable_path": "product.specifications",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.policy.not_generated",
+      "pointer": "/application/entities/1/policies/0",
+      "readable_path": "product.read_with_specs",
+      "reason": "Its Expression did not resolve or type-check: The selected Field has no general query profile (/application/entities/1/policies/0/allow_when/expression/operand/target/field).",
+      "consequence": "This release emits no record rule, relation scope, or dependent protected surface for this Policy."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/index",
+      "readable_path": "product.scaffold.index",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/show",
+      "readable_path": "product.scaffold.show",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/show/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`product.read_with_specs`",
+      "file": "app/policies/product_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`product.scaffold.index`",
+      "file": "app/controllers/products_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`product.scaffold.show`",
+      "file": "app/controllers/products_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`product.scaffold.index.authorization`",
+      "file": "app/policies/product_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`product.scaffold.show.authorization`",
+      "file": "app/policies/product_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`product.specifications`",
+      "file": "app/models/product.rb"
+    }
+  ]
+}

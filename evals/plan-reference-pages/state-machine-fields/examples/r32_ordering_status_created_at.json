@@ -1,0 +1,170 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tasks",
+  "name": "Tasks",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000010a",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000010b",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000109",
+      "key": "status",
+      "name": "Status",
+      "type": "state_machine",
+      "required": true,
+      "settings": {
+       "initial_state": "open",
+       "states": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000105",
+         "key": "open",
+         "name": "Open"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000106",
+         "key": "done",
+         "name": "Done"
+        }
+       ],
+       "transitions": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000107",
+         "key": "complete",
+         "from": [
+          "open"
+         ],
+         "to": "done",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000108",
+         "key": "reopen",
+         "from": [
+          "done"
+         ],
+         "to": "open",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "literal",
+            "value": null
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000010c",
+      "key": "completed_at",
+      "name": "Completed at",
+      "type": "datetime",
+      "required": false
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ],
+      "ordering": "task.by_status"
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     }
+    },
+    "orderings": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000010d",
+      "key": "by_status",
+      "terms": [
+       {
+        "field": "task.status",
+        "direction": "ascending"
+       },
+       {
+        "system_field": "created_at",
+        "direction": "descending"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

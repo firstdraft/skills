@@ -189,17 +189,19 @@ structured Plan.
 
 For example, an agreed CSV import may need to preview all row errors before saving anything and save a valid file
 as one transaction. Record examples such as "one invalid row leaves all records unchanged" and "a valid file saves
-every row." Whether duplicate rows should be rejected can remain an explicit open question. The format has no
-callback property, its seven Validation kinds are a closed list, and an `import_valid` Field would only add a
-column and a [checkbox](#choose-validations), so that workflow stays in the notes.
+every row." Whether duplicate rows should be rejected can remain an explicit open question. The Plan has no words
+for an import: it has no callback property, an `owner` Validation checks one record as it saves rather than a whole
+file, and an `import_valid` Field would only add a column and a [checkbox](#choose-validations), so that workflow
+stays in the notes.
 
 Keep these outcomes distinct:
 
 | Requirement | Where it belongs |
 | --- | --- |
-| Structured meaning realized by the compatible Compiler | Author it in the Plan and verify the matching analysis and generated result. |
-| Structured meaning not supported by the service or target | Preserve it in the Plan and review the actual GapSet; do not move it into notes to suppress a gap. |
-| Behavior outside the vocabulary | Retain it in implementation notes for ordinary source development; analysis cannot promise a gap for meaning it never received. |
+| Structured meaning the compatible Compiler generates | Author it in the Plan and verify the matching analysis and generated result. |
+| Structured meaning First Draft does not generate yet | Keep it in the Plan and review the actual GapSet; never move it into notes. Compile emits a stub with a failing placeholder example, or, where the GapSet says the request was left out, nothing. Either way the generated README lists it under Behavior to write; write it before the first preview. |
+| Behavior a Predicate, Ordering, Policy, Validation, or transition needs that the Plan's Expressions cannot say | An `owner` on that subject, describing the behavior in a sentence or two. Compile emits everything that uses it, a stub, and a failing placeholder example, and the README lists it under Behavior to write. |
+| Behavior the Plan has no words for, such as "show bookings as a calendar" | Implementation notes, with acceptance examples, for ordinary source development; analysis cannot report a gap for meaning it never received. |
 | Explicit user exclusion | Honor the agreed scope and retain the exclusion in the existing decisions/read-back; do not reintroduce it during a later revision. |
 
 Notes may refer to a structured subject or its gap, but do not duplicate the Plan or keep a gap list in the notes.
@@ -221,8 +223,8 @@ indexes keep Entity order.
 Selecting an index preserves its resource URL, query, and authorization. A protected index stays protected at Home.
 A missing Entity or an Entity without a selected index is invalid. If the selected index is genuinely unsupported,
 keep that intended choice in the Plan and review the dependent Home gap; the residual app uses the welcome page.
-Do not substitute another index or weaken access. See the
-[Application reference](foundation-plan-023.md#application-and-clients) for the serialized choice.
+Do not substitute another index or weaken access. See
+[Scaffold lists and details](plan/scaffold-lists-and-details.md) for the serialized choice.
 
 ## Model Entities and Fields
 
@@ -248,14 +250,14 @@ scopes and instance methods; a required enum adds presence validation and an opt
 The Compiler selects Rails prefix or suffix options when helper names would collide.
 Compatible in-domain literal-key defaults work regardless of whether the order has semantic rank. Database
 membership constraints, general rank semantics, and unsupported consumers remain gaps. Preserve
-product meaning instead of replacing an enum with a scalar; the [enum reference](foundation-plan-023.md#enums)
-owns the exact lowering.
+product meaning instead of replacing an enum with a scalar; [Enum Fields](plan/enum-fields.md) owns the exact
+lowering.
 
 Use `money` for an amount in one fixed currency, `position` for an order people arrange within a list, `secure_token`
 for a random token the app creates, such as an invite code, and `json` for a document whose structure the app does
 not model. Each generates ordinary Rails storage and inputs with a partial gap for its missing behavior, as the
-[Field type reference](foundation-plan-023.md#money-positions-tokens-and-json) lists. Keep stable facts as Fields,
-References, or Entities rather than inside JSON.
+[money](plan/money-fields.md), [position](plan/position-fields.md), [secure token](plan/secure-token-fields.md), and
+[JSON](plan/json-fields.md) pages list. Keep stable facts as Fields, References, or Entities rather than inside JSON.
 
 ### Choose text normalization
 
@@ -311,7 +313,7 @@ standard closed Validation families when they express the product requirement:
 | A retirement reason is needed only after `retired_at` is set | Optional text plus conditional `presence`; conditional `absence` expresses that a value must be missing in a particular condition. |
 | A title must contain at most 80 characters | `length`; use minimum, maximum, or exact length according to the actual rule. |
 | A product code contains only uppercase letters and digits | `format` on appropriate text; use the compatible pattern grammar, not arbitrary validation code. |
-| Usernames may not be `admin` or `support` | `exclusion` of a fixed typed literal set; the current target declares it as an empty method, usually with a failing spec, until it is written in Rails. |
+| Usernames may not be `admin` or `support` | `exclusion` of a fixed typed literal set; the current target declares it as an empty method with a placeholder example that fails until you write it, before the first preview. |
 | A rating is at least one, an end date follows a start date, or two selected people must differ | `comparison` with compatible values; use Entity ownership for a cross-value rule and select the input that should receive the error. |
 | A title and release date must be unique together | One Entity-owned `uniqueness` tuple, with an explicit participating Field or Reference as its error target and the intended null policy. |
 
@@ -323,24 +325,24 @@ to the end-date input. Plan error targets do not include the whole record. A com
 custom validator: ordinary Rails I18n can customize application error copy after Compilation. Ownership of
 comparison or uniqueness remains on the Entity when appropriate, independently of that error target.
 
-These examples explain kind selection, not a promise that every shape emits today. Read the compatible
-[Validation support reference](foundation-plan-023.md#validations), use the bundled schema for exact syntax, and
-inspect the real analysis result. A schema-valid rule the target cannot lower, such as an exclusion or a conditional
-Field-to-Field comparison, is declared as an empty method, with a failing spec where the Compiler can build a record
-it rejects, so the app accepts what it forbids until the method is written. No general Rails `validates` option or custom Ruby callback becomes Plan syntax merely
-because Rails supports it.
+These examples explain kind selection, not a promise that every shape emits today. Read
+[Validations](plan/validations.md), use the bundled schema for exact syntax, and inspect the real analysis result.
+A schema-valid rule the target cannot lower, such as an exclusion or a conditional Field-to-Field comparison, is
+declared as an empty method with a placeholder example that fails until the method is written, so the app accepts
+what it forbids until then; write it before the first preview. No general Rails `validates` option or custom Ruby
+callback becomes Plan syntax merely because Rails supports it.
 
-Operation-specific checks and bespoke rules outside the grammar belong in
-[implementation notes](#retain-implementation-requirements), with behavior and acceptance examples for the agent
-to implement and test in ordinary application code. A stored Field invented to carry such a rule is a real column
-and form control: an `import_valid` Boolean emits `t.boolean "import_valid"` and a checkbox people can tick.
-Supported structured meaning stays in the Plan, not in notes.
+A rule on one record that the Validation kinds cannot say, such as one that applies only on creation, is an `owner`
+Validation that describes it in a sentence or two: the model declares `validate :<key>` with an empty private
+method and a placeholder example for you to write. A stored Field invented to carry such a rule is a real column and
+form control: an `import_valid` Boolean emits `t.boolean "import_valid"` and a checkbox people can tick. Supported
+structured meaning stays in the Plan, not in notes.
 
 For example, an Entity comparison can express that a HabitLog's related Habit must be active whenever the log is
 saved. Preserve that structured rule and its actual reviewed target gap; a generation limitation does not make it
-unrepresentable. If the user means creation only, that every-save comparison is a different rule. Retain the
-creation-only requirement and acceptance examples in implementation notes when the grammar cannot express it.
-Clarify timing only when it is unresolved; do not ask again after the user has settled it.
+unrepresentable. If the user means creation only, that every-save comparison is a different rule: replace it with an
+`owner` Validation whose description says it applies only when a log is created, and keep its acceptance examples
+with it. Clarify timing only when it is unresolved; do not ask again after the user has settled it.
 
 ## Model relationships
 
@@ -360,9 +362,10 @@ Put a Reference on the Entity that stores the relationship fact. Ask:
 A Reference already emits its same-key forward Association, such as `belongs_to :team` for `membership.team`;
 authoring that Association again is skipped at import with a service-support gap. A referenced-side Association
 adds the reverse `has_many` or `has_one` on the target. An indirect Association composes two Associations: a team's
-`members` through its [memberships](foundation-plan-023.md#groups-and-memberships), with source `membership.user`,
+`members` through its [memberships](groups-and-memberships.md), with source `membership.user`,
 emits `has_many :members, -> { distinct }, through: :memberships, source: :user`, and a team's show page can list
-them.
+them. Author each Association you expect to need, from either side of a join or both;
+[Associations](plan/associations.md#across-a-join-entity) says how to name one and where to list it.
 
 The current Compiler emits a bounded single-target Reference slice with Boolean `required`, `one_to_one`, and
 `immutable`, plus its derived forward traversal and direct inverses over mutable and immutable References. The
@@ -374,12 +377,12 @@ input support is a separate consumer decision from Reference storage. Preserve b
 matching GapSet rather than applying an older blanket relationship limit.
 
 When people should see how many related records something has, such as likes on a post or a person's followers, add
-a [`counter` Field](foundation-plan-023.md#counters) on the record being counted for. Point it at the direct
+a [`counter` Field](plan/counter-fields.md) on the record being counted for. Point it at the direct
 Association that holds the counted records: `user.follower_links`, not the indirect `user.followers` through them.
 Add that direct referenced-side Association when the Plan lacks it. Rails maintains a direct count, including one
 over a polymorphic Reference whose targets share the column name or an exclusive arc. An indirect or filtered count
-keeps its column while its maintenance waits to be written in Rails: an indirect count behind a failing example, a
-filtered one as a Test coverage to complete entry. An explicit list or
+keeps its column while its maintenance waits to be written in Rails, behind a failing example in the model spec;
+write it before the first preview. An explicit list or
 details projection shows each counter after its authored items; people never type them.
 
 ## Group Entities into topics
@@ -411,7 +414,9 @@ and the description request no generated behavior, so they never need a gap or a
   `foundation_plan.gap.ordering.not_generated` record, and an index that selects one records its own gap. Each
   record's consequence says what the generated app does. When it says the named scope raises `NotImplementedError`
   until it is written, the Compiler emitted that scope as a stub, with no database index for an Ordering, and the
-  README's Behavior to write lists it; an index that selects it calls the stub, so the page raises until then.
+  README's Behavior to write lists it; an index that selects it calls the stub, so the page raises until then, and
+  the model spec has a placeholder example that fails until you write it. A filter or sort order the Plan's
+  Expressions or terms cannot say is an `owner` Predicate or Ordering, which Compile emits the same way.
   A key Rails reserves, such as `public`, becomes the key plus the table name, as `public_profiles`, with a warning.
   Otherwise the scope is left out, as when even that name is taken, and the consequence says what the page does
   without it. A Field followed by `id` also generates when both run in one
@@ -423,7 +428,7 @@ and the description request no generated behavior, so they never need a gap or a
   in the main navigation. Without a Scaffold, an Entity keeps its model, factory, and seeds, and its records have no
   page of their own.
 - Make access on generated surfaces explicitly public or Policy-controlled. An Entity may have only one Policy per
-  `operation`; when every page needs sign-in, use one [signed-in gate](examples.md#signed-in-gate-and-one-tap-records).
+  `operation`; when every page needs sign-in, use one [signed-in gate](plan/policies.md#what-a-rule-can-say).
 - Treat every structured definition as a generation request; there is no per-subject opt-out.
 - Keep custom Ruby, arbitrary seed code, secrets, and post-Compilation implementation notes outside the Plan.
 
@@ -434,14 +439,15 @@ Current Web Scaffolds may select standard resource routes, direct or recursive p
 consumers, cursor pagination, Field and Association inputs, server bindings, associated-create entry points, and
 optional return overrides. Without `return_to`, a saved New or Edit form redirects to the record, as in
 `redirect_to movie_path(@movie), status: :see_other`, and a delete to its list; `return_to` changes that
-destination, and the [Scaffold reference](foundation-plan-023.md#scaffolds) lists the other defaults. The
-[worked return examples](examples.md#deliberate-return-overrides) show the complete record operand and independent
-associated-success override. A supported associated `create_form` supplies a scoped New page, or a one-tap button
-for a no-input record, not an inline form in the details card.
+destination, and [Scaffold forms](plan/scaffold-forms.md#where-a-saved-form-goes) lists the other defaults and
+each `return_to` shape, including the record operand and the associated-success override. A supported associated
+`create_form` supplies a scoped New page, or a one-tap button for a no-input record, not an inline form in the
+details card.
 Every request and displayed Association declares public access or a Policy binding. The exact
 Web Account/Policy slice can protect supported surfaces and provide a Web-only Account profile; unsupported Policies
-and dependent consumers remain exact gaps. Read the Foundation Plan reference for the current prerequisites. Do not
-silently narrow a broader requested Scaffold or make it public merely to obtain a gap-free result.
+and dependent consumers remain exact gaps. Read [Accounts](plan/accounts.md) and [Policies](plan/policies.md) for the
+current prerequisites. Do not silently narrow a broader requested Scaffold or make it public merely to obtain a
+gap-free result.
 
 Choose what each main list shows. Start its index projection with the record's primary descriptor, such as a
 book's title or a post's author, using the Association item when the descriptor is an Association. Then add the
@@ -460,8 +466,8 @@ The button's label is the Entity's name: an Entity named Check-in emits
 `button_to CheckIn.model_name.human, unit_check_ins_path(@unit)`, which reads Check-in, one named Visit record shows
 a Visit record button, and a Bookmark toggle reads Bookmark, then Remove Bookmark.
 The public Guide's [No-input records](https://firstdraft.github.io/firstdraft/docs/architecture/design/foundation-plan.html#no-input-records)
-section defines the pattern, and the [Like example](examples.md#signed-in-gate-and-one-tap-records) copies its
-example. On that Like, a uniqueness rule over the parent Reference and the Account Reference emits
+section defines the pattern, and [Scaffold forms](plan/scaffold-forms.md) shows the one-tap button. On a Like, a
+uniqueness rule over the parent Reference and the Account Reference emits
 `validates :member, uniqueness: {scope: :post_id}` and a unique index on `post_id` and `member_id`. With it, a
 `destroy` route authorized by an owner Policy makes the button a toggle: the parent page finds the person's own
 record with `@post.likes.find_by(member: current_account)` and shows Unlike in place of Like, and
@@ -473,7 +479,7 @@ to like, one tap to unlike" or "each tap records another check-in".
 
 Select `native.ios` and `native.android` independently when the user wants those owned projects. Ordinary
 Compilation emits each with at least one main-navigation entry, public or protected, and an identity that fits its
-[platform limits](foundation-plan-023.md#application-and-clients); otherwise the valid run records an unrealized-client
+[platform limits](plan/native-apps.md#keys); otherwise the valid run records an unrealized-client
 target gap. Domain supplies a native HTTPS origin and platform identifier;
 it also configures the Rails production mailer host. It does not provision DNS, deployment, TLS, or mail delivery.
 Without a domain the native identifiers are explicit placeholders. Semantic icons inform Web, SF Symbol, and
@@ -491,10 +497,10 @@ the authored choice and requested clients instead of replacing `toggle` with `au
 Web components retain the stock Zinc theme. Native launcher icons use the app name's black-on-white monogram,
 like the bookmark assets. Android shows
 one stack, up to five tabs, or four tabs plus More for every overflow destination. After Compilation, preview both
-native apps in Revyl with the [native preview steps](foundation-plan-023.md#preview-generated-native-apps). Ordinary
+native apps in Revyl with the [native preview steps](plan/native-apps.md#previewing-after-compile). Ordinary
 Rails iteration uses the local web app; native preview is not a release or development prerequisite.
 Nonempty delivery, broader Account shapes, the Policy leaves that the
-[Plan reference](foundation-plan-023.md#accounts-and-policies) lists as gaps, and broader clients remain unsupported
+[Policies page](plan/policies.md#not-generated) lists as gaps, and broader clients remain unsupported
 or incomplete. Requirements without a v0.23 shape, including notification trigger/template definitions, deployment,
 and iPad, remain in [implementation notes](#retain-implementation-requirements) and the semantic read-back as
 currently unplannable rather than being invented as Plan JSON or promised a GapSet record.
@@ -538,12 +544,13 @@ Write it for a reader who is not technical, in this order:
    clients; what each main list shows; a few of the proposed sample records and any the gaps will drop; and
    delegated choices, assumptions, and exclusions. For an Account, say plainly whether people can sign in right
    after signing up or confirm their email first, as the
-   [Accounts reference](foundation-plan-023.md#accounts-and-policies) describes.
+   [Accounts page](plan/accounts.md) describes.
 2. What is not generated yet. Group the gaps by what the user will notice, lead with that effect, and say what
    the app does instead, for example "Descriptions are stored as plain text; formatting isn't generated yet" or
    "The rule that usernames can't be admin isn't generated yet; any username is accepted". Use one line per group
-   rather than one per record, and say which groups you plan to build in Rails after Compile. Include each step the
-   user described that no generated page performs, such as approving a request; analysis lists no gap for it.
+   rather than one per record, and say that you will write each group, and every `owner` subject, in Rails before
+   the first preview. Include each step the user described that no generated page performs, such as approving a
+   request; analysis lists no gap for it.
 3. What is built otherwise: outstanding implementation notes and any part of the idea outside First Draft, each
    with where it will be built, and how the selected output mode carries the notes forward.
 4. Feasibility findings and open questions, with sources for what research found. Leave out a list with nothing
@@ -555,6 +562,7 @@ When the user asks to see the code before Compile, such as the schema or the mod
 absent folder beside the project, such as `--output ../<application key>-preview`, and show what they asked for. The
 preview is not the go-ahead: the project's own Compile still waits for one.
 
-After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record. Follow the Skill's
-[read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the selected
-output mode, the page's address, and the go-ahead that Compile waits for.
+After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record, and its README has an entry that names
+each one. Follow the Skill's
+[read-back and approval workflow](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for the
+selected output mode, the page's address, and the go-ahead that Compile waits for.

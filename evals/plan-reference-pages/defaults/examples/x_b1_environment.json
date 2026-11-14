@@ -1,0 +1,232 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa2dd-0002-7000-8000-000000000025",
+        "key": "item",
+        "name": "Item",
+        "primary_descriptor": {
+          "field": "item.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa2dd-0002-7000-8000-00000000001e",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa2dd-0002-7000-8000-00000000001f",
+            "key": "occurred_at",
+            "name": "Occurred at",
+            "type": "datetime",
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_time"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0002-7000-8000-000000000020",
+            "key": "starts_on",
+            "name": "Starts on",
+            "type": "date",
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_date"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0002-7000-8000-000000000021",
+            "key": "seen_at",
+            "name": "Seen at",
+            "type": "datetime",
+            "required": false,
+            "default": {
+              "kind": "environment",
+              "name": "current_time"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0002-7000-8000-000000000022",
+            "key": "due_on",
+            "name": "Due on",
+            "type": "date",
+            "required": false,
+            "default": {
+              "kind": "environment",
+              "name": "current_date"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0002-7000-8000-000000000023",
+            "key": "day_from_time",
+            "name": "Day from time",
+            "type": "date",
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_time"
+            }
+          },
+          {
+            "subject_uuid": "019fa2dd-0002-7000-8000-000000000024",
+            "key": "time_from_day",
+            "name": "Time from day",
+            "type": "datetime",
+            "required": true,
+            "default": {
+              "kind": "environment",
+              "name": "current_date"
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.occurred_at"
+              },
+              {
+                "field": "item.starts_on"
+              },
+              {
+                "field": "item.seen_at"
+              },
+              {
+                "field": "item.due_on"
+              },
+              {
+                "field": "item.day_from_time"
+              },
+              {
+                "field": "item.time_from_day"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.occurred_at"
+              },
+              {
+                "field": "item.starts_on"
+              },
+              {
+                "field": "item.seen_at"
+              },
+              {
+                "field": "item.due_on"
+              },
+              {
+                "field": "item.day_from_time"
+              },
+              {
+                "field": "item.time_from_day"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.occurred_at"
+              },
+              {
+                "field": "item.starts_on"
+              },
+              {
+                "field": "item.seen_at"
+              },
+              {
+                "field": "item.due_on"
+              },
+              {
+                "field": "item.day_from_time"
+              },
+              {
+                "field": "item.time_from_day"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "item.title"
+              },
+              {
+                "field": "item.occurred_at"
+              },
+              {
+                "field": "item.starts_on"
+              },
+              {
+                "field": "item.seen_at"
+              },
+              {
+                "field": "item.due_on"
+              },
+              {
+                "field": "item.day_from_time"
+              },
+              {
+                "field": "item.time_from_day"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "019fa2dd-0002-7000-8000-000000000026",
+        "key": "only_title",
+        "entity": "item",
+        "fields": [
+          {
+            "field": "item.title",
+            "value": {
+              "kind": "literal",
+              "value": "First"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

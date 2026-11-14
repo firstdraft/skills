@@ -1,0 +1,254 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "posts",
+    "name": "Posts",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee49",
+        "key": "member",
+        "name": "Member",
+        "primary_descriptor": {
+          "field": "member.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee4a",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee4b",
+            "key": "posts",
+            "name": "Posts",
+            "kind": "direct",
+            "reference": "post.author",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee4c",
+            "key": "likes",
+            "name": "Likes",
+            "kind": "direct",
+            "reference": "like.member",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee4d",
+            "key": "liked_posts",
+            "name": "Liked posts",
+            "kind": "indirect",
+            "through": "member.likes",
+            "source": "like.post"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "member.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "member.name"
+              },
+              {
+                "association": "member.posts",
+                "authorization": "public"
+              },
+              {
+                "association": "member.liked_posts",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "member.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee4e",
+        "key": "post",
+        "name": "Post",
+        "primary_descriptor": {
+          "field": "post.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee4f",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee50",
+            "key": "author",
+            "name": "Author",
+            "targets": [
+              "member"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee51",
+            "key": "likes",
+            "name": "Likes",
+            "kind": "direct",
+            "reference": "like.post",
+            "side": "referenced"
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee52",
+            "key": "likers",
+            "name": "Liked by",
+            "kind": "indirect",
+            "through": "post.likes",
+            "source": "like.member"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              },
+              {
+                "association": "post.author",
+                "authorization": "public"
+              },
+              {
+                "association": "post.likes",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "association": "like.member",
+                    "authorization": "public"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "post.title"
+              },
+              {
+                "association": "post.author"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee53",
+        "key": "like",
+        "name": "Like",
+        "primary_descriptor": {
+          "system_field": "id"
+        },
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee54",
+            "key": "post",
+            "name": "Post",
+            "targets": [
+              "post"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee55",
+            "key": "member",
+            "name": "Member",
+            "targets": [
+              "member"
+            ],
+            "required": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "validations": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000ee56",
+            "key": "one_per_member",
+            "kind": "uniqueness",
+            "targets": [
+              {
+                "reference": "like.post"
+              },
+              {
+                "reference": "like.member"
+              }
+            ],
+            "nulls": "distinct",
+            "error_target": {
+              "reference": "like.member"
+            }
+          }
+        ],
+        "scaffold": {
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "association": "like.member"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

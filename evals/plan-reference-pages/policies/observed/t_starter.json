@@ -1,0 +1,81 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.route.partially_generated",
+      "pointer": "/application/entities/1/scaffold/resource_routes/3",
+      "readable_path": "project.scaffold.resource_routes.create",
+      "reason": "Standalone creation is incomplete. Required Reference \"owner\" has no generated create author.",
+      "consequence": "The selected standalone route retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.associated_create.partially_generated",
+      "pointer": "/application/entities/1/scaffold/show/projection/1/create_form",
+      "readable_path": "project.tasks.create_form",
+      "reason": "Associated creation is incomplete. Required Reference \"author\" has no generated create author.",
+      "consequence": "The associated create form retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.scaffold.resource_routes.create`",
+      "file": "app/controllers/projects_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.tasks.create_form`",
+      "file": "app/controllers/projects/tasks_controller.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: create persists the submitted values",
+      "file": "spec/requests/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create persists the submitted values",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create rejects a missing name without persisting changes",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: new accepts a permitted new-record request",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: create form browser coverage",
+      "file": "spec/system/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    }
+  ]
+}

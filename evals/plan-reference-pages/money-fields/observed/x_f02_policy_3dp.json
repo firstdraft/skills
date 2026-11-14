@@ -1,0 +1,69 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/1/fields/1",
+      "readable_path": "expense.amount",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are entered, stored, and displayed; splitting, rounding, and currency handling remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.policy.not_generated",
+      "pointer": "/application/entities/1/policies/0",
+      "readable_path": "expense.small",
+      "reason": "The Rails target cannot lower its Expression: 100.001 has more digits than Expense.amount stores, so Active Record would round it in SQL but not in Ruby (/application/entities/1/policies/0/allow_when).",
+      "consequence": "ExpensePolicy is emitted with a stub: `ExpensePolicy#update?` returns false and its `:update` relation scope raises NotImplementedError until they are written. Pages, links, and controls that ask the rule deny until then, pages that list or look up records through the scope raise, and the specs that request those pages fail."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`ExpensePolicy#update?`",
+      "file": "app/policies/expense_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`expense.amount`",
+      "file": "app/models/expense.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Expense: edit accepts a permitted edit request",
+      "file": "spec/requests/expenses_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Expense: update persists the submitted changes",
+      "file": "spec/requests/expenses_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Expense: update rejects a missing title without persisting changes",
+      "file": "spec/requests/expenses_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Expense: update form browser coverage",
+      "file": "spec/system/expenses_spec.rb"
+    }
+  ]
+}

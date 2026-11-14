@@ -1,0 +1,316 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "helpdesk",
+  "name": "Help desk",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a1cbae-fb3e-7abe-9e48-2d6983e84d40",
+    "key": "ticket",
+    "name": "Ticket",
+    "primary_descriptor": {
+     "field": "ticket.subject"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cbae-fb3e-75d8-8138-665477f4dd99",
+      "key": "subject",
+      "name": "Subject",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cbae-fb3e-70f1-9162-64f339162577",
+      "key": "body",
+      "name": "Body",
+      "type": "long_text",
+      "required": true
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update",
+      "destroy"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "ticket.subject"
+       },
+       {
+        "field": "ticket.body"
+       },
+       {
+        "association": "ticket.category",
+        "authorization": "public"
+       }
+      ],
+      "predicate": "ticket.billing"
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "ticket.subject"
+       },
+       {
+        "field": "ticket.body"
+       },
+       {
+        "association": "ticket.category",
+        "authorization": "public"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "ticket.subject"
+       },
+       {
+        "field": "ticket.body"
+       },
+       {
+        "association": "ticket.category"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "ticket.subject"
+       },
+       {
+        "field": "ticket.body"
+       },
+       {
+        "association": "ticket.category"
+       }
+      ]
+     },
+     "destroy": {
+      "authorization": "public"
+     }
+    },
+    "references": [
+     {
+      "subject_uuid": "01a1cbae-fb3f-77bf-b405-3be25afcb4a6",
+      "key": "category",
+      "name": "Category",
+      "targets": [
+       "category"
+      ],
+      "required": true,
+      "on_referenced_deleted": "restrict",
+      "default": {
+       "kind": "reference_record",
+       "record": "category.general"
+      }
+     }
+    ],
+    "predicates": [
+     {
+      "subject_uuid": "01a0caf3-075b-7000-8000-000000002b02",
+      "key": "billing",
+      "name": "Billing",
+      "expression": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "association": "ticket.category"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "reference_record",
+        "record": "category.billing"
+       }
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a1cbae-fb3f-71d0-ab2e-01bca37820c2",
+    "key": "category",
+    "name": "Category",
+    "primary_descriptor": {
+     "field": "category.name"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a1cbae-fb3f-72f7-9cd3-db4dd1e42c62",
+      "key": "code",
+      "name": "Code",
+      "type": "short_text",
+      "required": true,
+      "immutable": true
+     },
+     {
+      "subject_uuid": "01a1cbae-fb3f-7c95-80c1-55ddd6fed66a",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a1cbae-fb3f-73ab-a612-a1b6a55d72cc",
+      "key": "description",
+      "name": "Description",
+      "type": "long_text",
+      "required": false
+     }
+    ],
+    "validations": [
+     {
+      "subject_uuid": "01a1cbae-fb3f-7f44-bc07-1c356fd9dedf",
+      "key": "unique_code",
+      "kind": "uniqueness",
+      "targets": [
+       {
+        "field": "category.code"
+       }
+      ],
+      "nulls": "distinct",
+      "error_target": {
+       "field": "category.code"
+      }
+     }
+    ],
+    "reference_data": {
+     "identity": {
+      "field": "category.code"
+     },
+     "records": [
+      {
+       "subject_uuid": "01a1cbae-fb3f-776f-bf76-da36b50d1dfd",
+       "key": "general",
+       "fields": [
+        {
+         "field": "category.code",
+         "value": {
+          "kind": "literal",
+          "value": "general"
+         }
+        },
+        {
+         "field": "category.name",
+         "value": {
+          "kind": "literal",
+          "value": "General"
+         }
+        },
+        {
+         "field": "category.description",
+         "value": {
+          "kind": "literal",
+          "value": "Anything that fits nowhere else"
+         }
+        }
+       ]
+      },
+      {
+       "subject_uuid": "01a1cbae-fb3f-7152-87c1-780dacdeb8cd",
+       "key": "billing",
+       "fields": [
+        {
+         "field": "category.code",
+         "value": {
+          "kind": "literal",
+          "value": "billing"
+         }
+        },
+        {
+         "field": "category.name",
+         "value": {
+          "kind": "literal",
+          "value": "Billing"
+         }
+        },
+        {
+         "field": "category.description",
+         "value": {
+          "kind": "literal",
+          "value": "Invoices, refunds, and payment methods"
+         }
+        }
+       ]
+      },
+      {
+       "subject_uuid": "01a1cbae-fb3f-7bda-b598-e6284b21a78c",
+       "key": "technical",
+       "fields": [
+        {
+         "field": "category.code",
+         "value": {
+          "kind": "literal",
+          "value": "technical"
+         }
+        },
+        {
+         "field": "category.name",
+         "value": {
+          "kind": "literal",
+          "value": "Technical"
+         }
+        },
+        {
+         "field": "category.description",
+         "value": {
+          "kind": "literal",
+          "value": "Sign-in problems, errors, and bugs"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a1cbae-fb3f-7b62-857b-c60fec7d1667",
+    "key": "double_charge",
+    "entity": "ticket",
+    "fields": [
+     {
+      "field": "ticket.subject",
+      "value": {
+       "kind": "literal",
+       "value": "Charged twice for March"
+      }
+     },
+     {
+      "field": "ticket.body",
+      "value": {
+       "kind": "literal",
+       "value": "My card shows two charges for the March invoice."
+      }
+     }
+    ],
+    "references": [
+     {
+      "reference": "ticket.category",
+      "value": {
+       "kind": "reference_record",
+       "record": "category.billing"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

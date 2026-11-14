@@ -1,0 +1,32 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.account.partially_generated",
+      "pointer": "/application/entities/0/account/registration/inputs/2/default",
+      "readable_path": "user.account",
+      "reason": "Only nonblank literal registration defaults of at most 1024 bytes on short_text and time_zone inputs are generated.",
+      "consequence": "The signup control starts empty instead of showing the authored default."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.age`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
+    }
+  ]
+}

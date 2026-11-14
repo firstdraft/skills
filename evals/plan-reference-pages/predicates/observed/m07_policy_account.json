@@ -1,0 +1,83 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/2/predicates/1",
+      "readable_path": "task.urgent"
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/2/predicates/2",
+      "readable_path": "task.mine"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/2/predicates/1",
+      "readable_path": "task.urgent",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Task.urgent` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/2/predicates/2",
+      "readable_path": "task.mine",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Task.mine` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task.mine`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task.urgent`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: create redirects to a page that loads",
+      "file": "spec/requests/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update redirects to a page that loads",
+      "file": "spec/requests/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: create form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

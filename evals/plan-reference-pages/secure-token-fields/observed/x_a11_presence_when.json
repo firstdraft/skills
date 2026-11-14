@@ -1,0 +1,82 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.condition_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/0/fields/1/validations/0/when",
+      "readable_path": "invite.token.needed_when_shared"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "invite.token",
+      "reason": "Rails has_secure_token fills the Field with a unique random token that no form edits, but no lookup, rotation, or expiry flow is generated.",
+      "consequence": "Each new record receives a token; finding a record by token, regenerating it, and expiring it remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/0/fields/1/validations/0",
+      "readable_path": "invite.token.needed_when_shared",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.route.partially_generated",
+      "pointer": "/application/entities/0/scaffold/resource_routes/3",
+      "readable_path": "invite.scaffold.resource_routes.create",
+      "reason": "Standalone creation is incomplete. Required Field \"shared\" has no generated create author or realized target default.",
+      "consequence": "The selected standalone route retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`invite.scaffold.resource_routes.create`",
+      "file": "app/controllers/invites_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Invite#needed_when_shared`",
+      "file": "app/models/invite.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`invite.token`",
+      "file": "app/models/invite.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Invite: create persists the submitted values",
+      "file": "spec/requests/invites_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Invite: create rejects a missing email without persisting changes",
+      "file": "spec/requests/invites_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Invite: new accepts a permitted new-record request",
+      "file": "spec/requests/invites_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Invite: create form browser coverage",
+      "file": "spec/system/invites_spec.rb"
+    }
+  ]
+}

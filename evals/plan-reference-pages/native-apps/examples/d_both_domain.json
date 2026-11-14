@@ -1,0 +1,58 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "trail_log",
+    "name": "Trail Log",
+    "domain": "traillog.example",
+    "native": {
+      "ios": {},
+      "android": {}
+    },
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb4-ba1a-7000-8000-000300000008",
+        "key": "hike",
+        "name": "Hike",
+        "primary_descriptor": {
+          "field": "hike.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb4-ba1a-7000-8000-000300000007",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "hike.title"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

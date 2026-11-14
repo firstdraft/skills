@@ -1,0 +1,68 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/2/fields/5",
+      "readable_path": "event.price",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are entered and stored; splitting, rounding, and currency handling remain work after compilation."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`event.price`",
+      "file": "app/models/event.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: create persists the submitted values",
+      "file": "spec/requests/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: create rejects a missing title without persisting changes",
+      "file": "spec/requests/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: update persists the submitted changes",
+      "file": "spec/requests/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: update rejects a missing title without persisting changes",
+      "file": "spec/requests/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: create form browser coverage",
+      "file": "spec/system/events_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Event: update form browser coverage",
+      "file": "spec/system/events_spec.rb"
+    }
+  ]
+}

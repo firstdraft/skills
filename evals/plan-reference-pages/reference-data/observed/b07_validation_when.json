@@ -1,0 +1,39 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.condition_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/1/fields/1/validations/0/when",
+      "readable_path": "task.steps.required_for_bugs"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/1/fields/1/validations/0",
+      "readable_path": "task.steps.required_for_bugs",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Task#required_for_bugs`",
+      "file": "app/models/task.rb"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tasks",
+    "name": "Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000001",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000002",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000003",
+            "key": "body",
+            "name": "Body",
+            "type": "long_text",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000006",
+            "key": "kind",
+            "name": "Kind",
+            "type": "enum",
+            "required": true,
+            "settings": {
+              "values": [
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-000000000004",
+                  "key": "memo",
+                  "name": "Memo"
+                },
+                {
+                  "subject_uuid": "01a0caf3-07f0-7000-8000-000000000005",
+                  "key": "reminder",
+                  "name": "Reminder"
+                }
+              ]
+            },
+            "default": {
+              "kind": "literal",
+              "value": "memo"
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000008",
+            "key": "remind_on",
+            "name": "Remind on",
+            "type": "date",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-07f0-7000-8000-000000000007",
+                "key": "required_for_reminders",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "field": "note.kind"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "literal",
+                    "value": "reminder"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "note.title"
+              },
+              {
+                "field": "note.body"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "note.title"
+              },
+              {
+                "field": "note.body"
+              },
+              {
+                "field": "note.kind"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "note.title"
+              },
+              {
+                "field": "note.body"
+              },
+              {
+                "field": "note.kind"
+              },
+              {
+                "field": "note.remind_on"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

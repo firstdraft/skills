@@ -1,0 +1,43 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.account.partially_generated",
+      "pointer": "/application/entities/0/account/registration/inputs/1",
+      "readable_path": "user.account",
+      "reason": "This registration input has no generated signup control; only required inputs for stored, non-derived Fields are generated.",
+      "consequence": "The signup form omits this input."
+    },
+    {
+      "code": "foundation_plan.gap.account.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "user.account",
+      "reason": "This required Account Field has no generated signup control.",
+      "consequence": "Signup cannot supply this Field, so its validation rejects new Accounts."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.avatar`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.avatar`",
+      "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Account registration: persists submitted registration values",
+      "file": "spec/requests/account_registration_spec.rb"
+    }
+  ]
+}

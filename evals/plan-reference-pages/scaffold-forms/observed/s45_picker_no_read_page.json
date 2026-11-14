@@ -1,0 +1,100 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.input.not_generated",
+      "pointer": "/application/entities/3/scaffold/create/inputs/1",
+      "readable_path": "purchase.supplier",
+      "reason": "No authored Policy connects Supplier records to the signed-in Account for this Reference input, so nothing decides which Supplier records it may offer or accept.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.input.not_generated",
+      "pointer": "/application/entities/3/scaffold/create/inputs/2",
+      "readable_path": "purchase.depot",
+      "reason": "No authored Policy connects Depot records to the signed-in Account for this Reference input, so nothing decides which Depot records it may offer or accept.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.route.partially_generated",
+      "pointer": "/application/entities/3/scaffold/resource_routes/3",
+      "readable_path": "purchase.scaffold.resource_routes.create",
+      "reason": "Standalone creation is incomplete. Required Reference \"supplier\" has no generated create author.",
+      "consequence": "The selected standalone route retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.input.not_generated",
+      "pointer": "/application/entities/3/scaffold/update/inputs/1",
+      "readable_path": "purchase.supplier",
+      "reason": "No authored Policy connects Supplier records to the signed-in Account for this Reference input, so nothing decides which Supplier records it may offer or accept.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.input.not_generated",
+      "pointer": "/application/entities/3/scaffold/update/inputs/2",
+      "readable_path": "purchase.depot",
+      "reason": "No authored Policy connects Depot records to the signed-in Account for this Reference input, so nothing decides which Depot records it may offer or accept.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`purchase.supplier`",
+      "file": "app/controllers/purchases_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`purchase.supplier`",
+      "file": "app/controllers/purchases_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`purchase.depot`",
+      "file": "app/controllers/purchases_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`purchase.depot`",
+      "file": "app/controllers/purchases_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`purchase.scaffold.resource_routes.create`",
+      "file": "app/controllers/purchases_controller.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: create persists the submitted values",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: create rejects a missing number without persisting changes",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: new accepts a permitted new-record request",
+      "file": "spec/requests/purchases_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Purchase: create form browser coverage",
+      "file": "spec/system/purchases_spec.rb"
+    }
+  ]
+}

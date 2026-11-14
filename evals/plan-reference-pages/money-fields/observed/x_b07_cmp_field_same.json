@@ -1,0 +1,58 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.comparison_clause_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/0/fields/2/validations/0/comparisons/0/right",
+      "readable_path": "expense.tip.tip_below_amount"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "expense.amount",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are entered, stored, and displayed; splitting, rounding, and currency handling remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/2",
+      "readable_path": "expense.tip",
+      "reason": "The Field is stored as a decimal with two decimal places, but currency-aware arithmetic, allocation, and rounding are not generated.",
+      "consequence": "Amounts are entered, stored, and displayed; splitting, rounding, and currency handling remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/0/fields/2/validations/0",
+      "readable_path": "expense.tip.tip_below_amount",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Expense#tip_below_amount`",
+      "file": "app/models/expense.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`expense.amount`",
+      "file": "app/models/expense.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`expense.tip`",
+      "file": "app/models/expense.rb"
+    }
+  ]
+}

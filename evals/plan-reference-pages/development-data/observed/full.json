@@ -1,0 +1,32 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/2/fields/3/settings/transitions/0",
+      "readable_path": "task.status.finish",
+      "reason": "No generated page, route, or action fires the finish event.",
+      "consequence": "A record changes state through `Task#finish!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#finish!`",
+      "file": "app/controllers/tasks_controller.rb"
+    }
+  ]
+}

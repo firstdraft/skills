@@ -1,0 +1,221 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "boards",
+    "name": "Boards",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000f6",
+        "key": "board",
+        "name": "Board",
+        "primary_descriptor": {
+          "field": "board.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000f7",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000f8",
+            "key": "cards",
+            "name": "Cards",
+            "kind": "direct",
+            "reference": "card.board",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "board.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "board.title"
+              },
+              {
+                "association": "board.cards",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "card.title"
+                  }
+                ]
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "board.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "board.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000f9",
+        "key": "card",
+        "name": "Card",
+        "primary_descriptor": {
+          "field": "card.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000fa",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000f5",
+            "key": "position",
+            "name": "Position",
+            "type": "position",
+            "required": true,
+            "settings": {
+              "within": [
+                {
+                  "reference": "card.board"
+                }
+              ]
+            },
+            "validations": [
+              {
+                "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000f4",
+                "key": "not_zero",
+                "kind": "exclusion",
+                "forbidden_values": [
+                  {
+                    "kind": "literal",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000fb",
+            "key": "board",
+            "name": "Board",
+            "targets": [
+              "board"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "orderings": [
+          {
+            "subject_uuid": "01a0caf3-0c11-7000-8000-0000000000fc",
+            "key": "by_position",
+            "terms": [
+              {
+                "field": "card.position",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "card.title"
+              },
+              {
+                "field": "card.position"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "card.title"
+              },
+              {
+                "field": "card.position"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "card.title"
+              },
+              {
+                "association": "card.board"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "card.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

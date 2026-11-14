@@ -1,0 +1,24 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "invite.token",
+      "reason": "Rails has_secure_token fills the Field with a unique random token that no form edits, but no lookup, rotation, or expiry flow is generated.",
+      "consequence": "Each new record receives a token; finding a record by token, regenerating it, and expiring it remain work after compilation."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`invite.token`",
+      "file": "app/models/invite.rb"
+    }
+  ]
+}

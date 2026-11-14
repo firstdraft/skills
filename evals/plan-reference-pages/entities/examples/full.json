@@ -1,0 +1,192 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "recipe_box",
+    "name": "Recipe Box",
+    "native": {},
+    "delivery": {},
+    "topics": [
+      {
+        "name": "Chefs, their recipes, and ratings",
+        "entities": [
+          "cook",
+          "recipe",
+          "rating"
+        ]
+      }
+    ],
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0e00-7000-8000-000000000001",
+        "key": "cook",
+        "name": "Chef",
+        "icon": "person",
+        "primary_descriptor": {
+          "field": "cook.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "cook.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "cook.name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "cook.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0e00-7000-8000-000000000003",
+        "key": "recipe",
+        "name": "Recipe",
+        "icon": "document",
+        "primary_descriptor": {
+          "field": "recipe.title"
+        },
+        "implicit_order_column": [
+          {
+            "field": "recipe.published_on"
+          }
+        ],
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-000000000004",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-000000000005",
+            "key": "published_on",
+            "name": "Published on",
+            "type": "date",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-000000000006",
+            "key": "cook",
+            "name": "Chef",
+            "targets": [
+              "cook"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.published_on"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.published_on"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "recipe.title"
+              },
+              {
+                "field": "recipe.published_on"
+              },
+              {
+                "association": "recipe.cook"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0e00-7000-8000-000000000007",
+        "key": "rating",
+        "name": "Rating",
+        "primary_descriptor": {
+          "association": "rating.recipe"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-000000000008",
+            "key": "stars",
+            "name": "Stars",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0e00-7000-8000-000000000009",
+            "key": "recipe",
+            "name": "Recipe",
+            "targets": [
+              "recipe"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "delete_referencing_record"
+          }
+        ]
+      }
+    ]
+  }
+}

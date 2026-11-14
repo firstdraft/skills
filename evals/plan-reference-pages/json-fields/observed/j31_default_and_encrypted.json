@@ -1,0 +1,76 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "order.shipping_preferences",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Generated forms edit the document as JSON text, and any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/2",
+      "readable_path": "order.extras",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Generated forms edit the document as JSON text, and any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.default",
+      "pointer": "/application/entities/0/fields/2/default",
+      "readable_path": "order.extras",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "the authored default is not applied"
+    },
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/3",
+      "readable_path": "order.card_details",
+      "reason": "The Field is stored as jsonb, but no document structure is validated.",
+      "consequence": "Generated forms edit the document as JSON text, and any well-formed JSON document is accepted; key structure and schema validation remain work after compilation."
+    },
+    {
+      "code": "foundation_plan.gap.field_modifier.encrypted_at_rest",
+      "pointer": "/application/entities/0/fields/3/encrypted_at_rest",
+      "readable_path": "order.card_details",
+      "reason": "The current release does not realize this authored Field modifier.",
+      "consequence": "encryption at rest is not applied"
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.shipping_preferences`",
+      "file": "app/models/order.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.extras`",
+      "file": "app/models/order.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.card_details`",
+      "file": "app/models/order.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.extras`",
+      "file": "app/models/order.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`order.card_details`",
+      "file": "app/models/order.rb"
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+ "format": "firstdraft.foundation-plan.sketch/0.23",
+ "target": {
+  "id": "rails",
+  "profile": "rails-sketch/2026-10"
+ },
+ "application": {
+  "key": "tasks",
+  "name": "Tasks",
+  "native": {},
+  "delivery": {},
+  "entities": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-000000000124",
+    "key": "task",
+    "name": "Task",
+    "primary_descriptor": {
+     "field": "task.title"
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000125",
+      "key": "title",
+      "name": "Title",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000123",
+      "key": "status",
+      "name": "Status",
+      "type": "state_machine",
+      "required": true,
+      "settings": {
+       "initial_state": "open",
+       "states": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-00000000011f",
+         "key": "open",
+         "name": "Open"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000120",
+         "key": "done",
+         "name": "Done"
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000127",
+         "key": "archived",
+         "name": "Archived"
+        }
+       ],
+       "transitions": [
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000121",
+         "key": "complete",
+         "from": [
+          "open"
+         ],
+         "to": "done",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000122",
+         "key": "reopen",
+         "from": [
+          "done"
+         ],
+         "to": "open",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "literal",
+            "value": null
+           }
+          }
+         ]
+        },
+        {
+         "subject_uuid": "01a0caf3-0770-7000-8000-000000000128",
+         "key": "archive",
+         "from": [
+          "done"
+         ],
+         "to": "archived",
+         "effects": [
+          {
+           "kind": "set_field",
+           "field": "task.completed_at",
+           "value": {
+            "kind": "environment",
+            "name": "current_time"
+           }
+          },
+          {
+           "kind": "set_field",
+           "field": "task.archived_flag",
+           "value": {
+            "kind": "literal",
+            "value": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-000000000126",
+      "key": "completed_at",
+      "name": "Completed at",
+      "type": "datetime",
+      "required": false
+     },
+     {
+      "subject_uuid": "01a0caf3-0770-7000-8000-00000000011e",
+      "key": "archived_flag",
+      "name": "Archived flag",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "scaffold": {
+     "resource_routes": [
+      "index",
+      "show",
+      "new",
+      "create",
+      "edit",
+      "update"
+     ],
+     "index": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "show": {
+      "authorization": "public",
+      "projection": [
+       {
+        "field": "task.title"
+       },
+       {
+        "field": "task.status"
+       },
+       {
+        "field": "task.completed_at"
+       }
+      ]
+     },
+     "create": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     },
+     "update": {
+      "authorization": "public",
+      "inputs": [
+       {
+        "field": "task.title"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "development_data": [
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-000000000129",
+    "key": "y",
+    "entity": "task",
+    "fields": [
+     {
+      "field": "task.title",
+      "value": {
+       "kind": "literal",
+       "value": "Old"
+      }
+     },
+     {
+      "field": "task.status",
+      "value": {
+       "kind": "literal",
+       "value": "archived"
+      }
+     }
+    ]
+   },
+   {
+    "subject_uuid": "01a0caf3-0770-7000-8000-00000000012a",
+    "key": "z",
+    "entity": "task",
+    "fields": [
+     {
+      "field": "task.title",
+      "value": {
+       "kind": "literal",
+       "value": "Done one"
+      }
+     },
+     {
+      "field": "task.status",
+      "value": {
+       "kind": "literal",
+       "value": "done"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

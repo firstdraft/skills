@@ -1,0 +1,147 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "expenses",
+    "name": "Expenses",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0990-7000-8000-0000000000c4",
+        "key": "expense",
+        "name": "Expense",
+        "primary_descriptor": {
+          "field": "expense.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000000c5",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000000c1",
+            "key": "amount",
+            "name": "Amount",
+            "type": "money",
+            "required": true,
+            "settings": {
+              "currency": "USD"
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000000c2",
+            "key": "tip",
+            "name": "Tip",
+            "type": "money",
+            "required": false,
+            "settings": {
+              "currency": "USD"
+            }
+          }
+        ],
+        "validations": [
+          {
+            "subject_uuid": "01a0caf3-0990-7000-8000-0000000000c3",
+            "key": "tip_le_amount",
+            "kind": "comparison",
+            "left": {
+              "target": {
+                "field": "expense.tip"
+              }
+            },
+            "comparisons": [
+              {
+                "operator": "less_than_or_equal_to",
+                "right": {
+                  "target": {
+                    "field": "expense.amount"
+                  }
+                }
+              }
+            ],
+            "error_target": {
+              "field": "expense.tip"
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.tip"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.tip"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.tip"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "expense.title"
+              },
+              {
+                "field": "expense.amount"
+              },
+              {
+                "field": "expense.tip"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

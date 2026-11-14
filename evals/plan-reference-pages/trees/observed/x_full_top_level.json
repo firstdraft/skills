@@ -1,0 +1,129 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.compiler.unsupported_predicate",
+      "severity": "warning",
+      "pointer": "/application/entities/1/predicates/0",
+      "readable_path": "folder.top_level"
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.rails_target.validation.comparison_clause_unsupported",
+      "severity": "warning",
+      "pointer": "/application/entities/1/validations/0/comparisons/0/operator",
+      "readable_path": "folder.parent_in_same_project"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.associated_create.not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1/create_form",
+      "readable_path": "scaffold.associated_create_form",
+      "reason": "Predicated collections lack proof that inverse assignment satisfies the authored Predicate.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1/predicate",
+      "readable_path": "project.folders.predicate",
+      "reason": "The selected named Predicate has no target scope lowering.",
+      "consequence": "This surface calls `Folder.top_level`, which raises NotImplementedError until it is written."
+    },
+    {
+      "code": "foundation_plan.gap.predicate.not_generated",
+      "pointer": "/application/entities/1/predicates/0",
+      "readable_path": "folder.top_level",
+      "reason": "This Predicate is outside this release's bounded named-scope support.",
+      "consequence": "`Folder.top_level` raises NotImplementedError until it is written. Pages that call it raise until then, and the specs that request those pages fail."
+    },
+    {
+      "code": "foundation_plan.gap.reference.deletion_not_generated",
+      "pointer": "/application/entities/1/references/1/on_referenced_deleted",
+      "readable_path": "folder.parent.on_referenced_deleted",
+      "reason": "Project.folders keeps dependent: :delete_all, so one statement deletes Folder records together with the ones they restrict, which destroying each record would refuse.",
+      "consequence": "When a Folder outside that delete references a record in it through parent, deleting through Project.folders raises ActiveRecord::InvalidForeignKey instead of showing a refusal."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.associated_create.partially_generated",
+      "pointer": "/application/entities/1/scaffold/show/projection/3/create_form",
+      "readable_path": "folder.subfolders.create_form",
+      "reason": "Associated creation is incomplete. Required Reference \"project\" has no generated create author.",
+      "consequence": "The associated create form retains its authored inputs and authorization, but needs application code to supply the missing required values."
+    },
+    {
+      "code": "foundation_plan.gap.tree.partially_generated",
+      "pointer": "/application/entities/1/trees/0",
+      "readable_path": "folder.tree",
+      "reason": "The parent Reference folder.parent is generated, but the Tree's rules are not: nothing keeps the hierarchy free of cycles or keeps a parent within the same folder.project.",
+      "consequence": "A record can be saved with a parent that makes a cycle or that belongs to another folder.project."
+    },
+    {
+      "code": "foundation_plan.gap.validation.not_generated",
+      "pointer": "/application/entities/1/validations/0",
+      "readable_path": "folder.parent_in_same_project",
+      "reason": "This Validation is not lowered by the current profile release.",
+      "consequence": "The generated model declares `validate` with an empty private method for it, so it saves records the rule rejects until application code adds the error; its model spec fails until then."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.folders.create_form`",
+      "file": "app/controllers/projects/folders_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`folder.subfolders.create_form`",
+      "file": "app/controllers/folders/subfolders_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Folder.top_level`",
+      "file": "app/models/folder.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Folder#not_under_itself`",
+      "file": "app/models/folder.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Folder#parent_in_same_project`",
+      "file": "app/models/folder.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`folder.parent.on_referenced_deleted`",
+      "file": "app/models/folder.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`folder.tree`",
+      "file": "app/models/folder.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Folder subfolders: create persists the submitted values",
+      "file": "spec/requests/folders/subfolders_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Folder subfolders: create form browser coverage",
+      "file": "spec/system/folders/subfolders_spec.rb"
+    }
+  ]
+}

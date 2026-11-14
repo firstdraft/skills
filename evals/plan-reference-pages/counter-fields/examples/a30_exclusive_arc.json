@@ -1,0 +1,159 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "probe",
+    "name": "Probe",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000007531",
+        "key": "post",
+        "name": "Post",
+        "primary_descriptor": {
+          "field": "post.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000007532",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000007533",
+            "key": "likes_count",
+            "name": "Likes",
+            "type": "counter",
+            "required": true,
+            "settings": {
+              "counts": "post.likes"
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000007534",
+            "key": "likes",
+            "kind": "direct",
+            "name": "Likes",
+            "reference": "like.target",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "post.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000007535",
+        "key": "photo",
+        "name": "Photo",
+        "primary_descriptor": {
+          "field": "photo.caption"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000007536",
+            "key": "caption",
+            "name": "Caption",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000007537",
+            "key": "likes_count",
+            "name": "Likes",
+            "type": "counter",
+            "required": true,
+            "settings": {
+              "counts": "photo.likes"
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-000000007538",
+            "key": "likes",
+            "kind": "direct",
+            "name": "Likes",
+            "reference": "like.target",
+            "side": "referenced"
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-0c00-7000-8000-000000007539",
+        "key": "like",
+        "name": "Like",
+        "primary_descriptor": {
+          "system_field": "id"
+        },
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-0c00-7000-8000-00000000753a",
+            "key": "target",
+            "name": "Target",
+            "required": true,
+            "targets": [
+              "post",
+              "photo"
+            ],
+            "on_referenced_deleted": "delete_referencing_record",
+            "realization": {
+              "rails_association": "exclusive_arc"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

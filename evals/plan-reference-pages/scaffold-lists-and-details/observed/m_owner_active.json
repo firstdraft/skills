@@ -1,0 +1,64 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Project.active`",
+      "file": "app/models/project.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project tasks: index lists accessible records",
+      "file": "spec/requests/projects/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: index lists accessible records",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: index prevents a guest from accessing protected records",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: index prevents another account from accessing protected records",
+      "file": "spec/requests/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update redirects to a page that loads",
+      "file": "spec/requests/tasks_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: create form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Project: update form browser coverage",
+      "file": "spec/system/projects_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Task: update form browser coverage",
+      "file": "spec/system/tasks_spec.rb"
+    }
+  ]
+}

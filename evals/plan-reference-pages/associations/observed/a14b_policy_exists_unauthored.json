@@ -1,0 +1,91 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.link.association_not_found",
+      "severity": "warning",
+      "pointer": "/application/entities/1/policies/0/allow_when/association",
+      "readable_path": "project.read_member"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.policy.not_generated",
+      "pointer": "/application/entities/1/policies/0",
+      "readable_path": "project.read_member",
+      "reason": "Its Expression did not resolve or type-check: The linked Association does not exist in this Plan (/application/entities/1/policies/0/allow_when/association).",
+      "consequence": "This release emits no record rule, relation scope, or dependent protected surface for this Policy."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/index",
+      "readable_path": "project.scaffold.index",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/show",
+      "readable_path": "project.scaffold.show",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/show/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.read_member`",
+      "file": "app/policies/project_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.scaffold.index`",
+      "file": "app/controllers/projects_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.scaffold.show`",
+      "file": "app/controllers/projects_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.scaffold.index.authorization`",
+      "file": "app/policies/project_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`project.scaffold.show.authorization`",
+      "file": "app/policies/project_policy.rb"
+    }
+  ]
+}

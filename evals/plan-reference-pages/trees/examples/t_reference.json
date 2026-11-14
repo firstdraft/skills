@@ -1,0 +1,363 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "handbook",
+    "name": "Handbook",
+    "native": {},
+    "delivery": {},
+    "topics": [
+      {
+        "name": "Knowledge base",
+        "entities": [
+          "space",
+          "article"
+        ]
+      }
+    ],
+    "entities": [
+      {
+        "subject_uuid": "019fa3ff-3000-7000-8000-000000000001",
+        "key": "space",
+        "name": "Space",
+        "primary_descriptor": {
+          "field": "space.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000002",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000003",
+            "key": "articles",
+            "name": "Articles",
+            "kind": "direct",
+            "reference": "article.space",
+            "side": "referenced"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "space.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "space.name"
+              },
+              {
+                "association": "space.articles",
+                "authorization": "public",
+                "predicate": "article.top_level",
+                "projection": [
+                  {
+                    "field": "article.title"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "space.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "space.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      },
+      {
+        "subject_uuid": "019fa3ff-3000-7000-8000-000000000004",
+        "key": "article",
+        "name": "Article",
+        "primary_descriptor": {
+          "field": "article.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000005",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000006",
+            "key": "body",
+            "name": "Body",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000007",
+            "key": "space",
+            "name": "Space",
+            "targets": [
+              "space"
+            ],
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record"
+          },
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000065",
+            "key": "parent",
+            "name": "Parent article",
+            "targets": [
+              "article"
+            ],
+            "required": false,
+            "on_referenced_deleted": "nullify_reference",
+            "validations": [
+              {
+                "subject_uuid": "019fa3ff-3000-7000-8000-000000000071",
+                "key": "not_under_itself",
+                "owner": {
+                  "description": "An article's parent is not the article itself or any article below it."
+                }
+              }
+            ]
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "show",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "article.title"
+              },
+              {
+                "field": "article.body"
+              },
+              {
+                "association": "article.space",
+                "authorization": "public"
+              },
+              {
+                "association": "article.parent",
+                "authorization": "public"
+              },
+              {
+                "association": "article.subarticles",
+                "authorization": "public",
+                "projection": [
+                  {
+                    "field": "article.title"
+                  }
+                ],
+                "create_form": {}
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "article.title"
+              },
+              {
+                "field": "article.body"
+              },
+              {
+                "association": "article.parent"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "article.title"
+              },
+              {
+                "field": "article.body"
+              },
+              {
+                "association": "article.parent"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        },
+        "associations": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000066",
+            "key": "subarticles",
+            "name": "Subarticles",
+            "kind": "direct",
+            "reference": "article.parent",
+            "side": "referenced"
+          }
+        ],
+        "trees": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000067",
+            "key": "outline",
+            "parent_reference": "article.parent",
+            "scope_reference": "article.space"
+          }
+        ],
+        "validations": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000072",
+            "key": "parent_in_same_space",
+            "kind": "comparison",
+            "left": {
+              "through": [
+                {
+                  "association": "article.parent"
+                }
+              ],
+              "target": {
+                "reference": "article.space"
+              }
+            },
+            "comparisons": [
+              {
+                "operator": "equals",
+                "right": {
+                  "target": {
+                    "reference": "article.space"
+                  }
+                }
+              }
+            ],
+            "error_target": {
+              "reference": "article.parent"
+            }
+          }
+        ],
+        "predicates": [
+          {
+            "subject_uuid": "019fa3ff-3000-7000-8000-000000000073",
+            "key": "top_level",
+            "name": "Top level",
+            "expression": {
+              "kind": "not",
+              "expression": {
+                "kind": "exists",
+                "association": "article.parent"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "019fa3ff-3000-7000-8000-00000000006e",
+        "key": "handbook",
+        "entity": "space",
+        "fields": [
+          {
+            "field": "space.name",
+            "value": {
+              "kind": "literal",
+              "value": "Handbook"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "019fa3ff-3000-7000-8000-00000000006f",
+        "key": "onboarding",
+        "entity": "article",
+        "fields": [
+          {
+            "field": "article.title",
+            "value": {
+              "kind": "literal",
+              "value": "Onboarding"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "article.space",
+            "value": {
+              "kind": "reference_record",
+              "record": "space.handbook"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "019fa3ff-3000-7000-8000-000000000070",
+        "key": "first_week",
+        "entity": "article",
+        "fields": [
+          {
+            "field": "article.title",
+            "value": {
+              "kind": "literal",
+              "value": "First week"
+            }
+          }
+        ],
+        "references": [
+          {
+            "reference": "article.space",
+            "value": {
+              "kind": "reference_record",
+              "record": "space.handbook"
+            }
+          },
+          {
+            "reference": "article.parent",
+            "value": {
+              "kind": "reference_record",
+              "record": "article.onboarding"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

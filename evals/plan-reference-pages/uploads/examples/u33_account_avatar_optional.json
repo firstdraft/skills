@@ -1,0 +1,72 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "listings",
+    "name": "Listings",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa300-0000-7000-8000-000000000003",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000001",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa300-0000-7000-8000-000000000002",
+            "key": "avatar",
+            "name": "Avatar",
+            "type": "image",
+            "required": false
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "verification": {
+            "kind": "email"
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {},
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              },
+              {
+                "field": "user.avatar",
+                "required": true
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

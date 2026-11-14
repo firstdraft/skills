@@ -1,0 +1,37 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.native_client.not_generated",
+      "pointer": "/application/native/android",
+      "readable_path": "application.native.android",
+      "reason": "The Android client could not be generated for this Plan: A selected Android client requires at least one main-navigation entry.",
+      "consequence": "No Android client is emitted."
+    },
+    {
+      "code": "foundation_plan.gap.native_client.not_generated",
+      "pointer": "/application/native/ios",
+      "readable_path": "application.native.ios",
+      "reason": "The iOS client could not be generated for this Plan: A selected iOS client requires at least one main-navigation entry.",
+      "consequence": "No iOS client is emitted."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`application.native.android`",
+      "file": "android/"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`application.native.ios`",
+      "file": "ios/"
+    }
+  ]
+}

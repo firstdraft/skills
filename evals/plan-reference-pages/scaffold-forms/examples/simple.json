@@ -1,0 +1,94 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tasks",
+    "name": "Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-07f0-7000-8000-000000000001",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000002",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-07f0-7000-8000-000000000003",
+            "key": "body",
+            "name": "Body",
+            "type": "long_text",
+            "required": false
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "note.title"
+              },
+              {
+                "field": "note.body"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "note.title"
+              },
+              {
+                "field": "note.body"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "note.title"
+              },
+              {
+                "field": "note.body"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

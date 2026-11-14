@@ -1,0 +1,263 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "notebook",
+    "name": "Notebook",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cb98-7455-7381-875e-185ad28471ed",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb98-7455-7381-875e-185b0c524cc5",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a1cb98-7455-7381-875e-185cdd86fcaa",
+            "key": "notes",
+            "kind": "direct",
+            "name": "Notes",
+            "reference": "note.author",
+            "side": "referenced"
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              },
+              {
+                "association": "user.preferred_language",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "references": [
+          {
+            "subject_uuid": "01a1cb98-7455-7381-875e-185dbcd2dc86",
+            "key": "preferred_language",
+            "name": "Preferred language",
+            "required": true,
+            "on_referenced_deleted": "restrict",
+            "targets": [
+              "language"
+            ]
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cb98-7455-7381-875e-185fd0a53688",
+        "key": "note",
+        "name": "Note",
+        "primary_descriptor": {
+          "field": "note.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb98-7455-7381-875e-18604c1e8877",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cb98-7455-7381-875e-1861d2855ea1",
+            "key": "author",
+            "name": "Author",
+            "required": true,
+            "immutable": true,
+            "on_referenced_deleted": "delete_referencing_record",
+            "targets": [
+              "user"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a1cb98-7455-7381-875e-1862a20cb389",
+            "key": "manage_own",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "note.author"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "projection": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "note.author",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "note.manage_own"
+            },
+            "inputs": [
+              {
+                "field": "note.title"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "note.manage_own"
+            }
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cb98-7455-7381-875e-185630b9f43b",
+        "key": "language",
+        "name": "Language",
+        "primary_descriptor": {
+          "field": "language.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cb98-7455-7381-875e-18573fe981fb",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "reference_data": {
+          "identity": {
+            "field": "language.name"
+          },
+          "records": [
+            {
+              "subject_uuid": "01a1cb98-7455-7381-875e-18585a25f721",
+              "key": "english",
+              "fields": [
+                {
+                  "field": "language.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "English"
+                  }
+                }
+              ]
+            },
+            {
+              "subject_uuid": "01a1cb98-7455-7381-875e-18594fa96354",
+              "key": "french",
+              "fields": [
+                {
+                  "field": "language.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "French"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "scaffold": {
+          "resource_routes": [
+            "index"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "language.name"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "home_index": "note"
+  }
+}

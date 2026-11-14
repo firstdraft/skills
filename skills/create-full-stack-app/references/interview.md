@@ -75,8 +75,9 @@ Steps 1 and 2 are the opening turn, after the research and any fit, with at most
    a few minutes, then write a rough Plan, push it, and read its analysis. Keep the rough Plan small: the main
    records and their key Fields, any Account, who can see what, and requested phone apps; for a backbone, only the
    part First Draft builds. Tell the user in a few plain lines what First Draft will build and what it will not
-   build yet, for example "Descriptions are stored as plain text for now; I'll add formatting in Rails after" or
-   "The list of posts that mention a word is generated, and I'll write its search in Rails right after". When the
+   build yet, for example "Descriptions are stored as plain text for now; I'll add formatting in Rails before you
+   first try the app" or "The list of posts that mention a word is generated, and I'll write its search in Rails
+   right after Compile". When the
    user described moving a record from one state to another, such as approving a request, say that no generated
    page has a button for it yet and that you will write it after Compile. Then let
    the analysis steer the remaining questions: ask about consequences the user can choose between,
@@ -145,10 +146,11 @@ Ask who can see and change each kind of record in one turn, as one grid filled i
 | Comment | Anyone signed in | Anyone signed in | Its author | Its author, or the post's author |
 
 Ask what is wrong in it. A filled-in grid is easy to accept unread, so also ask two or three concrete cases where
-the answer is not obvious, using records from the Plan's sample data, and leave them for the user to answer: "Can
-Maya delete Sam's comment on her own post?" Make one case about someone other than its owner removing a record,
-such as an organizer removing spam. Add sample records first if the Plan has none. Change the grid where an answer
-disagrees with it.
+the answer is not obvious, about named people and records, and leave them for the user to answer: "Can Maya delete
+Sam's comment on her own post?" Use the Plan's sample records when it has them. When you ask before the rough Plan
+exists, name the people and records yourself, and make them its sample data. Make one case about someone other
+than its owner removing a record, such as an organizer removing spam. Change the grid where an answer disagrees
+with it.
 
 ## Meaning and implementation
 
@@ -168,12 +170,15 @@ with more than one target needs `realization.rails_association`. Both values com
   so each target carries the deletion outcome on its inverse. A target that cannot, such as one with two inverses
   or a Comment that replies to Comments, refuses its own deletion while a record references it, and so does every
   target of a one-to-one immutable polymorphic Reference whose outcome is nullification. A cascade or nullification
-  there is left to write after Compile.
+  there is left to write after Compile, before the first preview; its deletion spec fails until then.
 
 Forms, selects, Policies, Predicates, and other screens that cross either shape remain gaps, and a standalone create
-that needs a required multi-target Reference is generated but cannot save until the Reference is supplied in Rails. A
+that needs a required multi-target Reference is generated but cannot save until the Reference is supplied in Rails.
+Whether to plan such a Reference at all is meaning, so ask first, as the
+[References page](plan/references.md#decisions-to-raise) says; only its realization is yours to choose. A
 Policy that crosses either shape is emitted as a stub:
-its rule denies and its scope raises until it is written, and the screens it guards are still generated. Say so.
+its rule denies and its scope raises until it is written, and the screens it guards are still generated. Its Policy
+spec has a placeholder example that fails until you write it, before the first preview. Say so.
 
 Make implementation choices yourself: use the convention default without asking, and name it with a one-line why
 among the delegated choices in the read-back. Do not ask the user how involved they want to be. If they ask to be
@@ -210,11 +215,13 @@ the deployed Compiler; the matching GapSet says what this Compile leaves out.
 | Scaffold | [Movie pages](https://firstdraft.github.io/firstdraft/docs/architecture/design/foundation-plan-explorer/app.html?plan=oscar-party&subject=scaffold:movie) |
 
 No Guide example uses `polymorphic` yet. The Guide's example Accounts request flows outside today's Account slice,
-so use the [Accounts reference](foundation-plan-023.md#accounts-and-policies) for what an Account emits.
+so use [Accounts](plan/accounts.md) for what an Account emits.
 
-When the user or you prefer your own implementation of a generated part, keep its meaning in the Plan, Compile,
-then replace that code in plain Rails and record why in `implementation-notes.md`. Compile is one-shot today, so
-there is no option to leave a part out of the generated app.
+When the user or you prefer to write a Predicate, Ordering, Policy, Validation, or transition yourself, give it an
+`owner` that describes the behavior: Compile emits everything that uses it, a stub, and a failing placeholder
+example for you to write. For any other generated part, keep its meaning in the Plan, Compile, then replace that
+code in plain Rails and record why in `implementation-notes.md`. There is no option to leave a part out of the
+generated app.
 
 ## Coverage checklist
 
@@ -270,7 +277,7 @@ These steps are outside the Plan and do not block local development. They come a
       section shows; without `lockout`, read the Failed sign-ins section of `DEPLOY.md`, because people on one network,
       such as a classroom, share the per-IP sign-in limit.
 - [ ] Photos and files (apps with image or attachment Fields): sign up for Cloudinary and set `CLOUDINARY_URL`
-      as the [upload setup](foundation-plan-023.md#photos-and-files) describes.
+      as the [upload setup](plan/uploads.md#setup-after-compile) describes.
 - [ ] Deploy: before the first deploy, the user creates a separate Render workspace for this app in the Render
       dashboard, because each workspace gets [750 free instance hours](https://render.com/docs/free) a month and
       running out suspends every free web service in it. A Hobby workspace has no monthly fee and includes two
@@ -282,6 +289,6 @@ These steps are outside the Plan and do not block local development. They come a
       If Render cannot see the repository, connect GitHub for that workspace. Then follow `DEPLOY.md`, using its
       "Deploy from the command line" section for the Neon and Render CLIs. The free plan sleeps when idle.
 - [ ] Phone preview (apps with iPhone or Android): preview in Revyl with the
-      [native preview steps](foundation-plan-023.md#preview-generated-native-apps).
+      [native preview steps](plan/native-apps.md#previewing-after-compile).
 
 The user sets every key; never ask for, print, or commit its value.

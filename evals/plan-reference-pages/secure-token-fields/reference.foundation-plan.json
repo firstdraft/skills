@@ -1,0 +1,177 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "gatherings",
+    "name": "Gatherings",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbb2-60b0-708f-b86f-971d489db7d0",
+        "key": "event",
+        "name": "Event",
+        "primary_descriptor": {
+          "field": "event.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbb2-60b0-708c-8f33-0d223baf8526",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb2-60b0-708d-8ca3-f8d69eaf11ee",
+            "key": "starts_on",
+            "name": "Starts on",
+            "type": "date",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbb2-60b0-708e-826e-f8a51e177855",
+            "key": "details",
+            "name": "Details",
+            "type": "long_text",
+            "required": false
+          },
+          {
+            "subject_uuid": "01a1cbb2-60b0-7090-9bc0-8004aa8a10a0",
+            "key": "share_code",
+            "name": "Share code",
+            "type": "secure_token",
+            "required": true,
+            "immutable": true,
+            "redact_from_logs": true,
+            "notes": "Guests open /e/<code>; that page and the 30-day expiry are written after Compile."
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "event.title"
+              },
+              {
+                "field": "event.starts_on"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "event.title"
+              },
+              {
+                "field": "event.starts_on"
+              },
+              {
+                "field": "event.details"
+              },
+              {
+                "field": "event.share_code"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "event.title"
+              },
+              {
+                "field": "event.starts_on"
+              },
+              {
+                "field": "event.details"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "event.title"
+              },
+              {
+                "field": "event.starts_on"
+              },
+              {
+                "field": "event.details"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a1cbb2-60b0-7091-be70-9c5f0b13d55a",
+        "key": "launch_party",
+        "entity": "event",
+        "fields": [
+          {
+            "field": "event.title",
+            "value": {
+              "kind": "literal",
+              "value": "Launch party"
+            }
+          },
+          {
+            "field": "event.starts_on",
+            "value": {
+              "kind": "literal",
+              "value": "2027-03-12"
+            }
+          },
+          {
+            "field": "event.share_code",
+            "value": {
+              "kind": "literal",
+              "value": "launch-party-2027"
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a1cbb2-60b0-7092-8beb-93d633e89eb8",
+        "key": "book_club",
+        "entity": "event",
+        "fields": [
+          {
+            "field": "event.title",
+            "value": {
+              "kind": "literal",
+              "value": "Book club"
+            }
+          },
+          {
+            "field": "event.starts_on",
+            "value": {
+              "kind": "literal",
+              "value": "2027-04-02"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

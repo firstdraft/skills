@@ -1,0 +1,169 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.expression.field_not_queryable",
+      "severity": "warning",
+      "pointer": "/application/entities/1/policies/0/allow_when/expressions/1/operand/target/field",
+      "readable_path": "listing.manage_own"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.policy.not_generated",
+      "pointer": "/application/entities/1/policies/0",
+      "readable_path": "listing.manage_own",
+      "reason": "Its Expression did not resolve or type-check: The selected Field has no general query profile (/application/entities/1/policies/0/allow_when/expressions/1/operand/target/field).",
+      "consequence": "This release emits no record rule, relation scope, or dependent protected surface for this Policy."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/create",
+      "readable_path": "listing.scaffold.create",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/create/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/destroy",
+      "readable_path": "listing.scaffold.destroy",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/destroy/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/index",
+      "readable_path": "listing.scaffold.index",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/index/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/show",
+      "readable_path": "listing.scaffold.show",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/show/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/update",
+      "readable_path": "listing.scaffold.update",
+      "reason": "Its authorization cannot be preserved.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.authorization.not_generated",
+      "pointer": "/application/entities/1/scaffold/update/authorization",
+      "readable_path": "scaffold.authorization",
+      "reason": "The selected Policy is not target-admitted.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.manage_own`",
+      "file": "app/policies/listing_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.create`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.destroy`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.index`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.show`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.update`",
+      "file": "app/controllers/listings_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.create.authorization`",
+      "file": "app/policies/listing_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.destroy.authorization`",
+      "file": "app/policies/listing_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.index.authorization`",
+      "file": "app/policies/listing_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.show.authorization`",
+      "file": "app/policies/listing_policy.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`listing.scaffold.update.authorization`",
+      "file": "app/policies/listing_policy.rb"
+    }
+  ]
+}

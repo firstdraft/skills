@@ -1,0 +1,78 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create redirects to a page that loads",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: new accepts a permitted new-record request",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: new_list_options ignores a NUL byte in the search",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: new_list_options lists at most 20 lists",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: new_list_options lists the lists whose title contains the search, ignoring case",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: new_list_options matches % and _ in the search literally",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: new_list_options never lists another account's lists",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: update redirects to a page that loads",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create form browser coverage",
+      "file": "spec/system/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: update form browser coverage",
+      "file": "spec/system/notes_spec.rb"
+    }
+  ]
+}

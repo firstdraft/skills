@@ -1,0 +1,32 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.partially_generated",
+      "pointer": "/application/entities/0/fields/2",
+      "readable_path": "post.approved_comments_count",
+      "reason": "Rails counter_cache counts every child record; a Counter filtered by the Association's Predicate is not maintained.",
+      "consequence": "The integer column is generated, defaults to 0, and is read wherever the Plan reads it, but nothing updates it, so it reads 0 until application code maintains it."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`Post#approved_comments_count`",
+      "file": "app/models/post.rb"
+    }
+  ]
+}

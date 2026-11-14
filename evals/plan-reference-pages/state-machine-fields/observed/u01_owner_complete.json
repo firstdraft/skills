@@ -1,0 +1,76 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.development_data.record.not_generated",
+      "pointer": "/application/development_data/1",
+      "readable_path": "task.book_room",
+      "reason": "Required Field task.status has no target-compatible seed value.",
+      "consequence": "The generated development seed omits this record and dependent links."
+    },
+    {
+      "code": "foundation_plan.gap.development_data.field_assignment.not_generated",
+      "pointer": "/application/development_data/1/fields/1/value",
+      "readable_path": "task.book_room",
+      "reason": "Reaching the authored State Machine value fires task.status.complete, which First Draft did not write.",
+      "consequence": "The generated development seed omits this Field value."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/0",
+      "readable_path": "task.status.complete",
+      "reason": "No generated page, route, or action fires the complete event.",
+      "consequence": "A record changes state through `Task#complete!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_effect.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/0/effects/0",
+      "readable_path": "task.status.complete/effects/0",
+      "reason": "task.status.complete is marked owner, so application code writes the event and this effect.",
+      "consequence": "The generated application does not apply this effect."
+    },
+    {
+      "code": "foundation_plan.gap.state_transition_control.not_generated",
+      "pointer": "/application/entities/0/fields/1/settings/transitions/1",
+      "readable_path": "task.status.reopen",
+      "reason": "No generated page, route, or action fires the reopen event.",
+      "consequence": "A record changes state through `Task#reopen!` only when code the application's owner adds calls it: a button with its route and controller action, or another caller such as a job."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#complete!`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`Task#reopen!`",
+      "file": "app/controllers/tasks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Rules",
+      "title": "`Task#complete!`",
+      "file": "app/models/task.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`task.book_room`",
+      "file": "db/seeds/development.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`task.book_room`",
+      "file": "db/seeds/development.rb"
+    }
+  ]
+}

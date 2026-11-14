@@ -1,0 +1,37 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "status": "valid",
+  "diagnostics": [],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.scaffold.associated_create.not_generated",
+      "pointer": "/application/entities/0/scaffold/profile/projection/1/create_form",
+      "readable_path": "scaffold.associated_create_form",
+      "reason": "Profile-associated create requires an unsupported current_account parent context.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.definition.not_generated",
+      "pointer": "/application/entities/1/scaffold/create",
+      "readable_path": "bookmark.scaffold.create",
+      "reason": "The create definition has no selected route or associated-form consumer.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.bookmarks.create_form`",
+      "file": "app/controllers/accounts/bookmarks_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`bookmark.scaffold.create`",
+      "file": "app/controllers/accounts/bookmarks_controller.rb"
+    }
+  ]
+}

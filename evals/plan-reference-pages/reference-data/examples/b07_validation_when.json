@@ -1,0 +1,228 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "tasks",
+    "name": "Tasks",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a1cbae-fb3e-7abe-9e48-2d6983e84d40",
+        "key": "category",
+        "name": "Category",
+        "primary_descriptor": {
+          "field": "category.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-75d8-8138-665477f4dd99",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "reference_data": {
+          "identity": {
+            "field": "category.name"
+          },
+          "records": [
+            {
+              "subject_uuid": "01a1cbae-fb3e-70f1-9162-64f339162577",
+              "key": "general",
+              "fields": [
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "General"
+                  }
+                }
+              ]
+            },
+            {
+              "subject_uuid": "01a1cbae-fb3e-7221-817b-8007f6a6b84c",
+              "key": "billing",
+              "fields": [
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Billing"
+                  }
+                }
+              ]
+            },
+            {
+              "subject_uuid": "01a1cbae-fb3e-72ba-8b1b-c3df3c05673f",
+              "key": "bugs",
+              "fields": [
+                {
+                  "field": "category.name",
+                  "value": {
+                    "kind": "literal",
+                    "value": "Bugs"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "category.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "category.name"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "subject_uuid": "01a1cbae-fb3e-7aa5-9705-912225b309aa",
+        "key": "task",
+        "name": "Task",
+        "primary_descriptor": {
+          "field": "task.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-7ca0-bb36-6471d1e0c9ad",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a1cbae-fb3e-7c25-8270-3f3964f822ee",
+            "key": "steps",
+            "name": "Steps to reproduce",
+            "type": "long_text",
+            "required": false,
+            "validations": [
+              {
+                "subject_uuid": "01a1cbae-fb3e-76e3-8eb9-f1236eafa31a",
+                "key": "required_for_bugs",
+                "kind": "presence",
+                "when": {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "association": "task.category"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "reference_record",
+                    "record": "category.bugs"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a1cbae-fb3e-7277-8352-6c4836900187",
+            "key": "category",
+            "name": "Category",
+            "targets": [
+              "category"
+            ],
+            "required": true,
+            "on_referenced_deleted": "restrict"
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.steps"
+              },
+              {
+                "association": "task.category",
+                "authorization": "public"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.steps"
+              },
+              {
+                "association": "task.category",
+                "authorization": "public"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.steps"
+              },
+              {
+                "association": "task.category"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "task.title"
+              },
+              {
+                "field": "task.steps"
+              },
+              {
+                "association": "task.category"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}
