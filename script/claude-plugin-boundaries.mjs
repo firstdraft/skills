@@ -47,6 +47,12 @@ export const canonicalSourceSkills = Object.freeze({
     "references/rails.md",
     "references/shadcn.md",
   ]),
+  "maintain-app": Object.freeze([
+    "LICENSE.txt",
+    "SKILL.md",
+    "agents/openai.yaml",
+    "scripts/firstdraft.sh",
+  ]),
   "review-ui-consistency": Object.freeze([
     "LICENSE.txt",
     "SKILL.md",
@@ -57,6 +63,7 @@ export const canonicalSourceSkills = Object.freeze({
 
 export const canonicalPluginSkills = Object.freeze({
   "create-full-stack-app": canonicalSourceSkills["create-full-stack-app"],
+  "maintain-app": canonicalSourceSkills["maintain-app"],
 });
 
 export const canonicalPluginSkillNames = Object.freeze(Object.keys(canonicalPluginSkills));
