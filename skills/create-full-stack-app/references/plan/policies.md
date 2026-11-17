@@ -15,8 +15,10 @@ A rule takes one of three forms. Use the first that says exactly what the person
    admin", "an approved volunteer". It allows or denies a whole part. Use it when a role alone decides, as in "only
    coordinators add shifts"; [the gate example](#a-rule-about-the-signed-in-person-alone) shows one.
 3. **An `owner` Policy** says the rule in words, and you write its code before the preview. Use it only when
-   neither form can say the rule. The usual case joins a role and the record in one action, such as "the author,
-   or any admin": a record's rule cannot ask "is an admin", and a part has one Policy.
+   neither form can say the rule. The usual case lets a role in beside the record's own people, such as "the
+   author, or any admin": no record's rule can say "or any admin", and a part has one Policy. A role required of
+   the record's own person, such as "an approved volunteer signs up as themselves", is a record's rule; see
+   [What a rule can say](#what-a-rule-can-say).
 
 Nothing fails when a stated rule admits more people than the person asked for, or leaves someone out. When the
 nearest rule the first two forms can say is wider or narrower than the request, write `owner`, which denies until
@@ -170,14 +172,15 @@ end
 
 The New, Edit, and Delete controls show only to admins. A gate reads any of the Account's own Fields, such as a
 role enum or an `approved` flag, and "anyone signed in" is a gate too; [What a rule can say](#what-a-rule-can-say)
-has both shapes. A gate does not filter a list or hide a record. Where a role and the record decide one action
-together, see the next section.
+has both shapes. A gate does not filter a list or hide a record. A role required of the record's own person, such
+as "an approved volunteer signs up as themselves", is a record's rule, which the same table shows. For a role
+beside the record's own people, see the next section.
 
 ### When neither form can say the rule
 
-Each person changes their own notes, and an admin changes any note. A record's rule cannot ask whether the signed-in
-person is an admin, and a gate cannot ask whose note it is, so the Policy has `owner` in place of `allow_when`: a
-sentence or two that says who passes.
+Each person changes their own notes, and an admin changes any note. A record's rule cannot ask whether a signed-in
+person the note does not name is an admin, and a gate cannot ask whose note it is, so the Policy has `owner` in
+place of `allow_when`: a sentence or two that says who passes.
 
 ```json
 {"subject_uuid": "…", "key": "manage_own_or_admin", "operation": "manage",
@@ -268,6 +271,7 @@ and a right side are `comparison` objects shaped like the first row.
 | The record's Reference is the signed-in person | `{"kind": "comparison", "left": {"target": {"association": "note.author"}}, "operator": "equals", "right": CA}` | `user&.id.present? && record&.author_id == user.id` | `relation.where(author_id: user.id)`, or `relation.none` for a guest |
 | A parent's Reference is the signed-in person | `"left": {"through": [{"association": "note.list"}], "target": {"association": "list.owner"}}`, `equals`, `CA` | `user&.id.present? && record&.list&.owner_id == user.id` | `relation.where(list_id: List.where(owner_id: user.id))` |
 | Whoever passes a parent's Policy. `association` is singular, and the Policy belongs to the Entity it reaches. | `{"kind": "matches_policy", "association": "note.list", "policy": "list.manage_own"}` | `user&.id.present? && allowed_to?(:manage?, record&.list, with: ListPolicy)` | `relation.where(list_id: authorized_scope(List.all, as: :manage, with: ListPolicy))` |
+| The record's own person, who must also pass a rule about them, such as "an approved volunteer signs up as themselves". Put the first row and this one under `and`; the Policy is one of the Account Entity, reached through the same Reference. The rule and its scope are generated; README.md lists their examples under "Test coverage to complete". | `{"kind": "matches_policy", "association": "signup.volunteer", "policy": "user.approved_only"}` | `user&.id.present? && record&.volunteer_id == user.id && allowed_to?(:sign_up?, record&.volunteer, with: UserPolicy)` | `relation.where(volunteer_id: user.id).where(volunteer_id: authorized_scope(User.all, as: :sign_up, with: UserPolicy))` |
 | A linked record names the signed-in person, such as a share or a membership. `association` is one of the Entity's own `associations[]`; `where` is written from the linked Entity, which needs no Policy or pages. | `{"kind": "exists", "association": "note.shares", "where": {"kind": "comparison", "left": {"target": {"association": "share.user"}}, "operator": "equals", "right": CA}}` | `user&.id.present? && record&.shares&.any? { \|share\| share.user_id == user.id }` | `relation.where(id: Share.where(user_id: user.id).select(:note_id))` |
 | The record matches a value on the signed-in person, such as their team | `"left": {"target": {"association": "note.team"}}`, `equals`, `{"kind": "environment_path", "name": "current_account", "path": {"target": {"association": "user.team"}}}` | `user&.team_id.present? && record&.team_id == user.team_id` | `relation.where(team_id: user.team_id)` |
 | A Field has a value. No signed-in person is needed, so guests pass. | `{"kind": "comparison", "left": {"target": {"field": "note.shared"}}, "operator": "equals", "right": {"kind": "literal", "value": true}}` | `record&.shared == true` | `relation.where(shared: true)` |
@@ -473,9 +477,10 @@ its scope before the preview; `SKILL.md` has the order of work.
   generate it from the same Plan. Analysis reports `foundation_plan.gap.policy.not_generated`. One cause is a
   comparison on a Field with `"comparison": "case_insensitive"`; the gap's reason names the part that was not
   generated.
-- **"The author, or any admin."** A part has one `authorization`, and a record's rule cannot ask whether the
-  signed-in person is an admin; an `environment_path` on the left of a comparison is rejected. Write an `owner`
-  Policy that says the whole rule, and bind it to every part that rule guards:
+- **"The author, or any admin."** A part has one `authorization`. A record's rule can ask whether the author is an
+  admin, through `matches_policy`, and cannot ask it of a signed-in person the record does not name; an
+  `environment_path` on the left of a comparison is rejected. Write an `owner` Policy that says the whole rule, and
+  bind it to every part that rule guards:
 
   ```json
   {"subject_uuid": "…", "key": "update_own_or_admin", "operation": "update",
@@ -557,9 +562,10 @@ These pass as `valid` and are reported, as a warning or a gap:
 
 - **Ask, as one grid:** for each kind of record, who can see the list and open one, who can add, who can change, and
   who can delete. The usual answers are everyone, anyone signed in, the person who made it, people linked to it
-  through another record, and a role. Each generates in full when it decides an action alone; a role joined with
-  one of the others in a single action does not. Where the person has no preference, recommend the person who made
-  it, or people linked through another record, because nobody has to hand out a role.
+  through another record, and a role. Each generates in full when it decides an action alone, and so does a role
+  required of the person who made the record. A role beside one of the others, such as "the author, or any admin",
+  does not. Where the person has no preference, recommend the person who made it, or people linked through another
+  record, because nobody has to hand out a role.
 - **Ask:** whether a role should also see every record, and how people get a role or a membership, when no page
   sets them. For "the author, or any admin", recommend an `owner` Policy rather than gating whole parts on the role.
 - **Tell:** every place a signed-out visitor can read records, every action only a role can take, and that a
