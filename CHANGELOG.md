@@ -29,10 +29,10 @@ Entries are newest first. Keep their headings stable. Publish material correctio
 new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
 and any useful small example or verification; they need not reproduce commit logs.
 
-## 2026-11-12: One reference page per Plan capability, and stubs written before the preview
+## 2026-11-17: One reference page per Plan capability, and stubs written before the preview
 
-**Skills — on `main`, for the next plugin release.** The Skill's Plan reference was one long page and a page of
-examples. It is now one page per Plan capability, such as Fields, References, Policies, or Scaffold forms, under
+**Skills — released in plugin 0.9.3.** The Skill's Plan reference was one long page and a page of examples. It is
+now one page per Plan capability, such as Fields, References, Policies, or Scaffold forms, under
 `skills/create-full-stack-app/references/plan/`, with an index in `SKILL.md` that the agent sees before it writes
 any Plan JSON. Each page gives the keys, a simple and a full example, what Compile emits, what is left to write, and
 the decisions to raise. In a trial of 26 Plan-writing tasks with drafts of these pages, Sonnet 5.5 pushed a valid
@@ -42,15 +42,39 @@ The Skill also states three rules:
 
 - The Plan keeps every request it can state, even one First Draft does not generate. Notes hold only what the Plan
   has no words for, such as "show bookings as a calendar".
-- A Predicate, Ordering, Policy, Validation, or transition whose behavior the Plan's Expressions cannot say takes an
-  `owner` that describes it in a sentence or two. Compile emits everything that uses it, a stub, and a placeholder
-  example that fails until the agent writes the code.
+- A Predicate, Ordering, Policy, Validation, or transition takes an `owner`, a sentence or two that describes the
+  behavior, only when the Plan's Expressions cannot say it. Compile emits everything that uses it, a stub, and a
+  placeholder example that fails until the agent writes the code. Behavior the Plan can state stays stated, even
+  where the agent would rather write the code by hand.
 - After Compile, the agent runs setup and the specs, tells the person what there is to write, writes every item
   and fills in every placeholder example until the specs pass, and only then starts the preview. It asks before
   changing or dropping an item, and never skips or loosens an example to get a passing run.
 
-**Existing apps.** An app compiled earlier may have an `AGENTS.md` that says to start the preview before every
-item is written. The Skill now says to write them first; the app needs no other change.
+**Who may see or change records.** The Policies page opens with the three forms a rule takes, and the agent uses
+the first that says exactly what the person asked for. A record's rule is about the record: "its author", "a member
+of its club", "published". A gate judges the signed-in person alone: "anyone signed in", "an admin". An `owner`
+Policy says the rule in words, for a rule neither form can say, such as "the author, or any admin"; it denies
+everyone until the agent writes it. When the nearest rule the Plan can state would admit more or fewer people than
+the person asked for, the agent writes `owner`. In runs with six simulated people, one model left 53% of its
+Policies as `owner` before the page was rewritten and 22% to 31% after. The other model's share rose from 9% to
+between 12% and 21%: rules it had stated more widely than the person asked are now `owner`.
+
+**Lists across a join.** The Associations page says to author an indirect Association wherever a page, a rule, or
+the agent's own code will read the records across a join Entity. It says how to name one, such as `project.tags`,
+or a role name when that key is taken or says too little, and which list goes on which page.
+
+**What the generated README lists.** Once the First Draft service deploys the matching Compiler, a generated app's
+`README.md` lists every gap that analysis reports. Each entry is titled with its subject and names the file to
+open. The list includes each State Machine event that no generated page fires, with a placeholder example in the
+State Machine's spec, and the agent writes what fires the event, such as a button with its route and action, before
+the preview. Analysis also warns about two sign-up problems: a required Field on the Account that the Plan neither
+lists as a sign-up input nor gives a default, and a required Reference on the Account that sign-up cannot supply.
+
+**Existing Plans and apps.** The format stays `firstdraft.foundation-plan.sketch/0.23` and `owner` is optional, so a
+Plan that validated before still validates. Its analysis may now carry a sign-up warning, and a gap for each State
+Machine event that no generated page fires. An app compiled earlier is unchanged. Its `AGENTS.md` may say to start
+the preview before every item is written; the Skill now says to write them first, and the app needs no other
+change. The plugin still bundles CLI 0.9.0 and needs First Draft API 0.8.
 
 ## 2026-11-12: Forged client address headers no longer cause a 500
 
