@@ -115,7 +115,7 @@ A `projection` is an ordered list. An empty list is rejected (`foundation_plan.s
 | Item | Generates |
 | --- | --- |
 | `{"field": "<entity>.<field key>"}`, a Field of the page's Entity | `<dt>` from `human_attribute_name`, `<dd>` with the value. Dates are localized, Booleans read Yes/No through `shared.values.boolean`, enums show their label, an empty optional Field shows `shared.values.missing`. On an index, the descriptor Field's value links to the details page when there is a `show`. |
-| `{"association": "<entity>.<key>", "authorization": …}` for a single record, such as a Reference's forward Association `project.owner`; on `index`, `show`, and in a related list's rows | The record's descriptor, linked when its Entity has a `show` the viewer may open, plain text otherwise. Under a Policy, it shows only to people the Policy admits. Add `"projection"` to show its Fields as a nested list in place of the descriptor. |
+| `{"association": "<entity>.<key>", "authorization": …}` for a single record, such as a Reference's forward Association `project.owner`; on `index`, `show`, and in a related list's rows | The record's descriptor, linked when its Entity has a `show` the viewer may open, plain text otherwise. Under a Policy, it shows only to people the Policy admits. In a related list's rows it takes `"public"` or the related Entity's own Policy; a gate there is not generated. Add `"projection"` to show its Fields as a nested list in place of the descriptor. |
 | `{"association": "<entity>.<key>", "authorization": …}` for many records, such as `project.tasks`, on `show` only | A card below the details with up to five rows, a **View more…** row when there are more, and a full page at `/projects/:project_id/tasks` served by `Projects::TasksController#index`. Rows link to each record's `show` when it exists and the viewer may open it. |
 
 A forward Association for each Reference exists without being declared: Reference `project.owner` gives
@@ -172,7 +172,7 @@ Every `index`, `show`, and Association item says who may see it. The rules live 
 | --- | --- | --- | --- |
 | `"public"` | Anyone, signed in or not. | No check. | Every related record shows. |
 | `{"policy": "project.read_own"}` | The page Entity's Policy decides each record. | Index: `authorized_scope(Project.all, …, as: :read, with: ProjectPolicy)`. Show: the record is found through that scope, so others get 404. The navigation link shows only to signed-in people. | Must be the related Entity's Policy: `authorized_scope(@project.tasks, …, with: TaskPolicy)`. |
-| `{"policy": "user.signed_in", "record": {"kind": "environment", "name": "current_account"}}` | A gate: a Policy of the Account Entity, any operation, decides about the signed-in person. | On `index` or `show`: `before_action :authorize_use_app` (named after the operation). Guests go to sign in and come back; a signed-in person who fails gets a 403 page. The navigation link shows only to people who pass. | `@can_read_tasks = allowed_to?(:use_app?, current_account, with: UserPolicy)`; the card is hidden otherwise. The full page behind **View more…** calls `authorize!` with the same gate. |
+| `{"policy": "user.signed_in", "record": {"kind": "environment", "name": "current_account"}}` | A gate: a Policy of the Account Entity, any operation, decides about the signed-in person. | On `index` or `show`: `before_action :authorize_use_app` (named after the operation). Guests go to sign in and come back; a signed-in person who fails gets a 403 page. The navigation link shows only to people who pass. | `@can_read_tasks = allowed_to?(:use_app?, current_account, with: UserPolicy)`; the card is hidden otherwise. The full page behind **View more…** calls `authorize!` with the same gate. An item inside a related list's rows does not take a gate; see [Not generated](#not-generated). |
 | `{"policy": "project.read_own", "record": "scaffold_record"}` | Association items only: the page's own record decides whether the card shows. | Rejected on a page (`foundation_plan.schema.const`). | `allowed_to?(:read?, @project, with: ProjectPolicy)`, then every related record. |
 
 The `record` value is that literal object or the string `"scaffold_record"`; nothing else is accepted. A link to a
@@ -326,6 +326,11 @@ Predicate, the Ordering, or the related list.
   write the query and partial before the preview, or show the related list on the details page if the person
   agrees. When every item of an `index` projection is left out, the whole list is too, so keep at least
   one Field item beside it.
+- **A single record inside a related list's rows, behind a gate**, such as the tag in each row of a recipe's tags
+  with `"authorization": {"policy": "user.signed_in", "record": {…}}`. The item is left out
+  (`foundation_plan.gap.scaffold.projection.not_generated`), and a list whose rows have no other item is left out
+  with it. The list's own `authorization` already decides who sees each row, so give the item `"public"`, or the
+  related Entity's own Policy to show it only where that Policy allows.
 - **Search and filter controls.** A list has at most one fixed `predicate`; the Plan has no key for a value a person
   types or picks. Add a `params`-driven scope to the controller after Compile.
 - **Edit and Delete in list rows.** Rows show values and a link. Edit and Delete appear on the details page.
