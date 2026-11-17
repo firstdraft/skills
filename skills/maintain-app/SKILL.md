@@ -70,7 +70,9 @@ For each group you fix, on its own branch:
 1. Write a test that reproduces the failure from the evidence, and run it to see it fail.
 2. Make the smallest change that fixes the cause, not only the symptom on that line. Run the application's full
    checks.
-3. Open a pull request that names the items it fixes by ID and explains the cause.
+3. Open a pull request that names the items it fixes by ID, links each item's `issue_url` with `Refs #N`, and
+   explains the cause. First Draft files, reopens, and closes those issues itself, closing each when its item
+   resolves, so use `Refs` rather than `Fixes`, and leave the issues to First Draft.
 
 Merge under the owner's policy. Every policy keeps these gates: the error is confirmed in production and recurring;
 the test fails without the fix; checks pass; and no other open pull request or item covers the same group. An item
