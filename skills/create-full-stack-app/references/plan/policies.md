@@ -7,12 +7,21 @@ description: Policies, who may see, add, change, and delete each kind of record:
 
 A Policy is a named rule on an Entity that allows one operation, such as reading or managing its records. Every part
 of a Scaffold names the one Policy that guards it, or says `public`; there is no default, and a part has exactly one.
-A record's Policy compares the record, or records linked to it, with the signed-in Account, `current_account`, or
-with a value on it. A **gate** is a Policy on the Account Entity that judges only the signed-in Account, such as "is
-signed in" or "is an admin", and allows or denies a whole part. A record's Policy cannot ask "is an admin", and a part
-has one Policy, so `allow_when` cannot say "the author, or any admin" for one action. For such a rule, write an
-`owner` Policy, which describes the rule in words. Use a [Predicate](predicates.md) for a condition that filters a
-list for everyone alike; a rule can reuse one.
+A rule takes one of three forms. Use the first that says exactly what the person asked for:
+
+1. **A record's rule** compares the record, or records linked to it, with the signed-in Account, `current_account`,
+   or with a value on it: "its author", "a member of its club", "published". Lists show only the records it allows.
+2. **A gate** is a Policy on the Account Entity that judges only the signed-in Account: "anyone signed in", "an
+   admin", "an approved volunteer". It allows or denies a whole part. Use it when a role alone decides, as in "only
+   coordinators add shifts"; [the gate example](#a-rule-about-the-signed-in-person-alone) shows one.
+3. **An `owner` Policy** says the rule in words, and you write its code before the preview. Use it only when
+   neither form can say the rule. The usual case joins a role and the record in one action, such as "the author,
+   or any admin": a record's rule cannot ask "is an admin", and a part has one Policy.
+
+Nothing fails when a stated rule admits more people than the person asked for, or leaves someone out. When the
+nearest rule the first two forms can say is wider or narrower than the request, write `owner`, which denies until
+you write it. Use a [Predicate](predicates.md) for a condition that filters a list for everyone alike; a rule can
+reuse one.
 
 - **First Draft generates:** an Action Policy class per Entity with a rule and a relation scope per Policy; the
   controller checks; lists filtered to the records a person may see; links and buttons hidden from people who cannot
@@ -123,10 +132,52 @@ The generated request example "index prevents a guest from accessing protected r
 the record, so it then fails: change it to expect the redirect to sign-in. This changes what a guest sees, so tell
 the person.
 
-### When `allow_when` cannot say the rule
+### A rule about the signed-in person alone
 
-Each person changes their own notes, and an admin changes any note. No rule can ask whether the signed-in person
-is an admin, so the Policy has `owner` in place of `allow_when`: a sentence or two that says who passes.
+Anyone may read categories, and only an admin adds, changes, or deletes one. The role is a Field on the Account
+Entity, so the rule is a gate: a Policy in the Account Entity's `policies[]`, which each part binds to the signed-in
+Account with `record`.
+
+```json
+"policies": [
+  {"subject_uuid": "…", "key": "admins_only", "operation": "administer",
+   "allow_when": {"kind": "comparison", "left": {"target": {"field": "user.admin"}},
+                  "operator": "equals", "right": {"kind": "literal", "value": true}}}
+]
+```
+
+On the category, `create`, `update`, and `destroy` each name it:
+
+```json
+"create": {"authorization": {"policy": "user.admins_only",
+                             "record": {"kind": "environment", "name": "current_account"}},
+           "inputs": [{"field": "category.name"}]}
+```
+
+```ruby
+# app/policies/user_policy.rb
+def administer?
+  record&.admin == true
+end
+
+# app/controllers/categories_controller.rb
+before_action :authorize_administer, only: %i[new create edit update destroy]
+
+def authorize_administer
+  authorize! current_account, to: :administer?, with: UserPolicy
+end
+```
+
+The New, Edit, and Delete controls show only to admins. A gate reads any of the Account's own Fields, such as a
+role enum or an `approved` flag, and "anyone signed in" is a gate too; [What a rule can say](#what-a-rule-can-say)
+has both shapes. A gate does not filter a list or hide a record. Where a role and the record decide one action
+together, see the next section.
+
+### When neither form can say the rule
+
+Each person changes their own notes, and an admin changes any note. A record's rule cannot ask whether the signed-in
+person is an admin, and a gate cannot ask whose note it is, so the Policy has `owner` in place of `allow_when`: a
+sentence or two that says who passes.
 
 ```json
 {"subject_uuid": "…", "key": "manage_own_or_admin", "operation": "manage",
@@ -422,9 +473,9 @@ its scope before the preview; `SKILL.md` has the order of work.
   generate it from the same Plan. Analysis reports `foundation_plan.gap.policy.not_generated`. One cause is a
   comparison on a Field with `"comparison": "case_insensitive"`; the gap's reason names the part that was not
   generated.
-- **"The author, or any admin."** A part has one `authorization`, and no rule can ask whether the signed-in person
-  is an admin; an `environment_path` on the left of a comparison is rejected. Write an `owner` Policy that says the
-  whole rule, and bind it to every part that rule guards:
+- **"The author, or any admin."** A part has one `authorization`, and a record's rule cannot ask whether the
+  signed-in person is an admin; an `environment_path` on the left of a comparison is rejected. Write an `owner`
+  Policy that says the whole rule, and bind it to every part that rule guards:
 
   ```json
   {"subject_uuid": "…", "key": "update_own_or_admin", "operation": "update",
@@ -439,9 +490,9 @@ its scope before the preview; `SKILL.md` has the order of work.
   the admin branch as well, so it becomes an `owner` Policy. Every rule that reuses it through `matches_policy`,
   such as a child record's read rule, then denies until you write it.
 - **Any other rule `allow_when` cannot say,** such as "the author, within an hour of posting", which needs date
-  arithmetic. Write an `owner` Policy, as above. You may also write `owner` when you would rather write a rule
-  yourself; prefer `allow_when` when it can say the rule, because First Draft then writes the rule, its scope, and
-  their specs.
+  arithmetic. Write an `owner` Policy, as above. Use `owner` only for such rules: when a record's rule or a gate
+  can say the rule, First Draft writes the rule, its scope, and their specs, and an `owner` Policy leaves all three
+  to you.
 - **Who may see one Field,** such as a phone number shown only after booking. A Policy decides whole records, and
   the Plan has no way to say it. Keep it in your notes and write it in the views after Compile.
 - **Who may fire a State Machine event.** A transition has no key that names a Policy;
@@ -460,7 +511,10 @@ its scope before the preview; `SKILL.md` has the order of work.
 These pass analysis as `valid`:
 
 - **A rule, or a branch of `or`, that never reads `current_account` admits signed-out visitors.** That is right for
-  published recipes. When a part needs sign-in, compare with `current_account` or bind a signed-in gate.
+  published recipes. When a part needs sign-in, compare with `current_account` or bind a signed-in gate. When only
+  signed-in people should pass such a branch of a record's rule, such as public clubs for anyone signed in beside
+  private clubs for their members, the Plan has no Expression for "signed in" inside that rule: write an `owner`
+  Policy.
 - **A misspelled Policy name in an `authorization`, even in one part.** The Entity's whole `scaffold` is left out of
   the app, and Home with it when Home is that list. `plan push` warns `foundation_plan.import.unsupported_capability`
   at the name and `foundation_plan.import.skipped_dependent` at the Scaffold and at Home, with gap codes under
@@ -503,8 +557,9 @@ These pass as `valid` and are reported, as a warning or a gap:
 
 - **Ask, as one grid:** for each kind of record, who can see the list and open one, who can add, who can change, and
   who can delete. The usual answers are everyone, anyone signed in, the person who made it, people linked to it
-  through another record, and a role. Recommend the person who made it, and people linked through another record,
-  over a role, because those the Plan can generate in full.
+  through another record, and a role. Each generates in full when it decides an action alone; a role joined with
+  one of the others in a single action does not. Where the person has no preference, recommend the person who made
+  it, or people linked through another record, because nobody has to hand out a role.
 - **Ask:** whether a role should also see every record, and how people get a role or a membership, when no page
   sets them. For "the author, or any admin", recommend an `owner` Policy rather than gating whole parts on the role.
 - **Tell:** every place a signed-out visitor can read records, every action only a role can take, and that a

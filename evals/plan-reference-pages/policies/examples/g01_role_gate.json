@@ -1,0 +1,170 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "catalog",
+    "name": "Catalog",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000fa01",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fa02",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fa03",
+            "key": "admin",
+            "name": "Admin",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fa04",
+            "key": "admins_only",
+            "operation": "administer",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "user.admin"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": true
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000fa05",
+        "key": "category",
+        "name": "Category",
+        "primary_descriptor": {
+          "field": "category.name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fa06",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "category.name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "category.name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "user.admins_only",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "category.name"
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "user.admins_only",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            },
+            "inputs": [
+              {
+                "field": "category.name"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": {
+              "policy": "user.admins_only",
+              "record": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -13,9 +13,9 @@ publication, and native preview are optional. Compilation does not deploy.
 ## Preserve implementation requirements
 
 The Plan keeps every request it can state, even one First Draft does not generate; never leave one out or move it
-to notes. Prefer an Expression where the Plan has one. When a Predicate, Ordering, Policy, Validation, or transition
-needs behavior its Expressions cannot say, or you would rather write it, give it an `owner` describing the behavior
-in a sentence or two: Compile emits a stub and a failing placeholder example for you to write.
+to notes. State behavior with an Expression wherever one says it exactly. Give a Predicate, Ordering, Policy,
+Validation, or transition an `owner`, a sentence or two describing the behavior, only when its page shows that none
+can: Compile emits a stub and a failing placeholder example for you to write.
 
 Keep planning-root `implementation-notes.md` for what the Plan has no words for, such as "show bookings as a
 calendar", separating agreed requirements and acceptance examples from open questions; review them with the Plan
@@ -81,7 +81,7 @@ Lists, filters, and pages:
 People, access, and the app:
 
 - [Accounts](references/plan/accounts.md): `account`, sign-up, sign-in, reset, `/account`, demo logins.
-- [Policies](references/plan/policies.md): who may see, add, change, delete; `owner`; before any authorization.
+- [Policies](references/plan/policies.md): who may see, add, change, delete; gates, `owner`; before any authorization.
 - [Appearance](references/plan/appearance.md): `theme`, `tint_color`, icons; dark mode, brand colors, app icons.
 - [Native apps](references/plan/native-apps.md): `native.ios`, `native.android`, tabs, Revyl; iPhone and Android.
 - [Development data](references/plan/development-data.md): `development_data`, demo Accounts; preview samples.
