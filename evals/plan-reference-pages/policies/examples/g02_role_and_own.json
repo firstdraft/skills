@@ -1,0 +1,275 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-10"
+  },
+  "application": {
+    "key": "shifts",
+    "name": "Shifts",
+    "home_index": "signup",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb01",
+        "key": "user",
+        "name": "User",
+        "primary_descriptor": {
+          "field": "user.name"
+        },
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "name": "Email"
+            }
+          ],
+          "sign_in_methods": [
+            {
+              "kind": "password"
+            }
+          ],
+          "registration": {
+            "mode": "self_service",
+            "inputs": [
+              {
+                "field": "user.name",
+                "required": true
+              }
+            ]
+          },
+          "recovery": {
+            "kind": "password_reset"
+          },
+          "lockout": {}
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb02",
+            "key": "name",
+            "name": "Name",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb03",
+            "key": "approved",
+            "name": "Approved",
+            "type": "boolean",
+            "required": true,
+            "default": {
+              "kind": "literal",
+              "value": false
+            }
+          }
+        ],
+        "associations": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb04",
+            "key": "signups",
+            "kind": "direct",
+            "name": "Signups",
+            "reference": "signup.volunteer",
+            "side": "referenced"
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb05",
+            "key": "approved_only",
+            "operation": "sign_up",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "field": "user.approved"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "literal",
+                "value": true
+              }
+            }
+          }
+        ]
+      },
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb06",
+        "key": "signup",
+        "name": "Signup",
+        "primary_descriptor": {
+          "field": "signup.shift_name"
+        },
+        "fields": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb07",
+            "key": "shift_name",
+            "name": "Shift name",
+            "type": "short_text",
+            "required": true
+          }
+        ],
+        "references": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb08",
+            "key": "volunteer",
+            "name": "Volunteer",
+            "targets": [
+              "user"
+            ],
+            "required": true,
+            "one_to_one": false,
+            "on_referenced_deleted": "delete_referencing_record",
+            "immutable": true
+          }
+        ],
+        "policies": [
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb09",
+            "key": "read_own",
+            "operation": "read",
+            "allow_when": {
+              "kind": "comparison",
+              "left": {
+                "target": {
+                  "association": "signup.volunteer"
+                }
+              },
+              "operator": "equals",
+              "right": {
+                "kind": "environment",
+                "name": "current_account"
+              }
+            }
+          },
+          {
+            "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb0a",
+            "key": "manage_own_when_approved",
+            "operation": "manage",
+            "allow_when": {
+              "kind": "and",
+              "expressions": [
+                {
+                  "kind": "comparison",
+                  "left": {
+                    "target": {
+                      "association": "signup.volunteer"
+                    }
+                  },
+                  "operator": "equals",
+                  "right": {
+                    "kind": "environment",
+                    "name": "current_account"
+                  }
+                },
+                {
+                  "kind": "matches_policy",
+                  "association": "signup.volunteer",
+                  "policy": "user.approved_only"
+                }
+              ]
+            }
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update"
+          ],
+          "index": {
+            "authorization": {
+              "policy": "signup.read_own"
+            },
+            "projection": [
+              {
+                "field": "signup.shift_name"
+              }
+            ]
+          },
+          "show": {
+            "authorization": {
+              "policy": "signup.read_own"
+            },
+            "projection": [
+              {
+                "field": "signup.shift_name"
+              }
+            ]
+          },
+          "create": {
+            "authorization": {
+              "policy": "signup.manage_own_when_approved"
+            },
+            "inputs": [
+              {
+                "field": "signup.shift_name"
+              }
+            ],
+            "bindings": [
+              {
+                "reference": "signup.volunteer",
+                "value": {
+                  "kind": "environment",
+                  "name": "current_account"
+                }
+              }
+            ]
+          },
+          "update": {
+            "authorization": {
+              "policy": "signup.manage_own_when_approved"
+            },
+            "inputs": [
+              {
+                "field": "signup.shift_name"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "development_data": [
+      {
+        "subject_uuid": "01a0caf3-075b-7000-8000-00000000fb0b",
+        "key": "ana",
+        "entity": "user",
+        "fields": [
+          {
+            "field": "user.name",
+            "value": {
+              "kind": "literal",
+              "value": "Ana"
+            }
+          },
+          {
+            "field": "user.approved",
+            "value": {
+              "kind": "literal",
+              "value": true
+            }
+          }
+        ],
+        "account": {
+          "identifiers": [
+            {
+              "kind": "email",
+              "value": "ana@example.com"
+            }
+          ],
+          "credentials": [
+            {
+              "kind": "password",
+              "value": "password123"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
