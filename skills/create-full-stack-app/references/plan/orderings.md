@@ -323,8 +323,8 @@ sorts differently instead: the page shows records in an order nobody asked for, 
    "owner": {"description": "By the project's name, then by the task's title, then by id."}}
   ```
 
-  You may also write `owner` when you would rather write an order yourself. Prefer terms when they can say it: First
-  Draft then writes the scope and its index, now or in a later release.
+  Use `owner` only when terms cannot say the order. When they can, First Draft writes the scope and its index, now
+  or in a later release.
 - **Ascending with empty values last, or any order on an optional `date`.** Both are stubs of the first kind. Write
   the terms the person asked for, such as `{"field": "task.due_on", "direction": "ascending", "nulls": "last"}` then
   `{"system_field": "id", "direction": "ascending"}`, and write the scope, for example

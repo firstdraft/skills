@@ -359,8 +359,8 @@ writes the same stub and placeholder example, with no gap record, and README.md 
 - **Any other condition no Expression kind can state,** such as a part of a date ("due on a weekend") or a count
   of related records ("projects with more than ten open tasks").
 
-You may also write `owner` when you would rather write a condition yourself. Prefer the Expression when one exists:
-First Draft then writes the scope, now or in a later release.
+Use `owner` only when no Expression can state the condition. When one can, First Draft writes the scope, now or in
+a later release.
 
 ### Not Predicates
 

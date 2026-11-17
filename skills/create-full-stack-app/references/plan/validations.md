@@ -474,9 +474,8 @@ end
 An `owner` Validation on a Reference may sit on a required one too; its README entry says the error goes on the
 Reference, such as `project`.
 
-You may also write `owner` when you would rather write a rule yourself. Prefer a kind when one can say the rule:
-First Draft then writes the `validates` line, its spec, and any index, column limit, or form attribute, now or in a
-later release.
+Use `owner` only when no kind can say the rule. When one can, First Draft writes the `validates` line, its spec,
+and any index, column limit, or form attribute, now or in a later release.
 
 The Plan has no key for an error message's wording. Keep the rule's kind, put the wording in the Field's `notes`,
 an optional string such as `"notes": "Message: Codes are 4 to 8 letters."`, and write it in

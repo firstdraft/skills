@@ -217,11 +217,11 @@ the deployed Compiler; the matching GapSet says what this Compile leaves out.
 No Guide example uses `polymorphic` yet. The Guide's example Accounts request flows outside today's Account slice,
 so use [Accounts](plan/accounts.md) for what an Account emits.
 
-When the user or you prefer to write a Predicate, Ordering, Policy, Validation, or transition yourself, give it an
-`owner` that describes the behavior: Compile emits everything that uses it, a stub, and a failing placeholder
-example for you to write. For any other generated part, keep its meaning in the Plan, Compile, then replace that
+When the user or you would rather write a part by hand, keep its meaning in the Plan, Compile, then replace that
 code in plain Rails and record why in `implementation-notes.md`. There is no option to leave a part out of the
-generated app.
+generated app. An `owner` is only for a Predicate, Ordering, Policy, Validation, or transition whose behavior the
+Plan cannot state: Compile then emits everything that uses it, a stub, and a failing placeholder example for you to
+write.
 
 ## Coverage checklist
 
