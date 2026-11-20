@@ -6,14 +6,36 @@ software release; compare it with the application and workflow you own today.
 
 ## Reviewing updates
 
-Ask your existing agent:
+To review an app compiled earlier, paste this to your agent in the app's folder:
 
-> Review new First Draft changelog entries for this app. Compare them with our current source and workflow,
-> apply improvements that fit my request, and record what you reviewed in `.firstdraft/updates.md`.
+> Review the First Draft changelog entries since this app was compiled. Run the app's checks first, with `bin/ci`,
+> and tell me what fails. Apply what fixes a security or correctness problem in this app, list the rest with your
+> recommendation, and record what you reviewed in `.firstdraft/updates.md`.
 
-Use the saved entry link to find unread entries, then consider those entries from oldest to newest. If there is
-no checkpoint, or its entry cannot be found, review the entries for applicability. Follow the owner's requested
-scope and ordinary app tests for any edits. A changelog review does not authorize deployment.
+The agent reads the raw file, <https://raw.githubusercontent.com/firstdraft/skills/main/CHANGELOG.md>, and then:
+
+1. Runs `bin/ci`, then `bin/bundler-audit check --update`, before reading any entry. Advisories and browsers change
+   after Compile, so an app whose checks passed then can fail its audits or its browser specs now with no change of
+   its own, and the gem audit in `bin/ci` reads the advisory database it last fetched, which can be months old. The
+   2026-11-20 entries say how to clear each of those failures.
+2. Finds the first entry to read. If `.firstdraft/updates.md` names the last entry reviewed and this file still has
+   it, that is the entry above it. Otherwise it is the first entry dated on or after the date in the name of
+   `compiler_release` in `.firstdraft/gaps.json`. Without that file, it reads every entry, except in an app that
+   First Draft published to GitHub: there it starts a week before the date of the first commit,
+   `Generate application with First Draft`, because an entry can be dated a day or more before its Compiler release
+   was in use.
+3. Reads from there to the top of the file, oldest entry first. The file lists entries newest first.
+4. Reads the lines under each entry's bold lead first:
+   - **Existing apps** says what an app compiled before the change does: nothing; do this, with the steps and a
+     check; optional; or cannot be adopted by hand.
+   - **Compiler** names the Compiler release that first carried the change and the day it was in use on
+     firstdraft.com. An app whose `compiler_release` is that release, or a release listed above it under
+     [Compiler releases](#compiler-releases), already has the change. An app without `compiler_release` that was
+     compiled before that day lacks it.
+   - **Replaced** or **Corrected** names a later entry that changes this one's guidance. The later entry wins.
+5. Applies what fixes a security or correctness problem in this app, each with its check and the app's own tests,
+   and runs `bin/ci` again. It lists the rest with a recommendation and follows the owner's requested scope. A
+   changelog review does not authorize deployment.
 
 The checkpoint is optional local context. If `.firstdraft/` is absent, use existing owner notes instead of creating
 that directory only for this file. After considering all entries through a point, record its newest entry:
@@ -26,12 +48,366 @@ Last reviewed: [2026-09-27: Public Plan authoring references](https://github.com
 note only when useful. The checkpoint is not an application dependency; deleting it can cause a reread.
 
 Entries are newest first. Keep their headings stable. Publish material corrections or changed recommendations as
-new entries so readers who advanced their checkpoint see them. Entries explain what changed, why, when it applies,
-and any useful small example or verification; they need not reproduce commit logs.
+new entries so readers who advanced their checkpoint see them, and add a Replaced or Corrected line under the bold
+lead of each entry they change. Every entry has an Existing apps line under its bold lead. Once a Compiler release is
+in use, add it to [Compiler releases](#compiler-releases), and give each entry whose change it carries a Compiler
+line. Entries explain what changed, why, when it applies, and any useful small example or verification; they need
+not reproduce commit logs.
+
+### Compiler releases
+
+Every Compiler release that the release records show in use on firstdraft.com since those records began on
+2026-10-01, newest first, with the first day they show it. An app's `.firstdraft/gaps.json` records its release as `compiler_release`, the name below after
+`foundation-plan-rails/compiler-application-`. Each name begins with the day the release was built, so a release
+missing from this list sorts by that date.
+
+| Release | In use from |
+| --- | --- |
+| `2026-11-17-gem-advisories` | 2026-11-20 |
+| `2026-11-13-events-listed` | 2026-11-17 |
+| `2026-11-12-forged-ip-headers` | 2026-11-12 |
+| `2026-11-11-seed-reference-chains` | 2026-11-12 |
+| `2026-11-07-review-metadata` | 2026-11-08 |
+| `2026-11-05-rails-security-patch` | 2026-11-06 |
+| `2026-10-23-crass-advisory` | 2026-10-23 |
+| `2026-10-23-core-npm-refresh` | 2026-10-23 |
+| `2026-10-22-core-dependency-refresh` | 2026-10-22 |
+| `2026-10-20-rails-8-1-4` | 2026-10-20 |
+| `2026-10-16-denied-record-factories` | 2026-10-16 |
+| `2026-10-13-empty-factory-block` | 2026-10-14 |
+| `2026-10-13-policy-negated-comparisons` | 2026-10-13 |
+| `2026-10-12-neutral-mail-guidance` | 2026-10-12 |
+| `2026-10-12-state-scope-collisions` | 2026-10-12 |
+| `2026-10-12-policy-stubs` | 2026-10-12 |
+| `2026-10-12-destroy-refusals` | 2026-10-12 |
+| `2026-10-12-optional-account-flows` | 2026-10-12 |
+| `2026-10-11-rodauth-2-48` | 2026-10-12 |
+| `2026-10-11-picker-search` | 2026-10-11 |
+| `2026-10-10-native-path-configuration` | 2026-10-10 |
+| `2026-10-06-source-map-js-and-state-machines` | 2026-10-06 |
+| `2026-10-05-solid-cable-4-1` | 2026-10-05 |
+| `2026-10-05-remember-every-sign-in` | 2026-10-05 |
+| `2026-10-05-workspace-cap` | 2026-10-05 |
+| `2026-10-04-native-accounts` | 2026-10-05 |
+| `2026-10-03-accounts-without-verification` | 2026-10-04 |
+| `2026-10-03-workshop-core` | 2026-10-03 |
+| `2026-09-29-skipped-data-defaults` | 2026-10-01 or earlier |
+
+## 2026-11-20: Security advisories in an app's dependencies
+
+**Generated apps — a recommendation, not a release.**
+
+- Existing apps: do this in every review: run `bin/bundler-audit check --update` and
+  `npm audit --audit-level=high --omit=dev`, and follow the steps below when either lists an advisory.
+
+Advisories keep reaching gems and npm packages after an app is compiled, so an app whose audits passed at Compile
+fails them later with no change of its own. On 2026-11-20 an app compiled on 2026-10-05 failed both: the gem audit
+listed 80 advisories in 14 gems, one rated critical and eight high, and the JS audit one high advisory in
+`source-map-js`. Newly compiled apps lock patched versions; an app compiled earlier updates its own lockfiles.
+
+**Gems.**
+
+1. Run `bin/bundler-audit check --update`. It fetches the current advisory database, then lists each advisory with
+   the versions that fix it. `bin/ci` runs the same audit without `--update`, against the copy it last fetched.
+2. Update the gems it names, and only those, with `bundle update --conservative` followed by their names. For a
+   Rails component, such as actionpack, actionview, activestorage, or activesupport, name `rails`. For that app:
+
+   ```sh
+   bundle update --conservative rails addressable crass loofah msgpack nokogiri puma rack rails-html-sanitizer rodauth
+   ```
+
+   That moved Rails to 8.1.4.1, which
+   [Rails 8.1.4.1 is a security update](#2026-11-20-rails-8141-is-a-security-update) describes, rodauth to 2.51.0,
+   puma to 8.1.2, and the other named gems to their patched versions. Besides Rails's own components, no other gem
+   moved.
+3. Run `bin/bundler-audit check` again, and repeat until it prints `No vulnerabilities found`.
+
+**JavaScript packages.**
+
+1. Run `npm audit fix`. It moves packages within the ranges `package.json` allows. It can still exit with an error
+   and list advisories in development tools, such as `zod` and `minimatch` under the shadcn CLI, whose fix needs a
+   version outside those ranges. Leave those, and do not add `--force`.
+2. Run `npm audit --audit-level=high --omit=dev`, the audit `bin/ci` runs. For that app it printed
+   `found 0 vulnerabilities`.
+
+**Check.** `bin/ci` passes both Security steps and every test step. For that app, after these steps, the header
+change that the Rails entry asks for, and the [Chrome 158 entry](#2026-11-20-browser-specs-fail-on-chrome-158), all
+13 steps of its `bin/ci` passed.
+
+## 2026-11-20: Rails 8.1.4.1 is a security update
+
+**Generated apps — a correction, not a release.**
+
+- Existing apps: do this when `bin/rails -v` prints a version before 8.1.4.1. The steps and the check are below.
+- Corrects: [2026-10-20: Rails 8.1.4 and target profile rails-sketch/2026-10](#2026-10-20-rails-814-and-target-profile-rails-sketch2026-10),
+  which calls the Rails update a bug-fix release, and
+  [2026-11-12: Forged client address headers no longer cause a 500](#2026-11-12-forged-client-address-headers-no-longer-cause-a-500),
+  whose check holds only after this update.
+
+The 2026-10-20 entry says an app can move to Rails 8.1.4, a bug-fix release. Rails 8.1.4.1 followed, with fixes for
+advisories in actionmailbox, actionpack, actionview, activestorage, and activesupport, one of them, in activestorage,
+rated critical. `bundle update rails` now lands on 8.1.4.1, so the move is a security fix, not an option. Apps
+compiled by `2026-11-05-rails-security-patch` or a later release already lock it.
+
+Move with `bundle update --conservative rails`, or with the command in
+[Security advisories in an app's dependencies](#2026-11-20-security-advisories-in-an-apps-dependencies), which moves
+the other advised gems too, then run `bin/ci`. A later schema dump may list the columns of `db/schema.rb` in table
+order, as the 2026-10-20 entry says; for an app compiled on 2026-10-05 it changed nothing.
+
+**Forged client address headers.** The 2026-11-12 entry says both examples of its spec fail before its change. On
+Rails 8.1.3.1, only the `Client-Ip` example fails; the `Forwarded` example passes without the change. On Rails
+8.1.4.1, both fail with `ActionDispatch::RemoteIp::IpSpoofAttackError`, so after this update a forged `Forwarded`
+header also causes a 500. If the app is deployed on Render, make the 2026-11-12 change together with this one.
+
+**Check.** `bin/rails -v` prints `Rails 8.1.4.1`, and `bin/ci` passes. Both examples of the 2026-11-12 spec fail
+before that entry's change and pass after it. For an app compiled on 2026-10-05, all three held.
+
+## 2026-11-20: Browser specs fail on Chrome 158
+
+**Generated apps — a recommendation, not a release.**
+
+- Existing apps: do this when `bin/ci` fails at Tests: System with `invalid argument: * is not a valid URL`. The
+  steps and the check are below.
+
+Capybara 3.40.0, the latest release and the one First Draft apps lock, ends each Chrome session reset with the
+DevTools call `Storage.clearDataForOrigin` for the origin `*`. Chrome 158 rejects that origin, so every example in
+`spec/system` fails in teardown with `invalid argument: * is not a valid URL`
+([teamcapybara/capybara#2865](https://github.com/teamcapybara/capybara/issues/2865)). The app did not change; the
+browser did.
+
+Add this block to `spec/support/system.rb`, after the line
+`Capybara::Node::Element.prepend(WaitForTurboBeforeClick)`:
+
+```ruby
+# Capybara 3.40.0 ends a Chrome session reset with Storage.clearDataForOrigin
+# for origin "*". Chrome 158 rejects that origin, so every example fails in
+# teardown and leaves its cookies and storage for the next one
+# (https://github.com/teamcapybara/capybara/issues/2865). When Chrome rejects
+# it, clear every cookie and the storage of each http(s) origin still in the
+# tab's history instead. An origin with no page left there keeps its storage,
+# and so does a cross-site frame. Delete this block once Capybara is newer
+# than 3.40.0.
+if Capybara::VERSION == "3.40.0"
+  clear_storage_by_origin = Module.new do
+    private
+
+    def execute_cdp(cmd, params = {})
+      super
+    rescue Selenium::WebDriver::Error::InvalidArgumentError
+      raise unless cmd == "Storage.clearDataForOrigin" && params[:origin] == "*"
+
+      super("Network.clearBrowserCookies")
+      entries = super("Page.getNavigationHistory").fetch("entries")
+      origins = entries.filter_map { |entry| entry.fetch("url")[%r{\Ahttps?://[^/]+}] }
+      origins.uniq.each { |origin| super(cmd, params.merge(origin: origin)) }
+    end
+  end
+  Capybara::Selenium::Driver::ChromeDriver.prepend(clear_storage_by_origin)
+end
+```
+
+When Chrome rejects the wildcard, the block clears every cookie, then the storage Capybara asked to clear for each
+`http` or `https` origin still in the history of the one tab Capybara keeps open. A Chrome that accepts the wildcard
+is reset as before. The block applies only to Capybara 3.40.0: delete it once `Gemfile.lock` has a newer Capybara,
+which a release that fixes the issue above would bring.
+
+**Check.** `bundle exec rspec spec/system`. For an app compiled on 2026-10-05, on Chrome 158.0.8127.36, it went from
+9 examples, 9 failures to 9 examples, 0 failures.
+
+## 2026-11-20: Finding what an app left out
+
+**Generated apps — a recommendation, not a release.**
+
+- Existing apps: do this for each Validation, Predicate, or Ordering that the app's `.firstdraft/gaps.json` lists as
+  not generated; optional for the sample records it lists. The steps and the checks are below.
+
+[2026-10-11: Predicates and Orderings left to write](#2026-10-11-predicates-and-orderings-left-to-write) and
+[2026-10-12: More of the Plan reaches the generated app](#2026-10-12-more-of-the-plan-reaches-the-generated-app)
+describe parts of a Plan that later Compiles generate or stub and that an app compiled earlier left out. The app
+records what it left out in `.firstdraft/gaps.json`, if retained. Each item in its `gaps` list has a `code`, the Plan
+subject's `readable_path` and `pointer`, a `reason`, and a `consequence` for the app; the `pointer` locates the
+subject in `.firstdraft/submitted-foundation-plan.json`. Both files record what was compiled, and where the code has
+changed since, the code wins. To list the items:
+
+```sh
+ruby -rjson -e 'JSON.parse(File.read(".firstdraft/gaps.json"))["gaps"].each { |gap| puts [gap["code"], gap["readable_path"], gap["pointer"]].join("  ") }'
+```
+
+**Orderings and Predicates**, codes `foundation_plan.gap.ordering.not_generated` and
+`foundation_plan.gap.predicate.not_generated`. The page that selects one lists records in `id` order, or without
+its filter. Write the named scope on the model, call it from that page, and add a spec that pins the order or the
+filter. A second item names the page. In an app compiled on 2026-10-05, `member.by_username` orders Members by
+username, ascending, and the item `member.scaffold.index.ordering` is the Members index:
+
+```ruby
+# app/models/member.rb
+scope :by_username, -> { order(username: :asc, id: :asc) }
+
+# app/controllers/members_controller.rb, in index, in place of Member.order(:id)
+relation = Member.by_username.preload({avatar_attachment: :blob})
+```
+
+```ruby
+# spec/requests/members_order_spec.rb
+require "rails_helper"
+
+RSpec.describe "Member index order", type: :request do
+  it "lists members by username" do
+    user = create(:member, username: "zoe", display_name: "Zoe Zimmer")
+    create(:member, username: "adam", display_name: "Adam Abel")
+    post "/login", params: {email: user.email, password: "a sufficiently long password"}
+
+    get members_path
+
+    text = response.parsed_body.text
+    expect(text.index("Adam Abel")).to be < text.index("Zoe Zimmer")
+  end
+end
+```
+
+**Validations**, code `foundation_plan.gap.validation.not_generated`. The model accepts a value that the Plan's
+rule refuses. Write the rule in the shape that More of the Plan reaches the generated app gives, a `validate`
+declaration and a private method that adds the error, with a model spec that expects the error's kind.
+
+**Sample records**, code `foundation_plan.gap.development_data.record.not_generated`. Read the item's `reason`
+first. When it says that a generated Validation is not proven for the record, seeds left the record out because a
+rule covered it, which seeds no longer do. Read the record at its `pointer` in the submitted Plan, and add it to
+`db/seeds/development.rb` after the records it refers to, in the file's `find_or_create_by!` style. Another reason,
+such as two records that match the same seed lookup or a record that refers to one left out, needs that resolved
+first, or the record left out. The app compiled on 2026-10-05 left out seven Follow records under
+`follow.not_self`; the first two are:
+
+```ruby
+Follow.find_or_create_by!(follower: sam, followed: rose)
+Follow.find_or_create_by!(follower: sam, followed: maria)
+```
+
+Then run `bin/rails db:seed`, which keeps the records already there. If it raises `ActiveRecord::RecordInvalid`,
+that sample breaks its own rule: correct it or leave it out.
+
+**Check.** Each new spec fails before its change and passes after it, and `bin/ci` passes. For that app, the order
+spec failed on `id` order and passed with the scope, and after `bin/rails db:seed`, run twice,
+`bin/rails runner 'puts Follow.count'` printed 7.
+
+## 2026-11-20: Checking that an image upload is an image
+
+**Generated apps — a recommendation, not a release.**
+
+- Existing apps: do this when the app has an `image` Field and no `app/validators/image_validator.rb`. The steps and
+  the check are below.
+
+[2026-10-12: Policies and reduced Accounts generate](#2026-10-12-policies-and-reduced-accounts-generate) says that
+apps compiled since then check each `image` Field with a generated `ImageValidator`, and that an owner can add one
+like it. A Compile on 2026-11-20 writes this one:
+
+```ruby
+# app/validators/image_validator.rb
+# Active Storage sets content_type from the file's bytes when the file is
+# assigned. A file with no recognizable signature keeps the type that its
+# upload or filename claims.
+class ImageValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    record.errors.add(attribute, :image) if value.attached? && !value.image?
+  end
+end
+```
+
+1. Add the file above, and its message under `en.errors.messages` in `config/locales/en.yml`:
+
+   ```yaml
+   en:
+     errors:
+       messages:
+         image: must be an image
+   ```
+
+2. Declare it on each `image` Field, after its `has_one_attached`, such as `validates :photo, image: true`.
+3. Add a model spec for each, with a one-line text file at `spec/fixtures/files/firstdraft-file.txt`, such as
+   `First Draft test attachment`, beside the app's `spec/fixtures/files/firstdraft-image.png`:
+
+   ```ruby
+   it "validates photo as an image" do
+     record = build(:post, photo: Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/files/firstdraft-image.png"), "image/png"))
+     record.validate
+
+     expect(record.errors).not_to be_of_kind(:photo, :image)
+
+     record.photo = Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/files/firstdraft-file.txt"), "text/plain")
+     record.validate
+
+     expect(record.errors).to be_of_kind(:photo, :image)
+   end
+   ```
+
+A record whose stored file fails the check can no longer be saved, so check the stored files before you deploy:
+`bin/rails runner 'puts Post.with_attached_photo.count { |post| post.photo.attached? && !post.photo.image? }'`
+prints 0 when every stored photo passes it. The check reads the content type that Active Storage recorded, not the
+file's bytes.
+
+**Check.** The spec fails before the validator and passes after it, and `bin/ci` passes. For an app compiled on
+2026-10-05 with an image on Posts and on Members, both did.
+
+## 2026-11-20: Putting Home first in an older app's navigation
+
+**Generated apps — a recommendation, not a release.**
+
+- Existing apps: optional, when the app's first navigation link is not its Home index. The steps and the check are
+  below.
+
+[2026-10-09: Code worth keeping](#2026-10-09-code-worth-keeping) says that apps compiled since then list the Plan's
+`home_index` index first in the navigation and in the iPhone and Android tabs, and that earlier apps keep Entity
+order. The Home index is the one that `root` in `config/routes.rb` names, such as `root "posts#index"`. To match a
+Compile on 2026-11-20, move it first in these files:
+
+1. `app/views/shared/_main_navigation.html.erb`: move its `<li>`, with the `<% if %>` around it, above the other
+   indexes. Account stays last.
+2. If the app has `ios/`: move its `AppNavigationDefinition(...)` first in `navigation` in
+   `ios/FoundationApp/Generated/ApplicationDefinition.swift`. Two tests assert the order: move its values first in
+   each list in `ios/FoundationAppTests/Generated/ApplicationDefinitionTests.swift`, and its tab label first in
+   `ios/FoundationAppUITests/Generated/ApplicationNavigationUITests.swift`.
+3. If the app has `android/`: move its `ApplicationEntry(...)` first in `entries` in
+   `android/app/src/main/java/com/firstdraft/foundation/generated/GeneratedApplication.kt`, and its id and path
+   first in the two lists in `android/app/src/test/java/com/firstdraft/foundation/generated/GeneratedApplicationTest.kt`.
+4. If the app has `ios/` or `android/`, read the `"presentation": "replace_root"` rules in
+   `ios/FoundationApp/Generated/ios_v1.json` and `android/app/src/main/assets/json/android_v1.json`. When they name
+   only some tabs, such as the first four of six or more, make them name the tabs that come first now.
+
+**Check.** A request spec that signs in, requests `root_path`, and expects the first link in `nav` to be the Home
+index, then `bin/ios test` and `bin/android test`. For an app compiled on 2026-10-05 whose Home is Posts, the
+request spec and `bin/ios test` passed after these steps; its Android tests were not run.
+
+## 2026-11-20: Spec guidance for an AGENTS.md from early October
+
+**Generated apps — a recommendation, not a release.**
+
+- Existing apps: optional, when the app's `AGENTS.md` says nothing about failing specs. The text is below.
+
+A generated `AGENTS.md` tells the agent what to do with a failing spec only in apps compiled by
+`2026-10-11-rodauth-2-48` or a later release, and the rule changed several times after that;
+[2026-11-17: One reference page per Plan capability, and stubs written before the preview](#2026-11-17-one-reference-page-per-plan-capability-and-stubs-written-before-the-preview)
+has the current one. An app compiled earlier has no such text. To give its agent today's rule, add these bullets to
+the list in its `AGENTS.md`. They are today's generated text, shortened for an app whose `README.md` has no Behavior
+to write section:
+
+```markdown
+- Run setup and the specs before other work.
+- Debug a failing spec as you would your own failure: find the cause and fix the code. Without the user's yes,
+  never skip, delete, or loosen an example to get a green run; change a spec only when it contradicts the behavior
+  the app should have, and give the reason to the user, and in the commit message when this folder is a Git
+  repository.
+```
 
 ## 2026-11-17: One reference page per Plan capability, and stubs written before the preview
 
-**Skills — released in plugin 0.9.3.** The Skill's Plan reference was one long page and a page of examples. It is
+**Skills — released in plugin 0.9.3.**
+
+- Existing apps: nothing to do. An app whose `AGENTS.md` says nothing about failing specs can add the text in
+  [2026-11-20: Spec guidance for an AGENTS.md from early
+  October](#2026-11-20-spec-guidance-for-an-agentsmd-from-early-october); that is optional.
+- Compiler: the README's list of every gap arrived in release `2026-11-13-events-listed`, in use on firstdraft.com from
+  2026-11-17.
+
+The Skill's Plan reference was one long page and a page of examples. It is
 now one page per Plan capability, such as Fields, References, Policies, or Scaffold forms, under
 `skills/create-full-stack-app/references/plan/`, with an index in `SKILL.md` that the agent sees before it writes
 any Plan JSON. Each page gives the keys, a simple and a full example, what Compile emits, what is left to write, and
@@ -78,7 +454,15 @@ change. The plugin still bundles CLI 0.9.0 and needs First Draft API 0.8.
 
 ## 2026-11-12: Forged client address headers no longer cause a 500
 
-**Compiler — live on firstdraft.com since 2026-11-12.** A newly compiled app removes the `Client-Ip` and `Forwarded`
+**Compiler — live on firstdraft.com since 2026-11-12.**
+
+- Existing apps: do this when the app is deployed on Render and its `config/application.rb` has no `insert_before
+  ActionDispatch::RemoteIp` line: the change and the spec below.
+- Compiler: release `2026-11-12-forged-ip-headers`, in use on firstdraft.com from 2026-11-12.
+- Corrected: both examples of the spec fail before the change only on Rails 8.1.4.1 or later, by [2026-11-20: Rails
+  8.1.4.1 is a security update](#2026-11-20-rails-8141-is-a-security-update). Move Rails in the same change.
+
+A newly compiled app removes the `Client-Ip` and `Forwarded`
 request headers before Rails works out the client's address. Render and Cloudflare set neither header, so on Render
 they only ever come from the client. When one of them disagrees with `X-Forwarded-For`, Rails raises
 `ActionDispatch::RemoteIp::IpSpoofAttackError` before the app's error pages can handle it
@@ -125,7 +509,11 @@ end
 
 ## 2026-11-12: Compile waits for a go-ahead, and a failed Compilation leaves the Plan alone
 
-**Skills — released in plugin 0.9.2.** The Skill now handles each product decision the way a consultant developer
+**Skills — released in plugin 0.9.2.**
+
+- Existing apps: nothing to do.
+
+The Skill now handles each product decision the way a consultant developer
 would with a client. It asks when the answer is expensive to change after Compile, and each option says what the user
 will see. Where a convention fits most apps, it tells the user its default and when that default would be wrong, then
 continues. It decides what the user cannot see and names the choice in the read-back. Deletion gets a default by kind
@@ -155,7 +543,11 @@ Draft is notified when a Compilation fails while generating the application, so 
 
 ## 2026-11-08: A description and topics for reviewing the Plan
 
-**Skills — released in plugin 0.9.1.** A Foundation Plan can carry two optional keys written for the person who
+**Skills — released in plugin 0.9.1.**
+
+- Existing apps: nothing to do. Both keys are for reviewing a Plan, and the Compiler ignores them.
+
+A Foundation Plan can carry two optional keys written for the person who
 reviews it: `application.description`, a short statement of the idea, and `application.topics`, named groups of
 Entities. The Compiler ignores both. The First Draft service now draws a Plan's Entities and References as a diagram
 on its Project page and groups the cards by topic. The Skill keeps both keys current as the Plan changes. When a Plan
@@ -168,7 +560,16 @@ to one.
 
 ## 2026-10-20: Rails 8.1.4 and target profile rails-sketch/2026-10
 
-**Skills — released in plugin 0.9.0.** Once the First Draft service deploys the matching Compiler, generated apps use
+**Skills — released in plugin 0.9.0.**
+
+- Existing apps: do this: move to Rails 8.1.4.1, as [2026-11-20: Rails 8.1.4.1 is a security
+  update](#2026-11-20-rails-8141-is-a-security-update) says. A Project needs the new target profile, as below, only to
+  compile again.
+- Compiler: release `2026-10-20-rails-8-1-4`, in use on firstdraft.com from 2026-10-20.
+- Corrected: the Rails update is a security fix, not an optional bug-fix release, by [2026-11-20: Rails 8.1.4.1 is a
+  security update](#2026-11-20-rails-8141-is-a-security-update).
+
+Once the First Draft service deploys the matching Compiler, generated apps use
 Rails 8.1.4 under the new target profile `rails-sketch/2026-10`. The plugin bundles CLI 0.9.0, which needs First Draft
 API 0.8; both accept only the new profile. Rails 8.1.4 writes `db/schema.rb` columns in table order, where 8.1.3.1
 sorted them alphabetically, so a new app's emitted schema lists them that way.
@@ -185,7 +586,13 @@ columns, which changes no behavior.
 
 ## 2026-10-12: More of the Plan reaches the generated app
 
-**Skills — released in plugin 0.8.17.** Once the First Draft service deploys the matching Compiler, more of an
+**Skills — released in plugin 0.8.17.**
+
+- Existing apps: do this for each Validation the app left out; optional for the sample records it left out. [2026-11-20:
+  Finding what an app left out](#2026-11-20-finding-what-an-app-left-out) has the steps and the checks.
+- Compiler: release `2026-10-13-policy-negated-comparisons`, in use on firstdraft.com from 2026-10-13.
+
+Once the First Draft service deploys the matching Compiler, more of an
 authored Plan reaches the generated app, and what the Compiler cannot write yet is declared where it belongs, behind a
 failing spec. The Skill's references now describe that output.
 
@@ -226,7 +633,19 @@ declaration, a method, and a spec that pins its error kind.
 
 ## 2026-10-12: Agents preview first and debug failures
 
-**Skills — released in plugin 0.8.16.** Once the First Draft service deploys the matching Compiler, a generated app's
+**Skills — released in plugin 0.8.16.**
+
+- Existing apps: do this when the app's Account leaves out lockout and its `DEPLOY.md` says the app does not limit
+  failed sign-in attempts: follow that section of `DEPLOY.md` before inviting anyone. Check that
+  `app/misc/rodauth_main.rb` enables `:lockout`, or that `app/controllers/rodauth_controller.rb` has a `rate_limit`. For
+  the spec rules, an older `AGENTS.md` can take the text in [2026-11-20: Spec guidance for an AGENTS.md from early
+  October](#2026-11-20-spec-guidance-for-an-agentsmd-from-early-october); that is optional.
+- Compiler: release `2026-10-12-neutral-mail-guidance`, in use on firstdraft.com from 2026-10-12.
+- Replaced: what to do with a failing spec, and when to preview, by [2026-11-17: One reference page per Plan capability,
+  and stubs written before the
+  preview](#2026-11-17-one-reference-page-per-plan-capability-and-stubs-written-before-the-preview).
+
+Once the First Draft service deploys the matching Compiler, a generated app's
 `AGENTS.md` changes how the agent treats the first spec run. Before, the agent wrote every item in the README's
 Behavior to write before the first preview, asked you before previewing otherwise, and reported any other failing spec
 to you as a First Draft defect. Now it first writes any item whose entry says Home raises, starts the preview, and
@@ -262,7 +681,13 @@ describes the limit and how to key it by email as well. The Skill's Accounts tex
 
 ## 2026-10-12: State Machine events First Draft cannot generate are stubs
 
-**Skills — released in plugin 0.8.15.** Plugin 0.8.14 carried the same text but was never published: its tag was pushed while a GitHub Actions incident had dropped its main CI run, so the publish workflow refused it. Once the First Draft service deploys the matching Compiler, a required,
+**Skills — released in plugin 0.8.15.**
+
+- Existing apps: nothing to do. An app compiled earlier keeps such a machine as storage only, and its README lists no
+  event to write.
+- Compiler: release `2026-10-12-state-scope-collisions`, in use on firstdraft.com from 2026-10-12.
+
+Plugin 0.8.14 carried the same text but was never published: its tag was pushed while a GitHub Actions incident had dropped its main CI run, so the publish workflow refused it. Once the First Draft service deploys the matching Compiler, a required,
 unconditional State Machine alone on its Entity stays in AASM when an event has effects the Compiler cannot generate.
 Before, one such event made the whole machine storage only: a string column with no events, AASM initialization, or
 direct-assignment guard, even for the events the Compiler could generate. Now the `aasm` block lists the generated
@@ -290,7 +715,14 @@ lists an event under Behavior to write.
 
 ## 2026-10-12: Policies First Draft cannot lower are stubs
 
-**Skills — released in plugin 0.8.13.** Once the First Draft service deploys the matching Compiler, a Policy whose
+**Skills — released in plugin 0.8.13.**
+
+- Existing apps: nothing to do. An app compiled earlier left such a Policy out, with the pages it guards.
+- Compiler: release `2026-10-12-policy-stubs`, in use on firstdraft.com from 2026-10-12.
+- Replaced: when to preview, by [2026-11-17: One reference page per Plan capability, and stubs written before the
+  preview](#2026-11-17-one-reference-page-per-plan-capability-and-stubs-written-before-the-preview).
+
+Once the First Draft service deploys the matching Compiler, a Policy whose
 Expression uses a leaf the Rails target cannot lower keeps its class and every surface it guards. Before, it was
 left out with every page, input, collection, Home index, and native tab it guarded. Now its rule returns `false`
 under a comment naming the Policy and its spec, so every page, link, and control that asks it denies. Its relation
@@ -319,7 +751,15 @@ no README lists a Policy under Behavior to write.
 
 ## 2026-10-12: Polymorphic targets refuse deletes
 
-**Skills — released in plugin 0.8.12.** Once the First Draft service deploys the matching Compiler, a polymorphic
+**Skills — released in plugin 0.8.12.**
+
+- Existing apps: optional. An app compiled earlier left such a Reference out; the last paragraph says what an owner adds
+  in Rails.
+- Compiler: release `2026-10-12-destroy-refusals`, in use on firstdraft.com from 2026-10-12.
+- Replaced: what to do with a failing spec, by [2026-11-17: One reference page per Plan capability, and stubs written
+  before the preview](#2026-11-17-one-reference-page-per-plan-capability-and-stubs-written-before-the-preview).
+
+Once the First Draft service deploys the matching Compiler, a polymorphic
 Reference keeps its columns, `belongs_to`, and type list when a target cannot carry the authored deletion outcome.
 Before, the whole Reference was left out when a target had several inverses, a destructive cascade cycle reached it,
 as with comments that reply to comments, or its conventional inverse name was taken, and so was an optional or
@@ -346,7 +786,17 @@ README lists a deletion outcome. Apps compiled earlier keep the omissions; an ow
 
 ## 2026-10-12: Policies and reduced Accounts generate
 
-**Skills — released in plugin 0.8.11.** Once the First Draft service deploys the matching Compiler, a Policy's
+**Skills — released in plugin 0.8.11.**
+
+- Existing apps: do this for each `image` Field: [2026-11-20: Checking that an image upload is an
+  image](#2026-11-20-checking-that-an-image-upload-is-an-image) has the steps and the check. The rest is optional: a
+  Policy or an Account the app left out is ordinary Rails work, as the last paragraph says.
+- Compiler: release `2026-10-12-optional-account-flows`, in use on firstdraft.com from 2026-10-12.
+- Replaced: a Policy the Compiler cannot lower is a stub since [2026-10-12: Policies First Draft cannot lower are
+  stubs](#2026-10-12-policies-first-draft-cannot-lower-are-stubs), and failed sign-ins without lockout are limited since
+  [2026-10-12: Agents preview first and debug failures](#2026-10-12-agents-preview-first-and-debug-failures).
+
+Once the First Draft service deploys the matching Compiler, a Policy's
 `allow_when` lowers in general instead of shape by shape. `or`, `not`, `exists`, reused Predicates, paths through
 singular Associations, and `matches_policy` each generate an Action Policy rule, and each Policy gets a relation scope
 unless only `current_account` gates and create forms use it. Before, a Policy outside a few admitted shapes was left
@@ -400,7 +850,18 @@ rule and scope in the app's Policy class, an image check like the generated one,
 
 ## 2026-10-11: Predicates and Orderings left to write
 
-**Skills — released in plugin 0.8.10.** Once the First Draft service deploys the matching Compiler, a Predicate or
+**Skills — released in plugin 0.8.10.**
+
+- Existing apps: do this for each Predicate or Ordering the app left out: [2026-11-20: Finding what an app left
+  out](#2026-11-20-finding-what-an-app-left-out) has the steps and the check.
+- Compiler: release `2026-10-11-rodauth-2-48`, in use on firstdraft.com from 2026-10-12.
+- Replaced: what to do with a failing spec, and when to preview, by [2026-11-17: One reference page per Plan capability,
+  and stubs written before the
+  preview](#2026-11-17-one-reference-page-per-plan-capability-and-stubs-written-before-the-preview). A surface whose
+  Policy the Compiler cannot generate is emitted with a stub since [2026-10-12: Policies First Draft cannot lower are
+  stubs](#2026-10-12-policies-first-draft-cannot-lower-are-stubs).
+
+Once the First Draft service deploys the matching Compiler, a Predicate or
 Ordering that the Compiler cannot generate still gets its named scope, unless the model cannot take that name. The
 scope raises `NotImplementedError` until someone writes it, and an Ordering's scope gets no database index. Every
 Scaffold index and collection that selects the scope calls it, so those pages raise and the specs that request them
@@ -424,7 +885,13 @@ plugin 0.8.9. Apps compiled earlier keep their omitted scopes, unfiltered lists,
 
 ## 2026-10-10: Reference pickers search the server
 
-**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a generated form
+**Skills — released in plugin 0.8.9.**
+
+- Existing apps: optional. In an app compiled earlier, `shared/ui/reference_field` takes no `search_url:`, so a search
+  needs the newer picker as well as the action; this changelog has no steps for that.
+- Compiler: release `2026-10-11-picker-search`, in use on firstdraft.com from 2026-10-11.
+
+Once the First Draft service deploys the matching Compiler, a generated form
 no longer loads every record a Reference picker can offer. When the target's descriptor is required text, such as a
 Station's name, the picker asks the server for matches as the person types and the form loads only its current
 choice. Before, a controller ran `Station.order(name: :asc).pluck(:name, :id)` on each New and Edit render; with
@@ -450,7 +917,13 @@ author a Plan, a required text descriptor is what lets a large collection's pick
 
 ## 2026-10-10: Removing an uploaded file
 
-**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, the edit form of
+**Skills — released in plugin 0.8.9.**
+
+- Existing apps: do this for an optional upload that people need to clear: the steps in the last paragraph. Check: a
+  request spec that attaches a file, then submits only the flag, expects no file to remain.
+- Compiler: release `2026-10-11-picker-search`, in use on firstdraft.com from 2026-10-11.
+
+Once the First Draft service deploys the matching Compiler, the edit form of
 an optional `attachment` or `image` Field offers a "Remove" checkbox once a file is stored. An empty file input
 keeps the stored file, so the file could not be cleared from the page before. The checkbox submits
 `remove_<field>`, the name CarrierWave and Shrine give the same control. The model declares
@@ -472,7 +945,12 @@ failed validation.
 
 ## 2026-10-10: Collection pages as nested resources
 
-**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a generated app
+**Skills — released in plugin 0.8.9.**
+
+- Existing apps: optional. Flat routes keep working, with the same URLs and route helpers.
+- Compiler: release `2026-10-11-picker-search`, in use on firstdraft.com from 2026-10-11.
+
+Once the First Draft service deploys the matching Compiler, a generated app
 serves each parent's full collection page, its New page, and its create from a nested Rails controller, as a Rails
 developer would write it. A Post's Comments use `Posts::CommentsController`, routed by
 `resources :comments, only: %i[index new create], module: :posts` inside `resources :posts`, which loads the Post in
@@ -491,7 +969,14 @@ hand.
 
 ## 2026-10-10: References with several targets compile
 
-**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a Reference with
+**Skills — released in plugin 0.8.9.**
+
+- Existing apps: optional. An app compiled earlier lacks such a Reference until its owner adds it in Rails.
+- Compiler: release `2026-10-11-picker-search`, in use on firstdraft.com from 2026-10-11.
+- Replaced: a target that cannot carry the deletion outcome keeps the Reference and refuses deletes since [2026-10-12:
+  Polymorphic targets refuse deletes](#2026-10-12-polymorphic-targets-refuse-deletes).
+
+Once the First Draft service deploys the matching Compiler, a Reference with
 several targets, such as a comment on either a post or a photo, appears in the generated app under either
 `realization`. Before, the Skill asked you to choose `polymorphic` or `exclusive_arc`, and the Compiler then left the
 Reference out either way. Now `exclusive_arc` emits one nullable foreign key per target, a `belongs_to` per target, a
@@ -508,7 +993,15 @@ until their owners add it in Rails.
 
 ## 2026-10-10: Generated tests before the first preview
 
-**Skills — released in plugin 0.8.9.** After Compile, the Skill now runs the generated application's specs where
+**Skills — released in plugin 0.8.9.**
+
+- Existing apps: do this: run the app's checks before other work. To review updates, run `bin/ci`, as [Reviewing
+  updates](#reviewing-updates) says, because its audits and browser specs are what change after Compile.
+- Replaced: what to do with a failing spec, and when to preview, by [2026-11-17: One reference page per Plan capability,
+  and stubs written before the
+  preview](#2026-11-17-one-reference-page-per-plan-capability-and-stubs-written-before-the-preview).
+
+After Compile, the Skill now runs the generated application's specs where
 the first preview will run: `bin/setup --skip-server`, then the spec commands in the generated README's Checks
 section, `npm run build`, `npm run build:css`, and `bundle exec rspec`. The handoff used to go from setup straight to
 the browser, so a Compiler defect first showed up as a broken page, and nothing confirmed the app worked on the
@@ -524,7 +1017,14 @@ run the same commands from its root; a spec that fails in unedited generated cod
 
 ## 2026-10-10: Launcher icons from the app name
 
-**Skills — released in plugin 0.8.9.** Once the First Draft service deploys the matching Compiler, a generated
+**Skills — released in plugin 0.8.9.**
+
+- Existing apps: optional. An iPhone app compiled earlier has no image in
+  `ios/FoundationApp/Assets.xcassets/AppIcon.appiconset/`, so an App Store upload would likely fail, as this entry
+  says; an Android app keeps Core's icon.
+- Compiler: release `2026-10-11-picker-search`, in use on firstdraft.com from 2026-10-11.
+
+Once the First Draft service deploys the matching Compiler, a generated
 iPhone or Android app gets its launcher icon from the app name. The icon is the black-on-white monogram that already
 draws the web bookmark icons: the name's first ASCII letter or digit, or a neutral circle. Before, the iPhone
 AppIcon set held no image, so the app had no icon and an App Store upload would likely fail. Android showed a fixed
@@ -536,7 +1036,29 @@ with your own artwork. Apps compiled earlier keep Core's icons until their owner
 
 ## 2026-10-09: Code worth keeping
 
-**Skills — released in plugin 0.8.8.** First Draft now holds generated apps to one
+**Skills — released in plugin 0.8.8.**
+
+- Existing apps, by part:
+  - The URL check and refused deletes: do this for `url` Fields and for `restrict` References, with the steps in their
+    parts below. Checks: a model spec that rejects `example.com` and `javascript:alert(1)` as "is not a valid URL", and
+    a request spec that deletes a restricted record and gets the refusal as an alert.
+  - Home first: optional; [2026-11-20: Putting Home first in an older app's
+    navigation](#2026-11-20-putting-home-first-in-an-older-apps-navigation) has the steps.
+  - Uploads that follow Policies: cannot be adopted by hand. The change replaces the storage service and the image
+    helper, adds a Policy check to Active Storage's controllers, and gives the Policy of each record with uploads a
+    `show_files?` rule, and this changelog has no steps for it. Files uploaded before it stay public Cloudinary
+    assets. An app whose files must not be public gets it from a new Project compiled from its Plan.
+  - The README's Uploaded files sentence: optional, as its part says.
+  - Phone forms as modals: optional. The bundled rules are in `ios/FoundationApp/Generated/ios_v1.json` and
+    `android/app/src/main/assets/json/android_v1.json`; a rule whose `properties` set `"context": "modal"` opens the
+    pages its `patterns` match as a modal.
+  - The rest changes how the Skill writes Plans: nothing to do.
+- Compiler: release `2026-10-10-native-path-configuration`, in use on firstdraft.com from 2026-10-10.
+- Replaced: a Policy the Compiler cannot generate is a stub, not left out, since [2026-10-12: Policies First Draft
+  cannot lower are stubs](#2026-10-12-policies-first-draft-cannot-lower-are-stubs); `or` Policies generate since
+  [2026-10-12: Policies and reduced Accounts generate](#2026-10-12-policies-and-reduced-accounts-generate).
+
+First Draft now holds generated apps to one
 [standard](https://firstdraft.github.io/firstdraft/docs/product/requirements.html#foundation-quality) (F-9): an app
 may be unfinished, but every emitted line should be one its owner would keep. The Skill's Plan reference used to call
 unused or unguarded starter code an acceptable result of a gap. It now says the Compiler emits only what the Plan
@@ -659,7 +1181,12 @@ iPhone app's request for the server copy gets a 404, which leaves the bundled ru
 
 ## 2026-10-05: Remembered sign-ins
 
-**Skills — released in plugin 0.8.7.** Once the First Draft service deploys the matching Compiler, newly compiled apps
+**Skills — released in plugin 0.8.7.**
+
+- Existing apps: optional; this changelog has no steps for it. The sign-in settings are in `app/misc/rodauth_main.rb`.
+- Compiler: release `2026-10-05-remember-every-sign-in`, in use on firstdraft.com from 2026-10-05.
+
+Once the First Draft service deploys the matching Compiler, newly compiled apps
 keep people signed in, in the browser and in the iPhone and Android apps. Every sign-in is remembered without a
 "Remember me" checkbox, and each use moves the deadline a year out, so someone who keeps using the app stays signed in
 across browser and app restarts. Before, a web sign-in ended when the browser closed, and a phone-app sign-in ended 14
@@ -668,7 +1195,11 @@ an open session stays signed in. The Skill's description of phone-app sign-in no
 
 ## 2026-10-05: When Render's Hobby workspaces run out
 
-**Skills — released in plugin 0.8.6.** Render allows [five Hobby workspaces](https://render.com/docs/team-members)
+**Skills — released in plugin 0.8.6.**
+
+- Existing apps: nothing to do in the app. When you deploy, never choose Pro or any paid plan for a new workspace.
+
+Render allows [five Hobby workspaces](https://render.com/docs/team-members)
 per account. At that limit, the dashboard's New workspace form shows Hobby as "Limit reached" and preselects the paid
 Pro plan, so the per-app workspace step from plugin 0.8.5 could lead to a monthly charge. The After Compile checklist
 now says never to choose Pro or any paid plan there. Deploy into an existing workspace instead, preferably the one
@@ -677,7 +1208,13 @@ in it. Plugin 0.8.5 did not mention the limit.
 
 ## 2026-10-05: A Render workspace per app
 
-**Skills — released in plugin 0.8.5.** The After Compile checklist now has you create a separate Render workspace
+**Skills — released in plugin 0.8.5.**
+
+- Existing apps: optional; it applies when the app is first deployed.
+- Replaced: at Render's limit of five Hobby workspaces, deploy into an existing one, by [2026-10-05: When Render's Hobby
+  workspaces run out](#2026-10-05-when-renders-hobby-workspaces-run-out).
+
+The After Compile checklist now has you create a separate Render workspace
 for each app before its first deploy. Render grants each workspace
 [750 free instance hours](https://render.com/docs/free) a month and suspends every free web service in the workspace
 when they run out, so apps that share one can take each other offline. A Hobby workspace has no monthly fee and
@@ -687,7 +1224,11 @@ workspace. Earlier versions did not mention workspaces.
 
 ## 2026-10-04: First Draft as one tool for your app
 
-**Skills — released in plugin 0.8.4.** The Skill treats First Draft as one tool for your app instead of assuming it
+**Skills — released in plugin 0.8.4.**
+
+- Existing apps: nothing to do.
+
+The Skill treats First Draft as one tool for your app instead of assuming it
 can build whatever you describe. Before the interview the agent takes a quick look at how others build similar apps
 and uses what it finds to choose better questions and defaults. When feasibility is in question, such as phone
 sensors, outside data, store rules, or real-time behavior, it researches thoroughly whether the idea is possible and
@@ -702,7 +1243,11 @@ from your goal, so it triggers when you ask for help making or planning an app o
 
 ## 2026-10-04: Cancel a stuck Compilation
 
-**Skills — released in plugin 0.8.4 with CLI 0.8.2.** The plugin bundles CLI 0.8.2, which adds
+**Skills — released in plugin 0.8.4 with CLI 0.8.2.**
+
+- Existing apps: nothing to do.
+
+The plugin bundles CLI 0.8.2, which adds
 `firstdraft compilation cancel <compilation-id>`. When `plan push` or `plan compile` fails with First Draft's
 `409 compilation_active` problem because an earlier Compilation never finished, the agent checks that Compilation with
 `compilation status <id> --wait`, cancels it if it is still queued or running, and runs the command again. Before,
@@ -711,7 +1256,11 @@ Project's Publication, so the agent asks first.
 
 ## 2026-10-04: Photos, counts, Field types, and signed-in phone apps
 
-**Skills — released in plugin 0.8.4.** The Skill now describes what the current Compiler generates, so the agent
+**Skills — released in plugin 0.8.4.**
+
+- Existing apps: optional: add a newly supported feature in ordinary Rails, as the last paragraph says.
+
+The Skill now describes what the current Compiler generates, so the agent
 authors these features and stops reporting them as gaps. Earlier versions said each was skipped or unsupported.
 
 - **Photos and files.** `image` and `attachment` Fields generate Active Storage uploads stored on Cloudinary. Set
@@ -742,7 +1291,13 @@ ordinary Rails.
 
 ## 2026-10-03: An interview that asks your level first
 
-**Skills — released in plugin 0.8.3.** The Skill's interview now follows one order. The agent clarifies your idea,
+**Skills — released in plugin 0.8.3.**
+
+- Existing apps: nothing to do.
+- Replaced: the Skill's default for a Reference with several targets is `exclusive_arc` since [2026-10-10: References
+  with several targets compile](#2026-10-10-references-with-several-targets-compile).
+
+The Skill's interview now follows one order. The agent clarifies your idea,
 asks for materials such as design docs, screenshots, a CSV of sample data, or an app you like, and reads them before
 asking more. It asks once whether it should make the technical decisions for you, explain them as it goes, or ask
 you about them. Then it asks the product questions that shape the data model, most important first and one
@@ -770,7 +1325,13 @@ conversations started after you update the plugin; an existing app needs no chan
 
 ## 2026-10-03: Workshop fixes to authoring and preview
 
-**Skills — released in plugin 0.8.3.** When the Skill authors an Account, it now omits `verification`, so people
+**Skills — released in plugin 0.8.3.**
+
+- Existing apps: nothing to do.
+- Replaced: seeds keep the sample records a `format` or not-equal rule covers since [2026-10-12: More of the Plan
+  reaches the generated app](#2026-10-12-more-of-the-plan-reaches-the-generated-app).
+
+When the Skill authors an Account, it now omits `verification`, so people
 can sign in right after signing up; the Compiler generates that Account without an email-confirmation step. Email
 confirmation added a step before anyone could use a new app. If you want people to confirm their email first, ask
 for it, and the Skill authors `"verification": {"kind": "email"}`. The read-back says which one your Plan uses. An
@@ -805,7 +1366,11 @@ A workshop rehearsal of a private family social network found more problems, whi
 
 ## 2026-10-01: Log in once instead of exporting a token
 
-**Skills — released in plugin 0.8.1, with CLI 0.8.1.** The bundled CLI adds `firstdraft login` and
+**Skills — released in plugin 0.8.1, with CLI 0.8.1.**
+
+- Existing apps: nothing to do.
+
+The bundled CLI adds `firstdraft login` and
 `firstdraft logout`, so you no longer need to copy a token from `/api-tokens` into `FIRSTDRAFT_API_TOKEN` or
 `FIRSTDRAFT_STAGING_API_TOKEN`. Log in once per environment from any terminal:
 
@@ -823,7 +1388,11 @@ Compile, the Skill also tells you it usually finishes in under a minute. API 0.7
 
 ## 2026-09-28: Associated creation without standalone routes
 
-**Compiler and Skills — released with plugin and CLI 0.8.0.** An associated form can use a create
+**Compiler and Skills — released with plugin and CLI 0.8.0.**
+
+- Existing apps: nothing to do.
+
+An associated form can use a create
 definition without exposing standalone New/Create routes. For example, keep Rating's create inputs, authorization,
 and Movie collection form while omitting `new` and `create` from Rating's `resource_routes`. The nested route still
 supplies its Movie; a retained standalone `create.return_to` does not choose the nested form's destination.
@@ -835,7 +1404,11 @@ gaps and shared-Policy form-entry limits before handing unfinished application b
 
 ## 2026-09-27: Bookmark assets without a planning option
 
-**Compiler and authoring contract — released with plugin and CLI 0.8.0.** The Plan 0.23 contract includes
+**Compiler and authoring contract — released with plugin and CLI 0.8.0.**
+
+- Existing apps: optional: replace the public icon files, as the last paragraph says.
+
+The Plan 0.23 contract includes
 favicon and home-screen bookmark assets for every web app, removing the `application.pwa` option. Prepared
 black-on-white artwork uses the app name's first trimmed character when it is an ASCII letter or digit, or a neutral
 circle otherwise. Appearance still controls theme and native colors. This supplies a useful starting point without
@@ -847,7 +1420,11 @@ Compilation is needed for that edit.
 
 ## 2026-09-27: Public Plan authoring references
 
-**Skills — released in plugin 0.8.0.** The packaged authoring references now route to the existing
+**Skills — released in plugin 0.8.0.**
+
+- Existing apps: nothing to do.
+
+The packaged authoring references now route to the existing
 public [Field catalog](https://firstdraft.github.io/firstdraft/docs/architecture/design/field-catalog.html#normalization-and-comparison)
 and [Rails profile](https://firstdraft.github.io/firstdraft/docs/architecture/targets/rails/profile.html), and include
 the required native identity and AASM caveats. Dated qualification receipts moved to maintainer history.
@@ -858,7 +1435,11 @@ from this documentation repair.
 
 ## 2026-09-27: Continue UI work from the application's guidance
 
-**Workflow recommendation.** For ordinary UI work in an existing app, start with its `UI.md`, comparable screens,
+**Workflow recommendation.**
+
+- Existing apps: nothing to do; it describes how to work on UI in the app.
+
+For ordinary UI work in an existing app, start with its `UI.md`, comparable screens,
 and shared components. Keep the app's chosen stack unless the task calls for a migration. This keeps additions
 consistent with the application as it has evolved.
 
@@ -868,7 +1449,11 @@ matching existing form and run its relevant checks instead of starting another C
 
 ## 2026-09-27: Use a separate staging credential
 
-**Tooling — released CLI 0.7.0 and Skills 0.7.0.** New remote work defaults to `https://firstdraft.com`. Requested
+**Tooling — released CLI 0.7.0 and Skills 0.7.0.**
+
+- Existing apps: nothing to do; it affects First Draft's commands, not the app.
+
+New remote work defaults to `https://firstdraft.com`. Requested
 staging work uses `firstdraft --staging ...` and `FIRSTDRAFT_STAGING_API_TOKEN`; production uses
 `FIRSTDRAFT_API_TOKEN`. Resumed Plans keep their saved origin, and staging never falls back to the production token.
 

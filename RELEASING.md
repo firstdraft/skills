@@ -28,13 +28,17 @@ publication ([step 4](#4-select-the-published-version-in-the-catalog)), or the
 [package digest](#2-update-the-pin-and-digest). Until the tag is pushed, the candidate may change at a new commit
 without another version.
 
-Write the CHANGELOG entry in the same change. Give it a dated heading and a bold lead that names the plugin version
-as released:
+Write the CHANGELOG entry in the same change. Give it a dated heading, a bold lead that names the plugin version
+as released, and the Existing apps line that [Reviewing updates](CHANGELOG.md#reviewing-updates) describes:
 
 ```markdown
 ## YYYY-MM-DD: What changed
 
-**Skills — released in plugin <x.y.z>.** What changed, why, and when it applies.
+**Skills — released in plugin <x.y.z>.**
+
+- Existing apps: nothing to do; do this, with the steps and a check; optional; or cannot be adopted by hand.
+
+What changed, why, and when it applies.
 ```
 
 A lead that names only a CLI version does not count. `sh script/check` fails until the entry exists, and the
