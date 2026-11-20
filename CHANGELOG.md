@@ -95,7 +95,7 @@ missing from this list sorts by that date.
 
 ## 2026-11-20: Security advisories in an app's dependencies
 
-**Generated apps — a recommendation, not a release.**
+**Generated apps — recommendation.**
 
 - Existing apps: do this in every review: run `bin/bundler-audit check --update` and
   `npm audit --audit-level=high --omit=dev`, and follow the steps below when either lists an advisory.
@@ -136,7 +136,7 @@ change that the Rails entry asks for, and the [Chrome 158 entry](#2026-11-20-bro
 
 ## 2026-11-20: Rails 8.1.4.1 is a security update
 
-**Generated apps — a correction, not a release.**
+**Generated apps — correction.**
 
 - Existing apps: do this when `bin/rails -v` prints a version before 8.1.4.1. The steps and the check are below.
 - Corrects: [2026-10-20: Rails 8.1.4 and target profile rails-sketch/2026-10](#2026-10-20-rails-814-and-target-profile-rails-sketch2026-10),
@@ -146,7 +146,7 @@ change that the Rails entry asks for, and the [Chrome 158 entry](#2026-11-20-bro
 
 The 2026-10-20 entry says an app can move to Rails 8.1.4, a bug-fix release. Rails 8.1.4.1 followed, with fixes for
 advisories in actionmailbox, actionpack, actionview, activestorage, and activesupport, one of them, in activestorage,
-rated critical. `bundle update rails` now lands on 8.1.4.1, so the move is a security fix, not an option. Apps
+rated critical. `bundle update rails` now lands on 8.1.4.1, so the move fixes published advisories. Apps
 compiled by `2026-11-05-rails-security-patch` or a later release already lock it.
 
 Move with `bundle update --conservative rails`, or with the command in
@@ -164,7 +164,7 @@ before that entry's change and pass after it. For an app compiled on 2026-10-05,
 
 ## 2026-11-20: Browser specs fail on Chrome 158
 
-**Generated apps — a recommendation, not a release.**
+**Generated apps — recommendation.**
 
 - Existing apps: do this when `bin/ci` fails at Tests: System with `invalid argument: * is not a valid URL`. The
   steps and the check are below.
@@ -172,8 +172,8 @@ before that entry's change and pass after it. For an app compiled on 2026-10-05,
 Capybara 3.40.0, the latest release and the one First Draft apps lock, ends each Chrome session reset with the
 DevTools call `Storage.clearDataForOrigin` for the origin `*`. Chrome 158 rejects that origin, so every example in
 `spec/system` fails in teardown with `invalid argument: * is not a valid URL`
-([teamcapybara/capybara#2865](https://github.com/teamcapybara/capybara/issues/2865)). The app did not change; the
-browser did.
+([teamcapybara/capybara#2865](https://github.com/teamcapybara/capybara/issues/2865)). The failure comes from the
+browser update, with no change in the app.
 
 Add this block to `spec/support/system.rb`, after the line
 `Capybara::Node::Element.prepend(WaitForTurboBeforeClick)`:
@@ -216,7 +216,7 @@ which a release that fixes the issue above would bring.
 
 ## 2026-11-20: Finding what an app left out
 
-**Generated apps — a recommendation, not a release.**
+**Generated apps — recommendation.**
 
 - Existing apps: do this for each Validation, Predicate, or Ordering that the app's `.firstdraft/gaps.json` lists as
   not generated; optional for the sample records it lists. The steps and the checks are below.
@@ -291,7 +291,7 @@ spec failed on `id` order and passed with the scope, and after `bin/rails db:see
 
 ## 2026-11-20: Checking that an image upload is an image
 
-**Generated apps — a recommendation, not a release.**
+**Generated apps — recommendation.**
 
 - Existing apps: do this when the app has an `image` Field and no `app/validators/image_validator.rb`. The steps and
   the check are below.
@@ -341,15 +341,15 @@ end
 
 A record whose stored file fails the check can no longer be saved, so check the stored files before you deploy:
 `bin/rails runner 'puts Post.with_attached_photo.count { |post| post.photo.attached? && !post.photo.image? }'`
-prints 0 when every stored photo passes it. The check reads the content type that Active Storage recorded, not the
-file's bytes.
+prints 0 when every stored photo passes it. The check reads the content type that Active Storage recorded for each
+file.
 
 **Check.** The spec fails before the validator and passes after it, and `bin/ci` passes. For an app compiled on
 2026-10-05 with an image on Posts and on Members, both did.
 
 ## 2026-11-20: Putting Home first in an older app's navigation
 
-**Generated apps — a recommendation, not a release.**
+**Generated apps — recommendation.**
 
 - Existing apps: optional, when the app's first navigation link is not its Home index. The steps and the check are
   below.
@@ -378,7 +378,7 @@ request spec and `bin/ios test` passed after these steps; its Android tests were
 
 ## 2026-11-20: Spec guidance for an AGENTS.md from early October
 
-**Generated apps — a recommendation, not a release.**
+**Generated apps — recommendation.**
 
 - Existing apps: optional, when the app's `AGENTS.md` says nothing about failing specs. The text is below.
 
@@ -566,7 +566,7 @@ to one.
   update](#2026-11-20-rails-8141-is-a-security-update) says. A Project needs the new target profile, as below, only to
   compile again.
 - Compiler: release `2026-10-20-rails-8-1-4`, in use on firstdraft.com from 2026-10-20.
-- Corrected: the Rails update is a security fix, not an optional bug-fix release, by [2026-11-20: Rails 8.1.4.1 is a
+- Corrected: the Rails update fixes published advisories, by [2026-11-20: Rails 8.1.4.1 is a
   security update](#2026-11-20-rails-8141-is-a-security-update).
 
 Once the First Draft service deploys the matching Compiler, generated apps use
@@ -1054,7 +1054,7 @@ with your own artwork. Apps compiled earlier keep Core's icons until their owner
     pages its `patterns` match as a modal.
   - The rest changes how the Skill writes Plans: nothing to do.
 - Compiler: release `2026-10-10-native-path-configuration`, in use on firstdraft.com from 2026-10-10.
-- Replaced: a Policy the Compiler cannot generate is a stub, not left out, since [2026-10-12: Policies First Draft
+- Replaced: a Policy the Compiler cannot generate is emitted as a stub since [2026-10-12: Policies First Draft
   cannot lower are stubs](#2026-10-12-policies-first-draft-cannot-lower-are-stubs); `or` Policies generate since
   [2026-10-12: Policies and reduced Accounts generate](#2026-10-12-policies-and-reduced-accounts-generate).
 
@@ -1451,7 +1451,7 @@ matching existing form and run its relevant checks instead of starting another C
 
 **Tooling — released CLI 0.7.0 and Skills 0.7.0.**
 
-- Existing apps: nothing to do; it affects First Draft's commands, not the app.
+- Existing apps: nothing to do; it affects only First Draft's commands.
 
 New remote work defaults to `https://firstdraft.com`. Requested
 staging work uses `firstdraft --staging ...` and `FIRSTDRAFT_STAGING_API_TOKEN`; production uses
