@@ -311,7 +311,9 @@ Entity has no Policy that fits.
 When the `create` Policy reads a parent the person picks on the form, such as `matches_policy` through `note.list`
 with a `note.list` input, the New page opens for anyone with at least one list that would pass, the list's select
 offers only those lists, and Create checks the list it is sent. The Policy class gets `def new?` and
-`relation_scope(:list_choices)` for it. For a record added from its parent's page, see `create_form` under [Used
+`relation_scope(:list_choices)` for it. This holds for one offered parent, or several joined by `and`; two offered
+parents under `or` get nothing derived, and New asks the rule as under
+[Analysis does not catch](#analysis-does-not-catch). For a record added from its parent's page, see `create_form` under [Used
 elsewhere in the Plan](#used-elsewhere-in-the-plan).
 
 | Key | Required | Values | Default | Generates |
@@ -570,7 +572,8 @@ These pass analysis as `valid`:
 - **A gate on a list, with a record's Policy on the record's page.** The list shows every record to anyone the gate
   admits; the titles they may not open appear without a link.
 - **A New page whose `create` rule reads a value the empty record does not have yet.** New opens when the rule reads
-  a parent the form offers, as under [Keys](#keys). For any other rule, New asks the rule about the empty record. A
+  one parent the form offers, or several joined by `and`, as under [Keys](#keys). For any other rule, two offered
+  parents under `or` included, New asks the rule about the empty record. A
   rule that needs a value the form sets, such as a Field the person types or an editable Reference that must equal
   `current_account`, denies it: the New link is hidden, and the New page answers 403 to everyone. A submitted Create
   still works. Add such records through the parent page's `create_form`, or bind the Reference with `bindings`.

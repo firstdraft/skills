@@ -669,7 +669,8 @@ When generated code fails in a way the README does not list, send one `report fa
 when you stop trying: `--kind setup_failure` when `bin/setup` fails, `spec_failure` for a failing example that
 Behavior to write does not name, `boot_error` when the app does not boot, and `lint_failure` when a lint fails on
 generated code. Add what you have of `--rerun` with the RSpec command, `--error-class`, `--frame` for each of the
-app's own frames, `--message`, `--fix-summary`, `--ruby-version`, and `--rails-version`. Pass only text that may
+app's own frames as a path from the app's root, such as `app/models/movie.rb:12`, `--message`, `--fix-summary`,
+`--ruby-version`, and `--rails-version`. Pass only text that may
 leave the machine: never file contents, secrets, tokens, or the person's data. The CLI prints what it sends, and
 names on a `Left out:` line each field it left out because it did not fit that field's shape.
 
@@ -731,8 +732,9 @@ PUT may have been accepted but its response could not be verified, so local stat
 command once more, with the same options and environment. If First Draft accepts it, carry on. If it answers
 `server_rejected` with status `412` (`precondition_failed`), the first push may have landed, or another copy of the
 Project pushed. When another copy holds newer work, continue from that copy. Otherwise tell the person, and with
-their agreement start a new Project from this Plan: run `plan init` in a new folder, copy the old
-`.firstdraft/foundation-plan.json` over the new one, and push from there to the old Project's origin. A new folder
+their agreement start a new Project from this Plan: in a new folder, run
+`firstdraft_cli plan init --name "<application.name>" --application-key <application.key>` with the old Plan's values,
+copy the old `.firstdraft/foundation-plan.json` over the new one, and push from there to the old Project's origin. A new folder
 has no pinned origin, so its push goes to production unless you select the old one: read only `api_url` from the
 old `.firstdraft/state.json`, or use the origin the first push used when it saved none, and pass `--staging` for
 staging or the same `FIRSTDRAFT_API_URL` for a custom origin. Never manufacture an ETag or edit

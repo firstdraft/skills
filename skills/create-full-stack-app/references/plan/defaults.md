@@ -272,8 +272,8 @@ it to your own list.
 
 These pass analysis as `valid` and show up only as a gap:
 
-- **A literal that does not fit**, from the [Literal values](#literal-values) table. `"25.00"` on a money Field is
-  the usual case.
+- **A literal that does not fit**, from the [Literal values](#literal-values) table, except an enum key outside the
+  Field's values, which is rejected. `"25.00"` on a money Field is the usual case.
 - **An environment value on the wrong type**, such as `current_time` on a `date` or `short_text` Field.
 - **A Reference default that cannot work**: a `reference_record` naming a record that does not exist,
   `current_account` on a Reference whose target is not the Account Entity or in a Plan with no Account, or
