@@ -242,12 +242,12 @@ function splitProgressOutput(stderr) {
 }
 
 export const updateUrl = "https://firstdraft.com/update";
-// SemVer 2.0.0, as the CLI reads and prints it, and a URL origin as Node.js normalizes it.
+// SemVer 2.0.0, as the CLI reads and prints it. The origin is checked by isCliOrigin below.
 const identifier = String.raw`(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)`;
 const versionPattern =
   String.raw`(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-${identifier}(?:\.${identifier})*)?` +
   String.raw`(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?`;
-const originPattern = String.raw`https?://(?:[a-z0-9._-]+|\[[0-9a-f:.]+\])(?::\d{1,5})?`;
+const originPattern = String.raw`(?<origin>\S+)`;
 const updateSteps = updateUrl.replaceAll(".", String.raw`\.`);
 // A network command writes at most one of these, just before its result, from First Draft's version headers. The
 // CLI owns the wording, in its src/service-client.js.
@@ -270,7 +270,20 @@ export function isVersionLine(line) {
   if (!line.startsWith("First Draft: ")) return false;
 
   const message = line.slice("First Draft: ".length);
-  return versionLinePatterns.some((pattern) => pattern.test(message));
+  return versionLinePatterns.some((pattern) => {
+    const match = pattern.exec(message);
+    return match !== null && (match.groups?.origin === undefined || isCliOrigin(match.groups.origin));
+  });
+}
+
+// An origin the CLI accepts and prints: HTTPS, or HTTP on a loopback host, in URL's normalized form
+// (src/plan-state.js).
+function isCliOrigin(text) {
+  if (!URL.canParse(text)) return false;
+
+  const url = new URL(text);
+  const loopbackHttp = url.protocol === "http:" && ["127.0.0.1", "localhost", "[::1]"].includes(url.hostname);
+  return (url.protocol === "https:" || loopbackHttp) && url.origin === text;
 }
 
 function isSafeProgressMessage(line) {

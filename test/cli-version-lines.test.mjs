@@ -24,6 +24,8 @@ test("the CLI's update and stop lines are recognized exactly", () => {
       "before the next one.",
     "First Draft: First Draft at https://qa_1.example serves API contract 0.8.4, which is older than CLI 0.9.0 " +
       "accepts. This command finished; use the CLI version that this First Draft origin supports before the next one.",
+    "First Draft: First Draft at https://qa~blue.example serves API contract 0.8.4, which is older than CLI 0.9.0 " +
+      "accepts. This command finished; use the CLI version that this First Draft origin supports before the next one.",
   ]) {
     assert.equal(isVersionLine(line), true, line);
   }
@@ -43,6 +45,12 @@ test("other update and stop wording is not a recognized line", () => {
     `First Draft: an update is available (plugin 0.9.4; this setup has plugin 0.9.3). Tell the person the update steps are at ${steps} `,
     `First Draft: an update is available (plugin 00.9.4; this setup has plugin 0.9.3). Tell the person the update steps are at ${steps}`,
     `First Draft: an update is available (plugin 0.9.4-a..b; this setup has plugin 0.9.3). Tell the person the update steps are at ${steps}`,
+    "First Draft: First Draft at https://example.test:99999 serves API contract 0.8.4, which is older than CLI 0.9.0 " +
+      "accepts. This command finished; use the CLI version that this First Draft origin supports before the next one.",
+    "First Draft: First Draft at http://example.test serves API contract 0.8.4, which is older than CLI 0.9.0 " +
+      "accepts. This command finished; use the CLI version that this First Draft origin supports before the next one.",
+    "First Draft: First Draft at https://Example.test serves API contract 0.8.4, which is older than CLI 0.9.0 " +
+      "accepts. This command finished; use the CLI version that this First Draft origin supports before the next one.",
   ]) {
     assert.equal(isVersionLine(line), false, line);
   }
