@@ -16,7 +16,11 @@ server Publication. Only `create-full-stack-app` is packaged; the UI Skill audit
 Trying First Draft as a tester? Start with the
 [local development guide](https://firstdraft.github.io/firstdraft/docs/guides/local-app.html). Start in an empty
 local folder; a Drawing Board clone and GitHub push are unnecessary. The
-[Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft) is the Codespaces fallback.
+[Drawing Board guide](https://github.com/firstdraft/drawing-board#readme) is the Codespaces fallback. If you built
+an app with First Draft before, start a new one. Keep an earlier app only if it has real work in it, is deployed, or
+has users; for that app, give your agent the prompt under [Reviewing updates](CHANGELOG.md#reviewing-updates). When
+First Draft says your plugin is out of date, [Update First Draft](https://firstdraft.com/update) has the steps for
+each setup.
 
 ## What this repository owns
 
@@ -69,8 +73,13 @@ configuration directory, so Claude Code, Codex CLI, and desktop sessions all use
 authentication interrupts an already requested operation, log in and tell the same conversation to continue. Approve the specific CLI command when
 Codex requests network access; its tool permission is separate from approval of the Plan and Compile mode.
 
+Login prints a link: open it, sign in with GitHub, and approve. The first time, First Draft asks you to agree to its
+terms of service and privacy notice, and once whether your coding agent may send it progress and failure reports.
+Change that answer, or delete your account, at [firstdraft.com/account](https://firstdraft.com/account). Each account
+can start 50 Compilations and create 20 new Projects in any 24 hours; past that, First Draft says when to try again.
+
 For the Codespaces fallback, Drawing Board already has the Skill and CLI installed. Follow the
-[workspace sign-in and start instructions](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
+[workspace sign-in and start instructions](https://github.com/firstdraft/drawing-board#readme).
 Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
 conversation, run `codex resume` from the same workspace root.
 
