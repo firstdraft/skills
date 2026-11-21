@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "3ab4691abf6b2d310693149fb3c4dc9903ff5446";
+export const cliRevision = "5c08e8593a98216da4c545da5ffed01f69bf52b5";
 export const cliRuntimeSha256 =
-  "6a7622d27db851f7250479cb678c67c6627bb65fd68843782b93a3fbcbbcc36c";
+  "262df88b44cf0152776cdda0f4eea078febe8a40ff5dff6da828a2d3ce3fd1ec";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.9.0";
+export const cliPackageVersion = "0.10.0";
 
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
@@ -46,9 +46,9 @@ export const [foundationPlanFormat] = JSON.parse(
   readFileSync(new URL("../../release/compatibility.json", import.meta.url), "utf8"),
 ).requires.foundation_plan_formats;
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-10-20-rails-8-1-4";
+  "foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4";
+  "foundation-plan-rails/compiler-application-2026-11-21-rails-sketch-2026-11";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-11",

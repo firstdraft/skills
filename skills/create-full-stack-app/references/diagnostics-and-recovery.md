@@ -9,8 +9,8 @@ require the remainder to be one JSON object. An unrecognized prefixed line, a pr
 other prefix or suffix, and any interleaved output fail closed. Branch on the object's stable `error` and structured
 fields rather than the human-readable `detail` or broad process exit status.
 
-This plugin bundles `@firstdraft.com/cli@0.9.0`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.9.3/script/cli-contract/config.mjs)
+This plugin bundles `@firstdraft.com/cli@0.10.0`. Its exact reviewed revision and runtime digest are owned by
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.10.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag. Check the command surface rather than assuming the version alone
 establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
 staging compatibility, or a complete user journey.
@@ -47,7 +47,7 @@ Plans resumed without the flag.
 Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
 or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the token `firstdraft login` saved for that
 origin. The CLI never sends one environment's credential to another. The usual setup is one login per environment,
-which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.9.0 login`, with `--staging` added for
+which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.10.0 login`, with `--staging` added for
 staging, or `firstdraft login` from an installed CLI. It prints a URL to approve in a browser; on a machine without
 one, `--interactive` shows a device code to approve elsewhere. The login is saved outside the project, so every
 session and client on the machine shares it.

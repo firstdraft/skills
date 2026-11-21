@@ -63,6 +63,7 @@ missing from this list sorts by that date.
 
 | Release | In use from |
 | --- | --- |
+| `2026-11-21-rails-sketch-2026-11` | 2026-11-21 |
 | `2026-11-17-gem-advisories` | 2026-11-20 |
 | `2026-11-13-events-listed` | 2026-11-17 |
 | `2026-11-12-forged-ip-headers` | 2026-11-12 |
@@ -92,6 +93,123 @@ missing from this list sorts by that date.
 | `2026-10-03-accounts-without-verification` | 2026-10-04 |
 | `2026-10-03-workshop-core` | 2026-10-03 |
 | `2026-09-29-skipped-data-defaults` | 2026-10-01 or earlier |
+
+## 2026-11-21: "The author, or any admin" is a rule the Plan states
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: optional, when the app has an `owner` Policy that says "the author, or any admin". The code to
+  write is below.
+- Compiler: release `2026-11-21-rails-sketch-2026-11`, in use on firstdraft.com from 2026-11-21.
+
+A record's rule can now ask a Policy of the Account Entity about the person signed in, as one branch of the rule:
+`{"kind": "matches_policy", "record": {"kind": "environment", "name": "current_account"}, "policy": "user.admins_only"}`.
+"The author, or any admin" and "published ones, for anyone signed in" are then rules the Plan states, and Compile
+writes their rule, their scope, and their specs. Before, the Skill wrote each as an `owner` Policy, which denied
+everyone until it was written by hand. The Policies page shows both with the code they generate.
+
+A standalone New page whose create rule reads a parent the person picks on the form now opens for anyone with a
+parent that would pass, and its select lists only those parents. Before, it answered 403 to everyone.
+
+**Writing it in an existing app.** Replace the stub rule and scope in `app/policies/<entity>_policy.rb` with the
+code a new app gets, here for a note's `manage` Policy and a `user.admins_only` gate whose rule is `administer?`:
+
+```ruby
+def manage?
+  user&.id.present? &&
+    record.present? &&
+    (record.author_id == user.id || allowed_to?(:administer?, user, with: UserPolicy))
+end
+
+relation_scope(:manage) do |relation|
+  if user&.id.present?
+    relation.where(author_id: user.id)
+      .or(allowed_to?(:administer?, user, with: UserPolicy) ? relation : relation.none)
+  else
+    relation.none
+  end
+end
+```
+
+**Check.** Replace the placeholder example in `spec/policies/<entity>_policy_spec.rb` with cases for the author, an
+admin on another person's record, another account, and a guest, and run `bundle exec rspec`.
+
+## 2026-11-21: Buttons for State Machine events
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: optional. An app compiled earlier lists each event that nothing fires under "Behavior to write";
+  write its route, action, and button as that entry and the Skill's State Machine page describe.
+- Compiler: release `2026-11-21-rails-sketch-2026-11`, in use on firstdraft.com from 2026-11-21.
+
+A State Machine transition can say who fires its event from the record's page: `"authorization": "public"`, a Policy
+of its own Entity, or a gate on the Account Entity with `record`, the values a Scaffold part takes. Compile then
+writes a `patch` member route, an action that checks the Policy and locks the record, a button on the details page,
+and request specs. The Skill now gives every event a person presses an `authorization`, and leaves it out only for an
+event that a job or other code fires.
+
+## 2026-11-21: Analysis reports mistakes that used to pass
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: nothing to do. An app keeps the code it was compiled with. A Plan pushed again may now report an
+  error that it did not before; make the edit its message names.
+- Compiler: release `2026-11-21-rails-sketch-2026-11`, in use on firstdraft.com from 2026-11-21.
+
+These were silent, or broke the Compile, and are now analysis errors whose messages name the edit:
+
+- a name that names nothing, wherever it is written, such as a misspelled Policy, Predicate, Ordering, Field, or
+  Association on a page;
+- two Policies with one operation on an Entity;
+- an enum default that is not one of the Field's values;
+- an Entity key whose controller, route, or Policy class the generated app already has, such as `page`, `term`, or
+  `root` with pages, and a Field key that is a Ruby keyword, such as `when`;
+- a required enum or boolean Account Field that sign-up neither lists nor fills, which would let each person pick
+  their own value, such as `admin`.
+
+A required Reference or upload that sign-up cannot supply still passes, with a warning, and the app gets a failing
+example in its registration spec until the agent writes how a new Account gets it.
+
+## 2026-11-21: Target profile rails-sketch/2026-11
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: cannot be adopted by hand as a whole. A Project created under `rails-sketch/2026-10` can no longer
+  be analyzed or compiled: start a new Project for the app's Plan, as the Skill's "Retired target profile" section
+  says, and bring changes into the existing app by hand. Two parts are small enough to adopt, below.
+- Compiler: release `2026-11-21-rails-sketch-2026-11`, in use on firstdraft.com from 2026-11-21.
+
+Generated apps adopt the current foundation-rails-core: background jobs, Action Cable, and the cache run inside the
+app's process, and the health check is `/up`. Account email is sent inside the request that asks for it, so until a
+mail provider is configured, a deployed app answers each request that sends mail with the error page. Passwords need 8
+characters, where they needed 15. A signed-out visitor who opens a list that only signed-in people can pass is sent to
+sign in; a list with a branch a guest passes, such as published records, still lists.
+
+**Adopting two parts by hand.** For the shorter passwords, change `password_minimum_length 15` to
+`password_minimum_length 8` in `app/misc/rodauth_main.rb`. For the sign-in redirect, add
+`before_action :authenticate, only: %i[index]` to the controller of each list whose rule needs a signed-in person,
+and change its "index prevents a guest from accessing protected records" request example to expect a redirect to
+`/login`.
+
+**Check.** `bundle exec rspec` passes.
+
+## 2026-11-21: Update notices, daily limits, and agent reports
+
+**Skills — released in plugin 0.10.0.**
+
+- Existing apps: nothing to do. Update the First Draft plugin with the steps at <https://firstdraft.com/update>.
+
+The plugin bundles CLI 0.10.0, which needs First Draft API 0.9, and passes it the plugin version and the agent's
+name. First Draft names the latest and minimum plugin on every answer. When this setup is older than the latest, a
+command prints one line saying an update is available; below the minimum, it stops with `update_required`. An
+account can start 50 Compilations and create 20 new Projects in any 24 hours; past that, the CLI ends with
+`rate_limited` and the time to try again, and the Skill tells the person and stops. After an ambiguous push or
+Compile, the agent runs the same command once more instead of stopping. When the person said yes to reports while
+approving `login`, the agent sends progress reports at five steps of the first run and a failure report for an
+unexpected failure in generated code; each report command checks the answer first and prints what it sends.
+
+The format stays `firstdraft.foundation-plan.sketch/0.23`. The two new Plan keys are optional, so a Plan that
+validated before still validates.
 
 ## 2026-11-20: Security advisories in an app's dependencies
 

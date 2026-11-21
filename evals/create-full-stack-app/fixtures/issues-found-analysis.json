@@ -7,8 +7,8 @@
     "id": "01900000-0000-7000-8000-000000000901",
     "graph_version": 1,
     "head_source_sha256": "f9331ef6c5427a67c8e4cdb02c5a00ac50bee5b7cbcb24451c96857802deaf3e",
-    "analyzer_release": "foundation-plan-rails/application-2026-10-20-rails-8-1-4",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4",
+    "analyzer_release": "foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-11-21-rails-sketch-2026-11",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-11"
