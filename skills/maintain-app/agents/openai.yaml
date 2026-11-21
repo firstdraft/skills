@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain an app with First Draft"
+  short_description: "Work through a running app's open errors"
+  default_prompt: "Use $maintain-app to review my app's open First Draft items, fix what you can with tested pull requests, and tell me what needs me."
