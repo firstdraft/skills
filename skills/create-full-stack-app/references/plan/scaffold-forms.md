@@ -445,7 +445,9 @@ standalone New page, and `_new_<parent>_form` for an Add form, such as `tasks/_n
 - **A Delete button without the record's page.** With `destroy` and no `show`, the route exists and nothing links
   to it; no gap is reported. Select `show` too.
 - **A different rule for New than for Create.** Both use `create.authorization`, checked after bindings and before
-  the person types. A rule that tests an input the person fills, such as a chosen Reference, denies the New page.
+  the person types. The one exception is a rule that writes the condition on the parent the form offers inline, which
+  gets a New permission of its own; any other rule that tests an input the person fills denies the New page, as
+  [Policies](policies.md#keys) describes.
 
 ## Analysis does not catch
 

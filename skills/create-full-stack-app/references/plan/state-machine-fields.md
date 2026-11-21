@@ -141,9 +141,12 @@ def cancel
   @expense = Expense.find(params.expect(:id))
   authorize! @expense, to: :manage?, with: ExpensePolicy
   @expense.cancel!
-  …
+  redirect_to expense_path(@expense), status: :see_other,
+    success: t(".success")
 rescue AASM::InvalidTransition
   redirect_to expense_path(@expense), alert: t(".refused"), status: :see_other
+rescue ActiveRecord::RecordInvalid => error
+  redirect_to expense_path(@expense), alert: error.record.errors.full_messages.to_sentence, status: :see_other
 end
 
 # app/models/expense.rb
@@ -211,9 +214,10 @@ README.md lists it under "Behavior to write", in "Rules": "**`Task#complete!`** 
 `status` from `open` to `done` and sets `completed_at` to the current time, as the transition `task.status.complete`
 … says. Its `owner` description says the rest: Only when none of the task's checklist items is open. Until then,
 `complete!`, `complete`, and `may_complete?` raise. Add `event :complete` to the `aasm :status` block and delete the
-three stub methods below it." As for every event, it also lists `Task#complete!` in "Pages and actions", for what
-fires it. The transition's only gap record is `foundation_plan.gap.state_transition_control.not_generated`, which
-every transition has; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`.
+three stub methods below it." As for every event without a button, it also lists `Task#complete!` in "Pages and
+actions", for what fires it. The transition's only gap record is
+`foundation_plan.gap.state_transition_control.not_generated`, which every transition without a button has; each effect
+beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`.
 
 ## Keys
 
@@ -248,7 +252,7 @@ A State Machine Field takes no `default` and no `immutable`; analysis rejects ei
 | `to` | yes | one state key | | `to: :done`. |
 | `effects[]` | no | `{"kind": "set_field", "field": "<entity>.<field>", "value": …}` | none | One effect that sets an optional `datetime` Field on the same record to `{"kind": "environment", "name": "current_time"}` or `{"kind": "literal", "value": null}` gives `after: -> { self.completed_at = Time.current }`. Any other effect, or a second one, makes the whole event a [stub](#not-generated). |
 | `authorization` | no | `"public"`, `{"policy": "<entity>.<key>"}`, or the same with `"record": {"kind": "environment", "name": "current_account"}` | none | A button on the details page, a `patch` member route, an action, and request specs; see [Who fires an event from its page](#who-fires-an-event-from-its-page). Left out: no button, and README.md lists the event for you to wire up. |
-| `owner` | no | `{"description": "<a sentence or two>"}`, beside `from` and `to`; `effects` may stay beside it | none | The event as a stub: its bang method, its non-bang form, and its `may_` predicate raise `NotImplementedError`. README.md lists it under "Behavior to write" with the description, and the state machine spec gets a placeholder example. The transition's only gap record is `foundation_plan.gap.state_transition_control.not_generated`, which every transition has; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`. Use it for an effect or a condition the Plan cannot state; see [Not generated](#not-generated). |
+| `owner` | no | `{"description": "<a sentence or two>"}`, beside `from` and `to`; `effects` may stay beside it | none | The event as a stub: its bang method, its non-bang form, and its `may_` predicate raise `NotImplementedError`. README.md lists it under "Behavior to write" with the description, and the state machine spec gets a placeholder example. The transition's only gap record is `foundation_plan.gap.state_transition_control.not_generated`, which every transition without a button has, and an `owner` event never has one; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`. Use it for an effect or a condition the Plan cannot state; see [Not generated](#not-generated). |
 
 ## Method names
 
@@ -612,7 +616,7 @@ Plan change reaches that app only when you copy it across.
   Then make its examples in the state machine spec pass, and replace any placeholder example there with one that
   checks what the description asks for.
 - **To let people fire an event that has no button,** give its transition `authorization` for the next Compile. In
-  the app you have, copy a generated event's `patch` member route, action, and `button_to`, then replace the
-  event's placeholder example with a real one. A generated controller declares `verify_authorized` when one of its
-  pages uses a Policy; then every new action must call `authorize!`, or be added to its
-  `skip_verify_authorized only: %i[…]` line.
+  the app you have, add the route, action, button, and locale keys that a new app gets, as
+  [Who fires an event from its page](#who-fires-an-event-from-its-page) shows them, and as the
+  [changelog's steps for an existing app](https://github.com/firstdraft/skills/blob/main/CHANGELOG.md#2026-11-21-buttons-for-state-machine-events)
+  give them in full, with the check. Then replace the event's placeholder example with a real one.

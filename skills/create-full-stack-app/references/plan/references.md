@@ -423,9 +423,6 @@ These pass analysis as `valid`:
   the New page renders but every save fails "must exist" (`foundation_plan.gap.scaffold.route.partially_generated`).
   README.md lists the create under "Behavior to write", in Pages and actions, and the missing request specs under
   "Test coverage to complete". Add the input, or a binding.
-- **A Reference input written as `{"field": "task.project"}`.** The input is dropped with the misleading gap
-  `foundation_plan.gap.service.unsupported_capability`, and for a required Reference the create cannot save. Write
-  `{"association": "task.project"}`.
 - **A Reference key ending in `_id`.** `project_id` gives the column `project_id_id` and `belongs_to :project_id`.
 - **An example record that leaves out a required Reference.** The record is dropped
   (`foundation_plan.gap.development_data.record.not_generated`), and records that point at it are dropped with it.
@@ -433,7 +430,8 @@ These pass analysis as `valid`:
 Analysis rejects: `realization` on one target or its absence on several (`foundation_plan.schema.not`,
 `foundation_plan.schema.required`); a required Reference with `nullify_reference` (`foundation_plan.schema.not`);
 an unknown target (`foundation_plan.reference.target_not_found`); a form input written as
-`{"reference": "<entity>.<key>"}` (`foundation_plan.schema.additionalProperties`); a key shared with a Field
+`{"reference": "<entity>.<key>"}` (`foundation_plan.schema.additionalProperties`), or as `{"field": "task.project"}`
+(`foundation_plan.link.field_not_found`, since no Field has that path; write `{"association": "task.project"}`); a key shared with a Field
 (`foundation_plan.identity.generated_member_collision`); an example record pointing at a record of another Entity
 (`foundation_plan.data.reference_target_entity_incompatible`); and a Predicate `reference_record` that names an
 example record rather than [reference data](reference-data.md)

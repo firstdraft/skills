@@ -362,7 +362,7 @@ until one says reports are off.
 1. Run setup and the specs, as the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) says.
 2. Tell the user what there is to write, one line per item: each entry under the README's "Behavior to write",
    each placeholder example, each item a page told you to add to your own list, and each step the user described
-   that no generated page performs, such as approving a request. Also say what its "What you supply" section
+   that no generated page performs, such as sending a reminder. Also say what its "What you supply" section
    asks of them.
 3. Write every item and fill in every placeholder example until the specs pass, telling the user in one line as
    each is finished.

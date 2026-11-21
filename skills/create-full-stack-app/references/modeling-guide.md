@@ -549,8 +549,8 @@ Write it for a reader who is not technical, in this order:
    the app does instead, for example "Descriptions are stored as plain text; formatting isn't generated yet" or
    "The rule that usernames can't be admin isn't generated yet; any username is accepted". Use one line per group
    rather than one per record, and say that you will write each group, and every `owner` subject, in Rails before
-   the first preview. Include each step the user described that no generated page performs, such as approving a
-   request; analysis lists no gap for it.
+   the first preview. Include each step the user described that no generated page performs, such as sending a
+   reminder email; analysis lists no gap for it.
 3. What is built otherwise: outstanding implementation notes and any part of the idea outside First Draft, each
    with where it will be built, and how the selected output mode carries the notes forward.
 4. Feasibility findings and open questions, with sources for what research found. Leave out a list with nothing

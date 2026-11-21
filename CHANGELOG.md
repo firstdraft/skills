@@ -140,8 +140,8 @@ admin on another person's record, another account, and a guest, and run `bundle 
 
 **Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
 
-- Existing apps: optional. An app compiled earlier lists each event that nothing fires under "Behavior to write";
-  write its route, action, and button as that entry and the Skill's State Machine page describe.
+- Existing apps: optional. An app compiled earlier lists each event that nothing fires under "Behavior to write".
+  To give one a button, follow the steps below.
 - Compiler: release `2026-11-21-rails-sketch-2026-11`, in use on firstdraft.com from 2026-11-21.
 
 A State Machine transition can say who fires its event from the record's page: `"authorization": "public"`, a Policy
@@ -151,6 +151,86 @@ and request specs, when the Entity has a details page, First Draft writes the ev
 stubbed event, such as one marked `owner`, gets no button; the README says who may fire it, for the agent to add.
 The Skill now gives every event a person presses an `authorization`, and leaves it out only for an event that a job
 or other code fires.
+
+**Adding a button in an existing app.** These are the lines a new app gets for an expense's `cancel` event on
+`expense.status`, which the expense's own Policy `manage?` guards. Use your Entity, event, and Policy in their place.
+
+1. In `config/routes.rb`, give the resource a member route:
+
+   ```ruby
+   resources :expenses do
+     member do
+       patch :cancel
+     end
+   end
+   ```
+
+2. In `app/controllers/expenses_controller.rb`, add the action. Look the record up as the `show` action does; here
+   `show` is public, so `Expense.find` is the lookup.
+
+   ```ruby
+   def cancel
+     @expense = Expense.find(params.expect(:id))
+     authorize! @expense, to: :manage?, with: ExpensePolicy
+     @expense.cancel!
+     redirect_to expense_path(@expense), status: :see_other,
+       success: t(".success")
+   rescue AASM::InvalidTransition
+     redirect_to expense_path(@expense), alert: t(".refused"), status: :see_other
+   rescue ActiveRecord::RecordInvalid => error
+     redirect_to expense_path(@expense), alert: error.record.errors.full_messages.to_sentence, status: :see_other
+   end
+   ```
+
+   For an event that a gate on the Account Entity guards, drop the `authorize!` line and run the gate first:
+   `before_action :authorize_administer, only: %i[cancel]`, with a private method that calls
+   `authorize! current_account, to: :administer?, with: UserPolicy`, as the controller's other gated actions do.
+
+3. In `app/models/expense.rb`, add `requires_lock: true` to the machine, so that each bang method locks and
+   reloads its record: `aasm :status, column: :status, no_direct_assignment: true, requires_lock: true do`. Save a
+   record's other changes before you call a bang method on it.
+
+4. In `app/views/expenses/_expense.html.erb`, add the button to the record toolbar. For a gate, ask
+   `allowed_to?(:administer?, current_account, with: UserPolicy)` in place of the Policy:
+
+   ```erb
+   <% if expense.may_cancel? && allowed_to?(:manage?, expense, with: ExpensePolicy) %>
+     <%= button_to t(".events.cancel"), cancel_expense_path(expense),
+       method: :patch, class: "btn" %>
+   <% end %>
+   ```
+
+5. In `config/locales/scaffolds.en.yml`, add the label and the two messages:
+
+   ```yaml
+   en:
+     expenses:
+       expense:
+         events:
+           cancel: Cancel
+       cancel:
+         success: Status changed to Cancelled.
+         refused: Cancel is not available for this expense in its current state.
+   ```
+
+**Check.** Replace the event's placeholder example, "a caller fires expense.status.cancel", in
+`spec/models/expense_state_machine_spec.rb` with a request example in `spec/requests/expenses_spec.rb`, as a new app
+writes it:
+
+```ruby
+it "cancel moves status from submitted to cancelled" do
+  user = create(:user)
+  record = create(:expense, submitter: user)
+  post "/login", params: {email: user.email, password: "a sufficiently long password"}
+  expect(response).to have_http_status(:redirect)
+  patch cancel_expense_path(record)
+  expect(response).to redirect_to(expense_path(record))
+  expect(flash[:success]).to be_present
+  expect(record.reload.status).to eq("cancelled")
+end
+```
+
+Run `bundle exec rspec`, and remove the event's entry from the README's "Behavior to write".
 
 ## 2026-11-21: Analysis reports mistakes that used to pass
 
@@ -191,8 +271,8 @@ new account has the ordinary role, and run `bundle exec rspec`.
   says, and bring changes into the existing app by hand. Two parts are small enough to adopt, below.
 - Compiler: release `2026-11-21-rails-sketch-2026-11`, in use on firstdraft.com from 2026-11-21.
 
-Generated apps adopt the current foundation-rails-core: background jobs, Action Cable, and the cache run inside the
-app's process, and the health check is `/up`. Account email is sent inside the request that asks for it, so until a
+The Rails app shell that every generated app starts from now runs background jobs, Action Cable, and the cache
+inside the app's process, and its health check is `/up`. Account email is sent inside the request that asks for it, so until a
 mail provider is configured, a deployed app answers each request that sends mail with the error page. Passwords need 8
 characters, where they needed 15. A signed-out visitor who opens a list that only signed-in people can pass is sent to
 sign in; a list with a branch a guest passes, such as published records, still lists.
@@ -533,6 +613,11 @@ to write section:
 
 **Skills — released in plugin 0.9.3.**
 
+- Replaced: the `owner` Policy for "the author, or any admin", by [2026-11-21: "The author, or any admin" is a rule the
+  Plan states](#2026-11-21-the-author-or-any-admin-is-a-rule-the-plan-states); what fires a State Machine event, by
+  [2026-11-21: Buttons for State Machine events](#2026-11-21-buttons-for-state-machine-events); and the sign-up warning
+  for an unlisted required enum or boolean Account Field, now an error, by [2026-11-21: Analysis reports mistakes that
+  used to pass](#2026-11-21-analysis-reports-mistakes-that-used-to-pass).
 - Existing apps: nothing to do. An app whose `AGENTS.md` says nothing about failing specs can add the text in
   [2026-11-20: Spec guidance for an AGENTS.md from early
   October](#2026-11-20-spec-guidance-for-an-agentsmd-from-early-october); that is optional.
@@ -643,6 +728,8 @@ end
 
 **Skills — released in plugin 0.9.2.**
 
+- Replaced: "no generated page has a button for it yet", by [2026-11-21: Buttons for State Machine
+  events](#2026-11-21-buttons-for-state-machine-events).
 - Existing apps: nothing to do.
 
 The Skill now handles each product decision the way a consultant developer
@@ -700,6 +787,8 @@ to one.
 - Compiler: release `2026-10-20-rails-8-1-4`, in use on firstdraft.com from 2026-10-20.
 - Corrected: the Rails update fixes published advisories, by [2026-11-20: Rails 8.1.4.1 is a
   security update](#2026-11-20-rails-8141-is-a-security-update).
+- Replaced: the current target profile, by [2026-11-21: Target profile
+  rails-sketch/2026-11](#2026-11-21-target-profile-rails-sketch2026-11).
 
 Once the First Draft service deploys the matching Compiler, generated apps use
 Rails 8.1.4 under the new target profile `rails-sketch/2026-10`. The plugin bundles CLI 0.9.0, which needs First Draft
@@ -815,6 +904,8 @@ describes the limit and how to key it by email as well. The Skill's Accounts tex
 
 **Skills — released in plugin 0.8.15.**
 
+- Replaced: "no generated page fires an event", by [2026-11-21: Buttons for State Machine
+  events](#2026-11-21-buttons-for-state-machine-events).
 - Existing apps: nothing to do. An app compiled earlier keeps such a machine as storage only, and its README lists no
   event to write.
 - Compiler: release `2026-10-12-state-scope-collisions`, in use on firstdraft.com from 2026-10-12.

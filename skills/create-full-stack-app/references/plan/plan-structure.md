@@ -183,9 +183,10 @@ letters.
 
 An unknown path is rejected with a `foundation_plan.link.*_not_found` code at its JSON pointer, such as
 `/application/entities/0/primary_descriptor/field`, wherever it is written, a Scaffold's `predicate`, `ordering`,
-`authorization`, inputs, and projection items included. The message names the path, where it is written, and the
-names that exist there, such as "The only Field of "book" is "book.title"": change the path to one of them, or add
-what it means. Diagnostics locate problems by JSON pointer into the file you pushed.
+`authorization`, inputs, and projection items included, as for a Reference input written as `{"field":
+"task.project"}`. The message names the path, where it is written, and the names that exist there, such as "The only
+Field of "book" is "book.title"": change the path to one of them, or add what it means. Diagnostics locate problems by
+JSON pointer into the file you pushed.
 
 ## What analysis reports
 

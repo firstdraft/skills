@@ -413,8 +413,8 @@ A later Compile does not touch the app you already have. It writes a complete ne
 refuses a folder that already holds a compiled app. Code you wrote after Compile is never overwritten; a later
 Plan change reaches that app only when you copy it across.
 
-- **In the Plan:** renaming a `key` renames the scope. Change every path that names it in the same push; a list or
-  related list that still names the old path silently loses its filter.
+- **In the Plan:** renaming a `key` renames the scope. Change every path that names it in the same push; analysis
+  rejects a list or related list that still names the old path (`foundation_plan.link.predicate_not_found`).
 - **After Compile:** to write a stub, replace the `Kernel.raise` body in `app/models/<entity>.rb`, and replace the
   placeholder example in `spec/models/<entity>_spec.rb` with one that has a record the scope includes and a record
   it excludes. When a Policy reads the Predicate, the model also has a `?` method stub; write it to accept exactly
