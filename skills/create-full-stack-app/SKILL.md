@@ -81,7 +81,7 @@ Lists, filters, and pages:
 People, access, and the app:
 
 - [Accounts](references/plan/accounts.md): `account`, sign-up, sign-in, reset, `/account`, demo logins.
-- [Policies](references/plan/policies.md): who may see, add, change, delete; gates, `owner`; before any authorization.
+- [Policies](references/plan/policies.md): who may see, add, change, delete; gates; "or any admin"; before any authorization.
 - [Appearance](references/plan/appearance.md): `theme`, `tint_color`, icons; dark mode, brand colors, app icons.
 - [Native apps](references/plan/native-apps.md): `native.ios`, `native.android`, tabs, Revyl; iPhone and Android.
 - [Development data](references/plan/development-data.md): `development_data`, demo Accounts; preview samples.

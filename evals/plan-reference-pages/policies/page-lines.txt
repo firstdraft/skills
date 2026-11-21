@@ -1,2 +1,2 @@
-user&.admin? || (user&.id.present? && record&.author_id == user.id)
-next relation if user&.admin?
+user&.id.present? && record&.author_id == user.id && record.created_at > 1.hour.ago
+user&.id.present? ? relation.where(author_id: user.id, created_at: 1.hour.ago..) : relation.none

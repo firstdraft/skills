@@ -452,11 +452,13 @@ These pass analysis as `valid`:
 - **An `update` with no `inputs` and an `edit` route.** The Edit page is an empty form, and the generated parameter
   method is `params.expect(project: [])`. Leave `edit` and `update` out when nothing is editable.
 - **A standalone `create` with no `inputs`.** The New page is a form with only a submit button.
-- **A standalone `create` whose Policy reads a Reference the person picks,** such as a task whose rule asks about
-  its project, with `{"association": "task.project"}` as an input. The New page is checked before anything is
-  picked, so it answers 403 to everyone and its New link never shows. Analysis reports no gap; README.md lists the
-  missing New example under "Test coverage to complete". Offer the person to add the record from its parent's page
-  instead.
+- **A standalone `create` whose Policy reads a Field the person types,** or uses `not exists` over the parent the
+  form offers, or requires an editable Reference to equal `current_account`. The New page is checked before anything
+  is typed or picked, so it answers 403 to everyone and its New link never shows. Analysis reports no gap. Offer the
+  person to add the record from its parent's page instead, or bind the Reference. A rule that reads a parent the form
+  offers, such as a task whose rule asks about its project with `{"association": "task.project"}` as an input, opens
+  New for anyone with a project that would pass, and the select lists only those projects; see
+  [Policies](policies.md#keys).
 
 These pass as `valid` and are reported as gaps:
 

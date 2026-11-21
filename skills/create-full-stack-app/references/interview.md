@@ -142,7 +142,7 @@ Ask who can see and change each kind of record in one turn, as one grid filled i
 
 | | See | Add | Change | Delete |
 | --- | --- | --- | --- | --- |
-| Post | Anyone signed in | Anyone signed in | Its author | Its author |
+| Post | Anyone signed in | Anyone signed in | Its author | Its author, or any admin |
 | Comment | Anyone signed in | Anyone signed in | Its author | Its author, or the post's author |
 
 Ask what is wrong in it. A filled-in grid is easy to accept unread, so also ask two or three concrete cases where

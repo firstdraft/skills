@@ -103,11 +103,29 @@
     ],
     "policies": [
      {
-      "subject_uuid": "01a0caf3-0760-7000-8000-000000000008",
-      "key": "manage_own_or_admin",
+      "subject_uuid": "01a0caf3-0906-7000-8000-000000000001",
+      "key": "manage_own",
       "operation": "manage",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "association": "note.author"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "environment",
+        "name": "current_account"
+       }
+      }
+     },
+     {
+      "subject_uuid": "01a0caf3-0906-7000-8000-000000000002",
+      "key": "update_within_an_hour",
+      "operation": "update",
       "owner": {
-       "description": "The note's author, or any signed-in account whose admin Field is true."
+       "description": "The note's author, within one hour of creating the note."
       }
      }
     ],
@@ -123,7 +141,7 @@
      ],
      "index": {
       "authorization": {
-       "policy": "note.manage_own_or_admin"
+       "policy": "note.manage_own"
       },
       "projection": [
        {
@@ -133,7 +151,7 @@
      },
      "show": {
       "authorization": {
-       "policy": "note.manage_own_or_admin"
+       "policy": "note.manage_own"
       },
       "projection": [
        {
@@ -146,7 +164,7 @@
      },
      "create": {
       "authorization": {
-       "policy": "note.manage_own_or_admin"
+       "policy": "note.manage_own"
       },
       "inputs": [
        {
@@ -168,7 +186,7 @@
      },
      "update": {
       "authorization": {
-       "policy": "note.manage_own_or_admin"
+       "policy": "note.update_within_an_hour"
       },
       "inputs": [
        {
@@ -181,7 +199,7 @@
      },
      "destroy": {
       "authorization": {
-       "policy": "note.manage_own_or_admin"
+       "policy": "note.manage_own"
       }
      }
     }
