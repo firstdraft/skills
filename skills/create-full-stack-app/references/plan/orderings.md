@@ -344,13 +344,8 @@ These pass analysis as `valid`:
 - **A stub on a page.** The list or details page raises on every request until you write the scope. The gap at the
   page's `ordering` key says so, and README.md lists the scope under "Behavior to write" with the page that calls it;
   an `owner` Ordering has no gap, and README.md lists it the same way.
-- **A page that names an Ordering that does not exist, or one on another Entity.** The selection is dropped, and the
-  page sorts by `id`. `plan push` warns `foundation_plan.import.unsupported_capability` at the page's `ordering`
-  key, with the gap `foundation_plan.gap.service.unsupported_capability`, whose message does not mention the
-  Ordering. README.md lists it under "Behavior to write", in "Pages and actions", titled with that path, such as
-  `task.scaffold.index.ordering`, with the list's controller: "The Task index (`/tasks`) lists its records without
-  the sort the Plan names: First Draft did not import its `ordering`." It does not name the Ordering either, so
-  check every `ordering` against the Entity's Ordering keys.
+- **A page that names an Ordering of another Entity.** The sort is dropped, and the page sorts by `id`
+  (`foundation_plan.gap.ordering.not_generated`). A list takes its own Entity's Orderings.
 - **An Ordering with the same key as a [Predicate](predicates.md) on the Entity.** The Predicate keeps the scope
   name; the Ordering gets no scope at all, and a page that names it sorts by `id`. Give Orderings keys such as
   `by_title` or `newest_first`.
@@ -368,13 +363,15 @@ These pass analysis as `valid`:
   that ends "the surface falls back to id". Write the order in those controllers before the preview, or, for a
   cursor list, use page numbers.
 
-Analysis rejects, at import: a Field that does not exist or a Reference key in `field`
+Analysis rejects a page whose `ordering` names no Ordering (`foundation_plan.link.ordering_not_found`). Its message
+names the Orderings that exist, such as "The only Ordering of "task" is "task.by_title""; change the name to one of
+them. It also rejects, at import: a Field that does not exist or a Reference key in `field`
 (`foundation_plan.link.field_not_found`); a Field of another Entity
 (`foundation_plan.ordering.field_owner_incompatible`); a missing `direction`, a direction other than the two, `nulls`
 other than `"last"`, two identical terms, and an empty `terms` or `orderings` list (`foundation_plan.schema.*`). For
 `implicit_order_column` it rejects an optional Field (`foundation_plan.entity.implicit_order_field_optional`) and `id`
-before another term (`foundation_plan.entity.implicit_order_id_not_last`). An Ordering accepts `id` before another
-term and becomes a stub.
+before another term (`foundation_plan.entity.implicit_order_id_not_last`). An Ordering accepts `id` before another term
+and becomes a stub.
 
 ## Decisions to raise
 

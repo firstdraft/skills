@@ -72,7 +72,7 @@ as with an `immutable` Field, the views are `_new_form.html.erb` and `_edit_form
 | Key | Required | Values | Default | Generates |
 | --- | --- | --- | --- | --- |
 | `subject_uuid` | yes | UUIDv7 | | Nothing; keeps the Field's identity through renames. |
-| `key` | yes | lower snake case, `^[a-z][a-z0-9_]*$`, unique in the Entity | | The column and attribute name. Analysis rejects a key Rails already uses, such as `id`, `type`, `created_at`, `updated_at`, `class`, `hash`, `errors`, `attributes`, `save`, or `model_name` (`foundation_plan.identity.reserved_member_collision`). |
+| `key` | yes | lower snake case, `^[a-z][a-z0-9_]*$`, unique in the Entity | | The column and attribute name. Analysis rejects a key Rails already uses, such as `id`, `type`, `created_at`, `updated_at`, `class`, `hash`, `errors`, `attributes`, `save`, or `model_name`, and a Ruby keyword, such as `when`, `end`, or `next` (`foundation_plan.identity.reserved_member_collision`). Change only the key: `starts_when`, with the `name` kept. |
 | `name` | yes | text with at least one non-space character | | The label on forms and pages. |
 | `type` | yes | one of the types below | | The column, control, and display in the next table. |
 | `required` | yes | `true`, `false` | | `true`: `null: false`, a model check (below), and a spec "requires …". `false`: a nullable column and a spec "allows … to be absent". Always write it. |

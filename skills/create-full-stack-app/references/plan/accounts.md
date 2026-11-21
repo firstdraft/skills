@@ -147,12 +147,13 @@ are not asked for, and appear on `/account` only through a `profile`.
 | Account Entity Field | Listed as an input | On the sign-up form |
 | --- | --- | --- |
 | `name`, required `short_text` | yes or no | Text box, required. |
-| `role`, required `enum` with no `default` | no | A select of every value, chosen by the person signing up. Analysis warns `foundation_plan.account.registration_member_unlisted`; see [Analysis does not catch](#analysis-does-not-catch). |
+| `role`, required `enum` or `boolean` with no `default` | no | Analysis rejects the Plan, `foundation_plan.account.registration_member_unlisted`: each person would choose their own value, such as `admin`. Give it a `default`, or list it under `registration.inputs` when each person should choose. |
 | `role`, required `enum` with `"default": {"kind": "literal", "value": "member"}` | no | Not shown; new accounts get `member`, and there is no warning. The [Full example](#full-example) declares one. |
 | `bio`, optional `long_text` | no | Not shown. |
 | `bio`, optional `long_text` | `required: true` | Shown, required. |
 | `status`, `state_machine` | yes | Analysis rejects the Plan: `foundation_plan.account.registration_field_not_creatable`. |
-| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails. Not listed, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`. |
+| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails until you write how a new Account gets it. Not listed, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`. |
+| `avatar`, required `image` | no | No control, and every sign-up fails until you write how a new Account gets it. Analysis warns `foundation_plan.account.registration_required_field_unsupplied`. |
 
 Every value on the form goes through the model's validations before the account is saved; an invalid value returns
 422 with the error on its control.
@@ -309,8 +310,9 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   on the new account. For the Reference the entry reads "Public signup generates no control for a required
   Reference on the Account Entity. Signup cannot supply this Reference, so its validation rejects new Accounts."
   Write it before the preview; `SKILL.md` has the order of work. Keep `required` as the person asked: with a
-  required Reference every sign-up fails until then. The registration spec leaves out its success example, and the
-  README lists that example under "Test coverage to complete"; add it with the control.
+  required Reference every sign-up fails until then. `spec/requests/account_registration_spec.rb` has a
+  placeholder example for it, "How sign-up supplies user.team is not written yet.", that raises until you replace
+  it with an example that signs up.
 - **Optional questions at sign-up.** An input with `required: false` on an optional Field gets no control. Keep it
   in the Plan. The README lists it under "Behavior to write", in "Pages and actions", by the Field's path, such as
   `user.bio`, with the same two files: "This registration input has no generated signup control; only required
@@ -350,22 +352,20 @@ These pass analysis as `valid`:
 
 These pass as `valid` and are reported as a warning or a gap:
 
-- **A required Field that is not an input and has no `default`.** Warning
-  `foundation_plan.account.registration_member_unlisted` at the Field: the Sign up page asks every visitor for it,
-  because it is required and nothing fills it. On an enum, each person picks their own value, so with a role or an
-  admin flag anyone who signs up can pick `admin`. Give the Field a `default` that First Draft applies
-  ([Defaults](defaults.md)), and the warning goes. When the person wants sign-up to ask for it, list it under
-  `registration.inputs` instead.
+- **A required text Field that is not an input and has no `default`.** Warning
+  `foundation_plan.account.registration_member_unlisted` at the Field: the Sign up page asks every visitor for it.
+  Give the Field a `default` that First Draft applies ([Defaults](defaults.md)), and the warning goes, or list it
+  under `registration.inputs` when sign-up should ask. On a required enum or boolean the same code is an error, as
+  [What sign-up asks for](#what-sign-up-asks-for) says.
 - **A required Reference on the Account Entity that sign-up cannot supply.** Warning
   `foundation_plan.account.registration_required_reference_unsupplied` at the Reference, beside its gap
   `foundation_plan.gap.account.partially_generated`: no one can sign up, because the model rejects every new
-  Account without it. Its message offers three ways out: a `reference_record` default on the Reference; a
-  registration input over records a signed-out visitor may read; or, when people belong to a group such as a
-  team, a membership Entity with a role, so that sign-up creates only the Account. For a group, propose the
-  membership Entity to the person. The first two clear the warning, but First Draft generates neither yet: the
-  sign-up gap stays, and a default adds `foundation_plan.gap.reference.default_not_generated`
-  ([Defaults](defaults.md)). Write the control or the default before the preview; see
-  [Not generated](#not-generated).
+  Account without it, until code supplies it. Its message offers three ways out: write how a new Account gets it,
+  such as an invitation; make the Reference optional; or, when people belong to a group such as a team, move it to
+  a membership Entity with a role, so that sign-up creates only the Account. For a group, propose the membership
+  Entity to the person. A required upload or other Field that sign-up has no control for warns
+  `foundation_plan.account.registration_required_field_unsupplied` the same way. Each gets a placeholder example
+  in the registration spec; see [Not generated](#not-generated).
 - **A Field named `email`, `password`, or `account_status` on the Account Entity, or an Entity named `sequel`.**
   The whole Account is left out (`foundation_plan.gap.account.not_generated`), and with it every Policy and every
   page that names one. The `/account` page already shows the email; name a contact Field `contact_email`.

@@ -329,8 +329,9 @@ These pass as `valid` with no error about the name:
 - **A Predicate on a list that names a record.** The list raises on every visit; see
   [Used elsewhere](#used-elsewhere-in-the-plan).
 
-Analysis does reject a Predicate or Validation naming a missing record
-(`foundation_plan.expression.reference_record_not_found`), a development record naming a missing record
+Analysis does reject a Predicate, Validation, or Policy naming a missing record
+(`foundation_plan.expression.reference_record_not_found`), a Policy naming a development record
+(`foundation_plan.expression.reference_record_not_reference_data`), a development record naming a missing record
 (`foundation_plan.link.data_record_not_found`) or one of another Entity
 (`foundation_plan.data.reference_target_entity_incompatible`), and a text literal compared with a Reference
 (`foundation_plan.expression.literal_type_incompatible`).

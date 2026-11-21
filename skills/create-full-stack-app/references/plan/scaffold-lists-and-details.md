@@ -376,19 +376,11 @@ Predicate, the Ordering, or the related list.
 
 These pass analysis as `valid`. Read the gap list after every push.
 
-- **A misspelled Policy name in `index` or `show`.** The Entity's whole `scaffold` is left out: every route, list,
-  details page, and form (`foundation_plan.gap.service.pruned_scope` and
-  `foundation_plan.gap.service.depends_on_skipped`).
 - **A gate naming a Policy of an Entity other than the Account Entity**, such as
   `{"policy": "project.read_own", "record": {"kind": "environment", "name": "current_account"}}` on `index`. The
   page is left out (`foundation_plan.gap.scaffold.authorization.not_generated` and
   `foundation_plan.gap.scaffold.definition.not_generated`). A gate takes a Policy of the Account Entity; a record
   rule takes no `record`.
-- **A misspelled Predicate or Ordering name.** The filter or sort is dropped: the list shows every record, or sorts
-  by `id` (`foundation_plan.gap.service.unsupported_capability`). README.md lists it under "Behavior to write", in
-  "Pages and actions", titled with the list's path, such as `task.scaffold.index.predicate`, with the list's
-  controller: "The Task index (`/tasks`) lists its records without the filter the Plan names: First Draft did not
-  import its `predicate`." No entry names the Predicate or Ordering.
 - **A Predicate or Ordering of another Entity**, such as `task.open` on the projects list, or a parent's Predicate on
   a related list. The filter or sort is dropped (`foundation_plan.gap.predicate.not_generated` or
   `foundation_plan.gap.ordering.not_generated`). A related list takes the related Entity's Predicates and Orderings.
@@ -405,8 +397,10 @@ These pass analysis as `valid`. Read the gap list after every push.
   Field is shown twice.
 
 Analysis rejects a page definition without its route, a route without its definition, an empty `projection`, a
-`home_index` naming an Entity without `index` (`foundation_plan.application.home_index_not_selected`), and any
-`pagination` other than `"cursor"`.
+`home_index` naming an Entity without `index` (`foundation_plan.application.home_index_not_selected`), any
+`pagination` other than `"cursor"`, and a Policy, Predicate, Ordering, Field, or Association name on a page that names
+nothing (`foundation_plan.link.*_not_found`). The message lists the names that exist; change the name to one of
+them.
 
 ## Decisions to raise
 

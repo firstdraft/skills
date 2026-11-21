@@ -165,7 +165,9 @@ These pass analysis and are left out (`foundation_plan.gap.scaffold.binding.not_
 A Reference that a `current_account` binding sets is often one nobody should change later, such as an owner. Add
 `"immutable": true` to it; the model gets `attr_readonly :owner_id`.
 
-`update` and `destroy` take no `bindings`; analysis rejects them.
+`update` and `destroy` take no `bindings`; analysis rejects them. It also rejects a binding whose Field, Reference,
+`path`, or `record` names nothing (`foundation_plan.link.*_not_found`); a `reference_record` binding must name a
+[reference data](reference-data.md) record, never a development record.
 
 ## What a form needs from the Entity
 
