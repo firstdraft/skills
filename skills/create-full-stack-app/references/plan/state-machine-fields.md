@@ -571,6 +571,9 @@ These pass as `valid` and are reported as gaps:
 - **An event with an effect the Compiler cannot generate.** It becomes a stub, and example records in the state it
   leads to are dropped. An `owner` event does the same, with gap records for its effects and the dropped records;
   the transition has only the `state_transition_control` record that every transition without a button has.
+- **An `authorization` Policy with a branch that never reads `current_account` beside one that does,** such as
+  "the submitter, or the submitter is an admin". Warning `foundation_plan.policy.write_branch_admits_anyone`: that
+  branch lets anyone fire the event on such a record; see [Policies](policies.md#a-gate-inside-a-records-rule).
 - **An event whose name the controller or its routes already use,** such as `request`, `process`, or `update`. Its
   action and route take the namespaced name, such as `request_status`, with the warning
   `foundation_plan.rails_target.state_machine.event_action_renamed`. Rename the event to keep the plain name.

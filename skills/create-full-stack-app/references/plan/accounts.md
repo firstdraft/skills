@@ -101,9 +101,9 @@ second Entity.
 | `identifiers` | yes | exactly one `{"kind": "email", "name": "<label>"}` | | The `email` column, unique, stored trimmed and lower case. `name` is the label on the forms (`login_label`). |
 | `sign_in_methods` | yes | exactly `[{"kind": "password"}]` | | The password hash table, sign-in, sign-out, Change password. Passwords need 8 characters. |
 | `registration` | no | `{"mode": "self_service", "inputs": […]}` | omitted | The Sign up page and link. Anyone with an email address can sign up. Omitted: no sign-up page; the README shows the owner how to create each account with `bin/rails runner`. |
-| `verification` | no | `{"kind": "email"}` | omitted | Sign-up emails a link and refuses sign-in until it is followed; Change email takes effect only after the new address confirms. The app needs an email provider before anyone can finish signing up. Omitted: a new account is signed in at once, sign-up asks for the email twice, and Change email applies at once. |
-| `recovery` | no | `{"kind": "password_reset"}` | omitted | Forgot password, with an emailed reset link. Until an email provider is set up, the link is never delivered. Omitted: the README shows the owner how to set a new password. |
-| `lockout` | no | `{}`, an empty object; it has no keys | omitted | Locks an account after 10 wrong passwords, with an emailed unlock link. Until an email provider is set up, a locked account stays locked until the lockout expires after 24 hours. Omitted: a Rails `rate_limit` of 10 sign-in attempts per IP address in three minutes, in `RodauthController`. |
+| `verification` | no | `{"kind": "email"}` | omitted | Sign-up emails a link and refuses sign-in until it is followed; Change email takes effect only after the new address confirms. The app needs an email provider before anyone can finish signing up; see [Not generated](#not-generated). Omitted: a new account is signed in at once, sign-up asks for the email twice, and Change email applies at once. |
+| `recovery` | no | `{"kind": "password_reset"}` | omitted | Forgot password, with an emailed reset link, which needs an email provider; see [Not generated](#not-generated). Omitted: the README shows the owner how to set a new password. |
+| `lockout` | no | `{}`, an empty object; it has no keys | omitted | Locks an account after 10 wrong passwords, with an emailed unlock link, which needs an email provider ([Not generated](#not-generated)). Without one, a locked account stays locked until the lockout expires after 24 hours. Omitted: a Rails `rate_limit` of 10 sign-in attempts per IP address in three minutes, in `RodauthController`. |
 
 `registration.inputs[]`, in the order the sign-up form shows them. The Account Entity's other required Fields are
 added after them; see [What sign-up asks for](#what-sign-up-asks-for). `inputs` is a required key: write `[]` when
@@ -337,8 +337,10 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   offer it to the person if they would rather add notes there.
 - **Granting a role.** No page sets an admin flag or role unless you put it in an `update`, which lets people give
   it to themselves. Set roles in seeds or with `bin/rails runner`, or write an admin page after Compile.
-- **A production email provider.** Verification, reset, and unlock mail is sent through Action Mailer inside the
-  request, and `DEPLOY.md` lists what to configure.
+- **A production email provider.** Account email is sent through Action Mailer inside the request that asks for it.
+  Until a provider is configured, a deployed app answers each request that sends mail, such as sign-up with
+  `verification`, a resend, a password reset, or an unlock request, with the error page, and nothing retries the
+  message; in development the message is dropped and the page goes on. `DEPLOY.md` lists what to configure.
 
 ## Analysis does not catch
 

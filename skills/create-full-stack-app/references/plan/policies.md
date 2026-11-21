@@ -225,8 +225,9 @@ say](#what-a-rule-can-say), joined under `and` with the condition on the recipe:
 ```
 
 The scope lists published recipes only for someone signed in:
-`allowed_to?(:use_app?, user, with: UserPolicy) ? relation.where(published: true) : relation.none`. Without the gate
-branch, "published" reads nobody signed in and admits guests, as in the full example. A `matches_policy` names
+`allowed_to?(:use_app?, user, with: UserPolicy) ? relation.where(published: true) : relation.none`. Without the gate,
+the published branch asks only about the recipe, so it lets anyone open a published recipe, signed in or not, as the
+full example means to. A `matches_policy` names
 either `association` or `record`. With `record`:
 
 - its `policy` is a Policy of the Account Entity, the same one a part can name as a gate, so a role is written once;
@@ -236,7 +237,7 @@ either `association` or `record`. With `record`:
 To ask about the person signed in, write `record`. Through `association`, the same Policy asks about the record's
 own person: `{"kind": "matches_policy", "association": "note.author", "policy": "user.admins_only"}` holds for
 anyone, signed in or not, on a note an admin wrote. When such a branch stands beside one that reads
-`current_account` in a rule that guards a create, an update, or a delete, analysis warns
+`current_account` in a rule that guards a create, an update, a delete, or a State Machine event, analysis warns
 `foundation_plan.policy.write_branch_admits_anyone` at the branch, and its message gives the `record` to write.
 
 A gate on a part lets admins act, as delete does in the full example, and shows them no record they cannot read.
@@ -311,9 +312,9 @@ Entity has no Policy that fits.
 When the `create` Policy reads a parent the person picks on the form, such as `matches_policy` through `note.list`
 with a `note.list` input, the New page opens for anyone with at least one list that would pass, the list's select
 offers only those lists, and Create checks the list it is sent. The Policy class gets `def new?` and
-`relation_scope(:list_choices)` for it. This holds when the rule reads the offered parents and nothing else the form
-sets, with several parents joined by `and`. A rule that also reads a Field the person types, uses `not exists` over
-the parent, or puts two parents under `or` gets nothing derived, and New asks the rule as under [Analysis does not
+`relation_scope(:list_choices)` for it. Write the parent condition inline in the create Policy, as `matches_policy`,
+a path, or `exists` over the chosen Reference, with several parents joined by `and`. Any other rule, the same
+condition named as a Predicate included, keeps the create rule for New; see [Analysis does not
 catch](#analysis-does-not-catch). For a record added from its parent's page, see `create_form` under [Used elsewhere
 in the Plan](#used-elsewhere-in-the-plan).
 
@@ -572,11 +573,14 @@ These pass analysis as `valid`:
   read rule's Expression.
 - **A gate on a list, with a record's Policy on the record's page.** The list shows every record to anyone the gate
   admits; the titles they may not open appear without a link.
-- **A New page whose `create` rule reads a value the empty record does not have yet.** New opens when the rule reads
-  only the parents the form offers, as under [Keys](#keys). For any other rule, New asks the rule about the empty
-  record. A rule that needs a value the form sets, such as a Field the person types or an editable Reference that
-  must equal `current_account`, denies it, even beside a parent: the New link is hidden, and the New page answers 403
-  to everyone. A submitted Create still works. Add such records through the parent page's `create_form`, or bind the Reference with `bindings`.
+- **A New page that keeps its `create` rule.** New asks the create rule about the empty record, after its
+  bindings, when the rule names the parent condition as a Predicate in place of writing it inline, reads a Field the
+  form submits, puts two offered parents under `or`, requires an editable Reference to equal `current_account`, or
+  names an `owner` Policy that is not written yet. New then opens only where the empty record passes, as an admin
+  branch of `or` lets an admin in, and these conditions fail it: the New link is hidden, and the New page answers
+  403 to everyone else. A submitted Create still works. Write the parent condition inline, add such records through
+  the parent page's `create_form`, or bind the Reference with `bindings`. `not exists` over the offered parent keeps
+  the create rule too, but an empty record passes it, so New opens.
 
 These pass as `valid` and are reported, as a warning or a gap:
 
