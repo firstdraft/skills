@@ -22,6 +22,12 @@
 - The bookings index action in `app/controllers/bookings_controller.rb` calls a scope whose body is
   `where(<state column>: "<requested state>")` (or `where(<state column>: ["<requested state>"])`); the starter's
   index calls `Booking.order(:id)` with no scope.
+- The confirm transition has `authorization` (item 7): `"public"`, or, when the Plan adds an Account Entity, a
+  Policy that names who confirms, such as a staff gate with `"record": {"kind": "environment", "name":
+  "current_account"}`. `config/routes.rb` has `patch :confirm` in a `member` block for bookings,
+  `BookingsController#confirm` calls `confirm!`, and the booking's details partial shows the button when
+  `may_confirm?` holds. The decline transition has no `authorization`: it needs a reason typed first, and it is a
+  stub.
 - The Plan has three example bookings: one in the requested state, one confirmed, and one declined with the reason
   set. `db/seeds/development.rb` creates the first two: one with no event fired, and one with the confirm event
   fired (`<record>.confirm! if <record>.requested?`). The declined one is left out until the decline event is
@@ -29,9 +35,9 @@
 
 ## Notes
 
-- Says that no generated page, route, or controller action fires the confirm event, and that the reader will add
-  the button, route, and controller action before the preview (item 7).
+- Says that Compile writes the Confirm button on the booking's page (item 7), and that the reader writes what fires
+  the decline, cancel, and request-again events that have no button, or asks the person who may take them.
 - Says that one event generates only one timestamp effect, so stating the follow-up flag as a second effect (item 5)
   makes the decline event a stub that the reader writes before the preview, and that the declined example booking
   is not seeded until then.
-- Says who may confirm or decline cannot be expressed in the Plan, or asks the user about it.
+- Says who may confirm: asks the person, or says that without sign-in anyone who can open a booking can confirm it.

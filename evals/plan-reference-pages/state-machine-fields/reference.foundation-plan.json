@@ -79,7 +79,8 @@
             "name": "current_time"
            }
           }
-         ]
+         ],
+         "authorization": "public"
         },
         {
          "subject_uuid": "01a1cba6-7e02-7a5e-bb6d-439ed171ef38",

@@ -78,8 +78,8 @@ Steps 1 and 2 are the opening turn, after the research and any fit, with at most
    build yet, for example "Descriptions are stored as plain text for now; I'll add formatting in Rails before you
    first try the app" or "The list of posts that mention a word is generated, and I'll write its search in Rails
    right after Compile". When the
-   user described moving a record from one state to another, such as approving a request, say that no generated
-   page has a button for it yet and that you will write it after Compile. Then let
+   user described moving a record from one state to another, such as approving a request, ask who may do it from
+   the record's page; the answer becomes the transition's `authorization`, and Compile writes the button. Then let
    the analysis steer the remaining questions: ask about consequences the user can choose between,
    not about gaps they cannot change. Keep private access and requested phone apps in the Plan. Report each gap as
    the analysis gives it, even when its reason names no cause or contradicts these references; the deployed First
@@ -243,7 +243,7 @@ appearance. Name every default you told the user, delegated choice, and proposal
 - [ ] Links and deletion: which records belong to which, and what happens to them when that record is deleted, by
       the [kind of link](#ask-tell-or-decide).
 - [ ] Access: who can see, add, change, and delete each kind of record, asked as [one grid](#access), with one
-      Policy per operation.
+      Policy per operation, and who may take each workflow action from the record's page.
 - [ ] Accounts: whether people sign up, and the Account Fields on the sign-up form. Do not ask about email
       confirmation: leave `verification` out unless the user asks for it, so sign-up signs people in at once and
       they can share the app with friends right away. "No sign-up" is supported: without `registration`, sign-in

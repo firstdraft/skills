@@ -56,7 +56,7 @@ Plan and records:
 Field types:
 
 - [Enum Fields](references/plan/enum-fields.md): `enum` values, `ordinal`; one choice from a fixed list.
-- [State Machine Fields](references/plan/state-machine-fields.md): states, events, `owner`; approve, cancel, a workflow.
+- [State Machine Fields](references/plan/state-machine-fields.md): states, events and their buttons, `owner`; approve, a workflow.
 - [Money Fields](references/plan/money-fields.md): `money`, one currency per Field; prices, fees, budgets.
 - [Position Fields](references/plan/position-fields.md): `position`; steps, cards, or tracks people order by hand.
 - [Counter Fields](references/plan/counter-fields.md): `counter`, `derivation`; counts and sums of related records.
