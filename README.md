@@ -6,17 +6,24 @@ canonical Skills and bundled CLI are packaged once for Claude Code and Codex, an
 install. UI continuation follows the generated app's own design and components. The public catalog determines what
 a plugin installation actually receives.
 
-[Release compatibility](release/compatibility.json) names the CLI, Service API, and Foundation Plan format that
-this source requires. The [public catalog](.claude-plugin/marketplace.json) owns the installed version; source
-compatibility does not establish publication. New remote work uses production at `https://firstdraft.com`; staging
-is explicit with `firstdraft --staging ...` and a separate staging token. The workflow preserves the planning
-workspace under `.firstdraft/design/` and defaults to current-folder local output. The plugin packages
-`create-full-stack-app` and `maintain-app`; the UI Skill auditions remain deferred source.
+[Release compatibility](release/compatibility.json) names the CLI, Service API, and Foundation Plan format that this
+source requires. The [public catalog](.claude-plugin/marketplace.json) owns the installed version; source
+compatibility does not establish publication. New remote work uses production at `https://firstdraft.com` unless it
+selects staging. The workflow preserves the planning workspace under `.firstdraft/design/` and defaults to
+current-folder local output. The plugin packages `create-full-stack-app` and `maintain-app`; the UI Skill auditions
+remain deferred source.
 
 Trying First Draft as a tester? Start with the
 [local development guide](https://firstdraft.github.io/firstdraft/docs/guides/local-app.html). Start in an empty
 local folder; a Drawing Board clone and GitHub push are unnecessary. The
 [Drawing Board guide](https://github.com/firstdraft/drawing-board#part-3-build-your-app) is the Codespaces fallback.
+
+Set up First Draft before it came as one plugin? [Update First Draft](https://firstdraft.com/update) says how to set
+it up again in a Codespace or with the workshop kit, and how each setup updates, Windows included. After a hand
+install, run `npm uninstall --global @firstdraft.com/cli @firstdraft.com/claude-code`, remove any
+`create-full-stack-app` Skill you linked, and install the plugin as the local development guide says. Then start a new
+app; for an earlier one worth keeping, give its agent the prompt under
+[Reviewing updates](CHANGELOG.md#reviewing-updates).
 
 ## What this repository owns
 
@@ -48,9 +55,8 @@ behavior. This repository teaches an agent how to use those contracts without cr
 
 ## Using Codex
 
-The [catalog manifest](.claude-plugin/marketplace.json) selects the shared plugin, which holds the Skill and the CLI
-it was tested with. The Skill's helper runs only that bundled CLI, in either agent. A fresh authenticated student
-Codespace journey remains unproved.
+The [catalog manifest](.claude-plugin/marketplace.json) selects the shared plugin for both agents. A fresh
+authenticated student Codespace journey remains unproved.
 
 Start in a local folder. Codex uses the same catalog as Claude. Install it with:
 
@@ -60,20 +66,20 @@ codex plugin add firstdraft@firstdraft-skills
 ~~~
 
 Start a new Codex conversation after installation. Use `$firstdraft:create-full-stack-app`, or select it from
-`/skills`. Node.js 22 or newer and npm must be available. The package includes the compatible First Draft CLI;
-there is no separate CLI version to choose.
+`/skills`. Node.js 22 or newer and npm must be available.
 
 A plugin install does not sign you into First Draft. The Skill's first step, `firstdraft start`, says whether this
-computer is logged in. When it says to log in, the agent starts the login and shows you a link and a code: approve
-the login in your browser and tell the agent, which finishes it and carries on. When it says a token variable was not
-accepted, replace or unset that variable yourself. The login is saved once per environment in your user configuration
+computer is logged in. When it says to log in, the agent shows you a link and a code: sign in with GitHub there,
+approve, and tell the agent, which finishes it. First Draft asks you to accept its current terms and privacy notice,
+and once whether your agent may send reports and notes; change that at
+[firstdraft.com/account](https://firstdraft.com/account). When `start` says a token variable was not accepted,
+replace or unset that variable yourself. The login is saved once per environment in your user configuration
 directory, so Claude Code, Codex CLI, and desktop sessions all use it without exported variables. Approve the
 specific CLI command when Codex requests network access; its tool permission is separate from approval of the Plan
-and Compile mode.
+and Compile.
 
 For the Codespaces fallback, follow the
-[Drawing Board instructions](https://github.com/firstdraft/drawing-board#part-3-build-your-app). This
-Skill's helper finds a CLI only inside an installed plugin, so the Codespace must install the plugin.
+[Drawing Board instructions](https://github.com/firstdraft/drawing-board#part-3-build-your-app).
 Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
 conversation, run `codex resume` from the same workspace root.
 
@@ -163,11 +169,10 @@ Those actions follow the machine-owned [compatibility record](release/compatibil
 
 ## Credential boundary
 
-The agent logs the user in once per environment with the bundled CLI: `login --no-wait` prints a link and a code that
-the agent shows the user, and `login --finish` saves the login once the user says they approved it in their browser.
-`--staging` selects `https://staging.firstdraft.com`. The agent never opens the link, approves for the user, or asks
-for a token, and only the user runs `logout`. A workspace may instead supply `FIRSTDRAFT_API_TOKEN` for production or
-`FIRSTDRAFT_STAGING_API_TOKEN` for staging; a set variable takes precedence over a saved login. The CLI never uses
+The agent logs the user in once per environment with the bundled CLI's `login --no-wait` and `login --finish`.
+`--staging` selects `https://staging.firstdraft.com`. The agent never opens the login link, approves for the user, or
+asks for a token, and only the user runs `logout`. A workspace may instead supply `FIRSTDRAFT_API_TOKEN` for production
+or `FIRSTDRAFT_STAGING_API_TOKEN` for staging; a set variable takes precedence over a saved login. The CLI never uses
 one environment's credential for another. Existing Plans keep their saved origin. `FIRSTDRAFT_API_URL` is an advanced
 custom-server override; a conflicting URL cannot be combined with `--staging` or redirect an existing Project. The
 Skill's helper runs only the plugin's bundled CLI, and when that is missing it says the plugin needs reinstalling. It
