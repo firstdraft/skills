@@ -233,19 +233,21 @@ function splitProgressOutput(stderr) {
   assert.match(stderr, /\n$/);
   const lines = stderr.slice(0, -1).split("\n");
   const messages = [];
-  while (
-    lines[0]?.startsWith("First Draft: ") &&
-    isSafeProgressMessage(lines[0])
-  ) {
-    const [line] = lines.splice(0, 1);
-    messages.push(line);
+  while (lines[0]?.startsWith("First Draft: ") && isProgressMessage(lines[0])) {
+    messages.push(lines.shift());
   }
+  // At most one version line, after the progress and just before the result.
+  if (lines[0] !== undefined && isVersionLine(lines[0])) messages.push(lines.shift());
   return { messages, result: `${lines.join("\n")}\n` };
 }
 
 export const updateUrl = "https://firstdraft.com/update";
-const versionPattern = String.raw`\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?`;
-const originPattern = String.raw`https?://(?:[a-z0-9.-]+|\[[0-9a-f:.]+\])(?::\d{1,5})?`;
+// SemVer 2.0.0, as the CLI reads and prints it, and a URL origin as Node.js normalizes it.
+const identifier = String.raw`(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)`;
+const versionPattern =
+  String.raw`(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-${identifier}(?:\.${identifier})*)?` +
+  String.raw`(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?`;
+const originPattern = String.raw`https?://(?:[a-z0-9._-]+|\[[0-9a-f:.]+\])(?::\d{1,5})?`;
 const updateSteps = updateUrl.replaceAll(".", String.raw`\.`);
 // A network command writes at most one of these, just before its result, from First Draft's version headers. The
 // CLI owns the wording, in its src/service-client.js.
@@ -272,8 +274,10 @@ export function isVersionLine(line) {
 }
 
 function isSafeProgressMessage(line) {
-  if (isVersionLine(line)) return true;
+  return isVersionLine(line) || isProgressMessage(line);
+}
 
+function isProgressMessage(line) {
   const message = line.slice("First Draft: ".length);
   if (
     [
