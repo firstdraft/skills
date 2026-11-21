@@ -61,7 +61,7 @@ enable(:i18n, :create_account, :login, :logout, :remember, :change_login, :chang
        :reset_password, :lockout, :disallow_common_passwords)
 accounts_table :users
 login_label "Email"
-password_minimum_length 15
+password_minimum_length 8
 max_invalid_logins 10
 
 # app/controllers/application_controller.rb
@@ -99,7 +99,7 @@ second Entity.
 | Key | Required | Values | Default | Generates |
 | --- | --- | --- | --- | --- |
 | `identifiers` | yes | exactly one `{"kind": "email", "name": "<label>"}` | | The `email` column, unique, stored trimmed and lower case. `name` is the label on the forms (`login_label`). |
-| `sign_in_methods` | yes | exactly `[{"kind": "password"}]` | | The password hash table, sign-in, sign-out, Change password. Passwords need 15 characters. |
+| `sign_in_methods` | yes | exactly `[{"kind": "password"}]` | | The password hash table, sign-in, sign-out, Change password. Passwords need 8 characters. |
 | `registration` | no | `{"mode": "self_service", "inputs": […]}` | omitted | The Sign up page and link. Anyone with an email address can sign up. Omitted: no sign-up page; the README shows the owner how to create each account with `bin/rails runner`. |
 | `verification` | no | `{"kind": "email"}` | omitted | Sign-up emails a link and refuses sign-in until it is followed; Change email takes effect only after the new address confirms. The app needs an email provider before anyone can finish signing up. Omitted: a new account is signed in at once, sign-up asks for the email twice, and Change email applies at once. |
 | `recovery` | no | `{"kind": "password_reset"}` | omitted | Forgot password, with an emailed reset link. Until an email provider is set up, the link is never delivered. Omitted: the README shows the owner how to set a new password. |
@@ -132,7 +132,7 @@ page needs no `resource_routes`: it is `/account`, and it always loads the signe
 | Key | Required | Values | Generates |
 | --- | --- | --- | --- |
 | `identifiers` | yes | `[{"kind": "email", "value": "ada@example.com"}]`, lower case, one only. `value` here, `name` on the Entity. | The seed's `find_or_initialize_by(email: …)`. An address with capitals, or one that is not an address, drops the record (two gaps: `foundation_plan.gap.development_data.record.not_generated` on the record and `foundation_plan.gap.development_data.account.not_generated` on its `account`). |
-| `credentials` | yes | `[{"kind": "password", "value": "…"}]` | `ada.password = …`, set when the account is new or has no password; reseeding keeps a password the person changed. The 15-character minimum is not checked here. The README lists each email and password under the sign-in instructions. |
+| `credentials` | yes | `[{"kind": "password", "value": "…"}]` | `ada.password = …`, set when the account is new or has no password; reseeding keeps a password the person changed. The 8-character minimum is not checked here. The README lists each email and password under the sign-in instructions. |
 
 A record of the Account Entity without `account` is dropped, with every record that references it. `account` on
 a record of another Entity is rejected. A Field left out of the record gets its `default` from the database.
@@ -337,8 +337,8 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   offer it to the person if they would rather add notes there.
 - **Granting a role.** No page sets an admin flag or role unless you put it in an `update`, which lets people give
   it to themselves. Set roles in seeds or with `bin/rails runner`, or write an admin page after Compile.
-- **A production email provider.** Verification, reset, and unlock mail is queued through Action Mailer, and
-  `DEPLOY.md` lists what to configure.
+- **A production email provider.** Verification, reset, and unlock mail is sent through Action Mailer inside the
+  request, so a delivery error shows the error page, and `DEPLOY.md` lists what to configure.
 
 ## Analysis does not catch
 
@@ -406,7 +406,7 @@ Plan change reaches that app only when you copy it across.
 
 ```ruby
 User.find_or_create_by!(email: "you@example.com") do |account|
-  account.password = "a passphrase of at least 15 characters"
+  account.password = "a passphrase of at least 8 characters"
   account.name = "name"
 end
 ```

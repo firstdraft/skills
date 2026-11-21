@@ -176,10 +176,11 @@ Every `index`, `show`, and Association item says who may see it. The rules live 
 | `{"policy": "project.read_own", "record": "scaffold_record"}` | Association items only: the page's own record decides whether the card shows. | Rejected on a page (`foundation_plan.schema.const`). | `allowed_to?(:read?, @project, with: ProjectPolicy)`, then every related record. |
 
 The `record` value is that literal object or the string `"scaffold_record"`; nothing else is accepted. A link to a
-record's `show` from a related list's row or an Association item checks the same rule as that `show`, gate or
-Policy, and shows plain text to people who fail it; a link from a list page's own rows is unconditional. A guest who opens a list guarded by a record's Policy gets the page with no
-rows (the generated request spec expects 200). A list's Policy and its details page's Policy are independent; see
-[Analysis does not catch](#analysis-does-not-catch).
+record's `show` from a related list's row or an Association item checks the same rule as that `show`, gate or Policy,
+and shows plain text to people who fail it; a link from a list page's own rows is unconditional. A guest who opens a
+list guarded by a record's Policy is sent to sign in and comes back, as the generated request spec checks, unless a
+branch of the rule admits guests, such as "published"; the guest then sees the records that branch allows. A list's
+Policy and its details page's Policy are independent; see [Analysis does not catch](#analysis-does-not-catch).
 
 ## Full example
 
@@ -347,8 +348,7 @@ Predicate, the Ordering, or the related list.
   calls the scope, which raises `NotImplementedError` until you write it (`foundation_plan.gap.predicate.not_generated`
   or `foundation_plan.gap.ordering.not_generated`; an `owner` subject has no gap record); the page raises until then.
   The scope's placeholder example in the model spec fails until you replace it, and so does any request spec that
-  reaches the page. For a stub Predicate on a list, README.md lists the index request examples it leaves out under
-  "Test coverage to complete". See [Predicates](predicates.md) and [Orderings](orderings.md) for which ones generate
+  reaches the page. See [Predicates](predicates.md) and [Orderings](orderings.md) for which ones generate
   and how to write an `owner` one. With `project.active` in the full example made `owner`:
 
   ```ruby

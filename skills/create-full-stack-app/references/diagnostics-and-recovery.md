@@ -165,7 +165,8 @@ as the submitted candidate, and do not edit, push, or Compile the replacement.
 ### Retired target profile
 
 A Project keeps the target profile it was created with, and this plugin's CLI and First Draft accept only
-`rails-sketch/2026-10`. A Plan or Project that names an earlier profile fails at `/target/profile`:
+`rails-sketch/2026-11`. A Plan or Project that names an earlier profile cannot be analyzed or compiled, and fails at
+`/target/profile`:
 
 | Diagnostic code | Meaning |
 | --- | --- |
@@ -173,16 +174,19 @@ A Project keeps the target profile it was created with, and this plugin's CLI an
 | `foundation_plan.import.target_profile_mismatch` | The Plan names the current profile, but its Project was created with an earlier one. |
 | `foundation_plan.analysis.unsupported_target_profile` | The Project was created with an earlier profile. |
 
-Retrying or editing only the profile cannot fix this. With the user's agreement, start a new Project for the same
-Plan:
+Each message ends by saying to update the First Draft plugin first when older tools wrote the Plan, and names
+https://firstdraft.com/update. A plugin that ships this page is past that step, so go on to the new Project below;
+when a command also wrote an [update line](#update-and-stop-lines), pass it on. Retrying or editing only the profile
+cannot fix this. With the user's agreement, start a new Project for the same Plan:
 
 1. In the planning directory, which is `.firstdraft/design/` after root adoption, rename `.firstdraft` to a name such
    as `.firstdraft-retired-profile`. Keep it: it holds the old Plan and the old Project's private state.
 2. Run `plan init` with the old Plan's `application.name` and `application.key`. It creates a new Project identity
-   and an empty Plan that targets `rails-sketch/2026-10`.
-3. Replace the new empty Plan with the old Plan, changing only `target.profile` to `rails-sketch/2026-10`. Keep
+   and an empty Plan that targets `rails-sketch/2026-11`.
+3. Replace the new empty Plan with the old Plan, changing only `target.profile` to `rails-sketch/2026-11`. Keep
    every subject UUID.
-4. Push and wait for analysis as usual. The new profile can change the GapSet, so read it back again before Compile.
+4. Push and wait for analysis as usual. The new profile can change the GapSet and report new analysis errors, such
+   as a key the app already uses; fix each as its message says, and read the GapSet back again before Compile.
 
 A Compile in the new Project does not upgrade an application generated under the earlier profile. From
 `.firstdraft/design/`, select an absent `--output` path, then bring what the user wants into the existing
@@ -625,7 +629,7 @@ the application. First Draft is notified of these failures, so the user does not
 4. requires the envelope's `head_source_sha256` to equal the retained
    `compilation.head_source_sha256`;
 5. verifies transport metadata and exact bytes against the retained artifact digest, then validates Plan format
-   `firstdraft.foundation-plan.sketch/0.23`, target profile `rails-sketch/2026-10`, the canonical Foundation Plan
+   `firstdraft.foundation-plan.sketch/0.23`, target profile `rails-sketch/2026-11`, the canonical Foundation Plan
    digest, envelope, manifest, paths, modes, Base64 contents, and file digests; and
 6. installs an absent private sibling tree with one atomic rename, or applies direct Compile's
    [current-root transaction and CLI compatibility boundary](#direct-local-output).

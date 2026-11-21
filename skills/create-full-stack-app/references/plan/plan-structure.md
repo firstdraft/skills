@@ -27,7 +27,7 @@ The smallest Plan that compiles. `entities` may be empty while you work out the 
 ```json
 {
   "format": "firstdraft.foundation-plan.sketch/0.23",
-  "target": {"id": "rails", "profile": "rails-sketch/2026-10"},
+  "target": {"id": "rails", "profile": "rails-sketch/2026-11"},
   "application": {
     "key": "reading_club",
     "name": "Reading Club",
@@ -92,7 +92,7 @@ PNG icons are a monogram of the name's first character.
 | --- | --- | --- | --- | --- |
 | `format` | yes | `"firstdraft.foundation-plan.sketch/0.23"` | | Nothing. Any other version is rejected (`foundation_plan.unsupported_format`). |
 | `target.id` | yes | `"rails"` | | Nothing; the only target. |
-| `target.profile` | yes | `"rails-sketch/2026-10"` | | Nothing; the only profile. Other values are rejected. |
+| `target.profile` | yes | `"rails-sketch/2026-11"` | | Nothing; the only profile. Other values are rejected. |
 | `application` | yes | object | | Everything below. |
 
 No other root key is allowed. Do not add `id`, `project_id`, or `revision`: the Project holds those, not the Plan.
@@ -267,7 +267,7 @@ with a list and detail page.
 ```json
 {
   "format": "firstdraft.foundation-plan.sketch/0.23",
-  "target": {"id": "rails", "profile": "rails-sketch/2026-10"},
+  "target": {"id": "rails", "profile": "rails-sketch/2026-11"},
   "application": {
     "key": "reading_club",
     "name": "Northside Readers",

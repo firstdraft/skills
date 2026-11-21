@@ -327,7 +327,7 @@ Analysis rejects:
 | A key whose class is already a Ruby, Rails, or gem constant: `class`, `data`, `date`, `file`, `hash`, `method`, `module`, `object`, `process`, `queue`, `random`, `range`, `set`, `signal`, `struct`, `symbol`, `thread`, `time`, `warning`, `user_agent`, `mail`, `logger`, and others | `foundation_plan.identity.reserved_constant_collision`. Keep the product word in `name`: key `time_slot`, name `Time`. |
 | A key whose controller, route, or Policy class the app already has, as in [Keys to avoid](#keys-to-avoid) | `foundation_plan.identity.reserved_constant_collision`, `reserved_route_helper_collision`, or `reserved_route_path_collision`. The message names what the key collides with; change only the key and every readable path that starts with it. |
 | A key equal to `application.key`, or two keys with one table, such as `person` and `people` | `foundation_plan.identity.generated_constant_collision` |
-| A key whose table Rails or the app already owns, such as `schema_migration` or `solid_queue_job` | `foundation_plan.rails_target.compiler.unsupported_graph` |
+| A key whose table Rails already owns: `schema_migration` or `ar_internal_metadatum` | `foundation_plan.rails_target.compiler.unsupported_graph` |
 | A table name over 63 bytes | `foundation_plan.rails_target.compiler.unsupported_graph` |
 | A repeated key | `foundation_plan.identity.readable_path_duplicate` |
 | Capitals, a leading digit, or a hyphen in a key | `foundation_plan.schema.pattern` |
