@@ -181,7 +181,14 @@
             "name": "current_time"
            }
           }
-         ]
+         ],
+         "authorization": {
+          "policy": "user.admins_only",
+          "record": {
+           "kind": "environment",
+           "name": "current_account"
+          }
+         }
         },
         {
          "subject_uuid": "01a0caf3-0770-7000-8000-000000000011",
@@ -240,7 +247,14 @@
             "value": true
            }
           }
-         ]
+         ],
+         "authorization": {
+          "policy": "user.admins_only",
+          "record": {
+           "kind": "environment",
+           "name": "current_account"
+          }
+         }
         }
        ]
       }

@@ -11,6 +11,80 @@
   "delivery": {},
   "entities": [
    {
+    "subject_uuid": "01a0caf3-0920-7000-8000-000000000001",
+    "key": "user",
+    "name": "User",
+    "primary_descriptor": {
+     "field": "user.name"
+    },
+    "account": {
+     "identifiers": [
+      {
+       "kind": "email",
+       "name": "Email"
+      }
+     ],
+     "sign_in_methods": [
+      {
+       "kind": "password"
+      }
+     ],
+     "registration": {
+      "mode": "self_service",
+      "inputs": [
+       {
+        "field": "user.name",
+        "required": true
+       }
+      ]
+     },
+     "recovery": {
+      "kind": "password_reset"
+     },
+     "lockout": {}
+    },
+    "fields": [
+     {
+      "subject_uuid": "01a0caf3-0920-7000-8000-000000000002",
+      "key": "name",
+      "name": "Name",
+      "type": "short_text",
+      "required": true
+     },
+     {
+      "subject_uuid": "01a0caf3-0920-7000-8000-000000000003",
+      "key": "staff",
+      "name": "Staff",
+      "type": "boolean",
+      "required": true,
+      "default": {
+       "kind": "literal",
+       "value": false
+      }
+     }
+    ],
+    "policies": [
+     {
+      "subject_uuid": "01a0caf3-0920-7000-8000-000000000004",
+      "key": "staff_only",
+      "operation": "work_as_staff",
+      "allow_when": {
+       "kind": "comparison",
+       "left": {
+        "target": {
+         "field": "user.staff"
+        }
+       },
+       "operator": "equals",
+       "right": {
+        "kind": "literal",
+        "value": true
+       }
+      }
+     }
+    ]
+   },
+   {
     "subject_uuid": "01a0caf3-0770-7000-8000-0000000007d1",
     "key": "booking",
     "name": "Booking",
@@ -80,7 +154,13 @@
            }
           }
          ],
-         "authorization": "public"
+         "authorization": {
+          "policy": "user.staff_only",
+          "record": {
+           "kind": "environment",
+           "name": "current_account"
+          }
+         }
         },
         {
          "subject_uuid": "01a1cba6-7e02-7a5e-bb6d-439ed171ef38",
@@ -106,7 +186,14 @@
             "value": true
            }
           }
-         ]
+         ],
+         "authorization": {
+          "policy": "user.staff_only",
+          "record": {
+           "kind": "environment",
+           "name": "current_account"
+          }
+         }
         },
         {
          "subject_uuid": "01a1cba6-7e02-7767-80b5-ad4016b833db",

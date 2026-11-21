@@ -100,13 +100,16 @@ who the person said may do it. It takes the values a Scaffold part takes:
   itself, such as approving a volunteer, a rule about the person pressing the button needs `record` too.
 - `"public"`: anyone who can open the details page, whose own `show` authorization still applies.
 
-Leave `authorization` out when code, a job, or a webhook fires the event, and when the person must type a value for
-it, such as a reason a Validation requires in the state it leads to: a button collects nothing. Several events may
-share one Policy. A Policy whose `operation` equals an event's key binds nothing by that.
+Leave `authorization` out only when nothing a person presses fires the event: code, a job, or a webhook. Keep it when
+the event needs a value the person types, such as a reason a Validation requires in the state it leads to. A button
+collects nothing, so offer the Field on the Edit page, where the person saves it before pressing the button, or write
+a form that sets it and fires the event. Keep it on a stub too: README.md repeats who may fire the event, and you add
+the button when you write the event. Several events may share one Policy. A Policy whose `operation` equals an
+event's key binds nothing by that.
 
-An expense is approved by an admin, and cancelled or resubmitted by the person who submitted it. A decline needs a
-reason, typed on the Edit page first, and `escalate` is a stub, so neither has `authorization`. On the Account
-Entity, `user.admins_only` is the gate from [Policies](policies.md); on the expense, `manage_own` compares
+An admin approves, declines, or escalates an expense, and the person who submitted it cancels or resubmits it. A
+decline needs a reason, typed on the Edit page first, and `escalate` is a stub. On the Account Entity,
+`user.admins_only` is the gate from [Policies](policies.md); on the expense, `manage_own` compares
 `expense.submitter` with `current_account`:
 
 ```json
@@ -118,20 +121,21 @@ Entity, `user.admins_only` is the gate from [Policies](policies.md); on the expe
  "authorization": {"policy": "expense.manage_own"}}
 ```
 
-`resubmit` names `expense.manage_own` the same way.
+`decline` and `escalate` name the gate as `approve` does, and `resubmit` names `expense.manage_own`.
 
 ```ruby
 # config/routes.rb
 resources :expenses, only: %i[index show new create edit update] do
   member do
     patch :approve
+    patch :decline
     patch :cancel
     patch :resubmit
   end
 end
 
 # app/controllers/expenses_controller.rb, shortened
-before_action :authorize_administer, only: %i[approve]
+before_action :authorize_administer, only: %i[approve decline]
 
 def cancel
   @expense = Expense.find(params.expect(:id))
@@ -161,13 +165,15 @@ another account, a guest, and a state the event cannot leave. The label is the e
 
 `requires_lock: true` makes each bang method lock and reload its record, so of two requests that loaded one state,
 the second waits and decides from the state the first left. Save a record's other changes before you call a bang
-method on it: locking a record with unsaved changes raises. When setup cannot fill a value a state needs, such as the
-decline reason, README.md lists the examples that need that state under "Test coverage to complete".
+method on it: locking a record with unsaved changes raises. Until the reason is saved, Decline returns the
+Validation's message. Setup cannot fill a value a state needs, such as the decline reason, so README.md lists the
+examples that need that state under "Test coverage to complete".
 
-An event gets no button when its Entity has no `show` page, when the event is a stub (an `owner` event, one with more
-than one timestamp effect, or one on an optional machine), or when First Draft does not generate the Policy it
-names. It stays in the README's list of events that nothing fires, whose entry repeats who may fire it, so add the
-button when you write the event.
+An event gets no button when its Entity has no `show` page, when the event is a stub (an `owner` event, one whose
+effects go beyond one timestamp, or one on an optional machine), or when First Draft does not generate the Policy it
+names. It stays in the README's list of events that nothing fires, whose entry repeats who may fire it, such as "The
+Plan says a signed-in Account that `user.admins_only` allows may fire it", so add the button when you write the
+event.
 
 ### When the Plan cannot say an event
 
@@ -495,9 +501,9 @@ the starting state where `when` holds, before the preview. Prefer a required mac
   ```
 
   Before the preview, write what fires each one: a job or another caller for an event that happens on its own, and
-  a form and an action for an event that needs a value from the person. For any other event a person fires, give
-  the transition `authorization` so that Compile writes the button. Write a real example of what you add, in this
-  spec or a request or system spec, and delete the placeholder. For a stub, also write the event itself, as its
+  for a stub with `authorization`, the button its entry describes. Give every other event a person fires
+  `authorization`, so that Compile writes its button. Write a real example of what you add, in this spec or a
+  request or system spec, and delete the placeholder. For a stub, also write the event itself, as its
   entry under "Rules" says. Ask the person before dropping an event.
 - **An event that does more than one timestamp.** One event generates one effect: a timestamp on the same record.
   Anything more makes the whole event a stub. Its bang method, its non-bang form, and its `may_` predicate raise
@@ -586,7 +592,7 @@ name; change the name to one of them.
 - **Ask:** what each action records, and any condition on when it may happen. One timestamp per action generates.
   For more, say which events you will write yourself before the preview.
 - **Tell:** each action people take from the page gets a button, and before the preview you will write what fires
-  the rest: a job or another caller, or a form for an action that needs a value. Ask before dropping an event.
+  the rest, such as a job, and the button for each event you write yourself. Ask before dropping an event.
 
 ## Changing it later
 
