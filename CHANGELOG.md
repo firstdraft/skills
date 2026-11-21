@@ -211,14 +211,13 @@ and change its "index prevents a guest from accessing protected records" request
 
 - Existing apps: nothing to do. Update the First Draft plugin with the steps at <https://firstdraft.com/update>.
 
-The plugin bundles CLI 0.10.0, which needs First Draft API 0.9, and passes it the plugin version and the agent's
-name. First Draft names the latest and minimum plugin on every answer. When this setup is older than the latest, a
-command prints one line saying an update is available. Below the minimum, a command that still had a request to
-send stops with `update_required`, and one whose last answer it was keeps its result and prints one line saying to
-update before the next command. An
-account can start 50 Compilations and create 20 new Projects in any 24 hours; past that, the CLI ends with
-`rate_limited` and the time to try again, and the Skill tells the person and stops. After an ambiguous push or
-Compile, the agent runs the same command once more instead of stopping. When the person said yes to reports while
+The plugin bundles CLI 0.10.0, which needs First Draft API 0.9, and passes it the plugin version and the agent's name.
+First Draft names the latest and minimum plugin on every answer. When this setup is older than the latest, a command
+prints one line saying an update is available. Below the minimum, a command that still had a request to send stops
+with `update_required`, and one whose last answer it was keeps its result and prints one line saying to update before
+the next command. An account can start 50 Compilations and create 20 new Projects in any 24 hours; past that, the CLI
+ends with `rate_limited` and the time to try again, and the Skill tells the person and stops. After an ambiguous push
+or Compile, the agent runs the same command once more instead of stopping. When the person said yes to reports while
 approving `login`, the agent sends progress reports at five steps of the first run and a failure report for an
 unexpected failure in generated code; each report command checks the answer first and prints what it sends.
 
