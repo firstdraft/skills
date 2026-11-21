@@ -2494,8 +2494,8 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(ambiguousPush, "phase push", "before analysis or Publication");
   hasExpectation(
     ambiguousPush,
-    "stops without another CLI invocation",
-    "no Plan GET or reconciliation command",
+    "runs the same plan compile --github once more",
+    "unchanged bytes",
   );
 
   const ambiguousPublication = evaluation(
@@ -2674,8 +2674,8 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   assert(
     hasExpectation(
       ambiguousEvaluation,
-      "stops without repeating plan push",
-      "no Plan GET or reconciliation command",
+      "runs the same plan push once more",
+      "does not repeat it a third time",
     ),
   );
 

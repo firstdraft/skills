@@ -36,8 +36,8 @@ staging compatibility, or a complete user journey.
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
 CLI-owned Project, origin, and ETag state. Inspect the Plan; do not print, paste, commit, or treat the state file as
-agent-authored Plan content. Inspect only its `api_url` when a persistent read-only status failure requires checking
-the pinned origin.
+agent-authored Plan content. Inspect only its `api_url`, when a persistent read-only status failure requires checking
+the pinned origin or a new Project after a `412` needs the old one.
 
 `plan init` only creates local files; it does not choose a server. New remote work defaults to production at
 `https://firstdraft.com`. For requested staging work, use the root flag before each remote command
@@ -646,10 +646,13 @@ bytes and private state; create replacement work only within the user's authoriz
 
 With the person's yes, the agent tells First Draft how far a generated app has come and where generated code failed,
 so that First Draft can fix what it generates. The person answered once when approving `login` and can change the
-answer on their First Draft account page; you cannot. Before the [test run](#run-the-generated-tests), run
-`firstdraft_cli account` once. It prints `{"reports": "on"}` or `{"reports": "off"}`. When reports are off, send
-none and say nothing about them. When they are on, send these from the generated app's root, with the
-`compilation.id` that `plan compile` printed:
+answer on their First Draft account page; you cannot. Each report command reads that answer at the Project's origin
+first. When reports are off, it sends nothing, prints a line that says so, and exits 0: send no more reports, and
+say nothing about them.
+
+Send these with a Compilation ID that `plan compile` or `compilation status` printed, from the folder that holds the
+Project's state: the generated app's root after root adoption, or the planning folder after an absent `--output`
+path. `plan compile --github` prints only the repository URL, so after it send none.
 
 | When | Command |
 | --- | --- |
@@ -662,16 +665,16 @@ none and say nothing about them. When they are on, send these from the generated
 The counts come from the spec run's summary and the README: examples run, failing examples, failing examples that
 the README's Behavior to write names, and items still to write. Pass the counts you have and leave out the rest.
 
-When generated code fails in a way the README does not list, send one `report failure` before you fix it:
-`--kind setup_failure` when `bin/setup` fails, `spec_failure` for a failing example that Behavior to write does not
-name, `boot_error` when the app does not boot, and `lint_failure` when a lint fails on generated code. Add what you
-have of `--rerun` with the RSpec command, `--error-class`, `--frame` for each of the app's own frames, `--message`,
-`--fix-summary` once you have fixed it, `--ruby-version`, and `--rails-version`. Pass only text that may leave the
-machine: never file contents, secrets, tokens, or the person's data. The CLI prints what it sends, and names
-on a `Left out:` line each field it left out because it did not fit that field's shape.
+When generated code fails in a way the README does not list, send one `report failure` once you have fixed it, or
+when you stop trying: `--kind setup_failure` when `bin/setup` fails, `spec_failure` for a failing example that
+Behavior to write does not name, `boot_error` when the app does not boot, and `lint_failure` when a lint fails on
+generated code. Add what you have of `--rerun` with the RSpec command, `--error-class`, `--frame` for each of the
+app's own frames, `--message`, `--fix-summary`, `--ruby-version`, and `--rails-version`. Pass only text that may
+leave the machine: never file contents, secrets, tokens, or the person's data. The CLI prints what it sends, and
+names on a `Left out:` line each field it left out because it did not fit that field's shape.
 
 Each command sends once and never blocks your work. After `report_rejected`, `report_unavailable`,
-`account_unavailable`, or a line saying reports are off, carry on without that report and do not send it again.
+`account_unavailable`, or `rate_limited`, carry on without that report and do not send it again.
 
 ## Stable error families
 
@@ -680,8 +683,7 @@ Each command sends once and never blocks your work. After `report_rejected`, `re
 | Any leaf command | `invalid_arguments` | Syntax failed before the requested action. Read that command's help. |
 | Any command that calls First Draft, except `logout` | `update_required`, `api_contract_unsupported` | First Draft needs a newer plugin or CLI, or serves another API contract; see [update and stop lines](#update-and-stop-lines). |
 | Any command that calls First Draft, except `logout` | `rate_limited` | First Draft answered `429`; see [daily limits](#daily-limits). For a report, `response.code` `reports_rate_limited` means the account's reports for the hour are used up; carry on without it. |
-| `account` | `account_unavailable`, `invalid_server_response` | The account read failed; send no reports and carry on. |
-| `report progress`, `report failure` | `report_rejected`, `report_unavailable` | The report was refused, such as `400 invalid_report`, `403 reports_off`, or `409 compilation_not_succeeded`, or its outcome is unconfirmed; carry on without it. |
+| `report progress`, `report failure` | `report_rejected`, `report_unavailable`, `account_unavailable`, `invalid_server_response` | The report was refused, such as `400 invalid_report`, `403 reports_off`, or `409 compilation_not_succeeded`, its outcome is unconfirmed, or the account read before it failed; carry on without it. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | Ask the user to run `login` for that environment, or set its token, outside the conversation. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
@@ -728,9 +730,13 @@ described below.
 PUT may have been accepted but its response could not be verified, so local state was not changed. Run the same
 command once more, with the same options and environment. If First Draft accepts it, carry on. If it answers
 `server_rejected` with status `412` (`precondition_failed`), the first push may have landed, or another copy of the
-Project pushed: when another copy holds newer work, continue from that copy; otherwise tell the person, and with
-their agreement start a new Project from this Plan, as the CLI's error reference describes. Never manufacture an
-ETag or edit `.firstdraft/state.json`.
+Project pushed. When another copy holds newer work, continue from that copy. Otherwise tell the person, and with
+their agreement start a new Project from this Plan: run `plan init` in a new folder, copy the old
+`.firstdraft/foundation-plan.json` over the new one, and push from there to the old Project's origin. A new folder
+has no pinned origin, so its push goes to production unless you select the old one: read only `api_url` from the
+old `.firstdraft/state.json`, or use the origin the first push used when it saved none, and pass `--staging` for
+staging or the same `FIRSTDRAFT_API_URL` for a custom origin. Never manufacture an ETag or edit
+`.firstdraft/state.json`.
 
 `request_outcome_unknown` with `phase: "compilation"` means direct mode sent its conditional start but could not
 verify a retained Compilation identity. The CLI never repeats that start itself. Run the same `plan compile` once

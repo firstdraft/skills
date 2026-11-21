@@ -342,8 +342,9 @@ output stops recovery. Branch on the stable `error` and structured fields, not `
 
 Preserve exact bytes and private state after ambiguous mutations, and rerun an outcome-unknown push or direct start
 only once. Never use `invalid_publication_status` as a reason to retry. Let the CLI own output rollback. Pass an
-[update line](references/diagnostics-and-recovery.md#update-and-stop-lines) on to the user. At `update_required` or
-`rate_limited`, tell the user what the CLI said and stop remote work; never retry in a loop or switch accounts.
+[update line](references/diagnostics-and-recovery.md#update-and-stop-lines) on to the user. At `update_required`, or
+`rate_limited` from a push or Compile, tell the user what the CLI said and stop remote work; never retry in a loop or
+switch accounts.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.
@@ -353,9 +354,9 @@ repository requires a separate user request and an exact verified identity.
 After Compile, follow the [application handoff](references/diagnostics-and-recovery.md#application-handoff): after
 root adoption, the [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) first, then the
 [notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff). Then work in this order, even
-where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner. Run `firstdraft_cli account`
-once: when it prints `"reports": "on"`, send the
-[progress and failure reports](references/diagnostics-and-recovery.md#progress-and-failure-reports) at each step.
+where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner. Send the
+[progress and failure reports](references/diagnostics-and-recovery.md#progress-and-failure-reports) at each step
+until one says reports are off.
 
 1. Run setup and the specs, as the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) says.
 2. Tell the user what there is to write, one line per item: each entry under the README's "Behavior to write",
