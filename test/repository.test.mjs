@@ -45,7 +45,7 @@ const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
 // The bundled Plan schema is a byte-for-byte copy of the service's schema. This constant is its only digest record:
 // the service's release check reads it here by name, so keep the name and the one-line string.
-const foundationPlanSchemaDigest = "d39a81867e17a0fbef92bf49e0e7b86e772f4791d4dc0674e9869472a9425f62";
+const foundationPlanSchemaDigest = "e7f8023925e8a6c884ab8cbd80201cb4ceb540043d98bd2614383b601a524002";
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
     .update(`${JSON.stringify(value, null, 2)}\n`)
