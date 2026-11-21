@@ -243,7 +243,37 @@ function splitProgressOutput(stderr) {
   return { messages, result: `${lines.join("\n")}\n` };
 }
 
+export const updateUrl = "https://firstdraft.com/update";
+const versionPattern = String.raw`\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?`;
+const originPattern = String.raw`https?://(?:[a-z0-9.-]+|\[[0-9a-f:.]+\])(?::\d{1,5})?`;
+const updateSteps = updateUrl.replaceAll(".", String.raw`\.`);
+// A network command writes at most one of these, just before its result, from First Draft's version headers. The
+// CLI owns the wording, in its src/service-client.js.
+const versionLinePatterns = [
+  String.raw`an update is available \((plugin|CLI) ${versionPattern}; this setup has \1 ${versionPattern}\)\. ` +
+    String.raw`Tell the person the update steps are at ${updateSteps}`,
+  String.raw`FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version, so the CLI could not tell whether this ` +
+    String.raw`setup is current\. The update steps are at ${updateSteps}`,
+  String.raw`(?:First Draft requires (plugin|CLI) ${versionPattern} or later, and this setup has \1 ${versionPattern}|` +
+    String.raw`First Draft at ${originPattern} serves API contract ${versionPattern}, which is newer than CLI ` +
+    String.raw`${versionPattern} accepts)\. This command finished; tell the person to update with the steps at ` +
+    String.raw`${updateSteps} before the next one\.`,
+  String.raw`First Draft at ${originPattern} serves (?:API contract ${versionPattern}, which is older than CLI ` +
+    String.raw`${versionPattern} accepts|prerelease API contract ${versionPattern}, which CLI ${versionPattern} does ` +
+    String.raw`not accept)\. This command finished; use the CLI version that this First Draft origin supports before ` +
+    String.raw`the next one\.`,
+].map((pattern) => new RegExp(`^(?:${pattern})$`));
+
+export function isVersionLine(line) {
+  if (!line.startsWith("First Draft: ")) return false;
+
+  const message = line.slice("First Draft: ".length);
+  return versionLinePatterns.some((pattern) => pattern.test(message));
+}
+
 function isSafeProgressMessage(line) {
+  if (isVersionLine(line)) return true;
+
   const message = line.slice("First Draft: ".length);
   if (
     [
