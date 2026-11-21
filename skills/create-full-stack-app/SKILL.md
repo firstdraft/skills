@@ -37,8 +37,8 @@ Targets plugin 0.9.3, CLI 0.9.0, API 0.8, Plan 0.23; catalog selection is separa
 - Preview iPhone and Android apps in [Revyl](references/plan/native-apps.md#previewing-after-compile); Rails
   work needs only the local web app.
 
-Support claims rest on the matching analysis, its GapSet, and its `analyzer_release` and `compiler_release`, not on
-these pages or the public Guide. `valid` does not prove Compilation, and Compilation does not prove behavior.
+Support claims rest on the matching analysis, its GapSet, and its `analyzer_release` and `compiler_release`.
+`valid` does not prove Compilation, and Compilation does not prove behavior.
 
 ## Load references only when needed
 
@@ -112,8 +112,7 @@ using the loaded Skill path (expand any alias with its supplied Skill root). The
 project wrapper at `./bin/firstdraft`, then
 the plugin's bundled CLI, then `firstdraft` on PATH. Keep that order: a project wrapper may supply credentials.
 Use the same resolved helper path in each shell call; shell functions do not persist between tool calls.
-Do not collapse multiword CLI invocations into scalar shell variables: shells differ in word splitting and may
-pass the whole line as one unknown command.
+Never store a multiword CLI invocation in one shell variable: shells split it differently.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -128,9 +127,8 @@ commands:
 - `compilation status`, `compilation download`, and `compilation cancel`; and
 - `login` and `logout`, which only the user runs.
 
-There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.
-If its help differs, report it and stop remote work instead of using HTTP directly; local Plan work may continue.
-Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased.
+Never replace the CLI automatically. If its help differs, report it and stop remote work instead of using HTTP
+directly; local Plan work may continue. Point installs and updates to https://firstdraft.com/update.
 
 New remote work uses `https://firstdraft.com`; for requested staging use `firstdraft_cli --staging plan push`.
 Read [environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) before remote work.
@@ -302,11 +300,10 @@ the already selected mode:
 Invoke it exactly once without another confirmation or gap field; do not reimplement CLI internals. Tell the user
 it usually takes under a minute.
 
-Report direct output only after materialization verifies. On `request_outcome_unknown` with `phase: "compilation"`,
-preserve Plan, private state, and the selected output; do not retry or switch modes. A validated retained ID permits
-status and, after success, download. In `--github` mode, require terminal Publication success and its validated URL;
-Compilation success alone is insufficient. Never Compile concurrently. Publication-singleton replay
-never applies to an ambiguous push or direct start. On a failed Compilation, read
+Report direct output only after materialization verifies. On `request_outcome_unknown`, rerun the same command once;
+never switch modes. A validated retained ID permits status and, after success, download. In `--github` mode, require
+terminal Publication success and its validated URL; Compilation success alone is insufficient. Never Compile
+concurrently. On a failed Compilation, read
 [Failed Compilation](references/diagnostics-and-recovery.md#failed-compilation) first; the Plan is not the cause.
 
 ## Inspect or download the retained Compilation
@@ -343,9 +340,10 @@ Read the [error-envelope rules](references/diagnostics-and-recovery.md#diagnosti
 [stable error family](references/diagnostics-and-recovery.md#stable-error-families) before acting. Unrecognized
 output stops recovery. Branch on the stable `error` and structured fields, not `detail`, elapsed time, or HTTP status.
 
-Preserve exact bytes and private state after ambiguous mutations. An outcome-unknown push or direct start stops;
-only the documented unchanged-byte Publication singleton permits replay. Never use `invalid_publication_status`
-as a reason to retry. Follow the reference for phase-specific recovery and let the CLI own output rollback.
+Preserve exact bytes and private state after ambiguous mutations, and rerun an outcome-unknown push or direct start
+only once. Never use `invalid_publication_status` as a reason to retry. Let the CLI own output rollback. Pass an
+[update line](references/diagnostics-and-recovery.md#update-and-stop-lines) on to the user. At `update_required` or
+`rate_limited`, tell the user what the CLI said and stop remote work; never retry in a loop or switch accounts.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.
@@ -355,7 +353,9 @@ repository requires a separate user request and an exact verified identity.
 After Compile, follow the [application handoff](references/diagnostics-and-recovery.md#application-handoff): after
 root adoption, the [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) first, then the
 [notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff). Then work in this order, even
-where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner:
+where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner. Run `firstdraft_cli account`
+once: when it prints `"reports": "on"`, send the
+[progress and failure reports](references/diagnostics-and-recovery.md#progress-and-failure-reports) at each step.
 
 1. Run setup and the specs, as the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) says.
 2. Tell the user what there is to write, one line per item: each entry under the README's "Behavior to write",

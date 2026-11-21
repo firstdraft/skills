@@ -1,12 +1,13 @@
 # Diagnostics and recovery
 
-Read every result as evidence about one exact invocation and, for Plan mutations, one exact local byte sequence.
-Handled leaf-command failures end standard error with exactly one JSON object. `plan compile` may first emit the
-recognized progress lines documented below. Remove only one leading contiguous block of complete lines whose text
-after the exact `First Draft: ` prefix matches the stable message table below. Then require the remainder to be one
-JSON object. An unrecognized prefixed line, a progress line after the envelope, any other prefix or suffix, and any
-interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
-human-readable `detail` or broad process exit status.
+Read every result as evidence about one exact invocation and, for Plan mutations, one exact local byte sequence. Handled
+leaf-command failures end standard error with exactly one JSON object. `plan compile` may first emit the recognized
+progress lines documented below, and any command that calls First Draft may write one [update or stop
+line](#update-and-stop-lines) just before its result. Remove only one leading contiguous block of complete lines whose
+text after the exact `First Draft: ` prefix matches the stable message table or the update and stop lines below. Then
+require the remainder to be one JSON object. An unrecognized prefixed line, a progress line after the envelope, any
+other prefix or suffix, and any interleaved output fail closed. Branch on the object's stable `error` and structured
+fields rather than the human-readable `detail` or broad process exit status.
 
 This plugin bundles `@firstdraft.com/cli@0.9.0`. Its exact reviewed revision and runtime digest are owned by
 [the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.9.3/script/cli-contract/config.mjs)
@@ -17,11 +18,14 @@ staging compatibility, or a complete user journey.
 ## Contents
 
 - [Local state and credentials](#local-state-and-credentials)
+- [Update and stop lines](#update-and-stop-lines)
+- [Daily limits](#daily-limits)
 - [Push and analysis](#push-and-analysis)
 - [Product Compile](#product-compile)
 - [Retained Compilation status](#retained-compilation-status)
 - [Failed Compilation](#failed-compilation)
 - [Retained Compilation download](#retained-compilation-download)
+- [Progress and failure reports](#progress-and-failure-reports)
 - [Stable error families](#stable-error-families)
 - [Ambiguous mutations](#ambiguous-mutations)
 - [Stuck Compilation recovery](#stuck-compilation-recovery)
@@ -70,6 +74,36 @@ the already requested operation without asking for fresh authorization.
 
 An existing `.firstdraft/` is not disposable scratch space. Resume a readable Plan and state pair; do not
 reinitialize over partial, damaged, or existing state.
+
+## Update and stop lines
+
+First Draft names the latest and the minimum plugin on every answer. When this setup is older than the latest, the
+command writes one line on standard error just before its result:
+`First Draft: an update is available (plugin <latest>; this setup has plugin <installed>). Tell the person the update steps are at https://firstdraft.com/update`.
+A CLI run without the plugin names `CLI` in place of `plugin`. Pass the line on to the person in your next message,
+once per session, and carry on: the command's result stands.
+
+When this setup is older than the minimum, or First Draft serves an API contract this CLI does not accept, the CLI
+sends nothing after that answer. A command cut short ends with `update_required` or `api_contract_unsupported` in
+place of its result. A command whose last answer it was keeps its result, after one line that ends
+`This command finished; tell the person to update with the steps at https://firstdraft.com/update before the next one.`
+or, for an older or prerelease contract, `This command finished; use the CLI version that this First Draft origin supports before the next one.`
+Either way, stop remote work, tell the person what the line or the error's `detail` says, and wait until they have
+updated. A push that First Draft accepted keeps its saved ETag, so after the update run the same command again with
+the same options. When the error carries `current`, a Compilation had already started: follow
+`current.compilation.id` with `compilation status` instead of compiling again. A line that begins
+`First Draft: FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version` means a wrapper set that variable wrongly;
+tell the person, and carry on.
+
+## Daily limits
+
+In any 24 hours, one account can start 50 Compilations and create 20 new Projects. Every Compilation started counts,
+whatever its outcome; replacing an existing Project's Plan, reading status, cancelling, and downloading do not. At a
+limit, First Draft answers 429 and the CLI ends with `rate_limited`: the refused request did nothing.
+`response.code` is `compilation_limit_reached` or `project_limit_reached`, `response.detail` says when the next one
+can start, and `retry_at` is that time in UTC. Tell the person the limit and the time, and stop remote work until
+then. Do not retry in a loop, start another Project to get around it, or create or switch accounts. Local Plan work
+may continue.
 
 ## Push and analysis
 
@@ -237,8 +271,7 @@ index lock when applicable. Reverse the remaining `artifact_moves` in reverse re
 destination back to its source, before reversing the remaining `design_moves` in reverse recorded order. Design
 destinations are inside transaction staging: reversing the generated `.firstdraft` artifact move returns the
 archive there before the original planning `.firstdraft` can return to the root. Never merge or overwrite either
-`.firstdraft` directory. Verify the recorded original snapshot before removing the transaction. Do not repeat an
-outcome-unknown push.
+`.firstdraft` directory. Verify the recorded original snapshot before removing the transaction.
 
 Direct mode never starts GitHub Publication. Success writes one validated JSON object containing the Project,
 Compilation, absolute output path, file count, and manifest digest. Absent output contains only artifact files and
@@ -253,9 +286,9 @@ read-only `compilation status <id> --wait` and, after terminal success,
 `compilation download <id> --output <still-absent-directory>` rather than starting another Compilation. If it stays
 `queued` or `running` after that wait, follow [stuck Compilation recovery](#stuck-compilation-recovery).
 
-An ambiguous direct start is not replayable: `request_outcome_unknown` with `phase: "compilation"` means one
-Compilation may exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and selected
-output, then stop until First Draft or an operator reconciles the Project. Do not rerun either Compile mode.
+After an ambiguous direct start, `request_outcome_unknown` with `phase: "compilation"`, one Compilation may exist
+but its retained identity was not verified. Preserve the exact Plan, CLI state, and selected output, and rerun the
+same `plan compile` once, as [ambiguous mutations](#ambiguous-mutations) describes. Do not switch modes.
 
 #### Root-adoption handoff
 
@@ -540,8 +573,8 @@ Compile or another start request. If an invocation that reached that retained Pu
 Publication-phase outcome unknown, status unavailable, wait timeout, or interruption, wait for it to exit and rerun
 the same `plan compile --github` through the Skill resolver with exact unchanged Plan bytes. Its conditional
 singleton PUT is the documented reconciliation path and resumes or reconciles the retained Publication without
-creating another Compilation, repository, or push. This exception does not apply to an outcome-unknown Plan push or
-Compile `phase: "push"`, which must stop because there is no Plan GET. There is no separate public Publication
+creating another Compilation, repository, or push. An outcome-unknown Plan push or Compile `phase: "push"` follows
+the one-rerun rule under [ambiguous mutations](#ambiguous-mutations) instead. There is no separate public Publication
 status command. The singleton cannot be repointed to a later Head. `invalid_publication_status` is different:
 unchanged replay cannot repair its protocol mismatch. Preserve the exact Plan bytes and private state, reconcile the
 coordinated CLI/service versions first, and do not start a competing or direct mutation.
@@ -605,11 +638,46 @@ An earlier Plan format or target profile is rejected before installation, even w
 profile. Retrying the download or editing the local Plan cannot upgrade that retained artifact. Preserve its Plan
 bytes and private state; create replacement work only within the user's authorized candidate and Compile workflow.
 
+## Progress and failure reports
+
+With the person's yes, the agent tells First Draft how far a generated app has come and where generated code failed,
+so that First Draft can fix what it generates. The person answered once when approving `login` and can change the
+answer on their First Draft account page; you cannot. Before the [test run](#run-the-generated-tests), run
+`firstdraft_cli account` once. It prints `{"reports": "on"}` or `{"reports": "off"}`. When reports are off, send
+none and say nothing about them. When they are on, send these from the generated app's root, with the
+`compilation.id` that `plan compile` printed:
+
+| When | Command |
+| --- | --- |
+| `bin/setup` finished | `firstdraft_cli report progress <compilation-id> --step setup` |
+| The first spec run finished | `firstdraft_cli report progress <compilation-id> --step specs_first_run --examples <n> --failures <n> --behavior-to-write-failures <n> --items-remaining <n>` |
+| Every item under Behavior to write is written | the same with `--step behavior_written` |
+| The specs pass | the same with `--step specs_passing` |
+| The preview started | `firstdraft_cli report progress <compilation-id> --step preview_started` |
+
+The counts come from the spec run's summary and the README: examples run, failing examples, failing examples that
+the README's Behavior to write names, and items still to write. Pass the counts you have and leave out the rest.
+
+When generated code fails in a way the README does not list, send one `report failure` before you fix it:
+`--kind setup_failure` when `bin/setup` fails, `spec_failure` for a failing example that Behavior to write does not
+name, `boot_error` when the app does not boot, and `lint_failure` when a lint fails on generated code. Add what you
+have of `--rerun` with the RSpec command, `--error-class`, `--frame` for each of the app's own frames, `--message`,
+`--fix-summary` once you have fixed it, `--ruby-version`, and `--rails-version`. Pass only text that may leave the
+machine: never file contents, secrets, tokens, or the person's data. The CLI prints what it sends, and names
+on a `Left out:` line each field it left out because it did not fit that field's shape.
+
+Each command sends once and never blocks your work. After `report_rejected`, `report_unavailable`,
+`account_unavailable`, or a line saying reports are off, carry on without that report and do not send it again.
+
 ## Stable error families
 
 | Commands | `error` | Recovery meaning |
 | --- | --- | --- |
 | Any leaf command | `invalid_arguments` | Syntax failed before the requested action. Read that command's help. |
+| Any command that calls First Draft, except `logout` | `update_required`, `api_contract_unsupported` | First Draft needs a newer plugin or CLI, or serves another API contract; see [update and stop lines](#update-and-stop-lines). |
+| Any command that calls First Draft, except `logout` | `rate_limited` | First Draft answered `429`; see [daily limits](#daily-limits). For a report, `response.code` `reports_rate_limited` means the account's reports for the hour are used up; carry on without it. |
+| `account` | `account_unavailable`, `invalid_server_response` | The account read failed; send no reports and carry on. |
+| `report progress`, `report failure` | `report_rejected`, `report_unavailable` | The report was refused, such as `400 invalid_report`, `403 reports_off`, or `409 compilation_not_succeeded`, or its outcome is unconfirmed; carry on without it. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | Ask the user to run `login` for that environment, or set its token, outside the conversation. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
@@ -653,14 +721,19 @@ request is not this family: the CLI treats its outcome as unknown and performs t
 described below.
 
 `request_outcome_unknown` on ordinary `plan push` or with `phase: "push"` from `plan compile` means the Plan
-PUT may have been accepted but local state cannot prove the new Head. There is no Plan GET/reconciliation command,
-so preserve the local files and stop rather than repeating that mutation or manufacturing an ETag.
+PUT may have been accepted but its response could not be verified, so local state was not changed. Run the same
+command once more, with the same options and environment. If First Draft accepts it, carry on. If it answers
+`server_rejected` with status `412` (`precondition_failed`), the first push may have landed, or another copy of the
+Project pushed: when another copy holds newer work, continue from that copy; otherwise tell the person, and with
+their agreement start a new Project from this Plan, as the CLI's error reference describes. Never manufacture an
+ETag or edit `.firstdraft/state.json`.
 
 `request_outcome_unknown` with `phase: "compilation"` means direct mode sent its conditional start but could not
-verify a retained Compilation identity. Unlike Publication, direct Compilation has no Project singleton or safe
-same-command reconciliation path. Preserve the approved exact Plan, CLI state, and selected output. Do not rerun
-`plan compile --output`, switch to `--github` Publication, or issue a direct request. Stop until First Draft or an
-operator identifies the retained work and supplies a trustworthy recovery boundary.
+verify a retained Compilation identity. The CLI never repeats that start itself. Run the same `plan compile` once
+more, with the same options and environment, and do not switch to `--github`. If a Compilation is still active,
+First Draft refuses with `compilation_active` and names it; follow
+[stuck Compilation recovery](#stuck-compilation-recovery). Otherwise the rerun starts a new Compilation, and the one
+the first attempt may have started costs one of the day's Compilations. After that one rerun, stop and report.
 
 After a validated `202` start, act only on an error envelope carrying validated `current.compilation.id`.
 `compilation_status_unavailable` permits a bounded read-only status retry; an invalid status or artifact requires
@@ -733,7 +806,8 @@ changes a succeeded or failed Compilation, and repeating it is safe:
 - `invalid_compilation_status` means the response broke the Compilation contract; read `compilation status` instead
   of repeating the request.
 
-This recovery applies only to `compilation_active`. It does not change the stop rules for `request_outcome_unknown`.
+This recovery applies only to `compilation_active`. It does not change the one-rerun rule for
+`request_outcome_unknown`.
 
 ## Diagnostic shape
 
