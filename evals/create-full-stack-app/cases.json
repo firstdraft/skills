@@ -1560,7 +1560,7 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
       "expectations": [
         "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, and does not ask for a second confirmation or repeat the unchanged read-back.",
@@ -1587,7 +1587,7 @@
     {
       "id": "compile-prepared-drawing-board-application",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
+      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
       "expectations": [
         "Requires the installed CLI to expose plan compile --output as a direct local completion mode while retaining plan compile --github as the separate GitHub Publication mode.",
         "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; and asks for no second confirmation.",

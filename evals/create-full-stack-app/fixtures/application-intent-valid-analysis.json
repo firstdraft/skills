@@ -6,19 +6,19 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000905",
     "graph_version": 1,
-    "head_source_sha256": "f5efede3cda3261314601358bab6e189959c74cefec10418a2be2eb47f73552d",
+    "head_source_sha256": "6af7263769f12c93484936361b17b80a709dc93073586a0e59e6901ad893c8f6",
     "analyzer_release": "foundation-plan-rails/application-2026-10-20-rails-8-1-4",
     "compiler_release": "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4",
     "target": {
       "id": "rails",
-      "profile": "rails-sketch/2026-10"
+      "profile": "rails-sketch/2026-11"
     },
     "status": "valid",
     "diagnostics": [],
     "gap_set": {
       "format": "firstdraft.foundation-gaps/2",
       "source": {
-        "sha256": "f5efede3cda3261314601358bab6e189959c74cefec10418a2be2eb47f73552d"
+        "sha256": "6af7263769f12c93484936361b17b80a709dc93073586a0e59e6901ad893c8f6"
       },
       "project": {
         "id": "01900000-0000-7000-8000-000000000020",
@@ -30,11 +30,11 @@
       "compiler_release": "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4",
       "target": {
         "id": "rails",
-        "profile": "rails-sketch/2026-10"
+        "profile": "rails-sketch/2026-11"
       },
       "gaps": []
     },
-    "gap_set_sha256": "968bda7d909286ee6c731093e4ef7c9f1bb8ca41daf4ee5942838be1b95c3256",
+    "gap_set_sha256": "74beecba87e49807af6646e45b8a74b427a953d545d091f0cb0a0584ba502735",
     "started_at": "2026-07-30T12:02:00.000Z",
     "completed_at": "2026-07-30T12:02:01.000Z"
   }
