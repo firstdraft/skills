@@ -7,8 +7,8 @@ description: The Account Entity: sign-up, sign-in, password reset, lockout, the 
 
 An Entity with an `account` key is the record type that signs in. Its records are the people of the app, and
 `current_account` in a Policy, a binding, or a Predicate is the signed-in record. A Plan has at most one such
-Entity; a role such as staff or admin is a Field on it, never a second Account Entity. Email and password are not
-Fields. Who may see or change what is decided by [Policies](policies.md); this page covers the Account itself.
+Entity; a role such as staff or admin is a Field on it, never a second Account Entity: an enum named `role`, or a
+yes/no Field named for the people it marks, such as `admin` or `coordinator`. Email and password are not Fields. Who may see or change what is decided by [Policies](policies.md); this page covers the Account itself.
 
 - **First Draft generates:** Rodauth Rails authentication on the Entity's own table, with email and password sign-in,
   sign-out, remembered sessions, and change of email and password; the sign-up, password reset, lockout, and email
@@ -293,7 +293,7 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
 | [Policy](policies.md) or create binding | `{"kind": "environment", "name": "current_account"}` | `user` in the policy is `current_account`. Without an Account Entity, or when the Account is not generated, every Policy and every part that names one is left out (`foundation_plan.gap.policy.not_generated`). |
 | A Policy on the Account Entity itself | `"left": {"target": {"record": "current"}}`, `equals`, `current_account` | `user&.id.present? && record == user`: "this is me". Use it for `profile` and `update`. |
 | A role beside a record's own people, such as "the author, or any admin" | One branch `{"kind": "matches_policy", "record": {"kind": "environment", "name": "current_account"}, "policy": "user.admins_only"}` in the record's rule; see [Policies](policies.md#a-gate-inside-a-records-rule) | `allowed_to?(:administer?, user, with: UserPolicy)` in the rule, and the whole list or none in its scope. |
-| A [Reference](references.md) to the Account Entity | `"targets": ["user"]` on `note.author` | An ordinary `belongs_to`; set it with a create binding to `current_account`. |
+| A [Reference](references.md) to the Account Entity | `"targets": ["user"]` on `note.author` | An ordinary `belongs_to`; set it with a create binding to `current_account`. Name it for the person's part, as a noun: `author`, `host`, `assignee`. |
 | `development_data` References | `{"kind": "reference_record", "record": "user.ada"}` | The note's seed uses the seeded account. |
 | A list of accounts | `index` and `show` in `resource_routes` with a gate Policy | `/users` and `/users/:id`, a directory, separate from `/account`. |
 | An account's own edit page | `edit` and `update` in `resource_routes`, with a Policy that compares `{"record": "current"}` with `current_account` | `resources :users, only: %i[edit update]` beside `/account/edit`. `/users/:id/edit` takes `scaffold.update`'s inputs and finds only the signed-in record: another id, or a guest, gets 404. |
@@ -338,7 +338,7 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
 - **Granting a role.** No page sets an admin flag or role unless you put it in an `update`, which lets people give
   it to themselves. Set roles in seeds or with `bin/rails runner`, or write an admin page after Compile.
 - **A production email provider.** Verification, reset, and unlock mail is sent through Action Mailer inside the
-  request, so a delivery error shows the error page, and `DEPLOY.md` lists what to configure.
+  request, and `DEPLOY.md` lists what to configure.
 
 ## Analysis does not catch
 

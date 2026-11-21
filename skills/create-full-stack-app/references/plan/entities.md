@@ -139,7 +139,7 @@ show the `name`; only URLs and code show the key.
 | a Ruby, Rails, or gem constant: `thread`, `time`, `date`, `class`, `set`, `file`, and the others in the "Analysis rejects" table under [Analysis does not catch](#analysis-does-not-catch) | Rejected: `foundation_plan.identity.reserved_constant_collision`. |
 | `page` or `error` with `resource_routes`, and `account` with `resource_routes` beside an Account Entity | Rejected: `foundation_plan.identity.reserved_constant_collision`. The app already has `PagesController` and `ErrorsController`, and First Draft writes `AccountsController` for `/account`. |
 | `term`, `privacy`, or `root`, with `resource_routes` | Rejected: `foundation_plan.identity.reserved_route_helper_collision` or `foundation_plan.identity.reserved_route_path_collision`. The app's legal pages and Home own `terms_path`, `GET /terms`, `privacy_path`, and `root_path`. |
-| `application` with a Policy; `rodauth`, `rodauth_main`, or `rodauth_mailer` beside an Account Entity | Rejected: `foundation_plan.identity.reserved_constant_collision`. Every Policy class inherits from `ApplicationPolicy`, and sign-in already defines the Rodauth classes. |
+| `application` or `action` with a Policy; `rodauth`, `rodauth_main`, or `rodauth_mailer` beside an Account Entity | Rejected: `foundation_plan.identity.reserved_constant_collision`. Every Policy class inherits from `ApplicationPolicy`, `ActionPolicy` is the authorization library, and sign-in already defines the Rodauth classes. |
 | `request`, `session`, `params`, `response` | Valid and conventional, but awkward inside the Entity's partials; prefer `book_request`. |
 
 ## Implicit order
