@@ -459,8 +459,8 @@ These pass analysis as `valid`:
   anything is typed or picked, so it answers 403 to everyone and its New link never shows. Analysis reports no gap.
   Offer the person to add the record from its parent's page instead, or bind the Reference. A rule that reads a
   parent the form offers, such as a task whose rule asks about its project with `{"association": "task.project"}` as
-  an input, opens New for anyone with a project that would pass, and the select lists only those projects; two
-  offered parents under `or` do not. See [Policies](policies.md#keys).
+  an input, opens New for anyone with a project that would pass, and the select lists only those projects, when the
+  rule reads nothing else the form sets. See [Policies](policies.md#keys).
 
 These pass as `valid` and are reported as gaps:
 

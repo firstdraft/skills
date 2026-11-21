@@ -112,19 +112,20 @@ using the loaded Skill path (expand any alias with its supplied Skill root). The
 project wrapper at `./bin/firstdraft`, then
 the plugin's bundled CLI, then `firstdraft` on PATH. Keep that order: a project wrapper may supply credentials.
 Use the same resolved helper path in each shell call; shell functions do not persist between tool calls.
-Never store a multiword CLI invocation in one shell variable: shells split it differently.
+Never store a multiword CLI invocation in one shell variable.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli --help
 ```
 
-Require top-level help that lists `generate`, `plan`, and `compilation`. The compatible CLI supplies these public
+Require top-level help that lists `generate`, `plan`, `compilation`, and `report`. The compatible CLI supplies these public
 commands:
 
 - `generate uuid` and `generate application-key`;
 - `plan init`, `plan push`, `plan status`, and `plan compile` (local `--output .` by default), optional `--output <path>`, or explicit `--github`;
-- `compilation status`, `compilation download`, and `compilation cancel`; and
+- `compilation status`, `compilation download`, and `compilation cancel`;
+- `account`, `report progress`, and `report failure`; and
 - `login` and `logout`, which only the user runs.
 
 Never replace the CLI automatically. If its help differs, report it and stop remote work instead of using HTTP
