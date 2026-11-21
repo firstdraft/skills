@@ -27,7 +27,7 @@ The smallest Plan that compiles. `entities` may be empty while you work out the 
 ```json
 {
   "format": "firstdraft.foundation-plan.sketch/0.23",
-  "target": {"id": "rails", "profile": "rails-sketch/2026-10"},
+  "target": {"id": "rails", "profile": "rails-sketch/2026-11"},
   "application": {
     "key": "reading_club",
     "name": "Reading Club",
@@ -92,7 +92,7 @@ PNG icons are a monogram of the name's first character.
 | --- | --- | --- | --- | --- |
 | `format` | yes | `"firstdraft.foundation-plan.sketch/0.23"` | | Nothing. Any other version is rejected (`foundation_plan.unsupported_format`). |
 | `target.id` | yes | `"rails"` | | Nothing; the only target. |
-| `target.profile` | yes | `"rails-sketch/2026-10"` | | Nothing; the only profile. Other values are rejected. |
+| `target.profile` | yes | `"rails-sketch/2026-11"` | | Nothing; the only profile. Other values are rejected. |
 | `application` | yes | object | | Everything below. |
 
 No other root key is allowed. Do not add `id`, `project_id`, or `revision`: the Project holds those, not the Plan.
@@ -155,12 +155,12 @@ A `key` becomes a Rails name; a `name` becomes a label. Neither is ever derived 
 - **Keys are singular.** Entity key `books` compiles to `class Books` over a table `books`; use `book`.
 - **Keep the person's wording in `name`** and pick a `key` that is a safe Ruby name. Entity `case` is accepted.
 - **Analysis rejects** a key that makes a Ruby or Rails constant (`thread`, `rails`:
-  `foundation_plan.identity.reserved_constant_collision`), an Application key equal to an Entity key
-  (`foundation_plan.identity.generated_constant_collision`), a Field key Rails reserves (`id`, `type`:
-  `foundation_plan.identity.reserved_member_collision`), and a repeated key among siblings
-  (`foundation_plan.identity.readable_path_duplicate`).
-- **Analysis does not reject** Entity keys that clash with the app shell's own pages: `term`, `privacy`, `page`, and
-  `error`. See [Analysis does not catch](#analysis-does-not-catch).
+  `foundation_plan.identity.reserved_constant_collision`), an Entity key with pages whose controller or route the
+  app shell already has (`page`, `error`, `term`, `privacy`, `root`: see [Entities](entities.md#keys-to-avoid)), an
+  Application key equal to an Entity key (`foundation_plan.identity.generated_constant_collision`), a Field key Rails
+  reserves or a Ruby keyword (`id`, `type`, `when`: `foundation_plan.identity.reserved_member_collision`), and a
+  repeated key among siblings (`foundation_plan.identity.readable_path_duplicate`). Each message names the key to
+  change; keep the word in `name`.
 
 The same Field key on two Entities is fine (`book.title`, `member.title`); keys are local to their owner.
 
@@ -182,8 +182,10 @@ The key that holds a path says what kind of part it names: `{"field": "book.titl
 letters.
 
 An unknown path is rejected with a `foundation_plan.link.*_not_found` code at its JSON pointer, such as
-`/application/entities/0/primary_descriptor/field`. Diagnostics locate problems by JSON pointer into the file you
-pushed.
+`/application/entities/0/primary_descriptor/field`, wherever it is written, a Scaffold's `predicate`, `ordering`,
+`authorization`, inputs, and projection items included. The message names the path, where it is written, and the
+names that exist there, such as "The only Field of "book" is "book.title"": change the path to one of them, or add
+what it means. Diagnostics locate problems by JSON pointer into the file you pushed.
 
 ## What analysis reports
 
@@ -199,12 +201,10 @@ pushed.
   this happens.
 - **Skipped at import:** a part that First Draft does not import generates nothing, and `plan push` warns about
   it; the status stays `valid`. `foundation_plan.import.unsupported_capability` marks a part this release cannot
-  import, such as a nonempty `delivery`, a sum or average `derivation`, or an Association's `cardinality`; import
-  also skips a misspelled Predicate, Ordering, or Policy name in a Scaffold this way, with the same message. Check
-  the path first and fix a misspelling; keep a real request in the Plan. `foundation_plan.import.skipped_dependent`
-  marks a part skipped because it names a skipped part, such as an Entity's whole `scaffold` when one
-  `authorization` names a misspelled Policy, and `home_index` when that list goes with it. When the part it
-  depends on is a misspelling, fixing that brings it back. Each skip is also a gap, such as
+  import, such as a nonempty `delivery`, a sum or average `derivation`, or an Association's `cardinality`; keep a
+  real request in the Plan. `foundation_plan.import.skipped_dependent` marks a part skipped because it names a
+  skipped part or a name that names nothing; beside a `foundation_plan.link.*_not_found` error, fixing the name
+  brings it back. Each skip is also a gap, such as
   `foundation_plan.gap.service.unsupported_capability` or `foundation_plan.gap.service.depends_on_skipped`, and its
   README entry, in one of the two lists above, says what was not imported.
 - **Stub:** behavior First Draft cannot generate yet, such as a Predicate it cannot turn into a scope, is emitted as
@@ -267,7 +267,7 @@ with a list and detail page.
 ```json
 {
   "format": "firstdraft.foundation-plan.sketch/0.23",
-  "target": {"id": "rails", "profile": "rails-sketch/2026-10"},
+  "target": {"id": "rails", "profile": "rails-sketch/2026-11"},
   "application": {
     "key": "reading_club",
     "name": "Northside Readers",
@@ -298,8 +298,8 @@ with a list and detail page.
 }
 ```
 
-The club calls the journal entries Pages; the key is `journal_page` because an Entity keyed `page` with a `scaffold`
-fails Compile (see [Analysis does not catch](#analysis-does-not-catch)), and `name` keeps the word.
+The club calls the journal entries Pages; the key is `journal_page` because analysis rejects an Entity keyed `page`
+with pages, and `name` keeps the word.
 
 ### Generates
 
@@ -382,17 +382,6 @@ and `DEPLOY.md` lists `APP_HOST`.
 
 These pass analysis as `valid`:
 
-- **Entity key `term` or `privacy`.** The shell already names the routes `terms` (legal Terms page) and `privacy`
-  (legal Privacy page). With a list page for `term`, `/terms` and `terms_path`, including the navigation link, open
-  the legal page, so the list is unreachable. For `privacy`, `privacy_path(record)` points at the legal page, so
-  links to each record are wrong. Pick a key with a qualifier and keep the word in `name`.
-- **Entity key `page` or `error` with a `scaffold`.** Its controller would replace the shell's `PagesController` or
-  `ErrorsController`, so Compile fails with an internal error and produces no app. Without a `scaffold` it compiles.
-  Use another key.
-- **A one-part or three-part path in a Scaffold projection**, such as `"title"` or `"book.title.x"`. The item is
-  skipped with `foundation_plan.gap.service.unsupported_capability`, which reads like a missing feature; the list
-  shows only each record's descriptor. Elsewhere, such as `primary_descriptor` or a data record, the same path is
-  rejected.
 - **A path to another Entity's Field in a projection**, such as `member.full_name` in the book list. The list page
   is dropped (`foundation_plan.gap.scaffold.definition.not_generated`). Reach other Entities through an Association;
   see [Associations](associations.md).

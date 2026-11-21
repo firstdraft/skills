@@ -86,7 +86,7 @@ validation. Field types and their other keys are on [Fields](fields.md).
 | Key | Required | Values | Default | Generates |
 | --- | --- | --- | --- | --- |
 | `subject_uuid` | yes | lowercase UUIDv7 | | Nothing; identity. Keep it when you rename the Entity. |
-| `key` | yes | lower snake case, `^[a-z][a-z0-9_]*$`, unique among Entities | | Every Rails name; see [How a key becomes Rails names](#how-a-key-becomes-rails-names). Other parts of the Plan name the Entity by this key. Some product words cannot be keys: `thread`, `time`, and `date` are rejected, and `term`, `error`, and `page` pass analysis but break the app; see [Keys to avoid](#keys-to-avoid). |
+| `key` | yes | lower snake case, `^[a-z][a-z0-9_]*$`, unique among Entities | | Every Rails name; see [How a key becomes Rails names](#how-a-key-becomes-rails-names). Other parts of the Plan name the Entity by this key. Some product words cannot be keys, such as `thread`, `time`, `page`, and `term`; see [Keys to avoid](#keys-to-avoid). |
 | `name` | yes | text with at least one non-space character | | The human name: `activerecord.models.<key>` in `config/locales/scaffolds.en.yml`, and, with a Scaffold, page headings, buttons, and the navigation label, pluralized by Rails (`Person` gives `People`). It may differ from the key: key `cook`, name `Chef`. |
 | `primary_descriptor` | yes | exactly one of `{"field": …}`, `{"association": …}`, `{"system_field": …}` | | The label pages show for one record; see [Primary descriptor](#primary-descriptor). |
 | `icon` | no | one of `bell` `bookmark` `calendar` `camera` `cart` `chat` `check` `clock` `document` `envelope` `film` `folder` `gear` `globe` `grid` `heart` `house` `list` `map_pin` `music` `payment` `people` `person` `photo` `search` `star` `tag` `video` | none | The tab icon of the Entity's list page in a generated iPhone or Android app. The web app does not show it. |
@@ -137,8 +137,9 @@ show the `name`; only URLs and code show the key.
 | Key | What happens |
 | --- | --- |
 | a Ruby, Rails, or gem constant: `thread`, `time`, `date`, `class`, `set`, `file`, and the others in the "Analysis rejects" table under [Analysis does not catch](#analysis-does-not-catch) | Rejected: `foundation_plan.identity.reserved_constant_collision`. |
-| `term`, with an `index` route | Valid, but the app's own legal page owns `GET /terms` and `terms_path`, so the list page is unreachable. Any key whose table is not `terms` avoids it. |
-| `error` or `page`, with a `scaffold` | Valid, but the Compile fails and produces no app. |
+| `page` or `error` with `resource_routes`, and `account` with `resource_routes` beside an Account Entity | Rejected: `foundation_plan.identity.reserved_constant_collision`. The app already has `PagesController` and `ErrorsController`, and First Draft writes `AccountsController` for `/account`. |
+| `term`, `privacy`, or `root`, with `resource_routes` | Rejected: `foundation_plan.identity.reserved_route_helper_collision` or `foundation_plan.identity.reserved_route_path_collision`. The app's legal pages and Home own `terms_path`, `GET /terms`, `privacy_path`, and `root_path`. |
+| `application` or `action` with a Policy; `rodauth`, `rodauth_main`, or `rodauth_mailer` beside an Account Entity | Rejected: `foundation_plan.identity.reserved_constant_collision`. Every Policy class inherits from `ApplicationPolicy`, `ActionPolicy` is the authorization library, and sign-in already defines the Rodauth classes. |
 | `request`, `session`, `params`, `response` | Valid and conventional, but awkward inside the Entity's partials; prefer `book_request`. |
 
 ## Implicit order
@@ -311,13 +312,6 @@ An unknown Entity key in any of these fails import with `foundation_plan.link.en
 
 These pass analysis as `valid`, listed from most to least harm:
 
-- **Key `error` or `page` with a `scaffold`: no app.** Its controller would replace the app's own `ErrorsController`
-  or `PagesController`, and the Compile fails. Without a scaffold they compile.
-- **Key `term` with an `index` route: the list page is unreachable.** Every app has a legal page at
-  `get "terms"`, drawn before the Entity's `resources :terms`. That route keeps `GET /terms` and the `terms_path`
-  helper, so the navigation link opens the legal page and the generated request spec for the list fails. Use a
-  qualified key whose table is not `terms`, with `"name": "Term"`. The navigation then shows "Terms" for the Entity
-  and the footer keeps "Terms of service" for the legal page.
 - **An `enum` Field in `implicit_order_column`: the line is dropped.** The model gets no `implicit_order_column` and
   no gap is reported. Keep it in the Plan: the generated README does not list it either, so add it to your own list
   and write the `implicit_order_column` line before the preview; `SKILL.md` has the order of work.
@@ -331,15 +325,16 @@ Analysis rejects:
 | Key or shape | Code |
 | --- | --- |
 | A key whose class is already a Ruby, Rails, or gem constant: `class`, `data`, `date`, `file`, `hash`, `method`, `module`, `object`, `process`, `queue`, `random`, `range`, `set`, `signal`, `struct`, `symbol`, `thread`, `time`, `warning`, `user_agent`, `mail`, `logger`, and others | `foundation_plan.identity.reserved_constant_collision`. Keep the product word in `name`: key `time_slot`, name `Time`. |
+| A key whose controller, route, or Policy class the app already has, as in [Keys to avoid](#keys-to-avoid) | `foundation_plan.identity.reserved_constant_collision`, `reserved_route_helper_collision`, or `reserved_route_path_collision`. The message names what the key collides with; change only the key and every readable path that starts with it. |
 | A key equal to `application.key`, or two keys with one table, such as `person` and `people` | `foundation_plan.identity.generated_constant_collision` |
-| A key whose table Rails or the app already owns, such as `schema_migration` or `solid_queue_job` | `foundation_plan.rails_target.compiler.unsupported_graph` |
+| A key whose table Rails already owns: `schema_migration` or `ar_internal_metadatum` | `foundation_plan.rails_target.compiler.unsupported_graph` |
 | A table name over 63 bytes | `foundation_plan.rails_target.compiler.unsupported_graph` |
 | A repeated key | `foundation_plan.identity.readable_path_duplicate` |
 | Capitals, a leading digit, or a hyphen in a key | `foundation_plan.schema.pattern` |
 | A descriptor Field that does not exist, or that belongs to another Entity | `foundation_plan.link.field_not_found`, `foundation_plan.entity.primary_descriptor_owner_incompatible` |
 | An icon outside the list | `foundation_plan.schema.enum` |
 
-A rejected key can add a second, unrelated `unsupported_graph` error in the same result; fix the key first.
+Each of these messages says which key to change; the Entity's `name` can stay.
 
 ## Decisions to raise
 

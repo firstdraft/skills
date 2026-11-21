@@ -296,8 +296,6 @@ The full example shows the Plan shape for most rows. Every literal is `{"kind": 
 
 These pass analysis as `valid` and show up only as gap codes:
 
-- **A `default` whose key is not in the list.** The default is not applied
-  (`foundation_plan.gap.field_modifier.default`), and example records that relied on it are dropped.
 - **An example record whose value is not in the list.** The record is dropped
   (`foundation_plan.gap.development_data.record.not_generated`).
 - **A list page that selects an Ordering First Draft could not generate.** The page calls the scope, and the scope
@@ -318,9 +316,11 @@ These pass analysis as `valid` and show up only as gap codes:
 
 This passes as `valid` with no gap: **two values with the same `name`.** The select shows two identical labels.
 
-Analysis rejects a Predicate literal outside the list (`foundation_plan.expression.literal_type_incompatible`), a
-repeated value key (`foundation_plan.identity.readable_path_duplicate`), an empty `values` list, a key that is not
-lower snake case, and an `ordinal` that is not `true` or `false`.
+Analysis rejects a `default` whose key is not one of the Field's value keys
+(`foundation_plan.link.field_value_not_found`, whose message lists the keys; change the default to one of them), a
+Predicate literal outside the list (`foundation_plan.expression.literal_type_incompatible`), a repeated value key
+(`foundation_plan.identity.readable_path_duplicate`), an empty `values` list, a key that is not lower snake case, and an
+`ordinal` that is not `true` or `false`.
 
 ## Decisions to raise
 

@@ -1263,7 +1263,7 @@
       "expectations": [
         "Branches on request_outcome_unknown rather than the optional status or human-readable detail.",
         "Does not treat the optional status as proof of acceptance or rejection, trust an unverified response header, or derive an ETag from the Plan.",
-        "Preserves local files and stops without repeating plan push because no Plan GET or reconciliation command can recover the accepted Head.",
+        "Preserves local files and runs the same plan push once more with the same options and environment, and does not repeat it a third time. Handles that rerun's own result by its error family; with this case's opaque staged state it is local_input_unreadable, which preserves the files.",
         "Never claims the ambiguous request produced a particular server Head."
       ],
       "artifacts": [
@@ -1560,7 +1560,7 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
       "expectations": [
         "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, and does not ask for a second confirmation or repeat the unchanged read-back.",
@@ -1587,7 +1587,7 @@
     {
       "id": "compile-prepared-drawing-board-application",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
+      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
       "expectations": [
         "Requires the installed CLI to expose plan compile --output as a direct local completion mode while retaining plan compile --github as the separate GitHub Publication mode.",
         "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; and asks for no second confirmation.",
@@ -1766,7 +1766,7 @@
       "expectations": [
         "Uses phase push to identify ambiguity in Plan submission, before analysis or Publication, and does not claim that a repository exists.",
         "Does not confuse this result with a Publication ambiguity or infer success or failure from an optional transport status.",
-        "Preserves local files and stops without another CLI invocation because no Plan GET or reconciliation command can recover the accepted Head."
+        "Preserves local files and runs the same plan compile --github once more with unchanged bytes, options, and environment instead of reporting a repository URL, then handles that rerun's own result by its error family without a third attempt."
       ]
     },
     {
@@ -1786,8 +1786,8 @@
       "expectations": [
         "Uses phase compilation to recognize that the exact Plan was accepted and analyzed and that one direct Compilation may have started without a verified retained identity.",
         "Does not infer failure from the absent output directory or claim that no retained work exists.",
-        "Preserves the exact approved Plan, private CLI state, and absent output path and stops until First Draft or an operator reconciles the Project.",
-        "Does not rerun plan compile --output, switch to plan compile --github, invoke retained status without a trustworthy Compilation ID, issue HTTP directly, or claim Publication or a GitHub repository."
+        "Preserves the exact approved Plan, private CLI state, and absent output path, and runs the same plan compile --output ./application once more with the same options and environment, then handles that rerun's own result by its error family.",
+        "Does not run plan compile a third time, switch to plan compile --github, invoke retained status without a trustworthy Compilation ID, issue HTTP directly, or claim Publication or a GitHub repository."
       ]
     },
     {

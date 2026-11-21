@@ -1,0 +1,37 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-17-gem-advisories",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.policy.write_branch_admits_anyone",
+      "severity": "warning",
+      "pointer": "/application/entities/1/policies/0/allow_when/expressions/1",
+      "readable_path": "note.manage_own_or_admin"
+    }
+  ],
+  "gaps": [],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: new accepts a permitted new-record request",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create form browser coverage",
+      "file": "spec/system/notes_spec.rb"
+    }
+  ]
+}

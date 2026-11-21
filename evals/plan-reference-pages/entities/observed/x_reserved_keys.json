@@ -1,0 +1,38 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-17-gem-advisories",
+  "status": "issues_found",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.identity.reserved_constant_collision",
+      "severity": "error",
+      "pointer": "/application/entities/0/key",
+      "readable_path": "page"
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.identity.reserved_route_helper_collision",
+      "severity": "error",
+      "pointer": "/application/entities/1/key",
+      "readable_path": "term"
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.identity.reserved_constant_collision",
+      "severity": "error",
+      "pointer": "/application/entities/2/key",
+      "readable_path": "action"
+    }
+  ],
+  "gaps": [],
+  "compile": null,
+  "readme": []
+}

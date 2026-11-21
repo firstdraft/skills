@@ -432,12 +432,6 @@ Every one of these names an authored Association, or a Reference's forward reade
 
 These pass analysis as `valid`:
 
-- **A page item that names an Association no Entity authored, or misspells one.** The item is dropped at import
-  with `foundation_plan.gap.service.unsupported_capability` and `foundation_plan.gap.service.pruned_scope`; the page
-  has no section. The Rails `has_many` that a Reference already generates for deletion does not count: author it.
-- **A Policy whose `exists` names an Association no Entity authored.** The Policy, and every page it guards, are
-  left out (`foundation_plan.gap.policy.not_generated`, with a `foundation_plan.link.association_not_found`
-  warning). In a Predicate the same mistake is an error.
 - **A page item that names another Entity's Association,** such as `tag.projects` on the project page, or one
   Association listed twice on one page. The item is left out
   (`foundation_plan.gap.scaffold.projection.not_generated`).
@@ -452,16 +446,17 @@ These pass analysis as `valid`:
   calls them.
 
 Analysis rejects: a missing `kind` or `side`, `through` on a direct Association, `reference` or `side` on an
-indirect one (schema errors); an unknown Reference, Predicate, or `through` Association
-(`foundation_plan.link.reference_not_found`, `predicate_not_found`, `association_not_found`); a `"referenced"`
+indirect one (schema errors); an unknown Reference, Predicate, or `through` Association, and an Association that a
+page item, a form input, a Policy's `exists`, or a Predicate names but no Entity authored
+(`foundation_plan.link.reference_not_found`, `predicate_not_found`, `association_not_found`, whose message lists the
+Associations that exist; the Rails `has_many` that a Reference generates for deletion does not count, so author it);
+a `"referenced"`
 Association on the Reference's own Entity, or a `through` that does not start on this Entity
 (`foundation_plan.association.owner_incompatible`); a Predicate of the wrong Entity
 (`foundation_plan.association.predicate_owner_incompatible`); a key equal to a Field's
 (`foundation_plan.identity.generated_member_collision`) or to a Reference key on the same Entity
 (`foundation_plan.identity.readable_path_duplicate`); a reserved Rails name such as `errors`
-(`foundation_plan.identity.reserved_member_collision`); and `"cardinality": {}`. A Field-key collision or a
-reserved name also reports an unrelated `foundation_plan.rails_target.compiler.unsupported_graph` error about
-Predicates; fix the key and it goes away.
+(`foundation_plan.identity.reserved_member_collision`); and `"cardinality": {}`.
 
 ## Decisions to raise
 

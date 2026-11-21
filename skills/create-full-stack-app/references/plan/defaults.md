@@ -20,8 +20,10 @@ token Fields fill themselves; none of those four takes a `default`.
   datetime, time zone, URL, language, rich text, or JSON Field, and values computed from other Fields such as "a
   week after the start date". No spec checks a Field default.
 
-Analysis never rejects a Field or Reference default for its value. A default that is not generated shows up only as
-a gap, `foundation_plan.gap.field_modifier.default` on a Field or
+Analysis rejects one default for its value: an enum default whose key is not one of the Field's values
+(`foundation_plan.link.field_value_not_found`). Change it to one of the keys the message lists, or add the value it
+means. Any other default that is not generated shows up only as a gap, `foundation_plan.gap.field_modifier.default` on
+a Field or
 `foundation_plan.gap.reference.default_not_generated` on a Reference. The gap list is in the result of `plan push`
 and, after Compile, in the app's `.firstdraft/gaps.json`; the two are the same list. Read it after every push. The
 generated README lists each of these gaps under "Behavior to write", in "Data".
@@ -80,7 +82,8 @@ A gap leaves the column without a default and generates the rest of the Field as
 ## Literal values
 
 A literal default that does not fit its Field is not generated and is reported only as
-`foundation_plan.gap.field_modifier.default`, whose text is "the authored default is not applied".
+`foundation_plan.gap.field_modifier.default`, whose text is "the authored default is not applied". An enum default
+outside the Field's values is rejected instead.
 
 | Field type | Write | Not generated |
 | --- | --- | --- |
@@ -89,7 +92,7 @@ A literal default that does not fit its Field is not generated and is reported o
 | `decimal` | a string with no trailing fractional zero: `"2.5"`, `"10"`, `"-0.5"`, `"8.25"` | `2.5`, `"2.50"`, `"+1"`, `"1e3"`, `"07"` |
 | `money` | the same string form, at most two decimal places: `"25"`, `"0.7"`, `"10.5"` | `"25.00"`, `"10.50"`, `10`, `"10.999"` |
 | `short_text`, `long_text` | a string the Field's `normalizations` leave unchanged: `"Draft"`, `"Line one\nLine two"` | `5`; `" Draft "` with `trim` |
-| `enum` | a value `key`: `"medium"` | `"Medium"` (the name), a key not in the list |
+| `enum` | a value `key`: `"medium"` | Rejected: `"Medium"` (the name), or any key not in the list |
 | any | | `null`: an optional Field already starts empty, so leave `default` out |
 
 The migration writes a decimal or money default with a fractional part: `"25"` becomes `default: "25.0"`.
@@ -269,8 +272,8 @@ it to your own list.
 
 These pass analysis as `valid` and show up only as a gap:
 
-- **A literal that does not fit**, from the [Literal values](#literal-values) table. `"25.00"` on a money Field is
-  the usual case.
+- **A literal that does not fit**, from the [Literal values](#literal-values) table, except an enum key outside the
+  Field's values, which is rejected. `"25.00"` on a money Field is the usual case.
 - **An environment value on the wrong type**, such as `current_time` on a `date` or `short_text` Field.
 - **A Reference default that cannot work**: a `reference_record` naming a record that does not exist,
   `current_account` on a Reference whose target is not the Account Entity or in a Plan with no Account, or

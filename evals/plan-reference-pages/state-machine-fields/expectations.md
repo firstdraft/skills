@@ -22,6 +22,13 @@
 - The bookings index action in `app/controllers/bookings_controller.rb` calls a scope whose body is
   `where(<state column>: "<requested state>")` (or `where(<state column>: ["<requested state>"])`); the starter's
   index calls `Booking.order(:id)` with no scope.
+- The confirm and decline transitions name who acts (items 1 and 7) in `authorization`: a gate on a staff role of
+  an Account Entity the Plan adds, `{"policy": "<account>.<staff policy>", "record": {"kind": "environment", "name":
+  "current_account"}}`, whose rule reads the role. `"public"` meets this only when the notes record that the person
+  chose it after being told that anyone who opens a booking could then confirm it. `config/routes.rb` has
+  `patch :confirm` in a `member` block for bookings, `BookingsController#confirm` calls `confirm!`, with the gate a guest who
+  posts to it is sent to sign in, and the booking's details partial shows the button when `may_confirm?` holds. The
+  decline event is a stub, so it has no button.
 - The Plan has three example bookings: one in the requested state, one confirmed, and one declined with the reason
   set. `db/seeds/development.rb` creates the first two: one with no event fired, and one with the confirm event
   fired (`<record>.confirm! if <record>.requested?`). The declined one is left out until the decline event is
@@ -29,9 +36,9 @@
 
 ## Notes
 
-- Says that no generated page, route, or controller action fires the confirm event, and that the reader will add
-  the button, route, and controller action before the preview (item 7).
+- Says that Compile writes the Confirm button on the booking's page (item 7), that the reader writes the decline
+  event and its button, and asks who may cancel a booking or request it again.
 - Says that one event generates only one timestamp effect, so stating the follow-up flag as a second effect (item 5)
   makes the decline event a stub that the reader writes before the preview, and that the declined example booking
   is not seeded until then.
-- Says who may confirm or decline cannot be expressed in the Plan, or asks the user about it.
+- Says that staff need to sign in for the app to tell them apart, and asks how people become staff.

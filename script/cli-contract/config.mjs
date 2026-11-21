@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "a71962a4f4643d0a1835a2309a29a21268ba61c0";
+export const cliRevision = "3ab4691abf6b2d310693149fb3c4dc9903ff5446";
 export const cliRuntimeSha256 =
-  "502b8d7502641e4109c12b312c1b51a9f89fef106cee1f94967c39c4873ab856";
+  "6a7622d27db851f7250479cb678c67c6627bb65fd68843782b93a3fbcbbcc36c";
 export const cliPackageName = "@firstdraft.com/cli";
 export const cliPackageVersion = "0.9.0";
 
@@ -51,7 +51,7 @@ export const compilerRelease =
   "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4";
 export const compilationTarget = {
   id: "rails",
-  profile: "rails-sketch/2026-10",
+  profile: "rails-sketch/2026-11",
 };
 export const artifactMediaType =
   "application/vnd.firstdraft.compilation-artifact+json";
@@ -69,6 +69,7 @@ export const packedFileAllowlist = [
   "src/api-response.js",
   "src/application-identity.js",
   "src/cli.js",
+  "src/commands/account.js",
   "src/commands/compilation.js",
   "src/commands/login.js",
   "src/commands/logout.js",
@@ -77,6 +78,7 @@ export const packedFileAllowlist = [
   "src/commands/plan-publish.js",
   "src/commands/plan-push.js",
   "src/commands/plan-status.js",
+  "src/commands/report.js",
   "src/compilation-artifact.js",
   "src/credentials.js",
   "src/file-system.js",
@@ -84,6 +86,7 @@ export const packedFileAllowlist = [
   "src/plan-compile-progress.js",
   "src/plan-state.js",
   "src/root-output.js",
+  "src/service-client.js",
   "src/uuid-v7.js",
   "src/version.js",
 ];

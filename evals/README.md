@@ -30,9 +30,11 @@ pages' example Plans, what the Service reported for each, and the page tests are
   The protocol is evaluator-facing and is not packaged with the Skill.
 - Use a controlled local service. Publication also uses strict fake GitHub transport unless a live journey is
   explicitly approved. After an ambiguous external result, record it and reconcile read-only rather than repeating
-  the mutation. The sole exception is the unchanged-byte
+  the mutation. The exceptions are the unchanged-byte
   [Publication singleton replay](../skills/create-full-stack-app/references/diagnostics-and-recovery.md#private-github-publication)
-  after a Publication-phase unknown or status timeout; it never applies to an ambiguous Plan push or direct start.
+  after a Publication-phase unknown or status timeout, and the one rerun of an ambiguous Plan push or direct start
+  that [ambiguous mutations](../skills/create-full-stack-app/references/diagnostics-and-recovery.md#ambiguous-mutations)
+  describes.
 - Grade requested meaning and unaffected subject identities, not preferred wording. A source-only case does not
   establish target support, installed-client behavior, runtime results, or live transport through GitHub
   Publication.
