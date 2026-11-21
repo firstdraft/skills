@@ -340,7 +340,8 @@ Each of these messages says which key to change; the Entity's `name` can stay.
 
 - **Propose, and let the person correct:** the list of Entities and their names in the person's words, and which
   value names a record on its page. Recommend a required text Field such as a title or name.
-- **Tell:** when a product word is a key to avoid, such as Thread, always rejected, or Term, rejected with pages, say which key you used and that people still see their word on pages and in navigation.
+- **Tell:** when a product word is a key to avoid, such as Thread (always rejected) or Term (rejected when the
+  Entity has pages), say which key you used and that people still see their word on pages and in navigation.
 - **No need to ask:** `icon`; pick the closest token. Leave out `implicit_order_column` unless the person describes
   what "first" or "latest" means for a kind of record.
 

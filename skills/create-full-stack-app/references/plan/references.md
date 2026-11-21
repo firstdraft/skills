@@ -431,10 +431,10 @@ Analysis rejects: `realization` on one target or its absence on several (`founda
 `foundation_plan.schema.required`); a required Reference with `nullify_reference` (`foundation_plan.schema.not`);
 an unknown target (`foundation_plan.reference.target_not_found`); a form input written as
 `{"reference": "<entity>.<key>"}` (`foundation_plan.schema.additionalProperties`), or as `{"field": "task.project"}`
-(`foundation_plan.link.field_not_found`, since no Field has that path; write `{"association": "task.project"}`); a key shared with a Field
-(`foundation_plan.identity.generated_member_collision`); an example record pointing at a record of another Entity
-(`foundation_plan.data.reference_target_entity_incompatible`); and a Predicate `reference_record` that names an
-example record rather than [reference data](reference-data.md)
+(`foundation_plan.link.field_not_found`, since no Field has that path; write `{"association": "task.project"}`); a
+key shared with a Field (`foundation_plan.identity.generated_member_collision`); an example record pointing at a
+record of another Entity (`foundation_plan.data.reference_target_entity_incompatible`); and a Predicate
+`reference_record` that names an example record rather than [reference data](reference-data.md)
 (`foundation_plan.expression.reference_record_not_reference_data`).
 
 ## Decisions to raise
