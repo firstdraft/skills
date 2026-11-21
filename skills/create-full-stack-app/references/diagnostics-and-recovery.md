@@ -37,7 +37,7 @@ staging compatibility, or a complete user journey.
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
 CLI-owned Project, origin, and ETag state. Inspect the Plan; do not print, paste, commit, or treat the state file as
 agent-authored Plan content. Inspect only its `api_url`, when a persistent read-only status failure requires checking
-the pinned origin or a new Project after a `412` needs the old one.
+the pinned origin, or a new Project after a `412` or a retired profile needs the old one.
 
 `plan init` only creates local files; it does not choose a server. New remote work defaults to production at
 `https://firstdraft.com`. For requested staging work, use the root flag before each remote command
@@ -185,8 +185,10 @@ cannot fix this. With the user's agreement, start a new Project for the same Pla
    and an empty Plan that targets `rails-sketch/2026-11`.
 3. Replace the new empty Plan with the old Plan, changing only `target.profile` to `rails-sketch/2026-11`. Keep
    every subject UUID.
-4. Push and wait for analysis as usual. The new profile can change the GapSet and report new analysis errors, such
-   as a key the app already uses; fix each as its message says, and read the GapSet back again before Compile.
+4. Push to the old Project's origin: a new Project has no pinned origin, so select it as the
+   [fork after a `412`](#ambiguous-mutations) does, reading only `api_url` from the renamed folder's state. Then wait
+   for analysis as usual. The new profile can change the GapSet and report new analysis errors, such as a key the
+   app already uses; fix each as its message says, and read the GapSet back again before Compile.
 
 A Compile in the new Project does not upgrade an application generated under the earlier profile. From
 `.firstdraft/design/`, select an absent `--output` path, then bring what the user wants into the existing
@@ -743,9 +745,10 @@ staging or the same `FIRSTDRAFT_API_URL` for a custom origin. Never manufacture 
 `request_outcome_unknown` with `phase: "compilation"` means direct mode sent its conditional start but could not
 verify a retained Compilation identity. The CLI never repeats that start itself. Run the same `plan compile` once
 more, with the same options and environment, and do not switch to `--github`. If a Compilation is still active,
-First Draft refuses with `compilation_active` and names it; follow
-[stuck Compilation recovery](#stuck-compilation-recovery). Otherwise the rerun starts a new Compilation, and the one
-the first attempt may have started costs one of the day's Compilations. After that one rerun, stop and report.
+First Draft refuses with `compilation_active` and names it: run `compilation status <id> --wait` on that ID, and after
+`succeeded` use `compilation download <id> --output <the same absent path>`, with no third `plan compile`. Otherwise
+the rerun starts a new Compilation, and the one the first attempt may have started costs one of the day's
+Compilations. After that one rerun, stop and report.
 
 After a validated `202` start, act only on an error envelope carrying validated `current.compilation.id`.
 `compilation_status_unavailable` permits a bounded read-only status retry; an invalid status or artifact requires

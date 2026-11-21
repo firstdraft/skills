@@ -454,13 +454,14 @@ These pass analysis as `valid`:
 - **An `update` with no `inputs` and an `edit` route.** The Edit page is an empty form, and the generated parameter
   method is `params.expect(project: [])`. Leave `edit` and `update` out when nothing is editable.
 - **A standalone `create` with no `inputs`.** The New page is a form with only a submit button.
-- **A standalone `create` whose Policy needs a value the form sets,** such as a Field the person types, an
-  editable Reference that must equal `current_account`, or a parent condition named as a Predicate. The New page asks the rule about the empty record before
-  anything is typed or picked, so it answers 403 to everyone and its New link never shows. Analysis reports no gap.
-  Offer the person to add the record from its parent's page instead, or bind the Reference. A rule that reads a
-  parent the form offers, such as a task whose rule asks about its project with `{"association": "task.project"}` as
-  an input, opens New for anyone with a project that would pass, and the select lists only those projects, when the
-  rule reads nothing else the form sets. See [Policies](policies.md#keys).
+- **A standalone `create` whose Policy needs a value the form sets,** such as a Field the person types, an editable
+  Reference that must equal `current_account`, or a parent condition named as a Predicate. The New page asks the rule
+  about the empty record before anything is typed or picked, so it opens only where that record passes, as an admin
+  branch of `or` lets an admin in, and answers 403 to everyone else. Analysis reports no gap. Offer the person to add
+  the record from its parent's page instead, or bind the Reference. A rule that reads a parent the form offers, such as
+  a task whose rule asks about its project with `{"association": "task.project"}` as an input, opens New for anyone with
+  a project that would pass, and the select lists only those projects, when the rule reads nothing else the form sets.
+  See [Policies](policies.md#keys).
 
 These pass as `valid` and are reported as gaps:
 

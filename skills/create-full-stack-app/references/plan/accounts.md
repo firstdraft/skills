@@ -152,7 +152,7 @@ are not asked for, and appear on `/account` only through a `profile`.
 | `bio`, optional `long_text` | no | Not shown. |
 | `bio`, optional `long_text` | `required: true` | Shown, required. |
 | `status`, `state_machine` | yes | Analysis rejects the Plan: `foundation_plan.account.registration_field_not_creatable`. |
-| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails until you write how a new Account gets it. Not listed, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`. |
+| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails until you write how a new Account gets it. Not listed and with no `default`, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`; with a `reference_record` default there is no warning, but the default is a gap too, so read both gaps and the failing registration example. |
 | `avatar`, required `image` | no | No control, and every sign-up fails until you write how a new Account gets it. Analysis warns `foundation_plan.account.registration_required_field_unsupplied`. |
 
 Every value on the form goes through the model's validations before the account is saved; an invalid value returns
@@ -399,7 +399,8 @@ refuses a folder that already holds a compiled app. Code you wrote after Compile
 Plan change reaches that app only when you copy it across.
 
 - **In the Plan:** adding or dropping a flow changes `rodauth_main.rb`, the routes, and the authentication
-  migration. A new required Field on the Account Entity joins the sign-up form unless it has a `default`. Moving
+  migration. A new required text Field on the Account Entity joins the sign-up form unless it has a `default`; a required enum or
+  boolean needs a `default` or a `registration.inputs` entry. Moving
   `account` to another Entity starts the people over.
 - **After Compile:** Rodauth's configuration is in `app/misc/rodauth_main.rb`, its views in `app/views/rodauth/`,
   and labels in `config/locales/authentication.en.yml`. To let an admin grant a role, add a gate Policy and an
