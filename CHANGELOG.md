@@ -155,18 +155,19 @@ or other code fires.
 **Adding a button in an existing app.** These are the lines a new app gets for an expense's `cancel` event on
 `expense.status`, which the expense's own Policy `manage?` guards. Use your Entity, event, and Policy in their place.
 
-1. In `config/routes.rb`, give the resource a member route:
+1. In `config/routes.rb`, add a member route inside the resource's existing declaration, keeping its `only:` list:
 
    ```ruby
-   resources :expenses do
+   resources :expenses, only: %i[index show new create edit update] do
      member do
        patch :cancel
      end
    end
    ```
 
-2. In `app/controllers/expenses_controller.rb`, add the action. Look the record up as the `show` action does; here
-   `show` is public, so `Expense.find` is the lookup.
+2. In `app/controllers/expenses_controller.rb`, add the action. Look the record up as the `show` action does, and run
+   every check `show` runs, its gate included, before the event's own; here `show` is public, so `Expense.find` is
+   the lookup.
 
    ```ruby
    def cancel
@@ -182,9 +183,10 @@ or other code fires.
    end
    ```
 
-   For an event that a gate on the Account Entity guards, drop the `authorize!` line and run the gate first:
-   `before_action :authorize_administer, only: %i[cancel]`, with a private method that calls
-   `authorize! current_account, to: :administer?, with: UserPolicy`, as the controller's other gated actions do.
+   For an event that a gate on the Account Entity guards, drop the `authorize!` line and run the gate first. When the
+   controller already has `before_action :authorize_administer, only: %i[...]`, add `cancel` to that list; a second
+   `before_action` line for the same method replaces the first. Otherwise add the line and a private method that
+   calls `authorize! current_account, to: :administer?, with: UserPolicy`.
 
 3. In `app/models/expense.rb`, add `requires_lock: true` to the machine, so that each bang method locks and
    reloads its record: `aasm :status, column: :status, no_direct_assignment: true, requires_lock: true do`. Save a
@@ -258,9 +260,12 @@ Plan supplies it; a `reference_record` default counts as a source, though Compil
 
 **Closing sign-up to a role in an existing app.** Remove the role's control from
 `app/views/rodauth/create_account.html.erb` and the code that reads its parameter in `app/misc/rodauth_main.rb`, and
-set the ordinary role there for each new account, or give the column a default in a migration. Then add a request
-example to `spec/requests/account_registration_spec.rb` that signs up with `role` set to `admin` and checks that the
-new account has the ordinary role, and run `bundle exec rspec`.
+set the ordinary role there for each new account, or give the column a default in a migration. When the account's
+Edit details page lists it too, remove it from `app/views/accounts/_form.html.erb` and from the permitted parameters
+in `app/controllers/accounts_controller.rb`. Then add a request example to
+`spec/requests/account_registration_spec.rb` that signs up with `role` set to `admin` and checks that the new account
+has the ordinary role, and one that updates an account with `role` set to `admin` and checks that its role stays the
+same, and run `bundle exec rspec`.
 
 ## 2026-11-21: Target profile rails-sketch/2026-11
 

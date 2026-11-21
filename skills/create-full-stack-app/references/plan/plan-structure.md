@@ -181,12 +181,13 @@ The key that holds a path says what kind of part it names: `{"field": "book.titl
 `{"association": "loan.book"}`, `{"system_field": "id"}`. Paths never use `subject_uuid`, the `name`, or capital
 letters.
 
-An unknown path is rejected with a `foundation_plan.link.*_not_found` code at its JSON pointer, such as
-`/application/entities/0/primary_descriptor/field`, wherever it is written, a Scaffold's `predicate`, `ordering`,
-`authorization`, inputs, and projection items included, as for a Reference input written as `{"field":
-"task.project"}`. The message names the path, where it is written, and the names that exist there, such as "The only
-Field of "book" is "book.title"": change the path to one of them, or add what it means. Diagnostics locate problems by
-JSON pointer into the file you pushed.
+An unknown path in a link, a Scaffold's `predicate`, `ordering`, `authorization`, inputs, and projection items
+included, is rejected with a `foundation_plan.link.*_not_found` code at its JSON pointer, such as
+`/application/entities/0/primary_descriptor/field`. A Reference input written as `{"field": "task.project"}` is one. A
+Reference default that names a missing record still passes; see [Reference data](reference-data.md). The message
+names the path, where it is written, and the names that exist there, such as "The only Field of "book" is
+"book.title"": change the path to one of them, or add what it means. Diagnostics locate problems by JSON pointer into
+the file you pushed.
 
 ## What analysis reports
 

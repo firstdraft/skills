@@ -89,10 +89,11 @@ place of its result. A command whose last answer it was keeps its result, after 
 `This command finished; tell the person to update with the steps at https://firstdraft.com/update before the next one.`
 or, for an older or prerelease contract, `This command finished; use the CLI version that this First Draft origin supports before the next one.`
 Either way, stop remote work, tell the person what the line or the error's `detail` says, and wait until they have
-updated. A push that First Draft accepted keeps its saved ETag, so after the update run the same command again with
-the same options. When the error carries `current`, a Compilation had already started: follow
-`current.compilation.id` with `compilation status` instead of compiling again. A line that begins
-`First Draft: FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version` means a wrapper set that variable wrongly;
+updated. After a stop line, the command's result stands: once the person has updated, go on with the next step.
+After `update_required` or `api_contract_unsupported`, a push that First Draft accepted keeps its saved ETag, so after
+the update run the same command again with the same options. When the error carries `current`, a Compilation had
+already started: follow `current.compilation.id` with `compilation status` instead of compiling again. A line that
+begins `First Draft: FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version` means a wrapper set that variable wrongly;
 tell the person, and carry on.
 
 ## Daily limits
@@ -746,9 +747,9 @@ staging or the same `FIRSTDRAFT_API_URL` for a custom origin. Never manufacture 
 verify a retained Compilation identity. The CLI never repeats that start itself. Run the same `plan compile` once
 more, with the same options and environment, and do not switch to `--github`. If a Compilation is still active,
 First Draft refuses with `compilation_active` and names it: run `compilation status <id> --wait` on that ID, and after
-`succeeded` use `compilation download <id> --output <the same absent path>`, with no third `plan compile`. Otherwise
-the rerun starts a new Compilation, and the one the first attempt may have started costs one of the day's
-Compilations. After that one rerun, stop and report.
+`succeeded` use `compilation download <id> --output <the destination the Compile used>`, `.` after current-root
+adoption, with no third `plan compile`. Otherwise the rerun starts a new Compilation, and the one the first attempt
+may have started costs one of the day's Compilations. After that one rerun, stop and report.
 
 After a validated `202` start, act only on an error envelope carrying validated `current.compilation.id`.
 `compilation_status_unavailable` permits a bounded read-only status retry; an invalid status or artifact requires

@@ -152,7 +152,7 @@ are not asked for, and appear on `/account` only through a `profile`.
 | `bio`, optional `long_text` | no | Not shown. |
 | `bio`, optional `long_text` | `required: true` | Shown, required. |
 | `status`, `state_machine` | yes | Analysis rejects the Plan: `foundation_plan.account.registration_field_not_creatable`. |
-| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails until you write how a new Account gets it. Not listed and with no `default`, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`; with a `reference_record` default there is no warning, but the default is a gap too, so read both gaps and the failing registration example. |
+| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails until you write how a new Account gets it. Not listed and with nothing in the Plan supplying it, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`. A `reference_record` default naming a record that exists counts as a source, so there is no warning, but the default is a gap too: read both gaps and the failing registration example. |
 | `avatar`, required `image` | no | No control, and every sign-up fails until you write how a new Account gets it. Analysis warns `foundation_plan.account.registration_required_field_unsupplied`. |
 
 Every value on the form goes through the model's validations before the account is saved; an invalid value returns
@@ -359,7 +359,7 @@ These pass as `valid` and are reported as a warning or a gap:
   Give the Field a `default` that First Draft applies ([Defaults](defaults.md)), and the warning goes, or list it
   under `registration.inputs` when sign-up should ask. On a required enum or boolean the same code is an error, as
   [What sign-up asks for](#what-sign-up-asks-for) says.
-- **A required Reference on the Account Entity that sign-up cannot supply.** Warning
+- **A required Reference on the Account Entity that nothing in the Plan supplies at sign-up.** Warning
   `foundation_plan.account.registration_required_reference_unsupplied` at the Reference, beside its gap
   `foundation_plan.gap.account.partially_generated`: no one can sign up, because the model rejects every new
   Account without it, until code supplies it. Its message offers three ways out: write how a new Account gets it,

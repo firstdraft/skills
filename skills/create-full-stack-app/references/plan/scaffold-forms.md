@@ -444,9 +444,10 @@ standalone New page, and `_new_<parent>_form` for an Add form, such as `tasks/_n
 - **A form that edits two Entities at once,** such as a project with its first task. Each form saves one record.
 - **A Delete button without the record's page.** With `destroy` and no `show`, the route exists and nothing links
   to it; no gap is reported. Select `show` too.
-- **A different rule for New than for Create.** Both use `create.authorization`, checked after bindings and before
-  the person types. The one exception is a rule that writes the condition on the parent the form offers inline, which
-  gets a New permission of its own; any other rule that tests an input the person fills denies the New page, as
+- **A different rule for New than for Create.** New checks `create.authorization` against the empty record after its
+  bindings, before the person types, and Create checks the submitted record. A rule that writes the condition on the
+  parent the form offers inline gets a New permission of its own. Any other rule that tests an input the person fills
+  fails the empty record, so New opens only where another branch passes, such as an admin's, as
   [Policies](policies.md#keys) describes.
 
 ## Analysis does not catch
