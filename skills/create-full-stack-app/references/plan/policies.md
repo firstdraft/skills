@@ -570,9 +570,9 @@ These pass analysis as `valid`:
 - **A gate on a list, with a record's Policy on the record's page.** The list shows every record to anyone the gate
   admits; the titles they may not open appear without a link.
 - **A New page whose `create` rule reads a value the empty record does not have yet.** New opens when the rule reads
-  a parent the form offers, as under [Keys](#keys). It still denies everyone, with the New link hidden and the New
-  page answering 403, when the rule reads a Field the form submits, uses `not exists` over the chosen parent, puts
-  two chosen parents under `or`, or requires an editable Reference to equal `current_account`. A submitted Create
+  a parent the form offers, as under [Keys](#keys). For any other rule, New asks the rule about the empty record. A
+  rule that needs a value the form sets, such as a Field the person types or an editable Reference that must equal
+  `current_account`, denies it: the New link is hidden, and the New page answers 403 to everyone. A submitted Create
   still works. Add such records through the parent page's `create_form`, or bind the Reference with `bindings`.
 
 These pass as `valid` and are reported, as a warning or a gap:
