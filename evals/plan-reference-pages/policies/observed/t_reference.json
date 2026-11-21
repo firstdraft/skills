@@ -1,6 +1,6 @@
 {
   "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-17-gem-advisories",
   "status": "valid",
   "diagnostics": [
     {
@@ -14,12 +14,6 @@
   "gaps": [],
   "compile": "succeeded",
   "readme": [
-    {
-      "section": "Behavior to write",
-      "group": "Pages and actions",
-      "title": "`ProjectPolicy#update?`",
-      "file": "app/policies/project_policy.rb"
-    },
     {
       "section": "Test coverage to complete",
       "group": null,
@@ -35,19 +29,7 @@
     {
       "section": "Test coverage to complete",
       "group": null,
-      "title": "Project: edit accepts a permitted edit request",
-      "file": "spec/requests/projects_spec.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Project: update persists the submitted changes",
-      "file": "spec/requests/projects_spec.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Project: update rejects a missing name without persisting changes",
+      "title": "Project: update redirects to a page that loads",
       "file": "spec/requests/projects_spec.rb"
     },
     {

@@ -1263,7 +1263,7 @@
       "expectations": [
         "Branches on request_outcome_unknown rather than the optional status or human-readable detail.",
         "Does not treat the optional status as proof of acceptance or rejection, trust an unverified response header, or derive an ETag from the Plan.",
-        "Preserves local files and runs the same plan push once more with the same options and environment, and does not repeat it a third time.",
+        "Preserves local files and runs the same plan push once more with the same options and environment, and does not repeat it a third time. Handles that rerun's own result by its error family; with this case's opaque staged state it is local_input_unreadable, which preserves the files.",
         "Never claims the ambiguous request produced a particular server Head."
       ],
       "artifacts": [
@@ -1766,7 +1766,7 @@
       "expectations": [
         "Uses phase push to identify ambiguity in Plan submission, before analysis or Publication, and does not claim that a repository exists.",
         "Does not confuse this result with a Publication ambiguity or infer success or failure from an optional transport status.",
-        "Preserves local files and runs the same plan compile --github once more with unchanged bytes, options, and environment instead of reporting a repository URL."
+        "Preserves local files and runs the same plan compile --github once more with unchanged bytes, options, and environment instead of reporting a repository URL, then handles that rerun's own result by its error family without a third attempt."
       ]
     },
     {
@@ -1786,7 +1786,7 @@
       "expectations": [
         "Uses phase compilation to recognize that the exact Plan was accepted and analyzed and that one direct Compilation may have started without a verified retained identity.",
         "Does not infer failure from the absent output directory or claim that no retained work exists.",
-        "Preserves the exact approved Plan, private CLI state, and absent output path, and runs the same plan compile --output ./application once more with the same options and environment.",
+        "Preserves the exact approved Plan, private CLI state, and absent output path, and runs the same plan compile --output ./application once more with the same options and environment, then handles that rerun's own result by its error family.",
         "Does not run plan compile a third time, switch to plan compile --github, invoke retained status without a trustworthy Compilation ID, issue HTTP directly, or claim Publication or a GitHub repository."
       ]
     },

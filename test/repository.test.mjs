@@ -2671,13 +2671,8 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   assert(
     hasExpectation(ambiguousEvaluation, "Branches on request_outcome_unknown"),
   );
-  assert(
-    hasExpectation(
-      ambiguousEvaluation,
-      "runs the same plan push once more",
-      "does not repeat it a third time",
-    ),
-  );
+  assert(hasExpectation(ambiguousEvaluation, "runs the same plan push once more"));
+  assert(hasExpectation(ambiguousEvaluation, "does not repeat it a third time"));
 
   const localStateEvaluation = cases.find(
     ({ id }) => id === "local-state-not-saved",
