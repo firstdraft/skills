@@ -158,10 +158,10 @@ firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli generate application-key --name "<name>"
 ```
 
-If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
-directory. If `.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not
-reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
-A Plan whose `target.profile` is not `rails-sketch/2026-11` belongs to a retired profile; follow
+If initialization fails, follow its stable error and preserve any partial `.firstdraft/` directory. If
+`.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not reinitialize.
+Inspect private state only for a check the reference names, such as `api_url` for `start`. A Plan whose
+`target.profile` is not `rails-sketch/2026-11` belongs to a retired profile; follow
 [retired target profile](references/diagnostics-and-recovery.md#retired-target-profile) instead of pushing it.
 
 ## Interview and author incrementally
