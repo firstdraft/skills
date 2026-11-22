@@ -1577,7 +1577,14 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     path.join(evalsDirectory, "create-full-stack-app", "fixtures", "generated-application-AGENTS.md"),
     "utf8",
   );
-  assert.match(generatedAgents, /run `firstdraft start` once when a session begins/);
+  assert(
+    generatedAgents.includes(
+      "- If the `firstdraft` command is available, run `firstdraft start` once when a session begins. When it prints\n" +
+        "  `Reports are on:`, send the reports and notes it describes. When the command is missing, is not logged in, or\n" +
+        "  says nothing about reports, send nothing and keep working; do not ask the user to log in for this.\n",
+    ),
+    "the generated AGENTS.md fixture must carry the whole start bullet, its consent condition and fallback included",
+  );
   for (const id of ["run-generated-tests-before-preview", "failing-generated-spec-is-debugged"]) {
     assert(
       cases.find((evaluation) => evaluation.id === id).expectations.some((expectation) =>

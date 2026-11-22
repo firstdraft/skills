@@ -302,10 +302,12 @@ and change its "index prevents a guest from accessing protected records" request
 A generated app's `AGENTS.md` now tells an agent that comes back in a later session, without the First Draft Skill,
 to run `firstdraft start` once. It sends reports and notes only when `start` says the person said yes, and otherwise
 sends nothing and does not ask the person to log in for it. The bullet is the same in every app and follows the one
-about failures in code First Draft generated. From the app's root, the CLI names the Compilation it recorded when a
-CLI 0.10.0 compile or download wrote the code. An app compiled earlier has no such record, so a report, or a note
-about its generated code, stops with `compilation_not_recorded` unless the agent names the Compilation. The Plan
-format and analysis are unchanged.
+about failures in code First Draft generated. Run from the folder that holds the Project's state, the app's root
+after root adoption or the planning folder after `--output`, a report names the Compilation that a CLI 0.10.0 compile
+or download last recorded for the Project. When there is no record, as for an app compiled earlier, or it names other
+code, the agent names the Compilation. The bullet's `start` checks production by default; for a Project on staging,
+run `firstdraft --staging start`. The Plan format and the Analyzer release are unchanged; the next analysis of a Plan
+records the new Compiler release and a new GapSet digest.
 
 ```markdown
 - If the `firstdraft` command is available, run `firstdraft start` once when a session begins. When it prints
