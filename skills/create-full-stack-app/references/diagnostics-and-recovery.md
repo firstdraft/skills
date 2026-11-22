@@ -52,8 +52,8 @@ Staging names `FIRSTDRAFT_STAGING_API_TOKEN`. Then, by outcome:
 
 | Outcome | What `start` prints last | What you do |
 | --- | --- | --- |
-| Ready, exit 0 | `Ready: First Draft accepted this computer's login.`, or `Ready: First Draft accepted FIRSTDRAFT_API_TOKEN.` for a token variable | Go on. Never raise reports. |
-| Ready with reports on, exit 0 | The same `Ready:` line, then four lines that begin `Reports are on:`, `Progress:`, `Failure:`, and `Use compilation.id ...` | Go on, and send reports as those lines and [progress and failure reports](#progress-and-failure-reports) say. |
+| Ready, exit 0 | `Ready: First Draft accepted this computer's login.`, or `Ready: First Draft accepted FIRSTDRAFT_API_TOKEN.` for a token variable | Go on. Never raise reports or notes. |
+| Ready with reports on, exit 0 | The same `Ready:` line, then five lines about reports, which begin `Reports are on:`, `Progress:`, `Failure:`, `Each report names the Compilation ...`, and `Run each report and note command ...`, and five about notes, which begin `Notes:`, `Unstated request:`, `Unclear guidance:`, `Wrong output:`, and `Write each note ...` | Go on, and send reports and notes as those lines and [progress and failure reports](#progress-and-failure-reports) say. |
 | Not logged in: `authentication_required`, no request made | `To log in, run 'firstdraft login --no-wait'. It prints a link and a code: show both to the person and ask them to approve the login in their browser.` and `When the person says they approved, run 'firstdraft login --finish', then run 'firstdraft start' again.` | [Log in for the user](#log-in-for-the-user). |
 | Saved login rejected: `authentication_required` | `Not logged in: First Draft did not accept the saved login for <origin>.` and the same two login lines | [Log in for the user](#log-in-for-the-user). |
 | Token variable rejected: `authentication_required` | `Not logged in: First Draft did not accept FIRSTDRAFT_API_TOKEN. Ask the person to replace it or unset it; while it is set, the CLI uses no saved login.` | Tell the user, wait until they say it is done, and run `start` again. |
@@ -104,8 +104,10 @@ it says.
 ## Local state and credentials
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
-CLI-owned Project, origin, and ETag state. Inspect the Plan; do not print, paste, commit, or treat the state file as
-agent-authored Plan content. Inspect only its `api_url`, when `start` needs a resumed Project's origin, when a
+CLI-owned Project, origin, and ETag state. `.firstdraft/compilation.json`, beside it, is too: `plan compile` and
+`compilation download` record there the Compilation whose code they wrote, and reports and notes name it. After root
+adoption both are under `.firstdraft/design/.firstdraft/`. Inspect the Plan; never edit, print, paste, commit, or
+treat either file as agent-authored Plan content. Inspect only its `api_url`, when `start` needs a resumed Project's origin, when a
 persistent read-only status failure requires checking the pinned origin, or when a new Project after a `412` or a
 retired profile needs the old one.
 
@@ -725,23 +727,27 @@ bytes and private state; create replacement work only within the user's authoriz
 ## Progress and failure reports
 
 With the person's yes, the agent tells First Draft how far a generated app has come and where generated code failed,
-so that First Draft can fix what it generates. The person answered once, on the page where they approved the login,
-and can change the answer on their First Draft account page; you cannot. `start` prints the `Reports are on:` lines
-only when the answer is yes. Send reports only after `start` printed them; otherwise send none and do not bring
-reports up. Each report command reads the answer again at the Project's origin first. When reports are off, it sends
-nothing, prints a line that says so, and exits 0: send no more reports, and say nothing about them.
+and sends notes about problems with First Draft itself, so that First Draft can fix what it generates and teaches.
+One yes covers reports and notes. The person answered once, on the page where they approved the login, and can
+change the answer on their First Draft account page; you cannot. `start` prints the `Reports are on:` lines and the
+notes lines after them only when the answer is yes. Send reports and notes only after `start` printed them, as
+those lines say; otherwise send none and do not bring reports or notes up. Each report and note command reads the
+answer again at the Project's origin first. When reports are off, it sends nothing, prints a line that says so, and
+exits 0: send no more reports or notes, and say nothing about them.
 
-Send these with a Compilation ID that `plan compile` or `compilation status` printed, from the folder that holds the
-Project's state: the generated app's root after root adoption, or the planning folder after an absent `--output`
-path. `plan compile --github` prints only the repository URL, so after it send none.
+Run these from the folder that holds the Project's state: the generated app's root after root adoption, or the
+planning folder after an absent `--output` path. A report names the Compilation that the CLI recorded when
+`plan compile` or `compilation download` wrote its code, so give no ID, in a later session too. To name another, put
+its `compilation.id` right after `report progress` or `report failure`. `plan compile --github` writes no code into
+the folder and records nothing, so after it send none.
 
 | When | Command |
 | --- | --- |
-| `bin/setup` finished | `firstdraft_cli report progress <compilation-id> --step setup` |
-| The first spec run finished | `firstdraft_cli report progress <compilation-id> --step specs_first_run --examples <n> --failures <n> --behavior-to-write-failures <n> --items-remaining <n>` |
+| `bin/setup` finished | `firstdraft_cli report progress --step setup` |
+| The first spec run finished | `firstdraft_cli report progress --step specs_first_run --examples <n> --failures <n> --behavior-to-write-failures <n> --items-remaining <n>` |
 | Every item under Behavior to write is written | the same with `--step behavior_written` |
 | The specs pass | the same with `--step specs_passing` |
-| The preview started | `firstdraft_cli report progress <compilation-id> --step preview_started` |
+| The preview started | `firstdraft_cli report progress --step preview_started` |
 
 The counts come from the spec run's summary and the README: examples run, failing examples, failing examples that
 the README's Behavior to write names, and items still to write. Pass the counts you have and leave out the rest.
@@ -755,8 +761,15 @@ app's own frames as a path from the app's root, such as `app/models/movie.rb:12`
 leave the machine: never file contents, secrets, tokens, or the person's data. The CLI prints what it sends, and
 names on a `Left out:` line each field it left out because it did not fit that field's shape.
 
-Each command sends once and never blocks your work. After `report_rejected`, `report_unavailable`,
-`account_unavailable`, or `rate_limited`, carry on without that report and do not send it again.
+A note follows the notes lines `start` printed: send one only for a problem with First Draft that cost a real detour
+and is likely to happen again, never for routine debugging, and only after the Plan's first push. It is
+`firstdraft_cli note unstated_request`, `note unclear_guidance`, or `note wrong_output`, with the options those
+lines name; each prints what it sends.
+
+Each command sends once and never blocks your work. After `report_rejected`, `report_unavailable`, `note_rejected`,
+`note_unavailable`, `account_unavailable`, or `rate_limited`, carry on without that report or note and do not send it
+again. After `compilation_not_recorded`, name the Compilation, as the error table says. After `note_incomplete`,
+write the field it names again in plain words, or give a page or code in its shape, and send the note once more.
 
 ## Stable error families
 
@@ -766,12 +779,15 @@ Each command sends once and never blocks your work. After `report_rejected`, `re
 | Any command that calls First Draft, except `logout` | `update_required`, `api_contract_unsupported` | First Draft needs a newer plugin or CLI, or serves another API contract; see [update and stop lines](#update-and-stop-lines). |
 | Any command that calls First Draft, except `logout` | `rate_limited` | First Draft answered `429`; see [daily limits](#daily-limits). For a report, `response.code` `reports_rate_limited` means the account's reports for the hour are used up; carry on without it. |
 | `report progress`, `report failure` | `report_rejected`, `report_unavailable`, `account_unavailable`, `invalid_server_response` | The report was refused, such as `400 invalid_report` or `409 compilation_not_succeeded`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more reports. |
+| `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_rejected`, `note_unavailable`, `account_unavailable`, `invalid_server_response` | The note was refused, such as `invalid_note` or `compilation_not_found`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more notes. |
+| `report progress`, `report failure`, `note wrong_output` | `compilation_not_recorded` | No Compilation was given and none is recorded for this Project, so nothing was sent. Name the Compilation the code came from: put its `compilation.id` from `plan compile` right after `report progress` or `report failure`, or pass it to the note with `--compilation-id`. |
+| `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_incomplete` | Exit 2: a field the note needs had nothing left after shaping, so nothing was sent. `detail` names each such field. Write it again in plain words, or give a page or code in its shape. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
 | `start` | `authentication_required`, `account_unavailable`, `invalid_server_response`, `invalid_configuration` | Not ready; see [check readiness with start](#check-readiness-with-start). |
 | `login --no-wait`, `login --finish` | `authorization_pending`, `authorization_expired`, `authorization_denied`, `login_not_started`, `login_failed` | The agent's login did not finish; see [log in for the user](#log-in-for-the-user). |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` for the Project's origin and follow its lines. Then rerun the command, except when the error carries `current`: a Compilation already started, so resume it by `current.compilation.id` as [ambiguous mutations](#ambiguous-mutations) describes, and never start another. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
-| `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `project_not_pushed` | No accepted Project/origin is pinned locally. |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel`, `report`, `note` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
+| `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel`, `report`, `note` | `project_not_pushed` | No accepted Project/origin is pinned locally; a note needs the Plan's first push. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
 | `plan push`, `plan compile` | `server_rejected` | Inspect the validated status, bounded response, and diagnostics. A `compilation_active` problem starts [stuck Compilation recovery](#stuck-compilation-recovery). |
 | `plan push`, `plan compile` | `local_state_not_saved` | The Plan was accepted but private ETag state was not saved. |

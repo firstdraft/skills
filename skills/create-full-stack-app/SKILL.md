@@ -123,7 +123,7 @@ It prints one fact per line. Run each command its lines name, as printed, throug
 `'firstdraft login --no-wait'` is `firstdraft_cli login --no-wait`. Pass on an
 [update line](references/diagnostics-and-recovery.md#update-and-stop-lines), from any command, once. Then:
 
-- `Ready: First Draft accepted ...`: go on. Without a `Reports are on:` line after it, never raise reports.
+- `Ready: First Draft accepted ...`: go on. Without a `Reports are on:` line after it, never raise reports or notes.
 - `To log in, run ...` or `Not logged in: First Draft did not accept the saved login ...`: log in as below.
 - `Unknown command.`: this CLI predates `start`; tell the user the update steps are at https://firstdraft.com/update.
 - Anything else, such as `Not logged in: First Draft did not accept <variable>. ...`, `update_required`, or the
@@ -138,7 +138,8 @@ user, or ask for a token in the conversation. Only the user runs `logout`.
 
 Select requested staging, or a resumed Project's saved origin, for each remote command, `start` included, as
 [environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) describes.
-`.firstdraft/state.json` is private CLI-owned state: never print, paste, commit, or treat it as Plan content.
+`.firstdraft/state.json` and `compilation.json` are private CLI-owned state: never edit, commit, or treat them as
+Plan content.
 
 ## Initialize or resume the local Plan
 

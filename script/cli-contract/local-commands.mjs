@@ -47,6 +47,7 @@ export async function verifyLocalCommands(context) {
   assert.match(rootHelp.stdout, /generate\s+Generate local values/);
   assert.match(rootHelp.stdout, /login\s+Log in to First Draft and save a token/);
   assert.match(rootHelp.stdout, /logout\s+Revoke and remove the saved token/);
+  assert.match(rootHelp.stdout, /note\s+Send a note about a problem with First Draft/);
   assert.match(rootHelp.stdout, /plan\s+Work with Foundation Plans/);
   assert.match(rootHelp.stdout, /start\s+Check versions, login, and reports before other work/);
 
