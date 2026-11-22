@@ -22,6 +22,7 @@ import { verifyPackedExecutable } from "./cli-contract/packed-executable.mjs";
 import { verifyPlanJourney } from "./cli-contract/plan-journey.mjs";
 import { verifyPlanStatusGenerations } from "./cli-contract/plan-status.mjs";
 import { verifyPublicationValidation } from "./cli-contract/publication-validation.mjs";
+import { verifyQuotedSentences } from "./cli-contract/quoted-sentences.mjs";
 import { verifyServiceVersions } from "./cli-contract/service-versions.mjs";
 
 const cliDirectoryArgument = process.argv[2];
@@ -32,6 +33,7 @@ const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const revision = run("git", ["rev-parse", "HEAD"], cliDirectory);
 assert.equal(revision.stdout.trim(), cliRevision);
 assert.equal(cliRuntimeDigest(cliDirectory), cliRuntimeSha256);
+verifyQuotedSentences(cliDirectory);
 verifyPackageMetadata(
   JSON.parse(readFileSync(path.join(cliDirectory, "package.json"), "utf8")),
 );
