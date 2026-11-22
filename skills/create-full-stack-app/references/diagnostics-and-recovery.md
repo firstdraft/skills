@@ -115,9 +115,9 @@ retired profile needs the old one.
 Plans resumed without the flag.
 
 `start` and the login commands do not read the Project, so give them its origin. For new work that is production,
-or staging when the user asked for it. In a resumed Project, read only `api_url` from `.firstdraft/state.json`: add
-`--staging` for `https://staging.firstdraft.com`, add nothing for `https://firstdraft.com`, and for a custom origin
-set `FIRSTDRAFT_API_URL` to it for `start` and both login steps.
+or staging when the user asked for it. In a resumed Project, read only `api_url` from `.firstdraft/state.json` and
+set `FIRSTDRAFT_API_URL` to it for `start` and both login steps, production included, so that a variable already in
+the environment cannot select another origin. A printed `--staging` agrees with the staging URL.
 
 Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
 or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the login saved on this computer for that origin.

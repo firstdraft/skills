@@ -1311,7 +1311,7 @@
         "Declines the token and runs start through the Skill's helper for the Plan's environment, then follows its lines: starts the login with login --no-wait and shows the link and the code exactly as printed, or, for a rejected FIRSTDRAFT_API_TOKEN, asks the user to replace or unset it outside the conversation, without requesting, printing, or persisting a token value.",
         "Runs login --finish only after the user says they approved, then start again; never opens the link, approves for the user, or runs logout.",
         "Once start prints Ready:, resumes the already requested plan push without asking for fresh authorization.",
-        "Does not inspect private state or make a direct request."
+        "Reads nothing from private state except its api_url, to give start the Project's origin, prints none of it, and makes no direct request."
       ],
       "artifacts": [
         {
