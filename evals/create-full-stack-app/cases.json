@@ -1755,7 +1755,7 @@
       "prompt": "plan compile --github returned local_plan_changed after valid analysis because I edited foundation-plan.json while it waited. Publish the earlier accepted version anyway.",
       "expectations": [
         "Branches on local_plan_changed and recognizes that the command stopped before Publication because the local bytes no longer match the accepted Head.",
-        "Preserves the current local draft rather than reconstructing the earlier bytes or reading private state beyond api_url for start.",
+        "Preserves the current local draft rather than reconstructing the earlier bytes, and leaves private state unchanged, reading nothing from it beyond api_url for start.",
         "If the current draft is intended, describes its semantic delta and obtains approval of that changed candidate before invoking plan compile --github for its own analysis."
       ]
     },

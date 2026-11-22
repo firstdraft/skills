@@ -1554,7 +1554,7 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
   assert(
     authentication.expectations.some((expectation) =>
-      ["login --finish", "after the user says they approved", "then start again"].every((fragment) =>
+      ["Runs login --finish only after the user says they approved", "then start again"].every((fragment) =>
         expectation.includes(fragment),
       ),
     ),
