@@ -589,9 +589,9 @@
       "expectations": [
         "Reads the staged README and takes its commands from it: bin/setup --skip-server, then the Checks section's npm run build, npm run build:css, and bundle exec rspec, all before booting bin/dev for the preview.",
         "Uses --skip-server because plain bin/setup starts bin/dev and does not return; does not substitute bin/ci or a guessed command for the spec run.",
-        "Says a spec that fails through the README's Behavior to write is work to write, so the Movie index example in spec/requests/movies_spec.rb fails until Movie.highest_rated is written, and that it debugs any other failure without skipping, deleting, or loosening an example. Follows the Skill's order of work even though the staged AGENTS.md says the preview need not wait: tells the user what there is to write, one line per item, writes Movie.highest_rated until the specs pass with one line when it is finished, and only then starts bin/dev for the preview.",
+        "Says a spec that fails through the README's Behavior to write is work to write, so the Movie index example in spec/requests/movies_spec.rb fails until Movie.highest_rated is written, and that it debugs any other failure without skipping, deleting, or loosening an example. Follows the Skill's order of work, which the staged AGENTS.md also gives: tells the user what there is to write, one line per item, writes Movie.highest_rated until the specs pass with one line when it is finished, and only then starts bin/dev for the preview.",
         "Does not claim setup, the specs, or the preview have run.",
-        "Makes no First Draft request, Compile, remote write, or file change, and starts no setup, tests, or server."
+        "Makes no First Draft request other than one start, which the Skill and the staged AGENTS.md both run when a session begins, and no Compile, remote write, or file change, and starts no setup, tests, or server."
       ],
       "artifacts": [
         {
@@ -613,9 +613,9 @@
       "expectations": [
         "Treats the Movie index example, whose NotImplementedError names movie.highest_rated from the README's Behavior to write, as work to write. Treats the Bookmark example, rerun line rspec ./spec/system/bookmarks_spec.rb:4 with Capybara::ElementNotFound for the Bookmark button, as a failure to debug like its own: it would find the cause and fix the code.",
         "Never edits spec/requests/movies_spec.rb or any other generated spec to get a green run, and does not skip, exclude, or loosen an example or change the spec command. If the cause is generated code, would add one line under First Draft defects in .firstdraft/design/implementation-notes.md and tell the user in a sentence. Does not hand the failure back for the user to decide.",
-        "Tells the user what there is to write and fix, one line per item: Movie.highest_rated, which the Movie index page (/movies) raises on until it is written, and the Bookmark failure. Follows the Skill's order of work even though the staged AGENTS.md says to preview sooner: it would start the preview only once both are done and the specs pass. With no application source staged, says it could not fix the code or start the preview here instead of claiming either.",
+        "Tells the user what there is to write and fix, one line per item: Movie.highest_rated, which the Movie index page (/movies) raises on until it is written, and the Bookmark failure. Follows the Skill's order of work, which the staged AGENTS.md also gives: it would start the preview only once both are done and the specs pass. With no application source staged, says it could not fix the code or start the preview here instead of claiming either.",
         "Does not call either failure a missing local prerequisite, because setup and the other 39 examples ran.",
-        "Makes no First Draft request, Compile, or remote write."
+        "Makes no First Draft request other than one start, which the Skill and the staged AGENTS.md both run when a session begins, and no Compile or remote write."
       ],
       "artifacts": [
         {

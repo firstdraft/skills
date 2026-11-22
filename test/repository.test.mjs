@@ -1572,6 +1572,20 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
       `unstated-request-note-with-reports-on must expect: ${fragments.join(", ")}`,
     );
   }
+  // A generated AGENTS.md runs start once when a session begins, so a hand-off case allows that one request.
+  const generatedAgents = await readFile(
+    path.join(evalsDirectory, "create-full-stack-app", "fixtures", "generated-application-AGENTS.md"),
+    "utf8",
+  );
+  assert.match(generatedAgents, /run `firstdraft start` once when a session begins/);
+  for (const id of ["run-generated-tests-before-preview", "failing-generated-spec-is-debugged"]) {
+    assert(
+      cases.find((evaluation) => evaluation.id === id).expectations.some((expectation) =>
+        expectation.startsWith("Makes no First Draft request other than one start"),
+      ),
+      `${id} must allow the one start its AGENTS.md runs, and no other First Draft request`,
+    );
+  }
   const reportsOff = cases.find((evaluation) => evaluation.id === "unstated-request-with-reports-off");
   assert(
     reportsOff.expectations.some((expectation) =>
