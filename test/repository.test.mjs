@@ -1575,7 +1575,8 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   const reportsOff = cases.find((evaluation) => evaluation.id === "unstated-request-with-reports-off");
   assert(
     reportsOff.expectations.some((expectation) =>
-      expectation.startsWith("Runs no note or report command") && expectation.includes("reports or notes"),
+      expectation.startsWith("Runs no note or report command") &&
+      expectation.includes("says nothing to the user about First Draft reports or notes"),
     ),
     "unstated-request-with-reports-off must expect no note, no report, and no mention of either",
   );

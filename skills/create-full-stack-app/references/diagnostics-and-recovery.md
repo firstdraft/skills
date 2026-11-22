@@ -7,7 +7,8 @@ line](#update-and-stop-lines) just before its result. Remove only one leading co
 text after the exact `First Draft: ` prefix matches the stable message table or the update and stop lines below. Then
 require the remainder to be one JSON object. An unrecognized prefixed line, a progress line after the envelope, any
 other prefix or suffix, and any interleaved output fail closed. Branch on the object's stable `error` and structured
-fields rather than the human-readable `detail` or broad process exit status.
+fields rather than the human-readable `detail` or broad process exit status. A successful `plan compile` or
+`compilation download` may also write the [Compilation record line](#progress-and-failure-reports) on standard error.
 
 This plugin bundles `@firstdraft.com/cli@0.10.0`. Its exact reviewed revision and runtime digest are owned by
 [the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.10.0/script/cli-contract/config.mjs)
@@ -105,7 +106,8 @@ it says.
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
 CLI-owned Project, origin, and ETag state. `.firstdraft/compilation.json`, beside it, is too: `plan compile` and
-`compilation download` record there the Compilation whose code they wrote, and reports and notes name it. After root
+`compilation download` record there the Compilation whose code they wrote, and reports and notes about generated code
+name it. After root
 adoption both are under `.firstdraft/design/.firstdraft/`. Inspect the Plan; never edit, print, paste, commit, or
 treat either file as agent-authored Plan content. Inspect only its `api_url`, when `start` needs a resumed Project's origin, when a
 persistent read-only status failure requires checking the pinned origin, or when a new Project after a `412` or a
@@ -733,13 +735,21 @@ change the answer on their First Draft account page; you cannot. `start` prints 
 notes lines after them only when the answer is yes. Send reports and notes only after `start` printed them, as
 those lines say; otherwise send none and do not bring reports or notes up. Each report and note command reads the
 answer again at the Project's origin first. When reports are off, it sends nothing, prints a line that says so, and
-exits 0: send no more reports or notes, and say nothing about them.
+exits 0. If the person turns reports off after that read, the command has already printed and sent what it was
+sending, First Draft keeps nothing, and it prints the same line. Either way, send no more reports or notes, and say
+nothing about them.
 
 Run these from the folder that holds the Project's state: the generated app's root after root adoption, or the
-planning folder after an absent `--output` path. A report names the Compilation that the CLI recorded when
-`plan compile` or `compilation download` wrote its code, so give no ID, in a later session too. To name another, put
-its `compilation.id` right after `report progress` or `report failure`. `plan compile --github` writes no code into
-the folder and records nothing, so after it send none.
+planning folder after an absent `--output` path. A report, and a note about generated code, names the Compilation
+that the CLI recorded when `plan compile` or `compilation download` last wrote code for the Project, so give it no ID,
+in a later session too. Name one only when there is no record or it names another Compilation: put its
+`compilation.id` right after `report progress` or `report failure`, or pass it to the note with `--compilation-id`.
+Code written by an earlier CLI has no record. A successful `plan compile` or `compilation download` that could not
+write the record says so on standard error with
+`First Draft: the code is in place, but the CLI could not record Compilation <id>, ...`; the code is fine, so name
+that ID in each later report and note about generated code. `plan compile --github` writes no code into the folder
+and records nothing, so after it send no report and no note about generated code; the other notes belong to the
+Project and need only its first push.
 
 | When | Command |
 | --- | --- |
