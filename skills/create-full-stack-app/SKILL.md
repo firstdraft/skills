@@ -108,33 +108,37 @@ end to end; for a question the pages leave open, read only the definition of the
 ## Verify the local capability
 
 Work from the project root. Resolve `<skill-dir>` below to the absolute directory containing this `SKILL.md`,
-using the loaded Skill path (expand any alias with its supplied Skill root). The helper runs only the CLI bundled
-with this plugin. Use the same resolved helper path in each shell call; shell functions do not persist between tool
-calls. Never store a multiword CLI invocation in one shell variable.
+using the loaded Skill path (expand any alias with its supplied Skill root). Use the same resolved helper path in
+each shell call; shell functions do not persist between tool calls. Never store a multiword CLI invocation in one
+shell variable.
+
+The helper runs only this plugin's CLI. Run `start` before other First Draft work:
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-firstdraft_cli --help
+firstdraft_cli start
 ```
 
-Require top-level help that lists `generate`, `plan`, `compilation`, and `report`. The compatible CLI supplies these public
-commands:
+It prints one sentence per line. Run each command its lines name, as printed, through the helper:
+`'firstdraft login --no-wait'` is `firstdraft_cli login --no-wait`. Pass on an
+[update line](references/diagnostics-and-recovery.md#update-and-stop-lines), from any command, once. Then:
 
-- `generate uuid` and `generate application-key`;
-- `plan init`, `plan push`, `plan status`, and `plan compile` (local `--output .` by default), optional `--output <path>`, or explicit `--github`;
-- `compilation status`, `compilation download`, and `compilation cancel`;
-- `account`, `report progress`, and `report failure`; and
-- `login` and `logout`, which only the user runs.
+- `Ready: First Draft accepted ...`: go on. Without a `Reports are on:` line after it, never raise reports.
+- `To log in, run ...` or `Not logged in: First Draft did not accept the saved login ...`: log in as below.
+- `Unknown command.`: this CLI predates `start`; tell the user the update steps are at https://firstdraft.com/update.
+- Anything else, such as `Not logged in: First Draft did not accept <variable>. ...`, `update_required`, or the
+  helper's `First Draft CLI is unavailable:`: tell the user what it says.
 
-Never replace the CLI automatically. If its help differs, report it and stop remote work instead of using HTTP
-directly; local Plan work may continue. Point installs and updates to https://firstdraft.com/update.
+Until `Ready:`, do no remote work; local Plan work may continue. Never call First Draft's HTTP API yourself.
 
-New remote work uses `https://firstdraft.com`; for requested staging use `firstdraft_cli --staging plan push`.
-Read [environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) before remote work.
+You may start the [login](references/diagnostics-and-recovery.md#log-in-for-the-user): run
+`firstdraft_cli login --no-wait` and show the user the link and the code exactly as printed. When they say they
+approved, run `firstdraft_cli login --finish`, then `start` again, then resume. Never open the link, approve for the
+user, or ask for a token in the conversation. Only the user runs `logout`.
 
+For requested staging, add `--staging` to each remote command, as
+[environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) describes.
 `.firstdraft/state.json` is private CLI-owned state: never print, paste, commit, or treat it as Plan content.
-Never request or expose tokens. Ask the user to log in once per environment in their own terminal, as the reference describes; never run
-`login` or `logout` yourself. Once configured, resume the requested operation without fresh authorization.
 
 ## Initialize or resume the local Plan
 
@@ -339,10 +343,9 @@ Read the [error-envelope rules](references/diagnostics-and-recovery.md#diagnosti
 output stops recovery. Branch on the stable `error` and structured fields, not `detail`, elapsed time, or HTTP status.
 
 Preserve exact bytes and private state after ambiguous mutations, and rerun an outcome-unknown push or direct start
-only once. Never use `invalid_publication_status` as a reason to retry. Let the CLI own output rollback. Pass an
-[update line](references/diagnostics-and-recovery.md#update-and-stop-lines) on to the user. At `update_required`, or
-`rate_limited` from a push or Compile, tell the user what the CLI said and stop remote work; never retry in a loop or
-switch accounts.
+only once. Never use `invalid_publication_status` as a reason to retry. Let the CLI own output rollback. At
+`update_required`, or `rate_limited` from a push or Compile, tell the user what the CLI said and stop remote work;
+never retry in a loop or switch accounts.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.
@@ -352,7 +355,8 @@ repository requires a separate user request and an exact verified identity.
 After Compile, follow the [application handoff](references/diagnostics-and-recovery.md#application-handoff): after
 root adoption, the [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) first, then the
 [notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff). Then work in this order, even
-where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner. Send the
+where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner. If `start` printed
+`Reports are on:`, send the
 [progress and failure reports](references/diagnostics-and-recovery.md#progress-and-failure-reports) at each step
 until one says reports are off.
 

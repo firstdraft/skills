@@ -22,6 +22,7 @@ import {
   compilationTarget as foundationPlanTarget,
   compilerRelease as foundationPlanCompilerRelease,
   foundationPlanFormat,
+  startWithoutLogin,
 } from "../script/cli-contract/config.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -1703,6 +1704,17 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
 });
 
+test("the diagnostics reference quotes start's login lines as the pinned CLI prints them", async () => {
+  const source = await readFile(
+    path.join(skillsDirectory, "create-full-stack-app", "references", "diagnostics-and-recovery.md"),
+    "utf8",
+  );
+  const [, ...loginLines] = startWithoutLogin(null).trimEnd().split("\n");
+  for (const line of loginLines) {
+    assert(source.includes(line.replace("https://firstdraft.com", "<origin>")), line);
+  }
+});
+
 test("documented shell examples use the shared CLI helper", async () => {
   const skillSource = await readFile(
     path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
@@ -1712,7 +1724,7 @@ test("documented shell examples use the shared CLI helper", async () => {
     ([, body]) => body,
   );
   const firstDraftBlocks = shellBlocks.filter((body) =>
-    /(?:^|\s)(?:\.\/bin\/)?firstdraft(?:_cli)? (?:generate|plan|compilation)\b/m.test(
+    /(?:^|\s)(?:\.\/bin\/)?firstdraft(?:_cli)? (?:generate|plan|compilation|start|login)\b/m.test(
       body,
     ),
   );
@@ -1723,7 +1735,7 @@ test("documented shell examples use the shared CLI helper", async () => {
       normalizedBody,
       /^firstdraft_cli\(\) \{ sh "<skill-dir>\/scripts\/firstdraft\.sh" "\$@"; \}/,
     );
-    assert.doesNotMatch(normalizedBody, /^firstdraft (?:generate|plan|compilation)/m);
+    assert.doesNotMatch(normalizedBody, /^firstdraft (?:generate|plan|compilation|start|login)/m);
   }
 
   for (const relativePath of canonicalClaudePluginSkillFiles.filter((file) =>

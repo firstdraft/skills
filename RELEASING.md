@@ -64,9 +64,11 @@ pinned CLI. No CLI check fails when they change, so the next pin change fails he
 
 - `packedFileAllowlist` in `script/cli-contract/config.mjs`, the CLI package's file list;
 - `requires.api_contract` and `requires.foundation_plan_formats`, which must equal the CLI's own
-  `release/compatibility.json`; and
+  `release/compatibility.json`;
 - the contract fixtures in `script/cli-contract/config.mjs` that the CLI checks exactly, such as
-  `compilationTarget.profile`, `artifactMediaType`, and `safeGithubReasonCodes`.
+  `compilationTarget.profile`, `artifactMediaType`, and `safeGithubReasonCodes`; and
+- `startWithoutLogin` in the same file, the lines `firstdraft start` prints with no login, which the diagnostics
+  reference quotes with the CLI's other sentences for the agent.
 
 A Plan format change also renames the versioned schema and reference under
 `skills/create-full-stack-app/references/`. Search `script/` and `test/` for the old file names.

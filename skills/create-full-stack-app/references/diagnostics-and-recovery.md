@@ -11,12 +11,13 @@ fields rather than the human-readable `detail` or broad process exit status.
 
 This plugin bundles `@firstdraft.com/cli@0.10.0`. Its exact reviewed revision and runtime digest are owned by
 [the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.10.0/script/cli-contract/config.mjs)
-at this plugin's protected release tag. Check the command surface rather than assuming the version alone
-establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
-staging compatibility, or a complete user journey.
+at this plugin's protected release tag. The version alone does not establish that First Draft accepts this setup;
+[`start`](#check-readiness-with-start) asks it. These source checks do not prove plugin/catalog publication, service
+authentication, staging compatibility, or a complete user journey.
 
 ## Contents
 
+- [Check readiness with start](#check-readiness-with-start)
 - [Local state and credentials](#local-state-and-credentials)
 - [Update and stop lines](#update-and-stop-lines)
 - [Daily limits](#daily-limits)
@@ -32,6 +33,72 @@ staging compatibility, or a complete user journey.
 - [Diagnostic shape](#diagnostic-shape)
 - [Concurrent replacement](#concurrent-replacement)
 
+## Check readiness with start
+
+Run `start` through the helper before other First Draft work in each session. With a token for the origin, from the
+environment or a saved login, it reads the account once; without one, it makes no request. It prints plain sentences
+for you on standard output, one fact per line, and exits 0 only when First Draft accepted the token; every other
+outcome also ends standard error with its handled error. Run each command a line names through the helper, as
+printed: on staging, each ends in `--staging`.
+
+The first line names the versions, `First Draft CLI <version> with plugin <version>.` When First Draft names a newer
+version, the [update line](#update-and-stop-lines) comes second, on standard output. The login lines follow:
+`This computer has a saved login for <origin>.` or `This computer has no saved login for <origin>.`, and, when a
+token variable is set,
+`FIRSTDRAFT_API_TOKEN is set, so the CLI uses that token in place of any saved login for <origin>, and no login is needed.`
+Staging names `FIRSTDRAFT_STAGING_API_TOKEN`. Then, by outcome:
+
+| Outcome | What `start` prints last | What you do |
+| --- | --- | --- |
+| Ready, exit 0 | `Ready: First Draft accepted this computer's login.`, or `Ready: First Draft accepted FIRSTDRAFT_API_TOKEN.` for a token variable | Go on. Never raise reports. |
+| Ready with reports on, exit 0 | The same `Ready:` line, then four lines that begin `Reports are on:`, `Progress:`, `Failure:`, and `Use compilation.id` | Go on, and send reports as those lines and [progress and failure reports](#progress-and-failure-reports) say. |
+| Not logged in: `authentication_required`, no request made | `To log in, run 'firstdraft login --no-wait'. It prints a link and a code: show both to the person and ask them to approve the login in their browser.` and `When the person says they approved, run 'firstdraft login --finish', then run 'firstdraft start' again.` | [Log in for the user](#log-in-for-the-user). |
+| Saved login rejected: `authentication_required` | `Not logged in: First Draft did not accept the saved login for <origin>.` and the same two login lines | [Log in for the user](#log-in-for-the-user). |
+| Token variable rejected: `authentication_required` | `Not logged in: First Draft did not accept FIRSTDRAFT_API_TOKEN. Ask the person to replace it or unset it; while it is set, the CLI uses no saved login.` | Tell the user, wait until they say it is done, and run `start` again. |
+| `update_required`, `api_contract_unsupported` | The login lines, then the error | Follow [update and stop lines](#update-and-stop-lines). |
+| `account_unavailable` | The login lines, then the error | The account read failed and is safe to repeat: run `start` once more. If it fails again, tell the user. |
+| `invalid_server_response`, `rate_limited` | The login lines, then the error | Tell the user what the error says. |
+| `invalid_configuration`, exit 2 | Only the error | `--staging` conflicts with `FIRSTDRAFT_API_URL`, or that URL is invalid. Tell the user. |
+| A CLI older than `start` | `Unknown command.` on standard error, exit 2 | Tell the user the update steps are at https://firstdraft.com/update. |
+
+Until `Ready:`, do no remote work; local Plan work may continue. `start` prints no token and no account fact other
+than whether reports are on, and its errors carry no text that First Draft wrote.
+
+### Log in for the user
+
+You may start the login; the user approves it in their browser. Never open the link yourself, approve for the user,
+or ask them to paste a token into the conversation.
+
+1. Run `firstdraft_cli login --no-wait`, with `--staging` when the printed command has it. It saves the waiting
+   login on this computer, outside the project, and prints:
+
+   ```text
+   To log in to <origin>, ask the person to open this link in a browser, check that the page shows the code <code>, and approve:
+   <link that includes the code>
+   The link and the code expire in <n> minutes, at <UTC time>.
+   When the person says they approved, run 'firstdraft login --finish'.
+   ```
+
+   When First Draft sends no link that includes the code, the first line asks the person to enter the code
+   instead, and the second is the plain link. Show the user the link and the code exactly as printed, and ask them
+   to approve.
+2. Wait until the user says they approved, then run `firstdraft_cli login --finish`. It waits at most 15 seconds and
+   prints one of these:
+
+| `login --finish` prints | `error` | What you do |
+| --- | --- | --- |
+| `Logged in: this computer is now logged in to <origin>.` and `Run 'firstdraft start' again.` | none, exit 0 | Run `start` again. |
+| `Still waiting: First Draft has not confirmed that the person approved the login.`, the link lines again, and `The link and the code expire at <UTC time>. When the person says they approved, run 'firstdraft login --finish' again.` | `authorization_pending` | Show the link and the code again, and wait for the user before you run `login --finish` again. |
+| `Expired: the link and the code expired before this computer finished the login, so no new login was saved for <origin>.` and `To try again, run 'firstdraft login --no-wait'.` | `authorization_expired` | Run `login --no-wait` again, and show the user the new link and code. |
+| `Refused: the person denied this login, so no new login was saved for <origin>.` and `Ask the person before you start another login with 'firstdraft login --no-wait'.` | `authorization_denied` | Ask the user before you start another login. |
+| `No login is waiting: this computer has no device login for <origin> that has not ended.` and `Run 'firstdraft start' to see whether this computer is logged in.` | `login_not_started` | Run `start` again. |
+
+`login_failed` can end either step. With `reason` `invalid_grant` from `--finish`, the waiting login is spent: run
+`login --no-wait` again. With `credentials_path`, a file on this computer could not be read or written: tell the user
+what the error says. Otherwise, as after a network failure, run the same step once more. If `--finish` fails again,
+start over with `login --no-wait`; if `--no-wait` fails again, tell the user. After `rate_limited`, tell the user what
+it says.
+
 ## Local state and credentials
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
@@ -45,12 +112,10 @@ the pinned origin, or a new Project after a `412` or a retired profile needs the
 Plans resumed without the flag.
 
 Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
-or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the token `firstdraft login` saved for that
-origin. The CLI never sends one environment's credential to another. The usual setup is one login per environment,
-which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.10.0 login`, with `--staging` added for
-staging, or `firstdraft login` from an installed CLI. It prints a URL to approve in a browser; on a machine without
-one, `--interactive` shows a device code to approve elsewhere. The login is saved outside the project, so every
-session and client on the machine shares it.
+or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the login saved on this computer for that origin.
+The CLI never sends one environment's credential to another. The usual setup is one login per environment, which
+you start and the user approves, as [log in for the user](#log-in-for-the-user) describes. The login is saved
+outside the project, so every session and client on the machine shares it.
 
 `FIRSTDRAFT_API_URL` selects an advanced custom server, which uses `FIRSTDRAFT_API_TOKEN` or a login saved with the
 same variable set; the exact staging origin always uses the staging credential. Combining `--staging` with a different URL, or with
@@ -60,10 +125,10 @@ URL override. None of these selections migrates a Project. Preserve the existing
 independent work in another environment, use a separate folder with a new Plan; do not hand-edit private state or
 automatically copy Project identity across environments.
 
-Let the user configure credentials outside the conversation. Do not request a token's value, print it, place it on
-a command line, or persist it in project files. Do not run `login` or `logout` yourself: approval belongs to the
-user, and the command waits for it. When the user confirms authentication is configured, resume
-the already requested operation without asking for fresh authorization.
+Do not request a token's value, ask the user to paste one into the conversation, print it, place it on a command
+line, or persist it in project files. A token in the environment is the user's to set, replace, or unset outside the
+conversation. Only the user runs `logout`. Once `start` prints `Ready:`, resume the already requested operation
+without asking for fresh authorization.
 
 `plan init` has two handled failures:
 
@@ -80,7 +145,7 @@ reinitialize over partial, damaged, or existing state.
 First Draft names the latest and the minimum plugin on every answer. When this setup is older than the latest, the
 command writes one line on standard error just before its result:
 `First Draft: an update is available (plugin <latest>; this setup has plugin <installed>). Tell the person the update steps are at https://firstdraft.com/update`.
-A CLI run without the plugin names `CLI` in place of `plugin`. Pass the line on to the person in your next message,
+`start` writes it on standard output, after its version line. Pass the line on to the person in your next message,
 once per session, and carry on: the command's result stands.
 
 When this setup is older than the minimum, or First Draft serves an API contract this CLI does not accept, the CLI
@@ -93,8 +158,8 @@ updated. After a stop line, the command's result stands: once the person has upd
 After `update_required` or `api_contract_unsupported`, a push that First Draft accepted keeps its saved ETag, so after
 the update run the same command again with the same options. When the error carries `current`, a Compilation had
 already started: follow `current.compilation.id` with `compilation status` instead of compiling again. A line that
-begins `First Draft: FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version` means a wrapper set that variable wrongly;
-tell the person, and carry on.
+begins `First Draft: FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version` means the plugin passed a version
+the CLI cannot read; tell the person, and carry on.
 
 ## Daily limits
 
@@ -201,7 +266,7 @@ Use these terms when explaining the workflow:
 
 | Term | Meaning |
 | --- | --- |
-| Submit the Plan | Send the current Plan to First Draft for analysis (`plan push` through the verified CLI wrapper). |
+| Submit the Plan | Send the current Plan to First Draft for analysis (`plan push` through the Skill's helper). |
 | Compile | Generate and verify application source from the reviewed Foundation Plan. |
 | Commit | Record changes in local Git history; this does not copy them to GitHub. |
 | Create GitHub repository | Create a private repository for this workspace, connect it as `origin`, and push its existing commits. All three steps must succeed. |
@@ -648,10 +713,11 @@ bytes and private state; create replacement work only within the user's authoriz
 ## Progress and failure reports
 
 With the person's yes, the agent tells First Draft how far a generated app has come and where generated code failed,
-so that First Draft can fix what it generates. The person answered once when approving `login` and can change the
-answer on their First Draft account page; you cannot. Each report command reads that answer at the Project's origin
-first. When reports are off, it sends nothing, prints a line that says so, and exits 0: send no more reports, and
-say nothing about them.
+so that First Draft can fix what it generates. The person answered once, on the page where they approved the login,
+and can change the answer on their First Draft account page; you cannot. `start` prints the `Reports are on:` lines
+only when the answer is yes. Send reports only after `start` printed them; otherwise send none and do not bring
+reports up. Each report command reads the answer again at the Project's origin first. When reports are off, it sends
+nothing, prints a line that says so, and exits 0: send no more reports, and say nothing about them.
 
 Send these with a Compilation ID that `plan compile` or `compilation status` printed, from the folder that holds the
 Project's state: the generated app's root after root adoption, or the planning folder after an absent `--output`
@@ -689,7 +755,9 @@ Each command sends once and never blocks your work. After `report_rejected`, `re
 | Any command that calls First Draft, except `logout` | `rate_limited` | First Draft answered `429`; see [daily limits](#daily-limits). For a report, `response.code` `reports_rate_limited` means the account's reports for the hour are used up; carry on without it. |
 | `report progress`, `report failure` | `report_rejected`, `report_unavailable`, `account_unavailable`, `invalid_server_response` | The report was refused, such as `400 invalid_report` or `409 compilation_not_succeeded`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more reports. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | Ask the user to run `login` for that environment, or set its token, outside the conversation. |
+| `start` | `authentication_required`, `account_unavailable`, `invalid_server_response`, `invalid_configuration` | Not ready; see [check readiness with start](#check-readiness-with-start). |
+| `login --no-wait`, `login --finish` | `authorization_pending`, `authorization_expired`, `authorization_denied`, `login_not_started`, `login_failed` | The agent's login did not finish; see [log in for the user](#log-in-for-the-user). |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` and follow its lines, then rerun the command. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
 | `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `project_not_pushed` | No accepted Project/origin is pinned locally. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
@@ -817,8 +885,8 @@ changes a succeeded or failed Compilation, and repeating it is safe:
   check the ID, directory, environment, and login.
 - `compilation_cancel_unavailable` means a network failure, timeout, or server error left the outcome unconfirmed;
   rerun `compilation cancel` or read `compilation status`.
-- `authentication_required` means the environment's token is missing or was rejected with `401`; ask the user to
-  run `login` for that environment, then repeat the cancel.
+- `authentication_required` means the environment's token is missing or was rejected with `401`; run `start` and
+  follow its lines, then repeat the cancel.
 - `invalid_compilation_status` means the response broke the Compilation contract; read `compilation status` instead
   of repeating the request.
 
