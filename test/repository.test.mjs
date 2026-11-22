@@ -1517,23 +1517,49 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     replaceBeforeServerEvaluationState.project_id,
     /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
   );
-  // The Skill's first step is start; no case may still expect the removed help check as a capability probe.
+  // The Skill's first step is start, and the agent may run the login. No case may still grade the removed help
+  // check as a step to take or the old rule that only the person runs login.
+  const retiredExpectations = [
+    /preinstalled compatible|is available before editing|Requires the installed CLI to expose|identified CLI candidate/,
+    /^(?:Runs|Requires|Checks|Verifies)\b[^.]*(?:firstdraft --help|(?:top-level|root) help)/,
+    /\brun (?:firstdraft )?login or logout (?:itself|yourself)\b/,
+    /\bin their own terminal\b/,
+  ];
+  const retired = (expectation) => retiredExpectations.some((pattern) => pattern.test(expectation));
+  assert.equal(retired("Does not run firstdraft login or logout itself."), true);
+  assert.equal(retired("Asks the user to run firstdraft login for the Plan's environment in their own terminal."), true);
+  assert.equal(retired("Checks for a preinstalled compatible firstdraft CLI without installing or upgrading it."), true);
+  assert.equal(retired("Runs firstdraft --help and requires top-level help that lists generate."), true);
+  assert.equal(
+    retired("After the user says they approved, runs firstdraft login --finish through the Skill's helper, then start again."),
+    false,
+  );
+  assert.equal(retired("Does not run firstdraft --help before start."), false);
   for (const evaluation of cases) {
     for (const expectation of evaluation.expectations ?? []) {
-      assert.doesNotMatch(
-        expectation,
-        /preinstalled compatible|is available before editing|Requires the installed CLI to expose|identified CLI candidate|in their own terminal|firstdraft --help|(?:top-level|root) help|run firstdraft login|run login or logout itself|\.firstdraft\/state\.json unopened|private state unopened/,
-        `${evaluation.id}: expectation describes the removed help check or a person-only login`,
+      assert(
+        !retired(expectation),
+        `${evaluation.id}: expectation describes the removed help check or a person-only login: ${expectation}`,
       );
     }
   }
   const authentication = cases.find((evaluation) => evaluation.id === "authentication-required-stop");
-  for (const fragment of ["login --no-wait", "shows the link and the code exactly as printed", "after the user says they approved"]) {
-    assert(
-      authentication.expectations.some((expectation) => expectation.includes(fragment)),
-      `authentication-required-stop must expect the agent's login: ${fragment}`,
-    );
-  }
+  assert(
+    authentication.expectations.some((expectation) =>
+      ["login --no-wait", "shows the link and the code exactly as printed"].every((fragment) =>
+        expectation.includes(fragment),
+      ),
+    ),
+    "authentication-required-stop must expect the agent to start the login and show its link and code",
+  );
+  assert(
+    authentication.expectations.some((expectation) =>
+      ["login --finish", "after the user says they approved", "then start again"].every((fragment) =>
+        expectation.includes(fragment),
+      ),
+    ),
+    "authentication-required-stop must expect the agent to finish the login after approval, then run start again",
+  );
   for (const id of ["initialize-empty-plan", "add-field-with-minted-id", "add-ordinal-enum-with-minted-ids"]) {
     assert(
       cases.find((evaluation) => evaluation.id === id).expectations.some((expectation) =>
