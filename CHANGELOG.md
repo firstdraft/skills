@@ -300,7 +300,7 @@ The plugin bundles CLI 0.10.0, which needs First Draft API 0.9, and passes it th
 First Draft names the latest and minimum plugin on every answer. When this setup is older than the latest, a command
 prints one line saying an update is available. Below the minimum, a command that still had a request to send stops
 with `update_required`, and one whose last answer it was keeps its result and prints one line saying to update before
-the next command. An account can start 50 Compilations and create 20 new Projects in any 24 hours; past that, the CLI
+the next command; `firstdraft start` always stops with the error. An account can start 50 Compilations and create 20 new Projects in any 24 hours; past that, the CLI
 ends with `rate_limited` and the time to try again, and the Skill tells the person and stops. After an ambiguous push
 or Compile, the agent runs the same command once more instead of stopping. When the person said yes to reports while
 approving the login, the agent sends progress reports at five steps of the first run and a failure report for an
@@ -310,9 +310,10 @@ The plugin is now the only thing to install: it holds the Skill and the CLI it w
 only that CLI. It no longer uses a `bin/firstdraft` in the project or a `firstdraft` on `PATH`, so a separately
 installed CLI does nothing for it. The Skill's first step is `firstdraft start`, which prints the versions with any
 update notice, whether this computer is logged in, and, only when the person said yes to reports, when to send them.
-When the computer is not logged in, the agent starts the login: it shows the person a link and a code, the person
-approves in their browser and says so, and the agent finishes the login; the person runs no command. The agent never
-opens the link, approves, or asks for a token, and only the person runs `logout`.
+When it says to log in, the agent starts the login: it shows the person a link and a code, the person approves in
+their browser and says so, and the agent finishes the login; the person runs no command. When it says a token
+variable was not accepted, the person replaces or unsets it. The agent never opens the link, approves, or asks for a
+token, and only the person runs `logout`.
 
 The format stays `firstdraft.foundation-plan.sketch/0.23`, and its two new keys are optional. A Plan's
 `target.profile` must now be `rails-sketch/2026-11`, so a Plan from the earlier profile follows the Skill's "Retired

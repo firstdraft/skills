@@ -39,7 +39,9 @@ Run `start` through the helper before other First Draft work in each session. Wi
 environment or a saved login, it reads the account once; without one, it makes no request. It prints plain sentences
 for you on standard output, one fact per line, and exits 0 only when First Draft accepted the token; every other
 outcome also ends standard error with its handled error. Run each command a line names through the helper, as
-printed: on staging, each ends in `--staging`.
+printed. On staging, the `login` and `start` commands it names end in `--staging`; the report commands it names use
+the Project's saved origin. Give `start` the Project's origin, as
+[local state and credentials](#local-state-and-credentials) describes.
 
 The first line names the versions, `First Draft CLI <version> with plugin <version>.` When First Draft names a newer
 version, the [update line](#update-and-stop-lines) comes second, on standard output. The login lines follow:
@@ -103,13 +105,19 @@ it says.
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
 CLI-owned Project, origin, and ETag state. Inspect the Plan; do not print, paste, commit, or treat the state file as
-agent-authored Plan content. Inspect only its `api_url`, when a persistent read-only status failure requires checking
-the pinned origin, or a new Project after a `412` or a retired profile needs the old one.
+agent-authored Plan content. Inspect only its `api_url`, when `start` needs a resumed Project's origin, when a
+persistent read-only status failure requires checking the pinned origin, or when a new Project after a `412` or a
+retired profile needs the old one.
 
 `plan init` only creates local files; it does not choose a server. New remote work defaults to production at
 `https://firstdraft.com`. For requested staging work, use the root flag before each remote command
 (`firstdraft_cli --staging plan push`). Credential selection follows the saved origin, including existing staging
 Plans resumed without the flag.
+
+`start` and the login commands do not read the Project, so give them its origin. For new work that is production,
+or staging when the user asked for it. In a resumed Project, read only `api_url` from `.firstdraft/state.json`: add
+`--staging` for `https://staging.firstdraft.com`, add nothing for `https://firstdraft.com`, and for a custom origin
+set `FIRSTDRAFT_API_URL` to it for `start` and both login steps.
 
 Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
 or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the login saved on this computer for that origin.
@@ -150,13 +158,15 @@ once per session, and carry on: the command's result stands.
 
 When this setup is older than the minimum, or First Draft serves an API contract this CLI does not accept, the CLI
 sends nothing after that answer. A command cut short ends with `update_required` or `api_contract_unsupported` in
-place of its result. A command whose last answer it was keeps its result, after one line that ends
+place of its result. A command whose last answer it was keeps its result, except `start`, which always ends with the
+error because a setup that must update is not ready. Such a command's result comes after one line that ends
 `This command finished; tell the person to update with the steps at https://firstdraft.com/update before the next one.`
 or, for an older or prerelease contract, `This command finished; use the CLI version that this First Draft origin supports before the next one.`
 Either way, stop remote work, tell the person what the line or the error's `detail` says, and wait until they have
 updated. After a stop line, the command's result stands: once the person has updated, go on with the next step.
 After `update_required` or `api_contract_unsupported`, a push that First Draft accepted keeps its saved ETag, so after
-the update run the same command again with the same options. When the error carries `current`, a Compilation had
+the update run the same command again with the same options; after `start`, run `start` again for the same origin.
+When the error carries `current`, a Compilation had
 already started: follow `current.compilation.id` with `compilation status` instead of compiling again. A line that
 begins `First Draft: FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version` means the plugin passed a version
 the CLI cannot read; tell the person, and carry on.
@@ -757,7 +767,7 @@ Each command sends once and never blocks your work. After `report_rejected`, `re
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
 | `start` | `authentication_required`, `account_unavailable`, `invalid_server_response`, `invalid_configuration` | Not ready; see [check readiness with start](#check-readiness-with-start). |
 | `login --no-wait`, `login --finish` | `authorization_pending`, `authorization_expired`, `authorization_denied`, `login_not_started`, `login_failed` | The agent's login did not finish; see [log in for the user](#log-in-for-the-user). |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` and follow its lines, then rerun the command. |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` for the Project's origin and follow its lines. Then rerun the command, except when the error carries `current`: a Compilation already started, so resume it by `current.compilation.id` as [ambiguous mutations](#ambiguous-mutations) describes, and never start another. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
 | `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `project_not_pushed` | No accepted Project/origin is pinned locally. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |

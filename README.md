@@ -4,7 +4,7 @@ This repository packages the portable agent instructions that turn a product con
 [Foundation Plan](https://firstdraft.github.io/firstdraft/) and drive the First Draft authoring workflow. The
 canonical Skills and bundled CLI are packaged once for Claude Code and Codex, and the plugin is the only thing to
 install. UI continuation follows the generated app's own design and components. The public catalog determines what
-an installed workspace actually receives.
+a plugin installation actually receives.
 
 [Release compatibility](release/compatibility.json) names the CLI, Service API, and Foundation Plan format that
 this source requires. The [public catalog](.claude-plugin/marketplace.json) owns the installed version; source
@@ -64,14 +64,16 @@ Start a new Codex conversation after installation. Use `$firstdraft:create-full-
 there is no separate CLI version to choose.
 
 A plugin install does not sign you into First Draft. The Skill's first step, `firstdraft start`, says whether this
-computer is logged in. When it is not, the agent starts the login and shows you a link and a code: approve the login
-in your browser and tell the agent, which finishes it and carries on. The login is saved once per environment in your
-user configuration directory, so Claude Code, Codex CLI, and desktop sessions all use it without exported variables.
-Approve the specific CLI command when Codex requests network access; its tool permission is separate from approval
-of the Plan and Compile mode.
+computer is logged in. When it says to log in, the agent starts the login and shows you a link and a code: approve
+the login in your browser and tell the agent, which finishes it and carries on. When it says a token variable was not
+accepted, replace or unset that variable yourself. The login is saved once per environment in your user configuration
+directory, so Claude Code, Codex CLI, and desktop sessions all use it without exported variables. Approve the
+specific CLI command when Codex requests network access; its tool permission is separate from approval of the Plan
+and Compile mode.
 
-For the Codespaces fallback, the Drawing Board Codespace installs this plugin from the catalog. Follow the
-[workspace start instructions](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft).
+For the Codespaces fallback, follow the
+[Drawing Board instructions](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft). This
+Skill's helper finds a CLI only inside an installed plugin, so the Codespace must install the plugin.
 Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
 conversation, run `codex resume` from the same workspace root.
 

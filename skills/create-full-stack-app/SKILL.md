@@ -112,7 +112,7 @@ using the loaded Skill path (expand any alias with its supplied Skill root). Use
 each shell call; shell functions do not persist between tool calls. Never store a multiword CLI invocation in one
 shell variable.
 
-The helper runs only this plugin's CLI. Run `start` before other First Draft work:
+Run `start` before other First Draft work:
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -136,7 +136,7 @@ You may start the [login](references/diagnostics-and-recovery.md#log-in-for-the-
 approved, run `firstdraft_cli login --finish`, then `start` again, then resume. Never open the link, approve for the
 user, or ask for a token in the conversation. Only the user runs `logout`.
 
-For requested staging, add `--staging` to each remote command, as
+Select requested staging, or a resumed Project's saved origin, for each remote command, `start` included, as
 [environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) describes.
 `.firstdraft/state.json` is private CLI-owned state: never print, paste, commit, or treat it as Plan content.
 
