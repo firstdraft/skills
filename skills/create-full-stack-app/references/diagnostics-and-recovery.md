@@ -774,7 +774,8 @@ names on a `Left out:` line each field it left out because it did not fit that f
 A note follows the notes lines `start` printed: send one only for a problem with First Draft that cost a real detour
 and is likely to happen again, never for routine debugging, and only after the Plan's first push. It is
 `firstdraft_cli note unstated_request`, `note unclear_guidance`, or `note wrong_output`, with the options those
-lines name; each prints what it sends.
+lines name; each prints what it sends. Write each note in your own plain words, and never put secrets,
+credentials, personal data, or code from the person's project in it.
 
 Each command sends once and never blocks your work. After `report_rejected`, `report_unavailable`, `note_rejected`,
 `note_unavailable`, `account_unavailable`, or `rate_limited`, carry on without that report or note and do not send it
@@ -787,9 +788,9 @@ write the field it names again in plain words, or give a page or code in its sha
 | --- | --- | --- |
 | Any leaf command | `invalid_arguments` | Syntax failed before the requested action. Read that command's help. |
 | Any command that calls First Draft, except `logout` | `update_required`, `api_contract_unsupported` | First Draft needs a newer plugin or CLI, or serves another API contract; see [update and stop lines](#update-and-stop-lines). |
-| Any command that calls First Draft, except `logout` | `rate_limited` | First Draft answered `429`; see [daily limits](#daily-limits). For a report, `response.code` `reports_rate_limited` means the account's reports for the hour are used up; carry on without it. |
-| `report progress`, `report failure` | `report_rejected`, `report_unavailable`, `account_unavailable`, `invalid_server_response` | The report was refused, such as `400 invalid_report` or `409 compilation_not_succeeded`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more reports. |
-| `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_rejected`, `note_unavailable`, `account_unavailable`, `invalid_server_response` | The note was refused, such as `invalid_note` or `compilation_not_found`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more notes. |
+| Any command that calls First Draft, except `logout` | `rate_limited` | First Draft answered `429`; see [daily limits](#daily-limits). For a report or a note, `response.code` `reports_rate_limited` means the account's allowance for the hour is used up: carry on without it and do not send it again. |
+| `report progress`, `report failure` | `report_rejected`, `report_unavailable`, `account_unavailable`, `invalid_server_response` | The report was refused, such as `400 invalid_report` or `409 compilation_not_succeeded`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more reports or notes, and say nothing about them. |
+| `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_rejected`, `note_unavailable`, `account_unavailable`, `invalid_server_response` | The note was refused, such as `invalid_note` or `compilation_not_found`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more reports or notes, and say nothing about them. |
 | `report progress`, `report failure`, `note wrong_output` | `compilation_not_recorded` | No Compilation was given and none is recorded for this Project, so nothing was sent. Name the Compilation the code came from: put its `compilation.id` from `plan compile` right after `report progress` or `report failure`, or pass it to the note with `--compilation-id`. |
 | `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_incomplete` | Exit 2: a field the note needs had nothing left after shaping, so nothing was sent. `detail` names each such field. Write it again in plain words, or give a page or code in its shape. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
