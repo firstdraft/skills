@@ -6,6 +6,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -233,6 +234,22 @@ try {
     assert.equal(reported.agent, agent, `agent for ${JSON.stringify(environment)}`);
     assert.equal(reported.pluginVersion, compatibility.version, "the launcher names its own plugin version");
   }
+
+  // On Windows the laptop kit installs this npm package and links its Skill folder into ~/.claude/skills. The helper
+  // resolves the Skill's physical directory, so through that link it still runs the package's own CLI.
+  const linkedSkill = path.join(temporaryDirectory, "home", ".claude", "skills", "create-full-stack-app");
+  mkdirSync(path.dirname(linkedSkill), {recursive: true});
+  symlinkSync(path.join(installedRoot, "skills", "create-full-stack-app"), linkedSkill);
+  const throughLink = run(
+    "/bin/sh",
+    [path.join(linkedSkill, "scripts", "firstdraft.sh"), "probe"],
+    temporaryDirectory,
+    cleanEnvironment,
+  );
+  const linkedReport = JSON.parse(throughLink.stdout);
+  assert.deepEqual(linkedReport.arguments, ["probe"]);
+  assert.equal(linkedReport.pluginVersion, compatibility.version, "the linked Skill runs the package's own CLI");
+  assert.equal(throughLink.stderr, "");
 
   if (cliRoot) {
     const cliPackage = readJson(path.join(cliRoot, "package.json"));
