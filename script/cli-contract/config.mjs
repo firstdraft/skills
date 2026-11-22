@@ -61,7 +61,7 @@ export const [foundationPlanFormat] = JSON.parse(
 export const analyzerRelease =
   "foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-11-21-rails-sketch-2026-11";
+  "foundation-plan-rails/compiler-application-2026-11-21-agents-reports-line";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-11",

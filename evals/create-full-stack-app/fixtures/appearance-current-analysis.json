@@ -8,7 +8,7 @@
     "graph_version": 1,
     "head_source_sha256": "ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf",
     "analyzer_release": "foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-11-21-rails-sketch-2026-11",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-11-21-agents-reports-line",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-11"
@@ -27,7 +27,7 @@
       "analysis": {
         "release": "foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-11-21-rails-sketch-2026-11",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-11-21-agents-reports-line",
       "target": {
         "id": "rails",
         "profile": "rails-sketch/2026-11"
@@ -45,7 +45,7 @@
         }
       ]
     },
-    "gap_set_sha256": "ae3cf34bf877f83c61b11cb60827c3ab881110b814d4faeed80365891e3fde28",
+    "gap_set_sha256": "c7836243eb74a11031c7b8221aa2da4ed6491ea255484649b015c1f5ad471a53",
     "started_at": "2026-07-30T12:03:00.000Z",
     "completed_at": "2026-07-30T12:03:01.000Z"
   }
