@@ -687,7 +687,7 @@
       "prompt": "Resume the Foundation Plan already in .firstdraft, rename movie.title to movie.name, and fix every affected link.",
       "expectations": [
         "Does not run plan init or reconstruct state.",
-        "Leaves the CLI-owned .firstdraft/state.json unopened and unchanged.",
+        "Leaves the CLI-owned .firstdraft/state.json unchanged and reads nothing from it but api_url, for start.",
         "Keeps the existing Field subject_uuid while changing its readable key.",
         "Updates every affected typed path in the same complete candidate.",
         "Keeps unresolved material path choices explicit; it may push a parseable current draft for diagnostics without pretending those choices are settled."
@@ -713,7 +713,7 @@
         "Runs start through the Skill's helper before any other First Draft command and, since this work is local, continues it whatever start reports; runs no help check.",
         "Runs generate uuid through the Skill resolver exactly once for the one new Field and uses the returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
-        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
+        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unchanged, reading nothing from it but api_url, for start.",
         "Does not run plan init or plan push."
       ],
       "artifacts": [
@@ -739,7 +739,7 @@
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
         "Authors an enum Field with settings.values in low, medium, high order and settings.ordinal set to true.",
         "Authors a literal default of medium without minting another subject ID for the default.",
-        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
+        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unchanged, reading nothing from it but api_url, for start.",
         "Does not invent a Validation.",
         "Does not run plan init or plan push."
       ],
@@ -765,7 +765,7 @@
         "Preserves the enum Field, its default, and every existing subject_uuid without weakening the modeled product meaning.",
         "Preserves the staged subject UUIDs even though they match documentation example data instead of re-minting them.",
         "Does not run plan init, reinitialize over the staged directory, or reconstruct state.",
-        "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
+        "Reads nothing from .firstdraft/state.json but api_url, for start, and lets the CLI update it only after verified success.",
         "Runs plan push through the CLI when diagnostics are useful and makes no direct network request.",
         "After a verified push, runs plan status --wait and binds the result only when both graph versions and analysis.head_source_sha256 match the accepted project.graph_version and foundation_plan.source_sha256 before branching on analysis.status.",
         "If analysis is valid, reports the complete GapSet and digest without inventing blanket enum or default gaps; the current target supports this required ordinal enum and literal-key default unless the actual matching GapSet names a narrower unsupported consumer.",
@@ -854,7 +854,7 @@
         "Preserves private staff access and every requested screen as product meaning, then uses whole-graph analysis to tell realized protected Web and native surfaces from exact unsupported-consumer gaps.",
         "Does not add a public index for the phone apps, narrow the requested screens, discard private access, or decline either requested native client merely to fit current support.",
         "Preserves the complete staged Plan and every existing subject_uuid unchanged during this review.",
-        "Leaves .firstdraft/state.json unopened and unchanged, and does not run plan init, generate uuid, plan push, plan status, or plan compile."
+        "Leaves .firstdraft/state.json unchanged, reading nothing from it but api_url for start, and does not run plan init, generate uuid, plan push, plan status, or plan compile."
       ],
       "artifacts": [
         {
@@ -907,7 +907,7 @@
         "Explains the partially_generated target_support_gap foundation_plan.gap.appearance.native_theme_preference.not_generated at /application/appearance/theme: emitted iOS and Android clients and their embedded Rails responses use automatic appearance; browser selector and stored browser preferences cannot control native shells, and no native preference UI or bridge is generated.",
         "Reports the separate stock native launcher icon residual, while retaining the authored native tint and fixed black-on-white web bookmark artwork.",
         "Preserves toggle and both requested native clients without changing the choice to auto, dropping a client, inventing preference synchronization, or promising native runtime qualification. Valid applies only to the admitted graph and the attached result does not prove Compilation or device behavior.",
-        "Leaves the complete staged Plan and subject UUIDs unchanged, leaves private state unopened, and does not run plan init, plan push, plan status, or plan compile."
+        "Leaves the complete staged Plan and subject UUIDs unchanged, reads nothing from private state but api_url for start, and does not run plan init, plan push, plan status, or plan compile."
       ],
       "artifacts": [
         {
@@ -1120,7 +1120,7 @@
         "Changes the value key and name to standard and Standard, and changes the Field's literal default from medium to standard in the same candidate.",
         "Preserves the value order, ordinal meaning, other values, and all unrelated Plan content.",
         "Does not run generate uuid because the rename creates no new subject.",
-        "Leaves .firstdraft/state.json unopened and unchanged.",
+        "Leaves .firstdraft/state.json unchanged and reads nothing from it but api_url, for start.",
         "Does not run plan init or plan push or make a network request."
       ],
       "artifacts": [

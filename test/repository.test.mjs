@@ -1237,7 +1237,7 @@ test("revision evals stage existing Plan identity and private state", async () =
   );
   assert(
     enumRenameEvaluation.expectations.some((expectation) =>
-      expectation.includes("state.json unopened and unchanged"),
+      expectation.includes("state.json unchanged and reads nothing from it but api_url"),
     ),
     "enum rename eval must preserve private CLI state",
   );
@@ -1522,10 +1522,17 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     for (const expectation of evaluation.expectations ?? []) {
       assert.doesNotMatch(
         expectation,
-        /preinstalled compatible|is available before editing|Requires the installed CLI to expose|identified CLI candidate|in their own terminal/,
+        /preinstalled compatible|is available before editing|Requires the installed CLI to expose|identified CLI candidate|in their own terminal|firstdraft --help|(?:top-level|root) help|run firstdraft login|run login or logout itself|\.firstdraft\/state\.json unopened|private state unopened/,
         `${evaluation.id}: expectation describes the removed help check or a person-only login`,
       );
     }
+  }
+  const authentication = cases.find((evaluation) => evaluation.id === "authentication-required-stop");
+  for (const fragment of ["login --no-wait", "shows the link and the code exactly as printed", "after the user says they approved"]) {
+    assert(
+      authentication.expectations.some((expectation) => expectation.includes(fragment)),
+      `authentication-required-stop must expect the agent's login: ${fragment}`,
+    );
   }
   for (const id of ["initialize-empty-plan", "add-field-with-minted-id", "add-ordinal-enum-with-minted-ids"]) {
     assert(
