@@ -16,7 +16,7 @@ server Publication. Only `create-full-stack-app` is packaged; the UI Skill audit
 Trying First Draft as a tester? Start with the
 [local development guide](https://firstdraft.github.io/firstdraft/docs/guides/local-app.html). Start in an empty
 local folder; a Drawing Board clone and GitHub push are unnecessary. The
-[Drawing Board guide](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft) is the Codespaces fallback.
+[Drawing Board guide](https://github.com/firstdraft/drawing-board#part-3-build-your-app) is the Codespaces fallback.
 
 ## What this repository owns
 
@@ -72,7 +72,7 @@ specific CLI command when Codex requests network access; its tool permission is 
 and Compile mode.
 
 For the Codespaces fallback, follow the
-[Drawing Board instructions](https://github.com/firstdraft/drawing-board#build-an-app-with-first-draft). This
+[Drawing Board instructions](https://github.com/firstdraft/drawing-board#part-3-build-your-app). This
 Skill's helper finds a CLI only inside an installed plugin, so the Codespace must install the plugin.
 Describe your app normally, or select `firstdraft:create-full-stack-app` from `/skills`. To return to the same
 conversation, run `codex resume` from the same workspace root.
