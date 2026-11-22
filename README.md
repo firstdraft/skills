@@ -48,9 +48,9 @@ behavior. This repository teaches an agent how to use those contracts without cr
 
 ## Using Codex
 
-The [catalog manifest](.claude-plugin/marketplace.json) selects the shared plugin, which includes the compatible CLI
-and discovers it in either agent. Drawing Board supplies its own project wrapper and installed CLI. A fresh
-authenticated student Codespace journey remains unproved.
+The [catalog manifest](.claude-plugin/marketplace.json) selects the shared plugin, which holds the Skill and the CLI
+it was tested with. The Skill's helper runs only that bundled CLI, in either agent. A fresh authenticated student
+Codespace journey remains unproved.
 
 Start in a local folder. Codex uses the same catalog as Claude. Install it with:
 
@@ -127,10 +127,12 @@ CI checks consumer commands against the exact pinned CLI and verifies the candid
 cover the complete Publication protocol matrix; Skills retains representative recovery cases, compatible fixtures,
 and packaged-executable integration. The release runbook owns the commands for reproducing these checks.
 
-Preview the plugin directly from a checkout:
+A checkout holds no CLI, so `claude --plugin-dir .` loads the Skill but its helper reports the bundled CLI missing.
+To try the Skill with its CLI, stage the plugin and load that:
 
 ~~~sh
-claude --plugin-dir .
+node script/claude-plugin-package.mjs stage tmp/firstdraft --cli-root /path/to/exact/cli
+claude --plugin-dir tmp/firstdraft
 ~~~
 
 To test a standalone Codex candidate with its bundled CLI:
@@ -163,10 +165,9 @@ The user logs in once per environment with `firstdraft login`, or `firstdraft --
 `FIRSTDRAFT_STAGING_API_TOKEN` for staging; a set variable takes precedence over a saved login. The CLI never uses
 one environment's credential for another. Existing Plans keep their saved origin. `FIRSTDRAFT_API_URL` is an
 advanced custom-server override; a conflicting URL cannot be combined with `--staging` or redirect an existing Project.
-The shared helper prefers the project's `bin/firstdraft` credential wrapper, then the bundled CLI, then an
-installed CLI on PATH.
-It preserves the working directory and arguments. The adapter forwards ambient credentials; it does not read
-ignored credential files. The bundled CLI reads its own saved login, and only the user runs `login` or `logout`. Claude Code does not deliver plugin `userConfig` to
+The Skill's helper runs only the plugin's bundled CLI, and when that is missing it says the plugin needs
+reinstalling. It preserves the working directory and arguments. The adapter forwards ambient credentials; it does
+not read ignored credential files. The bundled CLI reads its own saved login, and only the user runs `login` or `logout`. Claude Code does not deliver plugin `userConfig` to
 `bin/` executables; a secure bridge is tracked in [issue #27](https://github.com/firstdraft/skills/issues/27).
 Never put a token in agent conversation, command-line arguments, checked-in files, examples, evaluations, or
 evidence. The executable adapter may read the environment, but ordinary Skill reference text must not receive or

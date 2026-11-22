@@ -19,6 +19,7 @@ import {
   foundationPlanFormat,
   projectId,
   rootOutputRecovery,
+  startWithoutLogin,
   storedApiUrl,
 } from "./config.mjs";
 import {
@@ -76,6 +77,15 @@ export async function verifyPackedExecutable(context) {
     { status: version.status, stdout: version.stdout, stderr: version.stderr },
     { status: 0, stdout: `${cliPackageVersion}\n`, stderr: "" },
   );
+
+  const start = invokeExecutable(
+    context.executable,
+    ["start"],
+    context.installationDirectory,
+    { FIRSTDRAFT_API_TOKEN: undefined },
+  );
+  assert.equal(start.stdout, startWithoutLogin(null));
+  assertErrorEnvelope({ ...start, stdout: "" }, "authentication_required");
 
   const planHelp = invokeExecutable(
     context.executable,

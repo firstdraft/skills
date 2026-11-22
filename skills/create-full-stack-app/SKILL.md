@@ -108,11 +108,9 @@ end to end; for a question the pages leave open, read only the definition of the
 ## Verify the local capability
 
 Work from the project root. Resolve `<skill-dir>` below to the absolute directory containing this `SKILL.md`,
-using the loaded Skill path (expand any alias with its supplied Skill root). The helper prefers an executable
-project wrapper at `./bin/firstdraft`, then
-the plugin's bundled CLI, then `firstdraft` on PATH. Keep that order: a project wrapper may supply credentials.
-Use the same resolved helper path in each shell call; shell functions do not persist between tool calls.
-Never store a multiword CLI invocation in one shell variable.
+using the loaded Skill path (expand any alias with its supplied Skill root). The helper runs only the CLI bundled
+with this plugin. Use the same resolved helper path in each shell call; shell functions do not persist between tool
+calls. Never store a multiword CLI invocation in one shell variable.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -135,8 +133,7 @@ New remote work uses `https://firstdraft.com`; for requested staging use `firstd
 Read [environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) before remote work.
 
 `.firstdraft/state.json` is private CLI-owned state: never print, paste, commit, or treat it as Plan content.
-Never request or expose tokens. Follow a wrapper's credential bootstrap without reading ignored environment files.
-Otherwise ask the user to log in once per environment in their own terminal, as the reference describes; never run
+Never request or expose tokens. Ask the user to log in once per environment in their own terminal, as the reference describes; never run
 `login` or `logout` yourself. Once configured, resume the requested operation without fresh authorization.
 
 ## Initialize or resume the local Plan

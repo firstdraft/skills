@@ -6,6 +6,19 @@ export const cliRuntimeSha256 =
 export const cliPackageName = "@firstdraft.com/cli";
 export const cliPackageVersion = "0.10.0";
 
+// What `firstdraft start` prints for production with no saved login and no token: it makes no request. The lines
+// come from the pinned CLI's src/agent-sentences.js, and the diagnostics reference quotes them.
+export function startWithoutLogin(pluginVersion) {
+  return [
+    pluginVersion === null
+      ? `First Draft CLI ${cliPackageVersion}.`
+      : `First Draft CLI ${cliPackageVersion} with plugin ${pluginVersion}.`,
+    "This computer has no saved login for https://firstdraft.com.",
+    "To log in, run 'firstdraft login --no-wait'. It prints a link and a code: show both to the person and ask them to approve the login in their browser.",
+    "When the person says they approved, run 'firstdraft login --finish', then run 'firstdraft start' again.",
+  ].map((line) => `${line}\n`).join("");
+}
+
 export const safeGithubReasonCodes = Object.freeze([
   "github.configuration_missing",
   "github.oauth_unavailable",
