@@ -63,6 +63,7 @@ missing from this list sorts by that date.
 
 | Release | In use from |
 | --- | --- |
+| `2026-11-21-agents-reports-line` | 2026-11-21 |
 | `2026-11-21-rails-sketch-2026-11` | 2026-11-21 |
 | `2026-11-17-gem-advisories` | 2026-11-20 |
 | `2026-11-13-events-listed` | 2026-11-17 |
@@ -289,6 +290,28 @@ and change its "index prevents a guest from accessing protected records" request
 `/login`.
 
 **Check.** `bundle exec rspec` passes.
+
+## 2026-11-21: A returning agent checks whether to send reports
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: optional. To have an agent that works in the app without the Skill send the reports and notes the
+  person agreed to, add the bullet below to the list in the app's `AGENTS.md`.
+- Compiler: release `2026-11-21-agents-reports-line`, in use on firstdraft.com from 2026-11-21.
+
+A generated app's `AGENTS.md` now tells an agent that comes back in a later session, without the First Draft Skill,
+to run `firstdraft start` once. It sends reports and notes only when `start` says the person said yes, and otherwise
+sends nothing and does not ask the person to log in for it. The bullet is the same in every app and follows the one
+about failures in code First Draft generated. From the app's root, the CLI names the Compilation it recorded when a
+CLI 0.10.0 compile or download wrote the code. An app compiled earlier has no such record, so a report, or a note
+about its generated code, stops with `compilation_not_recorded` unless the agent names the Compilation. The Plan
+format and analysis are unchanged.
+
+```markdown
+- If the `firstdraft` command is available, run `firstdraft start` once when a session begins. When it prints
+  `Reports are on:`, send the reports and notes it describes. When the command is missing, is not logged in, or
+  says nothing about reports, send nothing and keep working; do not ask the user to log in for this.
+```
 
 ## 2026-11-21: Update notices, daily limits, and agent reports
 
