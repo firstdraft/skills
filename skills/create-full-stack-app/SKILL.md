@@ -119,7 +119,7 @@ firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli start
 ```
 
-It prints one sentence per line. Run each command its lines name, as printed, through the helper:
+It prints one fact per line. Run each command its lines name, as printed, through the helper:
 `'firstdraft login --no-wait'` is `firstdraft_cli login --no-wait`. Pass on an
 [update line](references/diagnostics-and-recovery.md#update-and-stop-lines), from any command, once. Then:
 

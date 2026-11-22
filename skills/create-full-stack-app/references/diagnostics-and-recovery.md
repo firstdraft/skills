@@ -53,7 +53,7 @@ Staging names `FIRSTDRAFT_STAGING_API_TOKEN`. Then, by outcome:
 | Outcome | What `start` prints last | What you do |
 | --- | --- | --- |
 | Ready, exit 0 | `Ready: First Draft accepted this computer's login.`, or `Ready: First Draft accepted FIRSTDRAFT_API_TOKEN.` for a token variable | Go on. Never raise reports. |
-| Ready with reports on, exit 0 | The same `Ready:` line, then four lines that begin `Reports are on:`, `Progress:`, `Failure:`, and `Use compilation.id` | Go on, and send reports as those lines and [progress and failure reports](#progress-and-failure-reports) say. |
+| Ready with reports on, exit 0 | The same `Ready:` line, then four lines that begin `Reports are on:`, `Progress:`, `Failure:`, and `Use compilation.id ...` | Go on, and send reports as those lines and [progress and failure reports](#progress-and-failure-reports) say. |
 | Not logged in: `authentication_required`, no request made | `To log in, run 'firstdraft login --no-wait'. It prints a link and a code: show both to the person and ask them to approve the login in their browser.` and `When the person says they approved, run 'firstdraft login --finish', then run 'firstdraft start' again.` | [Log in for the user](#log-in-for-the-user). |
 | Saved login rejected: `authentication_required` | `Not logged in: First Draft did not accept the saved login for <origin>.` and the same two login lines | [Log in for the user](#log-in-for-the-user). |
 | Token variable rejected: `authentication_required` | `Not logged in: First Draft did not accept FIRSTDRAFT_API_TOKEN. Ask the person to replace it or unset it; while it is set, the CLI uses no saved login.` | Tell the user, wait until they say it is done, and run `start` again. |
