@@ -48,6 +48,7 @@ export async function verifyLocalCommands(context) {
   assert.match(rootHelp.stdout, /login\s+Log in to First Draft and save a token/);
   assert.match(rootHelp.stdout, /logout\s+Revoke and remove the saved token/);
   assert.match(rootHelp.stdout, /plan\s+Work with Foundation Plans/);
+  assert.match(rootHelp.stdout, /start\s+Check versions, login, and reports before other work/);
 
   const planHelp = await invokeRunner(
     context.runCli,
