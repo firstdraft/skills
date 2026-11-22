@@ -6,7 +6,7 @@
       "should_trigger": true,
       "prompt": "The compatible firstdraft CLI is installed. Help me start a First Draft Foundation Plan for my Oscar Party app and send it for diagnostics.",
       "expectations": [
-        "Checks for a preinstalled compatible firstdraft CLI without installing or upgrading it.",
+        "Runs start through the Skill's helper as its first First Draft command, without installing or upgrading a CLI or running a help check, and follows what start prints before plan push.",
         "Uses the supplied Oscar Party name and lets plan init derive its application key unless a key-specific choice is material, without asking for redundant confirmation.",
         "Leaves entities empty instead of inventing a placeholder Entity.",
         "Uses plan push through the CLI, then runs plan status --wait after a verified push and branches on analysis.status rather than the shell exit code.",
@@ -710,7 +710,7 @@
       "should_trigger": true,
       "prompt": "The installed firstdraft CLI includes generate uuid. Add a required integer movie.runtime_minutes Field to the staged Plan for local review. Do not push it.",
       "expectations": [
-        "Checks that generate uuid is available before editing the Plan.",
+        "Runs start through the Skill's helper before any other First Draft command and, since this work is local, continues it whatever start reports; runs no help check.",
         "Runs generate uuid through the Skill resolver exactly once for the one new Field and uses the returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
         "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
@@ -734,7 +734,7 @@
       "should_trigger": true,
       "prompt": "The installed firstdraft CLI includes generate uuid. Add a required movie.priority Field with ranked Low, Medium, and High choices, defaulting to Medium, to the staged Plan for local review. Do not push it.",
       "expectations": [
-        "Checks that generate uuid is available before editing the Plan.",
+        "Runs start through the Skill's helper before any other First Draft command and, since this work is local, continues it whatever start reports; runs no help check.",
         "Runs generate uuid --count 4 through the Skill resolver exactly once for the one new Field and its three new values, and uses every returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
         "Authors an enum Field with settings.values in low, medium, high order and settings.ordinal set to true.",
@@ -1562,7 +1562,7 @@
       "should_trigger": true,
       "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
       "expectations": [
-        "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
+        "Relies on the plugin's bundled CLI for both plan compile completion modes and no public plan publish command, without a help check.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, and does not ask for a second confirmation or repeat the unchanged read-back.",
         "Because the user has not said they looked at the Plan's page on First Draft's site, reminds them once that it is there and what it shows, as a statement that asks nothing, and Compiles in the same turn.",
         "Selects Publication because the user explicitly requested one private GitHub repository and runs exactly one plan compile --github through the Skill resolver; it does not add --output.",
@@ -1589,7 +1589,7 @@
       "should_trigger": true,
       "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
       "expectations": [
-        "Requires the installed CLI to expose plan compile --output as a direct local completion mode while retaining plan compile --github as the separate GitHub Publication mode.",
+        "Relies on the plugin's bundled CLI for plan compile --output as the direct local completion mode, with plan compile --github as the separate GitHub Publication mode, without a help check.",
         "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; and asks for no second confirmation.",
         "After approval, runs exactly one firstdraft plan compile --output ./application through the Skill resolver and does not also run plan compile --github, plan publish, or a preparatory plan push or plan status.",
         "Lets the CLI push the exact Plan, wait for matching valid analysis, start and poll one retained direct Compilation, verify its artifact, and atomically materialize exact bytes and modes without duplicating those mechanics.",
@@ -1617,7 +1617,7 @@
       "expectations": [
         "Treats the ordinary local request as selection of firstdraft plan compile and never substitutes an absent application directory or explicit --github Publication without another user decision.",
         "Runs the selected Compile exactly once without another command-level confirmation or preparatory push or status command.",
-        "Before mutation, verifies the identified CLI candidate supports the requested archive layout instead of assuming published CLI 0.2.2 implements it. Applies the CLI-owned POSIX current-root preconditions: the physical current directory is writable, has no reserved .firstdraft/design or top-level .firstdraft-root-output entry, contains only eligible top-level entries, and is not nested inside another worktree; an existing Git root must be clean, nonsparse, operation-free, and have no submodule metadata.",
+        "Before mutation, relies on the plugin's bundled CLI for the archive layout, with no help check and no other CLI. Applies the CLI-owned POSIX current-root preconditions: the physical current directory is writable, has no reserved .firstdraft/design or top-level .firstdraft-root-output entry, contains only eligible top-level entries, and is not nested inside another worktree; an existing Git root must be clean, nonsparse, operation-free, and have no submodule metadata.",
         "Lets the CLI own the root transaction, artifact verification, same-filesystem moves, rollback journal, and installation instead of moving, deleting, archiving, or overwriting workspace material itself.",
         "On success, reports the validated output path, file count, manifest digest, Compilation status, and root_adoption result; prior non-Git top-level material is directly under .firstdraft/design and an existing root .git and history are preserved with the transformation staged.",
         "Recognizes that the approved Plan and private CLI state moved to .firstdraft/design/.firstdraft, runs any later First Draft plan or compilation command from .firstdraft/design, and never initializes a replacement Project in the generated application root. Keeps that private state separate from the artifact-verified generated .firstdraft/submitted-foundation-plan.json and .firstdraft/gaps.json.",

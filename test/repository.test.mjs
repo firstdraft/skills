@@ -1517,6 +1517,24 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     replaceBeforeServerEvaluationState.project_id,
     /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
   );
+  // The Skill's first step is start; no case may still expect the removed help check as a capability probe.
+  for (const evaluation of cases) {
+    for (const expectation of evaluation.expectations ?? []) {
+      assert.doesNotMatch(
+        expectation,
+        /preinstalled compatible|is available before editing|Requires the installed CLI to expose|identified CLI candidate|in their own terminal/,
+        `${evaluation.id}: expectation describes the removed help check or a person-only login`,
+      );
+    }
+  }
+  for (const id of ["initialize-empty-plan", "add-field-with-minted-id", "add-ordinal-enum-with-minted-ids"]) {
+    assert(
+      cases.find((evaluation) => evaluation.id === id).expectations.some((expectation) =>
+        expectation.startsWith("Runs start through the Skill's helper"),
+      ),
+      `${id} must run start first`,
+    );
+  }
   for (const id of ["initialize-empty-plan", "local-only-draft"]) {
     assert.match(
       cases.find((evaluation) => evaluation.id === id).prompt,
@@ -2288,7 +2306,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(malformed, "early Compile attempt as harmful");
 
   const movie = evaluation("compile-prepared-movie-catalog");
-  hasExpectation(movie, "both plan compile completion modes", "no public plan publish");
+  hasExpectation(movie, "both plan compile completion modes", "no public plan publish", "without a help check");
   hasExpectation(movie, "explicitly requested one private GitHub repository", "plan compile --github");
   hasExpectation(movie, "pushes the exact whole file", "accepted exact Head's analysis");
   hasExpectation(movie, "progress as nonterminal observational output");
