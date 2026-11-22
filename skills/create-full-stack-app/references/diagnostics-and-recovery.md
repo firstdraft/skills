@@ -735,9 +735,9 @@ change the answer on their First Draft account page; you cannot. `start` prints 
 notes lines after them only when the answer is yes. Send reports and notes only after `start` printed them, as
 those lines say; otherwise send none and do not bring reports or notes up. Each report and note command reads the
 answer again at the Project's origin first. When reports are off, it sends nothing, prints a line that says so, and
-exits 0. If the person turns reports off after that read, the command has already printed and sent what it was
-sending, First Draft keeps nothing, and it prints the same line. Either way, send no more reports or notes, and say
-nothing about them.
+exits 0. When First Draft answers the send with `403 reports_off`, because the person turned reports off after that
+read, the command had already printed and sent its body, First Draft did not store it, and the command prints the
+same line. Either way, send no more reports or notes, and say nothing about them.
 
 Run these from the folder that holds the Project's state: the generated app's root after root adoption, or the
 planning folder after an absent `--output` path. A report, and a note about generated code, names the Compilation

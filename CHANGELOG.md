@@ -311,10 +311,11 @@ The same yes covers notes. With it, the agent can tell First Draft, in a few fix
 state something the person asked for, that a Skill page or a diagnostic was unclear, or that analysis or generated
 code was wrong. A note can be sent during the interview, once the Plan has been pushed. Like a report, it is printed
 before it is sent, and the CLI attaches no file from the project; the agent writes it in its own words and leaves
-out the person's code. Once this CLI has written an app's code, neither a report nor a note needs a Compilation ID:
-the CLI remembers the Compilation whose code it last wrote for the Project, so a later session, a second Compile, or
-maintenance can still send them. For code an earlier CLI wrote, the agent names the Compilation. The person can see
-each report and note on their First Draft account page and delete it there.
+out the person's code. The CLI remembers the Compilation whose code it last wrote for the Project, so a report, or a
+note about generated code, needs no Compilation ID when that record names the Compilation the code came from, and a
+later session, a second Compile, or maintenance can still send them. For code an earlier CLI wrote, or after the CLI
+says it could not record a Compilation, the agent names it. The person can see each report and note on their First
+Draft account page and delete it there.
 
 The plugin is now the only thing to install: it holds the Skill and the CLI it was tested with, and the Skill runs
 only that CLI. It no longer uses a `bin/firstdraft` in the project or a `firstdraft` on `PATH`, so a separately

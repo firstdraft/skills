@@ -1333,7 +1333,7 @@
       "expectations": [
         "Runs start through the Skill's helper before other First Draft work and follows its lines; with reports on, it prints the Reports are on: lines and the notes lines after them.",
         "Adds a release date Field to the movie Entity with one minted subject UUID, and keeps the calendar view, which the Plan has no words for, in implementation-notes.md with an acceptance example, telling the user it is written after Compile.",
-        "Pushes the Plan through the Skill's helper and reads its matching analysis before sending any note, reading nothing from .firstdraft/state.json but api_url for start.",
+        "Pushes the Plan through the Skill's helper and reads its matching analysis, reading nothing from .firstdraft/state.json but api_url for start; sends the note only after start showed reports are on and the Project has had a successful push.",
         "Sends exactly one note, an unstated_request note through the Skill's helper, because the calendar request cost a real detour that will recur, with --request naming the calendar view in plain words and --workaround saying it went to the implementation notes, run from the Project's directory.",
         "Sends no note for routine work, such as a diagnostic it corrected, and no progress or failure report, since nothing was compiled.",
         "Puts no secret, personal data, or code from the person's project in the note, and does not send it again after note_rejected, note_unavailable, or a reports-off line."
