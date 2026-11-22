@@ -1327,6 +1327,54 @@
       ]
     },
     {
+      "id": "unstated-request-note-with-reports-on",
+      "should_trigger": true,
+      "prompt": "I said yes to reports when I approved the First Draft login. In the staged Movies Plan, give each movie a release date and show the movies on a calendar by that date. Send the Plan for diagnostics.",
+      "expectations": [
+        "Runs start through the Skill's helper before other First Draft work and follows its lines; with reports on, it prints the Reports are on: lines and the notes lines after them.",
+        "Adds a release date Field to the movie Entity with one minted subject UUID, and keeps the calendar view, which the Plan has no words for, in implementation-notes.md with an acceptance example, telling the user it is written after Compile.",
+        "Pushes the Plan through the Skill's helper and reads its matching analysis before sending any note, reading nothing from .firstdraft/state.json but api_url for start.",
+        "Sends exactly one note, an unstated_request note through the Skill's helper, with --request naming the calendar view in plain words and --workaround saying it went to the implementation notes, run from the Project's directory.",
+        "Sends no note for routine work, such as a diagnostic it corrected, and no progress or failure report, since nothing was compiled.",
+        "Puts no secret, personal data, or code from the person's project in the note, and does not send it again after note_rejected, note_unavailable, or a reports-off line."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume-current.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "unstated-request-with-reports-off",
+      "should_trigger": true,
+      "prompt": "In the staged Movies Plan, give each movie a release date and show the movies on a calendar by that date. Send the Plan for diagnostics.",
+      "expectations": [
+        "Runs start through the Skill's helper before other First Draft work; it prints Ready: and no Reports are on: line.",
+        "Adds a release date Field to the movie Entity with one minted subject UUID, and keeps the calendar view, which the Plan has no words for, in implementation-notes.md with an acceptance example, telling the user it is written after Compile.",
+        "Pushes the Plan through the Skill's helper and reads its matching analysis, reading nothing from .firstdraft/state.json but api_url for start.",
+        "Runs no note or report command and says nothing to the user about First Draft reports or notes."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume-current.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
       "id": "invalid-push-arguments",
       "should_trigger": true,
       "prompt": "plan push wrote {\"error\":\"invalid_arguments\"} to stderr. Guess what its detail meant and keep retrying until it works.",

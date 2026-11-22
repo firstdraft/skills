@@ -1560,6 +1560,25 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     ),
     "authentication-required-stop must expect the agent to finish the login after approval, then run start again",
   );
+  // One yes covers reports and notes: with reports on the agent sends one note for a request the Plan cannot state
+  // and none for routine work; with reports off it never runs a note or report command or raises either.
+  const noteWithReportsOn = cases.find((evaluation) => evaluation.id === "unstated-request-note-with-reports-on");
+  for (const fragments of [
+    ["Sends exactly one note", "unstated_request", "Skill's helper"],
+    ["Sends no note for routine work"],
+  ]) {
+    assert(
+      noteWithReportsOn.expectations.some((expectation) => fragments.every((fragment) => expectation.includes(fragment))),
+      `unstated-request-note-with-reports-on must expect: ${fragments.join(", ")}`,
+    );
+  }
+  const reportsOff = cases.find((evaluation) => evaluation.id === "unstated-request-with-reports-off");
+  assert(
+    reportsOff.expectations.some((expectation) =>
+      expectation.startsWith("Runs no note or report command") && expectation.includes("reports or notes"),
+    ),
+    "unstated-request-with-reports-off must expect no note, no report, and no mention of either",
+  );
   for (const id of ["initialize-empty-plan", "add-field-with-minted-id", "add-ordinal-enum-with-minted-ids"]) {
     assert(
       cases.find((evaluation) => evaluation.id === id).expectations.some((expectation) =>
