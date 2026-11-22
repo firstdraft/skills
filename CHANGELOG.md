@@ -305,9 +305,11 @@ sends nothing and does not ask the person to log in for it. The bullet is the sa
 about failures in code First Draft generated. Run from the folder that holds the Project's state, the app's root
 after root adoption or the planning folder after `--output`, a report names the Compilation that a CLI 0.10.0 compile
 or download last recorded for the Project. When there is no record, as for an app compiled earlier, or it names other
-code, the agent names the Compilation. The bullet's `start` checks production by default; for a Project on staging,
-run `firstdraft --staging start`. The Plan format and the Analyzer release are unchanged; the next analysis of a Plan
-records the new Compiler release and a new GapSet digest.
+code, the agent names the Compilation. `start` does not read the Project, so for a Project whose state names an
+`api_url`, the agent sets `FIRSTDRAFT_API_URL` to that origin when it runs `start`; without one, `start` checks
+production unless `--staging` or `FIRSTDRAFT_API_URL` selects another origin. The Plan format and the Analyzer
+release are unchanged; the next analysis of a Plan records the new Compiler release and, when it is valid, a new
+GapSet digest.
 
 ```markdown
 - If the `firstdraft` command is available, run `firstdraft start` once when a session begins. When it prints
