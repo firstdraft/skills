@@ -1,0 +1,4 @@
+interface:
+  display_name: "Host an app with First Draft"
+  short_description: "Put a compiled app online and keep it running"
+  default_prompt: "Use $host-app to put my First Draft app online, tell me what stands in the way, and connect my domain when it is live."

@@ -11,7 +11,7 @@ this source requires. The [public catalog](.claude-plugin/marketplace.json) owns
 compatibility does not establish publication. New remote work uses production at `https://firstdraft.com`; staging
 is explicit with `firstdraft --staging ...` and a separate staging token. The workflow preserves the planning
 workspace under `.firstdraft/design/` and defaults to current-folder local output. Use explicit `--github` for
-server Publication. Only `create-full-stack-app` is packaged; the UI Skill auditions remain deferred source.
+server Publication. Only `create-full-stack-app` is packaged; the UI Skill auditions and the `host-app` draft remain deferred source.
 
 Trying First Draft as a tester? Start with the
 [local development guide](https://firstdraft.github.io/firstdraft/docs/guides/local-app.html). Start in an empty
