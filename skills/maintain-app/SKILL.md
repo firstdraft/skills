@@ -13,10 +13,11 @@ either fixed and resolved, resolved with another reason, or waiting on the owner
 ## Run the CLI
 
 Run First Draft commands from the application's folder, where you edit and test it. The CLI finds the Project there
-in every layout: from the Project's planning state when this computer has it, and otherwise, as in a fresh clone of
-the application, from the application's own `.firstdraft/gaps.json`. Resolve `<skill-dir>` to the absolute directory
-containing this `SKILL.md`; the helper is the one the authoring Skill uses. Shell functions do not persist between
-tool calls, so define the function in each call.
+in every layout: from planning state in that folder or its `.firstdraft/design` archive, and otherwise, as in a fresh
+clone or an application compiled with `--output`, from the application's own `.firstdraft/gaps.json`. A planning
+folder elsewhere on this computer gives you only the origin and the Compilation, below. Resolve `<skill-dir>` to the
+absolute directory containing this `SKILL.md`; the helper is the one the authoring Skill uses. Shell functions do not
+persist between tool calls, so define the function in each call.
 
 Choose the Project's origin once, and give it to every First Draft command in the run through `FIRSTDRAFT_API_URL`,
 as the helper function below does: `start`, both login steps, each maintain command, and `report failure`. Setting it
@@ -143,9 +144,11 @@ firstdraft_cli report failure --kind deployed_error --item ITEM_ID
 adding what the run has: `--error-class` from the item's title, `--rerun` with the spec you wrote, `--frame` for each
 place you fixed, and a one-line `--fix-summary` in your own words. An item resolved as a duplicate may have none of
 them. The report takes no message. It names the Compilation the CLI last recorded for this Project; when you know the
-deployed code came from another one, put that `compilation.id` right after `report failure`. A copy of the application
-without the Project's planning folder records no Compilation, so without that ID the report ends with
-`compilation_not_recorded` and sends nothing; then continue without it. Without that line, never raise reports.
+deployed code came from another one, put that `compilation.id` right after `report failure`. Run from an
+application folder without planning state, the report finds no recorded Compilation: when the Project's planning
+folder is on this computer, its `.firstdraft/compilation.json` names the one it last wrote as `compilation_id`;
+without an ID, the report ends with `compilation_not_recorded` and sends nothing, so continue without it. Without
+that line, never raise reports.
 
 ## Report the run
 
