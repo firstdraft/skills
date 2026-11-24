@@ -47,6 +47,12 @@ export const canonicalSourceSkills = Object.freeze({
     "references/rails.md",
     "references/shadcn.md",
   ]),
+  "host-app": Object.freeze([
+    "LICENSE.txt",
+    "SKILL.md",
+    "agents/openai.yaml",
+    "scripts/firstdraft.sh",
+  ]),
   "review-ui-consistency": Object.freeze([
     "LICENSE.txt",
     "SKILL.md",
