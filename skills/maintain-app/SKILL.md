@@ -18,21 +18,26 @@ the application, from the application's own `.firstdraft/gaps.json`. Resolve `<s
 containing this `SKILL.md`; the helper is the one the authoring Skill uses. Shell functions do not persist between
 tool calls, so define the function in each call.
 
-Run `start` first, at the origin the maintain commands will use. When the Project's planning state is on this
-computer (`.firstdraft/design/.firstdraft/state.json` in an application First Draft compiled into its root, otherwise
-`.firstdraft/state.json` where the Plan was started), set `FIRSTDRAFT_API_URL` to its `api_url` for `start` and both
-login steps, production included. Without it, the maintain commands use `https://firstdraft.com`, as `start` does,
-unless the owner says the Project is on staging; then add `--staging` to `start` and to every maintain command.
-`start` prints one fact per line; pass on an update line once. On `Ready: First Draft accepted ...`, go on. On `To log
-in, run ...` or `Not logged in: First Draft did not accept the saved login ...`, you may start the login: run the
-`login --no-wait` command `start` printed, through the helper and with its flags, and show the owner the link and the
-code exactly as printed; when they say they approved, run the printed `login --finish`, then `start` again. Never
-open the link, approve for the owner, or ask for a token in the conversation. Only the owner runs `logout`. For
-anything else `start` prints, tell the owner what it says.
+Choose the Project's origin once, and give it to every First Draft command in the run through `FIRSTDRAFT_API_URL`,
+as the helper function below does: `start`, both login steps, each maintain command, and `report failure`. Setting it
+every time keeps a value already in the shell from sending one of them elsewhere. The origin is the first of:
+
+1. the `api_url` in the application's archived planning state, `.firstdraft/design/.firstdraft/state.json`;
+2. the `api_url` in the Project's planning folder, `.firstdraft/state.json` where the Plan was started, when that
+   folder is on this computer, as beside an application compiled with `--output`;
+3. `https://staging.firstdraft.com` when the owner says the Project is on staging, and otherwise
+   `https://firstdraft.com`.
+
+Run `start` first. It prints one fact per line; pass on an update line once. On `Ready: First Draft accepted ...`,
+go on. On `To log in, run ...` or `Not logged in: First Draft did not accept the saved login ...`, you may start the
+login: run the `login --no-wait` command `start` printed, through the helper and with its flags, and show the owner
+the link and the code exactly as printed; when they say they approved, run the printed `login --finish`, then
+`start` again. Never open the link, approve for the owner, or ask for a token in the conversation. Only the owner
+runs `logout`. For anything else `start` prints, tell the owner what it says.
 
 ```sh
-firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-FIRSTDRAFT_API_URL=API_URL firstdraft_cli start   # API_URL: the api_url in the planning state, if any
+firstdraft_cli() { FIRSTDRAFT_API_URL=ORIGIN sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }   # ORIGIN as above
+firstdraft_cli start
 firstdraft_cli maintain                       # open items in production, most severe first
 firstdraft_cli maintain show ITEM_ID          # one item, with evidence and what done means
 firstdraft_cli maintain resolve ITEM_ID --reason pull_request --cause generated_code \
