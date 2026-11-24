@@ -12,26 +12,27 @@ either fixed and resolved, resolved with another reason, or waiting on the owner
 
 ## Run the CLI
 
-Run First Draft commands from the application's root, where the CLI finds the Project's state archived at
-`.firstdraft/design/` in an application First Draft compiled into its root, or from the directory where the Plan was
-started. Edit and test the application from its own root. Resolve `<skill-dir>` to the absolute directory containing
-this `SKILL.md`; the helper is the one the authoring Skill uses. Shell functions do not persist between tool calls,
-so define the function in each call.
+Run First Draft commands from the application's folder, where you edit and test it. The CLI finds the Project there
+in every layout: from the Project's planning state when this computer has it, and otherwise, as in a fresh clone of
+the application, from the application's own `.firstdraft/gaps.json`. Resolve `<skill-dir>` to the absolute directory
+containing this `SKILL.md`; the helper is the one the authoring Skill uses. Shell functions do not persist between
+tool calls, so define the function in each call.
 
-Run `start` first. The maintain commands use the `api_url` saved in the Project's state
-(`.firstdraft/design/.firstdraft/state.json` in an application First Draft compiled into its root, otherwise
-`.firstdraft/state.json` where the Plan was started), so set `FIRSTDRAFT_API_URL` to it for `start` and both login
-steps, production included, and they check the login the maintain commands will use. It prints one fact per line;
-pass on an update line once. On `Ready: First Draft accepted ...`, go on. On `To log in, run ...` or `Not logged in:
-First Draft did not accept the saved login ...`, you may start the login: run the `login --no-wait` command `start`
-printed, through the helper and with its flags, and show the owner the link and the code exactly as printed; when
-they say they approved, run the printed `login --finish`, then `start` again. Never open the link, approve for the
-owner, or ask for a token in the conversation. Only the owner runs `logout`. For anything else `start` prints, tell
-the owner what it says.
+Run `start` first, at the origin the maintain commands will use. When the Project's planning state is on this
+computer (`.firstdraft/design/.firstdraft/state.json` in an application First Draft compiled into its root, otherwise
+`.firstdraft/state.json` where the Plan was started), set `FIRSTDRAFT_API_URL` to its `api_url` for `start` and both
+login steps, production included. Without it, the maintain commands use `https://firstdraft.com`, as `start` does,
+unless the owner says the Project is on staging; then add `--staging` to `start` and to every maintain command.
+`start` prints one fact per line; pass on an update line once. On `Ready: First Draft accepted ...`, go on. On `To log
+in, run ...` or `Not logged in: First Draft did not accept the saved login ...`, you may start the login: run the
+`login --no-wait` command `start` printed, through the helper and with its flags, and show the owner the link and the
+code exactly as printed; when they say they approved, run the printed `login --finish`, then `start` again. Never
+open the link, approve for the owner, or ask for a token in the conversation. Only the owner runs `logout`. For
+anything else `start` prints, tell the owner what it says.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-FIRSTDRAFT_API_URL=API_URL firstdraft_cli start   # API_URL: the api_url in the Project's state
+FIRSTDRAFT_API_URL=API_URL firstdraft_cli start   # API_URL: the api_url in the planning state, if any
 firstdraft_cli maintain                       # open items in production, most severe first
 firstdraft_cli maintain show ITEM_ID          # one item, with evidence and what done means
 firstdraft_cli maintain resolve ITEM_ID --reason pull_request --cause generated_code \
@@ -137,8 +138,9 @@ firstdraft_cli report failure --kind deployed_error --item ITEM_ID
 adding what the run has: `--error-class` from the item's title, `--rerun` with the spec you wrote, `--frame` for each
 place you fixed, and a one-line `--fix-summary` in your own words. An item resolved as a duplicate may have none of
 them. The report takes no message. It names the Compilation the CLI last recorded for this Project; when you know the
-deployed code came from another one, put that `compilation.id` right after `report failure`. Without that line, never
-raise reports.
+deployed code came from another one, put that `compilation.id` right after `report failure`. A copy of the application
+without the Project's planning folder records no Compilation, so without that ID the report ends with
+`compilation_not_recorded` and sends nothing; then continue without it. Without that line, never raise reports.
 
 ## Report the run
 
