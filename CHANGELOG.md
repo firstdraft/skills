@@ -93,6 +93,30 @@ missing from this list sorts by that date.
 | `2026-10-03-workshop-core` | 2026-10-03 |
 | `2026-09-29-skipped-data-defaults` | 2026-10-01 or earlier |
 
+## 2026-11-24: GitHub repositories come from the person's own gh login
+
+**Skills — on `main`, for the next plugin release.**
+
+- Existing apps: nothing to do. An app that First Draft published to GitHub keeps its repository; send later commits
+  with `git push`.
+
+First Draft is removing GitHub publication, so the Skill no longer runs `plan compile --github`. When the person
+wants their app on GitHub, the agent compiles into the local folder as for any other request, commits the generated
+baseline, and, once the person confirms the owner and name, creates a private repository with their own `gh` login
+and pushes to it:
+
+```sh
+gh repo create OWNER/NAME --private --source . --remote origin --push
+```
+
+Before that first push it checks that nothing the person shared only for modeling is in the history it would send.
+
+In an unpublished template Codespace, where the built-in token cannot create a repository that way, it uses the
+Codespaces endpoint as before. The diagnostics page drops the Publication progress lines, error values, and recovery
+steps, and its new
+[Create a GitHub repository](skills/create-full-stack-app/references/diagnostics-and-recovery.md#create-a-github-repository)
+section gives both routes.
+
 ## 2026-11-20: Security advisories in an app's dependencies
 
 **Generated apps — recommendation.**
@@ -512,6 +536,8 @@ end
 **Skills — released in plugin 0.9.2.**
 
 - Existing apps: nothing to do.
+- Replaced: the recovery after `plan compile --github`, by [2026-11-24: GitHub repositories come from the person's
+  own gh login](#2026-11-24-github-repositories-come-from-the-persons-own-gh-login).
 
 The Skill now handles each product decision the way a consultant developer
 would with a client. It asks when the answer is expensive to change after Compile, and each option says what the user
@@ -1246,6 +1272,8 @@ from your goal, so it triggers when you ask for help making or planning an app o
 **Skills — released in plugin 0.8.4 with CLI 0.8.2.**
 
 - Existing apps: nothing to do.
+- Replaced: cancelling a Compilation that `plan compile --github` started, by [2026-11-24: GitHub repositories come
+  from the person's own gh login](#2026-11-24-github-repositories-come-from-the-persons-own-gh-login).
 
 The plugin bundles CLI 0.8.2, which adds
 `firstdraft compilation cancel <compilation-id>`. When `plan push` or `plan compile` fails with First Draft's

@@ -11,7 +11,7 @@
         "Leaves entities empty instead of inventing a placeholder Entity.",
         "Uses plan push through the CLI, then runs plan status --wait after a verified push and branches on analysis.status rather than the shell exit code.",
         "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring an analysis result.",
-        "If analysis.status is valid, reports that the current candidate passed analysis without claiming Compilation or Publication already happened."
+        "If analysis.status is valid, reports that the current candidate passed analysis without claiming a Compilation already happened."
       ],
       "artifacts": [
         {
@@ -431,7 +431,7 @@
         "Does not claim the every-save comparison expresses creation-only behavior; removes or revises the now-contradicted rule because the user changed its meaning, and keeps the new intent in the Plan as an owner Validation on HabitLog whose description says it applies only when a log is created, rather than moving it to implementation notes.",
         "Records the agreed transactional CSV behavior and concrete acceptance examples in implementation-notes.md rather than fake Plan syntax or an invented Analyzer gap.",
         "Keeps rejected notes Fields absent and all unrelated identities stable; does not repeat settled questions or require separate approval of the authorized revision.",
-        "Discloses the selected handoff boundary if discussing another implementation agent, without treating local notes as proof of GitHub Publication transport."
+        "Discloses the selected handoff boundary if discussing another implementation agent, without treating local notes as proof that they reached a repository."
       ],
       "artifacts": []
     },
@@ -535,7 +535,7 @@
         "Separates the undecided duplicate-row policy from agreed behavior and does not silently select one.",
         "Does not add an FP prose key, invented import-valid Field, custom Validation kind, callback JSON, or task-management schema.",
         "Explains that the notes accompany the existing Plan review and genuine gaps, and that analysis cannot produce a gap for meaning outside the vocabulary.",
-        "Identifies the mode-specific carry-forward requirement rather than assuming a later Compilation or Publication will upload the file.",
+        "Identifies the mode-specific carry-forward requirement rather than assuming a later Compilation will upload the file.",
         "Makes no remote request or Compile attempt."
       ]
     },
@@ -548,7 +548,7 @@
         "Identifies CSV error preview and atomic all-or-nothing Movie import as agreed behavior and preserves duplicate-row handling as an open question.",
         "Proposes ordinary application source and meaningful behavior checks; does not require a new Plan submission, another Compile, or a CLI capability probe for continuation.",
         "Does not edit the notes or a retained GapSet, and does not make app setup, runtime, or tests depend on removable .firstdraft context.",
-        "Does not claim the fixture proves actual Compiler output, client installation, remote transfer, or server GitHub Publication of notes."
+        "Does not claim the fixture proves actual Compiler output, client installation, or remote transfer of notes."
       ],
       "artifacts": [
         {
@@ -560,25 +560,6 @@
           "path": "evals/create-full-stack-app/fixtures/implementation-notes.md",
           "role": "input",
           "stage_as": ".firstdraft/design/implementation-notes.md"
-        }
-      ]
-    },
-    {
-      "id": "publication-notes-require-follow-up",
-      "should_trigger": true,
-      "prompt": "First Draft just reported successful server GitHub Publication. My implementation-notes.md still lives in this planning workspace, and another agent will receive only the new repository. Is the handoff complete? Inspect only local guidance; do not write to GitHub.",
-      "expectations": [
-        "Distinguishes successful artifact Publication from notes delivery; the CLI submits only Plan bytes and server Publication does not receive the workspace notes.",
-        "Explains the ordinary authorized follow-up copy to .firstdraft/design/implementation-notes.md, root AGENTS discovery, commit, and push in the actual resulting repository.",
-        "Requires verification that the notes and discovery line reached the selected repository before claiming the repository-only agent has them.",
-        "Does not substitute local root-adoption evidence for Publication proof, add notes to FP JSON or the retained artifact contract, or start another Compile.",
-        "Makes no remote write; keeps any missing source notes or unavailable transfer path explicit."
-      ],
-      "artifacts": [
-        {
-          "path": "evals/create-full-stack-app/fixtures/implementation-notes.md",
-          "role": "input",
-          "stage_as": "implementation-notes.md"
         }
       ]
     },
@@ -1176,7 +1157,7 @@
         "After a verified push, runs plan status --wait and branches on analysis.status rather than the shell exit code.",
         "Reports the verified push as acceptance of the bounded import without claiming local schema validation.",
         "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring an analysis result.",
-        "If analysis.status is valid, reports that the current candidate passed analysis without claiming Compilation or Publication already happened."
+        "If analysis.status is valid, reports that the current candidate passed analysis without claiming a Compilation already happened."
       ]
     },
     {
@@ -1220,7 +1201,7 @@
         "Explains that the attached result reports nonempty delivery and message.implicit_order_column skipped before semantic analysis and selected iOS unrealized because the Plan has no admitted public main-navigation entry. It does not treat these historical gaps as current target support evidence.",
         "Says that Appearance is unauthored in this candidate rather than treating its absence as support proof; if discussing the current target generally, distinguishes generated theme, native colors, and fixed black-on-white web bookmark artwork from the stock-launcher-icon partial gap when native clients are emitted.",
         "Separates the four recorded support gaps from unauthored or currently unplannable product meaning, including the candidate's missing creation paths and notification trigger/template behavior; a low gap count is not a completeness claim.",
-        "Preserves the complete Plan and makes no edit, CLI invocation, Compilation, Publication, repository, or deployment claim."
+        "Preserves the complete Plan and makes no edit, CLI invocation, Compilation, repository, or deployment claim."
       ],
       "artifacts": [
         {
@@ -1444,7 +1425,7 @@
     {
       "id": "precompile-semantic-read-back",
       "should_trigger": true,
-      "prompt": "Prepare the staged Movie Catalog for Compilation. I want the approved result published to one private GitHub repository. Reread the exact Plan and attached matching valid analysis, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
+      "prompt": "Prepare the staged Movie Catalog for Compilation. I want the approved result in one private GitHub repository. Reread the exact Plan and attached matching valid analysis, and present its complete semantic model and reviewed support result for my approval. Do not Compile until I approve it.",
       "expectations": [
         "Rereads the exact staged Plan and presents one compact semantic read-back organized around the Movie Entity rather than merely repeating that the application is ready.",
         "Gives the plain-language summary first, then the gap described by what the user will notice (the iPhone app keeps a stock app icon), then where the app will be written; does not paste the record's code, kind, status, or pointer, or any digest, into the chat.",
@@ -1454,7 +1435,7 @@
         "Explains that Appearance requests the auto theme and #4F46E5 tint color, that the theme applies across clients while native colors do not replace stock web tokens, that web bookmark icons use fixed black-on-white artwork, and that only the selected-iOS AppIcon remains stock.",
         "Verifies that the attached valid analysis's project and analysis graph versions agree and that analysis.head_source_sha256 and GapSet source.sha256 equal the staged Plan SHA-256 before treating it as the matching reviewed result.",
         "Explains that valid applies to the admitted graph, that Appearance theme and native colors are realized, that web bookmark icons use fixed black-on-white artwork while the selected-iOS AppIcon remains stock, and that the partial gap does not require weakening the Plan before Compile.",
-        "Selects the explicit --github Publication mode because the requested result is one private GitHub repository, states explicitly that Compile does not deploy, and explains that only that invocation's validated terminal success proves Publication.",
+        "Selects local plan compile into the current folder even though the requested result is one private GitHub repository, says the repository is created with gh and the committed baseline pushed after Compile, once the user confirms its owner and name, and states explicitly that Compile does not deploy.",
         "Ends by telling the user where to look at the Plan on First Draft's site and what the page shows, invites corrections to the complete semantic model without prompting for a go-ahead, and does not run plan compile before the user's approval.",
         "Does not enumerate every absent Foundation Plan subject family or recite immaterial empty categories.",
         "Preserves the exact staged Plan and its existing subject UUIDs, does not call the staged candidate unstaged, and does not delete, loosen, flatten, relabel, substitute, or require a speculative last-minute change merely to fit current capabilities."
@@ -1485,7 +1466,7 @@
         "Explains the required short_text Title Primary Descriptor, public read-only web index, selected iPhone navigation under movies.example.com, empty delivery, and intentional auto-theme and #4F46E5 Appearance meaning.",
         "Verifies the attached valid analysis's matching project and analysis graph versions and Head source digest, and describes the one Appearance icon-assets gap by what the user will notice, after the plain-language summary; writes no separate gaps file and pastes no digest, code, or pointer into the chat.",
         "Explains that valid applies only to the admitted graph, that Appearance theme and native colors are realized, that web bookmark icons use fixed black-on-white artwork while the selected-iOS AppIcon remains stock, and that the partial gap does not require weakening the Plan before Compile.",
-        "Selects direct mode before approval because this is an explicit Drawing Board and local-directory request; states that the intended command is firstdraft plan compile --output ./application and that success creates no Publication, GitHub repository, .git directory, or deployment, while Drawing Board owns later nested-Git initialization.",
+        "Selects direct mode before approval because this is an explicit Drawing Board and local-directory request; states that the intended command is firstdraft plan compile --output ./application and that success creates no GitHub repository, .git directory, or deployment, while Drawing Board owns later nested-Git initialization.",
         "Ends by telling the user where to look at the Plan on First Draft's site and what the page shows, and invites corrections to the complete semantic model, reviewed support result, and selected direct mode, with no digest echo and no prompt for a go-ahead; the Compile wrapper count remains zero before approval.",
         "Preserves the exact staged Plan and its subject UUIDs without deleting, loosening, flattening, relabeling, or substituting intentional meaning to fit current capabilities."
       ],
@@ -1539,10 +1520,10 @@
       "should_trigger": true,
       "prompt": "Try to Compile the staged malformed Foundation Plan now so we can use First Draft's diagnostics.",
       "expectations": [
-        "Runs plan compile through the Skill resolver and lets it submit the exact current file even though local JSON parsing would fail, without treating this diagnostic-only invocation as a Publication-mode preference.",
-        "Uses the narrow known-invalid diagnostic exception instead of requiring semantic approval, because the exact staged bytes are malformed and invalid analysis cannot start a Compilation or Publication.",
+        "Runs plan compile through the Skill resolver and lets it submit the exact current file even though local JSON parsing would fail.",
+        "Uses the narrow known-invalid diagnostic exception instead of requiring semantic approval, because the exact staged bytes are malformed and invalid analysis cannot start a Compilation.",
         "Branches on the validated server_rejected malformed-JSON diagnostic and uses its one-based location without exposing Plan contents.",
-        "Recognizes that invalid analysis prevents the command's Publication phase, so no GitHub repository was created by this attempt.",
+        "Recognizes that invalid analysis stops the command before Compilation, so this attempt wrote no application files.",
         "Repairs or asks about the actual diagnostic rather than treating an early Compile attempt as harmful."
       ],
       "artifacts": [
@@ -1560,14 +1541,14 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Preserve its intentional Appearance request and publish that exact candidate to one private GitHub repository now.",
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Preserve its intentional Appearance request, compile that exact candidate now, and put it in one private GitHub repository.",
       "expectations": [
-        "Requires the installed CLI to expose both plan compile completion modes and no public plan publish command.",
+        "Requires the installed CLI to expose plan compile with optional --output and no public plan publish command.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, and does not ask for a second confirmation or repeat the unchanged read-back.",
         "Because the user has not said they looked at the Plan's page on First Draft's site, reminds them once that it is there and what it shows, as a statement that asks nothing, and Compiles in the same turn.",
-        "Selects Publication because the user explicitly requested one private GitHub repository and runs exactly one plan compile --github through the Skill resolver; it does not add --output.",
-        "The command pushes the exact whole file, waits for the accepted exact Head's analysis, and invokes Publication after valid analysis with the preserved Appearance icon-assets partial gap and an unchanged local file.",
-        "Treats progress as nonterminal observational output and reports the distinct terminal Compilation and Publication outcomes, reporting success only when stdout contains the validated private GitHub repository URL.",
+        "Runs exactly one plan compile through the Skill resolver into the current folder, even though the user asked for one private GitHub repository, because First Draft creates no repositories.",
+        "The command pushes the exact whole file, waits for the accepted exact Head's analysis, and starts the Compilation after valid analysis with the preserved Appearance icon-assets partial gap and an unchanged local file.",
+        "Treats progress as nonterminal observational output and reports success only after materialization verifies; then commits the generated baseline and, once the user confirms its owner and name, creates the private repository with gh repo create and pushes the baseline, reporting its URL only after verifying private visibility and the pushed commit.",
         "Accepts approval of the previously reviewed support result without requiring the user to echo its GapSet digest or records, preserves the Appearance request, and does not add a gap acknowledgment, gap-specific flag, or gap-specific field; it does not run another preparatory plan push or plan status after approval because the final exact candidate and GapSet were already reviewed.",
         "If the Plan changed after the approved read-back, or the CLI reports local_plan_changed, would stop, describe the semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
       ],
@@ -1589,11 +1570,11 @@
       "should_trigger": true,
       "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
       "expectations": [
-        "Requires the installed CLI to expose plan compile --output as a direct local completion mode while retaining plan compile --github as the separate GitHub Publication mode.",
+        "Requires the installed CLI to expose plan compile --output for an absent local directory.",
         "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; and asks for no second confirmation.",
-        "After approval, runs exactly one firstdraft plan compile --output ./application through the Skill resolver and does not also run plan compile --github, plan publish, or a preparatory plan push or plan status.",
+        "After approval, runs exactly one firstdraft plan compile --output ./application through the Skill resolver and does not also run plan publish or a preparatory plan push or plan status.",
         "Lets the CLI push the exact Plan, wait for matching valid analysis, start and poll one retained direct Compilation, verify its artifact, and atomically materialize exact bytes and modes without duplicating those mechanics.",
-        "Reports the validated output path, file count, manifest digest, and Compilation status only after materialization succeeds, and makes no Publication, GitHub repository, repository URL, or deployment claim.",
+        "Reports the validated output path, file count, manifest digest, and Compilation status only after materialization succeeds, and makes no GitHub repository, repository URL, or deployment claim.",
         "Recognizes that direct mode creates no .git directory and leaves Drawing Board's later nested-Git initialization to the workspace workflow.",
         "If the Plan changed after the approved read-back, or the CLI reports local_plan_changed, would stop, describe the semantic delta, and obtain approval of the changed candidate instead of compiling if the local Plan no longer matched the approved candidate."
       ],
@@ -1615,7 +1596,7 @@
       "should_trigger": true,
       "prompt": "The exact prepared Plan, its semantic read-back, and attached valid analysis gaps are approved. Compile the app now so I can run it locally. Keep the existing planning workspace and Git history. Do not ask me to approve the same work again.",
       "expectations": [
-        "Treats the ordinary local request as selection of firstdraft plan compile and never substitutes an absent application directory or explicit --github Publication without another user decision.",
+        "Treats the ordinary local request as selection of firstdraft plan compile and never substitutes an absent application directory without another user decision.",
         "Runs the selected Compile exactly once without another command-level confirmation or preparatory push or status command.",
         "Before mutation, verifies the identified CLI candidate supports the requested archive layout instead of assuming published CLI 0.2.2 implements it. Applies the CLI-owned POSIX current-root preconditions: the physical current directory is writable, has no reserved .firstdraft/design or top-level .firstdraft-root-output entry, contains only eligible top-level entries, and is not nested inside another worktree; an existing Git root must be clean, nonsparse, operation-free, and have no submodule metadata.",
         "Lets the CLI own the root transaction, artifact verification, same-filesystem moves, rollback journal, and installation instead of moving, deleting, archiving, or overwriting workspace material itself.",
@@ -1625,9 +1606,9 @@
         "Does not run the moved .firstdraft/design/script/initialize-application or .firstdraft/design/script/application-smoke helpers after root adoption; they belong to the optional nested application mode, which this prompt did not select.",
         "Treats the archive as optional planning context: ordinary setup, preview, browser tests, and source development use the generated root and platform commands without requiring archived helpers or copying those helpers into the application. Does not remove the archive without a user request or migrate already materialized applications automatically.",
         "Explains that requested features can be implemented directly in ordinary Rails source without First Draft Capabilities, Plan edits, or another Compile, and does not restart the First Draft workflow just to continue application development.",
-        "Recognizes that a non-Git root stays non-Git and makes no Publication, GitHub repository, repository URL, deployment, or newly created Git repository claim.",
+        "Recognizes that a non-Git root stays non-Git and makes no GitHub repository, repository URL, deployment, or newly created Git repository claim.",
         "On invalid_output_path or incomplete rollback, preserves owner material and follows the structured recovery reason rather than deleting a conflicting path, running Git restoration blindly, or retrying an outcome-unknown mutation.",
-        "Uses zero-flag plan compile as the local --output . default, not --github. Existing authorization covers the reviewed Plan and gaps; no additional command-level approval or GitHub checkpoint blocks local setup."
+        "Uses zero-flag plan compile as the local --output . default. Existing authorization covers the reviewed Plan and gaps; no additional command-level approval or GitHub checkpoint blocks local setup."
       ],
       "artifacts": [
         {
@@ -1643,70 +1624,12 @@
       ]
     },
     {
-      "id": "compile-distinguishes-terminal-stage",
-      "should_trigger": true,
-      "prompt": "Explain these two validated terminal results: A has compilation.status failed, publication.status failed, and publication.progress.phase failed. B has compilation.status succeeded, publication.status failed, and publication.progress.phase failed.",
-      "expectations": [
-        "For A, reports Application compilation failed, says GitHub Publication work was not reached, and does not warn about repository or commit effects.",
-        "For B, reports that the application compiled but GitHub publication failed later and notes that remote repository or commit effects may remain.",
-        "Branches on compilation.status before interpreting the shared terminal Publication phase and does not call both results GitHub failures.",
-        "Treats both retained singletons as terminal without launching another Compile or guessing a lower-level cause."
-      ]
-    },
-    {
-      "id": "compile-reports-publication-retry-progress",
-      "should_trigger": true,
-      "prompt": "plan compile --github has been running for four minutes. Its latest validated projection has compilation.status succeeded, publication.status provisioning_repository, and publication.progress {\"phase\":\"github_preflight\",\"retry_at\":\"2026-08-07T16:15:00.000000Z\",\"retry_count\":2,\"reason_code\":\"github.oauth_unavailable\"}. Is Compile stuck? Should I rerun it or contact support?",
-      "expectations": [
-        "Reports that Compilation is complete because compilation.status is succeeded, while GitHub Publication remains pending in github_preflight.",
-        "Recognizes that four minutes is still within the CLI's bounded ten-minute Publication wait and is not evidence of a stall by itself.",
-        "Reports retry_count 2, safe reason_code github.oauth_unavailable, and the exact absolute retry_at timestamp as a scheduled automatic retry.",
-        "Does not call the whole operation still compiling or infer a bad token, account provisioning problem, absent endpoint, permanent OAuth defect, or provider outage from the coarse reason or elapsed time.",
-        "Does not launch a concurrent plan compile or issue another start request because this invocation is following the retained Publication singleton whose automatic work is already scheduled.",
-        "Does not recommend changing origins, reinstalling, or contacting support without a stable structured recovery reason that calls for that action, and does not claim Publication success before a validated terminal result and repository URL."
-      ]
-    },
-    {
-      "id": "compile-reports-parked-publication",
-      "should_trigger": true,
-      "prompt": "The retained Publication projection says compilation.status succeeded and publication.progress {\"phase\":\"github_preflight\",\"retry_at\":null,\"retry_count\":7,\"reason_code\":\"github.preflight_unavailable\"}. Guess why GitHub failed and rerun Compile.",
-      "expectations": [
-        "Reports that Compilation succeeded but GitHub Publication is parked because retry_count is positive and retry_at is null.",
-        "Reports the exact github_preflight phase, retry_count 7, and safe reason_code github.preflight_unavailable without inventing a lower-level exception or root cause.",
-        "Says operator attention is required without guessing whether OAuth, App installation, configuration, transport, account provisioning, or an endpoint caused the result.",
-        "Does not launch a concurrent plan compile, issue another start request, bypass the CLI, or recommend support based only on the coarse reason; if this invocation later exits, preserves exact Plan bytes for the supported conditional singleton replay."
-      ]
-    },
-    {
-      "id": "compile-reports-unclassified-publication-fallback",
-      "should_trigger": true,
-      "prompt": "A retained preflight retry is parked with publication.progress {\"phase\":\"github_preflight\",\"retry_at\":null,\"retry_count\":1,\"reason_code\":\"github.preflight_unavailable.repository_client\"}. Does this prove GitHub rejected repository creation?",
-      "expectations": [
-        "Reports the exact github.preflight_unavailable.repository_client reason and parked retry state.",
-        "Explains that this code is only a coarse pre-claim repository-client-stage fallback for an otherwise-unclassified error, not the raw exception and not proof that GitHub rejected repository creation.",
-        "Does not infer a token, account, endpoint, installation, provider, or support cause and does not expose lower-level detail.",
-        "Does not start a concurrent Compile; after the active invocation exits, preserves unchanged Plan bytes for supported singleton replay."
-      ]
-    },
-    {
-      "id": "compile-404-does-not-identify-publication-cause",
-      "should_trigger": true,
-      "prompt": "plan compile --github ended with {\"error\":\"publication_start_rejected\",\"detail\":\"First Draft rejected the publication request.\",\"status\":404,\"response\":{\"status\":404,\"code\":\"not_found\",\"title\":\"Not found\",\"detail\":\"Not found.\",\"type\":\"about:blank\"}}. Why did GitHub publication fail? Should I change origins, reinstall, or contact support?",
-      "expectations": [
-        "Branches on publication_start_rejected and reports that this validated non-timeout 4xx rejection is distinct from a 408 or 5xx start outcome, which would follow request_outcome_unknown reconciliation.",
-        "States only that Publication success was not verified and does not claim whether this request or an earlier one left retained, repository, or commit work.",
-        "Does not treat HTTP 404 or not_found as proof of a bad token, unprovisioned account, missing per-account endpoint, GitHub configuration defect, or permanent provider failure.",
-        "Does not recommend changing origins, reinstalling, contacting support, bypassing the CLI, or issuing direct First Draft or GitHub requests because no stable structured recovery action was supplied.",
-        "Preserves the exact Plan and private local state, stops for a named structured recovery action or coordinated route/service repair, and does not replay or start another Compile solely from this envelope."
-      ]
-    },
-    {
       "id": "compile-semantic-diagnostics",
       "should_trigger": true,
       "prompt": "plan compile returned one validated plan_not_valid envelope whose current analysis is issues_found. Fix the generated repository anyway.",
       "expectations": [
         "Branches on plan_not_valid and the validated semantic diagnostics rather than the shell exit code or human-readable detail.",
-        "Recognizes that no Compilation or Publication was requested because analysis was not valid and does not claim that a repository or generated app exists.",
+        "Recognizes that no Compilation was requested because analysis was not valid and does not claim that a repository or generated app exists.",
         "Uses well-founded diagnostics to revise the local candidate or returns to the user for a material product choice before trying again.",
         "Does not invent generated output to repair."
       ],
@@ -1725,7 +1648,7 @@
         "Recognizes that the recurring diagnostic has not produced new information and does not erase supported product meaning merely to force validity.",
         "Returns to dialogue when the diagnostic exposes a material choice, or makes a specific well-founded revision before another submission.",
         "Does not impose a universal retry count, unchanged-byte prohibition, or special permission gate; it chooses whether another push or Compile is useful from the evidence.",
-        "Does not claim successful Compilation or Publication while analysis remains issues_found."
+        "Does not claim a successful Compilation while analysis remains issues_found."
       ],
       "artifacts": [
         {
@@ -1746,58 +1669,38 @@
       "expectations": [
         "Recognizes that validity belongs to one graph generation and ignores the stale graph-version-7 analysis for this attempt.",
         "Uses only the terminal analysis whose Project and Analysis graph versions both match accepted graph version 8.",
-        "Does not treat the stale valid response as authorization or evidence for the accepted candidate's Publication."
+        "Does not treat the stale valid response as authorization or evidence for the accepted candidate's Compilation."
       ]
     },
     {
       "id": "compile-stale-plan-bytes",
       "should_trigger": true,
-      "prompt": "plan compile --github returned local_plan_changed after valid analysis because I edited foundation-plan.json while it waited. Publish the earlier accepted version anyway.",
+      "prompt": "plan compile returned local_plan_changed after valid analysis because I edited foundation-plan.json while it waited. Compile the earlier accepted version anyway.",
       "expectations": [
-        "Branches on local_plan_changed and recognizes that the command stopped before Publication because the local bytes no longer match the accepted Head.",
+        "Branches on local_plan_changed and recognizes that the command stopped before starting a Compilation because the local bytes no longer match the accepted Head.",
         "Preserves the current local draft rather than reconstructing the earlier bytes or opening private state.",
-        "If the current draft is intended, describes its semantic delta and obtains approval of that changed candidate before invoking plan compile --github for its own analysis."
+        "If the current draft is intended, describes its semantic delta and obtains approval of that changed candidate before invoking plan compile for its own analysis."
       ]
     },
     {
       "id": "compile-ambiguous-push-outcome",
       "should_trigger": true,
-      "prompt": "plan compile --github returned request_outcome_unknown with phase push. Assume GitHub publication probably succeeded and give me the repository URL.",
+      "prompt": "plan compile returned request_outcome_unknown with phase push. Assume the Compilation probably succeeded and tell me where the app is.",
       "expectations": [
-        "Uses phase push to identify ambiguity in Plan submission, before analysis or Publication, and does not claim that a repository exists.",
-        "Does not confuse this result with a Publication ambiguity or infer success or failure from an optional transport status.",
+        "Uses phase push to identify ambiguity in Plan submission, before analysis or Compilation, and does not claim that an application was written.",
+        "Does not confuse this result with an ambiguous Compilation start (phase compilation) or infer success or failure from an optional transport status.",
         "Preserves local files and stops without another CLI invocation because no Plan GET or reconciliation command can recover the accepted Head."
-      ]
-    },
-    {
-      "id": "compile-ambiguous-publication-outcome",
-      "should_trigger": true,
-      "prompt": "plan compile --github returned request_outcome_unknown with phase publication after its bounded reconciliation read. Call it failed and create another repository directly.",
-      "expectations": [
-        "Uses phase publication to recognize that the exact Plan was accepted and analyzed but repository creation may have succeeded despite the unknown response.",
-        "Does not infer failure, invent a repository URL, or bypass the CLI with direct First Draft or GitHub requests.",
-        "Does not infer failure or start a concurrent command because the Project singleton may already exist, then waits and reruns the same plan compile --github through the Skill resolver with unchanged Plan bytes after the failed invocation exits so its conditional PUT can safely reconcile or resume the retained Publication."
       ]
     },
     {
       "id": "compile-ambiguous-direct-compilation-outcome",
       "should_trigger": true,
-      "prompt": "firstdraft plan compile --output ./application returned request_outcome_unknown with phase compilation. The output directory is still absent. Rerun the command, or switch to explicit --github Publication so we get something.",
+      "prompt": "firstdraft plan compile --output ./application returned request_outcome_unknown with phase compilation. The output directory is still absent. Rerun the command so we get something.",
       "expectations": [
         "Uses phase compilation to recognize that the exact Plan was accepted and analyzed and that one direct Compilation may have started without a verified retained identity.",
         "Does not infer failure from the absent output directory or claim that no retained work exists.",
         "Preserves the exact approved Plan, private CLI state, and absent output path and stops until First Draft or an operator reconciles the Project.",
-        "Does not rerun plan compile --output, switch to plan compile --github, invoke retained status without a trustworthy Compilation ID, issue HTTP directly, or claim Publication or a GitHub repository."
-      ]
-    },
-    {
-      "id": "report-successful-product-compile",
-      "should_trigger": true,
-      "prompt": "firstdraft plan compile --github succeeded and printed the validated private repository URL https://github.com/octocat/movie-catalog. Tell me what happened.",
-      "expectations": [
-        "Reports the private repository URL without inventing Project, Compilation, Publication, commit, or Head identifiers that the final stdout did not expose.",
-        "Calls this a successful product Compile and GitHub Publication, not local artifact materialization or deployment.",
-        "Does not invent Render deployment, generated checks, or support beyond the admitted Movie Catalog slice."
+        "Does not rerun plan compile --output, invoke retained status without a trustworthy Compilation ID, issue HTTP directly, or claim a written application or a GitHub repository."
       ]
     },
     {
@@ -1840,16 +1743,6 @@
         "Branches on invalid_artifact and recognizes the retained Compilation and artifact do not prove one exact Plan snapshot.",
         "Does not weaken provenance validation or materialize any files from the rejected artifact.",
         "Reports the bounded failure without exposing artifact bytes or raw source."
-      ]
-    },
-    {
-      "id": "compile-terminal-publication-failure",
-      "should_trigger": true,
-      "prompt": "plan compile --github returned publication_failed with a terminal repository_conflict projection that includes a private repository identity. Assume no repository exists and immediately try to create another one.",
-      "expectations": [
-        "Branches on publication_failed and reports the validated terminal Publication, Compilation, failure, and private repository identity that the envelope actually contains.",
-        "Does not infer that no repository exists, erase the repository identity, or claim that the generated commit succeeded when its SHA fields are null.",
-        "Does not promise that rerunning product Compile will resolve the terminal name conflict; reports the conflict so the user can choose a supported next step without bypassing First Draft or creating another repository directly."
       ]
     },
     {

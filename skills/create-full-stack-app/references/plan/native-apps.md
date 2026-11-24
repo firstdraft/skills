@@ -176,8 +176,9 @@ pull-to-refresh off. Other links push onto the current tab.
 Nothing native runs at Compile. To see the apps, follow `IOS_PREVIEW.md` or `ANDROID_PREVIEW.md` in the generated
 app. In short:
 
-1. Push the app to a private GitHub repository. Pushing native files starts the build workflow; the iOS build runs
-   on a GitHub Mac runner, so no Mac is needed.
+1. Push the app to a private GitHub repository, as
+   [Create a GitHub repository](../diagnostics-and-recovery.md#create-a-github-repository) says. Pushing native files
+   starts the build workflow; the iOS build runs on a GitHub Mac runner, so no Mac is needed.
 2. Give Rails a public HTTPS address: `RAILS_DEVELOPMENT_HOSTS=.trycloudflare.com bin/dev` and
    `cloudflared tunnel --url http://localhost:3000`, or a public Codespace port 3000.
 3. Install and sign in to the Revyl CLI, then run `bin/ios preview revyl --server https://…` or

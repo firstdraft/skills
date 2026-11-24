@@ -102,7 +102,6 @@ export async function verifyPackedExecutable(context) {
     /--output <absent-directory\|\.>\s+Materialize here \(default: \.\)/,
   );
 
-  assert.match(compileHelp.stdout, /firstdraft plan compile --github/);
 
   const generated = invokeExecutable(
     context.executable,

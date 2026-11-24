@@ -21,7 +21,6 @@ import { verifyLocalCommands } from "./cli-contract/local-commands.mjs";
 import { verifyPackedExecutable } from "./cli-contract/packed-executable.mjs";
 import { verifyPlanJourney } from "./cli-contract/plan-journey.mjs";
 import { verifyPlanStatusGenerations } from "./cli-contract/plan-status.mjs";
-import { verifyPublicationValidation } from "./cli-contract/publication-validation.mjs";
 
 const cliDirectoryArgument = process.argv[2];
 assert(cliDirectoryArgument, "usage: check-cli-contract.mjs <cli-directory>");
@@ -95,7 +94,6 @@ try {
   await verifyLocalCommands(context);
   await verifyPlanStatusGenerations(context);
   await verifyPlanJourney(context);
-  await verifyPublicationValidation(context);
   await verifyCompilations(context);
 
   const packed = packAndInstall(cliDirectory, temporaryDirectory);

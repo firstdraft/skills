@@ -26,7 +26,6 @@ import {
   gapSetDocument,
   jsonResponse,
   problemResponse,
-  publicationProjection,
 } from "./fixtures.mjs";
 import {
   assertErrorEnvelope,
@@ -40,7 +39,6 @@ import {
 
 export async function verifyPlanJourney(context) {
   const moviePlan = readFileSync(context.moviePlanPath);
-  await verifyHappyCompile(context, moviePlan);
   await verifyHappyDirectCompile(context, moviePlan);
   await verifyHappyRootCompile(context, moviePlan);
   await verifyDirectOutputRecheck(context, moviePlan);
@@ -48,7 +46,7 @@ export async function verifyPlanJourney(context) {
   await verifySameGenerationDifferentHead(context, moviePlan);
   await verifyStaleLocalBytes(context, moviePlan);
   await verifyAmbiguousPhases(context, moviePlan);
-  await verifyDiagnosticsStopPublication(context, moviePlan);
+  await verifyDiagnosticsStopCompilation(context, moviePlan);
 }
 
 async function verifyHappyRootCompile(context, planSource) {
@@ -123,7 +121,6 @@ async function verifyHappyRootCompile(context, planSource) {
     "First Draft: Compiling application...",
     "First Draft: Application compiled.",
   ]);
-  assert.doesNotMatch(result.stderr, /GitHub|Publication/i);
   assert.equal(
     readFileSync(path.join(cwd, "app", "models", "movie.rb"), "utf8"),
     "class Movie < ApplicationRecord\nend\n",
@@ -213,7 +210,6 @@ async function verifyHappyDirectCompile(context, planSource) {
     "First Draft: Compiling application...",
     "First Draft: Application compiled.",
   ]);
-  assert.doesNotMatch(result.stderr, /GitHub|Publication/i);
   assert.deepEqual(
     calls.map(({ input, init }) => [init?.method, String(input)]),
     [
@@ -291,7 +287,7 @@ async function verifySameGenerationDifferentHead(context, planSource) {
   });
   const replacementHeadSourceSha256 = "f".repeat(64);
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--output", "./application"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -316,62 +312,24 @@ async function verifySameGenerationDifferentHead(context, planSource) {
   );
 }
 
-async function verifyHappyCompile(context, planSource) {
-  const cwd = await initializedProject(context, "compile-happy", { planSource });
-  const digest = sha256(planSource);
-  const published = publicationProjection(digest);
-  const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
-    fetchFunction: sequenceFetch(
-      [
-        acceptedPlanResponse(planSource),
-        jsonResponse(analysisProjection("valid")),
-        jsonResponse(published, 201),
-      ],
-      calls,
-    ),
-  });
-
-  assert.deepEqual(result, {
-    status: 0,
-    stdout: "https://github.com/octocat/movie-catalog\n",
-    stderr:
-      "First Draft: Analyzing Foundation Plan...\n" +
-      "First Draft: Foundation Plan analysis valid.\n" +
-      "First Draft: Compiling application...\n" +
-      "First Draft: Application compiled.\n" +
-      "First Draft: GitHub publication complete.\n",
-  });
-  assert.deepEqual(progressMessages(result), [
-    "First Draft: Analyzing Foundation Plan...",
-    "First Draft: Foundation Plan analysis valid.",
-    "First Draft: Compiling application...",
-    "First Draft: Application compiled.",
-    "First Draft: GitHub publication complete.",
-  ]);
-  assert.deepEqual(
-    calls.map(({ input, init }) => [init?.method, String(input)]),
-    [
-      ["PUT", `${storedApiUrl}/v1/projects/${projectId}/foundation-plan`],
-      ["GET", `${storedApiUrl}/v1/projects/${projectId}/analysis`],
-      ["PUT", `${storedApiUrl}/v1/projects/${projectId}/github-publication`],
-    ],
-  );
-  assert(Buffer.from(calls[0].init.body).equals(planSource));
-  assert.equal(new Headers(calls[0].init.headers).get("if-none-match"), "*");
-  assert.equal(
-    new Headers(calls[2].init.headers).get("if-match"),
-    `"sha256:${digest}"`,
-  );
-}
-
 async function verifyStaleAnalysisGeneration(context, planSource) {
   const cwd = await initializedProject(context, "compile-new-generation", {
     planSource,
   });
   const digest = sha256(planSource);
+  const artifact = compilationArtifact(digest, {
+    foundationPlanSha256: digest,
+    provenanceGraphVersion: 2,
+    provenanceAnalysisId: analysisId,
+  });
+  const succeeded = compilationProjection("succeeded", {
+    headSourceSha256: digest,
+    artifact,
+    graphVersion: 2,
+    analysisRunId: analysisId,
+  });
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--output", "./application"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource, 2),
@@ -384,15 +342,21 @@ async function verifyStaleAnalysisGeneration(context, planSource) {
         jsonResponse(
           analysisProjection("valid", { graphVersion: 2, identifier: analysisId }),
         ),
-        jsonResponse(publicationProjection(digest, { graphVersion: 2 }), 201),
+        jsonResponse(succeeded, 202, {
+          Location: succeeded.compilation.status_path,
+        }),
+        artifactResponse(artifact),
       ],
       calls,
     ),
     planCompileSleep: async () => {},
   });
   assert.equal(result.status, 0);
-  assert.equal(calls.length, 4);
-  assert.equal(result.stdout, "https://github.com/octocat/movie-catalog\n");
+  assert.deepEqual(
+    calls.map(({ init }) => init?.method),
+    ["PUT", "GET", "GET", "POST", "GET"],
+  );
+  assert.equal(JSON.parse(result.stdout).compilation.graph_version, 2);
 }
 
 async function verifyStaleLocalBytes(context, planSource) {
@@ -400,7 +364,7 @@ async function verifyStaleLocalBytes(context, planSource) {
     planSource,
   });
   const calls = [];
-  const result = await invokeRunner(context.runCli, ["plan", "compile", "--github"], cwd, {
+  const result = await invokeRunner(context.runCli, ["plan", "compile", "--output", "./application"], cwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -423,7 +387,7 @@ async function verifyAmbiguousPhases(context, planSource) {
   const pushCalls = [];
   const push = await invokeRunner(
     context.runCli,
-    ["plan", "compile", "--github"],
+    ["plan", "compile", "--output", "./application"],
     pushCwd,
     {
       fetchFunction: sequenceFetch(
@@ -527,45 +491,9 @@ async function verifyAmbiguousPhases(context, planSource) {
     ["PUT", "GET", "POST", "GET"],
   );
 
-  const publicationCwd = await initializedProject(
-    context,
-    "compile-ambiguous-publication",
-    { planSource },
-  );
-  const calls = [];
-  const publication = await invokeRunner(
-    context.runCli,
-    ["plan", "compile", "--github"],
-    publicationCwd,
-    {
-      fetchFunction: sequenceFetch(
-        [
-          acceptedPlanResponse(planSource),
-          jsonResponse(analysisProjection("valid")),
-          () => {
-            throw new TypeError("ambiguous publication");
-          },
-          () => {
-            throw new TypeError("ambiguous reconciliation");
-          },
-        ],
-        calls,
-      ),
-    },
-  );
-  const publicationEnvelope = assertErrorEnvelope(
-    publication,
-    "request_outcome_unknown",
-    { privateValues: ["ambiguous publication", "ambiguous reconciliation"] },
-  );
-  assert.equal(publicationEnvelope.phase, "publication");
-  assert.deepEqual(
-    calls.map(({ init }) => init?.method),
-    ["PUT", "GET", "PUT", "GET"],
-  );
 }
 
-async function verifyDiagnosticsStopPublication(context, planSource) {
+async function verifyDiagnosticsStopCompilation(context, planSource) {
   const malformedSource = readFileSync(
     `${context.fixtureDirectory}/malformed.foundation-plan.txt`,
   );
@@ -585,7 +513,7 @@ async function verifyDiagnosticsStopPublication(context, planSource) {
   const rejectedCalls = [];
   const rejected = await invokeRunner(
     context.runCli,
-    ["plan", "compile", "--github"],
+    ["plan", "compile", "--output", "./application"],
     rejectedCwd,
     {
       fetchFunction: sequenceFetch(
@@ -612,7 +540,7 @@ async function verifyDiagnosticsStopPublication(context, planSource) {
     planSource,
   });
   const issuesCalls = [];
-  const issues = await invokeRunner(context.runCli, ["plan", "compile", "--github"], issuesCwd, {
+  const issues = await invokeRunner(context.runCli, ["plan", "compile", "--output", "./application"], issuesCwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -629,7 +557,7 @@ async function verifyDiagnosticsStopPublication(context, planSource) {
     planSource,
   });
   const failedCalls = [];
-  const failed = await invokeRunner(context.runCli, ["plan", "compile", "--github"], failedCwd, {
+  const failed = await invokeRunner(context.runCli, ["plan", "compile", "--output", "./application"], failedCwd, {
     fetchFunction: sequenceFetch(
       [
         acceptedPlanResponse(planSource),
@@ -648,7 +576,7 @@ async function verifyDiagnosticsStopPublication(context, planSource) {
   let now = 0;
   const timeout = await invokeRunner(
     context.runCli,
-    ["plan", "compile", "--github"],
+    ["plan", "compile", "--output", "./application"],
     timeoutCwd,
     {
       fetchFunction: sequenceFetch([
