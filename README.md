@@ -10,8 +10,8 @@ actually receives.
 this source requires. The [public catalog](.claude-plugin/marketplace.json) owns the installed version; source
 compatibility does not establish publication. New remote work uses production at `https://firstdraft.com`; staging
 is explicit with `firstdraft --staging ...` and a separate staging token. The workflow preserves the planning
-workspace under `.firstdraft/design/` and defaults to current-folder local output. Use explicit `--github` for
-server Publication. The plugin packages `create-full-stack-app` and `maintain-app`; the UI Skill auditions remain deferred source.
+workspace under `.firstdraft/design/` and defaults to current-folder local output. The plugin packages
+`create-full-stack-app` and `maintain-app`; the UI Skill auditions remain deferred source.
 
 Trying First Draft as a tester? Start with the
 [local development guide](https://firstdraft.github.io/firstdraft/docs/guides/local-app.html). Start in an empty
@@ -124,8 +124,8 @@ The check covers repository structure, documentation links and currency, each Sk
 Plan schema and fixtures, the eval corpus, deterministic packaging with a stub CLI, and release compatibility.
 
 CI checks consumer commands against the exact pinned CLI and verifies the candidate package digest. CLI-owned tests
-cover the complete Publication protocol matrix; Skills retains representative recovery cases, compatible fixtures,
-and packaged-executable integration. The release runbook owns the commands for reproducing these checks.
+cover the complete command protocol matrix; Skills retains representative recovery cases, compatible fixtures, and
+packaged-executable integration. The release runbook owns the commands for reproducing these checks.
 
 Preview the plugin directly from a checkout:
 

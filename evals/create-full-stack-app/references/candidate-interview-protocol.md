@@ -101,23 +101,22 @@ and deferred questions can be revisited after diagnostics or further dialogue.
 
 ## Read back and approve before Compile
 
-Before the first Compile that could start direct retained work or reach Publication, reread the exact staged Plan and
-give a plain-language semantic summary first: application scope; Entities and their material Fields, relationships,
-rules, behavior, and data; surfaces, access, and clients; material assumptions, delegated choices, and exclusions.
-Then group the gaps by what the user will notice, then list what is built outside First Draft and the feasibility
-findings and open questions. State the selected completion mode: direct output creates only a verified local
-directory, while terminal successful Publication is intended to create one private GitHub repository. Neither
-deploys. Do not enumerate absent subject families or immaterial empty categories. End by telling the user where to
-look at the Plan on First Draft's site and what the page shows, and invite corrections without prompting for a
-go-ahead or requiring a digest echo or gap-specific field. Compile waits for the user's go-ahead: approval of the
-model and reviewed gaps, or an instruction to build. Delegating the remaining decisions is not one, and a request
-made before the read-back counts only when it said not to wait for the user. When the go-ahead comes from a user
-who has not said they looked at the page, remind them of it once, then Compile.
+Before the first Compile that could start retained work, reread the exact staged Plan and give a plain-language semantic
+summary first: application scope; Entities and their material Fields, relationships, rules, behavior, and data;
+surfaces, access, and clients; material assumptions, delegated choices, and exclusions. Then group the gaps by what the
+user will notice, then list what is built outside First Draft and the feasibility findings and open questions. State the
+selected output: Compile creates only a verified local directory, and a requested private GitHub repository is created
+and pushed with `gh` afterward. Neither deploys. Do not enumerate absent subject families or immaterial empty
+categories. End by telling the user where to look at the Plan on First Draft's site and what the page shows, and invite
+corrections without prompting for a go-ahead or requiring a digest echo or gap-specific field. Compile waits for the
+user's go-ahead: approval of the model and reviewed gaps, or an instruction to build. Delegating the remaining decisions
+is not one, and a request made before the read-back counts only when it said not to wait for the user. When the go-ahead
+comes from a user who has not said they looked at the page, remind them of it once, then Compile.
 
 The read-back reviews the staged candidate rather than reopening authoring. Preserve its existing subject UUIDs;
 do not require an edit without a user correction, a confirmed product decision, or a demonstrated diagnostic. If
 the Plan changes afterward, describe the semantic delta for approval. In the same continuing conversation, once the
-candidate is approved, run one deliberately selected Compile mode without a second command-level confirmation or
+candidate is approved, run one Compile for the selected output without a second command-level confirmation or
 gap-specific argument.
 
 Do not weaken product meaning to pass the current capability boundary. The user may explicitly move a feature out of
@@ -125,5 +124,5 @@ this release after seeing the consequence; record that product-scope decision. O
 reviewed valid analysis with gaps can proceed through the existing Compile action after approval without a Plan edit.
 
 An explicitly requested diagnostic-only Compile of an exact snapshot already known to be invalid from its bytes or
-matching diagnostics may precede approval because invalid analysis cannot start a Compilation or Publication. Do not
+matching diagnostics may precede approval because invalid analysis cannot start a Compilation. Do not
 extend this exception to a candidate that is merely assumed to be unsupported.

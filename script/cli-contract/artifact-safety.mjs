@@ -11,7 +11,7 @@ import path from "node:path";
 import {
   compilationId,
   projectId,
-  publicationId,
+  unrelatedId,
 } from "./config.mjs";
 import {
   artifactResponse,
@@ -64,11 +64,11 @@ async function verifyIntegrityAndProvenance(context, cwd) {
     ["file-digest", { fileDigest: "0".repeat(64) }],
     ["manifest-digest", { manifestDigest: "0".repeat(64) }],
     ["canonical-plan-digest", { foundationPlanSha256: "not-a-sha256" }],
-    ["project-provenance", { provenanceProjectId: publicationId }],
-    ["compilation-provenance", { provenanceCompilationId: publicationId }],
+    ["project-provenance", { provenanceProjectId: unrelatedId }],
+    ["compilation-provenance", { provenanceCompilationId: unrelatedId }],
     ["graph-provenance", { provenanceGraphVersion: 8 }],
     ["head-provenance", { provenanceHeadSourceSha256: "8".repeat(64) }],
-    ["analysis-provenance", { provenanceAnalysisId: publicationId }],
+    ["analysis-provenance", { provenanceAnalysisId: unrelatedId }],
     [
       "compiler-provenance",
       { provenanceCompilerRelease: "foundation-plan-rails/other-2026-08" },

@@ -2272,15 +2272,20 @@ test("product Compile and retained Compilation evals match the CLI contract", as
 
   const malformed = evaluation("compile-invalid-candidate-is-safe");
   hasExpectation(malformed, "Runs plan compile", "Skill resolver");
-  hasExpectation(malformed, "invalid analysis cannot start", "Compilation or Publication");
+  hasExpectation(malformed, "invalid analysis cannot start a Compilation");
   hasExpectation(malformed, "early Compile attempt as harmful");
 
   const movie = evaluation("compile-prepared-movie-catalog");
-  hasExpectation(movie, "both plan compile completion modes", "no public plan publish");
-  hasExpectation(movie, "explicitly requested one private GitHub repository", "plan compile --github");
+  hasExpectation(movie, "plan compile with optional --output", "no public plan publish");
+  hasExpectation(
+    movie,
+    "exactly one plan compile",
+    "one private GitHub repository",
+    "First Draft creates no repositories",
+  );
   hasExpectation(movie, "pushes the exact whole file", "accepted exact Head's analysis");
   hasExpectation(movie, "progress as nonterminal observational output");
-  hasExpectation(movie, "stdout", "validated private GitHub repository URL");
+  hasExpectation(movie, "gh repo create", "verifying private visibility and the pushed commit");
   hasExpectation(movie, "reviewed nonempty GapSet", "does not ask for a second confirmation");
   hasExpectation(
     movie,
@@ -2309,7 +2314,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     directReadBack,
     "Selects direct mode before approval",
     "firstdraft plan compile --output ./application",
-    "no Publication, GitHub repository, .git directory, or deployment",
+    "no GitHub repository, .git directory, or deployment",
   );
   hasExpectation(
     directReadBack,
@@ -2327,11 +2332,11 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     direct,
     "After approval",
     "exactly one firstdraft plan compile --output ./application",
-    "does not also run plan compile --github",
+    "does not also run plan publish",
   );
   hasExpectation(
     direct,
-    "no Publication, GitHub repository, repository URL, or deployment claim",
+    "no GitHub repository, repository URL, or deployment claim",
   );
 
   const root = evaluation("compile-prepared-current-root");
@@ -2360,118 +2365,17 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(
     root,
     "non-Git root stays non-Git",
-    "no Publication, GitHub repository",
-  );
-
-  const terminalStage = evaluation("compile-distinguishes-terminal-stage");
-  hasExpectation(
-    terminalStage,
-    "Application compilation failed",
-    "GitHub Publication work was not reached",
-    "does not warn about repository or commit effects",
-  );
-  hasExpectation(
-    terminalStage,
-    "application compiled",
-    "GitHub publication failed later",
-    "remote repository or commit effects may remain",
-  );
-  hasExpectation(terminalStage, "Branches on compilation.status");
-
-  const retryProgress = evaluation(
-    "compile-reports-publication-retry-progress",
-  );
-  hasExpectation(
-    retryProgress,
-    "Compilation is complete",
-    "GitHub Publication remains pending",
-    "github_preflight",
-  );
-  hasExpectation(
-    retryProgress,
-    "four minutes",
-    "bounded ten-minute Publication wait",
-    "not evidence of a stall",
-  );
-  hasExpectation(
-    retryProgress,
-    "retry_count 2",
-    "github.oauth_unavailable",
-    "exact absolute retry_at timestamp",
-  );
-  hasExpectation(retryProgress, "Does not launch a concurrent plan compile", "singleton");
-  hasExpectation(
-    retryProgress,
-    "Does not recommend changing origins, reinstalling, or contacting support",
-  );
-
-  const parkedProgress = evaluation("compile-reports-parked-publication");
-  hasExpectation(parkedProgress, "Compilation succeeded", "Publication is parked");
-  hasExpectation(
-    parkedProgress,
-    "retry_count 7",
-    "github.preflight_unavailable",
-  );
-  hasExpectation(parkedProgress, "operator attention", "without guessing");
-  hasExpectation(parkedProgress, "Does not launch a concurrent plan compile");
-  hasExpectation(parkedProgress, "conditional singleton replay");
-
-  const fallbackProgress = evaluation(
-    "compile-reports-unclassified-publication-fallback",
-  );
-  hasExpectation(
-    fallbackProgress,
-    "github.preflight_unavailable.repository_client",
-    "parked retry state",
-  );
-  hasExpectation(
-    fallbackProgress,
-    "coarse pre-claim repository-client-stage fallback",
-    "not the raw exception",
-    "not proof that GitHub rejected repository creation",
-  );
-  hasExpectation(fallbackProgress, "Does not start a concurrent Compile");
-
-  const rejected404 = evaluation(
-    "compile-404-does-not-identify-publication-cause",
-  );
-  hasExpectation(
-    rejected404,
-    "Branches on publication_start_rejected",
-    "validated non-timeout 4xx rejection",
-    "408 or 5xx start outcome",
-    "request_outcome_unknown reconciliation",
-  );
-  hasExpectation(
-    rejected404,
-    "Publication success was not verified",
-    "does not claim whether this request or an earlier one left retained",
-  );
-  hasExpectation(
-    rejected404,
-    "Does not treat HTTP 404",
-    "unprovisioned account",
-    "missing per-account endpoint",
-  );
-  hasExpectation(
-    rejected404,
-    "Does not recommend changing origins, reinstalling, contacting support",
-    "no stable structured recovery action",
-  );
-  hasExpectation(
-    rejected404,
-    "stops for a named structured recovery action or coordinated route/service repair",
-    "does not replay or start another Compile solely from this envelope",
+    "no GitHub repository",
   );
 
   const semantic = evaluation("compile-semantic-diagnostics");
   hasExpectation(semantic, "Branches on plan_not_valid", "semantic diagnostics");
-  hasExpectation(semantic, "no Compilation or Publication was requested");
+  hasExpectation(semantic, "no Compilation was requested");
 
   const recurring = evaluation("compile-recurring-diagnostics");
   hasExpectation(recurring, "recurring diagnostic has not produced new information");
   hasExpectation(recurring, "Does not impose a universal retry count");
-  hasExpectation(recurring, "Does not claim successful Compilation or Publication");
+  hasExpectation(recurring, "Does not claim a successful Compilation");
 
   const generation = evaluation(
     "compile-waits-for-accepted-analysis-generation",
@@ -2481,45 +2385,22 @@ test("product Compile and retained Compilation evals match the CLI contract", as
 
   const staleBytes = evaluation("compile-stale-plan-bytes");
   hasExpectation(staleBytes, "Branches on local_plan_changed");
-  hasExpectation(staleBytes, "stopped before Publication");
+  hasExpectation(staleBytes, "stopped before starting a Compilation");
   hasExpectation(
     staleBytes,
     "describes its semantic delta",
     "obtains approval of that changed candidate",
-    "before invoking plan compile --github",
+    "before invoking plan compile for its own analysis",
   );
 
   const ambiguousPush = evaluation("compile-ambiguous-push-outcome");
   assert.match(ambiguousPush.prompt, /phase push/);
-  hasExpectation(ambiguousPush, "phase push", "before analysis or Publication");
+  hasExpectation(ambiguousPush, "phase push", "before analysis or Compilation");
   hasExpectation(
     ambiguousPush,
     "stops without another CLI invocation",
     "no Plan GET or reconciliation command",
   );
-
-  const ambiguousPublication = evaluation(
-    "compile-ambiguous-publication-outcome",
-  );
-  assert.match(ambiguousPublication.prompt, /phase publication/);
-  hasExpectation(
-    ambiguousPublication,
-    "phase publication",
-    "repository creation may have succeeded",
-  );
-  hasExpectation(
-    ambiguousPublication,
-    "same plan compile --github",
-    "Skill resolver",
-    "unchanged Plan bytes",
-    "conditional PUT",
-  );
-
-  const success = evaluation("report-successful-product-compile");
-  hasExpectation(success, "private repository URL");
-  hasExpectation(success, "without inventing Project", "final stdout did not expose");
-  hasExpectation(success, "successful product Compile and GitHub Publication");
-  hasExpectation(success, "not local artifact materialization or deployment");
 
   const terminal = evaluation("compilation-status-terminal-failure");
   hasExpectation(terminal, "compilation status", "Skill resolver", "exact UUID");
@@ -2549,21 +2430,6 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(provenance, "do not prove one exact Plan snapshot");
   hasExpectation(provenance, "Does not weaken provenance validation");
 
-  const publicationFailure = evaluation(
-    "compile-terminal-publication-failure",
-  );
-  hasExpectation(publicationFailure, "Branches on publication_failed");
-  hasExpectation(
-    publicationFailure,
-    "private repository identity",
-    "actually contains",
-  );
-  hasExpectation(
-    publicationFailure,
-    "Does not promise",
-    "terminal name conflict",
-  );
-
   const nonsucceeded = evaluation("compilation-download-not-succeeded");
   hasExpectation(nonsucceeded, "Branches on compilation_not_succeeded");
   hasExpectation(nonsucceeded, "Does not request an artifact");
@@ -2580,6 +2446,11 @@ test("product Compile and retained Compilation evals match the CLI contract", as
     cases.filter(({ id }) => id.startsWith("publish-")).length,
     0,
     "the eval corpus must not retain the removed public plan publish workflow",
+  );
+  assert.equal(
+    cases.filter((value) => JSON.stringify(value).includes("--github")).length,
+    0,
+    "the eval corpus must not retain the removed plan compile --github workflow",
   );
 });
 

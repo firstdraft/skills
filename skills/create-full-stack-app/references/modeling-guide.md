@@ -555,7 +555,8 @@ Write it for a reader who is not technical, in this order:
    with where it will be built, and how the selected output mode carries the notes forward.
 4. Feasibility findings and open questions, with sources for what research found. Leave out a list with nothing
    in it.
-5. Where the app will be written: this folder, another folder, or a private GitHub repository; or plan only.
+5. Where the app will be written: this folder or another folder, and whether you will then push it to a new
+   [private GitHub repository](diagnostics-and-recovery.md#create-a-github-repository); or plan only.
 6. Where to look at the Plan, and what the page shows.
 
 When the user asks to see the code before Compile, such as the schema or the models, compile a preview into an
