@@ -117,7 +117,7 @@ run resolved it; read the index again.
 
 If `maintain` printed a line that begins `Reports are on:`, the owner agreed that you send First Draft failure
 reports, and that line says when and how: after resolving an item with `--cause generated_code`, run, from the
-application's root,
+directory where you ran `maintain`,
 
 ```sh
 firstdraft_cli report failure --kind deployed_error --item ITEM_ID --error-class NoMethodError \
