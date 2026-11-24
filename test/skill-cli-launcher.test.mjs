@@ -5,6 +5,7 @@ import {
   copyFile,
   mkdir,
   mkdtemp,
+  readFile,
   realpath,
   rm,
   symlink,
@@ -14,10 +15,33 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 
+import { canonicalPluginSkills } from "../script/claude-plugin-boundaries.mjs";
+
 const sourceLauncher = new URL(
   "../skills/create-full-stack-app/scripts/firstdraft.sh",
   import.meta.url,
 );
+
+// Each packaged Skill ships its own copy of the launcher, because a Skill is
+// installed as one folder; the tests below exercise the authoring Skill's.
+test("every packaged Skill's launcher is the authoring Skill's", async () => {
+  const expected = await readFile(sourceLauncher, "utf8");
+  const skills = Object.entries(canonicalPluginSkills)
+    .filter(([, files]) => files.includes("scripts/firstdraft.sh"))
+    .map(([skill]) => skill)
+    .filter((skill) => skill !== "create-full-stack-app");
+  assert.deepEqual(skills, ["maintain-app"]);
+  for (const skill of skills) {
+    assert.equal(
+      await readFile(
+        new URL(`../skills/${skill}/scripts/firstdraft.sh`, import.meta.url),
+        "utf8",
+      ),
+      expected,
+      `skills/${skill}/scripts/firstdraft.sh`,
+    );
+  }
+});
 
 async function fixture(t) {
   const root = await realpath(
