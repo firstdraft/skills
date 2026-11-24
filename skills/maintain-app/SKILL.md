@@ -12,8 +12,8 @@ either fixed and resolved, resolved with another reason, or waiting on the owner
 
 ## Run the CLI
 
-Run First Draft commands from the planning directory, the one whose `.firstdraft/state.json` names the Project:
-`.firstdraft/design/` in an application First Draft compiled into its root, otherwise the directory where the Plan was
+Run First Draft commands from the application's root, where the CLI finds the Project's state archived at
+`.firstdraft/design/` in an application First Draft compiled into its root, or from the directory where the Plan was
 started. Edit and test the application from its own root. Resolve `<skill-dir>` to the absolute directory containing
 this `SKILL.md`; the helper is the one the authoring Skill uses. Shell functions do not persist between tool calls,
 so define the function in each call.
@@ -39,8 +39,8 @@ items as JSON on standard output, and at most one line for you on standard error
 
 When First Draft refuses a request, the CLI reports `maintain_rejected` with the service's reason in
 `response.code`. `environment_not_found` there means this login sees no Environment of that name in the Project:
-check `--environment`, that you ran from the right planning directory, and that the owner is logged in to the
-account that owns the Project, before telling the owner that monitoring may not be connected.
+check `--environment`, that you ran from the right application or planning directory, and that the owner is
+logged in to the account that owns the Project, before telling the owner that monitoring may not be connected.
 `maintain_unavailable` means the result is unconfirmed. Retry a read later; after a resolution, run `maintain show`
 first, because the resolution may have succeeded and a newer error may since have reopened the item.
 `invalid_maintain_response` means this CLI and the service disagree about the response; report it to the owner
@@ -108,10 +108,12 @@ release's next occurrence. Until the fix is running, leave the item open; its pu
 - `configuration_or_host`, `data`, or `dependency`: a setting or the host, bad or unexpected records, or a gem or an
   outside service.
 - `not_a_bug`: nothing was wrong.
+- `unknown`: you read the evidence and the code and still cannot tell which of the others it is. Use it only after
+  that look; never as a shortcut, and never instead of `generated_code` when the evidence points there.
 
 For a duplicate, give the cause of the item it duplicates. For an item that stopped occurring, give the cause the
-evidence points to. A `response.code` of `item_already_resolved` means another run resolved it; read the index
-again.
+evidence points to, or `unknown` when it points nowhere. A `response.code` of `item_already_resolved` means another
+run resolved it; read the index again.
 
 If `maintain` printed a line that begins `Reports are on:`, the owner agreed that you send First Draft failure
 reports, and that line says when and how: after resolving an item with `--cause generated_code`, run, from the
