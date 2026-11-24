@@ -107,7 +107,8 @@ error seen after its resolution as a recurrence and reopens, so resolving at mer
 release's next occurrence. Until the fix is running, leave the item open; its pull request is the record. Before
 resolving a fixed item, run `maintain show` again: if the error occurred on the release that holds the fix, the
 fix did not hold, so leave the item open and reopen the work. An occurrence from the earlier release while the
-deploy switched over does not count; when the evidence names no release, compare its time with the deploy's.
+deploy switched over does not count. When the evidence names no release, compare the item's `last_seen_at` with the
+time the deploy finished, and leave the item open to investigate if it is later.
 
 `--reason` says how the item was resolved: `pull_request` (with the pull request URL), `host_change`, `not_a_bug`,
 `duplicate`, or `stopped_occurring`. `--cause` says what caused the error:
