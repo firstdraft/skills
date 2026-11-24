@@ -18,8 +18,10 @@ started. Edit and test the application from its own root. Resolve `<skill-dir>` 
 this `SKILL.md`; the helper is the one the authoring Skill uses. Shell functions do not persist between tool calls,
 so define the function in each call.
 
-Run `start` first, with `--staging` when the Project's `.firstdraft/state.json` names
-`https://staging.firstdraft.com`, so it checks the login the maintain commands will use. It prints one fact per line;
+Run `start` first. The maintain commands use the `api_url` saved in the Project's state
+(`.firstdraft/design/.firstdraft/state.json` in an application First Draft compiled into its root, otherwise
+`.firstdraft/state.json` where the Plan was started), so set `FIRSTDRAFT_API_URL` to it for `start` and both login
+steps, production included, and they check the login the maintain commands will use. It prints one fact per line;
 pass on an update line once. On `Ready: First Draft accepted ...`, go on. On `To log in, run ...` or `Not logged in:
 First Draft did not accept the saved login ...`, you may start the login: run the `login --no-wait` command `start`
 printed, through the helper and with its flags, and show the owner the link and the code exactly as printed; when
@@ -29,7 +31,7 @@ the owner what it says.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-firstdraft_cli start
+FIRSTDRAFT_API_URL=API_URL firstdraft_cli start   # API_URL: the api_url in the Project's state
 firstdraft_cli maintain                       # open items in production, most severe first
 firstdraft_cli maintain show ITEM_ID          # one item, with evidence and what done means
 firstdraft_cli maintain resolve ITEM_ID --reason pull_request --cause generated_code \
@@ -103,8 +105,9 @@ remind the owner on later runs.
 Resolve an item only once the release that contains its fix is deployed to that Environment. An item records an
 error seen after its resolution as a recurrence and reopens, so resolving at merge time would reopen it on the old
 release's next occurrence. Until the fix is running, leave the item open; its pull request is the record. Before
-resolving a fixed item, run `maintain show` again: if the error occurred after the deploy, or on the release that
-holds the fix, the fix did not hold, so leave the item open and reopen the work.
+resolving a fixed item, run `maintain show` again: if the error occurred on the release that holds the fix, the
+fix did not hold, so leave the item open and reopen the work. An occurrence from the earlier release while the
+deploy switched over does not count; when the evidence names no release, compare its time with the deploy's.
 
 `--reason` says how the item was resolved: `pull_request` (with the pull request URL), `host_change`, `not_a_bug`,
 `duplicate`, or `stopped_occurring`. `--cause` says what caused the error:
