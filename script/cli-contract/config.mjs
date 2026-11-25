@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "10c5f2aaaa319d08f28bd2bb7fadf863f5581ab7";
+export const cliRevision = "6a156b31dc670c32abd3e301c8956e64990fd0a8";
 export const cliRuntimeSha256 =
-  "8f2f7ef26164bd087acae1f89a42d5005dfe7569137169290b9468c9fb12583f";
+  "35a66bd838d8c496104dd0679ee2acf9595fe38f1d5c50a26f0a5b9b27a6c6d7";
 export const cliPackageName = "@firstdraft.com/cli";
 export const cliPackageVersion = "0.10.0";
 
@@ -68,10 +68,10 @@ export const packedFileAllowlist = [
   "src/commands/compilation.js",
   "src/commands/login.js",
   "src/commands/logout.js",
+  "src/commands/maintain.js",
   "src/commands/note.js",
   "src/commands/plan-compile.js",
   "src/commands/plan-init.js",
-  "src/commands/plan-publish.js",
   "src/commands/plan-push.js",
   "src/commands/plan-status.js",
   "src/commands/report.js",
