@@ -141,9 +141,18 @@ For a duplicate, give the cause of the item it duplicates. For an item that stop
 evidence points to, or `unknown` when it points nowhere. A `response.code` of `item_already_resolved` means another
 run resolved it; read the index again.
 
+An item that is not an error still takes a cause. Its title says what it is: `Uptime check failed:`,
+`Heartbeat missed:`, `Security alert:`, `Dependabot pull request left open:`, `CI failing on the default branch:`,
+`Core behind the Compiler's pin:`, or a host's memory, disk, or slow queries. Every other item is an error, titled
+with its exception class, or `Message`, and where it happened, such as `NoMethodError in body (app/models/reply.rb)`.
+A Core behind the pin is `generated_code`, because the Core is code First Draft generated: resolve it with
+`pull_request` once the release with the update is live, or with `not_a_bug` when none of the changes apply. A
+security alert or a Dependabot pull request is `dependency`. For a check, failing CI, or a host report, give what you
+found, such as `configuration_or_host` for the host or `later_code` for a commit.
+
 If `maintain` printed a line that begins `Reports are on:`, the owner agreed that you send First Draft failure
-reports, and that line says when and how: after resolving an item with `--cause generated_code`, run, from the
-directory where you ran `maintain`,
+reports, and that line says when and how. A failure report is for an error item only: after resolving one with
+`--cause generated_code`, run, from the directory where you ran `maintain`,
 
 ```sh
 firstdraft_cli report failure --kind deployed_error --item ITEM_ID
@@ -155,8 +164,9 @@ them. The report takes no message. It names the Compilation the CLI last recorde
 deployed code came from another one, put that `compilation.id` right after `report failure`. Run from an
 application folder without planning state, the report finds no recorded Compilation: when the Project's planning
 folder is on this computer, its `.firstdraft/compilation.json` names the one it last wrote as `compilation_id`;
-without an ID, the report ends with `compilation_not_recorded` and sends nothing, so continue without it. Without
-that line, never raise reports.
+without an ID, the report ends with `compilation_not_recorded` and sends nothing, so continue without it. Send none
+for an item that is not an error, such as a Core update, whatever its cause.
+Without that line, never raise reports.
 
 ## Wait for the owner
 
@@ -184,5 +194,5 @@ they run out Render suspends every free web service in the workspace until the n
 ## Report the run
 
 End with a short report to the owner: what you fixed and merged, what you resolved and why, which pull requests
-wait for them, which items you deferred and until when, and what you need from them. Mention items that reopened,
-since a reopened item means a fix did not hold.
+wait for them, which items you deferred and until when, and what you need from them. Mention items that reopened:
+a reopened error or check means a fix did not hold, but a reopened Core item means the Compiler pins a newer Core.
