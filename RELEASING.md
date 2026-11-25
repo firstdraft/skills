@@ -66,7 +66,7 @@ pinned CLI. No CLI check fails when they change, so the next pin change fails he
 - `requires.api_contract` and `requires.foundation_plan_formats`, which must equal the CLI's own
   `release/compatibility.json`;
 - the contract fixtures in `script/cli-contract/config.mjs` that the CLI checks exactly, such as
-  `compilationTarget.profile`, `artifactMediaType`, and `safeGithubReasonCodes`; and
+  `compilationTarget.profile` and `artifactMediaType`; and
 - `startWithoutLogin` in the same file, the lines `firstdraft start` prints with no login; and every sentence the
   Skill quotes from `start` and the device login, which
   [`script/cli-contract/quoted-sentences.mjs`](script/cli-contract/quoted-sentences.mjs) looks for in the pinned

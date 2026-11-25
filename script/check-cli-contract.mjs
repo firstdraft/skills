@@ -21,7 +21,6 @@ import { verifyLocalCommands } from "./cli-contract/local-commands.mjs";
 import { verifyPackedExecutable } from "./cli-contract/packed-executable.mjs";
 import { verifyPlanJourney } from "./cli-contract/plan-journey.mjs";
 import { verifyPlanStatusGenerations } from "./cli-contract/plan-status.mjs";
-import { verifyPublicationValidation } from "./cli-contract/publication-validation.mjs";
 import { verifyQuotedSentences } from "./cli-contract/quoted-sentences.mjs";
 import { verifyServiceVersions } from "./cli-contract/service-versions.mjs";
 
@@ -98,7 +97,6 @@ try {
   await verifyLocalCommands(context);
   await verifyPlanStatusGenerations(context);
   await verifyPlanJourney(context);
-  await verifyPublicationValidation(context);
   await verifyCompilations(context);
 
   const packed = packAndInstall(cliDirectory, temporaryDirectory);

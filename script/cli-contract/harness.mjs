@@ -17,7 +17,6 @@ import {
   cliPackageName,
   cliPackageVersion,
   projectId,
-  safeGithubReasonCodes,
   storedApiUrl,
 } from "./config.mjs";
 
@@ -38,8 +37,6 @@ export const cleanEnvironment = {
   ),
   XDG_CONFIG_HOME: isolatedConfigHome,
 };
-
-const safeGithubReasonCodeSet = new Set(safeGithubReasonCodes);
 
 export function cliRuntimeDigest(root) {
   const paths = runtimeJavaScriptFiles(path.join(root, "src"))
@@ -291,37 +288,12 @@ function isSafeProgressMessage(line) {
 }
 
 function isProgressMessage(line) {
-  const message = line.slice("First Draft: ".length);
-  if (
-    [
-      "Analyzing Foundation Plan...",
-      "Foundation Plan analysis valid.",
-      "Compiling application...",
-      "Application compiled.",
-      "Application compilation failed.",
-      "Application compilation cancelled.",
-      "Preparing private GitHub repository...",
-      "Checking GitHub access...",
-      "Creating private GitHub repository...",
-      "Preparing to verify GitHub repository creation...",
-      "Verifying GitHub repository creation...",
-      "Preparing compiled application...",
-      "Publishing compiled application to GitHub...",
-      "Preparing to verify GitHub publication...",
-      "Verifying GitHub publication...",
-      "GitHub publication complete.",
-      "GitHub publication failed.",
-      "GitHub publication cancelled.",
-    ].includes(message)
-  ) {
-    return true;
-  }
-
-  const match =
-    /^Checking GitHub access \(reason: ([a-z._]+); retry count: ([1-7]); (?:next retry: (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z)|(automatic retries paused; operator recovery required))\)\.$/.exec(
-      message,
-    );
-  return match !== null && safeGithubReasonCodeSet.has(match[1]);
+  return [
+    "Analyzing Foundation Plan...",
+    "Foundation Plan analysis valid.",
+    "Compiling application...",
+    "Application compiled.",
+  ].includes(line.slice("First Draft: ".length));
 }
 
 export function assertPrivateValuesAbsent(execution, privateValues) {

@@ -7,8 +7,8 @@ license: "MIT"
 # Create a Full-Stack App with First Draft
 
 Use First Draft where it helps the user's app: author and review a Foundation Plan, then Compile through the First
-Draft service into the current local folder. Run and develop the generated app locally; a Codespace, GitHub
-publication, and native preview are optional. Compilation does not deploy.
+Draft service into the current local folder. Run and develop the generated app locally; a Codespace, a GitHub
+repository, and native preview are optional. Compilation does not deploy.
 
 ## Preserve implementation requirements
 
@@ -246,10 +246,11 @@ Before the first `plan compile`, complete the modeling guide's
 [candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back), then reread the
 exact current `.firstdraft/foundation-plan.json` and give the read-back in that section's order. Use current-folder
 output by default. Select an absent `--output <path>` for a requested destination, an ineligible root, or model-only
-originals when root output was not explicitly requested. Select `--github` only for an explicit private GitHub
-repository request. Generic compile or build language selects local output. Direct output creates a verified local
-directory; Publication creates one private GitHub repository. Neither deploys. Do not enumerate absent subject
-families or immaterial properties.
+originals when root output was not explicitly requested. Generic compile or build language selects local output, and
+so does a request for a private GitHub repository: create that repository after Compile, as
+[Create a GitHub repository](references/diagnostics-and-recovery.md#create-a-github-repository) says. Compile
+creates a verified local directory and does not deploy. Do not enumerate absent subject families or immaterial
+properties.
 
 Compile waits for the user's go-ahead: they approve the candidate and its gaps, or tell you to build it. A request
 made before the read-back counts only when it said not to wait for them, as in "decide everything and build it
@@ -266,54 +267,42 @@ consequences need a user decision.
 
 If the Plan changes after the read-back, push it so the page shows it, and describe the semantic change. Obtain
 approval of the changed candidate only when it exceeds the existing request or delegated choices. On the go-ahead,
-make the request with exactly one invocation in the selected mode. Do not ask for a second command-level
+make the request with exactly one invocation for the selected output. Do not ask for a second command-level
 confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
 green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it.
 
 This gate does not block an explicitly requested diagnostic-only Compile of exact bytes already known to be
-invalid from those bytes or matching diagnostics. Invalid analysis cannot start a Compilation or Publication. Valid
+invalid from those bytes or matching diagnostics. Invalid analysis cannot start a Compilation. Valid
 analysis with gaps can; do not require removal of the corresponding Plan fields.
 
 ## Request the selected Compile journey
 
-On the user's go-ahead, read [Product Compile](references/diagnostics-and-recovery.md#product-compile) and request
-the already selected mode:
+On the user's go-ahead, read [Product Compile](references/diagnostics-and-recovery.md#product-compile) and compile
+into the current folder:
 
-- For the ordinary local journey, use the current folder:
+```sh
+firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
+firstdraft_cli plan compile
+```
 
-  ```sh
-  firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-  firstdraft_cli plan compile
-  ```
-
-  This is equivalent to `plan compile --output .`. Read the root-adoption preconditions before invoking it. The CLI
-  preserves an existing root `.git` and archives planning material under `.firstdraft/design/`. Use an absent path
-  such as `firstdraft_cli plan compile --output ./application`, when those rules require it. Root adoption
-  is POSIX-only; Windows requires an absent output path. Both local forms use the service Compiler and create no
-  GitHub repository.
-- For selected Publication, run explicit GitHub mode:
-
-  ```sh
-  firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-  firstdraft_cli plan compile --github
-  ```
-
-  `--github` and `--output` are mutually exclusive.
+This is equivalent to `plan compile --output .`. Read the root-adoption preconditions before invoking it. The CLI
+preserves an existing root `.git` and archives planning material under `.firstdraft/design/`. Use an absent path
+such as `firstdraft_cli plan compile --output ./application`, when those rules require it. Root adoption
+is POSIX-only; Windows requires an absent output path. Both forms use the service Compiler and create no GitHub
+repository.
 
 Invoke it exactly once without another confirmation or gap field; do not reimplement CLI internals. Tell the user
 it usually takes under a minute.
 
-Report direct output only after materialization verifies. On `request_outcome_unknown`, rerun the same command once;
-never switch modes. A validated retained ID permits status and, after success, download. In `--github` mode, require
-terminal Publication success and its validated URL; Compilation success alone is insufficient. Never Compile
+Report the output only after materialization verifies. On `request_outcome_unknown`, rerun the same command once,
+with the same output. A validated retained ID permits status and, after success, download. Never Compile
 concurrently. On a failed Compilation, read
 [Failed Compilation](references/diagnostics-and-recovery.md#failed-compilation) first; the Plan is not the cause.
 
 ## Inspect or download the retained Compilation
 
-`--github` success prints only the repository URL. Use retained commands only with an exact ID from the user, a
-validated structured projection, or the UUIDv7 in a `compilation_active` `response.detail`; never recover one from
-private state or unvalidated output.
+Use retained commands only with an exact ID from the user, a validated structured projection, or the UUIDv7 in a
+`compilation_active` `response.detail`; never recover one from private state or unvalidated output.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -334,7 +323,7 @@ firstdraft_cli compilation download <compilation-id> --output <absent-path>
 ```
 
 Download reads one succeeded Compilation, verifies it, and installs atomically; it never starts or polls work.
-`--output .` uses the same current-root transaction and preconditions as direct Compile; preserve every other
+`--output .` uses the same current-root transaction and preconditions as `plan compile`; preserve every other
 existing destination.
 
 ## Recover from failures
@@ -343,10 +332,9 @@ Read the [error-envelope rules](references/diagnostics-and-recovery.md#diagnosti
 [stable error family](references/diagnostics-and-recovery.md#stable-error-families) before acting. Unrecognized
 output stops recovery. Branch on the stable `error` and structured fields, not `detail`, elapsed time, or HTTP status.
 
-Preserve exact bytes and private state after ambiguous mutations, and rerun an outcome-unknown push or direct start
-only once. Never use `invalid_publication_status` as a reason to retry. Let the CLI own output rollback. At
-`update_required`, or `rate_limited` from a push or Compile, tell the user what the CLI said and stop remote work;
-never retry in a loop or switch accounts.
+Preserve exact bytes and private state after ambiguous mutations, and rerun an outcome-unknown push or Compilation
+start only once. Let the CLI own output rollback. At `update_required`, or `rate_limited` from a push or Compile,
+tell the user what the CLI said and stop remote work; never retry in a loop or switch accounts.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.
@@ -374,9 +362,9 @@ If you come to think an item should change or go, stop and ask, with your reason
 decides or asks you to; after a yes, remove what you judge right, specs included. Without that yes, never skip,
 delete, or loosen an example to pass. Then tell the user, in plain words:
 
-- where the app is: its folder, or the private GitHub repository once Publication succeeds;
+- where the app is: its folder and, when you created one, its private GitHub repository;
 - what works, as setup, the specs, and the preview actually showed;
 - what you will write next, such as agreed behavior from the implementation notes; and
 - how to open and restart the preview.
 
-Compilation and Publication do not deploy the app or make it ready for real users.
+Compilation does not deploy the app or make it ready for real users.
