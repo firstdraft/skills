@@ -287,7 +287,7 @@ Use these terms when explaining the workflow:
 | Commit | Record changes in local Git history; this does not copy them to GitHub. |
 | Create GitHub repository | Create a private repository for this workspace, connect it as `origin`, and push its existing commits. All three steps must succeed. |
 | Push | Send Git commits to an existing remote repository with `git push`. |
-| Deploy | Make the application run on a hosting service. Pushing to GitHub does not deploy it. |
+| Deploy | Make the application run on a hosting service. Compile does not deploy it. A push deploys it only when a hosting service, such as Render, deploys that branch. |
 
 Zero-flag mode selects local output in the current folder, equivalent to `--output .`. **Materialization** means
 writing the verified artifact into a local directory; use "write the generated application into this workspace" when
