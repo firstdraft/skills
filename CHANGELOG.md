@@ -109,7 +109,10 @@ and pushes to it:
 gh repo create OWNER/NAME --private --source . --remote origin --push
 ```
 
-Before that first push it checks that nothing the person shared only for modeling is in the history it would send.
+Before that first push it checks that the app's folder is its own repository, not one around it, and that nothing
+the person shared only for modeling is in the history it would send, under any name or folder. It pushes to a remote
+the app already has only once `gh` shows that each repository the push would reach is private, unless the person
+says to push anyway.
 
 In an unpublished template Codespace, where the built-in token cannot create a repository that way, it uses the
 Codespaces endpoint as before. The diagnostics page drops the Publication progress lines, error values, and recovery
