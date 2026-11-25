@@ -29,6 +29,7 @@
     "delivery": {
       "email": {}
     },
+    "mail": "resend",
     "entities": [
       {
         "subject_uuid": "01a1cb9b-fac9-7c2a-8620-29692e5a1af8",

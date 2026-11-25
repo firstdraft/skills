@@ -140,6 +140,7 @@ show the `name`; only URLs and code show the key.
 | `page` or `error` with `resource_routes`, and `account` with `resource_routes` beside an Account Entity | Rejected: `foundation_plan.identity.reserved_constant_collision`. The app already has `PagesController` and `ErrorsController`, and First Draft writes `AccountsController` for `/account`. |
 | `term`, `privacy`, or `root`, with `resource_routes` | Rejected: `foundation_plan.identity.reserved_route_helper_collision` or `foundation_plan.identity.reserved_route_path_collision`. The app's legal pages and Home own `terms_path`, `GET /terms`, `privacy_path`, and `root_path`. |
 | `application` or `action` with a Policy; `action_policy`, `application_policy`, or `ruby_next` in a Plan with any Policy; `rodauth`, `rodauth_main`, or `rodauth_mailer` beside an Account Entity | Rejected: `foundation_plan.identity.reserved_constant_collision`. Every Policy class inherits from `ApplicationPolicy`, `ActionPolicy` and `RubyNext` belong to the authorization library, and sign-in already defines the Rodauth classes. |
+| a name the mail or upload library already uses, such as `resend` in an app that sends mail or `cloudinary` in an app with uploads | Valid, with the warning `foundation_plan.identity.dependency_name_collision` at the key. Compile leaves out Resend, or every upload Field, and the gaps list what is missing. |
 | `request`, `session`, `params`, `response` | Valid and conventional, but awkward inside the Entity's partials; prefer `book_request`. |
 
 ## Implicit order

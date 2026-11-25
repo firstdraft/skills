@@ -47,7 +47,8 @@ is left to write, and decisions to raise.
 
 Plan and records:
 
-- [Plan structure](references/plan/plan-structure.md): root and Application keys, names, paths, omission; open first.
+- [Plan structure](references/plan/plan-structure.md): root and Application keys, `mail`, names, paths, omission;
+  open first.
 - [Entities](references/plan/entities.md): `key`, `name`, `primary_descriptor`, `icon`; adding or naming a record type.
 - [Fields](references/plan/fields.md): shared Field keys; text, number, date, URL, and zone types; any stored value.
 - [Defaults](references/plan/defaults.md): `default` on a Field or Reference; a value a new record starts with.

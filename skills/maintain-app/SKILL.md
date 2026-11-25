@@ -82,6 +82,13 @@ can appear as several items, for example one per caller. Decide for each group:
 - **Ask the owner** when the fix needs a product decision, credentials, or access you do not have. Leave the item
   open and say what you need.
 
+A `KeyError` whose message names `RESEND_API_KEY` is a missing setting, not a defect: the app sends its mail
+through Resend and reads the key when it sends. Open no pull request. Ask the owner to create an API key in Resend
+and set it as `RESEND_API_KEY` on the host, as the app's `DEPLOY.md` says, and never ask for its value. Resolve the
+item with `--reason host_change --cause configuration_or_host` once the running app has the key and the item's
+`last_seen_at`, from `maintain show`, is earlier than the time it took effect. Applying the key can redeploy the same
+release, so compare those times rather than releases.
+
 ## Fix with a failing test
 
 First look for an open pull request that already names the item or covers its root cause, including one from an

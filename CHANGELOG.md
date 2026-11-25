@@ -95,6 +95,65 @@ missing from this list sorts by that date.
 | `2026-10-03-workshop-core` | 2026-10-03 |
 | `2026-09-29-skipped-data-defaults` | 2026-10-01 or earlier |
 
+## 2026-11-25: The Plan names its mail provider
+
+**Compiler and Skills — released with plugin 0.10.0.**
+
+- Existing apps: optional, for an app whose Account confirms email, resets passwords, or unlocks accounts, and that
+  has no mail provider yet. The steps are below.
+- Compiler: release `2026-11-25-application-mail`.
+
+A Plan can now say `"mail": "resend"`, and an Account that confirms email, resets passwords, or unlocks accounts
+selects it when the Plan does not. Production then sends mail through Resend's HTTP API with the `resend` gem.
+Before, such an app had no provider, and on Render's free plan, which blocks the usual mail ports, the agent had to
+find and set one up before the first real sign-up. The Skill now writes `mail` when the app will send other email,
+such as reminders, and tells the person they will create a Resend account and key after Compile.
+
+The app reads `RESEND_API_KEY` when it sends, so it boots and deploys without the key, and the first message
+without it raises `KeyError: key not found: "RESEND_API_KEY"`. The `maintain-app` Skill treats that error as a
+setting for the owner to fix on the host, not a pull request. Mail is sent inside the request, so a slow Resend makes
+that request wait.
+
+Analysis also warns, with `foundation_plan.identity.dependency_name_collision`, when the application key or an Entity
+key takes a name that the mail or upload library already uses, such as `resend` or `cloudinary`. Compile then leaves
+Resend, or the upload Fields, out. Change the key and keep the name.
+
+**Adding Resend to an existing app.** These are the lines a new app gets:
+
+1. In `Gemfile`, add `gem "resend", "1.19.0"`, and run `bundle install`.
+2. In `config/environments/production.rb`, add `config.action_mailer.delivery_method = :resend`.
+3. Create `config/initializers/resend.rb`:
+
+   ```ruby
+   Resend.api_key = -> { ENV.fetch("RESEND_API_KEY") }
+   ```
+
+4. In `app/mailers/application_mailer.rb`, replace the `default from:` line with this one. When the Plan has a
+   `domain`, use `webmaster@<domain>` in place of Resend's test sender:
+
+   ```ruby
+   default from: -> { ENV.fetch("MAIL_FROM") { email_address_with_name("onboarding@resend.dev", t("app_name")) } }
+   ```
+
+   If the `default` line in `app/mailers/rodauth_mailer.rb` also names `from:`, remove that part, so Account mail
+   comes from the same sender.
+5. In `render.yaml`, add the key to the web service's `envVars`:
+
+   ```yaml
+   - key: RESEND_API_KEY
+     sync: false
+   ```
+
+Then the owner creates a Resend account and an API key, sets `RESEND_API_KEY` on the Render service, and verifies a
+sending domain in Resend's Domains page with the records it lists. When the sender is still Resend's test sender, or
+should be another address, they set `MAIL_FROM` to an address at the verified domain. Until then, the test sender
+delivers only to the address that owns the Resend account.
+
+**Check.** `bundle exec rspec` passes. On the deployed app, with the key set, use one mail flow the app has: a
+password reset for an open Account, an unlock request for a locked Account, a sign-up with a new address when
+sign-up confirms email, or, signed in, Change email to a new address when the app confirms email. While the app
+sends from the test sender, use the Resend account's own address. The email arrives, and its link works.
+
 ## 2026-11-24: GitHub repositories come from the person's own gh login
 
 **Skills — released in plugin 0.10.0.**
@@ -946,6 +1005,8 @@ declaration, a method, and a spec that pins its error kind.
 - Replaced: what to do with a failing spec, and when to preview, by [2026-11-17: One reference page per Plan capability,
   and stubs written before the
   preview](#2026-11-17-one-reference-page-per-plan-capability-and-stubs-written-before-the-preview).
+- Replaced: adding a mail provider for reset and unlock email, by
+  [2026-11-25: The Plan names its mail provider](#2026-11-25-the-plan-names-its-mail-provider).
 
 Once the First Draft service deploys the matching Compiler, a generated app's
 `AGENTS.md` changes how the agent treats the first spec run. Before, the agent wrote every item in the README's
@@ -1602,6 +1663,8 @@ ordinary Rails.
 - Existing apps: nothing to do.
 - Replaced: the Skill's default for a Reference with several targets is `exclusive_arc` since [2026-10-10: References
   with several targets compile](#2026-10-10-references-with-several-targets-compile).
+- Replaced: the mail provider for password reset in the After Compile checklist, by
+  [2026-11-25: The Plan names its mail provider](#2026-11-25-the-plan-names-its-mail-provider).
 
 The Skill's interview now follows one order. The agent clarifies your idea,
 asks for materials such as design docs, screenshots, a CSV of sample data, or an app you like, and reads them before

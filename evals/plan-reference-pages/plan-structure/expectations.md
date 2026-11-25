@@ -25,13 +25,15 @@
 - `application.delivery` has `"email": {}`. It may also have `"web_push": {}`; it has no `ios_push` or
   `android_push`. A gap at `/application/delivery` with code `foundation_plan.gap.service.unsupported_capability`
   is expected.
+- `application.mail` is `"resend"`, and `config/initializers/resend.rb` reads `RESEND_API_KEY`.
 
 ## Notes
 
 - Says that First Draft generates no email or push reminders: the channels stay in `delivery`, which import skips,
   and the README lists them under "What you supply". Says the reader writes the mailer, the scheduled job, and any
   push setup, that sending needs credentials only the person can supply, and asks whether to see the app first; the
-  channels stay in the Plan either way.
+  channels stay in the Plan either way. Says that the email goes through Resend, for which the person creates an
+  account and an API key after Compile.
 - Does not add an iOS or Android client for push, and says that push to phones needs a choice the person must
   make (browser push or a native app).
 - Says why the terms Entity's key is not `term` (it clashes with the legal Terms page at `/terms`), and that the

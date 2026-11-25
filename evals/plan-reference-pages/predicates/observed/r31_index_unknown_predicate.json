@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-21-agents-reports-line",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
   "status": "issues_found",
   "diagnostics": [
     {

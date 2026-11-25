@@ -1,0 +1,97 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-11"
+  },
+  "application": {
+    "key": "listings",
+    "name": "Listings",
+    "native": {},
+    "delivery": {},
+    "entities": [
+      {
+        "subject_uuid": "019fa301-0000-7000-8000-000000000001",
+        "key": "cloudinary",
+        "name": "Cloudinary",
+        "primary_descriptor": {
+          "field": "cloudinary.title"
+        },
+        "fields": [
+          {
+            "subject_uuid": "019fa301-0000-7000-8000-000000000002",
+            "key": "title",
+            "name": "Title",
+            "type": "short_text",
+            "required": true
+          },
+          {
+            "subject_uuid": "019fa301-0000-7000-8000-000000000003",
+            "key": "photo",
+            "name": "Photo",
+            "type": "image",
+            "required": true
+          }
+        ],
+        "scaffold": {
+          "resource_routes": [
+            "index",
+            "show",
+            "new",
+            "create",
+            "edit",
+            "update",
+            "destroy"
+          ],
+          "index": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "cloudinary.title"
+              },
+              {
+                "field": "cloudinary.photo"
+              }
+            ]
+          },
+          "show": {
+            "authorization": "public",
+            "projection": [
+              {
+                "field": "cloudinary.title"
+              },
+              {
+                "field": "cloudinary.photo"
+              }
+            ]
+          },
+          "create": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "cloudinary.title"
+              },
+              {
+                "field": "cloudinary.photo"
+              }
+            ]
+          },
+          "update": {
+            "authorization": "public",
+            "inputs": [
+              {
+                "field": "cloudinary.title"
+              },
+              {
+                "field": "cloudinary.photo"
+              }
+            ]
+          },
+          "destroy": {
+            "authorization": "public"
+          }
+        }
+      }
+    ]
+  }
+}

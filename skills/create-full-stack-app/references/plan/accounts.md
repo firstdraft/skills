@@ -13,10 +13,11 @@ yes/no Field named for the people it marks, such as `admin` or `coordinator`. Em
 - **First Draft generates:** Rodauth Rails authentication on the Entity's own table, with email and password sign-in,
   sign-out, remembered sessions, and change of email and password; the sign-up, password reset, lockout, and email
   confirmation flows the Plan asks for; a sign-up form that asks for the Entity's required Fields; an `/account`
-  page; example accounts with known passwords; request specs for sign-up and the account page.
+  page; example accounts with known passwords; request specs for sign-up and the account page; production mail
+  through Resend for the flows that send it.
 - **You write after Compile:** sign-in with anything but a password; inviting people or creating accounts for
   them from a page; choosing a group or another record at sign-up; deleting one's own account; a page that grants a
-  role; a production email provider.
+  role.
 
 Where analysis leaves something out, it reports a gap code such as `foundation_plan.gap.account.partially_generated`
 in the result of `plan push`.
@@ -101,9 +102,9 @@ second Entity.
 | `identifiers` | yes | exactly one `{"kind": "email", "name": "<label>"}` | | The `email` column, unique, stored trimmed and lower case. `name` is the label on the forms (`login_label`). |
 | `sign_in_methods` | yes | exactly `[{"kind": "password"}]` | | The password hash table, sign-in, sign-out, Change password. Passwords need 8 characters. |
 | `registration` | no | `{"mode": "self_service", "inputs": […]}` | omitted | The Sign up page and link. Anyone with an email address can sign up. Omitted: no sign-up page; the README shows the owner how to create each account with `bin/rails runner`. |
-| `verification` | no | `{"kind": "email"}` | omitted | Sign-up emails a link and refuses sign-in until it is followed; Change email takes effect only after the new address confirms. The app needs an email provider before anyone can finish signing up; see [Not generated](#not-generated). Omitted: a new account is signed in at once, sign-up asks for the email twice, and Change email applies at once. |
-| `recovery` | no | `{"kind": "password_reset"}` | omitted | Forgot password, with an emailed reset link, which needs an email provider; see [Not generated](#not-generated). Omitted: the README shows the owner how to set a new password. |
-| `lockout` | no | `{}`, an empty object; it has no keys | omitted | Locks an account after 10 wrong passwords, with an emailed unlock link, which needs an email provider ([Not generated](#not-generated)). Without one, a locked account stays locked until the lockout expires after 24 hours. Omitted: a Rails `rate_limit` of 10 sign-in attempts per IP address in three minutes, in `RodauthController`. |
+| `verification` | no | `{"kind": "email"}` | omitted | Sign-up emails a link and refuses sign-in until it is followed; Change email takes effect only after the new address confirms. No one can finish signing up until the person sets up Resend; see [Mail](#mail). Omitted: a new account is signed in at once, sign-up asks for the email twice, and Change email applies at once. |
+| `recovery` | no | `{"kind": "password_reset"}` | omitted | Forgot password, with an emailed reset link, which works once the person sets up Resend; see [Mail](#mail). Omitted: the README shows the owner how to set a new password. |
+| `lockout` | no | `{}`, an empty object; it has no keys | omitted | Locks an account after 10 wrong passwords, with an emailed unlock link, which works once the person sets up Resend ([Mail](#mail)). Until then, a locked account stays locked until the lockout expires after 24 hours. Omitted: a Rails `rate_limit` of 10 sign-in attempts per IP address in three minutes, in `RodauthController`. |
 
 `registration.inputs[]`, in the order the sign-up form shows them. The Account Entity's other required Fields are
 added after them; see [What sign-up asks for](#what-sign-up-asks-for). `inputs` is a required key: write `[]` when
@@ -283,8 +284,28 @@ Note.find_or_create_by!(title: "Ada's first note", author: ada)
 
 Sign-up asks for Name only; `role` starts `member`. Sign-up redirects to `/login` and emails a link
 (`app/views/rodauth_mailer/verify_account.text.erb`). Example accounts are created already confirmed. `DEPLOY.md`
-has an **Account email launch prerequisite** section. `spec/policies/user_policy_spec.rb` checks both rules, and
-`spec/requests/account_profile_spec.rb` checks show, update, a guest, and a blank name.
+has a **Mail through Resend** section and an **Account email launch prerequisite** section.
+`spec/policies/user_policy_spec.rb` checks both rules, and `spec/requests/account_profile_spec.rb` checks show,
+update, a guest, and a blank name.
+
+## Mail
+
+An Account with `verification`, `recovery`, or `lockout` sends mail, so the app sends it through Resend, exactly as
+`"mail": "resend"` does; see [Plan structure](plan-structure.md#mail). Writing `mail` as well selects the same
+setup. An Account with none of the three sends no mail, and the app gets no provider unless the Plan writes `mail`.
+
+Mail is sent inside the request that asks for it. Until the person sets `RESEND_API_KEY` on the host, each request
+that sends mail, such as sign-up with `verification`, a resend, a password reset, or an unlock request, shows the
+error page, and nothing retries the message. In development, a message goes to a mail server on the computer if one
+is running, and is otherwise dropped while the page goes on. Until the person verifies a sending domain in Resend, no
+one else receives mail; the sender is on [Plan structure](plan-structure.md#mail). `DEPLOY.md` has the steps in its
+**Mail through Resend** section and its Account email section.
+
+An application or Entity key that takes the `resend` gem's name, such as an application key `resend`, leaves Resend
+out: analysis warns `foundation_plan.identity.dependency_name_collision`, and `DEPLOY.md` has no **Mail through
+Resend** section. When the Plan omits `mail`, the gap is the Account's
+`foundation_plan.gap.account.partially_generated`; with `mail` written, it is at `/application/mail`, as
+[Plan structure](plan-structure.md#mail) says. Change the key.
 
 ## Used elsewhere in the Plan
 
@@ -337,10 +358,6 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   offer it to the person if they would rather add notes there.
 - **Granting a role.** No page sets an admin flag or role unless you put it in an `update`, which lets people give
   it to themselves. Set roles in seeds or with `bin/rails runner`, or write an admin page after Compile.
-- **A production email provider.** Account email is sent through Action Mailer inside the request that asks for it.
-  Until a provider is configured, a deployed app answers each request that sends mail, such as sign-up with
-  `verification`, a resend, a password reset, or an unlock request, with the error page, and nothing retries the
-  message; in development the message is dropped and the page goes on. `DEPLOY.md` lists what to configure.
 
 ## Analysis does not catch
 
@@ -384,9 +401,11 @@ These pass as `valid` and are reported as a warning or a gap:
 - **Ask:** what sign-up asks for besides email and password. Recommend one or two required Fields, such as a name;
   everything else goes on `/account`.
 - **Tell:** people can sign in right after signing up, and email confirmation is available. Leave `verification`
-  out unless they ask, so the app works before an email provider is set up.
-- **Tell:** keep `recovery` and `lockout` unless they ask to drop them. Both send mail only when used, and until an
-  email provider is set up, a forgotten password cannot be reset and a locked account waits 24 hours.
+  out unless they ask, so sign-up works before Resend is set up.
+- **Tell:** keep `recovery` and `lockout` unless they ask to drop them. Both send mail only when used, and until
+  Resend is set up, a forgotten password cannot be reset and a locked account waits 24 hours.
+- **Tell:** the app sends this mail through Resend. After Compile they create a free Resend account and an API key,
+  and until they verify a domain there, no one else receives it.
 - **Tell:** who becomes an admin or gets a role, and that you will set it in example data or by command, since no
   page grants it.
 - **No need to ask:** give a role Field a `default`, such as `member`, unless the person wants people to choose

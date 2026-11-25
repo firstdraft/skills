@@ -40,9 +40,9 @@ export const [foundationPlanFormat] = JSON.parse(
   readFileSync(new URL("../../release/compatibility.json", import.meta.url), "utf8"),
 ).requires.foundation_plan_formats;
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11";
+  "foundation-plan-rails/application-2026-11-25-application-mail";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-11-21-agents-reports-line";
+  "foundation-plan-rails/compiler-application-2026-11-25-application-mail";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-11",

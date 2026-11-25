@@ -337,7 +337,7 @@
       "should_trigger": true,
       "prompt": "Use First Draft to plan a private photo journal for my family with iPhone and Android apps: members sign up and post a photo with a caption. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
-        "Writes implementation-notes.md with an After Compile checklist of the applicable items: Rollbar once ROLLBAR_ACCESS_TOKEN is set; Skylight once SKYLIGHT_AUTHENTICATION is set; a mail provider for password reset following DEPLOY.md's Account email launch prerequisite; Cloudinary and CLOUDINARY_URL for the photo uploads; a separate Render workspace for this app before its first deploy, then deploying with DEPLOY.md's command-line section; and Revyl for previewing the phone apps.",
+        "Writes implementation-notes.md with an After Compile checklist of the applicable items: Rollbar once ROLLBAR_ACCESS_TOKEN is set; Skylight once SKYLIGHT_AUTHENTICATION is set; a Resend account and RESEND_API_KEY for password reset and unlock mail following DEPLOY.md's Mail through Resend section; Cloudinary and CLOUDINARY_URL for the photo uploads; a separate Render workspace for this app before its first deploy, then deploying with DEPLOY.md's command-line section; and Revyl for previewing the phone apps.",
         "Keeps those steps out of the Plan and does not ask for, print, or invent any key.",
         "Keeps the photo Field, private access, and the requested phone apps in the Plan.",
         "Makes no service request, Compile or remote write."
@@ -802,7 +802,7 @@
       "should_trigger": true,
       "prompt": "The staged Plan's domain, selected iPhone client, Movie icon and Field, and public-index Scaffold are intentional. A successful plan push was followed by plan status --wait, which printed the attached valid analysis. Review the result, but do not compile it.",
       "expectations": [
-        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11, graph version 1, and the absence of diagnostics.",
+        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-11-25-application-mail, graph version 1, and the absence of diagnostics.",
         "Reports the complete empty firstdraft.foundation-gaps/2 object and exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, rather than omitting the reviewed support result; never substitutes a fixture, historical, or other Project's digest.",
         "Preserves the complete staged Plan unchanged, including its domain, native.ios request, semantic icon, required title Field, and exact public-index Scaffold.",
         "Recognizes that the prepared 2026-09 boundary admits this bounded web public-index and selected iPhone request, while analysis alone does not prove generated output.",

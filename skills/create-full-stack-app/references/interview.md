@@ -250,6 +250,9 @@ appearance. Name every default you told the user, delegated choice, and proposal
       and Policies still generate, and the generated README shows the owner how to create each Account. Keep
       `recovery` and `lockout`; without `lockout`, sign-in allows 10 attempts per IP address every three minutes, and
       `DEPLOY.md` describes the limit.
+- [ ] Email: whether the app sends email beyond an Account's, such as reminders or receipts, now or later. If it
+      does, set `"mail": "resend"`. An Account with `verification`, `recovery`, or `lockout` sends mail already.
+      When the app sends mail, tell the user it goes through Resend, a free account they set up after Compile.
 - [ ] Lists: what each main list shows, starting with the record's name, and its order.
 - [ ] Sample data: the proposed sample records and demo sign-in, and any CSV the user wants imported; import itself
       goes in the implementation notes.
@@ -269,10 +272,11 @@ These steps are outside the Plan and do not block local development. They come a
       is set in the Render environment.
 - [ ] Performance monitoring: the app includes Skylight, which stays off until `SKYLIGHT_AUTHENTICATION` is set in
       the Render environment.
-- [ ] Email (apps with Accounts): password reset and unlock emails, with `recovery` and `lockout`, are not
-      delivered until a mail provider is added. Without `verification`, sign-up and sign-in work without one; with
-      it, Change email and sign-up with `registration` need one too, because their links travel by email. Follow
-      the Account email section of `DEPLOY.md` to add one before inviting real users.
+- [ ] Email (apps that send mail): production sends it through Resend. Until the user creates a Resend account and
+      sets `RESEND_API_KEY` in the Render environment, each request that sends mail, such as a password reset, shows
+      the error page; until they verify a sending domain there, no one else receives it. Without `verification`,
+      sign-up and sign-in work before then. Follow the Mail through Resend section of `DEPLOY.md`, which says when to
+      set `MAIL_FROM`, before inviting real users.
 - [ ] Accounts without sign-up or lockout: without `registration`, create each Account as the README's Accounts
       section shows; without `lockout`, read the Failed sign-ins section of `DEPLOY.md`, because people on one network,
       such as a classroom, share the per-IP sign-in limit.

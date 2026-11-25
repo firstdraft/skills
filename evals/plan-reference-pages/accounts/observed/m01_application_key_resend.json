@@ -1,0 +1,39 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.topics.missing",
+      "severity": "warning",
+      "pointer": "/application",
+      "readable_path": null
+    },
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.identity.dependency_name_collision",
+      "severity": "warning",
+      "pointer": "/application/key",
+      "readable_path": null
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.account.partially_generated",
+      "pointer": "/application/entities/0/account",
+      "readable_path": "user.account",
+      "reason": "The application or an authored Entity occupies the top-level constant Resend, which the resend mail dependency defines.",
+      "consequence": "The Account's mail flows are generated, but Compile leaves out the resend gem, its delivery method, and its sender, so their mail has no provider until one is configured."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`user.account`",
+      "file": "config/environments/production.rb"
+    }
+  ]
+}
