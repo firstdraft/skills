@@ -50,9 +50,10 @@ items as JSON on standard output and lines for you on standard error, such as an
 both.
 
 When First Draft refuses a request, the CLI reports `maintain_rejected` with the service's reason in
-`response.code`. `environment_not_found` there means this login sees no Environment of that name in the Project:
-check `--environment`, that you ran from the right application or planning directory, and that the owner is
-logged in to the account that owns the Project, before telling the owner that monitoring may not be connected.
+`response.code`. `environment_not_found` there means this login sees no Environment of that name in the Project,
+or no such Project at that origin: check `--environment`, the origin you chose, that you ran from the application's
+folder, and that the owner is logged in to the account that owns the Project, before telling the owner that
+monitoring may not be connected.
 `maintain_unavailable` means the result is unconfirmed. Retry a read later; after a resolution, run `maintain show`
 first, because the resolution may have succeeded and a newer error may since have reopened the item.
 `invalid_maintain_response` means this CLI and the service disagree about the response; report it to the owner
@@ -76,8 +77,8 @@ can appear as several items, for example one per caller. Decide for each group:
 - **Change the host** when the cause is configuration or capacity outside the repository, such as a missing
   environment variable. Ask the owner unless they have given you that access.
 - **Resolve without a change** when it is expected behavior (`not_a_bug`), the same root cause as another item
-  (`duplicate`, with the other item's ID as `--detail`), or a one-time event that has not recurred, such as an error
-  during a deploy (`stopped_occurring`).
+  (`duplicate`, with the other item's ID as `--detail`, resolved when you resolve that item), or a one-time event
+  that has not recurred, such as an error during a deploy (`stopped_occurring`).
 - **Ask the owner** when the fix needs a product decision, credentials, or access you do not have. Leave the item
   open and say what you need.
 
@@ -114,8 +115,9 @@ error seen after its resolution as a recurrence and reopens, so resolving at mer
 release's next occurrence. Until the fix is running, leave the item open; its pull request is the record. Before
 resolving a fixed item, run `maintain show` again: if the error occurred on the release that holds the fix, the
 fix did not hold, so leave the item open and reopen the work. An occurrence from the earlier release while the
-deploy switched over does not count. When the evidence names no release, compare the item's `last_seen_at` with the
-time the deploy finished, and leave the item open to investigate if it is later.
+deploy switched over does not count. Then compare the item's `last_seen_at` with the time the deploy finished,
+whatever release the evidence names, because the evidence can predate it; if `last_seen_at` is later, leave the item
+open to investigate.
 
 `--reason` says how the item was resolved: `pull_request` (with the pull request URL), `host_change`, `not_a_bug`,
 `duplicate`, or `stopped_occurring`. `--cause` says what caused the error:

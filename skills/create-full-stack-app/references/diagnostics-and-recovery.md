@@ -242,7 +242,8 @@ Success writes one validated JSON object containing the Project, Compilation, ab
 manifest digest. Absent output contains only artifact files and creates no repository or `.git`. Root adoption
 additionally contains preserved `.firstdraft/design/` and existing `.git` paths and reports the move/index facts above.
 The CLI runs no formatter and repairs nothing. When absent output is nested in Drawing Board or another Git worktree,
-leave nested-Git initialization to that workspace's own workflow.
+leave nested-Git initialization to that workspace's own workflow, or to
+[Create a GitHub repository](#create-a-github-repository) when the user wants one.
 
 Compile itself creates no repository; report a later GitHub repository or push separately. A Compilation wait timeout
 does not cancel retained work. When its validated `current` projection supplies the exact Compilation ID, use
@@ -287,10 +288,9 @@ boot, and iteration need no GitHub push.
 Confirm that the destination and applicable remote writes are already authorized before making them; an existing
 authorization is sufficient. Continue local work without prompting for an unnecessary remote.
 
-If a remote already exists, use that approved destination and an ordinary push; do not create another repository or
-replace its remote. Without a remote, create the repository as
-[Create a GitHub repository](#create-a-github-repository) says, only when the user wants one. A non-Git root stays
-non-Git unless the user requests initialization; asking for a GitHub repository requests it.
+Push or create a repository only when the user wants one, as
+[Create a GitHub repository](#create-a-github-repository) says, including for a root that already has a remote. A
+non-Git root stays non-Git unless the user requests initialization; asking for a GitHub repository requests it.
 
 Then follow the [application handoff](#application-handoff): setup and the generated tests, every item left to
 write, then the preview, all before requested feature work in ordinary Rails source.
@@ -302,19 +302,32 @@ Adding application features does not require First Draft Capabilities, Plan edit
 #### Create a GitHub repository
 
 First Draft does not create or push repositories. When the user wants the application on GitHub, create a private
-repository with `gh` and push the committed baseline. If the application's root already has a remote, check that it
-is the approved destination and push to it by name, `git push <remote> HEAD`, instead; do not create another
-repository or replace its remote.
+repository with `gh` and push the committed baseline, after the checks below.
 
 Work from the generated application's root: the workspace root after root adoption, or the application directory
-after an absent `--output`. It must be a Git repository with the baseline committed. If it is not one, run `git init`
-there and commit the baseline, keeping credentials and private CLI state ignored, unless the workspace's own workflow
-initializes it, as Drawing Board does for `./application`.
+after an absent `--output`. It must be its own Git repository: `git rev-parse --show-toplevel` prints the same path
+as `pwd -P`. When it prints another path, Git is using a repository around the application: commit nothing to that
+repository and push nothing from it. In that case, and when the directory is in no repository, run `git init -b main`
+there, unless the workspace's own workflow initializes it, as Drawing Board does for `./application`. Commit the
+baseline before the checks below, keeping credentials and private CLI state ignored; a staged baseline is not pushed.
 
 A push sends every commit reachable from the branch, including planning commits from before Compile. Before the first
-push, check each file the user shared only for modeling with `git log --full-history --oneline HEAD -- <path>`, which
-also follows merged branches. If any commit touched one, do not push that history: tell the user, offer to push only the
-generated application from a new repository without it, and keep the planning history local.
+push, check that none of them holds a file the user shared only for modeling:
+
+- `git log --diff-merges=separate --root --name-only --format= HEAD` lists every path in that history. Look for each
+  such file under any folder or earlier name, such as its copy under `.firstdraft/design/`.
+- For each such file you still have,
+  `git log --diff-merges=separate --root --oneline --name-only --find-object="$(git hash-object <file>)" HEAD`
+  prints the commits and paths that hold those exact bytes, under any name.
+
+If any of these commands fails, you do not know the history, so do not push. If either finds one, do not push that
+history: tell the user, offer to push only the generated application from a new repository without it, and keep the
+planning history local.
+
+If the repository already has a remote, do not create another repository or replace the remote. Push to it only when
+each URL `git remote get-url --push --all <remote>` prints is an approved destination and
+`gh repo view <url> --json visibility --jq .visibility` prints `PRIVATE` for it; otherwise tell the user, and push
+only if they say to. Push to it by name: `git push <remote> HEAD`.
 
 Confirm the owner and repository name with the user. On the user's computer, the owner is their own account, which
 `gh api user --jq .login` prints, or an organization they name. Use their own `gh` login; if `gh auth status` shows
