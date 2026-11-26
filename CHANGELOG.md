@@ -94,6 +94,26 @@ missing from this list sorts by that date.
 | `2026-10-03-workshop-core` | 2026-10-03 |
 | `2026-09-29-skipped-data-defaults` | 2026-10-01 or earlier |
 
+## 2026-11-25: Plugin 0.10.0 adds entries dated 2026-11-21
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: read the six entries dated 2026-11-21, below, even when `.firstdraft/updates.md` names the
+  2026-11-24 entry or a later one. They arrive with this release, below an entry that may already be reviewed. Start
+  with closing sign-up to a role such as `admin`, in
+  [Analysis reports mistakes that used to pass](#2026-11-21-analysis-reports-mistakes-that-used-to-pass).
+- Compiler: release `2026-11-25-application-mail`, in use on firstdraft.com from 2026-11-26.
+
+The six entries:
+
+- [2026-11-21: "The author, or any admin" is a rule the Plan
+  states](#2026-11-21-the-author-or-any-admin-is-a-rule-the-plan-states)
+- [2026-11-21: Buttons for State Machine events](#2026-11-21-buttons-for-state-machine-events)
+- [2026-11-21: Analysis reports mistakes that used to pass](#2026-11-21-analysis-reports-mistakes-that-used-to-pass)
+- [2026-11-21: Target profile rails-sketch/2026-11](#2026-11-21-target-profile-rails-sketch2026-11)
+- [2026-11-21: A returning agent checks whether to send reports](#2026-11-21-a-returning-agent-checks-whether-to-send-reports)
+- [2026-11-21: Update notices, daily limits, and agent reports](#2026-11-21-update-notices-daily-limits-and-agent-reports)
+
 ## 2026-11-25: The Plan names its mail provider
 
 **Compiler and Skills — released with plugin 0.10.0.**
@@ -181,8 +201,9 @@ to a time they agree to with `maintain defer`, and the item leaves the index unt
 while a free Render app sleeps is one such item: the Skill explains the free plan's limit and offers the owner the
 choices.
 
-When the owner agreed to reports, the Skill sends a `deployed_error` failure report for an error item it traced to code
-First Draft generated, and for no other item. Both Skills run the CLI that the plugin bundles, CLI 0.10.0, which adds
+When the owner agreed to reports, the Skill sends a `deployed_error` failure report after it resolves an error item it
+traced to code First Draft generated, and for no other item. The report needs the app's Compilation: in a fresh clone
+with no planning folder on the computer, the CLI has none recorded, and the report sends nothing. Both Skills run the CLI that the plugin bundles, CLI 0.10.0, which adds
 the `maintain` commands.
 
 ## 2026-11-24: GitHub repositories come from the person's own gh login
@@ -424,9 +445,9 @@ after root adoption or the planning folder after `--output`, a report names the 
 or download last recorded for the Project. When there is no record, as for an app compiled earlier, or it names other
 code, the agent names the Compilation. `start` does not read the Project, so for a Project whose state names an
 `api_url`, the agent sets `FIRSTDRAFT_API_URL` to that origin when it runs `start`; without one, `start` checks
-production unless `--staging` or `FIRSTDRAFT_API_URL` selects another origin. The Plan format and the Analyzer
-release are unchanged; the next analysis of a Plan records the new Compiler release and, when it is valid, a new
-GapSet digest.
+production unless `--staging` or `FIRSTDRAFT_API_URL` selects another origin. The bullet leaves the Plan format
+alone. The release that carries it to firstdraft.com also moves the Analyzer release, so the next analysis of a Plan
+records new Analyzer and Compiler releases and, when it is valid, a new GapSet digest.
 
 ```markdown
 - If the `firstdraft` command is available, run `firstdraft start` once when a session begins. When it prints
