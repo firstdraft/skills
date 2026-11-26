@@ -1,0 +1,84 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
+  "status": "valid",
+  "diagnostics": [
+    {
+      "stage": "analysis",
+      "code": "foundation_plan.identity.dependency_name_collision",
+      "severity": "warning",
+      "pointer": "/application/entities/0/key",
+      "readable_path": "cloudinary"
+    }
+  ],
+  "gaps": [
+    {
+      "code": "foundation_plan.gap.field_kind.not_generated",
+      "pointer": "/application/entities/0/fields/1",
+      "readable_path": "cloudinary.photo",
+      "reason": "The application or an authored Entity occupies the top-level constant Cloudinary, which the cloudinary upload dependency defines.",
+      "consequence": "The Field column, model behavior, and dependent generated surfaces are omitted."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.input.not_generated",
+      "pointer": "/application/entities/0/scaffold/create/inputs/1",
+      "readable_path": "cloudinary.photo",
+      "reason": "The selected Field has no explicit target form control.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "pointer": "/application/entities/0/scaffold/index/projection/1",
+      "readable_path": "cloudinary.photo",
+      "reason": "The selected Field is not emitted on this record.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.projection.not_generated",
+      "pointer": "/application/entities/0/scaffold/show/projection/1",
+      "readable_path": "cloudinary.photo",
+      "reason": "The selected Field is not emitted on this record.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    },
+    {
+      "code": "foundation_plan.gap.scaffold.input.not_generated",
+      "pointer": "/application/entities/0/scaffold/update/inputs/1",
+      "readable_path": "cloudinary.photo",
+      "reason": "The selected Field has no explicit target form control.",
+      "consequence": "This authored Scaffold meaning is omitted from generated Rails."
+    }
+  ],
+  "compile": "succeeded",
+  "readme": [
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`cloudinary.photo`",
+      "file": "app/controllers/cloudinaries_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`cloudinary.photo`",
+      "file": "app/controllers/cloudinaries_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`cloudinary.photo`",
+      "file": "app/controllers/cloudinaries_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Pages and actions",
+      "title": "`cloudinary.photo`",
+      "file": "app/controllers/cloudinaries_controller.rb"
+    },
+    {
+      "section": "Behavior to write",
+      "group": "Data",
+      "title": "`cloudinary.photo`",
+      "file": "app/models/cloudinary.rb"
+    }
+  ]
+}

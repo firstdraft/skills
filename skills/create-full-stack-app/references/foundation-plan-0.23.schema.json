@@ -176,6 +176,16 @@
           "description": "Which notification channels this Foundation requests. Each carries an external credential the owner must obtain.",
           "$ref": "#/$defs/deliveryChannels"
         },
+        "mail": {
+          "title": "Mail provider",
+          "description": "The transactional mail provider the application sends through, for mail the Plan describes and mail its owner adds later. Omission selects Resend when an Account sends verification, recovery, or unlock mail, and otherwise configures no provider. The provider's API key and the sender address are deployment settings, not Plan values.",
+          "oneOf": [
+            {
+              "const": "resend",
+              "title": "Resend, through its HTTP API"
+            }
+          ]
+        },
         "entities": {
           "title": "Entities",
           "description": "Domain record definitions. The collection may be empty while the Plan is being authored. At most one Entity may own Account behavior in this sketch.",
@@ -389,7 +399,7 @@
         },
         "email": {
           "title": "Transactional email",
-          "description": "Requires a transactional mail provider.",
+          "description": "Requires a transactional mail provider, which application.mail selects.",
           "type": "object",
           "additionalProperties": false
         }

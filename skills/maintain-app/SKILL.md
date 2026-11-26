@@ -1,6 +1,6 @@
 ---
 name: "maintain-app"
-description: "Use when someone asks to maintain, triage, or fix the production errors of an application First Draft monitors, or when a scheduled maintenance run starts. Reads the open items for a running Environment with `firstdraft maintain`, groups them by root cause, fixes what it can with a failing test and a pull request, and resolves each item with its reason."
+description: "Use when someone asks to maintain, triage, or fix the production errors of an application First Draft monitors, or when a scheduled maintenance run starts. Reads the open items for a running Environment with `firstdraft maintain`, groups them by root cause, fixes what it can with a failing test and a pull request, resolves each item with its reason, and records a question or a deferral for what waits on the owner."
 license: "MIT"
 ---
 
@@ -8,7 +8,8 @@ license: "MIT"
 
 First Draft records what goes wrong in each running copy of an application, its Environment, as items. This Skill
 works through an Environment's open items from the application's repository. The aim is an empty index: every item
-either fixed and resolved, resolved with another reason, or waiting on the owner with a stated question.
+either fixed and resolved, resolved with another reason, deferred to a time the owner agreed to, or waiting on the
+owner with a recorded question.
 
 ## Run the CLI
 
@@ -43,6 +44,8 @@ firstdraft_cli maintain                       # open items in production, most s
 firstdraft_cli maintain show ITEM_ID          # one item, with evidence and what done means
 firstdraft_cli maintain resolve ITEM_ID --reason pull_request --cause generated_code \
   --detail https://github.com/OWNER/REPO/pull/7
+firstdraft_cli maintain ask-owner ITEM_ID --question "What the owner needs to decide"
+firstdraft_cli maintain defer ITEM_ID --until 2026-12-09T15:00:00Z   # out of the index until then
 ```
 
 Add `--environment NAME` for another Environment and `--page N` when `next_page` is not null. `maintain` prints the
@@ -54,8 +57,10 @@ When First Draft refuses a request, the CLI reports `maintain_rejected` with the
 or no such Project at that origin: check `--environment`, the origin you chose, that you ran from the application's
 folder, and that the owner is logged in to the account that owns the Project, before telling the owner that
 monitoring may not be connected.
-`maintain_unavailable` means the result is unconfirmed. Retry a read later; after a resolution, run `maintain show`
-first, because the resolution may have succeeded and a newer error may since have reopened the item.
+`maintain_unavailable` means the result is unconfirmed. Retry a read later. Before sending a deferral or a question
+again, run `maintain` and reassess the item: a deferred item is missing from the index, and one that reopened since
+is back without its deferral or question. After a resolution, run `maintain show` first, because the resolution may
+have succeeded and a newer error may since have reopened the item.
 `invalid_maintain_response` means this CLI and the service disagree about the response; report it to the owner
 instead of retrying.
 
@@ -75,12 +80,20 @@ can appear as several items, for example one per caller. Decide for each group:
 
 - **Fix it** when the evidence points to a defect in the application's code.
 - **Change the host** when the cause is configuration or capacity outside the repository, such as a missing
-  environment variable. Ask the owner unless they have given you that access.
+  environment variable. Ask the owner unless they have given you that access and the change costs nothing.
 - **Resolve without a change** when it is expected behavior (`not_a_bug`), the same root cause as another item
   (`duplicate`, with the other item's ID as `--detail`, resolved when you resolve that item), or a one-time event
-  that has not recurred, such as an error during a deploy (`stopped_occurring`).
-- **Ask the owner** when the fix needs a product decision, credentials, or access you do not have. Leave the item
-  open and say what you need.
+  that has not recurred, such as an error during a deploy (`stopped_occurring`). Expected behavior that keeps
+  occurring, such as checks failing while a free app sleeps, is [deferred](#wait-for-the-owner) instead.
+- **Ask the owner** when the fix needs a product decision, credentials, access you do not have, or money, such as a
+  paid plan, and [record the question](#wait-for-the-owner).
+
+A `KeyError` whose message names `RESEND_API_KEY` is a missing setting, not a defect: the app sends its mail
+through Resend and reads the key when it sends. Open no pull request. Ask the owner to create an API key in Resend
+and set it as `RESEND_API_KEY` on the host, as the app's `DEPLOY.md` says, and never ask for its value. Resolve the
+item with `--reason host_change --cause configuration_or_host` once the running app has the key and the item's
+`last_seen_at`, from `maintain show`, is earlier than the time it took effect. Applying the key can redeploy the same
+release, so compare those times rather than releases.
 
 ## Fix with a failing test
 
@@ -135,9 +148,18 @@ For a duplicate, give the cause of the item it duplicates. For an item that stop
 evidence points to, or `unknown` when it points nowhere. A `response.code` of `item_already_resolved` means another
 run resolved it; read the index again.
 
+An item that is not an error still takes a cause. Its title says what it is: `Uptime check failed:`,
+`Heartbeat missed:`, `Security alert:`, `Dependabot pull request left open:`, `CI failing on the default branch:`,
+`Core behind the Compiler's pin:`, or a host's memory, disk, or slow queries. Every other item is an error, titled
+with its exception class, or `Message`, and where it happened, such as `NoMethodError in body (app/models/reply.rb)`.
+A Core behind the pin is `generated_code`, because the Core is code First Draft generated: resolve it with
+`pull_request` once the release with the update is live, or with `not_a_bug` when none of the changes apply. A
+security alert or a Dependabot pull request is `dependency`. For a check, failing CI, or a host report, give what you
+found, such as `configuration_or_host` for the host or `later_code` for a commit.
+
 If `maintain` printed a line that begins `Reports are on:`, the owner agreed that you send First Draft failure
-reports, and that line says when and how: after resolving an item with `--cause generated_code`, run, from the
-directory where you ran `maintain`,
+reports, and that line says when and how. A failure report is for an error item only: after resolving one with
+`--cause generated_code`, run, from the directory where you ran `maintain`,
 
 ```sh
 firstdraft_cli report failure --kind deployed_error --item ITEM_ID
@@ -149,11 +171,35 @@ them. The report takes no message. It names the Compilation the CLI last recorde
 deployed code came from another one, put that `compilation.id` right after `report failure`. Run from an
 application folder without planning state, the report finds no recorded Compilation: when the Project's planning
 folder is on this computer, its `.firstdraft/compilation.json` names the one it last wrote as `compilation_id`;
-without an ID, the report ends with `compilation_not_recorded` and sends nothing, so continue without it. Without
-that line, never raise reports.
+without an ID, the report ends with `compilation_not_recorded` and sends nothing, so continue without it. Send none
+for an item that is not an error, such as a Core update, whatever its cause.
+Without that line, never raise reports.
+
+## Wait for the owner
+
+Record the question with `maintain ask-owner`, then ask it in the conversation. Write it in your own words, at most
+500 characters: what you found, the choices, and what each costs. First Draft stores it with the item, so keep to
+what the owner needs to decide: never a secret, token, or key, and no end user's text or identifier; describe what
+happened instead. A new question replaces the last one, and the index does not show it.
+
+When the owner decides, act on it. When they want to decide later, or accept the item's cause for a while, defer it
+to a time they agree to, within 90 days, written with its offset as in `2026-12-09T15:00:00Z`. A deferred item
+leaves the index and First Draft stops escalating it until then; when it returns, raise it again. Defer, rather
+than resolve, a cause that will go on: a resolved item reopens at its next occurrence. When the owner does not
+answer during the run, leave the item open with its question recorded.
+
+**A free app that sleeps.** Render's free plan spins a web service down after 15 minutes without traffic, and the
+next request waits about a minute while it starts. An uptime check that runs less often than that can find the app
+asleep and fail, often by timing out, while the app works. When the failures follow quiet spells and the app answers
+once awake, tell the owner plainly that this is a limit of the free plan, not a fault in the app: on that plan the
+first visitor after a quiet spell also waits about a minute. Offer the choices: keep the free plan and accept the
+failed checks, and you defer the item; or move the web service to a paid compute plan, which does not sleep and
+which Render bills monthly. The owner makes that change or tells you to; never choose a paid plan yourself. Do not
+add a ping to keep the app awake: it spends nearly all of the workspace's 750 free instance hours a month, and once
+they run out Render suspends every free web service in the workspace until the next month.
 
 ## Report the run
 
 End with a short report to the owner: what you fixed and merged, what you resolved and why, which pull requests
-wait for them, and what you need from them. Mention items that reopened, since a reopened item means a fix did not
-hold.
+wait for them, which items you deferred and until when, and what you need from them. Mention items that reopened:
+a reopened error or check means a fix did not hold, but a reopened Core item means the Compiler pins a newer Core.

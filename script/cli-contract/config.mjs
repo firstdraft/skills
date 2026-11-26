@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "6a156b31dc670c32abd3e301c8956e64990fd0a8";
+export const cliRevision = "d508c7c5f86b64dd2eedea7c8df6179a6ef2aec7";
 export const cliRuntimeSha256 =
-  "35a66bd838d8c496104dd0679ee2acf9595fe38f1d5c50a26f0a5b9b27a6c6d7";
+  "f6fd167b09caa3611f4303870da108fc99f61a9700265293dc3d1d0586e82828";
 export const cliPackageName = "@firstdraft.com/cli";
 export const cliPackageVersion = "0.10.0";
 
@@ -40,9 +40,9 @@ export const [foundationPlanFormat] = JSON.parse(
   readFileSync(new URL("../../release/compatibility.json", import.meta.url), "utf8"),
 ).requires.foundation_plan_formats;
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-11-21-rails-sketch-2026-11";
+  "foundation-plan-rails/application-2026-11-25-application-mail";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-11-21-agents-reports-line";
+  "foundation-plan-rails/compiler-application-2026-11-25-application-mail";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-11",

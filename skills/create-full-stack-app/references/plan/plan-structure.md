@@ -14,11 +14,11 @@ naming, paths, and omission. The contents of an Entity are on [Entities](entitie
 
 - **First Draft generates:** the Rails app shell named from `key` and `name`: module, database names, Render service,
   app title, bookmark icons, welcome page, legal pages, health routes, and one model per Entity. `domain` sets the
-  production mailer host.
+  production mailer host, and `mail` sends production mail through Resend.
 - **You write after Compile:** the README's product paragraph, all notification sending (`delivery` generates
-  nothing), every stub and `owner` subject the Plan names, and anything for an Entity beyond its model until its
-  Scaffold is in the Plan. Write the stubs and `owner` subjects before the preview; `SKILL.md` has the order of
-  work.
+  nothing), any mail other than an Account's, every stub and `owner` subject the Plan names, and anything for an
+  Entity beyond its model until its Scaffold is in the Plan. Write the stubs and `owner` subjects before the preview;
+  `SKILL.md` has the order of work.
 
 ## Simple example
 
@@ -109,6 +109,7 @@ No other root key is allowed. Do not add `id`, `project_id`, or `revision`: the 
 | `description` | no | nonempty text | none | Nothing. A one-sentence statement of the idea for people reviewing the Plan. |
 | `topics` | no | one or more `{name, entities}` | none | Nothing. Groups Entities for review; see [Topics](#topics). |
 | `domain` | no | lowercase host name with at least one dot, such as `example.com` | none | `config.action_mailer.default_url_options = {host: "<domain>"}` in production, and the native apps' identifiers. |
+| `mail` | no | `"resend"` | none, but an Account that sends mail selects `"resend"` | Production sends mail through Resend; see [Mail](#mail). |
 | `appearance` | no | object | none | See [Appearance](appearance.md). |
 | `development_data` | no | one or more records | none | See [Development data](development-data.md). |
 | `home_index` | no | an Entity key | welcome page | See [Scaffold lists and details](scaffold-lists-and-details.md). |
@@ -128,6 +129,52 @@ The Application has no `subject_uuid`; adding one is rejected. `ios_push` requir
 When a Plan has two or more Entities and no `topics`, analysis warns `foundation_plan.topics.missing` and suggests
 groups from References alone. When some Entity is in no topic, it warns `foundation_plan.topics.incomplete`. Group
 Entities the way the person would explain the app, and put every Entity in a topic.
+
+### Mail
+
+Write `"mail": "resend"` when the app will send email that is not an Account's, such as reminders, receipts, or
+invitations, even when you write the sending code after Compile. An Account with `verification`, `recovery`, or
+`lockout` sends mail, so it selects Resend whether or not the Plan writes `mail`. Otherwise the app sends no mail.
+`"resend"` is the only value; any other is rejected (`foundation_plan.schema.const` at `/application/mail`). The
+API key and the sender address are settings on the host, never Plan values.
+
+With `"mail": "resend"` and `domain`, the app gets:
+
+```ruby
+# Gemfile
+gem "resend", "1.19.0"
+
+# config/environments/production.rb
+config.action_mailer.delivery_method = :resend
+
+# config/initializers/resend.rb
+Resend.api_key = -> { ENV.fetch("RESEND_API_KEY") }
+
+# app/mailers/application_mailer.rb
+default from: -> { ENV.fetch("MAIL_FROM") { email_address_with_name("webmaster@northsidereaders.example.com", t("app_name")) } }
+```
+
+```yaml
+# render.yaml
+- key: RESEND_API_KEY
+  sync: false
+```
+
+Render's Blueprint asks for the key when the service is created. The app boots and deploys without it; the first
+message sent without it raises a `KeyError` naming `RESEND_API_KEY`. Every message comes from `MAIL_FROM`. Until the
+person sets it, mail comes from `webmaster@<domain>`, which Resend sends only after they verify that domain there.
+Without `domain`, it comes from Resend's test sender, `onboarding@resend.dev`, which delivers only to the address that
+owns the Resend account, so the person verifies a domain and sets `MAIL_FROM` to an address there. In development, a
+message goes to a mail server on the computer if one is running, and is otherwise dropped without an error; tests
+read `ActionMailer::Base.deliveries`. `DEPLOY.md`'s **Mail through Resend** section has the person's steps and
+Resend's free quota, and the README and `AGENTS.md` say to send mail inside the request with `deliver_now`.
+
+An application key `resend` takes the gem's name. Analysis warns `foundation_plan.identity.dependency_name_collision`
+at `/application/key`, and Compile leaves Resend out, so `DEPLOY.md` has no **Mail through Resend** section. With
+`mail` written, the gap is `foundation_plan.gap.application_mail.not_generated`; when only an Account selects Resend,
+it is the Account's `foundation_plan.gap.account.partially_generated`. The README lists either under "Behavior to
+write". Change the key; the name can stay. An Entity key that does the same is on
+[Entities](entities.md#keys-to-avoid).
 
 ### On every part inside an Entity
 
@@ -359,7 +406,7 @@ and `DEPLOY.md` lists `APP_HOST`.
 | Where | Plan shape | Generates |
 | --- | --- | --- |
 | [Native apps](native-apps.md) | `native.ios`, `native.android` | Bundle and application IDs from `key` and `domain`. Without `domain`, a selected client is `partially_generated` with placeholder `.invalid` identifiers, and the README lists it under "What you supply". |
-| [Accounts](accounts.md) | an Entity with `account` | Account emails build their links with the production mailer host that `domain` sets. |
+| [Accounts](accounts.md) | an Entity with `account` | Account emails build their links with the production mailer host that `domain` sets. An Account with `verification`, `recovery`, or `lockout` selects Resend when `mail` is omitted. |
 | [References](references.md) | `"targets": ["book"]` | `belongs_to :book`. An unknown key is rejected (`foundation_plan.reference.target_not_found`). |
 | [Development data](development-data.md) | `"entity": "book"`, `"record": "book.dune"` | `dune = Book.find_or_create_by!(title: "Dune")` and `Loan.find_or_create_by!(book: dune)`. |
 | [Scaffold lists and details](scaffold-lists-and-details.md) | `"home_index": "book"` | `root "books#index"`. An unknown key is rejected. |
@@ -370,15 +417,20 @@ and `DEPLOY.md` lists `APP_HOST`.
   `foundation_plan.gap.service.unsupported_capability` at `/application/delivery`, and the app has no mailer, push
   setup, or job for it. The README lists it under "What you supply": the entry says the application delivers no
   notifications, names what each channel needs, such as "an account with a transactional mail provider" for
-  `email`, and ends "With those, add the delivery code." Keep each channel the person asked for in `delivery`. The
-  sending is yours to write: the mailer, job, and provider configuration. Sending needs credentials only the person
-  can supply, such as a mail provider's, so tell them so and ask whether to see the app first. When and to whom a
-  message goes, such as "a week after sign-up", has no Plan key; keep that in your notes.
+  `email`, and ends "With those, add the delivery code." Keep each channel the person asked for in `delivery`. For
+  `email`, also set `"mail": "resend"` on the Application, beside `delivery`, so the provider is set up; the entry
+  then names the Resend account and verified domain that `DEPLOY.md` describes. The sending is yours to write: the
+  mailer and the job or code that sends it. Sending needs credentials only the person can supply, such as Resend's, so tell them so and ask whether to see
+  the app first. When and to whom a message goes, such as "a week after sign-up", has no Plan key; keep that in your
+  notes.
+- **Mail beyond an Account's.** `mail` sets up the provider only. Each other message, its mailer and views, and the
+  code that sends it are yours to write. Send with `deliver_now`: production's in-process job queue loses a
+  `deliver_later` message on restart, deploy, or sleep.
 - **Review metadata.** `description` and `topics` generate nothing. Replace the README's placeholder paragraph
   yourself.
 - **Pages for an Entity without `scaffold`.** It gets a model, migration, factory, and model spec only.
-- **Hosting from `domain`.** It sets only the production mailer host: no DNS, `config.hosts`, TLS, or sender
-  address.
+- **Hosting from `domain`.** It sets the production mailer host and, when the app sends mail, the default sender. It
+  sets up no DNS, `config.hosts`, or TLS, and does not verify the domain with Resend.
 
 ## Analysis does not catch
 
@@ -401,6 +453,10 @@ These pass analysis as `valid`:
   whether to see the app before you write it. For push, ask whether they mean browser push (`web_push`) or a
   native app (`ios_push`, `android_push`, each needing its client). Never add a native client only to make a push
   channel valid.
+- **Mail:** unless an Account already sends mail, ask whether the app will send email, such as reminders or
+  receipts, now or later. If it will, write `"mail": "resend"`. When the app sends mail for either reason, tell them
+  it goes through Resend: after Compile they create a free Resend account and an API key, and until they verify a
+  domain there, no one else receives it.
 - **No need to ask:** `description` and `topics`. Write them from what the person said, and let them correct the
   groups.
 
@@ -417,5 +473,5 @@ Plan change reaches that app only when you copy it across.
   Generated class, table, and route names follow the new key; moving existing rows is a migration you write.
 - **A new part:** mint a new `subject_uuid` with `firstdraft_cli generate uuid --count <n>`; never copy one from an
   example. A UUID used twice anywhere in the Plan is rejected (`foundation_plan.identity.subject_uuid_duplicate`).
-- **`domain`:** changes the production mailer host. Native identifiers derived from it cannot change once an app is
-  published; see [Native apps](native-apps.md).
+- **`domain`:** changes the production mailer host and, in an app that sends mail, the default sender. Native
+  identifiers derived from it cannot change once an app is published; see [Native apps](native-apps.md).

@@ -1,0 +1,17 @@
+{
+  "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
+  "status": "import_rejected",
+  "diagnostics": [
+    {
+      "stage": "import",
+      "code": "foundation_plan.schema.const",
+      "severity": "error",
+      "pointer": "/application/mail",
+      "readable_path": null
+    }
+  ],
+  "gaps": [],
+  "compile": null,
+  "readme": []
+}
