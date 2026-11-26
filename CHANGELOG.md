@@ -106,7 +106,8 @@ missing from this list sorts by that date.
 A Plan can now say `"mail": "resend"`, and an Account that confirms email, resets passwords, or unlocks accounts
 selects it when the Plan does not. Production then sends mail through Resend's HTTP API with the `resend` gem.
 Before, such an app had no provider, and on Render's free plan, which blocks the usual mail ports, the agent had to
-find and set one up before the first real sign-up. The Skill now writes `mail` when the app will send other email,
+find and set one up before the app first sent mail, which, when sign-up confirms email, is its first sign-up. The
+Skill now writes `mail` when the app will send other email,
 such as reminders, and tells the person they will create a Resend account and key after Compile.
 
 The app reads `RESEND_API_KEY` when it sends, so it boots and deploys without the key, and the first message
@@ -121,7 +122,15 @@ Resend, or the upload Fields, out. Change the key and keep the name.
 **Adding Resend to an existing app.** These are the lines a new app gets:
 
 1. In `Gemfile`, add `gem "resend", "1.19.0"`, and run `bundle install`.
-2. In `config/environments/production.rb`, add `config.action_mailer.delivery_method = :resend`.
+2. In `config/environments/production.rb`, add `config.action_mailer.delivery_method = :resend`. If its
+   `default_url_options` line still says `host: "example.com"`, as in an app compiled in early October without a
+   `domain`, emailed links lead nowhere: replace that line with the one a new app gets, and set `APP_HOST` to a
+   custom domain once the app has one:
+
+   ```ruby
+   config.action_mailer.default_url_options = {host: ENV.fetch("APP_HOST") { ENV["RENDER_EXTERNAL_HOSTNAME"] }}.compact
+   ```
+
 3. Create `config/initializers/resend.rb`:
 
    ```ruby
@@ -143,6 +152,10 @@ Resend, or the upload Fields, out. Change the key and keep the name.
    - key: RESEND_API_KEY
      sync: false
    ```
+
+6. In `DEPLOY.md`, replace the mail steps that say to configure `email_from` in `app/misc/rodauth_main.rb` and an
+   Action Mailer delivery method, which the app no longer reads, with the setup in the next paragraph:
+   `RESEND_API_KEY`, a sending domain verified in Resend, and `MAIL_FROM` at that domain.
 
 Then the owner creates a Resend account and an API key, sets `RESEND_API_KEY` on the Render service, and verifies a
 sending domain in Resend's Domains page with the records it lists. When the sender is still Resend's test sender, or
