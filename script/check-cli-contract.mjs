@@ -21,6 +21,8 @@ import { verifyLocalCommands } from "./cli-contract/local-commands.mjs";
 import { verifyPackedExecutable } from "./cli-contract/packed-executable.mjs";
 import { verifyPlanJourney } from "./cli-contract/plan-journey.mjs";
 import { verifyPlanStatusGenerations } from "./cli-contract/plan-status.mjs";
+import { verifyQuotedSentences } from "./cli-contract/quoted-sentences.mjs";
+import { verifyServiceVersions } from "./cli-contract/service-versions.mjs";
 
 const cliDirectoryArgument = process.argv[2];
 assert(cliDirectoryArgument, "usage: check-cli-contract.mjs <cli-directory>");
@@ -30,6 +32,7 @@ const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const revision = run("git", ["rev-parse", "HEAD"], cliDirectory);
 assert.equal(revision.stdout.trim(), cliRevision);
 assert.equal(cliRuntimeDigest(cliDirectory), cliRuntimeSha256);
+verifyQuotedSentences(cliDirectory);
 verifyPackageMetadata(
   JSON.parse(readFileSync(path.join(cliDirectory, "package.json"), "utf8")),
 );
@@ -102,6 +105,7 @@ try {
     packedFileAllowlist,
   );
   await verifyPackedExecutable(packed);
+  await verifyServiceVersions(packed);
 } finally {
   rmSync(temporaryDirectory, { recursive: true, force: true });
 }

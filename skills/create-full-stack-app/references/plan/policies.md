@@ -1,24 +1,24 @@
 ---
 name: policies
-description: Policies, who may see, add, change, and delete each kind of record: rules, gates, `owner` rules, and the code they generate. Open it before writing any authorization.
+description: Policies, who may see, add, change, and delete each kind of record: rules, gates, a gate asked inside a rule, `owner` rules, and the code they generate. Open it before writing any authorization.
 ---
 
 # Policies
 
 A Policy is a named rule on an Entity that allows one operation, such as reading or managing its records. Every part
 of a Scaffold names the one Policy that guards it, or says `public`; there is no default, and a part has exactly one.
-A rule takes one of three forms. Use the first that says exactly what the person asked for:
+A rule takes one of three forms. Use the first that says what the person asked for:
 
 1. **A record's rule** compares the record, or records linked to it, with the signed-in Account, `current_account`,
    or with a value on it: "its author", "a member of its club", "published". Lists show only the records it allows.
+   One branch of it can ask a gate (form 2) about the person signed in, so "the author, or any admin" and
+   "published ones, for anyone signed in" are records' rules; [A gate inside a record's
+   rule](#a-gate-inside-a-records-rule) shows both.
 2. **A gate** is a Policy on the Account Entity that judges only the signed-in Account: "anyone signed in", "an
    admin", "an approved volunteer". It allows or denies a whole part. Use it when a role alone decides, as in "only
    coordinators add shifts"; [the gate example](#a-rule-about-the-signed-in-person-alone) shows one.
 3. **An `owner` Policy** says the rule in words, and you write its code before the preview. Use it only when
-   neither form can say the rule. The usual case lets a role in beside the record's own people, such as "the
-   author, or any admin": no record's rule can say "or any admin", and a part has one Policy. A role required of
-   the record's own person, such as "an approved volunteer signs up as themselves", is a record's rule; see
-   [What a rule can say](#what-a-rule-can-say).
+   neither form can say the rule, such as "the author, within an hour of writing it", which needs date arithmetic.
 
 Nothing fails when a stated rule admits more people than the person asked for, or leaves someone out. When the
 nearest rule the first two forms can say is wider or narrower than the request, write `owner`, which denies until
@@ -87,6 +87,7 @@ class NotePolicy < ApplicationPolicy
 end
 
 # app/controllers/notes_controller.rb, shortened
+before_action :authenticate, only: %i[index]
 before_action :set_note, only: %i[show edit update destroy]
 verify_authorized
 
@@ -121,18 +122,12 @@ and the scope admit exactly the same records. `spec/requests/notes_spec.rb` chec
 
 | Visitor | Part guarded by a record's Policy | Part guarded by a gate |
 | --- | --- | --- |
-| Guest, on a list | 200 with an empty list | Sent to sign in, then back |
+| Guest, on a list | Sent to sign in, then back; when a branch of the rule needs nobody signed in, such as "published", the records that branch allows | Sent to sign in, then back |
 | Guest, on a record's page, Edit, Update, or Delete | 404 | Sent to sign in, then back |
 | Guest, on New or Create | Sent to sign in, then back | Sent to sign in, then back |
 | Signed in but not allowed | The record is missing from lists, and its pages return 404; New and Create show the 403 page | The 403 page |
 
-A record's Policy never sends a guest on a list to sign in, and a gated list is not filtered, so the Plan cannot ask
-for both. For a filtered list that also sends guests to sign in, keep the record's Policy and add
-`before_action :authenticate` to the controller after Compile. The generated `ApplicationController` defines
-`authenticate` (it calls `rodauth.require_account`), and it works on any action, including a nested controller's.
-The generated request example "index prevents a guest from accessing protected records" expects the list without
-the record, so it then fails: change it to expect the redirect to sign-in. This changes what a guest sees, so tell
-the person.
+A gated list is not filtered: it shows every record to anyone the gate admits.
 
 ### A rule about the signed-in person alone
 
@@ -173,54 +168,115 @@ end
 The New, Edit, and Delete controls show only to admins. A gate reads any of the Account's own Fields, such as a
 role enum or an `approved` flag, and "anyone signed in" is a gate too; [What a rule can say](#what-a-rule-can-say)
 has both shapes. A gate does not filter a list or hide a record. A role required of the record's own person, such
-as "an approved volunteer signs up as themselves", is a record's rule, which the same table shows. For a role
-beside the record's own people, see the next section.
+as "an approved volunteer signs up as themselves", is a record's rule, which the same table shows.
 
-### When neither form can say the rule
+### A gate inside a record's rule
 
-Each person changes their own notes, and an admin changes any note. A record's rule cannot ask whether a signed-in
-person the note does not name is an admin, and a gate cannot ask whose note it is, so the Policy has `owner` in
-place of `allow_when`: a sentence or two that says who passes.
+Each person changes their own notes, and an admin changes any note. The note's rule has two branches under `or`: the
+author, or a `matches_policy` whose `record` is the signed-in Account, which asks the gate `user.admins_only` above
+about the person signed in.
 
 ```json
 {"subject_uuid": "…", "key": "manage_own_or_admin", "operation": "manage",
- "owner": {"description": "The note's author, or any signed-in account whose admin Field is true."}}
+ "allow_when": {"kind": "or", "expressions": [
+   {"kind": "comparison", "left": {"target": {"association": "note.author"}},
+    "operator": "equals", "right": {"kind": "environment", "name": "current_account"}},
+   {"kind": "matches_policy", "record": {"kind": "environment", "name": "current_account"},
+    "policy": "user.admins_only"}]}}
 ```
 
-Each part names it as before, `{"policy": "note.manage_own_or_admin"}`. Analysis reports no gap for it.
+Each part names it as in the simple example, `{"policy": "note.manage_own_or_admin"}`:
 
 ```ruby
 # app/policies/note_policy.rb
-class NotePolicy < ApplicationPolicy
-  def manage?
-    # note.manage_own_or_admin is not written yet.
-    # README.md describes it; spec/policies/note_policy_spec.rb has a placeholder example for it.
-    false
-  end
-
-  alias_rule :destroy?, to: :manage?
-
-  relation_scope(:manage) do |relation|
-    raise NotImplementedError,
-      "note.manage_own_or_admin is not written yet. README.md describes it; spec/policies/note_policy_spec.rb has a placeholder example for it."
-  end
+def manage?
+  user&.id.present? &&
+    record.present? &&
+    (record.author_id == user.id || allowed_to?(:administer?, user, with: UserPolicy))
 end
 
-# spec/policies/note_policy_spec.rb
-it "allows manage where note.manage_own_or_admin allows" do
-  raise NotImplementedError,
-    "note.manage_own_or_admin is not written yet. Replace this example with one that has an account and a record the rule allows and ones it denies, and checks that its :manage relation scope returns only the records the rule allows. The Plan describes it: The note's author, or any signed-in account whose admin Field is true."
+relation_scope(:manage) do |relation|
+  if user&.id.present?
+    relation.where(author_id: user.id)
+      .or(allowed_to?(:administer?, user, with: UserPolicy) ? relation : relation.none)
+  else
+    relation.none
+  end
 end
 ```
 
-README.md lists it under "Behavior to write": "Until then, the Note New page denies every account. Note deletion,
-the Note index (`/notes`), the Note page, and the Note edit page raise until the scope is written. Home (`/`) shows
-the Note index, so it raises too." No request spec is generated for those pages; README.md lists each missing
-example under "Test coverage to complete".
+An admin's list shows every note, and an admin opens, changes, and deletes any of them. The Policy spec and the
+request spec check the author, an admin on another person's note, another account, and a guest.
 
-Write the rule so that it also answers for a record with no values yet. The New page checks it against a new,
-empty record before anyone fills in the form, so a rule that reads a value the form sets denies everyone there.
-Create checks it again with the submitted values.
+"Signed in" joined with the record works the same way. Anyone signed in sees published recipes, and an author also
+sees their own drafts. `user.signed_in` is the gate "anyone signed in" from [What a rule can
+say](#what-a-rule-can-say), joined under `and` with the condition on the recipe:
+
+```json
+{"subject_uuid": "…", "key": "read_published_or_own", "operation": "read",
+ "allow_when": {"kind": "or", "expressions": [
+   {"kind": "and", "expressions": [
+     {"kind": "matches_policy", "record": {"kind": "environment", "name": "current_account"},
+      "policy": "user.signed_in"},
+     {"kind": "comparison", "left": {"target": {"field": "recipe.published"}},
+      "operator": "equals", "right": {"kind": "literal", "value": true}}]},
+   {"kind": "comparison", "left": {"target": {"association": "recipe.author"}},
+    "operator": "equals", "right": {"kind": "environment", "name": "current_account"}}]}}
+```
+
+The scope lists published recipes only for someone signed in:
+`allowed_to?(:use_app?, user, with: UserPolicy) ? relation.where(published: true) : relation.none`. Without the gate,
+the published branch asks only about the recipe, so it lets anyone open a published recipe, signed in or not, as the
+full example means to. A `matches_policy` names
+either `association` or `record`. With `record`:
+
+- its `policy` is a Policy of the Account Entity, the same one a part can name as a gate, so a role is written once;
+- when nobody is signed in the branch is false, and so is `not` over it;
+- it reads nothing of the record, so in a list it admits every record or none.
+
+To ask about the person signed in, write `record`. Through `association`, the same Policy asks about the record's
+own person: `{"kind": "matches_policy", "association": "note.author", "policy": "user.admins_only"}` holds for
+anyone, signed in or not, on a note an admin wrote. When such a branch stands beside one that reads
+`current_account` in a rule that guards a create, an update, a delete, or a State Machine event, analysis warns
+`foundation_plan.policy.write_branch_admits_anyone` at the branch, and its message gives the `record` to write.
+
+A gate on a part lets admins act, as delete does in the full example, and shows them no record they cannot read.
+When admins should see every record, give the read Policy the same admin branch.
+
+### When neither form can say the rule
+
+Each person changes a note for an hour after writing it. No Expression compares a time with an hour ago, so the
+update Policy has `owner` in place of `allow_when`: a sentence or two that says who passes.
+
+```json
+{"subject_uuid": "…", "key": "update_within_an_hour", "operation": "update",
+ "owner": {"description": "The note's author, within one hour of creating the note."}}
+```
+
+The `update` part names it, `{"policy": "note.update_within_an_hour"}`, and the other parts keep `note.manage_own`.
+Analysis reports no gap for it.
+
+```ruby
+# app/policies/note_policy.rb
+def update?
+  # note.update_within_an_hour is not written yet.
+  # README.md describes it; spec/policies/note_policy_spec.rb has a placeholder example for it.
+  false
+end
+
+relation_scope(:update) do |relation|
+  raise NotImplementedError,
+    "note.update_within_an_hour is not written yet. README.md describes it; spec/policies/note_policy_spec.rb has a placeholder example for it."
+end
+```
+
+README.md lists it under "Behavior to write": "The Note edit page raises until the scope is written." The Policy
+spec's placeholder example quotes the description. No request spec is generated for Edit and Update; README.md
+lists each missing example under "Test coverage to complete".
+
+Write an `owner` rule that guards `create` so that it also answers for a record with no values yet. The New page
+checks it against a new, empty record before anyone fills in the form, so a rule that reads a value the form sets
+denies everyone there. Create checks it again with the submitted values.
 
 ## Keys
 
@@ -229,10 +285,10 @@ A Policy, in `application.entities[].policies[]`. A Policy on the Account Entity
 | Key | Required | Values | Default | Generates |
 | --- | --- | --- | --- | --- |
 | `subject_uuid` | yes | UUIDv7 | | Nothing; identity. |
-| `key` | yes | lower snake case, unique on the Entity | | The Policy's name in the Plan. Each `authorization` names it as `<entity>.<key>`. Anything else, such as `manage-own`, is rejected. |
+| `key` | yes | lower snake case, unique on the Entity | | The Policy's name in the Plan. Each `authorization` names it as `<entity>.<key>`. Anything else, such as `manage-own`, is rejected. Name it as the rule in words, such as `author_or_admin` or `published_or_own`, never as the operation alone, such as `read`: the person reviewing the Plan reads the key. |
 | `operation` | yes | any lower snake case name; one Policy per operation on an Entity | | The rule's name: `manage` gives `manage?`, `read` gives `read?`, `use_app` gives `use_app?`. A name every Policy already has, such as `present`, becomes `present_rule?`, with warning `foundation_plan.rails_target.policy.rule_renamed`. Only `manage` and `destroy` are special; see below. |
 | `allow_when` | one of `allow_when`, `owner` | one Expression; see [What a rule can say](#what-a-rule-can-say) | | The rule body and the relation scope. Anything it does not allow is denied. A literal such as `{"kind": "literal", "value": true}` is rejected. |
-| `owner` | one of `allow_when`, `owner` | `{"description": "<a sentence or two>"}` | | The rule, which returns `false`, and its relation scope, which raises `NotImplementedError`; a placeholder example in the Policy spec. README.md lists it under "Behavior to write" with the description. Use it only when `allow_when` cannot say the rule; see [Not generated](#not-generated). |
+| `owner` | one of `allow_when`, `owner` | `{"description": "<a sentence or two>"}` | | The rule, which returns `false`, and its relation scope, which raises `NotImplementedError`; a placeholder example in the Policy spec. README.md lists it under "Behavior to write" with the description. Use it only when `allow_when` cannot say the rule; see [Not generated](#not-generated). Write the description as the rule itself, so that it reads after "Your agent writes this rule:", as "The note's author, within one hour of creating the note." does. |
 
 A `manage` Policy bound to a `destroy` part also answers delete (`alias_rule :destroy?, to: :manage?`), unless the
 Entity has a Policy whose operation is `destroy`; that one then decides delete. Any other operation bound to a part
@@ -251,8 +307,16 @@ Update. A part accepts a Policy with any operation.
 On a `create`, the Entity's own Policy is checked against the new record after its `bindings` are set, so an author
 rule with an author binding lets any signed-in person add. A signed-in gate also lets any signed-in person add. Use
 the Entity's own Policy when the rule reads the new record, a role gate for a role, and a signed-in gate when the
-Entity has no Policy that fits. For a record added from its parent's page, see `create_form` under
-[Used elsewhere in the Plan](#used-elsewhere-in-the-plan).
+Entity has no Policy that fits.
+
+When the `create` Policy reads a parent the person picks on the form, such as `matches_policy` through `note.list`
+with a `note.list` input, the New page opens for anyone with at least one list that would pass, the list's select
+offers only those lists, and Create checks the list it is sent. The Policy class gets `def new?` and
+`relation_scope(:list_choices)` for it. Write the parent condition inline in the create Policy, as `matches_policy`,
+a path, or `exists` over the chosen Reference, with several parents joined by `and`. Any other rule, the same
+condition named as a Predicate included, keeps the create rule for New; see [Analysis does not
+catch](#analysis-does-not-catch). For a record added from its parent's page, see `create_form` under [Used elsewhere
+in the Plan](#used-elsewhere-in-the-plan).
 
 | Key | Required | Values | Default | Generates |
 | --- | --- | --- | --- | --- |
@@ -272,6 +336,8 @@ and a right side are `comparison` objects shaped like the first row.
 | A parent's Reference is the signed-in person | `"left": {"through": [{"association": "note.list"}], "target": {"association": "list.owner"}}`, `equals`, `CA` | `user&.id.present? && record&.list&.owner_id == user.id` | `relation.where(list_id: List.where(owner_id: user.id))` |
 | Whoever passes a parent's Policy. `association` is singular, and the Policy belongs to the Entity it reaches. | `{"kind": "matches_policy", "association": "note.list", "policy": "list.manage_own"}` | `user&.id.present? && allowed_to?(:manage?, record&.list, with: ListPolicy)` | `relation.where(list_id: authorized_scope(List.all, as: :manage, with: ListPolicy))` |
 | The record's own person, who must also pass a rule about them, such as "an approved volunteer signs up as themselves". Put the first row and this one under `and`; the Policy is one of the Account Entity, reached through the same Reference. The rule and its scope are generated; README.md lists their examples under "Test coverage to complete". | `{"kind": "matches_policy", "association": "signup.volunteer", "policy": "user.approved_only"}` | `user&.id.present? && record&.volunteer_id == user.id && allowed_to?(:sign_up?, record&.volunteer, with: UserPolicy)` | `relation.where(volunteer_id: user.id).where(volunteer_id: authorized_scope(User.all, as: :sign_up, with: UserPolicy))` |
+| The signed-in person passes a gate, as one branch: "or any admin". The Policy is one of the Account Entity. | `{"kind": "matches_policy", "record": CA, "policy": "user.admins_only"}` | `allowed_to?(:administer?, user, with: UserPolicy)` | `allowed_to?(:administer?, user, with: UserPolicy) ? relation : relation.none` |
+| Anyone signed in, for some records: the gate "anyone signed in" under `and` with a condition on the record | `{"kind": "and", "expressions": [{"kind": "matches_policy", "record": CA, "policy": "user.signed_in"}, {"kind": "comparison", "left": {"target": {"field": "recipe.published"}}, …}]}` | `allowed_to?(:use_app?, user, with: UserPolicy) && record.published == true` | `allowed_to?(:use_app?, user, with: UserPolicy) ? relation.where(published: true) : relation.none` |
 | A linked record names the signed-in person, such as a share or a membership. `association` is one of the Entity's own `associations[]`; `where` is written from the linked Entity, which needs no Policy or pages. | `{"kind": "exists", "association": "note.shares", "where": {"kind": "comparison", "left": {"target": {"association": "share.user"}}, "operator": "equals", "right": CA}}` | `user&.id.present? && record&.shares&.any? { \|share\| share.user_id == user.id }` | `relation.where(id: Share.where(user_id: user.id).select(:note_id))` |
 | The record matches a value on the signed-in person, such as their team | `"left": {"target": {"association": "note.team"}}`, `equals`, `{"kind": "environment_path", "name": "current_account", "path": {"target": {"association": "user.team"}}}` | `user&.team_id.present? && record&.team_id == user.team_id` | `relation.where(team_id: user.team_id)` |
 | A Field has a value. No signed-in person is needed, so guests pass. | `{"kind": "comparison", "left": {"target": {"field": "note.shared"}}, "operator": "equals", "right": {"kind": "literal", "value": true}}` | `record&.shared == true` | `relation.where(shared: true)` |
@@ -460,11 +526,12 @@ end
 | A related list on a page, such as a recipe's comments | `{"association": "recipe.comments", "authorization": {"policy": "comment.read_with_recipe"}, …}` | The list is filtered through that Policy's scope. |
 | The same list, shown only to people who pass the page record's Policy | `"authorization": {"policy": "recipe.manage_own", "record": "scaffold_record"}` | `@can_read_comments = allowed_to?(:manage?, @recipe, with: RecipePolicy)`; the section is hidden when it is false, and its records are not filtered. Here `record` is the string `"scaffold_record"`; a gate's `record` is the `current_account` object. |
 | A form on a parent page, `create_form` | the child's `scaffold.create` | The parent is found through the parent page's own Policy, so someone who cannot read the parent gets 404 on the nested index, New, and Create. The child is built from the parent, so its Reference to the parent and its `bindings` are set before the child's rule runs; a child rule may use `matches_policy` through that Reference. The child's `create.authorization` decides who sees the Add link and may submit. A signed-in gate and a child rule that delegates to the parent's read Policy both limit adding to people who can read the parent; the gate also requires sign-in. Use the gate for "anyone who can open the parent"; use a child rule when adding needs more, such as being the parent's owner. |
-| A [Reference](references.md) input on a form | `{"association": "note.list"}` in `inputs` | Its options, and the ID it accepts, come through the target Entity's Policy scope: `authorized_scope(List.all, as: :manage, with: ListPolicy)`. |
+| A [Reference](references.md) input on a form | `{"association": "note.list"}` in `inputs` | Its options, and the ID it accepts, come through the target Entity's Policy scope: `authorized_scope(List.all, as: :manage, with: ListPolicy)`. On a New page whose `create` Policy reads that Reference, the options are the lists the rule allows, as under [Keys](#keys). |
 | Home | `application.home_index` | Home is that Entity's list, with that list's `authorization`. |
-| A part guarded by an `owner` Policy | `{"policy": "note.manage_own_or_admin"}`, on any part | The part is emitted and calls the rule and its scope as above. Until you write them, the rule denies everyone and a list or record lookup through the scope raises. |
+| Who fires a [State Machine](state-machine-fields.md) event from the record's page | a transition's `authorization`, which takes the values a part takes | A button on the details page, with a route and an action that check the Policy or the gate. |
+| A part guarded by an `owner` Policy | `{"policy": "note.update_within_an_hour"}`, on any part | The part is emitted and calls the rule and its scope as above. Until you write them, the rule denies everyone and a list or record lookup through the scope raises. |
 | A rule that reads an `owner` [Predicate](predicates.md) | `{"kind": "matches_predicate", "predicate": "note.pinned"}` | The rule and its scope are generated and call the Predicate by name: `record&.pinned?` and `relation.pinned`. The model's `scope :pinned` and `def pinned?` both raise `NotImplementedError`, and one placeholder example in the model spec covers both, so the rule raises until you write that pair. |
-| A rule that delegates to an `owner` Policy | `matches_policy` naming it | Generated as usual: `allowed_to?(:read?, record&.recipe, with: RecipePolicy)` and `relation.where(recipe_id: authorized_scope(Recipe.all, as: :read, with: RecipePolicy))`. It follows the `owner` Policy, so it denies and raises until you write that Policy, and README.md says so in that Policy's entry. Analysis reports no gap. |
+| A rule that delegates to an `owner` Policy | `matches_policy` naming it | Generated as usual: `allowed_to?(:read?, record&.recipe, with: RecipePolicy)` and `relation.where(recipe_id: authorized_scope(Recipe.all, as: :read, with: RecipePolicy))`. It follows the `owner` Policy, so it denies and raises until you write that Policy, and README.md says so in that Policy's entry. Analysis reports no gap. A `matches_policy` with `record` calls only the `owner` Policy's rule, so only that branch denies. |
 
 ## Not generated
 
@@ -477,31 +544,12 @@ its scope before the preview; `SKILL.md` has the order of work.
   generate it from the same Plan. Analysis reports `foundation_plan.gap.policy.not_generated`. One cause is a
   comparison on a Field with `"comparison": "case_insensitive"`; the gap's reason names the part that was not
   generated.
-- **"The author, or any admin."** A part has one `authorization`. A record's rule can ask whether the author is an
-  admin, through `matches_policy`, and cannot ask it of a signed-in person the record does not name; an
-  `environment_path` on the left of a comparison is rejected. Write an `owner` Policy that says the whole rule, and
-  bind it to every part that rule guards:
-
-  ```json
-  {"subject_uuid": "…", "key": "update_own_or_admin", "operation": "update",
-   "owner": {"description": "The recipe's author, or any signed-in account whose admin Field is true."}}
-  ```
-
-  It has no gap record. Do not bind a generated rule that says only the author part instead: admins are then denied,
-  and nothing fails. [Changing it later](#changing-it-later) shows the code to write.
-
-  A gate lets admins act, as delete does above, but it does not make records visible: an admin who cannot read a
-  record never reaches the page that has the button. When admins should see every record too, the read Policy needs
-  the admin branch as well, so it becomes an `owner` Policy. Every rule that reuses it through `matches_policy`,
-  such as a child record's read rule, then denies until you write it.
-- **Any other rule `allow_when` cannot say,** such as "the author, within an hour of posting", which needs date
-  arithmetic. Write an `owner` Policy, as above. Use `owner` only for such rules: when a record's rule or a gate
-  can say the rule, First Draft writes the rule, its scope, and their specs, and an `owner` Policy leaves all three
-  to you.
+- **A rule `allow_when` cannot say,** such as "the author, within an hour of writing it", which needs date
+  arithmetic. Write an `owner` Policy, as in [When neither form can say the
+  rule](#when-neither-form-can-say-the-rule). Use `owner` only for such rules: when a record's rule or a gate can say
+  the rule, First Draft writes the rule, its scope, and their specs, and an `owner` Policy leaves all three to you.
 - **Who may see one Field,** such as a phone number shown only after booking. A Policy decides whole records, and
   the Plan has no way to say it. Keep it in your notes and write it in the views after Compile.
-- **Who may fire a State Machine event.** A transition has no key that names a Policy;
-  [State Machine Fields](state-machine-fields.md) covers events.
 - **Any Policy, in a Plan with no Account Entity.** Even a rule that never reads the signed-in person is left out,
   with every part that uses it and Home when Home is one of them (`foundation_plan.gap.policy.not_generated`;
   for each part, `foundation_plan.gap.scaffold.definition.not_generated` and
@@ -517,34 +565,25 @@ These pass analysis as `valid`:
 
 - **A rule, or a branch of `or`, that never reads `current_account` admits signed-out visitors.** That is right for
   published recipes. When a part needs sign-in, compare with `current_account` or bind a signed-in gate. When only
-  signed-in people should pass such a branch of a record's rule, such as public clubs for anyone signed in beside
-  private clubs for their members, the Plan has no Expression for "signed in" inside that rule: write an `owner`
-  Policy.
-- **A misspelled Policy name in an `authorization`, even in one part.** The Entity's whole `scaffold` is left out of
-  the app, and Home with it when Home is that list. `plan push` warns `foundation_plan.import.unsupported_capability`
-  at the name and `foundation_plan.import.skipped_dependent` at the Scaffold and at Home, with gap codes under
-  `foundation_plan.gap.service`. README.md lists each under "Behavior to write", in "Pages and actions": the
-  Scaffold ("Note has no pages"), the part that names the Policy, that part's authorization
-  (`note.scaffold.destroy.authorization`, in `app/policies/note_policy.rb`: "First Draft did not import the Policy
-  that the Note `destroy` authorization names."), and Home. No entry names the Policy or says that a name is
-  misspelled. Check every name against the Policy keys.
+  signed-in people should pass such a branch, join it under `and` with the gate "anyone signed in", as in [A gate
+  inside a record's rule](#a-gate-inside-a-records-rule).
 - **An update Policy that admits people the read Policy does not.** They never see the record in a list, and its
   page returns 404, though Edit opens by URL. Put the read condition inside the update rule with `and`:
   `matches_policy` with the parent's read Policy for a child record, as in the nested rule above, or a copy of the
   read rule's Expression.
 - **A gate on a list, with a record's Policy on the record's page.** The list shows every record to anyone the gate
   admits; the titles they may not open appear without a link.
-- **A standalone `create` whose rule reads a Reference the form sets, such as `matches_policy` through `note.list`
-  with a `note.list` input.** New builds the record before the list is chosen, so the rule denies: the New link is
-  hidden and the New page returns 403 to everyone, though a submitted Create still works. Add such records through
-  the parent page's `create_form`, or guard `create` with a signed-in gate and let the Reference input's options
-  limit the choice.
+- **A New page that keeps its `create` rule.** New asks the create rule about the empty record, after its
+  bindings, when the rule names the parent condition as a Predicate in place of writing it inline, reads a Field the
+  form submits, puts two offered parents under `or`, requires an editable Reference to equal `current_account`, or
+  names an `owner` Policy that is not written yet. New then opens only where the empty record passes, as an admin
+  branch of `or` lets an admin in, and these conditions fail it: the New link is hidden, and the New page answers
+  403 to everyone else. A submitted Create still works. Write the parent condition inline, add such records through
+  the parent page's `create_form`, or bind the Reference with `bindings`. `not exists` over the offered parent keeps
+  the create rule too, but an empty record passes it, so New opens.
 
 These pass as `valid` and are reported, as a warning or a gap:
 
-- **Two Policies with one `operation` on an Entity.** Warning `foundation_plan.policy.operation_duplicate`; neither
-  is generated, and the parts that use them are left out (`foundation_plan.gap.scaffold.definition.not_generated`).
-  Join them with `or`, or give one its own operation name.
 - **A `matches_policy` naming a Policy of an Entity the Association does not reach, or through a has-many
   Association.** Warning `foundation_plan.policy.delegation_scope_incompatible` or
   `foundation_plan.expression.association_not_singular`; the Policy and its parts are left out. Use `exists` for a
@@ -558,19 +597,31 @@ These pass as `valid` and are reported, as a warning or a gap:
   (`foundation_plan.gap.scaffold.binding.not_generated`). Guard the create with a signed-in gate instead, and the
   binding generates.
 
+Analysis rejects a name that names nothing, in an `authorization`, a `matches_policy`, or inside `exists.where`
+(`foundation_plan.link.policy_not_found`, and `foundation_plan.link.*_not_found` for other names); two Policies with one
+`operation` on an Entity (`foundation_plan.policy.operation_duplicate`); a `matches_policy` with `record` whose Policy
+belongs to another Entity, or in a Plan with no Account Entity
+(`foundation_plan.policy.account_match_policy_incompatible`,
+`foundation_plan.policy.account_match_account_unavailable`), or one that names both or neither of `association` and
+`record`; and a rule that compares with a development record or a missing one
+(`foundation_plan.expression.reference_record_not_reference_data`,
+`foundation_plan.expression.reference_record_not_found`), since a rule may name only a [reference
+data](reference-data.md) record. Each message names the one edit that fixes it, such as the names that exist or the
+operation to rename; make that edit and push again. For two Policies on one operation, give one its own operation, or
+join their conditions with `or` in one Policy.
+
 ## Decisions to raise
 
 - **Ask, as one grid:** for each kind of record, who can see the list and open one, who can add, who can change, and
   who can delete. The usual answers are everyone, anyone signed in, the person who made it, people linked to it
-  through another record, and a role. Each generates in full when it decides an action alone, and so does a role
-  required of the person who made the record. A role beside one of the others, such as "the author, or any admin",
-  does not. Where the person has no preference, recommend the person who made it, or people linked through another
-  record, because nobody has to hand out a role.
+  through another record, and a role. Each generates in full, alone or joined with the others, such as "the author,
+  or any admin". Where the person has no preference, recommend the person who made it, or people linked through
+  another record, because nobody has to hand out a role.
 - **Ask:** whether a role should also see every record, and how people get a role or a membership, when no page
-  sets them. For "the author, or any admin", recommend an `owner` Policy rather than gating whole parts on the role.
-- **Tell:** every place a signed-out visitor can read records, every action only a role can take, and that a
-  signed-out visitor sees an empty list, not the sign-in page, on a list filtered by a record's Policy. Name each
-  rule you will write yourself before the preview.
+  sets them. For "the author, or any admin", recommend the record's rule with the admin gate as one branch, and give
+  the read Policy the same branch when admins should see every record.
+- **Tell:** every place a signed-out visitor can read records, and every action only a role can take. Name each rule
+  you will write yourself before the preview.
 
 ## Changing it later
 
@@ -582,17 +633,17 @@ Plan change reaches that app only when you copy it across.
   in the same push. Changing a rule regenerates its class, its scope, and their specs; nothing in the database
   changes.
 - **After Compile:** change a rule and its `relation_scope` together in `app/policies/<entity>_policy.rb`; the policy
-  spec fails when they admit different records. To write an `owner` Policy such as "the author, or any admin",
-  replace the stub rule and scope, and replace the placeholder example in `spec/policies/<entity>_policy_spec.rb`
-  with cases for the author, an admin, another account, and a guest:
+  spec fails when they admit different records. To write an `owner` Policy such as "the author, within an hour of
+  writing it", replace the stub rule and scope, and replace the placeholder example in
+  `spec/policies/<entity>_policy_spec.rb` with cases for the author within the hour, the author after it, another
+  account, and a guest:
 
 ```ruby
-def manage?
-  user&.admin? || (user&.id.present? && record&.author_id == user.id)
+def update?
+  user&.id.present? && record&.author_id == user.id && record.created_at > 1.hour.ago
 end
 
-relation_scope(:manage) do |relation|
-  next relation if user&.admin?
-  user&.id.present? ? relation.where(author_id: user.id) : relation.none
+relation_scope(:update) do |relation|
+  user&.id.present? ? relation.where(author_id: user.id, created_at: 1.hour.ago..) : relation.none
 end
 ```

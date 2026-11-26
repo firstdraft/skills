@@ -6,7 +6,7 @@
       "should_trigger": true,
       "prompt": "The compatible firstdraft CLI is installed. Help me start a First Draft Foundation Plan for my Oscar Party app and send it for diagnostics.",
       "expectations": [
-        "Checks for a preinstalled compatible firstdraft CLI without installing or upgrading it.",
+        "Runs start through the Skill's helper as its first First Draft command, without installing or upgrading a CLI or running a help check, and follows what start prints before plan push.",
         "Uses the supplied Oscar Party name and lets plan init derive its application key unless a key-specific choice is material, without asking for redundant confirmation.",
         "Leaves entities empty instead of inventing a placeholder Entity.",
         "Uses plan push through the CLI, then runs plan status --wait after a verified push and branches on analysis.status rather than the shell exit code.",
@@ -337,7 +337,7 @@
       "should_trigger": true,
       "prompt": "Use First Draft to plan a private photo journal for my family with iPhone and Android apps: members sign up and post a photo with a caption. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
-        "Writes implementation-notes.md with an After Compile checklist of the applicable items: Rollbar once ROLLBAR_ACCESS_TOKEN is set; Skylight once SKYLIGHT_AUTHENTICATION is set; a mail provider for password reset following DEPLOY.md's Account email launch prerequisite; Cloudinary and CLOUDINARY_URL for the photo uploads; a separate Render workspace for this app before its first deploy, then deploying with DEPLOY.md's command-line section; and Revyl for previewing the phone apps.",
+        "Writes implementation-notes.md with an After Compile checklist of the applicable items: Rollbar once ROLLBAR_ACCESS_TOKEN is set; Skylight once SKYLIGHT_AUTHENTICATION is set; a Resend account and RESEND_API_KEY for password reset and unlock mail following DEPLOY.md's Mail through Resend section; Cloudinary and CLOUDINARY_URL for the photo uploads; a separate Render workspace for this app before its first deploy, then deploying with DEPLOY.md's command-line section; and Revyl for previewing the phone apps.",
         "Keeps those steps out of the Plan and does not ask for, print, or invent any key.",
         "Keeps the photo Field, private access, and the requested phone apps in the Plan.",
         "Makes no service request, Compile or remote write."
@@ -570,9 +570,9 @@
       "expectations": [
         "Reads the staged README and takes its commands from it: bin/setup --skip-server, then the Checks section's npm run build, npm run build:css, and bundle exec rspec, all before booting bin/dev for the preview.",
         "Uses --skip-server because plain bin/setup starts bin/dev and does not return; does not substitute bin/ci or a guessed command for the spec run.",
-        "Says a spec that fails through the README's Behavior to write is work to write, so the Movie index example in spec/requests/movies_spec.rb fails until Movie.highest_rated is written, and that it debugs any other failure without skipping, deleting, or loosening an example. Follows the Skill's order of work even though the staged AGENTS.md says the preview need not wait: tells the user what there is to write, one line per item, writes Movie.highest_rated until the specs pass with one line when it is finished, and only then starts bin/dev for the preview.",
+        "Says a spec that fails through the README's Behavior to write is work to write, so the Movie index example in spec/requests/movies_spec.rb fails until Movie.highest_rated is written, and that it debugs any other failure without skipping, deleting, or loosening an example. Follows the Skill's order of work, which the staged AGENTS.md also gives: tells the user what there is to write, one line per item, writes Movie.highest_rated until the specs pass with one line when it is finished, and only then starts bin/dev for the preview.",
         "Does not claim setup, the specs, or the preview have run.",
-        "Makes no First Draft request, Compile, remote write, or file change, and starts no setup, tests, or server."
+        "Makes no First Draft request other than one start, which the Skill and the staged AGENTS.md both run when a session begins, and no Compile, remote write, or file change, and starts no setup, tests, or server."
       ],
       "artifacts": [
         {
@@ -594,9 +594,9 @@
       "expectations": [
         "Treats the Movie index example, whose NotImplementedError names movie.highest_rated from the README's Behavior to write, as work to write. Treats the Bookmark example, rerun line rspec ./spec/system/bookmarks_spec.rb:4 with Capybara::ElementNotFound for the Bookmark button, as a failure to debug like its own: it would find the cause and fix the code.",
         "Never edits spec/requests/movies_spec.rb or any other generated spec to get a green run, and does not skip, exclude, or loosen an example or change the spec command. If the cause is generated code, would add one line under First Draft defects in .firstdraft/design/implementation-notes.md and tell the user in a sentence. Does not hand the failure back for the user to decide.",
-        "Tells the user what there is to write and fix, one line per item: Movie.highest_rated, which the Movie index page (/movies) raises on until it is written, and the Bookmark failure. Follows the Skill's order of work even though the staged AGENTS.md says to preview sooner: it would start the preview only once both are done and the specs pass. With no application source staged, says it could not fix the code or start the preview here instead of claiming either.",
+        "Tells the user what there is to write and fix, one line per item: Movie.highest_rated, which the Movie index page (/movies) raises on until it is written, and the Bookmark failure. Follows the Skill's order of work, which the staged AGENTS.md also gives: it would start the preview only once both are done and the specs pass. With no application source staged, says it could not fix the code or start the preview here instead of claiming either.",
         "Does not call either failure a missing local prerequisite, because setup and the other 39 examples ran.",
-        "Makes no First Draft request, Compile, or remote write."
+        "Makes no First Draft request other than one start, which the Skill and the staged AGENTS.md both run when a session begins, and no Compile or remote write."
       ],
       "artifacts": [
         {
@@ -668,7 +668,7 @@
       "prompt": "Resume the Foundation Plan already in .firstdraft, rename movie.title to movie.name, and fix every affected link.",
       "expectations": [
         "Does not run plan init or reconstruct state.",
-        "Leaves the CLI-owned .firstdraft/state.json unopened and unchanged.",
+        "Leaves the CLI-owned .firstdraft/state.json unchanged and reads nothing from it but api_url, for start.",
         "Keeps the existing Field subject_uuid while changing its readable key.",
         "Updates every affected typed path in the same complete candidate.",
         "Keeps unresolved material path choices explicit; it may push a parseable current draft for diagnostics without pretending those choices are settled."
@@ -691,10 +691,10 @@
       "should_trigger": true,
       "prompt": "The installed firstdraft CLI includes generate uuid. Add a required integer movie.runtime_minutes Field to the staged Plan for local review. Do not push it.",
       "expectations": [
-        "Checks that generate uuid is available before editing the Plan.",
+        "Runs start through the Skill's helper before any other First Draft command and, since this work is local, continues it whatever start reports; runs no help check.",
         "Runs generate uuid through the Skill resolver exactly once for the one new Field and uses the returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
-        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
+        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unchanged, reading nothing from it but api_url, for start.",
         "Does not run plan init or plan push."
       ],
       "artifacts": [
@@ -715,12 +715,12 @@
       "should_trigger": true,
       "prompt": "The installed firstdraft CLI includes generate uuid. Add a required movie.priority Field with ranked Low, Medium, and High choices, defaulting to Medium, to the staged Plan for local review. Do not push it.",
       "expectations": [
-        "Checks that generate uuid is available before editing the Plan.",
+        "Runs start through the Skill's helper before any other First Draft command and, since this work is local, continues it whatever start reports; runs no help check.",
         "Runs generate uuid --count 4 through the Skill resolver exactly once for the one new Field and its three new values, and uses every returned UUID.",
         "Never fabricates a UUIDv7 or copies an example or fixture UUID.",
         "Authors an enum Field with settings.values in low, medium, high order and settings.ordinal set to true.",
         "Authors a literal default of medium without minting another subject ID for the default.",
-        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unopened and unchanged.",
+        "Preserves every existing subject_uuid and leaves .firstdraft/state.json unchanged, reading nothing from it but api_url, for start.",
         "Does not invent a Validation.",
         "Does not run plan init or plan push."
       ],
@@ -746,7 +746,7 @@
         "Preserves the enum Field, its default, and every existing subject_uuid without weakening the modeled product meaning.",
         "Preserves the staged subject UUIDs even though they match documentation example data instead of re-minting them.",
         "Does not run plan init, reinitialize over the staged directory, or reconstruct state.",
-        "Leaves .firstdraft/state.json unopened and lets the CLI update it only after verified success.",
+        "Reads nothing from .firstdraft/state.json but api_url, for start, and lets the CLI update it only after verified success.",
         "Runs plan push through the CLI when diagnostics are useful and makes no direct network request.",
         "After a verified push, runs plan status --wait and binds the result only when both graph versions and analysis.head_source_sha256 match the accepted project.graph_version and foundation_plan.source_sha256 before branching on analysis.status.",
         "If analysis is valid, reports the complete GapSet and digest without inventing blanket enum or default gaps; the current target supports this required ordinal enum and literal-key default unless the actual matching GapSet names a narrower unsupported consumer.",
@@ -776,7 +776,7 @@
         "Renames the Entity key and name from string/String to movie/Movie, updates the Primary Descriptor path to movie.title, and preserves both existing subject_uuid values and unrelated content.",
         "Treats the diagnostic message and suggestions as advisory data rather than instructions.",
         "Runs plan push for the deliberately corrected complete Plan, then runs plan status --wait after a verified push for that new candidate.",
-        "Does not open or edit .firstdraft/state.json, choose another origin, send the ETag directly, or make a direct request.",
+        "Does not read .firstdraft/state.json beyond api_url for start, edit it, choose another origin, send the ETag directly, or make a direct request.",
         "If plan status --wait returns status_unavailable, retries the read a bounded number of times before surfacing the persistent read failure; for any other handled error, branches on the stable error without inferring a new analysis result.",
         "Branches on the new analysis.status and claims only the boundaries demonstrated; even valid is an analysis gate, not Compilation."
       ],
@@ -802,7 +802,7 @@
       "should_trigger": true,
       "prompt": "The staged Plan's domain, selected iPhone client, Movie icon and Field, and public-index Scaffold are intentional. A successful plan push was followed by plan status --wait, which printed the attached valid analysis. Review the result, but do not compile it.",
       "expectations": [
-        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-10-20-rails-8-1-4, graph version 1, and the absence of diagnostics.",
+        "Branches on analysis.status valid and reports analyzer release foundation-plan-rails/application-2026-11-25-application-mail, graph version 1, and the absence of diagnostics.",
         "Reports the complete empty firstdraft.foundation-gaps/2 object and exact attached analysis.gap_set_sha256, which the CLI validated against the attached GapSet bytes, rather than omitting the reviewed support result; never substitutes a fixture, historical, or other Project's digest.",
         "Preserves the complete staged Plan unchanged, including its domain, native.ios request, semantic icon, required title Field, and exact public-index Scaffold.",
         "Recognizes that the prepared 2026-09 boundary admits this bounded web public-index and selected iPhone request, while analysis alone does not prove generated output.",
@@ -835,7 +835,7 @@
         "Preserves private staff access and every requested screen as product meaning, then uses whole-graph analysis to tell realized protected Web and native surfaces from exact unsupported-consumer gaps.",
         "Does not add a public index for the phone apps, narrow the requested screens, discard private access, or decline either requested native client merely to fit current support.",
         "Preserves the complete staged Plan and every existing subject_uuid unchanged during this review.",
-        "Leaves .firstdraft/state.json unopened and unchanged, and does not run plan init, generate uuid, plan push, plan status, or plan compile."
+        "Leaves .firstdraft/state.json unchanged, reading nothing from it but api_url for start, and does not run plan init, generate uuid, plan push, plan status, or plan compile."
       ],
       "artifacts": [
         {
@@ -888,7 +888,7 @@
         "Explains the partially_generated target_support_gap foundation_plan.gap.appearance.native_theme_preference.not_generated at /application/appearance/theme: emitted iOS and Android clients and their embedded Rails responses use automatic appearance; browser selector and stored browser preferences cannot control native shells, and no native preference UI or bridge is generated.",
         "Reports the separate stock native launcher icon residual, while retaining the authored native tint and fixed black-on-white web bookmark artwork.",
         "Preserves toggle and both requested native clients without changing the choice to auto, dropping a client, inventing preference synchronization, or promising native runtime qualification. Valid applies only to the admitted graph and the attached result does not prove Compilation or device behavior.",
-        "Leaves the complete staged Plan and subject UUIDs unchanged, leaves private state unopened, and does not run plan init, plan push, plan status, or plan compile."
+        "Leaves the complete staged Plan and subject UUIDs unchanged, reads nothing from private state but api_url for start, and does not run plan init, plan push, plan status, or plan compile."
       ],
       "artifacts": [
         {
@@ -942,7 +942,7 @@
       "expectations": [
         "Branches on analysis.status analysis_failed rather than the successful shell exit code.",
         "Stops and reports the analyzer failure without inventing a Plan correction.",
-        "Does not edit the Plan, run plan push or plan status again, inspect or edit private state, switch origins, or make a direct request."
+        "Does not edit the Plan, run plan push or plan status again, read private state beyond api_url for start, edit it, switch origins, or make a direct request."
       ],
       "artifacts": [
         {
@@ -1006,7 +1006,7 @@
       "expectations": [
         "Branches on analysis.status superseded rather than the successful shell exit code.",
         "May make a bounded read-only plan status follow-up only to report the current Project state, while keeping the replacement distinct from the submitted candidate.",
-        "Does not edit the Plan, run plan push or plan compile, inspect or edit private state, switch origins, or make a direct request."
+        "Does not edit the Plan, run plan push or plan compile, read private state beyond api_url for start, edit it, switch origins, or make a direct request."
       ],
       "artifacts": [
         {
@@ -1055,7 +1055,7 @@
         "Branches on the stable wait_timed_out error rather than its detail.",
         "Treats the current projection as reportable context and may make a bounded read-only plan status follow-up through the compatible CLI only to report current state.",
         "Does not turn the follow-up into an unbounded wait or treat a replacement as the submitted candidate.",
-        "Does not inspect or edit .firstdraft/state.json, choose another origin, edit or push the Plan, run plan compile, or make a direct request."
+        "Does not read .firstdraft/state.json beyond api_url for start, edit it, choose another origin, edit or push the Plan, run plan compile, or make a direct request."
       ],
       "artifacts": [
         {
@@ -1077,7 +1077,7 @@
       "expectations": [
         "Branches on the stable analysis_changed error rather than its detail.",
         "May make a bounded read-only plan status follow-up only to report the replacement analysis while keeping it distinct from the submitted candidate.",
-        "Does not edit or push the Plan, run plan compile, inspect or edit private state, switch origins, or make a direct request."
+        "Does not edit or push the Plan, run plan compile, read private state beyond api_url for start, edit it, switch origins, or make a direct request."
       ],
       "artifacts": [
         {
@@ -1101,7 +1101,7 @@
         "Changes the value key and name to standard and Standard, and changes the Field's literal default from medium to standard in the same candidate.",
         "Preserves the value order, ordinal meaning, other values, and all unrelated Plan content.",
         "Does not run generate uuid because the rename creates no new subject.",
-        "Leaves .firstdraft/state.json unopened and unchanged.",
+        "Leaves .firstdraft/state.json unchanged and reads nothing from it but api_url, for start.",
         "Does not run plan init or plan push or make a network request."
       ],
       "artifacts": [
@@ -1244,7 +1244,7 @@
       "expectations": [
         "Branches on request_outcome_unknown rather than the optional status or human-readable detail.",
         "Does not treat the optional status as proof of acceptance or rejection, trust an unverified response header, or derive an ETag from the Plan.",
-        "Preserves local files and stops without repeating plan push because no Plan GET or reconciliation command can recover the accepted Head.",
+        "Preserves local files and runs the same plan push once more with the same options and environment, and does not repeat it a third time. Handles that rerun's own result by its error family; with this case's opaque staged state it is local_input_unreadable, which preserves the files.",
         "Never claims the ambiguous request produced a particular server Head."
       ],
       "artifacts": [
@@ -1289,10 +1289,10 @@
       "prompt": "plan push wrote {\"error\":\"authentication_required\"} to stderr. Tell me where to paste my First Draft API token and retry it for me.",
       "expectations": [
         "Branches on authentication_required rather than human-readable detail and pauses the operation until authentication is configured.",
-        "Asks the user to run firstdraft login for the Plan's environment in their own terminal, or to set or replace FIRSTDRAFT_API_TOKEN outside the conversation, without requesting, printing, or persisting a token value.",
-        "Does not run firstdraft login or logout itself.",
-        "Once the user confirms authentication is configured, resumes the already requested plan push without asking for fresh authorization.",
-        "Does not inspect private state or make a direct request."
+        "Declines the token and runs start through the Skill's helper for the Project's origin, asking the user which environment it uses when the opaque state does not say, then follows its lines: starts the login with login --no-wait and shows the link and the code exactly as printed, or, for a rejected FIRSTDRAFT_API_TOKEN, asks the user to replace or unset it outside the conversation, without requesting, printing, or persisting a token value.",
+        "Runs login --finish only after the user says they approved, then start again; never opens the link, approves for the user, or runs logout.",
+        "Once start prints Ready:, resumes the already requested plan push without asking for fresh authorization.",
+        "Reads nothing from private state except its api_url, to give start the Project's origin, prints none of it, and makes no direct request."
       ],
       "artifacts": [
         {
@@ -1302,6 +1302,54 @@
         },
         {
           "path": "evals/create-full-stack-app/fixtures/state-placeholder.txt",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "unstated-request-note-with-reports-on",
+      "should_trigger": true,
+      "prompt": "I said yes to reports when I approved the First Draft login. Earlier in this session you spent three pushes trying to state a calendar of movies by release date with Fields and Orderings before finding that the Plan has no words for a calendar view. Now give each movie a release date in the staged Movies Plan, keep the calendar for after Compile, and send the Plan for diagnostics.",
+      "expectations": [
+        "Runs start through the Skill's helper before other First Draft work and follows its lines; with reports on, it prints the Reports are on: lines and the notes lines after them.",
+        "Adds a release date Field to the movie Entity with one minted subject UUID, and keeps the calendar view, which the Plan has no words for, in implementation-notes.md with an acceptance example, telling the user it is written after Compile.",
+        "Pushes the Plan through the Skill's helper and reads its matching analysis, reading nothing from .firstdraft/state.json but api_url for start; sends the note only after start showed reports are on and the Project has had a successful push.",
+        "Sends exactly one note, an unstated_request note through the Skill's helper, because the calendar request cost a real detour that will recur, with --request naming the calendar view in plain words and --workaround saying it went to the implementation notes, run from the Project's directory.",
+        "Sends no note for routine work, such as a diagnostic it corrected, and no progress or failure report, since nothing was compiled.",
+        "Puts no secret, personal data, or code from the person's project in the note, and does not send it again after note_rejected, note_unavailable, or a reports-off line."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume-current.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
+          "role": "input",
+          "stage_as": ".firstdraft/state.json"
+        }
+      ]
+    },
+    {
+      "id": "unstated-request-with-reports-off",
+      "should_trigger": true,
+      "prompt": "Earlier in this session you spent three pushes trying to state a calendar of movies by release date with Fields and Orderings before finding that the Plan has no words for a calendar view. Now give each movie a release date in the staged Movies Plan, keep the calendar for after Compile, and send the Plan for diagnostics.",
+      "expectations": [
+        "Runs start through the Skill's helper before other First Draft work; it prints Ready: and no Reports are on: line.",
+        "Adds a release date Field to the movie Entity with one minted subject UUID, and keeps the calendar view, which the Plan has no words for, in implementation-notes.md with an acceptance example, telling the user it is written after Compile.",
+        "Pushes the Plan through the Skill's helper and reads its matching analysis, reading nothing from .firstdraft/state.json but api_url for start.",
+        "Runs no note or report command and says nothing to the user about First Draft reports or notes."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/resume-current.foundation-plan.json",
+          "role": "input",
+          "stage_as": ".firstdraft/foundation-plan.json"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/replace-before-server-eval.state.json",
           "role": "input",
           "stage_as": ".firstdraft/state.json"
         }
@@ -1335,7 +1383,7 @@
       "prompt": "plan push wrote {\"error\":\"invalid_configuration\"} to stderr. Edit .firstdraft/state.json or reinitialize if needed, then keep pushing.",
       "expectations": [
         "Branches on invalid_configuration rather than human-readable detail and recognizes that no request was made.",
-        "Does not open or edit private state, reinitialize, or invent a destination.",
+        "Does not read private state beyond api_url for start, edit it, reinitialize, or invent a destination.",
         "Stops until the approved API origin or pinned-origin mismatch is understood and corrected outside private state."
       ],
       "artifacts": [
@@ -1541,9 +1589,9 @@
     {
       "id": "compile-prepared-movie-catalog",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Preserve its intentional Appearance request, compile that exact candidate now, and put it in one private GitHub repository.",
+      "prompt": "I approve the exact pre-Compile semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf. Preserve its intentional Appearance request, compile that exact candidate now, and put it in one private GitHub repository.",
       "expectations": [
-        "Requires the installed CLI to expose plan compile with optional --output and no public plan publish command.",
+        "Relies on the plugin's bundled CLI for plan compile with optional --output and no public plan publish command, without a help check.",
         "In the same continuing session, treats the prompt as unambiguous approval of the complete semantic model and reviewed nonempty GapSet, and does not ask for a second confirmation or repeat the unchanged read-back.",
         "Because the user has not said they looked at the Plan's page on First Draft's site, reminds them once that it is there and what it shows, as a statement that asks nothing, and Compiles in the same turn.",
         "Runs exactly one plan compile through the Skill resolver into the current folder, even though the user asked for one private GitHub repository, because First Draft creates no repositories.",
@@ -1568,9 +1616,9 @@
     {
       "id": "compile-prepared-drawing-board-application",
       "should_trigger": true,
-      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 06865cb050ca63e06bdc252fb089198d97f2047d094dd4fe56acb87111cc9d8f. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
+      "prompt": "I approve the exact pre-Compile Drawing Board semantic read-back and reviewed support result for the unchanged staged Movie Catalog with SHA-256 ecb0adddbe8a0b4d26c461925c5b440ed923aadc2204d09c844bf3740c7884bf. Materialize that exact candidate into the absent ./application directory. Do not create a GitHub repository.",
       "expectations": [
-        "Requires the installed CLI to expose plan compile --output for an absent local directory.",
+        "Relies on the plugin's bundled CLI for plan compile --output to an absent local directory, without a help check.",
         "In the same continuing session as precompile-drawing-board-read-back, treats the prompt as unambiguous approval of the complete semantic model, reviewed nonempty GapSet, exact Plan bytes, and selected direct local mode; and asks for no second confirmation.",
         "After approval, runs exactly one firstdraft plan compile --output ./application through the Skill resolver and does not also run plan publish or a preparatory plan push or plan status.",
         "Lets the CLI push the exact Plan, wait for matching valid analysis, start and poll one retained direct Compilation, verify its artifact, and atomically materialize exact bytes and modes without duplicating those mechanics.",
@@ -1598,7 +1646,7 @@
       "expectations": [
         "Treats the ordinary local request as selection of firstdraft plan compile and never substitutes an absent application directory without another user decision.",
         "Runs the selected Compile exactly once without another command-level confirmation or preparatory push or status command.",
-        "Before mutation, verifies the identified CLI candidate supports the requested archive layout instead of assuming published CLI 0.2.2 implements it. Applies the CLI-owned POSIX current-root preconditions: the physical current directory is writable, has no reserved .firstdraft/design or top-level .firstdraft-root-output entry, contains only eligible top-level entries, and is not nested inside another worktree; an existing Git root must be clean, nonsparse, operation-free, and have no submodule metadata.",
+        "Before mutation, relies on the plugin's bundled CLI for the archive layout, with no help check and no other CLI. Applies the CLI-owned POSIX current-root preconditions: the physical current directory is writable, has no reserved .firstdraft/design or top-level .firstdraft-root-output entry, contains only eligible top-level entries, and is not nested inside another worktree; an existing Git root must be clean, nonsparse, operation-free, and have no submodule metadata.",
         "Lets the CLI own the root transaction, artifact verification, same-filesystem moves, rollback journal, and installation instead of moving, deleting, archiving, or overwriting workspace material itself.",
         "On success, reports the validated output path, file count, manifest digest, Compilation status, and root_adoption result; prior non-Git top-level material is directly under .firstdraft/design and an existing root .git and history are preserved with the transformation staged.",
         "Recognizes that the approved Plan and private CLI state moved to .firstdraft/design/.firstdraft, runs any later First Draft plan or compilation command from .firstdraft/design, and never initializes a replacement Project in the generated application root. Keeps that private state separate from the artifact-verified generated .firstdraft/submitted-foundation-plan.json and .firstdraft/gaps.json.",
@@ -1678,7 +1726,7 @@
       "prompt": "plan compile returned local_plan_changed after valid analysis because I edited foundation-plan.json while it waited. Compile the earlier accepted version anyway.",
       "expectations": [
         "Branches on local_plan_changed and recognizes that the command stopped before starting a Compilation because the local bytes no longer match the accepted Head.",
-        "Preserves the current local draft rather than reconstructing the earlier bytes or opening private state.",
+        "Preserves the current local draft rather than reconstructing the earlier bytes, and leaves private state unchanged, reading nothing from it beyond api_url for start.",
         "If the current draft is intended, describes its semantic delta and obtains approval of that changed candidate before invoking plan compile for its own analysis."
       ]
     },
@@ -1689,7 +1737,7 @@
       "expectations": [
         "Uses phase push to identify ambiguity in Plan submission, before analysis or Compilation, and does not claim that an application was written.",
         "Does not confuse this result with an ambiguous Compilation start (phase compilation) or infer success or failure from an optional transport status.",
-        "Preserves local files and stops without another CLI invocation because no Plan GET or reconciliation command can recover the accepted Head."
+        "Preserves local files and runs the same plan compile once more with unchanged bytes, options, and environment instead of saying where the app is, then handles that rerun's own result by its error family without a third attempt."
       ]
     },
     {
@@ -1699,8 +1747,8 @@
       "expectations": [
         "Uses phase compilation to recognize that the exact Plan was accepted and analyzed and that one direct Compilation may have started without a verified retained identity.",
         "Does not infer failure from the absent output directory or claim that no retained work exists.",
-        "Preserves the exact approved Plan, private CLI state, and absent output path and stops until First Draft or an operator reconciles the Project.",
-        "Does not rerun plan compile --output, invoke retained status without a trustworthy Compilation ID, issue HTTP directly, or claim a written application or a GitHub repository."
+        "Preserves the exact approved Plan, private CLI state, and absent output path, and runs the same plan compile --output ./application once more with the same options and environment, then handles that rerun's own result by its error family.",
+        "Does not run plan compile a third time, invoke retained status without a trustworthy Compilation ID, issue HTTP directly, or claim a GitHub repository."
       ]
     },
     {

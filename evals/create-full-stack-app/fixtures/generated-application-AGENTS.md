@@ -39,18 +39,29 @@ That reading checkpoint is not a runtime dependency.
   the specific detector in `.active_record_doctor.rb`.
 - Bulk writes bypass validations and callbacks. Their writer owns recomputing derived/counter values; do not
   base authorization or uniqueness on cached fields.
-- Run the specs before other work. A spec that fails through an item in README.md's Behavior to write is work to
-  do: write that behavior until its specs pass, then delete the item. A stubbed scope or event raises
-  `NotImplementedError`, a stubbed Policy rule returns `false`, and a deletion outcome First Draft left out fails
-  its spec with `RecordNotDestroyed`. Write every item the section lists, including a denying rule no failing spec
-  names. A preview need not wait for them: first write any item whose entry says Home raises, then start the
-  preview and tell the user in one line which pages deny or raise until the rest are written. Do not ask first.
-- Debug any other failure as you would your own: find the cause and fix the code. Never skip, delete, or loosen an
-  example to get a green run; change a spec only when it contradicts the behavior the app should have, and say why
-  in the commit. When the cause is code First Draft generated, add one line under "First Draft defects" in
-  `.firstdraft/design/implementation-notes.md` with the rerun line (`rspec ./spec/...:LINE`) and your fix, tell
-  the user in a sentence, and keep working. `bundle exec rspec --only-failures` reruns the last failures, and
-  `bin/ci checks` runs the audits, linters, schema check, and asset builds without the specs.
+- Take these steps in order before other work. The first preview waits for step 3.
+  1. Run setup and the specs.
+  2. Tell the user what there is to write, one line per item under README.md's Behavior to write. If README.md has
+     a What you supply section, also tell the user what it asks of them; the first preview does not wait for it.
+  3. Write every item under Behavior to write, even one that no failing spec names, and fill in every placeholder
+     example, until the specs pass. As each item is finished, delete its entry and tell the user in one line. A
+     stubbed scope or event raises `NotImplementedError`, a stubbed Policy rule returns `false`, the spec of other
+     behavior First Draft left out fails with the error its item names, and a placeholder example raises
+     `NotImplementedError` until you replace it with a real one.
+  4. Start the preview.
+- If you come to think an item should change or go, stop and ask the user, giving your reasons and what you found.
+  The user decides, or asks you to decide. After a yes, remove what you judge right, specs included.
+- Debug any other failure as you would your own: find the cause and fix the code. Without the user's yes,
+  never skip, delete, or loosen an example to get a green run; change a spec only when it contradicts the
+  behavior the app should have, and give the reason to the user, and in the commit message when this folder is a
+  Git repository. When the cause is code First Draft generated, add one line under "First Draft defects" in
+  `.firstdraft/design/implementation-notes.md` with the rerun line (`rspec ./spec/...:LINE`) and your fix, tell the
+  user in a sentence, and keep working.
+  `bundle exec rspec --only-failures` reruns the last failures, and `bin/ci checks` runs the audits, linters,
+  schema check, and asset builds without the specs.
+- If the `firstdraft` command is available, run `firstdraft start` once when a session begins. When it prints
+  `Reports are on:`, send the reports and notes it describes. When the command is missing, is not logged in, or
+  says nothing about reports, send nothing and keep working; do not ask the user to log in for this.
 - Add a resource the way the generated ones are built. Copy a generated controller, its views, locale file, and
   specs rather than keeping `bin/rails generate scaffold`'s stock views, whose literal copy fails erb_lint. When
   `app/policies/` exists, declare `verify_authorized` in the controller, since `ApplicationController` does not,
@@ -60,5 +71,8 @@ That reading checkpoint is not a runtime dependency.
   Keep minimal factories and explicit scenario relationships; complete generator placeholders as behavior is added.
   WebMock blocks external HTTP: stub the application's external requests explicitly.
 - Complete the privacy/terms drafts against actual practices before inviting users and retain their license
-  attribution. Configure production domain policy; Render checks `/ready`, and Docker uses `/up` for liveness.
-  Read DEPLOY.md before adding availability monitoring: the Free default intentionally sleeps.
+  attribution. Configure production domain policy; Render and Docker check `/up`, which never queries the
+  database, and `/ready` adds a database round trip for a manual or infrequent check.
+  Read DEPLOY.md before adding availability monitoring, a background job, or a page that signed-out visitors can
+  open: the Free default intentionally sleeps, jobs run inside Puma and are lost when it restarts, and a
+  signed-out page that queries keeps the database awake.

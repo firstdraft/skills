@@ -1,20 +1,13 @@
 #!/bin/sh
 set -eu
 
-if [ -x ./bin/firstdraft ]; then
-  exec ./bin/firstdraft "$@"
-fi
-
-# Resolve the Skill's physical directory: Drawing Board links it from a cache.
+# The plugin holds this Skill and the CLI it was tested with, and this runs only that CLI. Resolve the Skill's
+# physical directory, so a Skill reached through a link still finds its own plugin.
 skill_scripts=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 bundled_cli="$skill_scripts/../../../bin/firstdraft"
 if [ -f "$skill_scripts/../../../.claude-plugin/plugin.json" ] && [ -x "$bundled_cli" ]; then
   exec "$bundled_cli" "$@"
 fi
 
-if command -v firstdraft >/dev/null 2>&1; then
-  exec firstdraft "$@"
-fi
-
-printf '%s\n' 'First Draft CLI is unavailable: no executable project wrapper, bundled CLI, or firstdraft on PATH.' >&2
+printf '%s\n' "First Draft CLI is unavailable: the bundled CLI is missing from this plugin, so the First Draft plugin needs reinstalling." >&2
 exit 127

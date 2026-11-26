@@ -176,10 +176,11 @@ Every `index`, `show`, and Association item says who may see it. The rules live 
 | `{"policy": "project.read_own", "record": "scaffold_record"}` | Association items only: the page's own record decides whether the card shows. | Rejected on a page (`foundation_plan.schema.const`). | `allowed_to?(:read?, @project, with: ProjectPolicy)`, then every related record. |
 
 The `record` value is that literal object or the string `"scaffold_record"`; nothing else is accepted. A link to a
-record's `show` from a related list's row or an Association item checks the same rule as that `show`, gate or
-Policy, and shows plain text to people who fail it; a link from a list page's own rows is unconditional. A guest who opens a list guarded by a record's Policy gets the page with no
-rows (the generated request spec expects 200). A list's Policy and its details page's Policy are independent; see
-[Analysis does not catch](#analysis-does-not-catch).
+record's `show` from a related list's row or an Association item checks the same rule as that `show`, gate or Policy,
+and shows plain text to people who fail it; a link from a list page's own rows is unconditional. A guest who opens a
+list guarded by a record's Policy is sent to sign in and comes back, as the generated request spec checks, unless a
+branch of the rule admits guests, such as "published"; the guest then sees the records that branch allows. A list's
+Policy and its details page's Policy are independent; see [Analysis does not catch](#analysis-does-not-catch).
 
 ## Full example
 
@@ -347,8 +348,7 @@ Predicate, the Ordering, or the related list.
   calls the scope, which raises `NotImplementedError` until you write it (`foundation_plan.gap.predicate.not_generated`
   or `foundation_plan.gap.ordering.not_generated`; an `owner` subject has no gap record); the page raises until then.
   The scope's placeholder example in the model spec fails until you replace it, and so does any request spec that
-  reaches the page. For a stub Predicate on a list, README.md lists the index request examples it leaves out under
-  "Test coverage to complete". See [Predicates](predicates.md) and [Orderings](orderings.md) for which ones generate
+  reaches the page. See [Predicates](predicates.md) and [Orderings](orderings.md) for which ones generate
   and how to write an `owner` one. With `project.active` in the full example made `owner`:
 
   ```ruby
@@ -376,19 +376,11 @@ Predicate, the Ordering, or the related list.
 
 These pass analysis as `valid`. Read the gap list after every push.
 
-- **A misspelled Policy name in `index` or `show`.** The Entity's whole `scaffold` is left out: every route, list,
-  details page, and form (`foundation_plan.gap.service.pruned_scope` and
-  `foundation_plan.gap.service.depends_on_skipped`).
 - **A gate naming a Policy of an Entity other than the Account Entity**, such as
   `{"policy": "project.read_own", "record": {"kind": "environment", "name": "current_account"}}` on `index`. The
   page is left out (`foundation_plan.gap.scaffold.authorization.not_generated` and
   `foundation_plan.gap.scaffold.definition.not_generated`). A gate takes a Policy of the Account Entity; a record
   rule takes no `record`.
-- **A misspelled Predicate or Ordering name.** The filter or sort is dropped: the list shows every record, or sorts
-  by `id` (`foundation_plan.gap.service.unsupported_capability`). README.md lists it under "Behavior to write", in
-  "Pages and actions", titled with the list's path, such as `task.scaffold.index.predicate`, with the list's
-  controller: "The Task index (`/tasks`) lists its records without the filter the Plan names: First Draft did not
-  import its `predicate`." No entry names the Predicate or Ordering.
 - **A Predicate or Ordering of another Entity**, such as `task.open` on the projects list, or a parent's Predicate on
   a related list. The filter or sort is dropped (`foundation_plan.gap.predicate.not_generated` or
   `foundation_plan.gap.ordering.not_generated`). A related list takes the related Entity's Predicates and Orderings.
@@ -405,8 +397,10 @@ These pass analysis as `valid`. Read the gap list after every push.
   Field is shown twice.
 
 Analysis rejects a page definition without its route, a route without its definition, an empty `projection`, a
-`home_index` naming an Entity without `index` (`foundation_plan.application.home_index_not_selected`), and any
-`pagination` other than `"cursor"`.
+`home_index` naming an Entity without `index` (`foundation_plan.application.home_index_not_selected`), any
+`pagination` other than `"cursor"`, and a Policy, Predicate, Ordering, Field, or Association name on a page that names
+nothing (`foundation_plan.link.*_not_found`). The message lists the names that exist; change the name to one of
+them.
 
 ## Decisions to raise
 

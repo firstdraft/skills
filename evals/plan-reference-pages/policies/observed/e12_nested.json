@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
   "status": "valid",
   "diagnostics": [
     {
@@ -17,7 +17,25 @@
     {
       "section": "Test coverage to complete",
       "group": null,
-      "title": "Note: create redirects to a page that loads",
+      "title": "Note: new is allowed for an account with a list to choose",
+      "file": "spec/policies/note_policy_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create persists the submitted values",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create rejects a missing title without persisting changes",
+      "file": "spec/requests/notes_spec.rb"
+    },
+    {
+      "section": "Test coverage to complete",
+      "group": null,
+      "title": "Note: create rejects an inaccessible list",
       "file": "spec/requests/notes_spec.rb"
     },
     {

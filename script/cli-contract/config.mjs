@@ -1,10 +1,23 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "a71962a4f4643d0a1835a2309a29a21268ba61c0";
+export const cliRevision = "d508c7c5f86b64dd2eedea7c8df6179a6ef2aec7";
 export const cliRuntimeSha256 =
-  "502b8d7502641e4109c12b312c1b51a9f89fef106cee1f94967c39c4873ab856";
+  "f6fd167b09caa3611f4303870da108fc99f61a9700265293dc3d1d0586e82828";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.9.0";
+export const cliPackageVersion = "0.10.0";
+
+// What `firstdraft start` prints for production with no saved login and no token: it makes no request. The lines
+// come from the pinned CLI's src/agent-sentences.js, and the diagnostics reference quotes them.
+export function startWithoutLogin(pluginVersion) {
+  return [
+    pluginVersion === null
+      ? `First Draft CLI ${cliPackageVersion}.`
+      : `First Draft CLI ${cliPackageVersion} with plugin ${pluginVersion}.`,
+    "This computer has no saved login for https://firstdraft.com.",
+    "To log in, run 'firstdraft login --no-wait'. It prints a link and a code: show both to the person and ask them to approve the login in their browser.",
+    "When the person says they approved, run 'firstdraft login --finish', then run 'firstdraft start' again.",
+  ].map((line) => `${line}\n`).join("");
+}
 
 export const rootOutputRecovery = Object.freeze({
   transactionName: ".firstdraft-root-output",
@@ -27,12 +40,12 @@ export const [foundationPlanFormat] = JSON.parse(
   readFileSync(new URL("../../release/compatibility.json", import.meta.url), "utf8"),
 ).requires.foundation_plan_formats;
 export const analyzerRelease =
-  "foundation-plan-rails/application-2026-10-20-rails-8-1-4";
+  "foundation-plan-rails/application-2026-11-25-application-mail";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4";
+  "foundation-plan-rails/compiler-application-2026-11-25-application-mail";
 export const compilationTarget = {
   id: "rails",
-  profile: "rails-sketch/2026-10",
+  profile: "rails-sketch/2026-11",
 };
 export const artifactMediaType =
   "application/vnd.firstdraft.compilation-artifact+json";
@@ -46,18 +59,23 @@ export const packedFileAllowlist = [
   "docs/commands.md",
   "docs/errors.md",
   "package.json",
+  "src/agent-sentences.js",
   "src/api-authentication.js",
   "src/api-response.js",
   "src/application-identity.js",
   "src/cli.js",
+  "src/commands/account.js",
   "src/commands/compilation.js",
   "src/commands/login.js",
   "src/commands/logout.js",
+  "src/commands/maintain.js",
+  "src/commands/note.js",
   "src/commands/plan-compile.js",
   "src/commands/plan-init.js",
-  "src/commands/plan-publish.js",
   "src/commands/plan-push.js",
   "src/commands/plan-status.js",
+  "src/commands/report.js",
+  "src/commands/start.js",
   "src/compilation-artifact.js",
   "src/credentials.js",
   "src/file-system.js",
@@ -65,6 +83,7 @@ export const packedFileAllowlist = [
   "src/plan-compile-progress.js",
   "src/plan-state.js",
   "src/root-output.js",
+  "src/service-client.js",
   "src/uuid-v7.js",
   "src/version.js",
 ];

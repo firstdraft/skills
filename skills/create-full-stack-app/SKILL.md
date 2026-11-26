@@ -28,7 +28,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.9.3, CLI 0.9.0, API 0.8, Plan 0.23; catalog selection is separate.
+Targets plugin 0.10.0, CLI 0.10.0, API 0.9, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/plan/appearance.md) controls theme and native colors.
@@ -37,8 +37,8 @@ Targets plugin 0.9.3, CLI 0.9.0, API 0.8, Plan 0.23; catalog selection is separa
 - Preview iPhone and Android apps in [Revyl](references/plan/native-apps.md#previewing-after-compile); Rails
   work needs only the local web app.
 
-Support claims rest on the matching analysis, its GapSet, and its `analyzer_release` and `compiler_release`, not on
-these pages or the public Guide. `valid` does not prove Compilation, and Compilation does not prove behavior.
+Support claims rest on the matching analysis, its GapSet, and its `analyzer_release` and `compiler_release`.
+`valid` does not prove Compilation, and Compilation does not prove behavior.
 
 ## Load references only when needed
 
@@ -47,7 +47,8 @@ is left to write, and decisions to raise.
 
 Plan and records:
 
-- [Plan structure](references/plan/plan-structure.md): root and Application keys, names, paths, omission; open first.
+- [Plan structure](references/plan/plan-structure.md): root and Application keys, `mail`, names, paths, omission;
+  open first.
 - [Entities](references/plan/entities.md): `key`, `name`, `primary_descriptor`, `icon`; adding or naming a record type.
 - [Fields](references/plan/fields.md): shared Field keys; text, number, date, URL, and zone types; any stored value.
 - [Defaults](references/plan/defaults.md): `default` on a Field or Reference; a value a new record starts with.
@@ -56,7 +57,7 @@ Plan and records:
 Field types:
 
 - [Enum Fields](references/plan/enum-fields.md): `enum` values, `ordinal`; one choice from a fixed list.
-- [State Machine Fields](references/plan/state-machine-fields.md): states, events, `owner`; approve, cancel, a workflow.
+- [State Machine Fields](references/plan/state-machine-fields.md): states, events and their buttons, `owner`; approve, a workflow.
 - [Money Fields](references/plan/money-fields.md): `money`, one currency per Field; prices, fees, budgets.
 - [Position Fields](references/plan/position-fields.md): `position`; steps, cards, or tracks people order by hand.
 - [Counter Fields](references/plan/counter-fields.md): `counter`, `derivation`; counts and sums of related records.
@@ -81,7 +82,7 @@ Lists, filters, and pages:
 People, access, and the app:
 
 - [Accounts](references/plan/accounts.md): `account`, sign-up, sign-in, reset, `/account`, demo logins.
-- [Policies](references/plan/policies.md): who may see, add, change, delete; gates, `owner`; before any authorization.
+- [Policies](references/plan/policies.md): who may see, add, change, delete; gates; "or any admin"; before any authorization.
 - [Appearance](references/plan/appearance.md): `theme`, `tint_color`, icons; dark mode, brand colors, app icons.
 - [Native apps](references/plan/native-apps.md): `native.ios`, `native.android`, tabs, Revyl; iPhone and Android.
 - [Development data](references/plan/development-data.md): `development_data`, demo Accounts; preview samples.
@@ -108,37 +109,38 @@ end to end; for a question the pages leave open, read only the definition of the
 ## Verify the local capability
 
 Work from the project root. Resolve `<skill-dir>` below to the absolute directory containing this `SKILL.md`,
-using the loaded Skill path (expand any alias with its supplied Skill root). The helper prefers an executable
-project wrapper at `./bin/firstdraft`, then
-the plugin's bundled CLI, then `firstdraft` on PATH. Keep that order: a project wrapper may supply credentials.
-Use the same resolved helper path in each shell call; shell functions do not persist between tool calls.
-Do not collapse multiword CLI invocations into scalar shell variables: shells differ in word splitting and may
-pass the whole line as one unknown command.
+using the loaded Skill path (expand any alias with its supplied Skill root). Use the same resolved helper path in
+each shell call; shell functions do not persist between tool calls. Never store a multiword CLI invocation in one
+shell variable.
+
+Run `start` before other First Draft work:
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-firstdraft_cli --help
+firstdraft_cli start
 ```
 
-Require top-level help that lists `generate`, `plan`, and `compilation`. The compatible CLI supplies these public
-commands:
+It prints one fact per line. Run each command its lines name, as printed, through the helper:
+`'firstdraft login --no-wait'` is `firstdraft_cli login --no-wait`. Pass on an
+[update line](references/diagnostics-and-recovery.md#update-and-stop-lines), from any command, once. Then:
 
-- `generate uuid` and `generate application-key`;
-- `plan init`, `plan push`, `plan status`, and `plan compile` (local `--output .` by default) or optional `--output <path>`;
-- `compilation status`, `compilation download`, and `compilation cancel`; and
-- `login` and `logout`, which only the user runs.
+- `Ready: First Draft accepted ...`: go on. Without a `Reports are on:` line after it, never raise reports or notes.
+- `To log in, run ...` or `Not logged in: First Draft did not accept the saved login ...`: log in as below.
+- `Unknown command.`: this CLI predates `start`; tell the user the update steps are at https://firstdraft.com/update.
+- Anything else, such as `Not logged in: First Draft did not accept <variable>. ...`, `update_required`, or the
+  helper's `First Draft CLI is unavailable:`: tell the user what it says.
 
-There is no public `plan publish` or `plan subject-id`. Never replace the CLI automatically.
-If its help differs, report it and stop remote work instead of using HTTP directly; local Plan work may continue.
-Verify the registry and catalog before recommending an installation or upgrade; a source candidate may be unreleased.
+Until `Ready:`, do no remote work; local Plan work may continue. Never call First Draft's HTTP API yourself.
 
-New remote work uses `https://firstdraft.com`; for requested staging use `firstdraft_cli --staging plan push`.
-Read [environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) before remote work.
+You may start the [login](references/diagnostics-and-recovery.md#log-in-for-the-user): run
+`firstdraft_cli login --no-wait` and show the user the link and the code exactly as printed. When they say they
+approved, run `firstdraft_cli login --finish`, then `start` again, then resume. Never open the link, approve for the
+user, or ask for a token in the conversation. Only the user runs `logout`.
 
-`.firstdraft/state.json` is private CLI-owned state: never print, paste, commit, or treat it as Plan content.
-Never request or expose tokens. Follow a wrapper's credential bootstrap without reading ignored environment files.
-Otherwise ask the user to log in once per environment in their own terminal, as the reference describes; never run
-`login` or `logout` yourself. Once configured, resume the requested operation without fresh authorization.
+Select requested staging, or a resumed Project's saved origin, for each remote command, `start` included, as
+[environment setup](references/diagnostics-and-recovery.md#local-state-and-credentials) describes.
+`.firstdraft/state.json` and `compilation.json` are private CLI-owned state: never edit, commit, or treat them as
+Plan content.
 
 ## Initialize or resume the local Plan
 
@@ -158,10 +160,10 @@ firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli generate application-key --name "<name>"
 ```
 
-If initialization fails, follow the stable error in the recovery reference. Preserve any partial `.firstdraft/`
-directory. If `.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not
-reinitialize. Inspect private state only for a recovery check explicitly named in the recovery reference.
-A Plan whose `target.profile` is not `rails-sketch/2026-10` belongs to a retired profile; follow
+If initialization fails, follow its stable error and preserve any partial `.firstdraft/` directory. If
+`.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not reinitialize.
+Inspect private state only for a check the reference names, such as `api_url` for `start`. A Plan whose
+`target.profile` is not `rails-sketch/2026-11` belongs to a retired profile; follow
 [retired target profile](references/diagnostics-and-recovery.md#retired-target-profile) instead of pushing it.
 
 ## Interview and author incrementally
@@ -293,9 +295,9 @@ repository.
 Invoke it exactly once without another confirmation or gap field; do not reimplement CLI internals. Tell the user
 it usually takes under a minute.
 
-Report the output only after materialization verifies. On `request_outcome_unknown` with `phase: "compilation"`,
-preserve Plan, private state, and the selected output; do not retry or change the output. A validated retained ID
-permits status and, after success, download. Never Compile concurrently. On a failed Compilation, read
+Report the output only after materialization verifies. On `request_outcome_unknown`, rerun the same command once,
+with the same output. A validated retained ID permits status and, after success, download. Never Compile
+concurrently. On a failed Compilation, read
 [Failed Compilation](references/diagnostics-and-recovery.md#failed-compilation) first; the Plan is not the cause.
 
 ## Inspect or download the retained Compilation
@@ -331,8 +333,9 @@ Read the [error-envelope rules](references/diagnostics-and-recovery.md#diagnosti
 [stable error family](references/diagnostics-and-recovery.md#stable-error-families) before acting. Unrecognized
 output stops recovery. Branch on the stable `error` and structured fields, not `detail`, elapsed time, or HTTP status.
 
-Preserve exact bytes and private state after ambiguous mutations. An outcome-unknown push or Compilation start stops.
-Follow the reference for phase-specific recovery and let the CLI own output rollback.
+Preserve exact bytes and private state after ambiguous mutations, and rerun an outcome-unknown push or Compilation
+start only once. Let the CLI own output rollback. At `update_required`, or `rate_limited` from a push or Compile,
+tell the user what the CLI said and stop remote work; never retry in a loop or switch accounts.
 
 Do not expose tokens, private state, raw artifacts, unvalidated bodies, or secrets. Deleting or altering a remote
 repository requires a separate user request and an exact verified identity.
@@ -342,12 +345,15 @@ repository requires a separate user request and an exact verified identity.
 After Compile, follow the [application handoff](references/diagnostics-and-recovery.md#application-handoff): after
 root adoption, the [root handoff](references/diagnostics-and-recovery.md#root-adoption-handoff) first, then the
 [notes handoff](references/diagnostics-and-recovery.md#implementation-notes-handoff). Then work in this order, even
-where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner:
+where an app's `AGENTS.md` or README from an earlier Compile says to preview sooner. If `start` printed
+`Reports are on:`, send the
+[progress and failure reports](references/diagnostics-and-recovery.md#progress-and-failure-reports) at each step
+until one says reports are off.
 
 1. Run setup and the specs, as the [test run](references/diagnostics-and-recovery.md#run-the-generated-tests) says.
 2. Tell the user what there is to write, one line per item: each entry under the README's "Behavior to write",
    each placeholder example, each item a page told you to add to your own list, and each step the user described
-   that no generated page performs, such as approving a request. Also say what its "What you supply" section
+   that no generated page performs, such as sending a reminder. Also say what its "What you supply" section
    asks of them.
 3. Write every item and fill in every placeholder example until the specs pass, telling the user in one line as
    each is finished.

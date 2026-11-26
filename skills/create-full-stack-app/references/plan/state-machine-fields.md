@@ -1,6 +1,6 @@
 ---
 name: state-machine-fields
-description: State Machine Fields: a `state_machine` Field's states, starting state, events, effects, and `owner` events. Open it when a record moves through a workflow by named actions such as approve.
+description: State Machine Fields: a `state_machine` Field's states, starting state, events, who fires each event from a page, effects, and `owner` events. Open it when a record moves through a workflow by named actions such as approve.
 ---
 
 # State Machine Fields
@@ -13,18 +13,18 @@ pick the value freely in a form.
 - **First Draft generates:** the column; an AASM machine with the states, the starting state, and each event; one
   timestamp effect per event; a guard against assigning the state directly; state labels on list and detail pages;
   Predicates and Validation conditions that read the state; Policies that read it, when the Plan has an Account
-  Entity; example records moved into later states; a spec for each event from each state.
-- **You write after Compile:** what fires each event: a button with its route and controller action, or another
-  caller such as a job. No generated page fires an event, so until you add one the state never changes in the app.
-  README.md lists every event, and its placeholder example in the state machine spec fails until you replace it. You
-  also write every event that is a stub: one whose effects go beyond one timestamp, and one marked `owner` for an
-  effect or a condition the Plan cannot state. Its three methods raise `NotImplementedError`, and its specs fail
-  until you write it. Write both before the preview; `SKILL.md` has the order of work. Who may fire each event is
-  yours to check in the action you write.
+  Entity; example records moved into later states; a spec for each event from each state; and, for each transition
+  whose `authorization` says who fires it from a page, a button on the record's details page with its route, its
+  controller action, and request specs.
+- **You write after Compile:** what fires each event that has no button, such as a job. README.md lists each, and
+  its placeholder example in the state machine spec fails until you replace it. You also write every event that is a
+  stub: one whose effects go beyond one timestamp, and one marked `owner` for an effect or a condition the Plan
+  cannot state. Its three methods raise `NotImplementedError`, and its specs fail until you write it. Write both
+  before the preview; `SKILL.md` has the order of work.
 
 Where analysis leaves something out, it reports a gap code such as
-`foundation_plan.gap.state_transition.effects_not_generated` in the result of `plan push`. Every transition also has
-`foundation_plan.gap.state_transition_control.not_generated`, because nothing generated fires it. An `owner`
+`foundation_plan.gap.state_transition.effects_not_generated` in the result of `plan push`. Every transition without
+a button has `foundation_plan.gap.state_transition_control.not_generated`, whose reason says why. An `owner`
 transition is your choice, so it has no other gap record.
 
 ## Simple example
@@ -88,6 +88,96 @@ status/done: Done
 "complete rejects status from done". It also has one placeholder example per event, such as "a caller fires
 task.status.complete", that fails until you write what fires the event; see [Not generated](#not-generated).
 
+### Who fires an event from its page
+
+Give a transition `authorization` whenever a person fires its event from the record's page, and choose the value by
+who the person said may do it. It takes the values a Scaffold part takes:
+
+- `{"policy": "<entity>.<key>"}`, a Policy of the transition's own Entity, asked of the record: "the person who
+  submitted it". The Policy that guards the record's Edit page usually fits.
+- `{"policy": "<entity>.<key>", "record": {"kind": "environment", "name": "current_account"}}`, a gate on the
+  Account Entity, asked of the person signed in: "an admin", "a coordinator". On a machine of the Account Entity
+  itself, such as approving a volunteer, a rule about the person pressing the button needs `record` too.
+- `"public"`: anyone who can open the details page, whose own `show` authorization still applies.
+
+Leave `authorization` out only when nothing a person presses fires the event: code, a job, or a webhook. Keep it when
+the event needs a value the person types, such as a reason a Validation requires in the state it leads to. A button
+collects nothing, so offer the Field on the Edit page, where the person saves it before pressing the button, or write
+a form that sets it and fires the event. Keep it on a stub too: README.md repeats who may fire the event, and you add
+the button when you write the event. Several events may share one Policy. A Policy whose `operation` equals an
+event's key binds nothing by that.
+
+An admin approves, declines, or escalates an expense, and the person who submitted it cancels or resubmits it. A
+decline needs a reason, typed on the Edit page first, and `escalate` is a stub. On the Account Entity,
+`user.admins_only` is the gate from [Policies](policies.md); on the expense, `manage_own` compares
+`expense.submitter` with `current_account`:
+
+```json
+{"subject_uuid": "…", "key": "approve", "from": ["submitted"], "to": "approved",
+ "authorization": {"policy": "user.admins_only", "record": {"kind": "environment", "name": "current_account"}},
+ "effects": [{"kind": "set_field", "field": "expense.decided_at",
+              "value": {"kind": "environment", "name": "current_time"}}]},
+{"subject_uuid": "…", "key": "cancel", "from": ["submitted", "approved"], "to": "cancelled",
+ "authorization": {"policy": "expense.manage_own"}}
+```
+
+`decline` and `escalate` name the gate as `approve` does, and `resubmit` names `expense.manage_own`.
+
+```ruby
+# config/routes.rb
+resources :expenses, only: %i[index show new create edit update] do
+  member do
+    patch :approve
+    patch :decline
+    patch :cancel
+    patch :resubmit
+  end
+end
+
+# app/controllers/expenses_controller.rb, shortened
+before_action :authorize_administer, only: %i[approve decline]
+
+def cancel
+  @expense = Expense.find(params.expect(:id))
+  authorize! @expense, to: :manage?, with: ExpensePolicy
+  @expense.cancel!
+  redirect_to expense_path(@expense), status: :see_other,
+    success: t(".success")
+rescue AASM::InvalidTransition
+  redirect_to expense_path(@expense), alert: t(".refused"), status: :see_other
+rescue ActiveRecord::RecordInvalid => error
+  redirect_to expense_path(@expense), alert: error.record.errors.full_messages.to_sentence, status: :see_other
+end
+
+# app/models/expense.rb
+aasm :status, column: :status, no_direct_assignment: true, requires_lock: true do
+```
+
+```erb
+<%# app/views/expenses/_expense.html.erb, on the details page %>
+<% if expense.may_approve? && allowed_to?(:administer?, current_account, with: UserPolicy) %>
+  <%= button_to t(".events.approve"), approve_expense_path(expense),
+    method: :patch, class: "btn" %>
+<% end %>
+```
+
+The action looks the record up as the details page does, and a gate answers first: a guest is sent to sign in, and an
+account the gate refuses gets 403. A state the event cannot leave, or a save a Validation refuses, returns to the
+details page with an alert. `spec/requests/expenses_spec.rb` fires each event as an allowed account and checks
+another account, a guest, and a state the event cannot leave. The label is the event key humanized.
+
+`requires_lock: true` makes each bang method lock and reload its record, so of two requests that loaded one state,
+the second waits and decides from the state the first left. Save a record's other changes before you call a bang
+method on it: locking a record with unsaved changes raises. Until the reason is saved, Decline returns the
+Validation's message. Setup cannot fill a value a state needs, such as the decline reason, so README.md lists the
+examples that need that state under "Test coverage to complete".
+
+An event gets no button when its Entity has no `show` page, when the event is a stub (an `owner` event, one whose
+effects go beyond one timestamp, or one on an optional machine), or when First Draft does not generate the Policy it
+names. It stays in the README's list of events that nothing fires, whose entry repeats who may fire it, such as "The
+Plan says a signed-in Account that `user.admins_only` allows may fire it", so add the button when you write the
+event.
+
 ### When the Plan cannot say an event
 
 A task can be completed only when none of its checklist items is still open. A transition has no key for a
@@ -124,9 +214,10 @@ README.md lists it under "Behavior to write", in "Rules": "**`Task#complete!`** 
 `status` from `open` to `done` and sets `completed_at` to the current time, as the transition `task.status.complete`
 … says. Its `owner` description says the rest: Only when none of the task's checklist items is open. Until then,
 `complete!`, `complete`, and `may_complete?` raise. Add `event :complete` to the `aasm :status` block and delete the
-three stub methods below it." As for every event, it also lists `Task#complete!` in "Pages and actions", for what
-fires it. The transition's only gap record is `foundation_plan.gap.state_transition_control.not_generated`, which
-every transition has; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`.
+three stub methods below it." As for every event without a button, it also lists `Task#complete!` in "Pages and
+actions", for what fires it. The transition's only gap record is
+`foundation_plan.gap.state_transition_control.not_generated`, which every transition without a button has; each effect
+beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`.
 
 ## Keys
 
@@ -138,7 +229,7 @@ The Field, in `application.entities[].fields[]`:
 | `type` | yes | `"state_machine"` | | A `string` column and an `aasm` block. |
 | `required` | yes | `true`, `false` | | `true`: `null: false` and the AASM machine. `false` needs `settings.when`: see [Optional machines](#optional-machines). |
 | `settings` | yes | the object below | | |
-| `notes` | no | text | none | Nothing; shown to people reviewing the Plan. Use it to say who may fire each event. |
+| `notes` | no | text | none | Nothing; shown to people reviewing the Plan. |
 | `validations` | no | rules on the state Field itself, such as `comparison` or `exclusion` | none | Left out: analysis warns and reports `foundation_plan.gap.validation.not_generated`, and the model gets `validate :<key>` with an empty method and a failing example, as on [Validations](validations.md). Restricting the state through its events is usually simpler. A rule on another Field may read the state in its `when`; see [Used elsewhere](#used-elsewhere-in-the-plan). |
 | `encrypted_at_rest`, `redact_from_logs` | no | `true`, `false` | `false` | Nothing: reported as `foundation_plan.gap.field_modifier.*`. |
 
@@ -150,7 +241,7 @@ A State Machine Field takes no `default` and no `immutable`; analysis rejects ei
 | --- | --- | --- | --- | --- |
 | `initial_state` | yes | the `key` of one state | | `state :open, initial: true`; every new record starts there. |
 | `states[]` | yes | one or more `{subject_uuid, key, name}`; keys unique | | `state :<key>`, AASM's helpers (`task.open?`, `Task.open`), and the label at `activerecord.attributes.<model>.<field>/<key>`. |
-| `transitions[]` | yes | one or more `{subject_uuid, key, from, to, effects, owner}`; keys unique on the Field | | `event :<key>`, giving `task.complete!`, `task.complete`, and `task.may_complete?`. |
+| `transitions[]` | yes | one or more `{subject_uuid, key, from, to, effects, authorization, owner}`; keys unique on the Field | | `event :<key>`, giving `task.complete!`, `task.complete`, and `task.may_complete?`. |
 | `when` | only when `required` is `false` | an Expression | none | An empty callback for you to fill; see [Optional machines](#optional-machines). Analysis rejects `when` on a required machine. |
 
 `transitions[]`:
@@ -160,7 +251,8 @@ A State Machine Field takes no `default` and no `immutable`; analysis rejects ei
 | `from` | yes | one or more state keys | | `transitions from: :open` or `from: [:submitted, :approved]`. `from` may include `to`. |
 | `to` | yes | one state key | | `to: :done`. |
 | `effects[]` | no | `{"kind": "set_field", "field": "<entity>.<field>", "value": …}` | none | One effect that sets an optional `datetime` Field on the same record to `{"kind": "environment", "name": "current_time"}` or `{"kind": "literal", "value": null}` gives `after: -> { self.completed_at = Time.current }`. Any other effect, or a second one, makes the whole event a [stub](#not-generated). |
-| `owner` | no | `{"description": "<a sentence or two>"}`, beside `from` and `to`; `effects` may stay beside it | none | The event as a stub: its bang method, its non-bang form, and its `may_` predicate raise `NotImplementedError`. README.md lists it under "Behavior to write" with the description, and the state machine spec gets a placeholder example. The transition's only gap record is `foundation_plan.gap.state_transition_control.not_generated`, which every transition has; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`. Use it for an effect or a condition the Plan cannot state; see [Not generated](#not-generated). |
+| `authorization` | no | `"public"`, `{"policy": "<entity>.<key>"}`, or the same with `"record": {"kind": "environment", "name": "current_account"}` | none | A button on the details page, a `patch` member route, an action, and request specs; see [Who fires an event from its page](#who-fires-an-event-from-its-page). Left out: no button, and README.md lists the event for you to wire up. |
+| `owner` | no | `{"description": "<a sentence or two>"}`, beside `from` and `to`; `effects` may stay beside it | none | The event as a stub: its bang method, its non-bang form, and its `may_` predicate raise `NotImplementedError`. README.md lists it under "Behavior to write" with the description, and the state machine spec gets a placeholder example. The transition's only gap record is `foundation_plan.gap.state_transition_control.not_generated`, which every transition without a button has, and an `owner` event never has one; each effect beside it is reported as `foundation_plan.gap.state_transition_effect.not_generated`. Use it for an effect or a condition the Plan cannot state; see [Not generated](#not-generated). |
 
 ## Method names
 
@@ -266,7 +358,8 @@ waiting, and an expense can be edited only while submitted. `escalate` has two e
 
 `decline_reason` is only in `update.inputs`. Its rule reads `declined`, a state no new expense is in, so the New
 page needs no control for it, and analysis reports no gap for it. The Policy is generated only because the Plan also has
-an Account Entity, left out here; see [Policies](policies.md).
+an Account Entity, left out here; see [Policies](policies.md). No transition has `authorization` here; [Who fires an
+event from its page](#who-fires-an-event-from-its-page) gives the same expense its buttons.
 
 ### Generates
 
@@ -393,11 +486,11 @@ the starting state where `when` holds, before the preview. Prefer a required mac
 
 ## Not generated
 
-- **A way to fire an event.** No page has a button, and no route or controller action exists, and the Plan has no
-  key for one. Analysis reports `foundation_plan.gap.state_transition_control.not_generated` at every transition,
-  whether its event is generated, a stub, or `owner`. README.md lists each event under "Behavior to write", in
-  "Pages and actions", by its bang method, and the state machine spec has a placeholder example for each that raises
-  `NotImplementedError`. In the simple example:
+- **A way to fire an event that has no button.** Analysis reports
+  `foundation_plan.gap.state_transition_control.not_generated` at each such transition, whether its event is
+  generated, a stub, or `owner`. README.md lists each under "Behavior to write", in "Pages and actions", by its bang
+  method, and the state machine spec has a placeholder example for each that raises `NotImplementedError`. In the
+  simple example:
 
   ```text
   - **`Task#complete!`** (`app/controllers/tasks_controller.rb`) moves `status` from `open` to `done`, as the transition `task.status.complete` at `/application/entities/0/fields/1/settings/transitions/0` in `.firstdraft/submitted-foundation-plan.json` says, but no generated page, route, or action calls it. Add the code that calls it: a button with its route and controller action, or another caller such as a job. `spec/models/task_state_machine_spec.rb` has a placeholder example for it.
@@ -411,11 +504,11 @@ the starting state where `when` holds, before the preview. Prefer a required mac
   end
   ```
 
-  Before the preview, write what fires each event: a button, route, and controller action for an action people
-  take, as in [Changing it later](#changing-it-later), or a job or another caller for one that happens on its own.
-  Write a real example of what you add, in this spec or a request or system spec, and delete the placeholder. For a
-  stub, also write the event itself, as its entry under "Rules" says. Keep each button the person asked for in your
-  notes, since the README does not say which events get one, and ask the person before dropping an event.
+  Before the preview, write what fires each one: a job or another caller for an event that happens on its own, and
+  for a stub with `authorization`, the button its entry describes. Give every other event a person fires
+  `authorization`, so that Compile writes its button. Write a real example of what you add, in this spec or a
+  request or system spec, and delete the placeholder. For a stub, also write the event itself, as its
+  entry under "Rules" says. Ask the person before dropping an event.
 - **An event that does more than one timestamp.** One event generates one effect: a timestamp on the same record.
   Anything more makes the whole event a stub. Its bang method, its non-bang form, and its `may_` predicate raise
   `NotImplementedError` until you write the event, including the `from`, `to`, and timestamp that First Draft would
@@ -425,7 +518,7 @@ the starting state where `when` holds, before the preview. Prefer a required mac
     `foundation_plan.gap.state_transition.effects_not_generated`.
   - An effect `effects` cannot state, such as sending an email or creating another record: add `owner` to the
     transition, and keep beside it the effects the Plan can state. The transition's only gap record is the
-    `state_transition_control` one that every transition has.
+    `state_transition_control` one that every transition without a button has.
 
   ```json
   {"subject_uuid": "…", "key": "decline", "from": ["submitted"], "to": "declined",
@@ -453,10 +546,6 @@ the starting state where `when` holds, before the preview. Prefer a required mac
   has no key for it. Add `owner` to the transition with the condition in its description, as in
   [When the Plan cannot say an event](#when-the-plan-cannot-say-an-event). The whole event is a stub, as above;
   write it with the condition as an AASM guard (`guard:` on its `transitions` line).
-- **Who may fire an event.** The Plan has no shape for it, because no generated page fires events. Write it in the
-  Field's `notes`, and check it in the controller action you write before the preview. Without an Account Entity
-  the app has no sign-in and no Policies, so nothing can check it until you add accounts; see
-  [Accounts](accounts.md).
 - **A history of transitions** (who moved the record, and when, beyond the effect's timestamp). Declare the history
   as its own Entity when people need to see it. Writing a row on an event is an effect `effects` cannot state, so
   add `owner` to each transition that records history. Each of those events is then a stub; you can write the
@@ -485,23 +574,32 @@ These pass as `valid` and are reported as gaps:
   reports nothing for it, and the examples are generated.
 - **An event with an effect the Compiler cannot generate.** It becomes a stub, and example records in the state it
   leads to are dropped. An `owner` event does the same, with gap records for its effects and the dropped records;
-  the transition has only the `state_transition_control` record that every transition has.
+  the transition has only the `state_transition_control` record that every transition without a button has.
+- **An `authorization` Policy with a branch that never reads `current_account` beside one that does,** such as
+  "the submitter, or the submitter is an admin". Warning `foundation_plan.policy.write_branch_admits_anyone`: that
+  branch lets anyone fire the event on such a record; see [Policies](policies.md#a-gate-inside-a-records-rule).
+- **An event whose name the controller or its routes already use,** such as `request`, `process`, or `update`. Its
+  action and route take the namespaced name, such as `request_status`, with the warning
+  `foundation_plan.rails_target.state_machine.event_action_renamed`. Rename the event to keep the plain name.
 
 Analysis rejects an `initial_state`, `from`, or `to` that names no state
 (`foundation_plan.state_machine.state_not_found`); two states or two events with one `key`
 (`foundation_plan.identity.readable_path_duplicate`); an empty `transitions` list (`foundation_plan.schema.minItems`);
-`required: false` without `when` (`foundation_plan.schema.required`); and `when` on a required machine, `default`, or
-`immutable` (`foundation_plan.schema.not`).
+`required: false` without `when` (`foundation_plan.schema.required`); `when` on a required machine, `default`, or
+`immutable` (`foundation_plan.schema.not`); and an `authorization` Policy that names nothing
+(`foundation_plan.link.policy_not_found`) or belongs to the wrong Entity for its form
+(`foundation_plan.state_machine.authorization_policy_scope_incompatible`). Both messages list the Policies it could
+name; change the name to one of them.
 
 ## Decisions to raise
 
-- **Ask:** the states, the actions that move a record between them, and who may take each action. Recommend one
-  machine per Entity unless two workflows are independent.
+- **Ask:** the states, the actions that move a record between them, and who may take each action from the record's
+  page. Each answer becomes that transition's `authorization`. Recommend one machine per Entity unless two workflows
+  are independent.
 - **Ask:** what each action records, and any condition on when it may happen. One timestamp per action generates.
   For more, say which events you will write yourself before the preview.
-- **Tell:** no generated page fires an event, so before the preview you will write what fires each one: a button,
-  route, and controller action for each action people take, and a job or another caller for the rest. Ask before
-  dropping an event.
+- **Tell:** each action people take from the page gets a button, and before the preview you will write what fires
+  the rest, such as a job, and the button for each event you write yourself. Ask before dropping an event.
 
 ## Changing it later
 
@@ -517,31 +615,8 @@ Plan change reaches that app only when you copy it across.
   the `aasm` block and delete its three stub methods; they are defined below the block and would hide the event.
   Then make its examples in the state machine spec pass, and replace any placeholder example there with one that
   checks what the description asks for.
-- **To let people fire an event,** write a route, an action, and a button before the preview, then replace the
-  event's placeholder example with a real one, in the state machine spec or a request or system spec. This code is
-  yours, not generated:
-
-```ruby
-# config/routes.rb
-resources :expenses do
-  member { post :approve }
-end
-
-# app/controllers/expenses_controller.rb
-def approve
-  @expense = Expense.find(params.expect(:id))
-  authorize! @expense, to: :update?, with: ExpensePolicy # only when the controller declares verify_authorized
-  @expense.approve!
-  redirect_to expense_path(@expense), status: :see_other
-end
-```
-
-A generated controller declares `verify_authorized` only when one of its pages uses a Policy, which needs an Account
-Entity. Then every new action must call `authorize!` with one of the Entity's Policies, or be added to the
-controller's `skip_verify_authorized only: %i[…]` line. Without an Account Entity there is no Policy class and no
-check: leave the `authorize!` line out.
-
-```erb
-<%# app/views/expenses/_expense.html.erb %>
-<%= button_to "Approve", approve_expense_path(expense), class: "btn" if expense.may_approve? %>
-```
+- **To let people fire an event that has no button,** give its transition `authorization` for the next Compile. In
+  the app you have, add the route, action, button, and locale keys that a new app gets, as
+  [Who fires an event from its page](#who-fires-an-event-from-its-page) shows them, and as the
+  [changelog's steps for an existing app](https://github.com/firstdraft/skills/blob/main/CHANGELOG.md#2026-11-21-buttons-for-state-machine-events)
+  give them in full, with the check. Then replace the event's placeholder example with a real one.

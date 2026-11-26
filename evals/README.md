@@ -30,7 +30,9 @@ pages' example Plans, what the Service reported for each, and the page tests are
   The protocol is evaluator-facing and is not packaged with the Skill.
 - Use a controlled local service, and fake GitHub transport for a case that creates a repository unless a live
   journey is explicitly approved. After an ambiguous external result, record it and reconcile read-only rather than
-  repeating the mutation.
+  repeating the mutation. The exception is the one rerun of an ambiguous Plan push or Compilation start that
+  [ambiguous mutations](../skills/create-full-stack-app/references/diagnostics-and-recovery.md#ambiguous-mutations)
+  describes.
 - Grade requested meaning and unaffected subject identities, not preferred wording. A source-only case does not
   establish target support, installed-client behavior, runtime results, or a live push to GitHub.
 

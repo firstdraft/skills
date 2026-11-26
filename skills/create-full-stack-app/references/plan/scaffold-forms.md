@@ -165,7 +165,9 @@ These pass analysis and are left out (`foundation_plan.gap.scaffold.binding.not_
 A Reference that a `current_account` binding sets is often one nobody should change later, such as an owner. Add
 `"immutable": true` to it; the model gets `attr_readonly :owner_id`.
 
-`update` and `destroy` take no `bindings`; analysis rejects them.
+`update` and `destroy` take no `bindings`; analysis rejects them. It also rejects a binding whose Field, Reference,
+`path`, or `record` names nothing (`foundation_plan.link.*_not_found`); a `reference_record` binding must name a
+[reference data](reference-data.md) record, never a development record.
 
 ## What a form needs from the Entity
 
@@ -442,8 +444,11 @@ standalone New page, and `_new_<parent>_form` for an Add form, such as `tasks/_n
 - **A form that edits two Entities at once,** such as a project with its first task. Each form saves one record.
 - **A Delete button without the record's page.** With `destroy` and no `show`, the route exists and nothing links
   to it; no gap is reported. Select `show` too.
-- **A different rule for New than for Create.** Both use `create.authorization`, checked after bindings and before
-  the person types. A rule that tests an input the person fills, such as a chosen Reference, denies the New page.
+- **A different rule for New than for Create.** New checks `create.authorization` against the empty record after its
+  bindings, before the person types, and Create checks the submitted record. A rule that writes the condition on the
+  parent the form offers inline gets a New permission of its own. Any other rule that tests an input the person fills
+  fails the empty record, so New opens only where another branch passes, such as an admin's, as
+  [Policies](policies.md#keys) describes.
 
 ## Analysis does not catch
 
@@ -452,11 +457,14 @@ These pass analysis as `valid`:
 - **An `update` with no `inputs` and an `edit` route.** The Edit page is an empty form, and the generated parameter
   method is `params.expect(project: [])`. Leave `edit` and `update` out when nothing is editable.
 - **A standalone `create` with no `inputs`.** The New page is a form with only a submit button.
-- **A standalone `create` whose Policy reads a Reference the person picks,** such as a task whose rule asks about
-  its project, with `{"association": "task.project"}` as an input. The New page is checked before anything is
-  picked, so it answers 403 to everyone and its New link never shows. Analysis reports no gap; README.md lists the
-  missing New example under "Test coverage to complete". Offer the person to add the record from its parent's page
-  instead.
+- **A standalone `create` whose Policy needs a value the form sets,** such as a Field the person types, an editable
+  Reference that must equal `current_account`, or a parent condition named as a Predicate. The New page asks the rule
+  about the empty record before anything is typed or picked, so it opens only where that record passes, as an admin
+  branch of `or` lets an admin in, and answers 403 to everyone else. Analysis reports no gap. Offer the person to add
+  the record from its parent's page instead, or bind the Reference. A rule that reads a parent the form offers, such as
+  a task whose rule asks about its project with `{"association": "task.project"}` as an input, opens New for anyone with
+  a project that would pass, and the select lists only those projects, when the rule reads nothing else the form sets.
+  See [Policies](policies.md#keys).
 
 These pass as `valid` and are reported as gaps:
 

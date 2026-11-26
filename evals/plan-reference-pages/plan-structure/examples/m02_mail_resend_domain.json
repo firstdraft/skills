@@ -1,0 +1,16 @@
+{
+  "format": "firstdraft.foundation-plan.sketch/0.23",
+  "target": {
+    "id": "rails",
+    "profile": "rails-sketch/2026-11"
+  },
+  "application": {
+    "key": "reading_club",
+    "name": "Northside Readers",
+    "domain": "northsidereaders.example.com",
+    "native": {},
+    "delivery": {},
+    "mail": "resend",
+    "entities": []
+  }
+}

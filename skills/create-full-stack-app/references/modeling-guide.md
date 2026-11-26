@@ -481,7 +481,8 @@ Select `native.ios` and `native.android` independently when the user wants those
 Compilation emits each with at least one main-navigation entry, public or protected, and an identity that fits its
 [platform limits](plan/native-apps.md#keys); otherwise the valid run records an unrealized-client
 target gap. Domain supplies a native HTTPS origin and platform identifier;
-it also configures the Rails production mailer host. It does not provision DNS, deployment, TLS, or mail delivery.
+it also configures the Rails production mailer host and, in an app that sends mail, the default sender. It does not
+provision DNS, deployment, or TLS, or verify the domain with Resend.
 Without a domain the native identifiers are explicit placeholders. Semantic icons inform Web, SF Symbol, and
 Material navigation. The phone apps show the same lists as the web app, protected ones and the Account tab included,
 and people sign in through the generated web pages inside the app. A private app needs no public page for its phone
@@ -505,6 +506,8 @@ or incomplete. Requirements without a v0.23 shape, including notification trigge
 and iPad, remain in [implementation notes](#retain-implementation-requirements) and the semantic read-back as
 currently unplannable rather than being invented as Plan JSON or promised a GapSet record.
 The authored `delivery` channel block itself remains in the Plan and receives its expected service-support gap.
+When any of those requirements sends email, also write `"mail": "resend"`, so the app has its mail provider before
+the sending code is written; see [Plan structure](plan/plan-structure.md#mail).
 
 ## Preserve intent during diagnostics
 
@@ -544,13 +547,14 @@ Write it for a reader who is not technical, in this order:
    clients; what each main list shows; a few of the proposed sample records and any the gaps will drop; and
    delegated choices, assumptions, and exclusions. For an Account, say plainly whether people can sign in right
    after signing up or confirm their email first, as the
-   [Accounts page](plan/accounts.md) describes.
+   [Accounts page](plan/accounts.md) describes. When the app sends mail, say that it goes through Resend, which the
+   user sets up after Compile.
 2. What is not generated yet. Group the gaps by what the user will notice, lead with that effect, and say what
    the app does instead, for example "Descriptions are stored as plain text; formatting isn't generated yet" or
    "The rule that usernames can't be admin isn't generated yet; any username is accepted". Use one line per group
    rather than one per record, and say that you will write each group, and every `owner` subject, in Rails before
-   the first preview. Include each step the user described that no generated page performs, such as approving a
-   request; analysis lists no gap for it.
+   the first preview. Include each step the user described that no generated page performs, such as sending a
+   reminder email; analysis lists no gap for it.
 3. What is built otherwise: outstanding implementation notes and any part of the idea outside First Draft, each
    with where it will be built, and how the selected output mode carries the notes forward.
 4. Feasibility findings and open questions, with sources for what research found. Leave out a list with nothing

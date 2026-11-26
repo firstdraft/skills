@@ -6,12 +6,12 @@
   "analysis": {
     "id": "01900000-0000-7000-8000-000000000902",
     "graph_version": 1,
-    "head_source_sha256": "27d8d5cf60c5bc64496139d52559de130714fa5dd5e9e741921da4bffce297c2",
-    "analyzer_release": "foundation-plan-rails/application-2026-10-20-rails-8-1-4",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-10-20-rails-8-1-4",
+    "head_source_sha256": "51762800295aa80f33d5130a30f7da93324e326d63a2279f96f9a9a02d0e91bf",
+    "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
     "target": {
       "id": "rails",
-      "profile": "rails-sketch/2026-10"
+      "profile": "rails-sketch/2026-11"
     },
     "status": "analysis_failed",
     "diagnostics": [],

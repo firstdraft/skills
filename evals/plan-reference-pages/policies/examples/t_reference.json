@@ -2,7 +2,7 @@
  "format": "firstdraft.foundation-plan.sketch/0.23",
  "target": {
   "id": "rails",
-  "profile": "rails-sketch/2026-10"
+  "profile": "rails-sketch/2026-11"
  },
  "application": {
   "key": "tracker",
@@ -310,8 +310,31 @@
       "subject_uuid": "01a1cba4-c31e-7e80-b49b-ce30cdaf641b",
       "key": "owner_or_admin",
       "operation": "update",
-      "owner": {
-       "description": "The project's owner, or any signed-in account whose admin Field is true."
+      "allow_when": {
+       "kind": "or",
+       "expressions": [
+        {
+         "kind": "comparison",
+         "left": {
+          "target": {
+           "association": "project.owner"
+          }
+         },
+         "operator": "equals",
+         "right": {
+          "kind": "environment",
+          "name": "current_account"
+         }
+        },
+        {
+         "kind": "matches_policy",
+         "record": {
+          "kind": "environment",
+          "name": "current_account"
+         },
+         "policy": "user.admins_only"
+        }
+       ]
       }
      }
     ]

@@ -230,17 +230,64 @@ function splitProgressOutput(stderr) {
   assert.match(stderr, /\n$/);
   const lines = stderr.slice(0, -1).split("\n");
   const messages = [];
-  while (
-    lines[0]?.startsWith("First Draft: ") &&
-    isSafeProgressMessage(lines[0])
-  ) {
-    const [line] = lines.splice(0, 1);
-    messages.push(line);
+  while (lines[0]?.startsWith("First Draft: ") && isProgressMessage(lines[0])) {
+    messages.push(lines.shift());
   }
+  // At most one version line, after the progress and just before the result.
+  if (lines[0] !== undefined && isVersionLine(lines[0])) messages.push(lines.shift());
   return { messages, result: `${lines.join("\n")}\n` };
 }
 
+export const updateUrl = "https://firstdraft.com/update";
+// SemVer 2.0.0, as the CLI reads and prints it. The origin is checked by isCliOrigin below.
+const identifier = String.raw`(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)`;
+const versionPattern =
+  String.raw`(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-${identifier}(?:\.${identifier})*)?` +
+  String.raw`(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?`;
+const originPattern = String.raw`(?<origin>\S+)`;
+const updateSteps = updateUrl.replaceAll(".", String.raw`\.`);
+// A network command writes at most one of these, just before its result, from First Draft's version headers. The
+// CLI owns the wording, in its src/service-client.js.
+const versionLinePatterns = [
+  String.raw`an update is available \((plugin|CLI) ${versionPattern}; this setup has \1 ${versionPattern}\)\. ` +
+    String.raw`Tell the person the update steps are at ${updateSteps}`,
+  String.raw`FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version, so the CLI could not tell whether this ` +
+    String.raw`setup is current\. The update steps are at ${updateSteps}`,
+  String.raw`(?:First Draft requires (plugin|CLI) ${versionPattern} or later, and this setup has \1 ${versionPattern}|` +
+    String.raw`First Draft at ${originPattern} serves API contract ${versionPattern}, which is newer than CLI ` +
+    String.raw`${versionPattern} accepts)\. This command finished; tell the person to update with the steps at ` +
+    String.raw`${updateSteps} before the next one\.`,
+  String.raw`First Draft at ${originPattern} serves (?:API contract ${versionPattern}, which is older than CLI ` +
+    String.raw`${versionPattern} accepts|prerelease API contract ${versionPattern}, which CLI ${versionPattern} does ` +
+    String.raw`not accept)\. This command finished; use the CLI version that this First Draft origin supports before ` +
+    String.raw`the next one\.`,
+].map((pattern) => new RegExp(`^(?:${pattern})$`));
+
+export function isVersionLine(line) {
+  if (!line.startsWith("First Draft: ")) return false;
+
+  const message = line.slice("First Draft: ".length);
+  return versionLinePatterns.some((pattern) => {
+    const match = pattern.exec(message);
+    return match !== null && (match.groups?.origin === undefined || isCliOrigin(match.groups.origin));
+  });
+}
+
+// An origin the CLI accepts and prints: HTTPS, or HTTP on a loopback host, in URL's normalized form
+// (src/plan-state.js).
+function isCliOrigin(text) {
+  if (!URL.canParse(text)) return false;
+
+  const url = new URL(text);
+  const loopbackHttp = url.protocol === "http:" && ["127.0.0.1", "localhost", "[::1]"].includes(url.hostname);
+  return (url.protocol === "https:" || loopbackHttp) && url.origin === text;
+}
+
 function isSafeProgressMessage(line) {
+  return isVersionLine(line) || isProgressMessage(line);
+}
+
+function isProgressMessage(line) {
   return [
     "Analyzing Foundation Plan...",
     "Foundation Plan analysis valid.",

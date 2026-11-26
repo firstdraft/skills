@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import {
   cpSync,
   existsSync,
@@ -24,7 +25,7 @@ import {
   resolveNativeExecutable,
   runPluginCommand,
 } from "./claude-plugin-command.mjs";
-import { cliPackageVersion } from "./cli-contract/config.mjs";
+import { cliPackageVersion, startWithoutLogin } from "./cli-contract/config.mjs";
 import { isolatedPluginEnvironment } from "./plugin-isolation.mjs";
 
 const { values } = parseArgs({
@@ -117,13 +118,18 @@ try {
   const generation = run("/bin/sh", [helper, "generate", "application-key", "--name", "Claude Install Smoke"]);
   assert.equal(generation.stdout, "claude_install_smoke\n");
   assert.equal(generation.stderr, "");
+  // With no saved login and no token, start makes no request: it names the agent's login steps and exits 1.
+  const start = spawnSync("/bin/sh", [helper, "start"], { cwd: locations.work, env: environment, encoding: "utf8" });
+  assert.equal(start.status, 1, start.stderr);
+  assert.equal(start.stdout, startWithoutLogin(manifest.version));
+  assert.equal(JSON.parse(start.stderr).error, "authentication_required");
   assert.equal(existsSync(path.join(locations.work, ".firstdraft")), false);
   assert.equal(existsSync(path.join(locations.config, ".credentials.json")), false);
 
   process.stdout.write(
     "Claude Code " + version + ": installed First Draft " + manifest.version + "; discovered " +
       canonicalPluginSkillNames.length + " exact Skills; invoked CLI " + cliPackageVersion +
-      " and local generation without a global CLI or credentials.\n",
+      ", local generation, and start without a global CLI or credentials.\n",
   );
 } finally {
   rmSync(smokeRoot, { recursive: true, force: true });

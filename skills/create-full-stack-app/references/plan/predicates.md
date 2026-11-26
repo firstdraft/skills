@@ -375,14 +375,6 @@ a later release.
 
 These pass analysis as `valid`. Some report a gap, but the gap does not say what goes wrong in the app:
 
-- **A misspelled Predicate path on a list or related list.** The filter is dropped and the page shows every record.
-  `plan push` warns `foundation_plan.import.unsupported_capability` at that path, and analysis reports only the gap
-  `foundation_plan.gap.service.unsupported_capability` there. README.md lists it under "Behavior to write", in
-  "Pages and actions", titled with the list's path, such as `task.scaffold.index.predicate` or
-  `project.tasks.predicate`, with the controllers that load the list: "The Task index (`/tasks`) lists its records
-  without the filter the Plan names: First Draft did not import its `predicate`." None of them names the Predicate,
-  so check every path against the Predicate keys. A misspelled path in an Association or in `matches_predicate` is
-  rejected.
 - **Another Entity's Predicate on a list,** such as `task.open` on the project list. The list is generated without
   the filter (`foundation_plan.gap.predicate.not_generated`).
 - **A Predicate key equal to an enum value key, or `not_` and a value key,** such as `high` or `not_low` beside a
@@ -395,8 +387,10 @@ These pass analysis as `valid`. Some report a gap, but the gap does not say what
 Analysis rejects a literal that does not fit the Field (`foundation_plan.expression.literal_type_incompatible`), such
 as `"8"` for an integer or an unknown enum key; `current_time` against a `date` Field
 (`foundation_plan.expression.operand_type_incompatible`); an operator the Field type lacks, such as `greater_than` on
-an enum without `ordinal` (`foundation_plan.expression.operator_not_supported`); a missing Field or Predicate
-(`foundation_plan.link.field_not_found`, `foundation_plan.link.predicate_not_found`); `matches_predicate` naming
+an enum without `ordinal` (`foundation_plan.expression.operator_not_supported`); a missing Field or Predicate,
+including a misspelled `predicate` on a list or related list (`foundation_plan.link.field_not_found`,
+`foundation_plan.link.predicate_not_found`, whose message lists the Predicates that exist, such as "The Predicates of
+"task" are "task.open" and "task.overdue""); `matches_predicate` naming
 another Entity's Predicate (`foundation_plan.expression.predicate_scope_incompatible`); a reuse cycle
 (`foundation_plan.expression.predicate_cycle`); a collection Association in `through` or as a comparison target
 (`foundation_plan.expression.association_not_singular`); and an Association whose `predicate` belongs to another
@@ -419,8 +413,8 @@ A later Compile does not touch the app you already have. It writes a complete ne
 refuses a folder that already holds a compiled app. Code you wrote after Compile is never overwritten; a later
 Plan change reaches that app only when you copy it across.
 
-- **In the Plan:** renaming a `key` renames the scope. Change every path that names it in the same push; a list or
-  related list that still names the old path silently loses its filter.
+- **In the Plan:** renaming a `key` renames the scope. Change every path that names it in the same push; analysis
+  rejects a list or related list that still names the old path (`foundation_plan.link.predicate_not_found`).
 - **After Compile:** to write a stub, replace the `Kernel.raise` body in `app/models/<entity>.rb`, and replace the
   placeholder example in `spec/models/<entity>_spec.rb` with one that has a record the scope includes and a record
   it excludes. When a Policy reads the Predicate, the model also has a `?` method stub; write it to accept exactly

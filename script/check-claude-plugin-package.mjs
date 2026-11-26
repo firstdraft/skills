@@ -6,6 +6,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -58,18 +59,14 @@ assert.doesNotMatch(
 const temporaryDirectory = mkdtempSync(
   path.join(tmpdir(), "firstdraft-claude-plugin-check-"),
 );
-const cleanEnvironment = {...process.env};
-for (const name of [
-  "FIRSTDRAFT_API_URL",
-  "FIRSTDRAFT_API_TOKEN",
-  "FIRSTDRAFT_STAGING_API_TOKEN",
-  "CLAUDE_PLUGIN_OPTION_api_url",
-  "CLAUDE_PLUGIN_OPTION_api_token",
-  "CLAUDE_PLUGIN_OPTION_API_URL",
-  "CLAUDE_PLUGIN_OPTION_API_TOKEN",
-]) {
-  delete cleanEnvironment[name];
-}
+// The launcher reads the agent from the environment, so a check run inside Claude Code or Codex must not see its own.
+const cleanEnvironment = Object.fromEntries(
+  Object.entries(process.env).filter(
+    ([name]) =>
+      !/^(?:FIRSTDRAFT_|CLAUDE_PLUGIN_OPTION_|CLAUDE_CODE_|CODEX_)/.test(name) &&
+      !["CLAUDECODE", "AI_AGENT"].includes(name),
+  ),
+);
 // A credentials file saved by `firstdraft login` on this machine must not
 // reach the bundled CLI.
 cleanEnvironment.XDG_CONFIG_HOME = path.join(temporaryDirectory, "config");
@@ -178,6 +175,7 @@ try {
     arguments: ["--staging", "probe"],
     lowercasePluginApiTokenPresent: false,
     lowercasePluginApiUrlPresent: false,
+    pluginVersion: compatibility.version,
     uppercasePluginApiTokenPresent: true,
     uppercasePluginApiUrlPresent: true,
   });
@@ -197,6 +195,7 @@ try {
     arguments: ["probe"],
     lowercasePluginApiTokenPresent: false,
     lowercasePluginApiUrlPresent: false,
+    pluginVersion: compatibility.version,
     uppercasePluginApiTokenPresent: true,
     uppercasePluginApiUrlPresent: true,
   });
@@ -211,9 +210,46 @@ try {
     arguments: ["probe"],
     lowercasePluginApiTokenPresent: false,
     lowercasePluginApiUrlPresent: false,
+    pluginVersion: compatibility.version,
     uppercasePluginApiTokenPresent: false,
     uppercasePluginApiUrlPresent: false,
   });
+
+  for (const [environment, agent] of [
+    [{CLAUDECODE: "1"}, "claude-code"],
+    [{CODEX_THREAD_ID: "019a0000-0000-7000-8000-000000000001"}, "codex"],
+    [{CODEX_CI: "1"}, "codex"],
+    [{CODEX_SANDBOX: "seatbelt"}, "codex"],
+    [{CLAUDECODE: "1", CODEX_THREAD_ID: "019a0000-0000-7000-8000-000000000001"}, "codex"],
+    [{CLAUDECODE: "0"}, undefined],
+    [{FIRSTDRAFT_AGENT: "cursor"}, "cursor"],
+  ]) {
+    const execution = run(
+      pluginExecutable(fakeInstallation),
+      ["probe"],
+      fakeInstallation,
+      {...cleanEnvironment, FIRSTDRAFT_PLUGIN_VERSION: "0.0.1", ...environment},
+    );
+    const reported = JSON.parse(execution.stdout);
+    assert.equal(reported.agent, agent, `agent for ${JSON.stringify(environment)}`);
+    assert.equal(reported.pluginVersion, compatibility.version, "the launcher names its own plugin version");
+  }
+
+  // On Windows the laptop kit installs this npm package and links its Skill folder into ~/.claude/skills. The helper
+  // resolves the Skill's physical directory, so through that link it still runs the package's own CLI.
+  const linkedSkill = path.join(temporaryDirectory, "home", ".claude", "skills", "create-full-stack-app");
+  mkdirSync(path.dirname(linkedSkill), {recursive: true});
+  symlinkSync(path.join(installedRoot, "skills", "create-full-stack-app"), linkedSkill);
+  const throughLink = run(
+    "/bin/sh",
+    [path.join(linkedSkill, "scripts", "firstdraft.sh"), "probe"],
+    temporaryDirectory,
+    cleanEnvironment,
+  );
+  const linkedReport = JSON.parse(throughLink.stdout);
+  assert.deepEqual(linkedReport.arguments, ["probe"]);
+  assert.equal(linkedReport.pluginVersion, compatibility.version, "the linked Skill runs the package's own CLI");
+  assert.equal(throughLink.stderr, "");
 
   if (cliRoot) {
     const cliPackage = readJson(path.join(cliRoot, "package.json"));
@@ -287,6 +323,8 @@ process.stdout.write(JSON.stringify({
   stagingApiToken: process.env.FIRSTDRAFT_STAGING_API_TOKEN,
   apiUrl: process.env.FIRSTDRAFT_API_URL,
   arguments: process.argv.slice(2),
+  pluginVersion: process.env.FIRSTDRAFT_PLUGIN_VERSION,
+  agent: process.env.FIRSTDRAFT_AGENT,
   lowercasePluginApiTokenPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_api_token"),
   lowercasePluginApiUrlPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_api_url"),
   uppercasePluginApiTokenPresent: Object.hasOwn(process.env, "CLAUDE_PLUGIN_OPTION_API_TOKEN"),

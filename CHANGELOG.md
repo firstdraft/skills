@@ -63,6 +63,7 @@ missing from this list sorts by that date.
 
 | Release | In use from |
 | --- | --- |
+| `2026-11-25-application-mail` | 2026-11-26 |
 | `2026-11-17-gem-advisories` | 2026-11-20 |
 | `2026-11-13-events-listed` | 2026-11-17 |
 | `2026-11-12-forged-ip-headers` | 2026-11-12 |
@@ -93,9 +94,121 @@ missing from this list sorts by that date.
 | `2026-10-03-workshop-core` | 2026-10-03 |
 | `2026-09-29-skipped-data-defaults` | 2026-10-01 or earlier |
 
+## 2026-11-25: Plugin 0.10.0 adds entries dated 2026-11-21
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: read the six entries dated 2026-11-21, below, even when `.firstdraft/updates.md` names the
+  2026-11-24 entry or a later one. They arrive with this release, below an entry that may already be reviewed. Start
+  with closing sign-up to a role such as `admin`, in
+  [Analysis reports mistakes that used to pass](#2026-11-21-analysis-reports-mistakes-that-used-to-pass).
+- Compiler: release `2026-11-25-application-mail`, in use on firstdraft.com from 2026-11-26.
+
+The six entries:
+
+- [2026-11-21: "The author, or any admin" is a rule the Plan
+  states](#2026-11-21-the-author-or-any-admin-is-a-rule-the-plan-states)
+- [2026-11-21: Buttons for State Machine events](#2026-11-21-buttons-for-state-machine-events)
+- [2026-11-21: Analysis reports mistakes that used to pass](#2026-11-21-analysis-reports-mistakes-that-used-to-pass)
+- [2026-11-21: Target profile rails-sketch/2026-11](#2026-11-21-target-profile-rails-sketch2026-11)
+- [2026-11-21: A returning agent checks whether to send reports](#2026-11-21-a-returning-agent-checks-whether-to-send-reports)
+- [2026-11-21: Update notices, daily limits, and agent reports](#2026-11-21-update-notices-daily-limits-and-agent-reports)
+
+## 2026-11-25: The Plan names its mail provider
+
+**Compiler and Skills — released with plugin 0.10.0.**
+
+- Existing apps: optional, for an app whose Account confirms email, resets passwords, or unlocks accounts, and that
+  has no mail provider yet. The steps are below.
+- Compiler: release `2026-11-25-application-mail`, in use on firstdraft.com from 2026-11-26.
+
+A Plan can now say `"mail": "resend"`, and an Account that confirms email, resets passwords, or unlocks accounts
+selects it when the Plan does not. Production then sends mail through Resend's HTTP API with the `resend` gem.
+Before, such an app had no provider, and on Render's free plan, which blocks the usual mail ports, the agent had to
+find and set one up before the app first sent mail, which, when sign-up confirms email, is its first sign-up. The
+Skill now writes `mail` when the app will send other email,
+such as reminders, and tells the person they will create a Resend account and key after Compile.
+
+The app reads `RESEND_API_KEY` when it sends, so it boots and deploys without the key, and the first message
+without it raises `KeyError: key not found: "RESEND_API_KEY"`. The `maintain-app` Skill treats that error as a
+setting for the owner to fix on the host, not a pull request. Mail is sent inside the request, so a slow Resend makes
+that request wait.
+
+Analysis also warns, with `foundation_plan.identity.dependency_name_collision`, when the application key or an Entity
+key takes a name that the mail or upload library already uses, such as `resend` or `cloudinary`. Compile then leaves
+Resend, or the upload Fields, out. Change the key and keep the name.
+
+**Adding Resend to an existing app.** These are the lines a new app gets:
+
+1. In `Gemfile`, add `gem "resend", "1.19.0"`, and run `bundle install`.
+2. In `config/environments/production.rb`, add `config.action_mailer.delivery_method = :resend`. If its
+   `default_url_options` line still says `host: "example.com"`, as in an app compiled in early October without a
+   `domain`, emailed links lead nowhere: replace that line with the one a new app gets, and set `APP_HOST` to a
+   custom domain once the app has one:
+
+   ```ruby
+   config.action_mailer.default_url_options = {host: ENV.fetch("APP_HOST") { ENV["RENDER_EXTERNAL_HOSTNAME"] }}.compact
+   ```
+
+3. Create `config/initializers/resend.rb`:
+
+   ```ruby
+   Resend.api_key = -> { ENV.fetch("RESEND_API_KEY") }
+   ```
+
+4. In `app/mailers/application_mailer.rb`, replace the `default from:` line with this one. When the Plan has a
+   `domain`, use `webmaster@<domain>` in place of Resend's test sender:
+
+   ```ruby
+   default from: -> { ENV.fetch("MAIL_FROM") { email_address_with_name("onboarding@resend.dev", t("app_name")) } }
+   ```
+
+   If the `default` line in `app/mailers/rodauth_mailer.rb` also names `from:`, remove that part, so Account mail
+   comes from the same sender.
+5. In `render.yaml`, add the key to the web service's `envVars`:
+
+   ```yaml
+   - key: RESEND_API_KEY
+     sync: false
+   ```
+
+6. In `DEPLOY.md`, replace the mail steps that say to configure `email_from` in `app/misc/rodauth_main.rb` and an
+   Action Mailer delivery method, which the app no longer reads, with the setup in the next paragraph:
+   `RESEND_API_KEY`, a sending domain verified in Resend, and `MAIL_FROM` at that domain.
+
+Then the owner creates a Resend account and an API key, sets `RESEND_API_KEY` on the Render service, and verifies a
+sending domain in Resend's Domains page with the records it lists. When the sender is still Resend's test sender, or
+should be another address, they set `MAIL_FROM` to an address at the verified domain. Until then, the test sender
+delivers only to the address that owns the Resend account.
+
+**Check.** `bundle exec rspec` passes. On the deployed app, with the key set, use one mail flow the app has: a
+password reset for an open Account, an unlock request for a locked Account, a sign-up with a new address when
+sign-up confirms email, or, signed in, Change email to a new address when the app confirms email. While the app
+sends from the test sender, use the Resend account's own address. The email arrives, and its link works.
+
+## 2026-11-25: An agent maintains a running app with maintain-app
+
+**Skills — released in plugin 0.10.0.**
+
+- Existing apps: nothing to change in the app. Once First Draft monitors one of its Environments, the owner can ask
+  their agent, in the app's folder, to maintain it.
+
+The plugin adds a second Skill, `maintain-app`. It reads a running Environment's open items with
+`firstdraft maintain`, groups them by root cause, fixes what it can with a failing test and a pull request, and
+resolves each item with how it was resolved and what caused it. For an item that waits on the owner, it records the
+question with `maintain ask-owner`. When the owner decides later, or accepts the cause for a while, it defers the item
+to a time they agree to with `maintain defer`, and the item leaves the index until then. An uptime check that fails
+while a free Render app sleeps is one such item: the Skill explains the free plan's limit and offers the owner the
+choices.
+
+When the owner agreed to reports, the Skill sends a `deployed_error` failure report after it resolves an error item it
+traced to code First Draft generated, and for no other item. The report needs the app's Compilation: in a fresh clone
+with no planning folder on the computer, the CLI has none recorded, and the report sends nothing. Both Skills run the CLI that the plugin bundles, CLI 0.10.0, which adds
+the `maintain` commands.
+
 ## 2026-11-24: GitHub repositories come from the person's own gh login
 
-**Skills — on `main`, for the next plugin release.**
+**Skills — released in plugin 0.10.0.**
 
 - Existing apps: nothing to do. An app that First Draft published to GitHub keeps its repository; send later commits
   with `git push`.
@@ -119,6 +232,268 @@ Codespaces endpoint as before. The diagnostics page drops the Publication progre
 steps, and its new
 [Create a GitHub repository](skills/create-full-stack-app/references/diagnostics-and-recovery.md#create-a-github-repository)
 section gives both routes.
+
+## 2026-11-21: "The author, or any admin" is a rule the Plan states
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: optional, when the app has an `owner` Policy that says "the author, or any admin". The code to
+  write is below.
+- Compiler: release `2026-11-25-application-mail`, in use on firstdraft.com from 2026-11-26.
+
+A record's rule can now ask a Policy of the Account Entity about the person signed in, as one branch of the rule:
+`{"kind": "matches_policy", "record": {"kind": "environment", "name": "current_account"}, "policy": "user.admins_only"}`.
+"The author, or any admin" and "published ones, for anyone signed in" are then rules the Plan states, and Compile
+writes their rule, their scope, and their specs. Before, the Skill wrote each as an `owner` Policy, which denied
+everyone until it was written by hand. The Policies page shows both with the code they generate.
+
+A standalone New page whose create rule writes its parent condition inline, such as `matches_policy` through the
+Reference the person picks on the form, now opens for anyone with a parent that would pass, and its select lists
+only those parents. Before, it answered 403 to everyone. Any other create rule, the same condition named as a
+Predicate included, is asked about the empty record, as the Policies page describes.
+
+**Writing it in an existing app.** Replace the stub rule and scope in `app/policies/<entity>_policy.rb` with the
+code a new app gets, here for a note's `manage` Policy and a `user.admins_only` gate whose rule is `administer?`:
+
+```ruby
+def manage?
+  user&.id.present? &&
+    record.present? &&
+    (record.author_id == user.id || allowed_to?(:administer?, user, with: UserPolicy))
+end
+
+relation_scope(:manage) do |relation|
+  if user&.id.present?
+    relation.where(author_id: user.id)
+      .or(allowed_to?(:administer?, user, with: UserPolicy) ? relation : relation.none)
+  else
+    relation.none
+  end
+end
+```
+
+**Check.** Replace the placeholder example in `spec/policies/<entity>_policy_spec.rb` with cases for the author, an
+admin on another person's record, another account, and a guest, and run `bundle exec rspec`.
+
+## 2026-11-21: Buttons for State Machine events
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: optional. An app compiled earlier lists each event that nothing fires under "Behavior to write".
+  To give one a button, follow the steps below.
+- Compiler: release `2026-11-25-application-mail`, in use on firstdraft.com from 2026-11-26.
+
+A State Machine transition can say who fires its event from the record's page: `"authorization": "public"`, a Policy
+of its own Entity, or a gate on the Account Entity with `record`, the values a Scaffold part takes. Compile then
+writes a `patch` member route, an action that checks the Policy and locks the record, a button on the details page,
+and request specs, when the Entity has a details page, First Draft writes the event, and it generates the Policy. A
+stubbed event, such as one marked `owner`, gets no button; the README says who may fire it, for the agent to add.
+The Skill now gives every event a person presses an `authorization`, and leaves it out only for an event that a job
+or other code fires.
+
+**Adding a button in an existing app.** These are the lines a new app gets for an expense's `cancel` event on
+`expense.status`, which the expense's own Policy `manage?` guards. Use your Entity, event, and Policy in their place.
+
+1. In `config/routes.rb`, add a member route inside the resource's existing declaration, keeping its `only:` list:
+
+   ```ruby
+   resources :expenses, only: %i[index show new create edit update] do
+     member do
+       patch :cancel
+     end
+   end
+   ```
+
+2. In `app/controllers/expenses_controller.rb`, add the action. Look the record up as the `show` action does, and run
+   every check `show` runs, its gate included, before the event's own; here `show` is public, so `Expense.find` is
+   the lookup.
+
+   ```ruby
+   def cancel
+     @expense = Expense.find(params.expect(:id))
+     authorize! @expense, to: :manage?, with: ExpensePolicy
+     @expense.cancel!
+     redirect_to expense_path(@expense), status: :see_other,
+       success: t(".success")
+   rescue AASM::InvalidTransition
+     redirect_to expense_path(@expense), alert: t(".refused"), status: :see_other
+   rescue ActiveRecord::RecordInvalid => error
+     redirect_to expense_path(@expense), alert: error.record.errors.full_messages.to_sentence, status: :see_other
+   end
+   ```
+
+   For an event that a gate on the Account Entity guards, drop the `authorize!` line and run the gate first. When the
+   controller already has `before_action :authorize_administer, only: %i[...]`, add `cancel` to that list; a second
+   `before_action` line for the same method replaces the first. Otherwise add the line and a private method that
+   calls `authorize! current_account, to: :administer?, with: UserPolicy`.
+
+3. In `app/models/expense.rb`, add `requires_lock: true` to the machine, so that each bang method locks and
+   reloads its record: `aasm :status, column: :status, no_direct_assignment: true, requires_lock: true do`. Save a
+   record's other changes before you call a bang method on it.
+
+4. In `app/views/expenses/_expense.html.erb`, add the button to the record toolbar. For a gate, ask
+   `allowed_to?(:administer?, current_account, with: UserPolicy)` in place of the Policy:
+
+   ```erb
+   <% if expense.may_cancel? && allowed_to?(:manage?, expense, with: ExpensePolicy) %>
+     <%= button_to t(".events.cancel"), cancel_expense_path(expense),
+       method: :patch, class: "btn" %>
+   <% end %>
+   ```
+
+5. In `config/locales/scaffolds.en.yml`, add the label and the two messages:
+
+   ```yaml
+   en:
+     expenses:
+       expense:
+         events:
+           cancel: Cancel
+       cancel:
+         success: Status changed to Cancelled.
+         refused: Cancel is not available for this expense in its current state.
+   ```
+
+**Check.** Replace the event's placeholder example, "a caller fires expense.status.cancel", in
+`spec/models/expense_state_machine_spec.rb` with a request example in `spec/requests/expenses_spec.rb`, as a new app
+writes it:
+
+```ruby
+it "cancel moves status from submitted to cancelled" do
+  user = create(:user)
+  record = create(:expense, submitter: user)
+  post "/login", params: {email: user.email, password: "a sufficiently long password"}
+  expect(response).to have_http_status(:redirect)
+  patch cancel_expense_path(record)
+  expect(response).to redirect_to(expense_path(record))
+  expect(flash[:success]).to be_present
+  expect(record.reload.status).to eq("cancelled")
+end
+```
+
+Run `bundle exec rspec`, and remove the event's entry from the README's "Behavior to write".
+
+## 2026-11-21: Analysis reports mistakes that used to pass
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: do this when the app's sign-up form asks for a role or an admin flag that the Plan meant to set
+  itself: each person who signs up chooses it, `admin` included. The steps are below. Otherwise nothing to do; a
+  Plan pushed again may now report an error that it did not before, so make the edit its message names.
+- Compiler: release `2026-11-25-application-mail`, in use on firstdraft.com from 2026-11-26.
+
+These were silent, or broke the Compile, and are now analysis errors whose messages name the edit:
+
+- a name that names nothing in a page, a Policy, a Predicate, an Ordering, or a create binding, such as a
+  misspelled Policy, Predicate, Ordering, Field, or Association;
+- two Policies with one operation on an Entity;
+- an enum default that is not one of the Field's values;
+- an Entity key whose controller, route, or Policy class the generated app already has, such as `page`, `term`, or
+  `root` with pages, and a Field key that is a Ruby keyword, such as `when`;
+- a required enum or boolean Account Field that sign-up neither lists nor fills, which would let each person pick
+  their own value, such as `admin`.
+
+A required Reference or upload that sign-up cannot supply still passes, and the app gets a failing example in its
+registration spec until the agent writes how a new Account gets it. Analysis warns about it when nothing in the
+Plan supplies it; a `reference_record` default counts as a source, though Compile does not apply it yet.
+
+**Closing sign-up to a role in an existing app.** Remove the role's control from
+`app/views/rodauth/create_account.html.erb` and the code that reads its parameter in `app/misc/rodauth_main.rb`, and
+set the ordinary role there for each new account, or give the column a default in a migration. When the account's
+Edit details page lists it too, remove it from `app/views/accounts/_form.html.erb` and from the permitted parameters
+in `app/controllers/accounts_controller.rb`. Then add a request example to
+`spec/requests/account_registration_spec.rb` that signs up with `role` set to `admin` and checks that the new account
+has the ordinary role, and one that updates an account with `role` set to `admin` and checks that its role stays the
+same, and run `bundle exec rspec`.
+
+## 2026-11-21: Target profile rails-sketch/2026-11
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: cannot be adopted by hand as a whole. A Project created under `rails-sketch/2026-10` can no longer
+  be analyzed or compiled: start a new Project for the app's Plan, as the Skill's "Retired target profile" section
+  says, and bring changes into the existing app by hand. Two parts are small enough to adopt, below.
+- Compiler: release `2026-11-25-application-mail`, in use on firstdraft.com from 2026-11-26.
+
+The Rails app shell that every generated app starts from now runs background jobs, Action Cable, and the cache
+inside the app's process, and its health check is `/up`. Account email is sent inside the request that asks for it, so until a
+mail provider is configured, a deployed app answers each request that sends mail with the error page. Passwords need 8
+characters, where they needed 15. A signed-out visitor who opens a list that only signed-in people can pass is sent to
+sign in; a list with a branch a guest passes, such as published records, still lists.
+
+**Adopting two parts by hand.** For the shorter passwords, change `password_minimum_length 15` to
+`password_minimum_length 8` in `app/misc/rodauth_main.rb`. For the sign-in redirect, add
+`before_action :authenticate, only: %i[index]` to the controller of each list whose rule needs a signed-in person,
+and change its "index prevents a guest from accessing protected records" request example to expect a redirect to
+`/login`.
+
+**Check.** `bundle exec rspec` passes.
+
+## 2026-11-21: A returning agent checks whether to send reports
+
+**Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
+
+- Existing apps: optional. To have an agent that works in the app without the Skill send the reports and notes the
+  person agreed to, add the bullet below to the list in the app's `AGENTS.md`.
+- Compiler: release `2026-11-25-application-mail`, in use on firstdraft.com from 2026-11-26.
+
+A generated app's `AGENTS.md` now tells an agent that comes back in a later session, without the First Draft Skill,
+to run `firstdraft start` once. It sends reports and notes only when `start` says the person said yes, and otherwise
+sends nothing and does not ask the person to log in for it. The bullet is the same in every app and follows the one
+about failures in code First Draft generated. Run from the folder that holds the Project's state, the app's root
+after root adoption or the planning folder after `--output`, a report names the Compilation that a CLI 0.10.0 compile
+or download last recorded for the Project. When there is no record, as for an app compiled earlier, or it names other
+code, the agent names the Compilation. `start` does not read the Project, so for a Project whose state names an
+`api_url`, the agent sets `FIRSTDRAFT_API_URL` to that origin when it runs `start`; without one, `start` checks
+production unless `--staging` or `FIRSTDRAFT_API_URL` selects another origin. The bullet leaves the Plan format
+alone. The release that carries it to firstdraft.com also moves the Analyzer release, so the next analysis of a Plan
+records new Analyzer and Compiler releases and, when it is valid, a new GapSet digest.
+
+```markdown
+- If the `firstdraft` command is available, run `firstdraft start` once when a session begins. When it prints
+  `Reports are on:`, send the reports and notes it describes. When the command is missing, is not logged in, or
+  says nothing about reports, send nothing and keep working; do not ask the user to log in for this.
+```
+
+## 2026-11-21: Update notices, daily limits, and agent reports
+
+**Skills — released in plugin 0.10.0.**
+
+- Existing apps: nothing to do. Update the First Draft plugin with the steps at <https://firstdraft.com/update>.
+
+The plugin bundles CLI 0.10.0, which needs First Draft API 0.9, and passes it the plugin version and the agent's name.
+First Draft names the latest and minimum plugin on every answer. When this setup is older than the latest, a command
+prints one line saying an update is available. Below the minimum, a command that still had a request to send stops
+with `update_required`, and one whose last answer it was keeps its result and prints one line saying to update before
+the next command; `firstdraft start` always stops with the error. An account can start 50 Compilations and create 20
+new Projects in any 24 hours; past that, the CLI ends with `rate_limited` and the time to try again, and the Skill
+tells the person and stops. After an ambiguous push or Compile, the agent runs the same command once more instead of
+stopping. When the person said yes to reports while approving the login, the agent sends progress reports at five
+steps of the first run and a failure report for an unexpected failure in generated code; each report command checks
+the answer first and prints what it sends.
+
+The same yes covers notes. With it, the agent can tell First Draft, in a few fixed fields, that the Plan could not
+state something the person asked for, that a Skill page or a diagnostic was unclear, or that analysis or generated
+code was wrong. A note can be sent during the interview, once the Plan has been pushed. Like a report, it is printed
+before it is sent, and the CLI attaches no file from the project; the agent writes it in its own words and leaves
+out the person's code. The CLI remembers the Compilation whose code it last wrote for the Project, so a report, or a
+note about generated code, needs no Compilation ID when that record names the Compilation the code came from, and a
+later session, a second Compile, or maintenance can still send them. For code an earlier CLI wrote, or after the CLI
+says it could not record a Compilation, the agent names it. The person can see each report and note on their First
+Draft account page and delete it there.
+
+The plugin is now the only thing to install: it holds the Skill and the CLI it was tested with, and the Skill runs
+only that CLI. It no longer uses a `bin/firstdraft` in the project or a `firstdraft` on `PATH`, so a separately
+installed CLI does nothing for it. The Skill's first step is `firstdraft start`, which prints the versions with any
+update notice, whether this computer is logged in, and, only when the person said yes to reports, when to send
+reports and notes. When it says to log in, the agent starts the login: it shows the person a link and a code, the
+person approves in their browser and says so, and the agent finishes the login; the person runs no command. When it
+says a token variable was not accepted, the person replaces or unsets it. The agent never opens the link, approves,
+or asks for a token, and only the person runs `logout`.
+
+The format stays `firstdraft.foundation-plan.sketch/0.23`, and its two new keys are optional. A Plan's
+`target.profile` must now be `rails-sketch/2026-11`, so a Plan from the earlier profile follows the Skill's "Retired
+target profile" steps into a new Project.
 
 ## 2026-11-20: Security advisories in an app's dependencies
 
@@ -428,6 +803,11 @@ to write section:
 
 **Skills — released in plugin 0.9.3.**
 
+- Replaced: the `owner` Policy for "the author, or any admin", by [2026-11-21: "The author, or any admin" is a rule the
+  Plan states](#2026-11-21-the-author-or-any-admin-is-a-rule-the-plan-states); what fires a State Machine event, by
+  [2026-11-21: Buttons for State Machine events](#2026-11-21-buttons-for-state-machine-events); and the sign-up warning
+  for an unlisted required enum or boolean Account Field, now an error, by [2026-11-21: Analysis reports mistakes that
+  used to pass](#2026-11-21-analysis-reports-mistakes-that-used-to-pass).
 - Existing apps: nothing to do. An app whose `AGENTS.md` says nothing about failing specs can add the text in
   [2026-11-20: Spec guidance for an AGENTS.md from early
   October](#2026-11-20-spec-guidance-for-an-agentsmd-from-early-october); that is optional.
@@ -538,9 +918,11 @@ end
 
 **Skills — released in plugin 0.9.2.**
 
-- Existing apps: nothing to do.
+- Replaced: "no generated page has a button for it yet", by [2026-11-21: Buttons for State Machine
+  events](#2026-11-21-buttons-for-state-machine-events).
 - Replaced: the recovery after `plan compile --github`, by [2026-11-24: GitHub repositories come from the person's
   own gh login](#2026-11-24-github-repositories-come-from-the-persons-own-gh-login).
+- Existing apps: nothing to do.
 
 The Skill now handles each product decision the way a consultant developer
 would with a client. It asks when the answer is expensive to change after Compile, and each option says what the user
@@ -597,6 +979,8 @@ to one.
 - Compiler: release `2026-10-20-rails-8-1-4`, in use on firstdraft.com from 2026-10-20.
 - Corrected: the Rails update fixes published advisories, by [2026-11-20: Rails 8.1.4.1 is a
   security update](#2026-11-20-rails-8141-is-a-security-update).
+- Replaced: the current target profile, by [2026-11-21: Target profile
+  rails-sketch/2026-11](#2026-11-21-target-profile-rails-sketch2026-11).
 
 Once the First Draft service deploys the matching Compiler, generated apps use
 Rails 8.1.4 under the new target profile `rails-sketch/2026-10`. The plugin bundles CLI 0.9.0, which needs First Draft
@@ -673,6 +1057,8 @@ declaration, a method, and a spec that pins its error kind.
 - Replaced: what to do with a failing spec, and when to preview, by [2026-11-17: One reference page per Plan capability,
   and stubs written before the
   preview](#2026-11-17-one-reference-page-per-plan-capability-and-stubs-written-before-the-preview).
+- Replaced: adding a mail provider for reset and unlock email, by
+  [2026-11-25: The Plan names its mail provider](#2026-11-25-the-plan-names-its-mail-provider).
 
 Once the First Draft service deploys the matching Compiler, a generated app's
 `AGENTS.md` changes how the agent treats the first spec run. Before, the agent wrote every item in the README's
@@ -712,6 +1098,8 @@ describes the limit and how to key it by email as well. The Skill's Accounts tex
 
 **Skills — released in plugin 0.8.15.**
 
+- Replaced: "no generated page fires an event", by [2026-11-21: Buttons for State Machine
+  events](#2026-11-21-buttons-for-state-machine-events).
 - Existing apps: nothing to do. An app compiled earlier keeps such a machine as storage only, and its README lists no
   event to write.
 - Compiler: release `2026-10-12-state-scope-collisions`, in use on firstdraft.com from 2026-10-12.
@@ -1327,6 +1715,8 @@ ordinary Rails.
 - Existing apps: nothing to do.
 - Replaced: the Skill's default for a Reference with several targets is `exclusive_arc` since [2026-10-10: References
   with several targets compile](#2026-10-10-references-with-several-targets-compile).
+- Replaced: the mail provider for password reset in the After Compile checklist, by
+  [2026-11-25: The Plan names its mail provider](#2026-11-25-the-plan-names-its-mail-provider).
 
 The Skill's interview now follows one order. The agent clarifies your idea,
 asks for materials such as design docs, screenshots, a CSV of sample data, or an app you like, and reads them before

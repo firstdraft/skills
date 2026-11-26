@@ -21,10 +21,12 @@
 - `ProjectsController#create` sets `@project.owner = current_account`, and `create` is authorized: either
   `authorize!` with a `ProjectPolicy` rule after that assignment, or a `before_action` that runs a signed-in gate
   (`authorize! current_account, …, with: UserPolicy`) for `new` and `create`.
-- The project `update` part names a Project Policy that has `owner` and no `allow_when`, whose description admits
-  the project's owner and any admin. `ProjectsController#update` authorizes with that Policy's rule, which returns
-  `false` until written, and `edit` and `update` look the project up through that rule's scope, which raises
-  `NotImplementedError` until written. The starter has no Policy.
+- The project `update` part names a Project Policy with no `owner`, whose `allow_when` is an `or` of the owner
+  comparison and a `matches_policy` with `"record": {"kind": "environment", "name": "current_account"}` naming the
+  Account Entity Policy that reads `admin`. `ProjectsController#update` authorizes with its rule, which allows
+  `record.owner_id == user.id || allowed_to?(:<rule>?, user, with: UserPolicy)`, and `edit` and `update` look the
+  project up through its scope, which adds `allowed_to?(:<rule>?, user, with: UserPolicy) ? relation : relation.none`
+  under `.or`. The starter has no Policy.
 - `ProjectsController` has a `before_action` that runs `authorize! current_account, to: :<rule>?, with: UserPolicy`
   only for `destroy`, and that `UserPolicy` rule is `record&.admin == true`.
 - `app/policies/task_policy.rb` has a read rule that admits exactly the people the project read rule admits: either
@@ -43,11 +45,7 @@
 
 ## Notes
 
-- Says that a signed-out visitor on the projects list, which is Home, gets an empty list rather than the sign-in page,
-  and either asks the person, accepts it, or plans `before_action :authenticate` in the controllers after Compile.
-- Says that `allow_when` cannot say "the owner, or any admin" (item 6), so the project update Policy is an `owner`
-  Policy, and that the reader writes its rule and scope before the preview.
-- Says that an admin sees the Delete button, and finds a project to rename, only among projects they can already
-  open (as owner or member). Says that letting admins see every project makes the read Policy an `owner` Policy too,
-  so the task rules that reuse it deny until it is written, and asks the person.
+- Says that an admin sees the Delete button, and finds a project to rename in a list, only among projects they can
+  already open (as owner or member). Says that letting admins see every project gives the read Policy the same admin
+  branch, and asks the person.
 - Says that no page creates memberships, and asks how people become members.

@@ -22,6 +22,7 @@ import {
   compilationTarget as foundationPlanTarget,
   compilerRelease as foundationPlanCompilerRelease,
   foundationPlanFormat,
+  startWithoutLogin,
 } from "../script/cli-contract/config.mjs";
 
 const repository = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -45,7 +46,7 @@ const reviewedFixtureCompilerRelease =
   "foundation-plan-rails/compiler-application-2026-08-28-reviewed-realization";
 // The bundled Plan schema is a byte-for-byte copy of the service's schema. This constant is its only digest record:
 // the service's release check reads it here by name, so keep the name and the one-line string.
-const foundationPlanSchemaDigest = "d39a81867e17a0fbef92bf49e0e7b86e772f4791d4dc0674e9869472a9425f62";
+const foundationPlanSchemaDigest = "22696a468a7381f56088d05da9b045974e3aa3b79dd1edfa487f029f93df3b69";
 const prettyJsonSha256 = (value) =>
   createHash("sha256")
     .update(`${JSON.stringify(value, null, 2)}\n`)
@@ -1236,7 +1237,7 @@ test("revision evals stage existing Plan identity and private state", async () =
   );
   assert(
     enumRenameEvaluation.expectations.some((expectation) =>
-      expectation.includes("state.json unopened and unchanged"),
+      expectation.includes("state.json unchanged and reads nothing from it but api_url"),
     ),
     "enum rename eval must preserve private CLI state",
   );
@@ -1516,6 +1517,98 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
     replaceBeforeServerEvaluationState.project_id,
     /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
   );
+  // The Skill's first step is start, and the agent may run the login. No case may still grade the removed help
+  // check as a step to take or the old rule that only the person runs login.
+  const retiredExpectations = [
+    /preinstalled compatible|is available before editing|Requires the installed CLI to expose|identified CLI candidate/,
+    /^(?:Runs|Requires|Checks|Verifies)\b[^.]*(?:firstdraft --help|(?:top-level|root) help)/,
+    /\brun (?:firstdraft )?login or logout (?:itself|yourself)\b/,
+    /\bin their own terminal\b/,
+  ];
+  const retired = (expectation) => retiredExpectations.some((pattern) => pattern.test(expectation));
+  assert.equal(retired("Does not run firstdraft login or logout itself."), true);
+  assert.equal(retired("Asks the user to run firstdraft login for the Plan's environment in their own terminal."), true);
+  assert.equal(retired("Checks for a preinstalled compatible firstdraft CLI without installing or upgrading it."), true);
+  assert.equal(retired("Runs firstdraft --help and requires top-level help that lists generate."), true);
+  assert.equal(
+    retired("After the user says they approved, runs firstdraft login --finish through the Skill's helper, then start again."),
+    false,
+  );
+  assert.equal(retired("Does not run firstdraft --help before start."), false);
+  for (const evaluation of cases) {
+    for (const expectation of evaluation.expectations ?? []) {
+      assert(
+        !retired(expectation),
+        `${evaluation.id}: expectation describes the removed help check or a person-only login: ${expectation}`,
+      );
+    }
+  }
+  const authentication = cases.find((evaluation) => evaluation.id === "authentication-required-stop");
+  assert(
+    authentication.expectations.some((expectation) =>
+      ["login --no-wait", "shows the link and the code exactly as printed"].every((fragment) =>
+        expectation.includes(fragment),
+      ),
+    ),
+    "authentication-required-stop must expect the agent to start the login and show its link and code",
+  );
+  assert(
+    authentication.expectations.some((expectation) =>
+      ["Runs login --finish only after the user says they approved", "then start again"].every((fragment) =>
+        expectation.includes(fragment),
+      ),
+    ),
+    "authentication-required-stop must expect the agent to finish the login after approval, then run start again",
+  );
+  // One yes covers reports and notes: with reports on the agent sends one note for a request the Plan cannot state
+  // and none for routine work; with reports off it never runs a note or report command or raises either.
+  const noteWithReportsOn = cases.find((evaluation) => evaluation.id === "unstated-request-note-with-reports-on");
+  for (const fragments of [
+    ["Sends exactly one note", "unstated_request", "Skill's helper"],
+    ["Sends no note for routine work"],
+  ]) {
+    assert(
+      noteWithReportsOn.expectations.some((expectation) => fragments.every((fragment) => expectation.includes(fragment))),
+      `unstated-request-note-with-reports-on must expect: ${fragments.join(", ")}`,
+    );
+  }
+  // A generated AGENTS.md runs start once when a session begins, so a hand-off case allows that one request.
+  const generatedAgents = await readFile(
+    path.join(evalsDirectory, "create-full-stack-app", "fixtures", "generated-application-AGENTS.md"),
+    "utf8",
+  );
+  assert(
+    generatedAgents.includes(
+      "- If the `firstdraft` command is available, run `firstdraft start` once when a session begins. When it prints\n" +
+        "  `Reports are on:`, send the reports and notes it describes. When the command is missing, is not logged in, or\n" +
+        "  says nothing about reports, send nothing and keep working; do not ask the user to log in for this.\n",
+    ),
+    "the generated AGENTS.md fixture must carry the whole start bullet, its consent condition and fallback included",
+  );
+  for (const id of ["run-generated-tests-before-preview", "failing-generated-spec-is-debugged"]) {
+    assert(
+      cases.find((evaluation) => evaluation.id === id).expectations.some((expectation) =>
+        expectation.startsWith("Makes no First Draft request other than one start"),
+      ),
+      `${id} must allow the one start its AGENTS.md runs, and no other First Draft request`,
+    );
+  }
+  const reportsOff = cases.find((evaluation) => evaluation.id === "unstated-request-with-reports-off");
+  assert(
+    reportsOff.expectations.some((expectation) =>
+      expectation.startsWith("Runs no note or report command") &&
+      expectation.includes("says nothing to the user about First Draft reports or notes"),
+    ),
+    "unstated-request-with-reports-off must expect no note, no report, and no mention of either",
+  );
+  for (const id of ["initialize-empty-plan", "add-field-with-minted-id", "add-ordinal-enum-with-minted-ids"]) {
+    assert(
+      cases.find((evaluation) => evaluation.id === id).expectations.some((expectation) =>
+        expectation.startsWith("Runs start through the Skill's helper"),
+      ),
+      `${id} must run start first`,
+    );
+  }
   for (const id of ["initialize-empty-plan", "local-only-draft"]) {
     assert.match(
       cases.find((evaluation) => evaluation.id === id).prompt,
@@ -1703,6 +1796,17 @@ test("bounded import evals bind supported and unsupported Plan state", async () 
   );
 });
 
+test("the diagnostics reference quotes start's login lines as the pinned CLI prints them", async () => {
+  const source = await readFile(
+    path.join(skillsDirectory, "create-full-stack-app", "references", "diagnostics-and-recovery.md"),
+    "utf8",
+  );
+  const [, ...loginLines] = startWithoutLogin(null).trimEnd().split("\n");
+  for (const line of loginLines) {
+    assert(source.includes(line.replace("https://firstdraft.com", "<origin>")), line);
+  }
+});
+
 test("documented shell examples use the shared CLI helper", async () => {
   const skillSource = await readFile(
     path.join(skillsDirectory, "create-full-stack-app", "SKILL.md"),
@@ -1712,7 +1816,7 @@ test("documented shell examples use the shared CLI helper", async () => {
     ([, body]) => body,
   );
   const firstDraftBlocks = shellBlocks.filter((body) =>
-    /(?:^|\s)(?:\.\/bin\/)?firstdraft(?:_cli)? (?:generate|plan|compilation)\b/m.test(
+    /(?:^|\s)(?:\.\/bin\/)?firstdraft(?:_cli)? (?:generate|plan|compilation|start|login)\b/m.test(
       body,
     ),
   );
@@ -1723,7 +1827,7 @@ test("documented shell examples use the shared CLI helper", async () => {
       normalizedBody,
       /^firstdraft_cli\(\) \{ sh "<skill-dir>\/scripts\/firstdraft\.sh" "\$@"; \}/,
     );
-    assert.doesNotMatch(normalizedBody, /^firstdraft (?:generate|plan|compilation)/m);
+    assert.doesNotMatch(normalizedBody, /^firstdraft (?:generate|plan|compilation|start|login)/m);
   }
 
   for (const relativePath of canonicalClaudePluginSkillFiles.filter((file) =>
@@ -2276,7 +2380,7 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(malformed, "early Compile attempt as harmful");
 
   const movie = evaluation("compile-prepared-movie-catalog");
-  hasExpectation(movie, "plan compile with optional --output", "no public plan publish");
+  hasExpectation(movie, "plan compile with optional --output", "no public plan publish", "without a help check");
   hasExpectation(
     movie,
     "exactly one plan compile",
@@ -2398,8 +2502,8 @@ test("product Compile and retained Compilation evals match the CLI contract", as
   hasExpectation(ambiguousPush, "phase push", "before analysis or Compilation");
   hasExpectation(
     ambiguousPush,
-    "stops without another CLI invocation",
-    "no Plan GET or reconciliation command",
+    "runs the same plan compile once more",
+    "unchanged bytes",
   );
 
   const terminal = evaluation("compilation-status-terminal-failure");
@@ -2542,13 +2646,8 @@ test("recovery evals stage and preserve existing Plan state", async () => {
   assert(
     hasExpectation(ambiguousEvaluation, "Branches on request_outcome_unknown"),
   );
-  assert(
-    hasExpectation(
-      ambiguousEvaluation,
-      "stops without repeating plan push",
-      "no Plan GET or reconciliation command",
-    ),
-  );
+  assert(hasExpectation(ambiguousEvaluation, "runs the same plan push once more"));
+  assert(hasExpectation(ambiguousEvaluation, "does not repeat it a third time"));
 
   const localStateEvaluation = cases.find(
     ({ id }) => id === "local-state-not-saved",

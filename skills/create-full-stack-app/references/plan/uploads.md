@@ -333,7 +333,9 @@ same. Never ask for, print, or commit its value.
 - **A sign-up file input**, such as an avatar chosen at sign-up. Keep the Field in `registration.inputs`; the input
   is left out (`foundation_plan.gap.account.partially_generated`), and you add it to the Rodauth form before the
   preview. Keep `required` as the person asked: a required upload on the Account Entity makes every sign-up fail
-  until the form sends the file.
+  until the form sends the file, and `spec/requests/account_registration_spec.rb` has a placeholder example for it
+  until then. Left out of `registration.inputs`, it also warns
+  `foundation_plan.account.registration_required_field_unsupplied`.
 
 ## Analysis does not catch
 

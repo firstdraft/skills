@@ -7,16 +7,17 @@ description: The Account Entity: sign-up, sign-in, password reset, lockout, the 
 
 An Entity with an `account` key is the record type that signs in. Its records are the people of the app, and
 `current_account` in a Policy, a binding, or a Predicate is the signed-in record. A Plan has at most one such
-Entity; a role such as staff or admin is a Field on it, never a second Account Entity. Email and password are not
-Fields. Who may see or change what is decided by [Policies](policies.md); this page covers the Account itself.
+Entity; a role such as staff or admin is a Field on it, never a second Account Entity: an enum named `role`, or a
+yes/no Field named for the people it marks, such as `admin` or `coordinator`. Email and password are not Fields. Who may see or change what is decided by [Policies](policies.md); this page covers the Account itself.
 
 - **First Draft generates:** Rodauth Rails authentication on the Entity's own table, with email and password sign-in,
   sign-out, remembered sessions, and change of email and password; the sign-up, password reset, lockout, and email
   confirmation flows the Plan asks for; a sign-up form that asks for the Entity's required Fields; an `/account`
-  page; example accounts with known passwords; request specs for sign-up and the account page.
+  page; example accounts with known passwords; request specs for sign-up and the account page; production mail
+  through Resend for the flows that send it.
 - **You write after Compile:** sign-in with anything but a password; inviting people or creating accounts for
   them from a page; choosing a group or another record at sign-up; deleting one's own account; a page that grants a
-  role; a production email provider.
+  role.
 
 Where analysis leaves something out, it reports a gap code such as `foundation_plan.gap.account.partially_generated`
 in the result of `plan push`.
@@ -61,7 +62,7 @@ enable(:i18n, :create_account, :login, :logout, :remember, :change_login, :chang
        :reset_password, :lockout, :disallow_common_passwords)
 accounts_table :users
 login_label "Email"
-password_minimum_length 15
+password_minimum_length 8
 max_invalid_logins 10
 
 # app/controllers/application_controller.rb
@@ -99,11 +100,11 @@ second Entity.
 | Key | Required | Values | Default | Generates |
 | --- | --- | --- | --- | --- |
 | `identifiers` | yes | exactly one `{"kind": "email", "name": "<label>"}` | | The `email` column, unique, stored trimmed and lower case. `name` is the label on the forms (`login_label`). |
-| `sign_in_methods` | yes | exactly `[{"kind": "password"}]` | | The password hash table, sign-in, sign-out, Change password. Passwords need 15 characters. |
+| `sign_in_methods` | yes | exactly `[{"kind": "password"}]` | | The password hash table, sign-in, sign-out, Change password. Passwords need 8 characters. |
 | `registration` | no | `{"mode": "self_service", "inputs": […]}` | omitted | The Sign up page and link. Anyone with an email address can sign up. Omitted: no sign-up page; the README shows the owner how to create each account with `bin/rails runner`. |
-| `verification` | no | `{"kind": "email"}` | omitted | Sign-up emails a link and refuses sign-in until it is followed; Change email takes effect only after the new address confirms. The app needs an email provider before anyone can finish signing up. Omitted: a new account is signed in at once, sign-up asks for the email twice, and Change email applies at once. |
-| `recovery` | no | `{"kind": "password_reset"}` | omitted | Forgot password, with an emailed reset link. Until an email provider is set up, the link is never delivered. Omitted: the README shows the owner how to set a new password. |
-| `lockout` | no | `{}`, an empty object; it has no keys | omitted | Locks an account after 10 wrong passwords, with an emailed unlock link. Until an email provider is set up, a locked account stays locked until the lockout expires after 24 hours. Omitted: a Rails `rate_limit` of 10 sign-in attempts per IP address in three minutes, in `RodauthController`. |
+| `verification` | no | `{"kind": "email"}` | omitted | Sign-up emails a link and refuses sign-in until it is followed; Change email takes effect only after the new address confirms. No one can finish signing up until the person sets up Resend; see [Mail](#mail). Omitted: a new account is signed in at once, sign-up asks for the email twice, and Change email applies at once. |
+| `recovery` | no | `{"kind": "password_reset"}` | omitted | Forgot password, with an emailed reset link, which works once the person sets up Resend; see [Mail](#mail). Omitted: the README shows the owner how to set a new password. |
+| `lockout` | no | `{}`, an empty object; it has no keys | omitted | Locks an account after 10 wrong passwords, with an emailed unlock link, which works once the person sets up Resend ([Mail](#mail)). Until then, a locked account stays locked until the lockout expires after 24 hours. Omitted: a Rails `rate_limit` of 10 sign-in attempts per IP address in three minutes, in `RodauthController`. |
 
 `registration.inputs[]`, in the order the sign-up form shows them. The Account Entity's other required Fields are
 added after them; see [What sign-up asks for](#what-sign-up-asks-for). `inputs` is a required key: write `[]` when
@@ -132,7 +133,7 @@ page needs no `resource_routes`: it is `/account`, and it always loads the signe
 | Key | Required | Values | Generates |
 | --- | --- | --- | --- |
 | `identifiers` | yes | `[{"kind": "email", "value": "ada@example.com"}]`, lower case, one only. `value` here, `name` on the Entity. | The seed's `find_or_initialize_by(email: …)`. An address with capitals, or one that is not an address, drops the record (two gaps: `foundation_plan.gap.development_data.record.not_generated` on the record and `foundation_plan.gap.development_data.account.not_generated` on its `account`). |
-| `credentials` | yes | `[{"kind": "password", "value": "…"}]` | `ada.password = …`, set when the account is new or has no password; reseeding keeps a password the person changed. The 15-character minimum is not checked here. The README lists each email and password under the sign-in instructions. |
+| `credentials` | yes | `[{"kind": "password", "value": "…"}]` | `ada.password = …`, set when the account is new or has no password; reseeding keeps a password the person changed. The 8-character minimum is not checked here. The README lists each email and password under the sign-in instructions. |
 
 A record of the Account Entity without `account` is dropped, with every record that references it. `account` on
 a record of another Entity is rejected. A Field left out of the record gets its `default` from the database.
@@ -147,12 +148,13 @@ are not asked for, and appear on `/account` only through a `profile`.
 | Account Entity Field | Listed as an input | On the sign-up form |
 | --- | --- | --- |
 | `name`, required `short_text` | yes or no | Text box, required. |
-| `role`, required `enum` with no `default` | no | A select of every value, chosen by the person signing up. Analysis warns `foundation_plan.account.registration_member_unlisted`; see [Analysis does not catch](#analysis-does-not-catch). |
+| `role`, required `enum` or `boolean` with no `default` | no | Analysis rejects the Plan, `foundation_plan.account.registration_member_unlisted`: each person would choose their own value, such as `admin`. Give it a `default`, or list it under `registration.inputs` when each person should choose. |
 | `role`, required `enum` with `"default": {"kind": "literal", "value": "member"}` | no | Not shown; new accounts get `member`, and there is no warning. The [Full example](#full-example) declares one. |
 | `bio`, optional `long_text` | no | Not shown. |
 | `bio`, optional `long_text` | `required: true` | Shown, required. |
 | `status`, `state_machine` | yes | Analysis rejects the Plan: `foundation_plan.account.registration_field_not_creatable`. |
-| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails. Not listed, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`. |
+| `team`, required Reference | either | No control; `foundation_plan.gap.account.partially_generated`, and every sign-up fails until you write how a new Account gets it. Not listed and with nothing in the Plan supplying it, analysis also warns `foundation_plan.account.registration_required_reference_unsupplied`. A `reference_record` default naming a record that exists counts as a source, so there is no warning, but the default is a gap too: read both gaps and the failing registration example. |
+| `avatar`, required `image` | no | No control, and every sign-up fails until you write how a new Account gets it. Analysis warns `foundation_plan.account.registration_required_field_unsupplied`. |
 
 Every value on the form goes through the model's validations before the account is saved; an invalid value returns
 422 with the error on its control.
@@ -282,8 +284,28 @@ Note.find_or_create_by!(title: "Ada's first note", author: ada)
 
 Sign-up asks for Name only; `role` starts `member`. Sign-up redirects to `/login` and emails a link
 (`app/views/rodauth_mailer/verify_account.text.erb`). Example accounts are created already confirmed. `DEPLOY.md`
-has an **Account email launch prerequisite** section. `spec/policies/user_policy_spec.rb` checks both rules, and
-`spec/requests/account_profile_spec.rb` checks show, update, a guest, and a blank name.
+has a **Mail through Resend** section and an **Account email launch prerequisite** section.
+`spec/policies/user_policy_spec.rb` checks both rules, and `spec/requests/account_profile_spec.rb` checks show,
+update, a guest, and a blank name.
+
+## Mail
+
+An Account with `verification`, `recovery`, or `lockout` sends mail, so the app sends it through Resend, exactly as
+`"mail": "resend"` does; see [Plan structure](plan-structure.md#mail). Writing `mail` as well selects the same
+setup. An Account with none of the three sends no mail, and the app gets no provider unless the Plan writes `mail`.
+
+Mail is sent inside the request that asks for it. Until the person sets `RESEND_API_KEY` on the host, each request
+that sends mail, such as sign-up with `verification`, a resend, a password reset, or an unlock request, shows the
+error page, and nothing retries the message. In development, a message goes to a mail server on the computer if one
+is running, and is otherwise dropped while the page goes on. Until the person verifies a sending domain in Resend, no
+one else receives mail; the sender is on [Plan structure](plan-structure.md#mail). `DEPLOY.md` has the steps in its
+**Mail through Resend** section and its Account email section.
+
+An application or Entity key that takes the `resend` gem's name, such as an application key `resend`, leaves Resend
+out: analysis warns `foundation_plan.identity.dependency_name_collision`, and `DEPLOY.md` has no **Mail through
+Resend** section. When the Plan omits `mail`, the gap is the Account's
+`foundation_plan.gap.account.partially_generated`; with `mail` written, it is at `/application/mail`, as
+[Plan structure](plan-structure.md#mail) says. Change the key.
 
 ## Used elsewhere in the Plan
 
@@ -291,8 +313,8 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
 | --- | --- | --- |
 | [Policy](policies.md) or create binding | `{"kind": "environment", "name": "current_account"}` | `user` in the policy is `current_account`. Without an Account Entity, or when the Account is not generated, every Policy and every part that names one is left out (`foundation_plan.gap.policy.not_generated`). |
 | A Policy on the Account Entity itself | `"left": {"target": {"record": "current"}}`, `equals`, `current_account` | `user&.id.present? && record == user`: "this is me". Use it for `profile` and `update`. |
-| A rule about the signed-in Account that `allow_when` cannot say, such as "the author, or any admin" | An `owner` Policy; see [Policies](policies.md) | The rule, which returns `false`, and its relation scope, which raises, until you write them. The Policy spec has a placeholder example that fails until you replace it. |
-| A [Reference](references.md) to the Account Entity | `"targets": ["user"]` on `note.author` | An ordinary `belongs_to`; set it with a create binding to `current_account`. |
+| A role beside a record's own people, such as "the author, or any admin" | One branch `{"kind": "matches_policy", "record": {"kind": "environment", "name": "current_account"}, "policy": "user.admins_only"}` in the record's rule; see [Policies](policies.md#a-gate-inside-a-records-rule) | `allowed_to?(:administer?, user, with: UserPolicy)` in the rule, and the whole list or none in its scope. |
+| A [Reference](references.md) to the Account Entity | `"targets": ["user"]` on `note.author` | An ordinary `belongs_to`. Name it for the person's part, as a noun. Set it with a create binding to `current_account` when it names the person adding the record, such as `author` or `host`, and with an input when that person chooses someone, such as `assignee`. |
 | `development_data` References | `{"kind": "reference_record", "record": "user.ada"}` | The note's seed uses the seeded account. |
 | A list of accounts | `index` and `show` in `resource_routes` with a gate Policy | `/users` and `/users/:id`, a directory, separate from `/account`. |
 | An account's own edit page | `edit` and `update` in `resource_routes`, with a Policy that compares `{"record": "current"}` with `current_account` | `resources :users, only: %i[edit update]` beside `/account/edit`. `/users/:id/edit` takes `scaffold.update`'s inputs and finds only the signed-in record: another id, or a guest, gets 404. |
@@ -309,8 +331,9 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   on the new account. For the Reference the entry reads "Public signup generates no control for a required
   Reference on the Account Entity. Signup cannot supply this Reference, so its validation rejects new Accounts."
   Write it before the preview; `SKILL.md` has the order of work. Keep `required` as the person asked: with a
-  required Reference every sign-up fails until then. The registration spec leaves out its success example, and the
-  README lists that example under "Test coverage to complete"; add it with the control.
+  required Reference every sign-up fails until then. `spec/requests/account_registration_spec.rb` has a
+  placeholder example for it, "How sign-up supplies user.team is not written yet.", that raises until you replace
+  it with an example that signs up.
 - **Optional questions at sign-up.** An input with `required: false` on an optional Field gets no control. Keep it
   in the Plan. The README lists it under "Behavior to write", in "Pages and actions", by the Field's path, such as
   `user.bio`, with the same two files: "This registration input has no generated signup control; only required
@@ -335,8 +358,6 @@ has an **Account email launch prerequisite** section. `spec/policies/user_policy
   offer it to the person if they would rather add notes there.
 - **Granting a role.** No page sets an admin flag or role unless you put it in an `update`, which lets people give
   it to themselves. Set roles in seeds or with `bin/rails runner`, or write an admin page after Compile.
-- **A production email provider.** Verification, reset, and unlock mail is queued through Action Mailer, and
-  `DEPLOY.md` lists what to configure.
 
 ## Analysis does not catch
 
@@ -350,22 +371,20 @@ These pass analysis as `valid`:
 
 These pass as `valid` and are reported as a warning or a gap:
 
-- **A required Field that is not an input and has no `default`.** Warning
-  `foundation_plan.account.registration_member_unlisted` at the Field: the Sign up page asks every visitor for it,
-  because it is required and nothing fills it. On an enum, each person picks their own value, so with a role or an
-  admin flag anyone who signs up can pick `admin`. Give the Field a `default` that First Draft applies
-  ([Defaults](defaults.md)), and the warning goes. When the person wants sign-up to ask for it, list it under
-  `registration.inputs` instead.
-- **A required Reference on the Account Entity that sign-up cannot supply.** Warning
+- **A required text Field that is not an input and has no `default`.** Warning
+  `foundation_plan.account.registration_member_unlisted` at the Field: the Sign up page asks every visitor for it.
+  Give the Field a `default` that First Draft applies ([Defaults](defaults.md)), and the warning goes, or list it
+  under `registration.inputs` when sign-up should ask. On a required enum or boolean the same code is an error, as
+  [What sign-up asks for](#what-sign-up-asks-for) says.
+- **A required Reference on the Account Entity that nothing in the Plan supplies at sign-up.** Warning
   `foundation_plan.account.registration_required_reference_unsupplied` at the Reference, beside its gap
   `foundation_plan.gap.account.partially_generated`: no one can sign up, because the model rejects every new
-  Account without it. Its message offers three ways out: a `reference_record` default on the Reference; a
-  registration input over records a signed-out visitor may read; or, when people belong to a group such as a
-  team, a membership Entity with a role, so that sign-up creates only the Account. For a group, propose the
-  membership Entity to the person. The first two clear the warning, but First Draft generates neither yet: the
-  sign-up gap stays, and a default adds `foundation_plan.gap.reference.default_not_generated`
-  ([Defaults](defaults.md)). Write the control or the default before the preview; see
-  [Not generated](#not-generated).
+  Account without it, until code supplies it. Its message offers three ways out: write how a new Account gets it,
+  such as an invitation; make the Reference optional; or, when people belong to a group such as a team, move it to
+  a membership Entity with a role, so that sign-up creates only the Account. For a group, propose the membership
+  Entity to the person. A required upload or other Field that sign-up has no control for warns
+  `foundation_plan.account.registration_required_field_unsupplied` the same way. Each gets a placeholder example
+  in the registration spec; see [Not generated](#not-generated).
 - **A Field named `email`, `password`, or `account_status` on the Account Entity, or an Entity named `sequel`.**
   The whole Account is left out (`foundation_plan.gap.account.not_generated`), and with it every Policy and every
   page that names one. The `/account` page already shows the email; name a contact Field `contact_email`.
@@ -382,9 +401,11 @@ These pass as `valid` and are reported as a warning or a gap:
 - **Ask:** what sign-up asks for besides email and password. Recommend one or two required Fields, such as a name;
   everything else goes on `/account`.
 - **Tell:** people can sign in right after signing up, and email confirmation is available. Leave `verification`
-  out unless they ask, so the app works before an email provider is set up.
-- **Tell:** keep `recovery` and `lockout` unless they ask to drop them. Both send mail only when used, and until an
-  email provider is set up, a forgotten password cannot be reset and a locked account waits 24 hours.
+  out unless they ask, so sign-up works before Resend is set up.
+- **Tell:** keep `recovery` and `lockout` unless they ask to drop them. Both send mail only when used, and until
+  Resend is set up, a forgotten password cannot be reset and a locked account waits 24 hours.
+- **Tell:** the app sends this mail through Resend. After Compile they create a free Resend account and an API key,
+  and until they verify a domain there, no one else receives it.
 - **Tell:** who becomes an admin or gets a role, and that you will set it in example data or by command, since no
   page grants it.
 - **No need to ask:** give a role Field a `default`, such as `member`, unless the person wants people to choose
@@ -397,7 +418,8 @@ refuses a folder that already holds a compiled app. Code you wrote after Compile
 Plan change reaches that app only when you copy it across.
 
 - **In the Plan:** adding or dropping a flow changes `rodauth_main.rb`, the routes, and the authentication
-  migration. A new required Field on the Account Entity joins the sign-up form unless it has a `default`. Moving
+  migration. A new required text Field on the Account Entity joins the sign-up form unless it has a `default`; a required enum or
+  boolean needs a `default` or a `registration.inputs` entry. Moving
   `account` to another Entity starts the people over.
 - **After Compile:** Rodauth's configuration is in `app/misc/rodauth_main.rb`, its views in `app/views/rodauth/`,
   and labels in `config/locales/authentication.en.yml`. To let an admin grant a role, add a gate Policy and an
@@ -406,7 +428,7 @@ Plan change reaches that app only when you copy it across.
 
 ```ruby
 User.find_or_create_by!(email: "you@example.com") do |account|
-  account.password = "a passphrase of at least 15 characters"
+  account.password = "a passphrase of at least 8 characters"
   account.name = "name"
 end
 ```

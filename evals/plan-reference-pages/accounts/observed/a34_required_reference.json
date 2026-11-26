@@ -1,6 +1,6 @@
 {
-  "analyzer_release": "foundation-plan-rails/application-2026-11-13-events-listed",
-  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-13-events-listed",
+  "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
+  "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
   "status": "valid",
   "diagnostics": [
     {
@@ -34,12 +34,6 @@
       "group": "Pages and actions",
       "title": "`user.team`",
       "file": "app/views/rodauth/create_account.html.erb, app/misc/rodauth_main.rb"
-    },
-    {
-      "section": "Test coverage to complete",
-      "group": null,
-      "title": "Account registration: persists submitted registration values",
-      "file": "spec/requests/account_registration_spec.rb"
     }
   ]
 }

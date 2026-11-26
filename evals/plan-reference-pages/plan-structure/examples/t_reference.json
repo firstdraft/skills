@@ -2,7 +2,7 @@
   "format": "firstdraft.foundation-plan.sketch/0.23",
   "target": {
     "id": "rails",
-    "profile": "rails-sketch/2026-10"
+    "profile": "rails-sketch/2026-11"
   },
   "application": {
     "key": "supper_club",
@@ -29,6 +29,7 @@
     "delivery": {
       "email": {}
     },
+    "mail": "resend",
     "entities": [
       {
         "subject_uuid": "01a1cb9b-fac9-7c2a-8620-29692e5a1af8",

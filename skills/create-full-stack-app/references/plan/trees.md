@@ -83,7 +83,8 @@ Analysis rejects a missing `parent_reference` (`foundation_plan.schema.required`
 (`foundation_plan.link.reference_not_found`), a Reference of another Entity
 (`foundation_plan.tree.parent_owner_incompatible`, `foundation_plan.tree.scope_owner_incompatible`), a scope equal
 to the parent (`foundation_plan.tree.scope_reuses_parent`), a repeated Tree key (`foundation_plan.identity.readable_path_duplicate`), and any other key, such as `max_depth`
-(`foundation_plan.schema.additionalProperties`).
+(`foundation_plan.schema.additionalProperties`). It also rejects an Entity keyed `page` with pages
+(`foundation_plan.identity.reserved_constant_collision`); key it `article`, and keep "Page" as its name.
 
 The parent Reference, in the Entity's `references[]`:
 
@@ -339,8 +340,6 @@ These pass analysis as `valid`:
 - **Example records whose parent is in another scope.** They are seeded as written.
 - **An optional scope Reference, or a scope that is another self-Reference.** Each compiles and means nothing more.
 - **Two Trees on one parent Reference.** Each gets its own gap and nothing else.
-- **An Entity with the key `page`.** Analysis passes and the Compile fails, because the generated `PagesController`
-  collides with the app's own pages for privacy and terms. Name the Entity something else, such as `article`.
 
 ## Decisions to raise
 

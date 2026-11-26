@@ -1,52 +1,135 @@
 # Diagnostics and recovery
 
-Read every result as evidence about one exact invocation and, for Plan mutations, one exact local byte sequence.
-Handled leaf-command failures end standard error with exactly one JSON object. `plan compile` may first emit the
-recognized progress lines documented below. Remove only one leading contiguous block of complete lines whose text
-after the exact `First Draft: ` prefix matches the stable message table below. Then require the remainder to be one
-JSON object. An unrecognized prefixed line, a progress line after the envelope, any other prefix or suffix, and any
-interleaved output fail closed. Branch on the object's stable `error` and structured fields rather than the
-human-readable `detail` or broad process exit status.
+Read every result as evidence about one exact invocation and, for Plan mutations, one exact local byte sequence. Handled
+leaf-command failures end standard error with exactly one JSON object. `plan compile` may first emit the recognized
+progress lines documented below, and any command that calls First Draft may write one [update or stop
+line](#update-and-stop-lines) just before its result. Remove only one leading contiguous block of complete lines whose
+text after the exact `First Draft: ` prefix matches the stable message table or the update and stop lines below. Then
+require the remainder to be one JSON object. An unrecognized prefixed line, a progress line after the envelope, any
+other prefix or suffix, and any interleaved output fail closed. Branch on the object's stable `error` and structured
+fields rather than the human-readable `detail` or broad process exit status. A successful `plan compile` or
+`compilation download` may also write the [Compilation record line](#progress-and-failure-reports) on standard error.
 
-This plugin bundles `@firstdraft.com/cli@0.9.0`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.9.3/script/cli-contract/config.mjs)
-at this plugin's protected release tag. Check the command surface rather than assuming the version alone
-establishes compatibility. These source checks do not prove plugin/catalog publication, service authentication,
-staging compatibility, or a complete user journey.
+This plugin bundles `@firstdraft.com/cli@0.10.0`. Its exact reviewed revision and runtime digest are owned by
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.10.0/script/cli-contract/config.mjs)
+at this plugin's protected release tag. The version alone does not establish that First Draft accepts this setup;
+[`start`](#check-readiness-with-start) asks it. These source checks do not prove plugin/catalog publication, service
+authentication, staging compatibility, or a complete user journey.
 
 ## Contents
 
+- [Check readiness with start](#check-readiness-with-start)
 - [Local state and credentials](#local-state-and-credentials)
+- [Update and stop lines](#update-and-stop-lines)
+- [Daily limits](#daily-limits)
 - [Push and analysis](#push-and-analysis)
 - [Product Compile](#product-compile)
 - [Retained Compilation status](#retained-compilation-status)
 - [Failed Compilation](#failed-compilation)
 - [Retained Compilation download](#retained-compilation-download)
+- [Progress and failure reports](#progress-and-failure-reports)
 - [Stable error families](#stable-error-families)
 - [Ambiguous mutations](#ambiguous-mutations)
 - [Stuck Compilation recovery](#stuck-compilation-recovery)
 - [Diagnostic shape](#diagnostic-shape)
 - [Concurrent replacement](#concurrent-replacement)
 
+## Check readiness with start
+
+Run `start` through the helper before other First Draft work in each session. With a token for the origin, from the
+environment or a saved login, it reads the account once; without one, it makes no request. It prints plain sentences
+for you on standard output, one fact per line, and exits 0 only when First Draft accepted the token; every other
+outcome also ends standard error with its handled error. Run each command a line names through the helper, as
+printed. On staging, the `login` and `start` commands it names end in `--staging`; the report commands it names use
+the Project's saved origin. Give `start` the Project's origin, as
+[local state and credentials](#local-state-and-credentials) describes.
+
+The first line names the versions, `First Draft CLI <version> with plugin <version>.` When First Draft names a newer
+version, the [update line](#update-and-stop-lines) comes second, on standard output. The login lines follow:
+`This computer has a saved login for <origin>.` or `This computer has no saved login for <origin>.`, and, when a
+token variable is set,
+`FIRSTDRAFT_API_TOKEN is set, so the CLI uses that token in place of any saved login for <origin>, and no login is needed.`
+Staging names `FIRSTDRAFT_STAGING_API_TOKEN`. Then, by outcome:
+
+| Outcome | What `start` prints last | What you do |
+| --- | --- | --- |
+| Ready, exit 0 | `Ready: First Draft accepted this computer's login.`, or `Ready: First Draft accepted FIRSTDRAFT_API_TOKEN.` for a token variable | Go on. Never raise reports or notes. |
+| Ready with reports on, exit 0 | The same `Ready:` line, then five lines about reports, which begin `Reports are on:`, `Progress:`, `Failure:`, `Each report names the Compilation ...`, and `Run each report and note command ...`, and five about notes, which begin `Notes:`, `Unstated request:`, `Unclear guidance:`, `Wrong output:`, and `Write each note ...` | Go on, and send reports and notes as those lines and [progress and failure reports](#progress-and-failure-reports) say. |
+| Not logged in: `authentication_required`, no request made | `To log in, run 'firstdraft login --no-wait'. It prints a link and a code: show both to the person and ask them to approve the login in their browser.` and `When the person says they approved, run 'firstdraft login --finish', then run 'firstdraft start' again.` | [Log in for the user](#log-in-for-the-user). |
+| Saved login rejected: `authentication_required` | `Not logged in: First Draft did not accept the saved login for <origin>.` and the same two login lines | [Log in for the user](#log-in-for-the-user). |
+| Token variable rejected: `authentication_required` | `Not logged in: First Draft did not accept FIRSTDRAFT_API_TOKEN. Ask the person to replace it or unset it; while it is set, the CLI uses no saved login.` | Tell the user, wait until they say it is done, and run `start` again. |
+| `update_required`, `api_contract_unsupported` | The login lines, then the error | Follow [update and stop lines](#update-and-stop-lines). |
+| `account_unavailable` | The login lines, then the error | The account read failed and is safe to repeat: run `start` once more. If it fails again, tell the user. |
+| `invalid_server_response`, `rate_limited` | The login lines, then the error | Tell the user what the error says. |
+| `invalid_configuration`, exit 2 | Only the error | `--staging` conflicts with `FIRSTDRAFT_API_URL`, or that URL is invalid. Tell the user. |
+| A CLI older than `start` | `Unknown command.` on standard error, exit 2 | Tell the user the update steps are at https://firstdraft.com/update. |
+
+Until `Ready:`, do no remote work; local Plan work may continue. `start` prints no token and no account fact other
+than whether reports are on, and its errors carry no text that First Draft wrote.
+
+### Log in for the user
+
+You may start the login; the user approves it in their browser. Never open the link yourself, approve for the user,
+or ask them to paste a token into the conversation.
+
+1. Run `firstdraft_cli login --no-wait`, with `--staging` when the printed command has it. It saves the waiting
+   login on this computer, outside the project, and prints:
+
+   ```text
+   To log in to <origin>, ask the person to open this link in a browser, check that the page shows the code <code>, and approve:
+   <link that includes the code>
+   The link and the code expire in <n> minutes, at <UTC time>.
+   When the person says they approved, run 'firstdraft login --finish'.
+   ```
+
+   When First Draft sends no link that includes the code, the first line asks the person to enter the code
+   instead, and the second is the plain link. Show the user the link and the code exactly as printed, and ask them
+   to approve.
+2. Wait until the user says they approved, then run `firstdraft_cli login --finish`. It waits at most 15 seconds and
+   prints one of these:
+
+| `login --finish` prints | `error` | What you do |
+| --- | --- | --- |
+| `Logged in: this computer is now logged in to <origin>.` and `Run 'firstdraft start' again.` | none, exit 0 | Run `start` again. |
+| `Still waiting: First Draft has not confirmed that the person approved the login.`, the link lines again, and `The link and the code expire at <UTC time>. When the person says they approved, run 'firstdraft login --finish' again.` | `authorization_pending` | Show the link and the code again, and wait for the user before you run `login --finish` again. |
+| `Expired: the link and the code expired before this computer finished the login, so no new login was saved for <origin>.` and `To try again, run 'firstdraft login --no-wait'.` | `authorization_expired` | Run `login --no-wait` again, and show the user the new link and code. |
+| `Refused: the person denied this login, so no new login was saved for <origin>.` and `Ask the person before you start another login with 'firstdraft login --no-wait'.` | `authorization_denied` | Ask the user before you start another login. |
+| `No login is waiting: this computer has no device login for <origin> that has not ended.` and `Run 'firstdraft start' to see whether this computer is logged in.` | `login_not_started` | Run `start` again. |
+
+`login_failed` can end either step. With `reason` `invalid_grant` from `--finish`, the waiting login is spent: run
+`login --no-wait` again. With `credentials_path`, a file on this computer could not be read or written: tell the user
+what the error says. Otherwise, as after a network failure, run the same step once more. If `--finish` fails again,
+start over with `login --no-wait`; if `--no-wait` fails again, tell the user. After `rate_limited`, tell the user what
+it says.
+
 ## Local state and credentials
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
-CLI-owned Project, origin, and ETag state. Inspect the Plan; do not print, paste, commit, or treat the state file as
-agent-authored Plan content. Inspect only its `api_url` when a persistent read-only status failure requires checking
-the pinned origin.
+CLI-owned Project, origin, and ETag state. `.firstdraft/compilation.json`, beside it, is too: `plan compile` and
+`compilation download` record there the Compilation whose code they wrote, and reports and notes about generated code
+name it. After root
+adoption both are under `.firstdraft/design/.firstdraft/`. Inspect the Plan; never edit, print, paste, commit, or
+treat either file as agent-authored Plan content. Inspect only its `api_url`, when `start` needs a resumed Project's origin, when a
+persistent read-only status failure requires checking the pinned origin, or when a new Project after a `412` or a
+retired profile needs the old one.
 
 `plan init` only creates local files; it does not choose a server. New remote work defaults to production at
 `https://firstdraft.com`. For requested staging work, use the root flag before each remote command
 (`firstdraft_cli --staging plan push`). Credential selection follows the saved origin, including existing staging
 Plans resumed without the flag.
 
+`start` and the login commands do not read the Project, so give them its origin. For new work that is production,
+or staging when the user asked for it. In a resumed Project, read only `api_url` from `.firstdraft/state.json`. When
+it has one, set `FIRSTDRAFT_API_URL` to it for `start` and both login steps, production included, so that a variable
+already in the environment cannot select another origin; a printed `--staging` agrees with the staging URL. A Project
+whose first push has not succeeded has no `api_url` yet: treat it as new work. When the state cannot be read, ask the
+user which environment the Project uses.
+
 Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
-or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the token `firstdraft login` saved for that
-origin. The CLI never sends one environment's credential to another. The usual setup is one login per environment,
-which the user runs in their own terminal: `npx --yes @firstdraft.com/cli@0.9.0 login`, with `--staging` added for
-staging, or `firstdraft login` from an installed CLI. It prints a URL to approve in a browser; on a machine without
-one, `--interactive` shows a device code to approve elsewhere. The login is saved outside the project, so every
-session and client on the machine shares it.
+or `FIRSTDRAFT_STAGING_API_TOKEN` for staging, when set; otherwise the login saved on this computer for that origin.
+The CLI never sends one environment's credential to another. The usual setup is one login per environment, which
+you start and the user approves, as [log in for the user](#log-in-for-the-user) describes. The login is saved
+outside the project, so every session and client on the machine shares it.
 
 `FIRSTDRAFT_API_URL` selects an advanced custom server, which uses `FIRSTDRAFT_API_TOKEN` or a login saved with the
 same variable set; the exact staging origin always uses the staging credential. Combining `--staging` with a different URL, or with
@@ -56,10 +139,10 @@ URL override. None of these selections migrates a Project. Preserve the existing
 independent work in another environment, use a separate folder with a new Plan; do not hand-edit private state or
 automatically copy Project identity across environments.
 
-Let the user configure credentials outside the conversation. Do not request a token's value, print it, place it on
-a command line, or persist it in project files. Do not run `login` or `logout` yourself: approval belongs to the
-user, and the command waits for it. When the user confirms authentication is configured, resume
-the already requested operation without asking for fresh authorization.
+Do not request a token's value, ask the user to paste one into the conversation, print it, place it on a command
+line, or persist it in project files. A token in the environment is the user's to set, replace, or unset outside the
+conversation. Only the user runs `logout`. Once `start` prints `Ready:`, resume the already requested operation
+without asking for fresh authorization.
 
 `plan init` has two handled failures:
 
@@ -70,6 +153,39 @@ the already requested operation without asking for fresh authorization.
 
 An existing `.firstdraft/` is not disposable scratch space. Resume a readable Plan and state pair; do not
 reinitialize over partial, damaged, or existing state.
+
+## Update and stop lines
+
+First Draft names the latest and the minimum plugin on every answer. When this setup is older than the latest, the
+command writes one line on standard error just before its result:
+`First Draft: an update is available (plugin <latest>; this setup has plugin <installed>). Tell the person the update steps are at https://firstdraft.com/update`.
+`start` writes it on standard output, after its version line. Pass the line on to the person in your next message,
+once per session, and carry on: the command's result stands.
+
+When this setup is older than the minimum, or First Draft serves an API contract this CLI does not accept, the CLI
+sends nothing after that answer. A command cut short ends with `update_required` or `api_contract_unsupported` in
+place of its result. A command whose last answer it was keeps its result, except `start`, which always ends with the
+error because a setup that must update is not ready. Such a command's result comes after one line that ends
+`This command finished; tell the person to update with the steps at https://firstdraft.com/update before the next one.`
+or, for an older or prerelease contract, `This command finished; use the CLI version that this First Draft origin supports before the next one.`
+Either way, stop remote work, tell the person what the line or the error's `detail` says, and wait until they have
+updated. After a stop line, the command's result stands: once the person has updated, go on with the next step.
+After `update_required` or `api_contract_unsupported`, a push that First Draft accepted keeps its saved ETag, so after
+the update run the same command again with the same options; after `start`, run `start` again for the same origin.
+When the error carries `current`, a Compilation had
+already started: follow `current.compilation.id` with `compilation status` instead of compiling again. A line that
+begins `First Draft: FIRSTDRAFT_PLUGIN_VERSION is set but is not a plugin version` means the plugin passed a version
+the CLI cannot read; tell the person, and carry on.
+
+## Daily limits
+
+In any 24 hours, one account can start 50 Compilations and create 20 new Projects. Every Compilation started counts,
+whatever its outcome; replacing an existing Project's Plan, reading status, cancelling, and downloading do not. At a
+limit, First Draft answers 429 and the CLI ends with `rate_limited`: the refused request did nothing.
+`response.code` is `compilation_limit_reached` or `project_limit_reached`, `response.detail` says when the next one
+can start, and `retry_at` is that time in UTC. Tell the person the limit and the time, and stop remote work until
+then. Do not retry in a loop, start another Project to get around it, or create or switch accounts. Local Plan work
+may continue.
 
 ## Push and analysis
 
@@ -131,7 +247,8 @@ as the submitted candidate, and do not edit, push, or Compile the replacement.
 ### Retired target profile
 
 A Project keeps the target profile it was created with, and this plugin's CLI and First Draft accept only
-`rails-sketch/2026-10`. A Plan or Project that names an earlier profile fails at `/target/profile`:
+`rails-sketch/2026-11`. A Plan or Project that names an earlier profile cannot be analyzed or compiled, and fails at
+`/target/profile`:
 
 | Diagnostic code | Meaning |
 | --- | --- |
@@ -139,16 +256,21 @@ A Project keeps the target profile it was created with, and this plugin's CLI an
 | `foundation_plan.import.target_profile_mismatch` | The Plan names the current profile, but its Project was created with an earlier one. |
 | `foundation_plan.analysis.unsupported_target_profile` | The Project was created with an earlier profile. |
 
-Retrying or editing only the profile cannot fix this. With the user's agreement, start a new Project for the same
-Plan:
+Each message ends by saying to update the First Draft plugin first when older tools wrote the Plan, and names
+https://firstdraft.com/update. A plugin that ships this page is past that step, so go on to the new Project below;
+when a command also wrote an [update line](#update-and-stop-lines), pass it on. Retrying or editing only the profile
+cannot fix this. With the user's agreement, start a new Project for the same Plan:
 
 1. In the planning directory, which is `.firstdraft/design/` after root adoption, rename `.firstdraft` to a name such
    as `.firstdraft-retired-profile`. Keep it: it holds the old Plan and the old Project's private state.
 2. Run `plan init` with the old Plan's `application.name` and `application.key`. It creates a new Project identity
-   and an empty Plan that targets `rails-sketch/2026-10`.
-3. Replace the new empty Plan with the old Plan, changing only `target.profile` to `rails-sketch/2026-10`. Keep
+   and an empty Plan that targets `rails-sketch/2026-11`.
+3. Replace the new empty Plan with the old Plan, changing only `target.profile` to `rails-sketch/2026-11`. Keep
    every subject UUID.
-4. Push and wait for analysis as usual. The new profile can change the GapSet, so read it back again before Compile.
+4. Push to the old Project's origin: a new Project has no pinned origin, so select it as the
+   [fork after a `412`](#ambiguous-mutations) does, reading only `api_url` from the renamed folder's state. Then wait
+   for analysis as usual. The new profile can change the GapSet and report new analysis errors, such as a key the
+   app already uses; fix each as its message says, and read the GapSet back again before Compile.
 
 A Compile in the new Project does not upgrade an application generated under the earlier profile. From
 `.firstdraft/design/`, select an absent `--output` path, then bring what the user wants into the existing
@@ -160,12 +282,12 @@ Use these terms when explaining the workflow:
 
 | Term | Meaning |
 | --- | --- |
-| Submit the Plan | Send the current Plan to First Draft for analysis (`plan push` through the verified CLI wrapper). |
+| Submit the Plan | Send the current Plan to First Draft for analysis (`plan push` through the Skill's helper). |
 | Compile | Generate and verify application source from the reviewed Foundation Plan. |
 | Commit | Record changes in local Git history; this does not copy them to GitHub. |
 | Create GitHub repository | Create a private repository for this workspace, connect it as `origin`, and push its existing commits. All three steps must succeed. |
 | Push | Send Git commits to an existing remote repository with `git push`. |
-| Deploy | Make the application run on a hosting service. Pushing to GitHub does not deploy it. |
+| Deploy | Make the application run on a hosting service. Compile does not deploy it. A push deploys it only when a hosting service, such as Render, deploys that branch. |
 
 Zero-flag mode selects local output in the current folder, equivalent to `--output .`. **Materialization** means
 writing the verified artifact into a local directory; use "write the generated application into this workspace" when
@@ -235,8 +357,7 @@ index lock when applicable. Reverse the remaining `artifact_moves` in reverse re
 destination back to its source, before reversing the remaining `design_moves` in reverse recorded order. Design
 destinations are inside transaction staging: reversing the generated `.firstdraft` artifact move returns the
 archive there before the original planning `.firstdraft` can return to the root. Never merge or overwrite either
-`.firstdraft` directory. Verify the recorded original snapshot before removing the transaction. Do not repeat an
-outcome-unknown push.
+`.firstdraft` directory. Verify the recorded original snapshot before removing the transaction.
 
 Success writes one validated JSON object containing the Project, Compilation, absolute output path, file count, and
 manifest digest. Absent output contains only artifact files and creates no repository or `.git`. Root adoption
@@ -251,9 +372,9 @@ read-only `compilation status <id> --wait` and, after terminal success,
 `compilation download <id> --output <still-absent-directory>` rather than starting another Compilation. If it stays
 `queued` or `running` after that wait, follow [stuck Compilation recovery](#stuck-compilation-recovery).
 
-An ambiguous Compilation start is not replayable: `request_outcome_unknown` with `phase: "compilation"` means one
-Compilation may exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and selected
-output, then stop until First Draft or an operator reconciles the Project. Do not rerun Compile.
+After an ambiguous Compilation start, `request_outcome_unknown` with `phase: "compilation"`, one Compilation may
+exist but its retained identity was not verified. Preserve the exact Plan, CLI state, and selected output, and rerun
+the same `plan compile` once, as [ambiguous mutations](#ambiguous-mutations) describes.
 
 The CLI emits only state-changing progress lines, suppresses consecutive duplicate text, and prefixes every line with
 `First Draft: `. The stable messages are:
@@ -548,7 +669,7 @@ the application. First Draft is notified of these failures, so the user does not
 4. requires the envelope's `head_source_sha256` to equal the retained
    `compilation.head_source_sha256`;
 5. verifies transport metadata and exact bytes against the retained artifact digest, then validates Plan format
-   `firstdraft.foundation-plan.sketch/0.23`, target profile `rails-sketch/2026-10`, the canonical Foundation Plan
+   `firstdraft.foundation-plan.sketch/0.23`, target profile `rails-sketch/2026-11`, the canonical Foundation Plan
    digest, envelope, manifest, paths, modes, Base64 contents, and file digests; and
 6. installs an absent private sibling tree with one atomic rename, or applies `plan compile`'s
    [current-root transaction and CLI compatibility boundary](#direct-local-output).
@@ -561,15 +682,78 @@ An earlier Plan format or target profile is rejected before installation, even w
 profile. Retrying the download or editing the local Plan cannot upgrade that retained artifact. Preserve its Plan
 bytes and private state; create replacement work only within the user's authorized candidate and Compile workflow.
 
+## Progress and failure reports
+
+With the person's yes, the agent tells First Draft how far a generated app has come and where generated code failed,
+and sends notes about problems with First Draft itself, so that First Draft can fix what it generates and teaches.
+One yes covers reports and notes. The person answered once, on the page where they approved the login, and can
+change the answer on their First Draft account page; you cannot. `start` prints the `Reports are on:` lines and the
+notes lines after them only when the answer is yes. Send reports and notes only after `start` printed them, as
+those lines say; otherwise send none and do not bring reports or notes up. Each report and note command reads the
+answer again at the Project's origin first. When reports are off, it sends nothing, prints a line that says so, and
+exits 0. When First Draft answers the send with `403 reports_off`, because the person turned reports off after that
+read, the command had already printed and sent its body, First Draft did not store it, and the command prints the
+same line. Either way, send no more reports or notes, and say nothing about them.
+
+Run these from the folder that holds the Project's state: the generated app's root after root adoption, or the
+planning folder after an absent `--output` path. A report, and a note about generated code, names the Compilation
+that the CLI recorded when `plan compile` or `compilation download` last wrote code for the Project, so give it no ID,
+in a later session too. Name one only when there is no record or it names another Compilation: put its
+`compilation.id` right after `report progress` or `report failure`, or pass it to the note with `--compilation-id`.
+Code written by an earlier CLI has no record. A successful `plan compile` or `compilation download` that could not
+write the record says so on standard error with
+`First Draft: the code is in place, but the CLI could not record Compilation <id>, ...`; the code is fine, so name
+that ID in each later report and note about generated code. The other notes belong to the Project and need only its
+first push.
+
+| When | Command |
+| --- | --- |
+| `bin/setup` finished | `firstdraft_cli report progress --step setup` |
+| The first spec run finished | `firstdraft_cli report progress --step specs_first_run --examples <n> --failures <n> --behavior-to-write-failures <n> --items-remaining <n>` |
+| Every item under Behavior to write is written | the same with `--step behavior_written` |
+| The specs pass | the same with `--step specs_passing` |
+| The preview started | `firstdraft_cli report progress --step preview_started` |
+
+The counts come from the spec run's summary and the README: examples run, failing examples, failing examples that
+the README's Behavior to write names, and items still to write. Pass the counts you have and leave out the rest.
+
+When generated code fails in a way the README does not list, send one `report failure` once you have fixed it, or
+when you stop trying: `--kind setup_failure` when `bin/setup` fails, `spec_failure` for a failing example that
+Behavior to write does not name, `boot_error` when the app does not boot, and `lint_failure` when a lint fails on
+generated code. Add what you have of `--rerun` with the RSpec command, `--error-class`, `--frame` for each of the
+app's own frames as a path from the app's root, such as `app/models/movie.rb:12`, `--message`, `--fix-summary`,
+`--ruby-version`, and `--rails-version`. Pass only text that may
+leave the machine: never file contents, secrets, tokens, or the person's data. The CLI prints what it sends, and
+names on a `Left out:` line each field it left out because it did not fit that field's shape.
+
+A note follows the notes lines `start` printed: send one only for a problem with First Draft that cost a real detour
+and is likely to happen again, never for routine debugging, and only after the Plan's first push. It is
+`firstdraft_cli note unstated_request`, `note unclear_guidance`, or `note wrong_output`, with the options those
+lines name; each prints what it sends. Write each note in your own plain words, and never put secrets,
+credentials, personal data, or code from the person's project in it.
+
+Each command sends once and never blocks your work. After `report_rejected`, `report_unavailable`, `note_rejected`,
+`note_unavailable`, `account_unavailable`, or `rate_limited`, carry on without that report or note and do not send it
+again. After `compilation_not_recorded`, name the Compilation, as the error table says. After `note_incomplete`,
+write the field it names again in plain words, or give a page or code in its shape, and send the note once more.
+
 ## Stable error families
 
 | Commands | `error` | Recovery meaning |
 | --- | --- | --- |
 | Any leaf command | `invalid_arguments` | Syntax failed before the requested action. Read that command's help. |
+| Any command that calls First Draft, except `logout` | `update_required`, `api_contract_unsupported` | First Draft needs a newer plugin or CLI, or serves another API contract; see [update and stop lines](#update-and-stop-lines). |
+| Any command that calls First Draft, except `logout` | `rate_limited` | First Draft answered `429`; see [daily limits](#daily-limits). For a report or a note, `response.code` `reports_rate_limited` means the account's allowance for the hour is used up: carry on without it and do not send it again. |
+| `report progress`, `report failure` | `report_rejected`, `report_unavailable`, `account_unavailable`, `invalid_server_response` | The report was refused, such as `400 invalid_report` or `409 compilation_not_succeeded`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more reports or notes, and say nothing about them. |
+| `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_rejected`, `note_unavailable`, `account_unavailable`, `invalid_server_response` | The note was refused, such as `invalid_note` or `compilation_not_found`, its outcome is unconfirmed, or the account read before it failed; carry on without it. A reports-off line is no error: send no more reports or notes, and say nothing about them. |
+| `report progress`, `report failure`, `note wrong_output` | `compilation_not_recorded` | No Compilation was given and none is recorded for this Project, so nothing was sent. Name the Compilation the code came from: put its `compilation.id` from `plan compile` right after `report progress` or `report failure`, or pass it to the note with `--compilation-id`. |
+| `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_incomplete` | Exit 2: a field the note needs had nothing left after shaping, so nothing was sent. `detail` names each such field. Write it again in plain words, or give a page or code in its shape. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | Ask the user to run `login` for that environment, or set its token, outside the conversation. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
-| `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `project_not_pushed` | No accepted Project/origin is pinned locally. |
+| `start` | `authentication_required`, `account_unavailable`, `invalid_server_response`, `invalid_configuration` | Not ready; see [check readiness with start](#check-readiness-with-start). |
+| `login --no-wait`, `login --finish` | `authorization_pending`, `authorization_expired`, `authorization_denied`, `login_not_started`, `login_failed` | The agent's login did not finish; see [log in for the user](#log-in-for-the-user). |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` for the Project's origin and follow its lines. Then rerun the command, except when the error carries `current`: a Compilation already started, so resume it by `current.compilation.id` as [ambiguous mutations](#ambiguous-mutations) describes, and never start another. |
+| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel`, `report`, `note` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
+| `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel`, `report`, `note` | `project_not_pushed` | No accepted Project/origin is pinned locally; a note needs the Plan's first push. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
 | `plan push`, `plan compile` | `server_rejected` | Inspect the validated status, bounded response, and diagnostics. A `compilation_active` problem starts [stuck Compilation recovery](#stuck-compilation-recovery). |
 | `plan push`, `plan compile` | `local_state_not_saved` | The Plan was accepted but private ETag state was not saved. |
@@ -595,13 +779,25 @@ bytes and private state; create replacement work only within the user's authoriz
 ## Ambiguous mutations
 
 `request_outcome_unknown` on ordinary `plan push` or with `phase: "push"` from `plan compile` means the Plan
-PUT may have been accepted but local state cannot prove the new Head. There is no Plan GET/reconciliation command,
-so preserve the local files and stop rather than repeating that mutation or manufacturing an ETag.
+PUT may have been accepted but its response could not be verified, so local state was not changed. Run the same
+command once more, with the same options and environment. If First Draft accepts it, carry on. If it answers
+`server_rejected` with status `412` (`precondition_failed`), the first push may have landed, or another copy of the
+Project pushed. When another copy holds newer work, continue from that copy. Otherwise tell the person, and with
+their agreement start a new Project from this Plan: in a new folder, run
+`firstdraft_cli plan init --name "<application.name>" --application-key <application.key>` with the old Plan's values,
+copy the old `.firstdraft/foundation-plan.json` over the new one, and push from there to the old Project's origin. A new folder
+has no pinned origin, so its push goes to production unless you select the old one: read only `api_url` from the
+old `.firstdraft/state.json`, or use the origin the first push used when it saved none, and pass `--staging` for
+staging or the same `FIRSTDRAFT_API_URL` for a custom origin. Never manufacture an ETag or edit
+`.firstdraft/state.json`.
 
 `request_outcome_unknown` with `phase: "compilation"` means `plan compile` sent its conditional Compilation start
-but could not verify a retained Compilation identity. That start has no safe same-command reconciliation path. Preserve
-the approved exact Plan, CLI state, and selected output. Do not rerun `plan compile` or issue a direct request. Stop
-until First Draft or an operator identifies the retained work and supplies a trustworthy recovery boundary.
+but could not verify a retained Compilation identity. The CLI never repeats that start itself. Run the same
+`plan compile` once more, with the same options and environment. If a Compilation is still active,
+First Draft refuses with `compilation_active` and names it: run `compilation status <id> --wait` on that ID, and after
+`succeeded` use `compilation download <id> --output <the destination the Compile used>`, `.` after current-root
+adoption, with no third `plan compile`. Otherwise the rerun starts a new Compilation, and the one the first attempt
+may have started costs one of the day's Compilations. After that one rerun, stop and report.
 
 After a validated `202` start, act only on an error envelope carrying validated `current.compilation.id`.
 `compilation_status_unavailable` permits a bounded read-only status retry; an invalid status or artifact requires
@@ -643,12 +839,13 @@ finishes in under a minute, so when this error follows a Compile that has been s
   check the ID, directory, environment, and login.
 - `compilation_cancel_unavailable` means a network failure, timeout, or server error left the outcome unconfirmed;
   rerun `compilation cancel` or read `compilation status`.
-- `authentication_required` means the environment's token is missing or was rejected with `401`; ask the user to
-  run `login` for that environment, then repeat the cancel.
+- `authentication_required` means the environment's token is missing or was rejected with `401`; run `start` and
+  follow its lines, then repeat the cancel.
 - `invalid_compilation_status` means the response broke the Compilation contract; read `compilation status` instead
   of repeating the request.
 
-This recovery applies only to `compilation_active`. It does not change the stop rules for `request_outcome_unknown`.
+This recovery applies only to `compilation_active`. It does not change the one-rerun rule for
+`request_outcome_unknown`.
 
 ## Diagnostic shape
 

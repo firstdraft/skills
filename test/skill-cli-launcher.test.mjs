@@ -144,18 +144,18 @@ function assertSelected(result, f, selected, arguments_ = [], status = 0) {
   assert.equal(result.stderr, `${selected}: fixture stderr\n`);
 }
 
-test("project wrapper takes precedence over bundled and PATH CLIs", async (t) => {
+const missingCli =
+  "First Draft CLI is unavailable: the bundled CLI is missing from this plugin, so the First Draft plugin needs reinstalling.\n";
+
+function assertMissing(result) {
+  assert.equal(result.status, 127);
+  assert.equal(result.stdout, "");
+  assert.equal(result.stderr, missingCli);
+}
+
+test("bundled CLI runs even when a project wrapper and a CLI on PATH exist", async (t) => {
   const f = await fixture(t);
   await installCli(f.wrapper, "wrapper");
-  await installCli(f.bundle, "bundle");
-  await installCli(f.global, "global");
-
-  assertSelected(launch(f), f, "wrapper");
-});
-
-test("bundled CLI beats PATH when the project wrapper is not executable", async (t) => {
-  const f = await fixture(t);
-  await installCli(f.wrapper, "wrapper", 0o600);
   await installCli(f.bundle, "bundle");
   await installCli(f.global, "global");
 
@@ -169,14 +169,23 @@ test("standalone plugin runs its bundled CLI without a global installation", asy
   assertSelected(launch(f), f, "bundle");
 });
 
-test("source Skill without a project wrapper or bundled CLI falls back to PATH", async (t) => {
+test("without a bundled CLI, a project wrapper and PATH are ignored and the plugin needs reinstalling", async (t) => {
   const f = await fixture(t);
+  await installCli(f.wrapper, "wrapper");
   await installCli(f.global, "global");
 
-  assertSelected(launch(f), f, "global");
+  assertMissing(launch(f));
 });
 
-test("copied standalone Skill ignores an unrelated ancestor CLI and falls back to PATH", async (t) => {
+test("a bundled CLI that is not executable is missing", async (t) => {
+  const f = await fixture(t);
+  await installCli(f.bundle, "bundle", 0o600);
+  await installCli(f.global, "global");
+
+  assertMissing(launch(f));
+});
+
+test("copied standalone Skill ignores an unrelated ancestor CLI", async (t) => {
   const f = await fixture(t);
   const copiedLauncher = path.join(
     f.homeDirectory,
@@ -190,21 +199,7 @@ test("copied standalone Skill ignores an unrelated ancestor CLI and falls back t
   await installCli(path.join(f.homeDirectory, "bin", "firstdraft"), "unrelated");
   await installCli(f.global, "global");
 
-  assertSelected(launch(f, { launcher: copiedLauncher }), f, "global");
-});
-
-test("missing executable CLI reports the available resolution routes and exits 127", async (t) => {
-  const f = await fixture(t);
-  await installCli(f.wrapper, "wrapper", 0o600);
-  await installCli(f.bundle, "bundle", 0o600);
-  const result = launch(f);
-
-  assert.equal(result.status, 127);
-  assert.equal(result.stdout, "");
-  assert.match(result.stderr, /First Draft CLI is unavailable/);
-  assert.match(result.stderr, /project wrapper/);
-  assert.match(result.stderr, /bundled CLI/);
-  assert.match(result.stderr, /firstdraft on PATH/);
+  assertMissing(launch(f, { launcher: copiedLauncher }));
 });
 
 test("symlinked Skill resolves its physical bundle through paths with spaces", async (t) => {
@@ -234,33 +229,30 @@ test("symlinked Skill resolves its physical bundle through paths with spaces", a
   );
 });
 
-for (const selected of ["wrapper", "bundle", "global"]) {
-  test(`${selected} CLI preserves arguments, cwd, stderr, and failure status without fallback`, async (t) => {
-    const f = await fixture(t);
-    await installCli(f.global, "global");
-    if (selected !== "global") await installCli(f.bundle, "bundle");
-    if (selected === "wrapper") await installCli(f.wrapper, "wrapper");
-    const arguments_ = [
-      "plan",
-      "compile",
-      "--output",
-      ".",
-      "an argument with spaces",
-      "",
-      "a 'single' and a \"double\" quote",
-      "line one\nline two",
-      "*.json",
-      "$(printf literal)",
-      "$HOME",
-    ];
-    await writeFile(path.join(f.projectDirectory, "must-not-expand.json"), "{}\n");
+test("bundled CLI preserves arguments, cwd, stderr, and failure status", async (t) => {
+  const f = await fixture(t);
+  await installCli(f.bundle, "bundle");
+  await installCli(f.global, "global");
+  const arguments_ = [
+    "plan",
+    "compile",
+    "--output",
+    ".",
+    "an argument with spaces",
+    "",
+    "a 'single' and a \"double\" quote",
+    "line one\nline two",
+    "*.json",
+    "$(printf literal)",
+    "$HOME",
+  ];
+  await writeFile(path.join(f.projectDirectory, "must-not-expand.json"), "{}\n");
 
-    assertSelected(
-      launch(f, { arguments_, status: 37 }),
-      f,
-      selected,
-      arguments_,
-      37,
-    );
-  });
-}
+  assertSelected(
+    launch(f, { arguments_, status: 37 }),
+    f,
+    "bundle",
+    arguments_,
+    37,
+  );
+});
