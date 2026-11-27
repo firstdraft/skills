@@ -1,10 +1,8 @@
 # First Draft Skills
 
-This repository packages the portable agent instructions that turn a product conversation into a reviewed
-[Foundation Plan](https://firstdraft.github.io/firstdraft/) and drive the First Draft authoring workflow. The
-canonical Skills and bundled CLI are packaged once for Claude Code and Codex, and the plugin is the only thing to
-install. UI continuation follows the generated app's own design and components. The public catalog determines what
-a plugin installation actually receives.
+The First Draft plugin bundles the Skills and CLI for Claude Code and Codex. For a new app, the agent reads your
+idea and materials, sketches the main screens and revises them with you alongside a working
+[Foundation Plan](https://firstdraft.github.io/firstdraft/). After Compile it uses the selected source in Rails.
 
 [Release compatibility](release/compatibility.json) names the CLI, Service API, and Foundation Plan format that this
 source requires. The [public catalog](.claude-plugin/marketplace.json) owns the installed version; source
@@ -46,7 +44,7 @@ behavior. This repository teaches an agent how to use those contracts without cr
 | Understand the installed workflow | [Skill entrypoint](skills/create-full-stack-app/SKILL.md) |
 | Continue or review an app's UI | The app's `UI.md` and shared components; [UI Skill status](#ui-continuation) |
 | Review improvements for an existing app or workflow | [First Draft changelog](CHANGELOG.md) |
-| Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [interview guide](skills/create-full-stack-app/references/interview.md) or [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
+| Change Plan authoring guidance | [Skill entrypoint](skills/create-full-stack-app/SKILL.md), then [interview guide](skills/create-full-stack-app/references/interview.md), [sketch review](skills/create-full-stack-app/references/sketch-review.md), or [modeling guide](skills/create-full-stack-app/references/modeling-guide.md) |
 | Check current Foundation Plan capability | The [index of Plan reference pages](skills/create-full-stack-app/SKILL.md#load-references-only-when-needed), one per capability |
 | Inspect exact Plan structure | [Bundled schema](skills/create-full-stack-app/references/foundation-plan-0.23.schema.json) |
 | Add or run behavioral evaluations | [Evaluation guide](evals/README.md) |
@@ -107,6 +105,7 @@ The [portable layout](https://developers.openai.com/plugins/build/plugins#create
 
 ## UI continuation
 
+Bind the reviewed screens to real data and authorized Rails actions.
 Use the generated app's `UI.md`, comparable screens, and shared components for source development. The new Rails UI
 uses ERB/Basecoat Vega and selected shadcn `base-vega` islands through Turbo Mount. The app owns its theme, partial
 contracts, and component update commands. Existing apps keep their own stack unless migration is requested.
@@ -136,8 +135,8 @@ CI checks consumer commands against the exact pinned CLI and verifies the candid
 cover the complete command protocol matrix; Skills retains representative recovery cases, compatible fixtures, and
 packaged-executable integration. The release runbook owns the commands for reproducing these checks.
 
-A checkout holds no CLI, so `claude --plugin-dir .` loads the Skill but its helper reports the bundled CLI missing.
-To try the Skill with its CLI, stage the plugin and load that:
+Install the plugin’s packaging dependency with `npm ci --omit=dev --ignore-scripts` before either standalone
+staging example. Stage the CLI and Skill for Claude Code:
 
 ~~~sh
 node script/claude-plugin-package.mjs stage tmp/firstdraft --cli-root /path/to/exact/cli

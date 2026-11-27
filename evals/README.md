@@ -17,8 +17,10 @@ pages' example Plans, what the Service reported for each, and the page tests are
 
 ## Running a case
 
-- Run each case in a fresh agent context. Continue a session only for these pairs, running the second case in the
-  same session and output workspace after preserving the first case's output:
+- Run each case in a fresh agent context. Continue these sequences in the same session and workspace. Preserve
+  each turn's output before sending the next prompt:
+  - `sketch-from-older-prototype`, then `sketch-selection-into-plan`, then `revise-sketch-and-plan-together`;
+  - `fit-partial-opening-race-coaching`, then `fit-partial-backbone-plan-race-coaching`;
   - `reconcile-habit-requirements`, then `reconcile-habit-creation-only-revision`;
   - `author-deliberate-return-overrides`, then `preserve-current-location-return`;
   - `precompile-semantic-read-back`, then `compile-prepared-movie-catalog`;

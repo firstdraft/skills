@@ -8,6 +8,7 @@ import {
   mkdtemp,
   readdir,
   readFile,
+  lstat,
   rm,
   writeFile,
 } from "node:fs/promises";
@@ -24,6 +25,14 @@ export async function stageClaudePlugin(destination, cliRoot) {
   assert(cliRoot, "the exact CLI checkout is required");
   const target = path.resolve(destination);
   await mkdir(target, {recursive: true});
+  const dependency = path.join(repository, "node_modules", "playwright-core");
+  const bundled = path.join(target, "node_modules", "playwright-core");
+  const template = JSON.parse(await readFile(path.join(packageSource, "package.template.json"), "utf8"));
+  assert((await lstat(dependency)).isDirectory(), "playwright-core must be an installed directory");
+  const installed = JSON.parse(await readFile(path.join(dependency, "package.json"), "utf8"));
+  assert.equal(installed.version, template.dependencies["playwright-core"], "install the locked packaging dependencies with npm ci");
+  await cp(dependency, bundled, {recursive: true});
+  await normalizePackageModes(bundled, async (item) => (await lstat(item)).mode & 0o111);
   await Promise.all([
     cp(
       path.join(packageSource, ".claude-plugin"),
@@ -191,24 +200,23 @@ async function stageCli(cliRoot, destination) {
       0,
       [extracted.error?.message, extracted.stderr].filter(Boolean).join("; "),
     );
-    await normalizeCliModes(destination, destination);
+    await normalizePackageModes(destination, (item) => item === path.join(destination, "bin", "firstdraft.js"));
   } finally {
     await rm(packedDirectory, {recursive: true, force: true});
   }
 }
 
-async function normalizeCliModes(root, current) {
+async function normalizePackageModes(current, isExecutable) {
   for (const entry of await readdir(current, {withFileTypes: true})) {
     const item = path.join(current, entry.name);
-    assert.equal(entry.isSymbolicLink(), false, `unexpected CLI symlink: ${item}`);
+    assert.equal(entry.isSymbolicLink(), false, `unexpected package symlink: ${item}`);
     if (entry.isDirectory()) {
       await chmod(item, 0o755);
-      await normalizeCliModes(root, item);
+      await normalizePackageModes(item, isExecutable);
       continue;
     }
-    assert(entry.isFile(), `unexpected CLI package entry: ${item}`);
-    const relative = path.relative(root, item);
-    await chmod(item, relative === path.join("bin", "firstdraft.js") ? 0o755 : 0o644);
+    assert(entry.isFile(), `unexpected package entry: ${item}`);
+    await chmod(item, (await isExecutable(item)) ? 0o755 : 0o644);
   }
 }
 

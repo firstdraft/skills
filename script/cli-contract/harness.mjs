@@ -338,7 +338,6 @@ export function packAndInstall(cliDirectory, temporaryDirectory) {
       "--ignore-scripts",
       "--no-audit",
       "--no-fund",
-      "--offline",
       "--no-save",
       path.join(temporaryDirectory, manifest.filename),
     ],
@@ -361,7 +360,10 @@ export function verifyPackageMetadata(packageMetadata) {
   assert.equal(packageMetadata.name, cliPackageName);
   assert.equal(packageMetadata.version, cliPackageVersion);
   assert.equal(packageMetadata.bin?.firstdraft, "bin/firstdraft.js");
-  assert.equal(packageMetadata.dependencies, undefined);
+  const template = JSON.parse(
+    readFileSync(new URL("../../packages/claude-plugin/package.template.json", import.meta.url), "utf8"),
+  );
+  assert.deepEqual(packageMetadata.dependencies, template.dependencies);
   assert.equal(packageMetadata.scripts?.prepack, undefined);
 }
 

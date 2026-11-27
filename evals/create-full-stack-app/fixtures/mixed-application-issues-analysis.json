@@ -8,7 +8,7 @@
     "graph_version": 1,
     "head_source_sha256": "a1a3aa1d4a331820aeaebac65f3e48b92626b9fbfc01cec48462c402f61605d3",
     "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-11-27-ruby-4-0-10",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-11"

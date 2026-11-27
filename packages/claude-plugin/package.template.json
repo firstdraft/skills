@@ -1,9 +1,13 @@
 {
   "name": "@firstdraft.com/claude-code",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "First Draft Foundation Plan authoring and Compilation for Claude Code and Codex",
   "license": "MIT",
   "type": "module",
+  "dependencies": {
+    "playwright-core": "1.65.1"
+  },
+  "bundleDependencies": ["playwright-core"],
   "bin": {
     "firstdraft": "bin/firstdraft"
   },

@@ -10,8 +10,8 @@ other prefix or suffix, and any interleaved output fail closed. Branch on the ob
 fields rather than the human-readable `detail` or broad process exit status. A successful `plan compile` or
 `compilation download` may also write the [Compilation record line](#progress-and-failure-reports) on standard error.
 
-This plugin bundles `@firstdraft.com/cli@0.10.0`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.10.0/script/cli-contract/config.mjs)
+This plugin bundles `@firstdraft.com/cli@0.11.0`. Its exact reviewed revision and runtime digest are owned by
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.11.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag. The version alone does not establish that First Draft accepts this setup;
 [`start`](#check-readiness-with-start) asks it. These source checks do not prove plugin/catalog publication, service
 authentication, staging compatibility, or a complete user journey.
@@ -36,7 +36,8 @@ authentication, staging compatibility, or a complete user journey.
 
 ## Check readiness with start
 
-Run `start` through the helper before other First Draft work in each session. With a token for the origin, from the
+Run `start` through the helper before other First Draft CLI work each session, unless the user asks to keep the
+walkthrough or all work local. With a token for the origin, from the
 environment or a saved login, it reads the account once; without one, it makes no request. It prints plain sentences
 for you on standard output, one fact per line, and exits 0 only when First Draft accepted the token; every other
 outcome also ends standard error with its handled error. Run each command a line names through the helper, as
@@ -105,7 +106,8 @@ it says.
 ## Local state and credentials
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
-CLI-owned Project, origin, and ETag state. `.firstdraft/compilation.json`, beside it, is too: `plan compile` and
+CLI-owned Project, origin, and ETag state. The Sketches receipts and pending request under `.firstdraft/`,
+the hosted writer PID in `.firstdraft-root-output/hosted-writer.pid`, and `.firstdraft/compilation.json` are private: `plan compile` and
 `compilation download` record there the Compilation whose code they wrote, and reports and notes about generated code
 name it. After root
 adoption both are under `.firstdraft/design/.firstdraft/`. Inspect the Plan; never edit, print, paste, commit, or
@@ -121,8 +123,8 @@ Plans resumed without the flag.
 `start` and the login commands do not read the Project, so give them its origin. For new work that is production,
 or staging when the user asked for it. In a resumed Project, read only `api_url` from `.firstdraft/state.json`. When
 it has one, set `FIRSTDRAFT_API_URL` to it for `start` and both login steps, production included, so that a variable
-already in the environment cannot select another origin; a printed `--staging` agrees with the staging URL. A Project
-whose first push has not succeeded has no `api_url` yet: treat it as new work. When the state cannot be read, ask the
+already in the environment cannot select another origin; a printed `--staging` agrees with the staging URL. A reserved Sketches Project saves its origin at `project start`. An unreserved Plan-only folder without an
+`api_url` uses the new-work origin. When the state cannot be read, ask the
 user which environment the Project uses.
 
 Each request uses the credential for its exact origin: `FIRSTDRAFT_API_TOKEN` for production and custom servers,
@@ -232,9 +234,34 @@ To find the page that explains a diagnostic or a gap, search the Plan reference 
 that section before changing the Plan. When no page names the code, go by the subject its JSON Pointer names and
 the page index in `SKILL.md`.
 
-Before the read-back, `plan push` the final exact candidate and obtain its matching valid `plan status --wait` result
-so the read-back covers the complete GapSet. `plan compile` repeats that exact-byte push; do not add another
-preparatory push, a gap acknowledgment, or any gap-specific field.
+Before the read-back, submit the final candidate and obtain its matching valid `plan status --wait` result
+so the read-back covers the complete GapSet. For a hosted sketch review, use `sketches publish` and retain
+the revision it returns. On approval, use `plan compile --revision <reviewed-uuid>` with the requested output.
+For a Plan-only Project, use `plan push`. Its `plan compile` repeats that exact-byte push.
+
+### Hosted Sketches recovery
+
+- After an interrupted publish, replay `sketches publish` in the same folder. If another writer is active,
+  wait for it. After a killed writer, check `.firstdraft-root-output/hosted-writer.pid` and verify that its
+  process has exited before removing that file and the empty reservation directory. If the PID or reservation
+  is empty, first verify that every writer, Compile and download using this folder has stopped. Preserve any
+  journal or artifact files and the pending publication. Then replay the publish.
+- For `409 sketch_review_conflict`,
+  reconcile against the current review and Head as [publishing a correction](sketch-review.md#make-the-first-walkthrough) describes.
+- With `422 invalid_sketch_review`, repair the input named in `response.detail`. With Plan diagnostics, repair the
+  Plan and any affected screens. `413 payload_too_large` calls for a smaller review. `413 sketch_quota_reached`
+  means the Project has reached its review storage limit. A smaller review may fit within the byte limit.
+  At the revision-count limit, continue locally. If the owner chooses to Compile the last published revision,
+  preserve the current edits, restore that revision’s exact Plan and sources in a working copy, and confirm
+  that this is the revision they approve. Later unpublished edits are separate implementation work.
+- When publication returns `409 compilation_active`, use the active Compilation’s ID and [check its status](#stuck-compilation-recovery).
+- On `412 sketch_review_changed`, inspect the current review and Head. When `response.current_review.graph_version`
+  differs from `response.head_graph_version`, publish a new review against the current Head even if the Plan bytes
+  match. Reconcile any other differences, present the current revision, and get approval for it before compiling.
+- Before a fresh Compile, preserve intentional changes to the Plan or sketches. Publish them and obtain approval
+  for the new revision. If the files for the current approved revision were lost, restore them without overwriting
+  intentional edits. For a retained download, restore that Compilation’s exact local receipt, Plan and sources in
+  a separate working copy when needed. After `reviewed_sources_changed`, use the existing Compilation ID to retry the download.
 
 `status_unavailable` is a read-only failure. Retry that GET a bounded number of times; if it persists, inspect the
 private state's pinned `api_url` locally without printing the rest of the file. `invalid_server_response` instead
@@ -296,7 +323,8 @@ explaining that mechanic to the user.
 Use **Publish to GitHub** when referring to VS Code's command, choosing its private repository option. Do not call
 repository creation "Create origin": `origin` is the local name for a remote, not the repository itself.
 
-`plan compile` submits the exact Plan bytes again and waits for the analysis whose graph version and Head digest
+Hosted `plan compile --revision <id>` verifies the approved receipt, source files and Plan bytes, and uses
+the matching hosted analysis without another push. Plan-only `plan compile` submits the exact Plan bytes again and waits for the analysis whose graph version and Head digest
 came from that accepted submission. Only `valid` analysis proceeds, and the Compilation start uses the accepted exact
 Head condition; do not add a gap digest, acknowledgment field, or Plan edit.
 
@@ -351,7 +379,8 @@ An `invalid_output_path` preflight makes no request. For an absent destination t
 second check may follow an accepted Plan push and analysis reads but still prevents Compilation. For root adoption,
 correct only the reported precondition or select an absent output; do not delete or overwrite owner material. A
 `materialization_failed` result with `reason: "root_rollback_incomplete"` retains the private
-`.firstdraft-root-output` journal. Do not delete it or run Git restoration commands. Reconcile the journal with the
+`.firstdraft-root-output` journal. Preserve its files. Only a [hosted writer’s empty reservation](#hosted-sketches-recovery)
+uses the simpler cleanup above. Do not run Git restoration commands. Reconcile the journal with the
 current path identities; some moves may already have been reversed. Restore the exact original index through Git's
 index lock when applicable. Reverse the remaining `artifact_moves` in reverse recorded order, moving each
 destination back to its source, before reversing the remaining `design_moves` in reverse recorded order. Design
@@ -360,7 +389,8 @@ archive there before the original planning `.firstdraft` can return to the root.
 `.firstdraft` directory. Verify the recorded original snapshot before removing the transaction.
 
 Success writes one validated JSON object containing the Project, Compilation, absolute output path, file count, and
-manifest digest. Absent output contains only artifact files and creates no repository or `.git`. Root adoption
+manifest digest. Absent output contains the artifact and any approved Sketches files under `.firstdraft/design/sketches/`.
+The CLI leaves repository creation to the owner. Root adoption
 additionally contains preserved `.firstdraft/design/` and existing `.git` paths and reports the move/index facts above.
 The CLI runs no formatter and repairs nothing. When absent output is nested in Drawing Board or another Git worktree,
 leave nested-Git initialization to that workspace's own workflow, or to
@@ -508,9 +538,9 @@ follow the existing Git workflow for later commits and authorized pushes. Preser
 immutable Plan/GapSet provenance: `.firstdraft/submitted-foundation-plan.json` and `.firstdraft/gaps.json` record
 what was compiled and are never updated, so where code you write disagrees with them, the code wins. Then follow
 the [notes handoff](#implementation-notes-handoff) and the Skill's
-[order of work](../SKILL.md#hand-off-the-result): the [test run](#run-the-generated-tests), every item left to
-write, and [first-preview verification](#verify-the-first-preview), followed by [UI continuation](#ui-continuation)
-for the requested work.
+[order of work](../SKILL.md#hand-off-the-result). Run the [generated tests](#run-the-generated-tests), finish the
+remaining behavior, integrate the selected screen source, and [verify the first preview](#verify-the-first-preview).
+Use [UI continuation](#ui-continuation) for later requested changes.
 
 For later improvements, the public [First Draft changelog](https://github.com/firstdraft/skills/blob/main/CHANGELOG.md)
 provides an ordinary review prompt and an optional reading checkpoint at `.firstdraft/updates.md`.
@@ -563,9 +593,12 @@ If the app has image or attachment Fields, uploads need the user's Cloudinary `C
 only to a required upload, and the README's Uploaded files section names each one; an optional upload starts empty.
 
 Open the running app in a browser and check representative visible records, their relationships, and relevant
-states in the intended flow. For an explicit empty start, check the empty state and appropriate create flow. For
-Account-free output, do not invent a login. If a supported Account and its data actually emitted, use the initial
-disposable login documented in README or the emitted seed to sign in and exercise the intended flow. Do not claim
+states in the intended flow. If screens were selected, compare the running pages with the same roles, records and
+reviewed layouts at the intended viewport sizes. Where a journey allows a write, exercise a submission, its
+resulting state and an applicable validation or permission boundary. Report any difference the user would see.
+For an explicit empty start, check the empty state and appropriate create flow. For Account-free output, do not
+invent a login. If a supported Account and its data actually emitted, use the initial disposable login documented
+in README or the emitted seed to sign in and exercise the intended flow. Do not claim
 that file presence, Compilation, or setup success proves login or a populated UI.
 
 Demo credentials are deliberately public development values and may be documented. Keep real owner/provider
@@ -591,15 +624,19 @@ the notes and `.firstdraft/gaps.json` as separate sources; never edit the retain
 | Output mode | What carries the notes |
 | --- | --- |
 | Current-root adoption (`plan compile`, `plan compile --output .`, or `compilation download <id> --output .`) | The CLI moves the planning-root file into `.firstdraft/design/`. Verify it arrived and describes the selected Plan. Only previously tracked archived files are staged; explicitly include untracked notes in the authorized application commit. |
-| Absent output (`plan compile --output ./application`) | The directory contains only artifact files. After verified materialization, copy the notes into the app location above and add discovery guidance. |
+| Absent output (`plan compile --output ./application`) | The CLI writes the artifact and any sources included in the published Sketches revision. Copy selected local-only sources and supporting files as the [Sketches handoff](sketch-review.md#use-the-selected-source-in-the-working-app) describes. After verified materialization, copy the notes into the app location above and add discovery guidance. |
 | Retained Compilation download to an absent directory | The artifact does not contain workspace notes. Recover the matching planning notes separately and carry them into the downloaded app; a download alone cannot recover missing notes. |
 
 For a manual transfer, inspect any existing destination and reconcile it instead of overwriting it. Compare the
 copied contents with the reviewed notes. Continue maintaining the app copy; a retained planning copy is a handoff
 snapshot, not a second editable authority. On a later download, confirm the notes describe that retained Plan and
 identify later requirements separately rather than silently pairing the artifact with unrelated current notes.
-Copy only the notes, not private CLI state. A manually added `.firstdraft/design/` notes directory does not establish
-a resumable planning workspace.
+A retained Sketches Compilation requires the matching local revision receipt, Plan bytes and selected sources
+before download. Restore those in the planning workspace if needed. The CLI verifies them and carries the selected
+screens and assets into either output. For separate output, copy any required companion license notices alongside
+the assets before repository handoff. Identify the selection in the notes and verify the files against it.
+If an approved source is unavailable, recover it or ask the owner to review a reconstruction. Keep private CLI
+state and inspection-only originals out of manual transfers. A manually added `.firstdraft/design/` directory does not establish a resumable planning workspace.
 
 Use the user's already authorized repository and Git workflow. Compile alone does not authorize a remote
 write. Verify the notes and discovery line in the actual commit before reporting a repository handoff complete;
@@ -615,11 +652,12 @@ or tests depend on them.
 
 #### UI continuation
 
-After the applicable GitHub checkpoint and [first-preview verification](#verify-the-first-preview), continue
-already requested UI work in generated source.
-Read the app's `UI.md` and actual shared components. Carry the user's design references into the first
-scaffold-shaping task. The app owns its theme, component contracts, and examples; neither this authoring Skill nor
-an upstream registry replaces that authority. Additional UI Skills are optional and are not included in this package.
+Before the first working preview, read the app’s `UI.md` and actual shared components. Use the selected sketch
+source in ordinary app views and styles, binding displayed examples to authorized records, Rails forms and real
+routes. Preserve the selected composition and wire custom actions on the server. Keep runtime independent of the
+planning archive. When the user has requested further design work, continue in the generated source after
+[first-preview verification](#verify-the-first-preview). Follow the app’s theme, component contracts and examples
+for later changes. Additional UI Skills are optional and are not included in this package.
 
 For apps using the new Rails UI, ordinary pages/forms remain ERB with Basecoat Vega and selected controls reuse
 shadcn Base UI islands through Turbo Mount. Older apps keep their existing stack unless migration is requested. A visual
@@ -749,12 +787,13 @@ write the field it names again in plain words, or give a page or code in its sha
 | `report progress`, `report failure`, `note wrong_output` | `compilation_not_recorded` | No Compilation was given and none is recorded for this Project, so nothing was sent. Name the Compilation the code came from: put its `compilation.id` from `plan compile` right after `report progress` or `report failure`, or pass it to the note with `--compilation-id`. |
 | `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_incomplete` | Exit 2: a field the note needs had nothing left after shaping, so nothing was sent. `detail` names each such field. Write it again in plain words, or give a page or code in its shape. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
+| `project start`, `sketches publish`, `plan compile`, `compilation download` | `sketch_review_failed` | Follow [hosted Sketches recovery](#hosted-sketches-recovery). |
 | `start` | `authentication_required`, `account_unavailable`, `invalid_server_response`, `invalid_configuration` | Not ready; see [check readiness with start](#check-readiness-with-start). |
 | `login --no-wait`, `login --finish` | `authorization_pending`, `authorization_expired`, `authorization_denied`, `login_not_started`, `login_failed` | The agent's login did not finish; see [log in for the user](#log-in-for-the-user). |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` for the Project's origin and follow its lines. Then rerun the command, except when the error carries `current`: a Compilation already started, so resume it by `current.compilation.id` as [ambiguous mutations](#ambiguous-mutations) describes, and never start another. |
+| `project start`, `sketches publish`, `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` for the Project's origin and follow its lines. Then rerun the command, except when the error carries `current`: a Compilation already started, so resume it by `current.compilation.id` as [ambiguous mutations](#ambiguous-mutations) describes, and never start another. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel`, `report`, `note` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
 | `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel`, `report`, `note` | `project_not_pushed` | No accepted Project/origin is pinned locally; a note needs the Plan's first push. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
+| `project start`, `sketches publish`, `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
 | `plan push`, `plan compile` | `server_rejected` | Inspect the validated status, bounded response, and diagnostics. A `compilation_active` problem starts [stuck Compilation recovery](#stuck-compilation-recovery). |
 | `plan push`, `plan compile` | `local_state_not_saved` | The Plan was accepted but private ETag state was not saved. |
 | `plan push`, `plan compile` | `request_outcome_unknown` | A mutation or its response was not fully verified. See phase rules below. |
@@ -764,7 +803,7 @@ write the field it names again in plain words, or give a page or code in its sha
 | `plan compile` | `analysis_status_unavailable`, `invalid_analysis_status`, `analysis_status_rejected` | Compile's analysis read failed or was rejected. |
 | `plan compile` | `plan_not_valid` | The accepted graph did not reach `valid`; inspect `current`. |
 | `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before the Compilation start. |
-| `plan compile` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | The Compilation start or status did not complete its validated contract. A `compilation_active` start rejection starts [stuck Compilation recovery](#stuck-compilation-recovery). |
+| `plan compile` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | The Compilation start or status did not complete its validated contract. For `compilation_active`, follow [stuck Compilation recovery](#stuck-compilation-recovery). For `sketch_review_changed`, follow [hosted Sketches recovery](#hosted-sketches-recovery). |
 | `plan compile` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned Compilation changed, remained nonterminal, or reached a non-success terminal state. For `compilation_failed`, follow [Failed Compilation](#failed-compilation). |
 | `plan compile` | `invalid_output_path` | Preflight makes no request; an absent-path post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve owner material and correct only the reported root precondition or choose an absent path. |
 | `plan compile`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `materialization_failed` | No verified local tree was installed. |
@@ -820,7 +859,8 @@ A Project allows one active Compilation. While one is `queued` or `running`, `pl
 `server_rejected`, and a Compilation start can fail with `compilation_start_rejected`. Either carries First Draft's
 `409` problem with `response.code: "compilation_active"`. Only its validated `response.detail` names the active
 Compilation: "Cancel active Compilation <id> before replacing the Foundation Plan." after a push, or "Compilation <id>
-is already active for this Project." after a start. This is the one exception to reading only structured fields: take
+is already active for this Project." after a start. `sketches publish` reports `sketch_review_failed` with the same
+problem code and the detail "Cancel active Compilation <id>." This is the one exception to reading only structured fields: take
 that ID only when it is exactly one lowercase UUIDv7, and otherwise stop and report the error. A Compilation usually
 finishes in under a minute, so when this error follows a Compile that has been stuck for minutes:
 

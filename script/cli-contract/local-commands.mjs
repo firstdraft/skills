@@ -78,14 +78,15 @@ export async function verifyLocalCommands(context) {
     context.temporaryDirectory,
   );
   assert.equal(compileHelp.status, 0);
-  assert.match(compileHelp.stdout, /submits the exact current whole-file Plan/);
+  assert.match(compileHelp.stdout, /pushes the exact local Plan/);
+  assert.match(compileHelp.stdout, /With --revision,\s+it verifies the local sources against the published review/);
   assert.match(
     compileHelp.stdout,
     /firstdraft plan compile --output <absent-directory\|\.>/,
   );
   assert.match(
     compileHelp.stdout,
-    /By default it materializes the\s+verified application in the current directory/,
+    /By default the command materializes the\s+verified application in the current directory/,
   );
 
   const uuids = await invokeRunner(

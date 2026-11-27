@@ -1,14 +1,15 @@
 ---
 name: "create-full-stack-app"
-description: "Use when someone asks for help making or planning an app or game, even one First Draft may not fit. Experimental: researches whether the idea is possible and how similar things are built, then uses First Draft where it helps: Foundation Plans, analysis, and bounded Rails/iPhone/Android Compile for records, people, permissions, lists, and forms. Says early when First Draft won't cover the core, and what will."
+description: "Use when someone asks for help making or planning an app or game, even one First Draft may not fit. Experimental: researches whether the idea is possible and how similar things are built, sketches the screens with the user, then uses First Draft where it helps: Foundation Plans, analysis, and bounded Rails/iPhone/Android Compile for records, people, permissions, lists, and forms. Says early when First Draft won't cover the core, and what will."
 license: "MIT"
 ---
 
 # Create a Full-Stack App with First Draft
 
-Use First Draft where it helps the user's app: author and review a Foundation Plan, then Compile through the First
-Draft service into the current local folder. Run and develop the generated app locally; a Codespace, a GitHub
-repository, and native preview are optional. Compilation does not deploy.
+For a new app with screens, give the user their Project URL, then sketch the screens together. Publish the
+first sketches with a working Foundation Plan. Refine both in conversation until the user is ready to Compile.
+Run and develop the generated app locally. A Codespace, a GitHub repository and native preview are optional.
+Compilation does not deploy.
 
 ## Preserve implementation requirements
 
@@ -28,7 +29,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.10.0, CLI 0.10.0, API 0.9, Plan 0.23; catalog selection is separate.
+Targets plugin 0.11.0, CLI 0.11.0, API 0.9.1, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/plan/appearance.md) controls theme and native colors.
@@ -88,9 +89,9 @@ People, access, and the app:
 - [Development data](references/plan/development-data.md): `development_data`, demo Accounts; preview samples.
 - [Reference data](references/plan/reference-data.md): `reference_data`; fixed records in every environment.
 
-For the conversation: the [interview](references/interview.md) for its flow, what each option emits, and the
-checklists; the [modeling guide](references/modeling-guide.md) for modeling choices and
-[candidate reconciliation](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back).
+For a new app, follow the [interview](references/interview.md) and use [sketch review](references/sketch-review.md)
+to make and revise the screens. Use the [modeling guide](references/modeling-guide.md) when drafting the Plan and
+[reconciling the candidate](references/modeling-guide.md#prepare-the-pre-compile-semantic-read-back).
 
 For CLI work:
 
@@ -113,7 +114,9 @@ using the loaded Skill path (expand any alias with its supplied Skill root). Use
 each shell call; shell functions do not persist between tool calls. Never store a multiword CLI invocation in one
 shell variable.
 
-Run `start` before other First Draft work:
+Run `start` first, including for a Plan edit the user asks you not to push. Local edits can continue whatever
+`start` reports. If the user asks to keep the walkthrough or all work local, skip remote commands including
+`start`. Local commands such as `generate uuid` still work.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -130,7 +133,8 @@ It prints one fact per line. Run each command its lines name, as printed, throug
 - Anything else, such as `Not logged in: First Draft did not accept <variable>. ...`, `update_required`, or the
   helper's `First Draft CLI is unavailable:`: tell the user what it says.
 
-Until `Ready:`, do no remote work; local Plan work may continue. Never call First Draft's HTTP API yourself.
+While login is pending, continue the interview and draw local screens. For a new hosted review, reserve the
+Project after readiness and before running `plan init`. Never call First Draft's HTTP API yourself.
 
 You may start the [login](references/diagnostics-and-recovery.md#log-in-for-the-user): run
 `firstdraft_cli login --no-wait` and show the user the link and the code exactly as printed. When they say they
@@ -146,7 +150,12 @@ Plan content.
 
 After root adoption, run later First Draft commands from `.firstdraft/design/`; never initialize the generated root.
 
-If `.firstdraft/` does not exist, establish or propose the application name, then initialize:
+Before reserving a hosted sketch Project, check for Chrome or `FIRSTDRAFT_CHROME_PATH`. After readiness,
+run `firstdraft_cli project start` and share its URL. Retry in the same folder. Without Chrome, if the owner
+chooses a local walkthrough, skip reservation and use ordinary `plan init`. Honor headless and Plan-only requests.
+
+When ready to author a Plan, establish or propose the application name. If the folder has no Plan file yet,
+initialize it (including in a Project just started for Sketches):
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -161,33 +170,28 @@ firstdraft_cli generate application-key --name "<name>"
 ```
 
 If initialization fails, follow its stable error and preserve any partial `.firstdraft/` directory. If
-`.firstdraft/` already exists, read the Plan, resume its Project and subject identities, and do not reinitialize.
+the Plan already exists, read it, resume its Project and subject identities, and do not reinitialize.
 Inspect private state only for a check the reference names, such as `api_url` for `start`. A Plan whose
 `target.profile` is not `rails-sketch/2026-11` belongs to a retired profile; follow
 [retired target profile](references/diagnostics-and-recovery.md#retired-target-profile) instead of pushing it.
 
 ## Interview and author incrementally
 
-Start when the user asks for help making an app or invokes `/create-full-stack-app`. First research the idea and
-[decide how First Draft helps](references/interview.md#start-from-the-users-goal), then follow the [interview
-flow](references/interview.md#interview-flow). Clarify the idea; ask for materials and read them before asking more.
-Then raise the product decisions that shape the data model, most important first, asking one decision per turn, until
-only delegated or nonblocking items remain. Right after the opening answers, push a rough Plan and tell the user
-plainly what First Draft will and will not build. Handle each decision as a consultant developer would, [asking,
-telling, or deciding](references/interview.md#ask-tell-or-decide). Product meaning is asked, told, or delegated: ask
-what is expensive to change after Compile, and where a convention fits, tell the user your default and when it would
-be wrong. Make implementation choices yourself and name them in the read-back, unless the user asks to be asked. Honor
-"make the rest of the decisions for me" at any point: it ends the interview, leaving only the read-back's few
-confirmations, and is not a go-ahead to Compile. Before the read-back, walk the coverage checklist silently and write
-the after-Compile checklist into the notes. When your work between two messages to the user runs past about two
-minutes, such as writing and pushing the Plan, tell the user in one line what you are doing.
+Follow the [interview](references/interview.md#interview-flow). For a new app with a UI, publish
+[sketches](references/sketch-review.md) and a working Plan together, using the same examples. Refine both
+in chat. Explain custom work from matching analysis.
+
+Resume existing work. If `plan init` preceded reservation, sketch locally and use that Project’s ordinary Plan
+commands. An empty Plan still needs the opening interview. Honor direct Plan, diagnostic or Compile requests and model a headless app directly. Delegation
+ends questions. Choose the design and include it in the read-back without waiting for design selection.
+[Compile approval](#read-back-and-approve-the-candidate-before-compile) still applies.
 
 State the access boundary precisely: Web pages may be public or use Accounts and Policies, and iPhone and Android
 apps show the same pages with the same sign-in. Keep private access and requested clients in the Plan.
 
-Edit `.firstdraft/foundation-plan.json` throughout the conversation. Keep one complete current candidate; an
-incomplete or malformed local snapshot is safe to submit for diagnostics. Model product meaning rather than Rails
-tables, macros, gems, callbacks, or arbitrary code. Keep capability gaps separate from product choices and never
+Once modeling starts, edit `.firstdraft/foundation-plan.json` as decisions change. Keep one complete current
+candidate. An incomplete or malformed local snapshot is safe to submit for diagnostics. Describe product meaning
+in the Plan and leave Rails tables, macros, gems and callbacks to the target. Keep capability gaps separate from product choices and never
 maintain a second flattened candidate merely for Compilation. Keep the review metadata, `application.description`
 and `application.topics`, current as the Plan changes, as the
 [modeling guide](references/modeling-guide.md#group-entities-into-topics) describes.
@@ -206,26 +210,19 @@ receive UUIDs.
 
 ## Submit snapshots and use diagnostics
 
-Read [Push and analysis](references/diagnostics-and-recovery.md#push-and-analysis), then submit whenever feedback
-would help:
+For hosted sketches, use `firstdraft_cli sketches publish`. For Plan-only work, follow
+[Push and analysis](references/diagnostics-and-recovery.md#push-and-analysis):
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli plan push
 ```
 
-The command submits the current whole file as exact bytes. It is fine to submit incomplete, invalid, unchanged, or
-frequently revised snapshots; there is no separate permission, batching, or changed-byte prerequisite. On success,
-retain `project.graph_version` and `foundation_plan.source_sha256`, then read the matching analysis:
-
-```sh
-firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
-firstdraft_cli plan status --wait
-```
-
-Bind status only when both graph versions and `analysis.head_source_sha256` match the accepted result's version and
-`foundation_plan.source_sha256`. Poll lower versions read-only within a bounded wait; a higher version or SHA
-mismatch is a replacement. Branch on `analysis.status`, not only the process exit status:
+Plan push accepts incomplete or unchanged snapshots. Keep its `project.graph_version` and
+`foundation_plan.source_sha256`. Sketch publication returns `review.id` and `foundation_plan.source_sha256`.
+Read the analysis with `firstdraft_cli plan status --wait`. Its Project and analysis graph versions must agree
+and its analysis Head SHA must match the submitted digest. For Plan push, also match the returned graph version.
+Bound read-only polling while status catches up. Reconcile a replacement before proceeding. Branch on `analysis.status`:
 
 - `valid`: the admitted graph passed the analyzer; Compilation is not proved. Require and inspect the complete
   `analysis.gap_set` and `analysis.gap_set_sha256`, including an empty `gaps` array. Service gaps were skipped before
@@ -237,9 +234,8 @@ mismatch is a replacement. Branch on `analysis.status`, not only the process exi
   replacement.
 
 Treat messages and suggestions as advisory. Do not loop a repeated diagnostic without new information; preserve
-intent and ask only for needed product input. Before the read-back, push the final exact candidate and read its
-matching valid status, so the complete GapSet can be reviewed and First Draft's site shows that Plan. `plan compile`
-later repeats that exact push.
+intent and ask only for needed product input. Before the read-back, publish the final candidate and read its
+matching valid status so the owner can review the complete GapSet.
 
 ## Read back and approve the candidate before Compile
 
@@ -257,17 +253,20 @@ Compile waits for the user's go-ahead: they approve the candidate and its gaps, 
 made before the read-back counts only when it said not to wait for them, as in "decide everything and build it
 without checking with me". Delegating decisions, as with "make the rest of the decisions for me", is not a go-ahead.
 
-End the read-back by giving the user the address of the Plan's page: `https://firstdraft.com/projects/` followed
-by the Project id that `plan push` printed. The page asks them to sign in first when they are not signed in. Say
-what the page shows: a diagram of the Plan, with a card for each kind of record that lists its fields, and a line
-for each link between records. If the user already said not to wait, Compile in the same turn. Otherwise ask what
-they would change and stop: do not prompt for a go-ahead, and require no digest echo or gap-acknowledgment field. When
+End the read-back with the same Project URL the owner has been reviewing. For a Plan-only Project, give
+`<service-origin>/projects/<project-id>` using the selected origin and the ID from `plan push`.
+Point out the diagram of records, fields and links, and the relevant available views of sample data, access,
+decisions and gaps. On a local-only walkthrough, link the selected local sketch. If the user already said not
+to wait, Compile in the same turn. Otherwise ask what they would change and stop. Do not prompt for a go-ahead
+or require a digest echo or gap-acknowledgment field. When
 a go-ahead comes from a user who has not said they looked at the page, remind them once that it is there and what
 it shows, then Compile in the same turn. Never hold Compile for the page. Ask only when new material scope or gap
 consequences need a user decision.
 
-If the Plan changes after the read-back, push it so the page shows it, and describe the semantic change. Obtain
-approval of the changed candidate only when it exceeds the existing request or delegated choices. On the go-ahead,
+When a revision changes the Plan, update the affected sources, examples and notes before publishing. Check the
+matching analysis. A layout-only edit publishes a new board revision against the same Plan. Obtain approval
+of the changed candidate only when it exceeds the existing request or
+delegated choices. On the go-ahead,
 make the request with exactly one invocation for the selected output. Do not ask for a second command-level
 confirmation. Do not delete, loosen, flatten, relabel, or substitute intended product meaning to make analysis
 green. The user may explicitly move a feature out of scope after seeing the consequence; otherwise preserve it.
@@ -286,7 +285,10 @@ firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli plan compile
 ```
 
-This is equivalent to `plan compile --output .`. Read the root-adoption preconditions before invoking it. The CLI
+Every Project reserved with `project start` needs `--revision <reviewed-uuid>` on that Compile command.
+Publish the review first and use the current revision the owner approved. If it is stale, show what changed.
+
+The default output is equivalent to `plan compile --output .`. Read the root-adoption preconditions before invoking it. The CLI
 preserves an existing root `.git` and archives planning material under `.firstdraft/design/`. Use an absent path
 such as `firstdraft_cli plan compile --output ./application`, when those rules require it. Root adoption
 is POSIX-only; Windows requires an absent output path. Both forms use the service Compiler and create no GitHub
@@ -355,9 +357,11 @@ until one says reports are off.
    each placeholder example, each item a page told you to add to your own list, and each step the user described
    that no generated page performs, such as sending a reminder. Also say what its "What you supply" section
    asks of them.
-3. Write every item and fill in every placeholder example until the specs pass, telling the user in one line as
-   each is finished.
-4. Start the [preview](references/diagnostics-and-recovery.md#verify-the-first-preview).
+3. Write every item and fill in its placeholder examples. If the interview selected screens, integrate their
+   [source and theme](references/sketch-review.md) with the app’s real records, forms and policies. Keep the
+   generated guarantees, run the specs, and report completed items.
+4. [Verify the first working preview](references/diagnostics-and-recovery.md#verify-the-first-preview) against the
+   selected screens and reviewed journeys before inviting the user to try it.
 
 If you come to think an item should change or go, stop and ask, with your reasons and what you found. The user
 decides or asks you to; after a yes, remove what you judge right, specs included. Without that yes, never skip,

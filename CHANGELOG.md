@@ -94,6 +94,19 @@ missing from this list sorts by that date.
 | `2026-10-03-workshop-core` | 2026-10-03 |
 | `2026-09-29-skipped-data-defaults` | 2026-10-01 or earlier |
 
+## 2026-11-27: Review the app’s sketches and Plan together
+
+**Skills — released in plugin 0.11.0.**
+
+- Existing apps: nothing to do. Continue an existing Plan or generated app from its current step.
+
+With a new idea, bring existing designs, a form, or a spreadsheet if you have one. Tell the agent how people use it
+and what still happens outside it. The agent shows the main screens together even when you start from an empty
+folder. For a hosted interview, open the Project URL the agent gives you after sign-in. The first sketches
+and their working Plan appear together. Switch between desktop and mobile and point to a screen or element
+in chat. The agent updates the sketches and the Plan as you revise them. Compile still needs your go-ahead. The agent carries
+the selected screen source into Rails and exercises the working screens before the first preview.
+
 ## 2026-11-25: Plugin 0.10.0 adds entries dated 2026-11-21
 
 **Compiler and Skills — released with plugin 0.10.0 and CLI 0.10.0.**
@@ -1713,6 +1726,7 @@ ordinary Rails.
 **Skills — released in plugin 0.8.3.**
 
 - Existing apps: nothing to do.
+- Replaced: the rough-Plan-first interview by [sketch review](#2026-11-27-review-the-apps-sketches-and-plan-together).
 - Replaced: the Skill's default for a Reference with several targets is `exclusive_arc` since [2026-10-10: References
   with several targets compile](#2026-10-10-references-with-several-targets-compile).
 - Replaced: the mail provider for password reset in the After Compile checklist, by

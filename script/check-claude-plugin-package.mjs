@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
+import { createRequire } from "node:module";
 import { spawnSync } from "node:child_process";
 import {
   chmodSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  readdirSync,
+  statSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -46,7 +49,7 @@ assert.equal(packageTemplate.name, "@firstdraft.com/claude-code");
 assert.equal(packageTemplate.version, compatibility.version);
 assert.equal(pluginManifest.name, "firstdraft");
 assert.equal(pluginManifest.version, compatibility.version);
-assert.equal(packageTemplate.dependencies, undefined);
+assert.deepEqual(packageTemplate.bundleDependencies, Object.keys(packageTemplate.dependencies));
 assert.equal(pluginManifest.userConfig, undefined);
 assert.doesNotMatch(
   readFileSync(
@@ -110,15 +113,17 @@ try {
   ].sort();
   const packagedFiles = first.manifest.files.map(({path: file}) => file).sort();
   assert.deepEqual(
-    packagedFiles.filter((file) => !file.startsWith("vendor/cli/")),
+    packagedFiles.filter((file) => !file.startsWith("vendor/cli/") && !file.startsWith("node_modules/playwright-core/")),
     expectedFiles,
   );
   assert(packagedFiles.includes("vendor/cli/package.json"));
   assert(packagedFiles.includes("vendor/cli/bin/firstdraft.js"));
+  assert.deepEqual(first.manifest.bundled, ["playwright-core"]);
   for (const file of first.manifest.files) {
     const executable =
       file.path === "bin/firstdraft" ||
-      file.path === "vendor/cli/bin/firstdraft.js";
+      file.path === "vendor/cli/bin/firstdraft.js" ||
+      (file.path.startsWith("node_modules/playwright-core/") && (statSync(path.join(repository, file.path)).mode & 0o111));
     assert.equal(
       file.mode,
       executable ? 0o755 : 0o644,
@@ -135,6 +140,18 @@ try {
     packages: [fakePlugin.tarball],
   });
   const installedRoot = path.dirname(path.dirname(pluginExecutable(fakeInstallation)));
+  const dependencyPath = "node_modules/playwright-core";
+  const licenseSidecars = readdirSync(path.join(repository, dependencyPath, "lib"))
+    .filter((file) => file.endsWith(".LICENSE"))
+    .map((file) => `lib/${file}`);
+  for (const notice of ["LICENSE", "NOTICE", "ThirdPartyNotices.txt", ...licenseSidecars]) {
+    const file = `${dependencyPath}/${notice}`;
+    assert(packagedFiles.includes(file), `missing bundled notice: ${file}`);
+    assert.deepEqual(readFileSync(path.join(installedRoot, file)), readFileSync(path.join(repository, file)));
+  }
+  const cliRequire = createRequire(path.join(installedRoot, "vendor", "cli", "package.json"));
+  assert.equal(cliRequire("playwright-core/package.json").version, packageTemplate.dependencies["playwright-core"]);
+  assert.equal(typeof cliRequire("playwright-core").chromium.launch, "function");
   const installedClaude = readJson(path.join(installedRoot, ".claude-plugin", "plugin.json"));
   const installedCodex = readJson(path.join(installedRoot, ".codex-plugin", "plugin.json"));
   const installedPortable = readJson(path.join(installedRoot, "plugin.json"));

@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "d508c7c5f86b64dd2eedea7c8df6179a6ef2aec7";
+export const cliRevision = "3195c74ba06da21c23f9216dddc13ce09d81c2e5";
 export const cliRuntimeSha256 =
-  "f6fd167b09caa3611f4303870da108fc99f61a9700265293dc3d1d0586e82828";
+  "b5af727af56a102c4296295efaab661c1f3fe99bfdf908a6129e249c717bbf1d";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.10.0";
+export const cliPackageVersion = "0.11.0";
 
 // What `firstdraft start` prints for production with no saved login and no token: it makes no request. The lines
 // come from the pinned CLI's src/agent-sentences.js, and the diagnostics reference quotes them.
@@ -42,7 +42,7 @@ export const [foundationPlanFormat] = JSON.parse(
 export const analyzerRelease =
   "foundation-plan-rails/application-2026-11-25-application-mail";
 export const compilerRelease =
-  "foundation-plan-rails/compiler-application-2026-11-25-application-mail";
+  "foundation-plan-rails/compiler-application-2026-11-27-ruby-4-0-10";
 export const compilationTarget = {
   id: "rails",
   profile: "rails-sketch/2026-11",
@@ -75,6 +75,7 @@ export const packedFileAllowlist = [
   "src/commands/plan-push.js",
   "src/commands/plan-status.js",
   "src/commands/report.js",
+  "src/commands/sketches.js",
   "src/commands/start.js",
   "src/compilation-artifact.js",
   "src/credentials.js",
@@ -84,6 +85,7 @@ export const packedFileAllowlist = [
   "src/plan-state.js",
   "src/root-output.js",
   "src/service-client.js",
+  "src/sketch-capture.js",
   "src/uuid-v7.js",
   "src/version.js",
 ];
