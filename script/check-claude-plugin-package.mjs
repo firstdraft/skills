@@ -6,6 +6,8 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  readdirSync,
+  statSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -118,10 +120,10 @@ try {
   assert(packagedFiles.includes("vendor/cli/bin/firstdraft.js"));
   assert.deepEqual(first.manifest.bundled, ["playwright-core"]);
   for (const file of first.manifest.files) {
-    if (file.path.startsWith("node_modules/playwright-core/")) continue;
     const executable =
       file.path === "bin/firstdraft" ||
-      file.path === "vendor/cli/bin/firstdraft.js";
+      file.path === "vendor/cli/bin/firstdraft.js" ||
+      (file.path.startsWith("node_modules/playwright-core/") && (statSync(path.join(repository, file.path)).mode & 0o111));
     assert.equal(
       file.mode,
       executable ? 0o755 : 0o644,
@@ -138,6 +140,15 @@ try {
     packages: [fakePlugin.tarball],
   });
   const installedRoot = path.dirname(path.dirname(pluginExecutable(fakeInstallation)));
+  const dependencyPath = "node_modules/playwright-core";
+  const licenseSidecars = readdirSync(path.join(repository, dependencyPath, "lib"))
+    .filter((file) => file.endsWith(".LICENSE"))
+    .map((file) => `lib/${file}`);
+  for (const notice of ["LICENSE", "NOTICE", "ThirdPartyNotices.txt", ...licenseSidecars]) {
+    const file = `${dependencyPath}/${notice}`;
+    assert(packagedFiles.includes(file), `missing bundled notice: ${file}`);
+    assert.deepEqual(readFileSync(path.join(installedRoot, file)), readFileSync(path.join(repository, file)));
+  }
   const cliRequire = createRequire(path.join(installedRoot, "vendor", "cli", "package.json"));
   assert.equal(cliRequire("playwright-core/package.json").version, packageTemplate.dependencies["playwright-core"]);
   assert.equal(typeof cliRequire("playwright-core").chromium.launch, "function");

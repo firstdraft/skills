@@ -1,7 +1,7 @@
 {
   "format": "firstdraft.release-compatibility/1",
   "component": "skills",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "plugin_source": {
     "package": "@firstdraft.com/claude-code",
     "tarball_sha256": "17b02db6522e8ecb86a18ef9d2e719d2812e35b98857581c8ca619f6284f7914"
@@ -12,7 +12,7 @@
       "< 0.10.0"
     ],
     "cli": [
-      "= 0.10.1"
+      "= 0.11.0"
     ],
     "foundation_plan_formats": [
       "firstdraft.foundation-plan.sketch/0.23"

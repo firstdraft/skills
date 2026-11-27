@@ -570,12 +570,14 @@ Write it for a reader who is not technical, in this order:
    in it.
 5. Where the app will be written: this folder or another folder, and whether you will then push it to a new
    [private GitHub repository](diagnostics-and-recovery.md#create-a-github-repository); or plan only.
-6. Where to see the selected local sketches and the analyzed Plan, and what each view shows.
+6. Where to review the candidate. Share the same hosted Project for a published board or Plan. For a local-only
+   walkthrough, link the selected local screens and Plan.
 
 When the user asks about the generated schema or models, explain what the reviewed Plan requests. In a hosted
 Sketches Project, get approval for the displayed revision before running a preview Compile. Pass that revision
 with `--revision` and use an absent folder such as `--output ../<application key>-preview`. On the ordinary
-Plan-only path, an owner can request a separate preview Compile before approving root adoption.
+Plan-only path, an owner can also request a separate preview Compile. In either case the approval covers the
+preview only. Wait for the owner’s go-ahead before compiling the app in its intended destination.
 
 After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record, and its README has an entry that names
 each one. Follow the Skill's

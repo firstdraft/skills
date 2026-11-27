@@ -96,13 +96,13 @@ missing from this list sorts by that date.
 
 ## 2026-11-27: Review the app’s sketches and Plan together
 
-**Skills — released in plugin 0.10.1.**
+**Skills — released in plugin 0.11.0.**
 
 - Existing apps: nothing to do. Continue an existing Plan or generated app from its current step.
 
 With a new idea, bring existing designs, a form, or a spreadsheet if you have one. Tell the agent how people use it
 and what still happens outside it. The agent shows the main screens together even when you start from an empty
-folder. For a hosted interview, open the Project URL the agent gives you in the first turn. The first sketches
+folder. For a hosted interview, open the Project URL the agent gives you after sign-in. The first sketches
 and their working Plan appear together. Switch between desktop and mobile and point to a screen or element
 in chat. The agent updates the sketches and the Plan as you revise them. Compile still needs your go-ahead. The agent carries
 the selected screen source into Rails and exercises the working screens before the first preview.

@@ -55,13 +55,15 @@ packaged lines it lists.
 ## 2. Update the pin and digest
 
 `script/cli-contract/config.mjs` names the bundled CLI by `cliPackageVersion`, `cliRevision`, and
-`cliRuntimeSha256`. To bundle a new CLI, edit them by hand, along with `requires.cli` in
+`cliRuntimeSha256`. The plugin also includes `playwright-core` with its own license and third-party notices under
+`node_modules/playwright-core/`. To bundle a new CLI, edit the pins by hand, along with `requires.cli` in
 [`release/compatibility.json`](release/compatibility.json). CI checks out `cliRevision` from CLI `main`, so land the
 CLI first. `sh script/check` then fails until the Skill's `@firstdraft.com/cli@` references name the new CLI.
 
 **What breaks Skills CI without warning.** Skills keeps copies of CLI facts, and CI compares them only against the
 pinned CLI. No CLI check fails when they change, so the next pin change fails here instead:
 
+- the exact `playwright-core` version in both the root and plugin package manifests, plus the npm lockfile;
 - `packedFileAllowlist` in `script/cli-contract/config.mjs`, the CLI package's file list;
 - `requires.api_contract` and `requires.foundation_plan_formats`, which must equal the CLI's own
   `release/compatibility.json`;

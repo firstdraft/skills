@@ -5,8 +5,8 @@ Skill and modeling guide. It remains a separate staged input so a harness can gr
 an extra protocol file beside the Skill.
 
 The interview turns an underspecified product request into explicit product meaning without inventing consequential
-answers. In a new app interview the first artifact is a local whole-app sketch. The owner can revise the
-journeys before the agent authors the full Plan and submits it for analysis. An explicit Plan operation or an
+answers. A new hosted interview shows the principal screens with their working Plan on the same Project.
+The owner can revise both together. A local-only interview shows the screens and Plan in the planning folder. An explicit Plan operation or an
 existing candidate continues at that stage. Compile still requires the user's go-ahead after the read-back.
 
 ## Keep a decision ledger
@@ -35,7 +35,7 @@ ambiguity matrix guides the dialogue; it is not a one-message questionnaire.
 1. **Frame the first release.** Establish the application name and key, its primary job and actors, the must-have
    workflows, and what this candidate excludes.
 2. **Show the first sketch review.** For a new hosted app, use the Project URL obtained after readiness.
-   Publish the main screens and working FP together using the same named examples. Locate a control the owner
+   Publish the main screens and working Foundation Plan together using the same named examples. Locate a control the owner
    references from the board and republish the corrected set. Honor a request to work locally.
 3. **Find durable nouns.** Decide which concepts need independent records and lifecycles, what one record represents,
    what is an owned value or derivation, and what identifies each record to a person.

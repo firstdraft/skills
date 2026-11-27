@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "b298e35757150273bd57cea06c5074841bfc2fc3";
+export const cliRevision = "42935862d8908404e106a15a2b4a5e8b8b651cc3";
 export const cliRuntimeSha256 =
-  "4ee8e652514643fc7a49c0631ffbad81e5f6482074518a9930400a17b09e9acd";
+  "6d30dbdf1fa3e731b9982d94b3ab38027f4b29a1d4c42b2dda2555ce44bb40d5";
 export const cliPackageName = "@firstdraft.com/cli";
-export const cliPackageVersion = "0.10.1";
+export const cliPackageVersion = "0.11.0";
 
 // What `firstdraft start` prints for production with no saved login and no token: it makes no request. The lines
 // come from the pinned CLI's src/agent-sentences.js, and the diagnostics reference quotes them.

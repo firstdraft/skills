@@ -89,8 +89,8 @@ Plan operation, skips sketching, or is modeling a system without screens can go 
    review. See [sketch review](sketch-review.md) for keeping a design selection and Plan analysis together.
 6. **Read back and Compile on the user's go-ahead.** Walk the [coverage checklist](#coverage-checklist) silently
    and write the [after-Compile checklist](#after-compile-checklist) into the notes. During work that takes more
-   than about two minutes, give the user a line of progress. Give the user their local
-   sketch and analyzed Project page to review. For a Plan-only request, give the read-back and stop.
+   than about two minutes, give the user a line of progress. Link the hosted Project for a published review or Plan, or the
+   local sketch and Plan for a local-only walkthrough. For a planning-only request, give the read-back and stop.
 
 At any point the user may say “make the rest of the decisions for me.” End the questions and choose for them.
 If screens are in scope, produce or complete the sketch and include the selected version with the read-back.

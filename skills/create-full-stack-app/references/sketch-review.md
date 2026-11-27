@@ -43,7 +43,8 @@ For records and subjects the screen represents, include their `subject_uuid` val
   preview can link to the resulting state or present it alongside the original.
 - **Style the actual components.** A standalone Basecoat stylesheet works without Rails or a Tailwind build.
   For the target using Basecoat 1.0.2, copy the published `basecoat-css@1.0.2/dist/basecoat-vega.cdn.min.css`
-  into `sketches/` with its MIT notice preserved in a CSS comment. List the CSS, local font files and images in `board.json` assets.
+  into `sketches/`. Prepend the full MIT notice from the package’s `LICENSE.md` as a CSS comment and keep the
+  existing Tailwind license banner. List the CSS, local font files and images in `board.json` assets.
   Link the local files and load the app stylesheet last. Declare CSS, PNG, JPEG, WebP, SVG, and WOFF2 assets.
   Keep license notices alongside the files. Use script-free screens that fit at 1280 × 800 and 390 × 844
   without horizontal overflow and stay within 8192 pixels in height. Match the target's version when it changes. Use classes
@@ -61,9 +62,14 @@ For records and subjects the screen represents, include their `subject_uuid` val
 When you can draw the screens, initialize a small working Plan in the reserved Project and populate both the
 screens and Data with its examples. Check the desktop and mobile layouts. Run `firstdraft_cli sketches publish`
 from the planning folder with Google Chrome installed or `FIRSTDRAFT_CHROME_PATH` set to its executable.
-If capture or the hosted endpoint is unavailable, continue the walkthrough with the local HTML.
-Share the same Project URL and point out where the owner can check the examples.
-Gaps can still be analyzing. After a capture error, correct the local source. After an interrupted publication,
+On success, share the Project URL and point out where the owner can check the screens and examples while gaps
+are analyzing. If capture or publication fails, link the local HTML and Plan. The hosted Project still shows its
+last published review, if any. Before compiling a reserved Project, publish the corrected revision, show it
+to the owner, and obtain approval for that revision. If this host lacks Chrome, install it or move the
+planning folder, including its private state, to an owner-controlled host that can capture.
+
+After a capture error, repair the local source. For rejected inputs and storage limits, follow
+[hosted Sketches recovery](diagnostics-and-recovery.md#hosted-sketches-recovery). After an interrupted publication,
 rerun the same command to recover its outcome. On `sketch_review_conflict`, open the current review and reconcile
 the owner's correction with the intervening changes. Publish the reconciled candidate with
 `--after <current-review> --head <current-plan-sha256>` using the identities returned by the service. Use `none` for a missing identity.
@@ -108,9 +114,11 @@ layout. Show the current selection with the read-back, invite corrections, and w
 
 ## Use the selected source in the working app
 
-Root adoption retains the planning folder under `.firstdraft/design/`. For a separate output, the CLI carries
-the reviewed screen sources and assets there. Carry the implementation notes as the
-[mode-specific handoff](diagnostics-and-recovery.md#implementation-notes-handoff) describes.
+Root adoption retains the planning folder under `.firstdraft/design/`. For a separate output compiled with
+`--revision`, the CLI carries the published board’s declared sources and assets there. For a local walkthrough
+followed by ordinary Plan Compile, copy the selected files into `.firstdraft/design/sketches/` in the separate
+output. In either mode, include selected ERB partials and license notices outside the board’s file list, verify
+the handoff against the recorded fingerprints, and carry the [implementation notes](diagnostics-and-recovery.md#implementation-notes-handoff).
 After the generated baseline's setup, specs, and listed unwritten behavior, integrate the selected screen markup
 or ERB and app-owned theme. Keep the chosen structure while replacing fixture values with authorized records,
 real routes, form bindings, and validation feedback. Use the app's installed components and assets. Keep preview

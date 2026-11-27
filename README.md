@@ -135,8 +135,8 @@ CI checks consumer commands against the exact pinned CLI and verifies the candid
 cover the complete command protocol matrix; Skills retains representative recovery cases, compatible fixtures, and
 packaged-executable integration. The release runbook owns the commands for reproducing these checks.
 
-A checkout holds no CLI, so `claude --plugin-dir .` loads the Skill but its helper reports the bundled CLI missing.
-To try the Skill with its CLI, stage the plugin and load that:
+Install the plugin’s packaging dependency with `npm ci --omit=dev --ignore-scripts` before either standalone
+staging example. Stage the CLI and Skill for Claude Code:
 
 ~~~sh
 node script/claude-plugin-package.mjs stage tmp/firstdraft --cli-root /path/to/exact/cli

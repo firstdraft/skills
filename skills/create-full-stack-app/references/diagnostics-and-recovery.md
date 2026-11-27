@@ -10,8 +10,8 @@ other prefix or suffix, and any interleaved output fail closed. Branch on the ob
 fields rather than the human-readable `detail` or broad process exit status. A successful `plan compile` or
 `compilation download` may also write the [Compilation record line](#progress-and-failure-reports) on standard error.
 
-This plugin bundles `@firstdraft.com/cli@0.10.1`. Its exact reviewed revision and runtime digest are owned by
-[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.10.1/script/cli-contract/config.mjs)
+This plugin bundles `@firstdraft.com/cli@0.11.0`. Its exact reviewed revision and runtime digest are owned by
+[the CLI contract configuration](https://github.com/firstdraft/skills/blob/claude-v0.11.0/script/cli-contract/config.mjs)
 at this plugin's protected release tag. The version alone does not establish that First Draft accepts this setup;
 [`start`](#check-readiness-with-start) asks it. These source checks do not prove plugin/catalog publication, service
 authentication, staging compatibility, or a complete user journey.
@@ -36,7 +36,8 @@ authentication, staging compatibility, or a complete user journey.
 
 ## Check readiness with start
 
-Run `start` through the helper before other First Draft work in each session. With a token for the origin, from the
+Run `start` through the helper before other First Draft CLI work each session, unless the user asks to keep the
+walkthrough or all work local. With a token for the origin, from the
 environment or a saved login, it reads the account once; without one, it makes no request. It prints plain sentences
 for you on standard output, one fact per line, and exits 0 only when First Draft accepted the token; every other
 outcome also ends standard error with its handled error. Run each command a line names through the helper, as
@@ -237,6 +238,20 @@ Before the read-back, submit the final candidate and obtain its matching valid `
 so the read-back covers the complete GapSet. For a hosted sketch review, use `sketches publish` and retain
 the revision it returns. On approval, use `plan compile --revision <reviewed-uuid>` with the requested output.
 For a Plan-only Project, use `plan push`. Its `plan compile` repeats that exact-byte push.
+
+### Hosted Sketches recovery
+
+- After an interrupted publish, replay `sketches publish` in the same folder. For `409 sketch_review_conflict`,
+  reconcile against the current review and Head as [publishing a correction](sketch-review.md#make-the-first-walkthrough) describes.
+- With `422 invalid_sketch_review`, repair the input named in `response.detail`. With Plan diagnostics, repair the
+  Plan and any affected screens. `413 payload_too_large` calls for a smaller review. `413 sketch_quota_reached`
+  means the Project has reached its review storage limit. Tell the user and continue locally.
+- When publication returns `409 compilation_active`, use the active Compilation’s ID and [check its status](#stuck-compilation-recovery).
+- A `412 sketch_review_changed` at Compile start means the published revision or Plan has moved. Show the current
+  candidate, reconcile differences, and get approval for the exact revision before starting its Compile.
+- For missing or changed reviewed sources on Compile or retained download, restore the receipt, Plan and sources
+  for that revision. If materialization fails with `reviewed_sources_changed` after Compilation, restore them and
+  download the existing Compilation using its ID. Recompiling creates a different run.
 
 `status_unavailable` is a read-only failure. Retry that GET a bounded number of times; if it persists, inspect the
 private state's pinned `api_url` locally without printing the rest of the file. `invalid_server_response` instead
@@ -598,7 +613,7 @@ the notes and `.firstdraft/gaps.json` as separate sources; never edit the retain
 | Output mode | What carries the notes |
 | --- | --- |
 | Current-root adoption (`plan compile`, `plan compile --output .`, or `compilation download <id> --output .`) | The CLI moves the planning-root file into `.firstdraft/design/`. Verify it arrived and describes the selected Plan. Only previously tracked archived files are staged; explicitly include untracked notes in the authorized application commit. |
-| Absent output (`plan compile --output ./application`) | The CLI writes the artifact and any reviewed Sketches sources. After verified materialization, copy the notes into the app location above and add discovery guidance. |
+| Absent output (`plan compile --output ./application`) | The CLI writes the artifact and any sources included in the published Sketches revision. Copy selected local-only sources and supporting files as the [Sketches handoff](sketch-review.md#use-the-selected-source-in-the-working-app) describes. After verified materialization, copy the notes into the app location above and add discovery guidance. |
 | Retained Compilation download to an absent directory | The artifact does not contain workspace notes. Recover the matching planning notes separately and carry them into the downloaded app; a download alone cannot recover missing notes. |
 
 For a manual transfer, inspect any existing destination and reconcile it instead of overwriting it. Compare the
@@ -761,13 +776,13 @@ write the field it names again in plain words, or give a page or code in its sha
 | `report progress`, `report failure`, `note wrong_output` | `compilation_not_recorded` | No Compilation was given and none is recorded for this Project, so nothing was sent. Name the Compilation the code came from: put its `compilation.id` from `plan compile` right after `report progress` or `report failure`, or pass it to the note with `--compilation-id`. |
 | `note unstated_request`, `note unclear_guidance`, `note wrong_output` | `note_incomplete` | Exit 2: a field the note needs had nothing left after shaping, so nothing was sent. `detail` names each such field. Write it again in plain words, or give a page or code in its shape. |
 | `plan init` | `local_initialization_failed` | Preserve possibly partial local state. |
-| `project start`, `sketches publish` | `sketch_review_failed` | Follow [Sketches recovery](sketch-review.md#make-the-first-walkthrough). Correct capture inputs or a rejected draft. Replay an uncertain publish. Reconcile a competing review before rebasing. |
+| `project start`, `sketches publish`, `plan compile`, `compilation download` | `sketch_review_failed` | Follow [hosted Sketches recovery](#hosted-sketches-recovery). |
 | `start` | `authentication_required`, `account_unavailable`, `invalid_server_response`, `invalid_configuration` | Not ready; see [check readiness with start](#check-readiness-with-start). |
 | `login --no-wait`, `login --finish` | `authorization_pending`, `authorization_expired`, `authorization_denied`, `login_not_started`, `login_failed` | The agent's login did not finish; see [log in for the user](#log-in-for-the-user). |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` for the Project's origin and follow its lines. Then rerun the command, except when the error carries `current`: a Compilation already started, so resume it by `current.compilation.id` as [ambiguous mutations](#ambiguous-mutations) describes, and never start another. |
+| `project start`, `sketches publish`, `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `authentication_required` | The environment's token is missing or was rejected. Run `start` for the Project's origin and follow its lines. Then rerun the command, except when the error carries `current`: a Compilation already started, so resume it by `current.compilation.id` as [ambiguous mutations](#ambiguous-mutations) describes, and never start another. |
 | `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel`, `report`, `note` | `local_input_unreadable` | Preserve unreadable local files; do not reconstruct private state. |
 | `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel`, `report`, `note` | `project_not_pushed` | No accepted Project/origin is pinned locally; a note needs the Plan's first push. |
-| `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
+| `project start`, `sketches publish`, `plan push`, `plan status`, `plan compile`, `compilation status`, `compilation download`, `compilation cancel` | `invalid_configuration` | The API origin, `--staging` selection, or saved Head state is incompatible. |
 | `plan push`, `plan compile` | `server_rejected` | Inspect the validated status, bounded response, and diagnostics. A `compilation_active` problem starts [stuck Compilation recovery](#stuck-compilation-recovery). |
 | `plan push`, `plan compile` | `local_state_not_saved` | The Plan was accepted but private ETag state was not saved. |
 | `plan push`, `plan compile` | `request_outcome_unknown` | A mutation or its response was not fully verified. See phase rules below. |
@@ -833,7 +848,8 @@ A Project allows one active Compilation. While one is `queued` or `running`, `pl
 `server_rejected`, and a Compilation start can fail with `compilation_start_rejected`. Either carries First Draft's
 `409` problem with `response.code: "compilation_active"`. Only its validated `response.detail` names the active
 Compilation: "Cancel active Compilation <id> before replacing the Foundation Plan." after a push, or "Compilation <id>
-is already active for this Project." after a start. This is the one exception to reading only structured fields: take
+is already active for this Project." after a start. `sketches publish` reports `sketch_review_failed` with the same
+problem code and the detail "Cancel active Compilation <id>." This is the one exception to reading only structured fields: take
 that ID only when it is exactly one lowercase UUIDv7, and otherwise stop and report the error. A Compilation usually
 finishes in under a minute, so when this error follows a Compile that has been stuck for minutes:
 

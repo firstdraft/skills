@@ -29,7 +29,7 @@ explicit handoff. Follow [writing notes](references/modeling-guide.md#retain-imp
 
 ## Current boundary
 
-Targets plugin 0.10.1, CLI 0.10.1, API 0.9.1, Plan 0.23; catalog selection is separate.
+Targets plugin 0.11.0, CLI 0.11.0, API 0.9.1, Plan 0.23; catalog selection is separate.
 
 - Bounded generation includes Web Accounts/Policies/Scaffolds, development data, and selected iPhone/Android
   clients. [Appearance](references/plan/appearance.md) controls theme and native colors.
@@ -114,8 +114,9 @@ using the loaded Skill path (expand any alias with its supplied Skill root). Use
 each shell call; shell functions do not persist between tool calls. Never store a multiword CLI invocation in one
 shell variable.
 
-For a hosted workflow, run `start` as the first First Draft CLI command. For a local-only walkthrough,
-work in the planning folder and hold remote commands until the owner wants to share.
+Run `start` first, including for a Plan edit the user asks you not to push. Local edits can continue whatever
+`start` reports. If the user asks to keep the walkthrough or all work local, skip remote commands including
+`start`. Local commands such as `generate uuid` still work.
 
 ```sh
 firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
@@ -150,7 +151,8 @@ Plan content.
 After root adoption, run later First Draft commands from `.firstdraft/design/`; never initialize the generated root.
 
 For a new hosted sketch interview, run `firstdraft_cli project start` after readiness and share its URL.
-Retry in the same folder. Honor local-only, headless and Plan-only requests.
+Retry in the same folder. Hosted capture needs Chrome. If this host cannot capture and the owner chooses a
+local walkthrough, begin with ordinary `plan init` and local sketches. Honor headless and Plan-only requests.
 
 When ready to author a Plan, establish or propose the application name. If the folder has no Plan file yet,
 initialize it (including in a Project just started for Sketches):
@@ -251,8 +253,8 @@ Compile waits for the user's go-ahead: they approve the candidate and its gaps, 
 made before the read-back counts only when it said not to wait for them, as in "decide everything and build it
 without checking with me". Delegating decisions, as with "make the rest of the decisions for me", is not a go-ahead.
 
-End the read-back with the same Project URL the owner has been reviewing. For a Plan-only Project, use the
-Project page for the selected service origin and the Project ID returned by the push.
+End the read-back with the same Project URL the owner has been reviewing. For a Plan-only Project, give
+`<service-origin>/projects/<project-id>` using the selected origin and the ID from `plan push`.
 Point out the diagram of records, fields and links, and the relevant available views of sample data, access,
 decisions and gaps. On a local-only walkthrough, link the selected local sketch. If the user already said not
 to wait, Compile in the same turn. Otherwise ask what they would change and stop. Do not prompt for a go-ahead
@@ -283,8 +285,8 @@ firstdraft_cli() { sh "<skill-dir>/scripts/firstdraft.sh" "$@"; }
 firstdraft_cli plan compile
 ```
 
-For a hosted sketch review, add `--revision <reviewed-uuid>` to that same Compile command. Use the revision
-from the publish result the owner approved. If it is stale, show the owner what has changed.
+Every Project reserved with `project start` needs `--revision <reviewed-uuid>` on that Compile command.
+Publish the review first and use the current revision the owner approved. If it is stale, show what changed.
 
 The default output is equivalent to `plan compile --output .`. Read the root-adoption preconditions before invoking it. The CLI
 preserves an existing root `.git` and archives planning material under `.firstdraft/design/`. Use an absent path
