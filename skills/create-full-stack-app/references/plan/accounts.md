@@ -317,7 +317,7 @@ Resend** section. When the Plan omits `mail`, the gap is the Account's
 | A [Reference](references.md) to the Account Entity | `"targets": ["user"]` on `note.author` | An ordinary `belongs_to`. Name it for the person's part, as a noun. Set it with a create binding to `current_account` when it names the person adding the record, such as `author` or `host`, and with an input when that person chooses someone, such as `assignee`. |
 | `development_data` References | `{"kind": "reference_record", "record": "user.ada"}` | The note's seed uses the seeded account. |
 | A list of accounts | `index` and `show` in `resource_routes` with a gate Policy | `/users` and `/users/:id`, a directory, separate from `/account`. |
-| An account's own edit page | `edit` and `update` in `resource_routes`, with a Policy that compares `{"record": "current"}` with `current_account` | `resources :users, only: %i[edit update]` beside `/account/edit`. `/users/:id/edit` takes `scaffold.update`'s inputs and finds only the signed-in record: another id, or a guest, gets 404. |
+| An account's own edit page | `edit` and `update` in `resource_routes`, with a Policy that compares `{"record": "current"}` with `current_account` | `resources :users, only: %i[edit update]` beside `/account/edit`. `/users/:id/edit` takes `scaffold.update`'s inputs. A guest is sent to sign in before the lookup. Another account's record returns 404. |
 
 ## Not generated
 

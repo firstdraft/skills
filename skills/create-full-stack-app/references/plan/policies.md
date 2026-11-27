@@ -87,7 +87,7 @@ class NotePolicy < ApplicationPolicy
 end
 
 # app/controllers/notes_controller.rb, shortened
-before_action :authenticate, only: %i[index]
+before_action :authenticate, only: %i[index show edit update destroy]
 before_action :set_note, only: %i[show edit update destroy]
 verify_authorized
 
@@ -122,12 +122,14 @@ and the scope admit exactly the same records. `spec/requests/notes_spec.rb` chec
 
 | Visitor | Part guarded by a record's Policy | Part guarded by a gate |
 | --- | --- | --- |
-| Guest, on a list | Sent to sign in, then back; when a branch of the rule needs nobody signed in, such as "published", the records that branch allows | Sent to sign in, then back |
-| Guest, on a record's page, Edit, Update, or Delete | 404 | Sent to sign in, then back |
-| Guest, on New or Create | Sent to sign in, then back | Sent to sign in, then back |
-| Signed in but not allowed | The record is missing from lists, and its pages return 404; New and Create show the 403 page | The 403 page |
+| Guest, on a list | Sign-in when the scope requires an Account. A branch such as "published" keeps those records visible. | Sign-in when the gate denies. |
+| Guest, on Show, Edit, Update, Delete, or an event | Sign-in before a lookup that requires an Account. When guests can pass a branch, a record outside the scope returns 404. | Sign-in when the gate denies. |
+| Guest, on New or Create | Sign-in when the record rule denies. | Sign-in when the gate denies. |
+| Signed-in Account denied by the Policy | A record outside the scope is hidden from lists and returns 404 on lookup. A rule denial returns 403 for a record the Account can reach, including a record built for New or Create. | The 403 page. |
 
-A gated list is not filtered: it shows every record to anyone the gate admits.
+After browser sign-in, a GET returns to the requested page. A write sent to sign in ends without changing the record.
+For Edit and Update the lookup uses the update Policy. An event uses the show Policy to find its record, then checks
+its own authorization. A gated list shows every record to anyone the gate admits.
 
 ### A rule about the signed-in person alone
 
@@ -480,6 +482,7 @@ relation_scope(:read) do |relation|
 end
 
 # app/controllers/recipes_controller.rb, shortened
+before_action :authenticate, only: %i[edit update]
 before_action :authorize_administer, only: %i[destroy]
 before_action :set_recipe, only: %i[edit update]
 
@@ -525,7 +528,7 @@ end
 | --- | --- | --- |
 | A related list on a page, such as a recipe's comments | `{"association": "recipe.comments", "authorization": {"policy": "comment.read_with_recipe"}, …}` | The list is filtered through that Policy's scope. |
 | The same list, shown only to people who pass the page record's Policy | `"authorization": {"policy": "recipe.manage_own", "record": "scaffold_record"}` | `@can_read_comments = allowed_to?(:manage?, @recipe, with: RecipePolicy)`; the section is hidden when it is false, and its records are not filtered. Here `record` is the string `"scaffold_record"`; a gate's `record` is the `current_account` object. |
-| A form on a parent page, `create_form` | the child's `scaffold.create` | The parent is found through the parent page's own Policy, so someone who cannot read the parent gets 404 on the nested index, New, and Create. The child is built from the parent, so its Reference to the parent and its `bindings` are set before the child's rule runs; a child rule may use `matches_policy` through that Reference. The child's `create.authorization` decides who sees the Add link and may submit. A signed-in gate and a child rule that delegates to the parent's read Policy both limit adding to people who can read the parent; the gate also requires sign-in. Use the gate for "anyone who can open the parent"; use a child rule when adding needs more, such as being the parent's owner. |
+| A form on a parent page, `create_form` | the child's `scaffold.create` | The nested controller uses the parent page's lookup Policy and its sign-in requirement. A parent outside the scope returns 404. The child is built from the parent, so its Reference to the parent and its `bindings` are set before the child's rule runs; a child rule may use `matches_policy` through that Reference. The child's `create.authorization` decides who sees the Add link and may submit. A signed-in gate and a child rule that delegates to the parent's read Policy both limit adding to people who can read the parent; the gate also requires sign-in. Use the gate for "anyone who can open the parent"; use a child rule when adding needs more, such as being the parent's owner. |
 | A [Reference](references.md) input on a form | `{"association": "note.list"}` in `inputs` | Its options, and the ID it accepts, come through the target Entity's Policy scope: `authorized_scope(List.all, as: :manage, with: ListPolicy)`. On a New page whose `create` Policy reads that Reference, the options are the lists the rule allows, as under [Keys](#keys). |
 | Home | `application.home_index` | Home is that Entity's list, with that list's `authorization`. |
 | Who fires a [State Machine](state-machine-fields.md) event from the record's page | a transition's `authorization`, which takes the values a part takes | A button on the details page, with a route and an action that check the Policy or the gate. |

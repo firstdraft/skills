@@ -358,7 +358,8 @@ def show
 end
 
 # app/controllers/projects/tasks_controller.rb, shortened
-before_action :set_project   # found through ProjectPolicy's scope, so 404 for anyone else
+before_action :authenticate
+before_action :set_project
 
 def create
   authorize! @project, to: :manage?, with: ProjectPolicy
