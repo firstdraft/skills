@@ -35,6 +35,7 @@ export const canonicalClaudePluginSkillFiles = Object.freeze([
   "references/plan/trees.md",
   "references/plan/uploads.md",
   "references/plan/validations.md",
+  "references/sketch-review.md",
   "scripts/firstdraft.sh",
 ]);
 

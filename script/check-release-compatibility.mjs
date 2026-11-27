@@ -186,7 +186,10 @@ export function assertSkillsReleaseCompatibility({
   assert.deepEqual(installableManifest.skills, canonicalPluginSkillNames.map((name) => `./skills/${name}`));
 
   assert.equal(packageTemplate.name, compatibility.plugin_source.package);
-  assert.equal(packageTemplate.dependencies, undefined);
+  assert.deepEqual(packageTemplate.dependencies, {
+    "playwright-core": packageDocument.dependencies["playwright-core"],
+  });
+  assert.deepEqual(packageTemplate.bundleDependencies, ["playwright-core"]);
   assert.deepEqual(packageTemplate.publishConfig, {
     access: "public",
     provenance: true,

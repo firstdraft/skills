@@ -21,6 +21,16 @@
       ]
     },
     {
+      "id": "hosted-sketch-first-review",
+      "should_trigger": true,
+      "prompt": "Let's build a neighborhood tool library. People sign in and see their own loans. Our volunteer checks items out to neighbors and records returns one item at a time. Start a new Project and show me the first sketches and data so I can review them together. You can use invented people and tools. Wait for me before building the app.",
+      "expectations": [
+        "Runs start through the bundled helper, reserves the Project after readiness and gives the owner the Project URL while there is still no Plan.",
+        "Uses the same loan and tools in the borrower and volunteer screens and in the working Foundation Plan. The owner can point to a return control on the mobile preview.",
+        "Publishes both screen renders and the working Plan in one review and brings the owner back to the original Project URL. Describes pending analysis accurately and waits for feedback before Compile."
+      ]
+    },
+    {
       "id": "local-only-draft",
       "should_trigger": true,
       "prompt": "The compatible firstdraft CLI is installed. Initialize and prepare my Foundation Plan locally for review, but do not send anything to First Draft.",
@@ -36,8 +46,8 @@
       "prompt": "Let's make an app that helps me inventory my home. Follow the attached candidate interview protocol. Keep this opening interview turn local; do not contact First Draft yet.",
       "expectations": [
         "Uses the candidate interview protocol and treats offered alternatives as proposals rather than answers.",
-        "Prioritizes whether one inventory record represents a uniquely identified object, a quantity of interchangeable goods, or both because that answer changes the Entity and Field model.",
-        "Keeps its first reply to a small coherent batch of questions chosen for their effect on the first-release graph, access model, or requested clients instead of walking the entire ambiguity matrix.",
+        "Asks about the concrete job, such as finding one particular item or counting supplies, in terms the owner can answer from life at home.",
+        "Invites any existing inventory, photos, or spreadsheet and asks at most two focused opening questions. Uses the answers to decide which journeys to sketch.",
         "Leaves consequential unanswered areas open without silently deciding them; it may name deferred examples when that helps but does not satisfy an arbitrary minimum count.",
         "Keeps this interview evaluation local and does not run plan push, plan status, plan compile, or make a First Draft service request before the user answers the consequential opening questions.",
         "Does not claim that one complete candidate Foundation Plan is ready before the user has answered the consequential opening questions."
@@ -88,7 +98,7 @@
     {
       "id": "first-preview-account-free",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a simple public habit tracker for my workshop. A goal has a name; a habit belongs to a goal, has a name and an active or paused status; each dated log belongs to a habit. No accounts or sign-in. I'd like to explore goals, habits and logs in the first local preview. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a simple public habit tracker for my workshop. A goal has a name; a habit belongs to a goal, has a name and an active or paused status; each dated log belongs to a habit. No accounts or sign-in. I'd like to explore goals, habits and logs in the first local preview. Choose reasonable details for my review. I have no artifacts to share. Please draft the Foundation Plan directly. Keep this local; do not submit or Compile.",
       "expectations": [
         "Proposes representative connected goals, active and paused habits, and historical dated logs without an explicit sample-data request.",
         "Respects Account-free public scope and never adds an Account or advertises a demo login.",
@@ -99,7 +109,7 @@
     {
       "id": "sample-data-without-unrequested-rules",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a directory for my running club: members sign up with a unique username, a name, email and password, and can follow each other. Nobody can follow themselves. Add sample data so I can click around after it's built. Choose reasonable remaining details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a directory for my running club: members sign up with a unique username, a name, email and password, and can follow each other. Nobody can follow themselves. Add sample data so I can click around after it's built. Choose reasonable remaining details for my review. I have no artifacts to share. Please draft the Foundation Plan directly. Keep this local; do not submit or Compile.",
       "expectations": [
         "Keeps the requested username uniqueness and does not add a format Validation to usernames or any other format or not-equal rule the user did not ask for.",
         "Authors the requested no-self-follow rule as an Entity comparison with one not_equals clause between the two required Follow References, with a Reference error target.",
@@ -112,7 +122,7 @@
     {
       "id": "account-without-email-confirmation",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a book club app for my workshop. People sign up with their name, email and password, then see the club's books; only signed-in members can see the book list. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a book club app for my workshop. People sign up with their name, email and password, then see the club's books; only signed-in members can see the book list. Choose reasonable details for my review. I have no artifacts to share. Please draft the Foundation Plan directly. Keep this local; do not submit or Compile.",
       "expectations": [
         "Authors one Account with an email identifier, password sign-in, self-service registration, password-reset recovery and lockout, and omits verification because the user did not ask for email confirmation.",
         "Does not ask whether people must confirm their email; says sign-up signs people in at once so the user can share the app with friends right away.",
@@ -123,7 +133,7 @@
     {
       "id": "account-with-email-confirmation",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a book club app for my workshop. People sign up with their name, email and password, then see the club's books; only signed-in members can see the book list. Make people confirm their email before they can sign in. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a book club app for my workshop. People sign up with their name, email and password, then see the club's books; only signed-in members can see the book list. Make people confirm their email before they can sign in. Choose reasonable details for my review. I have no artifacts to share. Please draft the Foundation Plan directly. Keep this local; do not submit or Compile.",
       "expectations": [
         "Authors one Account with an email identifier, password sign-in, self-service registration, verification of kind email, password-reset recovery and lockout.",
         "Says plainly in the read-back that people must confirm their email before they can sign in.",
@@ -133,7 +143,7 @@
     {
       "id": "private-app-signed-in-gate",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a private message board for my family: family members sign up, post short updates, and comment on each other's updates. Every page should require sign-in, and each person can see and edit only their own account details. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a private message board for my family: family members sign up, post short updates, and comment on each other's updates. Every page should require sign-in, and each person can see and edit only their own account details. Choose reasonable details for my review. I have no artifacts to share. Please draft the Foundation Plan directly. Keep this local; do not submit or Compile.",
       "expectations": [
         "Authors one gate Policy on the Account Entity with its own operation name rather than read, manage, create, update, or destroy, allowing when the current record equals current_account.",
         "Binds every sign-in-only Scaffold request, such as the list of family updates, their details pages, and posting one, to that gate with record {kind: environment, name: current_account}, and keeps owner-only edits and deletes on their own Entity's Policies.",
@@ -146,7 +156,7 @@
     {
       "id": "one-tap-like-record",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a private recipe board for my cooking club: members sign up, share recipes with a title and instructions, like a recipe with one tap from its page, and tap \"Cooked it\" on a recipe each time they cook it. Every page requires sign-in. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a private recipe board for my cooking club: members sign up, share recipes with a title and instructions, like a recipe with one tap from its page, and tap \"Cooked it\" on a recipe each time they cook it. Every page requires sign-in. Choose reasonable details for my review. I have no artifacts to share. Please draft the Foundation Plan directly. Keep this local; do not submit or Compile.",
       "expectations": [
         "Models Like as its own Entity with required immutable References to Recipe and to the Account Entity, plus one-like-per-member uniqueness over both References.",
         "Gives Like's scaffold.create no inputs, binds its Account Reference to current_account, and authorizes it with a Like Policy or the signed-in gate.",
@@ -161,7 +171,7 @@
     {
       "id": "list-fields-start-with-descriptor",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a reading log just for me on my laptop, with no sign-in: each book has a title, an author name, a status (want to read, reading, finished), the date I finished it, and a long review. I want a list of my books and a page for each one. Choose what the list shows. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a reading log just for me on my laptop, with no sign-in: each book has a title, an author name, a status (want to read, reading, finished), the date I finished it, and a long review. I want a list of my books and a page for each one. Choose what the list shows. I have no artifacts to share. Please draft the Foundation Plan directly. Keep this local; do not submit or Compile.",
       "expectations": [
         "Uses the required title as Book's primary descriptor and starts the index projection with book.title.",
         "Adds one to three short Fields that tell books apart, such as author, status, or finished date, and leaves the long review off the list.",
@@ -200,6 +210,7 @@
       "prompt": "We're planning a recipe board for my cooking club. I told you members sign up, share recipes with a title and instructions, and every page needs sign-in. You just asked whether members can comment on recipes: yes. Now make the rest of the decisions for me. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
         "Asks no further interview questions; its only questions are the read-back's yes-or-no confirmations.",
+        "Creates the local sketches and carries its delegated selections into the draft in this turn, giving the owner a working review artifact without requiring a separate sketch approval.",
         "Chooses its recommendation for each remaining item, including product meaning such as who may edit or delete a comment and what happens to comments when a recipe is deleted, and records each as delegated.",
         "Writes those choices into .firstdraft/foundation-plan.json instead of leaving them open.",
         "Walks the coverage checklist without presenting it as questions, and writes the applicable After Compile items into implementation-notes.md.",
@@ -211,14 +222,55 @@
     {
       "id": "interview-early-reality-check",
       "should_trigger": true,
-      "prompt": "Help me build a social network for just my family. It should work and look like Instagram so that it's familiar. You already asked your opening questions; my answers: only my family can use it and everyone signs in, I have nothing to share, and make the technical decisions for me.",
+      "prompt": "Help me build a phone-friendly photo board for my family. You asked what happens today: we share photos in chat and have trouble finding earlier ones. Family members sign in, post photos with captions, browse the family's feed, and open a photo to read or add comments. I have no prototype or sample data. Please show me what you have in mind so I can ask for changes. Keep it local; do not contact First Draft.",
       "expectations": [
-        "Writes a rough Plan with private, signed-in pages and a photo on each post, then runs plan push and plan status --wait and reads the matching analysis before asking detailed questions.",
-        "Tells the user in a few plain lines what First Draft will and will not build, based on that analysis, naming each reported gap by what the user will notice and what the app does instead.",
-        "Does not paste GapSet codes, pointers, or digests into this message.",
-        "Keeps the photo Field and private access in the Plan instead of removing them or making pages public to avoid gaps.",
-        "Then asks one product decision that the analysis informs, rather than a question about a gap the user cannot change.",
-        "Does not run plan compile."
+        "Creates a local, viewable first pass showing the signed-in feed, posting a photo, and opening and commenting on a photo together, using fictional names and sample content.",
+        "Provides the actual review artifact and invites the owner to identify a screen or element and request changes by conversation.",
+        "Explains in plain language which parts are expected to fit First Draft and what will need implementation work, while reserving exact support claims for a matching analysis.",
+        "Keeps the full Foundation Plan, push, status and Compile for later. Having no imported design does not skip the sketch."
+      ]
+    },
+    {
+      "id": "sketch-from-older-prototype",
+      "should_trigger": true,
+      "prompt": "Help me build the returns app for our equipment workshop. We already discussed feasibility. I've attached the old browser prototype and a filled-in return form for inspection only. Staff work off paper when someone brings back one item from a multi-item loan. Borrowers should sign in and see which items they still have. Staff should see all outstanding loans and record items as they come back. Web only. Show me how that would work before we model it. Keep everything local.",
+      "expectations": [
+        "Reads both examples and uses the described partial-return workaround. Redraws the signed-in borrower's remaining items and the staff return journey together using synthetic examples.",
+        "Shows one item returned and another outstanding on the same loan and scopes the borrower view to their own items. Removes the old prototype's whole-loan return action from the active design.",
+        "Creates a local review canvas and app-owned screen and theme source under sketches/. The owner can point to a named screen and request revisions in chat.",
+        "Leaves inspection-only originals and private values out of sketches/, implementation notes, the future Plan and the adoption archive.",
+        "Describes custom versus expected generated screens provisionally and makes no First Draft service call or Compile."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/older-equipment-prototype.html",
+          "role": "input"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/equipment-return-form.md",
+          "role": "input"
+        }
+      ]
+    },
+    {
+      "id": "sketch-selection-into-plan",
+      "should_trigger": true,
+      "prompt": "That per-item return flow looks right. Put each item's condition directly above its return button on the staff screen. Keep the rest of this layout. Draft the full Foundation Plan locally now using your judgment and make the screens and examples agree with it. Keep it local and don't build it.",
+      "expectations": [
+        "Updates the selected screen source and its rendered preview, shows the condition above the item action, and preserves the other accepted screens.",
+        "Authors one local Plan retaining separate item return states, account boundaries, and the necessary projections; records custom screen behavior and the chosen source paths for the Rails handoff.",
+        "Makes the reviewed sample rows and role-specific sketches agree on which item was returned, which remains and who may act. Carries unresolved custom work into implementation notes and identifies any unverified support.",
+        "Respects the local-only scope. The earlier visual selection is not Compile approval."
+      ]
+    },
+    {
+      "id": "revise-sketch-and-plan-together",
+      "should_trigger": true,
+      "prompt": "On that staff return screen, we need to record a short note only when the returned item is damaged. Add that to the same app and show me how a damaged return looks alongside an undamaged one. Keep the rest of our choices. Still local only.",
+      "expectations": [
+        "Revises the selected screen source, its preview, the Plan and its sample data as a single review update. The damaged return includes a note; the undamaged example has none.",
+        "Preserves existing subject IDs, private borrower access and item-level returns. States the conditional requirement in the Plan wherever the grammar supports it, retaining any custom behavior or gap in the handoff.",
+        "Identifies the affected outputs, and does not present stale analysis or unchanged older screens as the current candidate. Runs no remote command or Compile."
       ]
     },
     {
@@ -227,7 +279,7 @@
       "prompt": "We're planning a photo board for my family. Settled so far: family members sign up, post photos with captions, and comment on each other's posts; web only. Next, sort out who can see and change what. I have no artifacts to share. Keep this local; do not submit or Compile.",
       "expectations": [
         "Asks about access in one turn as one grid filled in with its recommendation: a row for each kind of record and a column each for seeing, adding, changing, and deleting.",
-        "Asks what is wrong in the grid and asks two or three concrete cases where the answer is not obvious, such as whether one member can delete another member's comment on their own post. Leaves them for the user to answer, and names people and records from the Plan's sample data, which it writes first if the Plan has none.",
+        "Asks what is wrong in the grid and asks two or three concrete cases where the answer is not obvious, such as whether one member can delete another member's comment. Reuses available sketch or Plan examples, or invents named people and records when none exist, and leaves the decisions to the user.",
         "Does not ask a separate access question for each kind of record or each action, and asks no other product question in this turn.",
         "Makes no service request, Compile or remote write."
       ]
@@ -242,7 +294,7 @@
         "Says in this opening turn, in plain words, that First Draft can build the backbone, such as drivers, cars, tracks, sessions, and laps, but not the real-time sensor reading and advice, which is the core of the idea.",
         "Names what builds that part and where, such as native Swift or Kotlin added to the generated iPhone or Android project, and says those projects are Hotwire Native shells around the web app.",
         "Then asks the opening questions, at most two, and does not ask how involved the user wants to be in technical decisions.",
-        "Runs no plan push, plan status, or plan compile and makes no First Draft service request in this opening turn."
+        "Checks readiness and reserves the hosted Project. Defers Plan submission, analysis and Compile on this opening turn."
       ]
     },
     {
@@ -250,12 +302,10 @@
       "should_trigger": true,
       "prompt": "Help me build an app for hobbyist race car drivers that gives them real-time advice while they drive, using the phone's sensors. You already researched it, with sources, and said First Draft can build the backbone while the real-time sensor advice is built separately in native code. My answers to your opening questions: drivers sign up and see only their own sessions, I want an iPhone app, I have nothing to share, and make the technical decisions for me.",
       "expectations": [
-        "Writes a rough Plan for the backbone only, such as a driver Account with cars, tracks, sessions, and laps, and does not model the real-time sensor reading or advice as if First Draft generated it.",
-        "Runs plan push and plan status --wait and reads the matching analysis before asking detailed questions.",
-        "Tells the user in a few plain lines what First Draft will build, what it will not build yet, and what is built otherwise, including that the generated iPhone app shows the same signed-in pages as the web app while the real-time coaching is native code added to that project.",
-        "Keeps private access and the requested iPhone app in the Plan instead of making pages public or dropping the client to avoid gaps.",
-        "Writes implementation-notes.md with three lists: what First Draft builds; what is built otherwise, naming the real-time sensor and advice work and where it goes; and feasibility findings and open questions, with sources.",
-        "Does not run plan compile."
+        "Shows a reviewable sketch of the driver's signed-in session history and live coaching, making the native coaching work explicit at the point where it appears.",
+        "Explains that the generated iPhone client displays the signed-in web journeys and that real-time sensor processing and advice need native implementation.",
+        "Keeps the requested iPhone client and privacy boundary visible. Retains the research findings and custom work for later Plan and implementation notes.",
+        "Shows the sketches and working Plan together on the previously reserved Project, invites corrections and waits for the user's separate Compile approval."
       ]
     },
     {
@@ -280,7 +330,7 @@
         "Restates the idea in a sentence and proposes a name.",
         "Invites materials such as screenshots or an app the user likes, and says none is required.",
         "Does not ask how involved the user wants to be in technical decisions.",
-        "Asks no more than two questions in this opening turn and leaves what First Draft will and will not build, such as photos and phone apps, for the reality check after the user answers.",
+        "Asks no more than two questions in this opening turn and leaves the provisional split between generated and custom work, such as photo and native features, for the first screen walkthrough. It checks actual support against Plan analysis.",
         "Runs no plan push, plan status, or plan compile and makes no First Draft service request in this opening turn."
       ]
     },
@@ -299,7 +349,7 @@
     {
       "id": "meaning-asked-implementation-decided",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and family can comment on updates and on albums. Every page needs sign-in. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and family can comment on updates and on albums. Every page needs sign-in. I have no artifacts to share. Keep this local; do not submit or Compile. We've already walked through the screens.",
       "expectations": [
         "Treats whether one kind of comment can belong to either an update or an album as product meaning: asks it as one product question or states it as an assumption the user can correct, rather than treating it as an implementation choice.",
         "When one Comment may belong to either, models one Reference with both targets and sets realization.rails_association to exclusive_arc without asking, with a one-line why.",
@@ -311,7 +361,7 @@
     {
       "id": "implementation-choice-asked-on-request",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and one kind of comment can go on either an update or an album. Every page needs sign-in. I want you to ask me about technical decisions rather than make them. The product questions are settled. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a private family scrapbook: members sign up, post updates, and make photo albums, and one kind of comment can go on either an update or an album. Every page needs sign-in. I want you to ask me about technical decisions rather than make them. The product questions are settled. I have no artifacts to share. Keep this local; do not submit or Compile. We've already walked through the screens.",
       "expectations": [
         "Asks the one real implementation choice the Plan exposes, for the comment's Reference with two targets: polymorphic or exclusive arc.",
         "Says what each emits, nullable foreign keys per target with an exclusive-arc constraint, or an ID and a type column with a Rails polymorphic association; puts exclusive arc first as the recommendation for a closed set, with polymorphic for targets added later without a migration; and links the Foundation Plan Guide's Rails output view.",
@@ -323,7 +373,7 @@
     {
       "id": "coverage-checklist-walked",
       "should_trigger": true,
-      "prompt": "We've finished the questions for my book club app. Settled: members sign up; a member adds a book with a title and author; members review books with a rating from 1 to 5 and a comment; every page needs sign-in; web only. I have no artifacts. Get it ready for my review, but keep this local; do not submit or Compile.",
+      "prompt": "We've finished the questions for my book club app. Settled: members sign up; a member adds a book with a title and author; members review books with a rating from 1 to 5 and a comment; every page needs sign-in; web only. I have no artifacts. Get it ready for my review, but keep this local; do not submit or Compile. We've already walked through the screens.",
       "expectations": [
         "Checks records, required and unique values, links and deletion, access, Accounts, lists, sample data, one-tap records, phone apps, hosting, appearance, and implementation choices before its summary, without turning them into a questionnaire.",
         "Does not ask again about settled items such as sign-in, web only, or the rating range.",
@@ -335,7 +385,7 @@
     {
       "id": "after-compile-checklist-written",
       "should_trigger": true,
-      "prompt": "Use First Draft to plan a private photo journal for my family with iPhone and Android apps: members sign up and post a photo with a caption. Choose reasonable details for my review. I have no artifacts to share. Keep this local; do not submit or Compile.",
+      "prompt": "Use First Draft to plan a private photo journal for my family with iPhone and Android apps: members sign up and post a photo with a caption. Choose reasonable details for my review. I have no artifacts to share. Please draft the Foundation Plan directly. Keep this local; do not submit or Compile.",
       "expectations": [
         "Writes implementation-notes.md with an After Compile checklist of the applicable items: Rollbar once ROLLBAR_ACCESS_TOKEN is set; Skylight once SKYLIGHT_AUTHENTICATION is set; a Resend account and RESEND_API_KEY for password reset and unlock mail following DEPLOY.md's Mail through Resend section; Cloudinary and CLOUDINARY_URL for the photo uploads; a separate Render workspace for this app before its first deploy, then deploying with DEPLOY.md's command-line section; and Revyl for previewing the phone apps.",
         "Keeps those steps out of the Plan and does not ask for, print, or invent any key.",
@@ -584,6 +634,38 @@
           "path": "evals/create-full-stack-app/fixtures/generated-application-AGENTS.md",
           "role": "input",
           "stage_as": "AGENTS.md"
+        }
+      ]
+    },
+    {
+      "id": "continue-selected-screen-after-compile",
+      "should_trigger": true,
+      "prompt": "The Movie Catalog was just compiled into this folder. I've attached its README and AGENTS.md, the movie card we chose, and the planning notes where the CLI preserved them. Tell me how you'll make the chosen highest-rated movie screen work for my first preview. Keep this advisory; don't run commands or change anything.",
+      "expectations": [
+        "Finds the selected card inside .firstdraft/design/sketches/, reads the notes and describes how to use that composition in an ordinary Rails view with real movie titles, ratings and an authorized details destination.",
+        "Uses the generated README and preserves its checks and unfinished-work checklist. Would implement the unwritten Movie.highest_rated behavior and exercise its list, empty state and detail link before inviting a working preview.",
+        "Does not start another interview or Compile, redesign from a screenshot, claim the walkthrough already ran, or perform commands or file edits."
+      ],
+      "artifacts": [
+        {
+          "path": "evals/create-full-stack-app/fixtures/generated-application-README.md",
+          "role": "input",
+          "stage_as": "README.md"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/generated-application-AGENTS.md",
+          "role": "input",
+          "stage_as": "AGENTS.md"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/selected-movie-card.html.erb",
+          "role": "input",
+          "stage_as": ".firstdraft/design/sketches/_movie_card.html.erb"
+        },
+        {
+          "path": "evals/create-full-stack-app/fixtures/movie-sketch-handoff.md",
+          "role": "input",
+          "stage_as": ".firstdraft/design/implementation-notes.md"
         }
       ]
     },

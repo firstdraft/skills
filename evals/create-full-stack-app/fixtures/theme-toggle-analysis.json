@@ -8,7 +8,7 @@
     "graph_version": 1,
     "head_source_sha256": "669e71cdf19f0df187ad6b854604e0df605668848c66c669777c1781cd5eae93",
     "analyzer_release": "foundation-plan-rails/application-2026-11-25-application-mail",
-    "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
+    "compiler_release": "foundation-plan-rails/compiler-application-2026-11-27-ruby-4-0-10",
     "target": {
       "id": "rails",
       "profile": "rails-sketch/2026-11"
@@ -27,7 +27,7 @@
       "analysis": {
         "release": "foundation-plan-rails/application-2026-11-25-application-mail"
       },
-      "compiler_release": "foundation-plan-rails/compiler-application-2026-11-25-application-mail",
+      "compiler_release": "foundation-plan-rails/compiler-application-2026-11-27-ruby-4-0-10",
       "target": {
         "id": "rails",
         "profile": "rails-sketch/2026-11"
@@ -55,7 +55,7 @@
         }
       ]
     },
-    "gap_set_sha256": "298e327eed3d302cfe8d106bcabeaf7255ab8aa7788974c90e66cfd3266d9e54",
+    "gap_set_sha256": "bbe1ca524339d530c5cb87165f2cf73238f795fbb09b7403402fb19ed7f1d0dc",
     "started_at": "2026-07-30T12:03:00.000Z",
     "completed_at": "2026-07-30T12:03:01.000Z"
   }

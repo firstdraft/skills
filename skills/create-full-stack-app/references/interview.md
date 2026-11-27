@@ -16,9 +16,10 @@ to model each answer. The Skill owns the read-back, the user's go-ahead, and Com
 ## Start from the user's goal
 
 First Draft is one tool for the user's goal. Use it where it helps: to plan and Compile, to plan only, or not at
-all. Decide which before the opening turn.
+all. Once you understand the idea, choose the appropriate path.
 
-**Research first, always.** Before the opening turn, take a quick look with your web search tools, a few searches,
+**Research the idea.** If the initial message gives no idea to research, ask for the user’s materials or description
+first. Once you have enough context, take a quick look with your web search tools, a few searches,
 at how others build similar apps: common features, patterns, and pitfalls. Use what you find to choose better
 questions and defaults. Research thoroughly only when feasibility is in question, because the idea depends on a
 device capability, outside data or APIs, store or platform rules, or real-time behavior. Then find out whether it
@@ -39,8 +40,8 @@ is usually the opening turn:
   iPhone and Android projects. Those projects are Hotwire Native shells around the web app that show its pages,
   sign-in included; device features are code added there.
 - **Plan only:** the user will build in another stack, or won't use the generated code. The Foundation Plan and its
-  analysis still help design the data model: push it and use the analysis to check the model, skip the reality
-  check about what First Draft generates, give the read-back, and do not Compile.
+  analysis still help design the data model. Push it as authorized, use the analysis to check the model, and
+  give the model read-back. The user is taking the implementation into their own stack.
 - **Not at all:** First Draft doesn't help with the core, and the core is the app, such as a first-person shooter.
   Say First Draft isn't the right tool and name what is, such as a game engine like Unity, Unreal, or Godot. Say
   First Draft could later build a part it fits, such as accounts, leaderboards, or a website, if the user wants.
@@ -51,53 +52,51 @@ Then continue with whichever applies; the interview below covers the First Draft
 
 ## Interview flow
 
-Start when the user asks for help making an app, such as "help me make an app for my book club", or invokes
-`/create-full-stack-app`.
+For a local-only request, show the screen files and working Plan locally at each review or correction. The
+publication and hosted analysis steps below apply when the owner wants a hosted Project.
 
-1. **Clarify the idea.** Restate it in one sentence and propose a name. Ask only what you need to understand the
-   idea, such as who uses it; skip this when the request is clear.
-2. **Ask for materials:** design docs, screenshots, a CSV of sample data, a form or report, or an app they like.
-   None is required. Read whatever arrives before asking more, and do not ask what it already answers. Follow the
-   [artifact guidance](modeling-guide.md#learn-from-examples-and-artifacts).
+Use this flow for a new app. Resume an existing Plan or sketch at its current step. A user who requests a specific
+Plan operation, skips sketching, or is modeling a system without screens can go directly to that work.
 
-Steps 1 and 2 are the opening turn, after the research and any fit, with at most two questions.
+1. **Start the Project and invite materials.** For a new hosted sketch interview, share the Project URL
+   from `project start` on the first turn. Invite design exports, screenshots, sample spreadsheets, forms or
+   reports. Read what is already there, including an old Lovable, Claude Design or Figma prototype. If there are
+   no materials, ask the user to describe the idea, or use the description already given. Restate the goal and
+   propose a name. Ask at most two opening questions.
+   [Learn from the materials](modeling-guide.md#learn-from-examples-and-artifacts).
+2. **Learn enough to sketch the whole app.** Find who uses it, what each person is trying to do, where they start,
+   what changes after an action, and what they still do outside the tools they brought. Ask one consequential
+   question per turn. For a watch-party ballot, a host still taking picks on paper might tell you that late guests
+   should be able to pick unannounced awards. Raise access or data-loss choices as soon as a journey makes them
+   concrete. Use [ask, tell, or decide](#ask-tell-or-decide).
+3. **Publish the first review.** Follow [sketch review](sketch-review.md). Draw the principal screens and
+   author a working Plan with the records, relationships and access choices that explain them. Use its examples
+   to populate the screens. Redraw an imported design with the components intended for the app. Publish once
+   and invite the user to point at a screen or element in their Project. They can paste the reference into chat.
+   On the first walkthrough, distinguish likely standard record pages from work you expect to write, such as a
+   host's announcement or correction button. Qualify this estimate until the actual Plan analysis is available.
+4. **Refine the Plan.** Once the reviewed screens and remaining assumptions are clear, model what they
+   imply. Choose routes and projections from what each person sees and does. Ask about expensive choices the
+   sketches leave open, including [access](#access), deletion, and requested clients. For a transition such as
+   approval on a record’s page, ask who may take it and use that answer for its `authorization` so Compile can
+   generate the button. Make implementation choices as [meaning and implementation](#meaning-and-implementation) describes. Hosting is a supplied default:
+   the app is set up for Render's free plan with a free Neon database, and a paid option is planned.
+5. **Review one candidate.** Publish the revised sketches and Plan and read their matching analysis and GapSet. Show how its
+   available diagram, data, decisions and access views relate to the chosen screens. Review custom action access
+   in the sketches and notes as well. Explain each actual gap in terms of the journey. Keep the user's requested meaning even
+   when the deployed Compiler leaves work to do. Each push replaces the Project's current Plan, so push only
+   the user's candidate. Apply revisions from any view to all affected artifacts before presenting the updated
+   review. See [sketch review](sketch-review.md) for keeping a design selection and Plan analysis together.
+6. **Read back and Compile on the user's go-ahead.** Walk the [coverage checklist](#coverage-checklist) silently
+   and write the [after-Compile checklist](#after-compile-checklist) into the notes. During work that takes more
+   than about two minutes, give the user a line of progress. Give the user their local
+   sketch and analyzed Project page to review. For a Plan-only request, give the read-back and stop.
 
-3. **Raise product decisions** that shape the data model, most important first: which records exist and what one
-   record is, [who can see and do what](#access), and whether they want iPhone or Android apps. Order the rest by
-   how likely your default is wrong for this app, times how costly the mistake is after Compile. A mistake costs
-   most when it shows records to the wrong people, then when it loses data, then when records must be
-   restructured, and least when it is cosmetic. After the opening turn, ask one decision per turn. Handle each
-   decision in the [form that fits it](#ask-tell-or-decide): ask, tell, or decide. Leave details such as list
-   fields for later. Stop when only delegated or nonblocking items remain; there is no fixed number of questions.
-   Do not ask about hosting. Say the app is set up for free hosting on Render's free plan with a free Neon
-   database, and that a paid option is planned.
-4. **Give an early reality check.** As soon as the opening answers settle the main records, tell the user this takes
-   a few minutes, then write a rough Plan, push it, and read its analysis. Keep the rough Plan small: the main
-   records and their key Fields, any Account, who can see what, and requested phone apps; for a backbone, only the
-   part First Draft builds. Tell the user in a few plain lines what First Draft will build and what it will not
-   build yet, for example "Descriptions are stored as plain text for now; I'll add formatting in Rails before you
-   first try the app" or "The list of posts that mention a word is generated, and I'll write its search in Rails
-   right after Compile". When the
-   user described moving a record from one state to another, such as approving a request, ask who may do it from
-   the record's page; the answer becomes the transition's `authorization`, and Compile writes the button. Then let
-   the analysis steer the remaining questions: ask about consequences the user can choose between,
-   not about gaps they cannot change. Keep private access and requested phone apps in the Plan. Report each gap as
-   the analysis gives it, even when its reason names no cause or contradicts these references; the deployed First
-   Draft may not generate it yet. Do not trim the Plan or push trial or example Plans to find a cause: each push
-   replaces the Project's current Plan, and a defensible variant is still a trial.
-5. **Make implementation choices last**, as [meaning and implementation](#meaning-and-implementation) describes.
-6. **Walk the [coverage checklist](#coverage-checklist)** silently, and write the
-   [after-Compile checklist](#after-compile-checklist) into the implementation notes.
-7. **Read back**, tell the user where to look at the Plan, and Compile on their go-ahead, as the Skill describes.
-   For plan only, give the read-back and stop.
-
-At any point the user may say "make the rest of the decisions for me". Stop the interview. Choose your recommendation
-for every remaining item, including product meaning, and mark each one delegated. Walk the checklist and give the
-read-back, naming those choices. Lead it with the delegated choices that would cost most if wrong, at most three, each
-as a yes-or-no question on one line: a rule that deletes records, and access wider than the user described. These
-confirmations are the only questions after a delegation. Delegating decisions is not a go-ahead: Compile waits for
-one, so the user can [look at the Plan](../SKILL.md#read-back-and-approve-the-candidate-before-compile) while changing
-a choice still takes one edit to it.
+At any point the user may say “make the rest of the decisions for me.” End the questions and choose for them.
+If screens are in scope, produce or complete the sketch and include the selected version with the read-back.
+Name delegated choices. Lead with at most three yes-or-no confirmations for choices that would cost most if
+wrong, such as deleting records or widening access. These are the only questions after delegation. Follow the
+[existing go-ahead rule](../SKILL.md#read-back-and-approve-the-candidate-before-compile) for Compile.
 
 ## Ask, tell, or decide
 
@@ -147,10 +146,10 @@ Ask who can see and change each kind of record in one turn, as one grid filled i
 
 Ask what is wrong in it. A filled-in grid is easy to accept unread, so also ask two or three concrete cases where
 the answer is not obvious, about named people and records, and leave them for the user to answer: "Can Maya delete
-Sam's comment on her own post?" Use the Plan's sample records when it has them. When you ask before the rough Plan
-exists, name the people and records yourself, and make them its sample data. Make one case about someone other
-than its owner removing a record, such as an organizer removing spam. Change the grid where an answer disagrees
-with it.
+Sam's comment on her own post?" Reuse the Plan's sample records or suitable sketch examples. Before either
+exists, invent named people and records for the cases. Carry synthetic or explicitly cleared sketch examples into
+the Plan. Make one case about someone other than the owner removing a record, such as an organizer removing spam.
+Change the grid where an answer disagrees with it.
 
 ## Meaning and implementation
 

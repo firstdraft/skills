@@ -1,4 +1,4 @@
 interface:
   display_name: "Create a Full-Stack App with First Draft"
-  short_description: "Interview, author, diagnose, and compile a Plan"
-  default_prompt: "Use $create-full-stack-app to interview me, incrementally author and diagnose one complete First Draft Foundation Plan candidate, and use the available Compile workflow when that candidate is ready."
+  short_description: "Sketch the app, review its Plan, and compile"
+  default_prompt: "Use $create-full-stack-app to sketch my app with me, keep the screens and Foundation Plan in sync as we revise them, and show me what to review before Compile."

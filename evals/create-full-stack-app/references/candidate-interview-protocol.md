@@ -5,10 +5,9 @@ Skill and modeling guide. It remains a separate staged input so a harness can gr
 an extra protocol file beside the Skill.
 
 The interview turns an underspecified product request into explicit product meaning without inventing consequential
-answers. It is not a gate on local work: the agent may edit a local Plan incrementally and may submit the current
-whole-file snapshot for diagnostics whenever that is useful. An incomplete or invalid submission may return
-descriptive diagnostics. Compilation still consumes one complete candidate snapshot that whole-graph analysis has
-accepted, after the user has approved its semantic read-back.
+answers. In a new app interview the first artifact is a local whole-app sketch. The owner can revise the
+journeys before the agent authors the full Plan and submits it for analysis. An explicit Plan operation or an
+existing candidate continues at that stage. Compile still requires the user's go-ahead after the read-back.
 
 ## Keep a decision ledger
 
@@ -27,27 +26,31 @@ answer to a question is not a default; "you pick" or "make the rest of the decis
 convention fits most apps, the agent may instead tell the user its default and the condition under which it would
 be wrong; that default stands unless the user objects. The opening turn clarifies the idea and invites materials;
 the agent makes technical decisions itself unless asked otherwise, and later turns ask one decision at a time, most
-important first. Prioritize questions whose answers would change the graph, access, or requested clients. The
+important first. During sketching prioritize people, journeys and the work missing from the supplied materials.
+During modeling prioritize questions that change the graph, access or requested clients. The
 ambiguity matrix guides the dialogue; it is not a one-message questionnaire.
 
 ## Interview from product meaning
 
 1. **Frame the first release.** Establish the application name and key, its primary job and actors, the must-have
    workflows, and what this candidate excludes.
-2. **Find durable nouns.** Decide which concepts need independent records and lifecycles, what one record represents,
+2. **Show the first sketch review.** For a new hosted app, use the Project URL obtained after readiness.
+   Publish the main screens and working FP together using the same named examples. Locate a control the owner
+   references from the board and republish the corrected set. Honor a request to work locally.
+3. **Find durable nouns.** Decide which concepts need independent records and lifecycles, what one record represents,
    what is an owned value or derivation, and what identifies each record to a person.
-3. **Specify stored meaning.** For every included Field, establish its semantic type and requiredness. Resolve
+4. **Specify stored meaning.** For every included Field, establish its semantic type and requiredness. Resolve
    defaults, immutability, normalization, validations, encryption, or log redaction wherever they affect the product.
-4. **Connect records.** For every Reference, establish its owner, allowed targets, requiredness, target-deletion
+5. **Connect records.** For every Reference, establish its owner, allowed targets, requiredness, target-deletion
    behavior, mutability, one-to-one meaning, and any required multi-target realization. Add reverse or indirect
    Associations only for a named product traversal or workflow.
-5. **Define use and access.** Establish requested list, detail, create, update, and delete experiences; who may use
+6. **Define use and access.** Establish requested list, detail, create, update, and delete experiences; who may use
    each one, asked as one grid of the agent's recommendation with a few concrete cases; Account and sign-in intent;
    and whether any records are public.
-6. **Resolve client consequences.** Establish requested web and native clients, domain handling, native capture or
+7. **Resolve client consequences.** Establish requested web and native clients, domain handling, native capture or
    offline needs, delivery channels, notifications, and external prerequisites. A native client does not imply push
    notifications, and absent Account requirements do not imply public access.
-7. **Read back.** Summarize Entities and their material Fields, relationships, rules, behavior, and data; surfaces,
+8. **Read back.** Summarize Entities and their material Fields, relationships, rules, behavior, and data; surfaces,
    access, native and delivery choices; explicit exclusions, delegated decisions, and open choices. For a matching
    valid analysis, group the gaps by what the user will notice and say what the app does instead. End with where the
    user can look at the Plan, and wait for their go-ahead, as
@@ -95,9 +98,9 @@ The agent has enough information to assemble and read back one complete candidat
   than silently guessed; and
 - capability gaps are recorded separately from product choices and disclosed in the read-back.
 
-"Use your judgment" can delegate a choice. The resulting decision still belongs in the read-back. These criteria
-describe readiness for a complete candidate; they do not prohibit earlier local edits or diagnostic submissions,
-and deferred questions can be revisited after diagnostics or further dialogue.
+"Use your judgment" can delegate a choice. The resulting decision still belongs in the read-back. In a new app interview, use the reviewed journeys to
+draft the first complete candidate. A specific request for Plan diagnostics can proceed directly. Deferred questions
+can be revisited after diagnostics or further dialogue.
 
 ## Read back and approve before Compile
 
@@ -107,8 +110,8 @@ surfaces, access, and clients; material assumptions, delegated choices, and excl
 user will notice, then list what is built outside First Draft and the feasibility findings and open questions. State the
 selected output: Compile creates only a verified local directory, and a requested private GitHub repository is created
 and pushed with `gh` afterward. Neither deploys. Do not enumerate absent subject families or immaterial empty
-categories. End by telling the user where to look at the Plan on First Draft's site and what the page shows, and invite
-corrections without prompting for a go-ahead or requiring a digest echo or gap-specific field. Compile waits for the
+categories. End by showing the same Project URL or the selected local sketch and telling the user where to look at the analyzed
+Plan on First Draft's site and what the page shows. Invite corrections without prompting for a go-ahead or requiring a digest echo or gap-specific field. Compile waits for the
 user's go-ahead: approval of the model and reviewed gaps, or an instruction to build. Delegating the remaining decisions
 is not one, and a request made before the read-back counts only when it said not to wait for the user. When the go-ahead
 comes from a user who has not said they looked at the page, remind them of it once, then Compile.

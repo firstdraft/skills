@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createRequire } from "node:module";
 import { spawnSync } from "node:child_process";
 import {
   chmodSync,
@@ -46,7 +47,7 @@ assert.equal(packageTemplate.name, "@firstdraft.com/claude-code");
 assert.equal(packageTemplate.version, compatibility.version);
 assert.equal(pluginManifest.name, "firstdraft");
 assert.equal(pluginManifest.version, compatibility.version);
-assert.equal(packageTemplate.dependencies, undefined);
+assert.deepEqual(packageTemplate.bundleDependencies, Object.keys(packageTemplate.dependencies));
 assert.equal(pluginManifest.userConfig, undefined);
 assert.doesNotMatch(
   readFileSync(
@@ -110,12 +111,14 @@ try {
   ].sort();
   const packagedFiles = first.manifest.files.map(({path: file}) => file).sort();
   assert.deepEqual(
-    packagedFiles.filter((file) => !file.startsWith("vendor/cli/")),
+    packagedFiles.filter((file) => !file.startsWith("vendor/cli/") && !file.startsWith("node_modules/playwright-core/")),
     expectedFiles,
   );
   assert(packagedFiles.includes("vendor/cli/package.json"));
   assert(packagedFiles.includes("vendor/cli/bin/firstdraft.js"));
+  assert.deepEqual(first.manifest.bundled, ["playwright-core"]);
   for (const file of first.manifest.files) {
+    if (file.path.startsWith("node_modules/playwright-core/")) continue;
     const executable =
       file.path === "bin/firstdraft" ||
       file.path === "vendor/cli/bin/firstdraft.js";
@@ -135,6 +138,9 @@ try {
     packages: [fakePlugin.tarball],
   });
   const installedRoot = path.dirname(path.dirname(pluginExecutable(fakeInstallation)));
+  const cliRequire = createRequire(path.join(installedRoot, "vendor", "cli", "package.json"));
+  assert.equal(cliRequire("playwright-core/package.json").version, packageTemplate.dependencies["playwright-core"]);
+  assert.equal(typeof cliRequire("playwright-core").chromium.launch, "function");
   const installedClaude = readJson(path.join(installedRoot, ".claude-plugin", "plugin.json"));
   const installedCodex = readJson(path.join(installedRoot, ".codex-plugin", "plugin.json"));
   const installedPortable = readJson(path.join(installedRoot, "plugin.json"));

@@ -85,6 +85,7 @@ that edits it, so that commit's CI checks the digest the tag will publish.
 By hand, after the last packaged edit lands, pack `main` with the exact CLI under that Node:
 
 ```sh
+npm ci --omit=dev --ignore-scripts --no-audit --no-fund
 node script/claude-plugin-package.mjs pack tmp/plugin --cli-root /path/to/exact/cli
 ```
 

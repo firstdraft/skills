@@ -24,6 +24,11 @@ export async function stageClaudePlugin(destination, cliRoot) {
   assert(cliRoot, "the exact CLI checkout is required");
   const target = path.resolve(destination);
   await mkdir(target, {recursive: true});
+  await cp(
+    path.join(repository, "node_modules", "playwright-core"),
+    path.join(target, "node_modules", "playwright-core"),
+    {recursive: true},
+  );
   await Promise.all([
     cp(
       path.join(packageSource, ".claude-plugin"),

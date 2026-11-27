@@ -343,7 +343,7 @@ test("Claude Code packaging selects canonical authoring source exactly once", as
   });
   assert.equal(packageTemplate.version, version);
   assert.equal(installableManifest.version, version);
-  assert.equal(packageTemplate.dependencies, undefined);
+  assert.deepEqual(packageTemplate.bundleDependencies, ["playwright-core"]);
   assert.deepEqual(installableManifest.skills, checkoutManifest.skills);
   assert.equal(installableManifest.userConfig, undefined);
 
@@ -489,7 +489,9 @@ test("CI binds publication to protected identities and checks", async () => {
     /secrets|NODE_AUTH_TOKEN|NPM_TOKEN/i,
   );
   assert.doesNotMatch(publishWorkflow, /npm dist-tag|--tag next/);
-  assert.doesNotMatch(publishWorkflow, /npm ci|npm audit|npm run check|sh script\/check/);
+  const installForPackaging = "npm ci --omit=dev --ignore-scripts --no-audit --no-fund";
+  assert.ok(publishWorkflow.includes(installForPackaging));
+  assert.doesNotMatch(publishWorkflow.replace(installForPackaging, ""), /npm ci|npm audit|npm run check|sh script\/check/);
   assert.match(publishWorkflow, /actions: read/);
   assert.match(publishWorkflow, /GH_TOKEN: \$\{\{ github\.token \}\}/);
   assert.match(publishWorkflow, /gh run list --workflow ci\.yml --branch main --event push --commit "\$release_sha" --status success/);
@@ -2831,11 +2833,11 @@ async function checkSkill(skillName) {
   if (skillName === "create-full-stack-app") {
     assert.equal(
       shortDescription,
-      "Interview, author, diagnose, and compile a Plan",
+      "Sketch the app, review its Plan, and compile",
     );
     assert.equal(
       defaultPrompt,
-      `Use $${skillName} to interview me, incrementally author and diagnose one complete First Draft Foundation Plan candidate, and use the available Compile workflow when that candidate is ready.`,
+      `Use $${skillName} to sketch my app with me, keep the screens and Foundation Plan in sync as we revise them, and show me what to review before Compile.`,
     );
   }
 }

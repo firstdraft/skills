@@ -46,16 +46,17 @@ column. A counter or secure token listed as a form input gets no control and a
 ## Interview toward one coherent candidate
 
 Follow the [interview flow](interview.md#interview-flow) for the order of questions. Treat the interview as an
-incremental design conversation, not a questionnaire that must finish before local work begins: edit and push the
-Plan as answers arrive. Prioritize answers that change the graph, access model, or requested clients.
+incremental design conversation. Draw the principal screens first. For hosted Sketches, publish them with a small
+working Plan. As answers arrive, submit both together with `sketches publish`. Use `plan push` for Plan-only work. Prioritize
+answers that change the graph, access model, or requested clients.
 
 When modeling a collection, distinguish one uniquely identified object, a quantity of interchangeable goods, and a
 mixed product that needs both meanings. Uniquely identified objects are records of their own Entity, such as a Unit
 with a serial number and `belongs_to :product`; a quantity is an `integer` Field on one record, emitted as
 `t.integer "quantity", null: false`; a mixed product authors both. In the opening turn, ask only about intended
-product meaning and materials, and name deferred product areas; give the reality check about
-target support after the user answers. Whether First Draft covers the core of the idea is
-[fit](interview.md#start-from-the-users-goal), not target support: say it in the opening turn when research shows it.
+product meaning and materials, and name deferred product areas. Explain [fit](interview.md#start-from-the-users-goal)
+when research establishes it. Estimate likely custom screen work during sketch review. Confirm what the target
+generates against the matching analysis once the Plan exists.
 Do not promote a common use case into an unstated assumption. When target support matters, know the desired access
 before describing the current Account, Policy, Web, and native boundaries. Keep one candidate Plan: do not maintain
 a parallel flattened or capability-friendly shape merely so one version can Compile.
@@ -83,8 +84,8 @@ Establish enough product meaning to answer these questions for the included firs
 - Are Accounts, public access, web or native clients, capture or offline behavior, delivery channels,
   notifications, domains, or external prerequisites part of this slice?
 
-The ambiguity matrix guides the dialogue; it is not a one-message checklist. The agent may edit the local Plan
-incrementally and may submit the current whole-file snapshot for diagnostics whenever useful. A malformed,
+Use these questions as decisions arise in the modeling conversation. Edit the local Plan incrementally and submit
+the current whole-file snapshot for diagnostics whenever useful. A malformed,
 incomplete, or invalid snapshot may produce descriptive diagnostics. Compilation receives one exact candidate
 snapshot, its admitted graph after whole-graph analysis, and the matching reviewed GapSet.
 
@@ -103,12 +104,14 @@ photo, report, or export, or an app the user likes. Read what arrives before ask
 understand the work; sample-data reuse is secondary. An example already supplied satisfies this invitation. If none
 is available or sharing is declined, continue from the description or a synthetic example.
 
-Have the user explain a representative item and how it is used. Inspect relevant material with available tools;
+Inspect a representative item first. Ask how it is used when its meaning remains unclear and
 say when a format could not be read. Use it to clarify vocabulary, record boundaries, relationships, units, dates,
 allowed values, attachments, and workflows. An equipment sheet repeating borrower details across loans may suggest
 Equipment, Borrower, and Checkout records. A form with several photo slots may mean a collection of attachments,
 not one Field per slot. Columns, blanks, and duplicates alone do not establish requiredness or uniqueness.
-Distinguish current workarounds from desired behavior and ask about consequential ambiguity.
+Distinguish current workarounds from desired behavior and ask about consequential ambiguity. Treat an old export
+as evidence about layout and workflow. Redraw it with the app’s intended components, then test the result with
+the user’s own examples in [sketch review](sketch-review.md).
 
 Sharing a private example for modeling does not authorize copying it into the Plan, notes, seeds, design archive,
 or repository. Use authorization already given; clarify reuse only when it is unclear. Prefer a small synthetic
@@ -125,6 +128,9 @@ it. Inspect the archive and staged changes before a baseline commit or remote ha
 ## Prepare data for the first preview
 
 Normally propose a small realistic `application.development_data` graph even when the user did not ask for data.
+Carry forward the reviewed relationships and states using synthetic or cleared people and records. Once the Plan exists,
+render the reviewed examples from its authored data and reconcile any earlier illustrative fixtures. A sample guest
+who picked the winning film should have the same score in the sketch and in the records used to calculate it.
 Choose enough related records and relevant states to exercise the intended first flow, plus a useful empty state
 where appropriate. For a movie app, a few movies, one demo viewer, and related watched/watchlist records make the
 relationships explorable. For a habit app without Accounts, related goals, active and paused habits, and historical
@@ -522,8 +528,11 @@ a cause: each push replaces the Project's current Plan.
 
 ## Prepare the pre-Compile semantic read-back
 
-First reconcile the exact candidate with the user's requests, decisions, explicit revisions, exclusions and
-implementation notes. Inspect every authored Entity and Field, including optional Fields, and the relationships,
+First reconcile the exact candidate with the user's requests, selected screens, decisions, revisions, exclusions
+and implementation notes. For each selected screen, trace its entry point, role, visible fields and associations,
+available actions, and destination to the Plan or notes. Keep custom layouts in the selected view source. Choose a
+Scaffold route only where the app needs it. A movie detail can show related comments without standalone comment
+pages. Inspect every authored Entity and Field, including optional Fields, and the relationships,
 rules and interactions that implement requested behavior; the compact user summary is not the internal check.
 For each explicit requirement, locate its structured meaning, precise reviewed gap, existing outside-grammar note,
 or explicit exclusion using the [outcomes above](#retain-implementation-requirements). Check that removed Fields
@@ -561,11 +570,12 @@ Write it for a reader who is not technical, in this order:
    in it.
 5. Where the app will be written: this folder or another folder, and whether you will then push it to a new
    [private GitHub repository](diagnostics-and-recovery.md#create-a-github-repository); or plan only.
-6. Where to look at the Plan, and what the page shows.
+6. Where to see the selected local sketches and the analyzed Plan, and what each view shows.
 
-When the user asks to see the code before Compile, such as the schema or the models, compile a preview into an
-absent folder beside the project, such as `--output ../<application key>-preview`, and show what they asked for. The
-preview is not the go-ahead: the project's own Compile still waits for one.
+When the user asks about the generated schema or models, explain what the reviewed Plan requests. In a hosted
+Sketches Project, get approval for the displayed revision before running a preview Compile. Pass that revision
+with `--revision` and use an absent folder such as `--output ../<application key>-preview`. On the ordinary
+Plan-only path, an owner can request a separate preview Compile before approving root adoption.
 
 After Compile, the app's `.firstdraft/gaps.json` holds every GapSet record, and its README has an entry that names
 each one. Follow the Skill's
