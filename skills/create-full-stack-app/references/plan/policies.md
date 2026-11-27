@@ -125,7 +125,7 @@ and the scope admit exactly the same records. `spec/requests/notes_spec.rb` chec
 | Guest, on a list | Sign-in when the scope requires an Account. A branch such as "published" keeps those records visible. | Sign-in when the gate denies. |
 | Guest, on Show, Edit, Update, Delete, or an event | Sign-in before a lookup that requires an Account. When guests can pass a branch, a record outside the scope returns 404. | Sign-in when the gate denies. |
 | Guest, on New or Create | Sign-in when the record rule denies. | Sign-in when the gate denies. |
-| Signed-in Account denied by the Policy | A record outside the scope is hidden from lists and returns 404 on lookup. A rule denial on a record the Account can reach returns 403. | The 403 page. |
+| Signed-in Account denied by the Policy | A record outside the scope is hidden from lists and returns 404 on lookup. A rule denial returns 403 for a record the Account can reach, including a record built for New or Create. | The 403 page. |
 
 After browser sign-in, a GET returns to the requested page. A write sent to sign in ends without changing the record.
 For Edit and Update the lookup uses the update Policy. An event uses the show Policy to find its record, then checks
@@ -482,6 +482,7 @@ relation_scope(:read) do |relation|
 end
 
 # app/controllers/recipes_controller.rb, shortened
+before_action :authenticate, only: %i[edit update]
 before_action :authorize_administer, only: %i[destroy]
 before_action :set_recipe, only: %i[edit update]
 

@@ -171,16 +171,16 @@ Every `index`, `show`, and Association item says who may see it. The rules live 
 | `authorization` | Meaning | Generates on a page | On an Association item |
 | --- | --- | --- | --- |
 | `"public"` | Anyone, signed in or not. | No check. | Every related record shows. |
-| `{"policy": "project.read_own"}` | The page Entity's Policy decides each record. | Index: `authorized_scope(Project.all, …, as: :read, with: ProjectPolicy)`. Show: the record is found through that scope, so others get 404. The navigation link shows only to signed-in people. | Must be the related Entity's Policy: `authorized_scope(@project.tasks, …, with: TaskPolicy)`. |
+| `{"policy": "project.read_own"}` | The page Entity's Policy decides each record. | Index: `authorized_scope(Project.all, …, as: :read, with: ProjectPolicy)`. Show finds the record through that scope. A hidden record returns 404 if the lookup runs. The navigation link shows only to signed-in people. | Must be the related Entity's Policy: `authorized_scope(@project.tasks, …, with: TaskPolicy)`. |
 | `{"policy": "user.signed_in", "record": {"kind": "environment", "name": "current_account"}}` | A gate: a Policy of the Account Entity, any operation, decides about the signed-in person. | On `index` or `show`: `before_action :authorize_use_app` (named after the operation). Guests go to sign in and come back; a signed-in person who fails gets a 403 page. The navigation link shows only to people who pass. | `@can_read_tasks = allowed_to?(:use_app?, current_account, with: UserPolicy)`; the card is hidden otherwise. The full page behind **View more…** calls `authorize!` with the same gate. An item inside a related list's rows does not take a gate; see [Not generated](#not-generated). |
 | `{"policy": "project.read_own", "record": "scaffold_record"}` | Association items only: the page's own record decides whether the card shows. | Rejected on a page (`foundation_plan.schema.const`). | `allowed_to?(:read?, @project, with: ProjectPolicy)`, then every related record. |
 
 The `record` value is that literal object or the string `"scaffold_record"`; nothing else is accepted. A link to a
 record's `show` from a related list's row or an Association item checks the same rule as that `show`, gate or Policy,
-and shows plain text to people who fail it; a link from a list page's own rows is unconditional. A guest who opens a
-list guarded by a record's Policy is sent to sign in and comes back, as the generated request spec checks, unless a
-branch of the rule admits guests, such as "published"; the guest then sees the records that branch allows. A list's
-Policy and its details page's Policy are independent; see [Analysis does not catch](#analysis-does-not-catch).
+and shows plain text to people who fail it. A link from a list page's own rows is unconditional. A list or details
+page whose lookup Policy requires an Account sends guests to sign in before the lookup. A branch such as
+"published" lets guests see the records it allows. A list's Policy and its details page's Policy are independent.
+See [Analysis does not catch](#analysis-does-not-catch).
 
 ## Full example
 
@@ -256,7 +256,8 @@ def show
 end
 
 # app/controllers/projects/tasks_controller.rb, shortened: the full list behind View more…
-before_action :set_project      # found through ProjectPolicy's read scope
+before_action :authenticate
+before_action :set_project
 
 def index
   authorize! @project, to: :read?, with: ProjectPolicy
@@ -390,8 +391,9 @@ These pass analysis as `valid`. Read the gap list after every push.
 - **The parent's Policy on a related list without `"record": "scaffold_record"`.** The card is left out
   (`foundation_plan.gap.scaffold.authorization.not_generated`). Name the related Entity's Policy, or add
   `"record": "scaffold_record"` to check the page's record.
-- **A public list over a details page guarded by a Policy.** Every row links to its details page, and people the
-  Policy does not admit get 404 there. Give both the same rule, or leave `show` public.
+- **A public list over a details page guarded by a Policy.** Every row links to its details page. A details scope
+  that requires an Account sends a guest to sign in. A lookup that reaches the scope returns 404 for a hidden
+  record. Give both the same rule, or leave `show` public.
 - **The same Association twice on one page.** The second is left out
   (`foundation_plan.gap.scaffold.projection.not_generated`, "The collection browse path conflicts"). A repeated
   Field is shown twice.

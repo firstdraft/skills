@@ -161,8 +161,9 @@ aasm :status, column: :status, no_direct_assignment: true, requires_lock: true d
 <% end %>
 ```
 
-The action looks the record up as the details page does, and a gate answers first: a guest is sent to sign in, and an
-account the gate refuses gets 403. A state the event cannot leave, or a save a Validation refuses, returns to the
+The action uses the details page's lookup Policy. If that lookup requires an Account, a guest is sent to sign in
+before the record is read. An Account gate also runs before the lookup. It sends guests to sign in and returns 403
+to a signed-in Account it refuses. A state the event cannot leave, or a save a Validation refuses, returns to the
 details page with an alert. `spec/requests/expenses_spec.rb` fires each event as an allowed account and checks
 another account, a guest, and a state the event cannot leave. The label is the event key humanized.
 
