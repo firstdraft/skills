@@ -241,11 +241,19 @@ For a Plan-only Project, use `plan push`. Its `plan compile` repeats that exact-
 
 ### Hosted Sketches recovery
 
-- After an interrupted publish, replay `sketches publish` in the same folder. For `409 sketch_review_conflict`,
+- After an interrupted publish, replay `sketches publish` in the same folder. If another writer is active,
+  wait for it. After a killed writer, check `.firstdraft-root-output/hosted-writer.pid` and verify that its
+  process has exited before removing that file and the empty reservation directory. If the PID or reservation
+  is empty, first verify that every writer, Compile and download using this folder has stopped. Preserve any
+  journal or artifact files and the pending publication. Then replay the publish.
+- For `409 sketch_review_conflict`,
   reconcile against the current review and Head as [publishing a correction](sketch-review.md#make-the-first-walkthrough) describes.
 - With `422 invalid_sketch_review`, repair the input named in `response.detail`. With Plan diagnostics, repair the
   Plan and any affected screens. `413 payload_too_large` calls for a smaller review. `413 sketch_quota_reached`
-  means the Project has reached its review storage limit. Tell the user and continue locally.
+  means the Project has reached its review storage limit. A smaller review may fit within the byte limit.
+  At the revision-count limit, continue locally. If the owner chooses to Compile the last published revision,
+  preserve the current edits, restore that revision’s exact Plan and sources in a working copy, and confirm
+  that this is the revision they approve. Later unpublished edits are separate implementation work.
 - When publication returns `409 compilation_active`, use the active Compilation’s ID and [check its status](#stuck-compilation-recovery).
 - On `412 sketch_review_changed`, inspect the current review and Head. When `response.current_review.graph_version`
   differs from `response.head_graph_version`, publish a new review against the current Head even if the Plan bytes
@@ -371,7 +379,8 @@ An `invalid_output_path` preflight makes no request. For an absent destination t
 second check may follow an accepted Plan push and analysis reads but still prevents Compilation. For root adoption,
 correct only the reported precondition or select an absent output; do not delete or overwrite owner material. A
 `materialization_failed` result with `reason: "root_rollback_incomplete"` retains the private
-`.firstdraft-root-output` journal. Do not delete it or run Git restoration commands. Reconcile the journal with the
+`.firstdraft-root-output` journal. Preserve its files. Only a [hosted writer’s empty reservation](#hosted-sketches-recovery)
+uses the simpler cleanup above. Do not run Git restoration commands. Reconcile the journal with the
 current path identities; some moves may already have been reversed. Restore the exact original index through Git's
 index lock when applicable. Reverse the remaining `artifact_moves` in reverse recorded order, moving each
 destination back to its source, before reversing the remaining `design_moves` in reverse recorded order. Design
