@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 
-export const cliRevision = "42935862d8908404e106a15a2b4a5e8b8b651cc3";
+export const cliRevision = "3195c74ba06da21c23f9216dddc13ce09d81c2e5";
 export const cliRuntimeSha256 =
-  "6d30dbdf1fa3e731b9982d94b3ab38027f4b29a1d4c42b2dda2555ce44bb40d5";
+  "b5af727af56a102c4296295efaab661c1f3fe99bfdf908a6129e249c717bbf1d";
 export const cliPackageName = "@firstdraft.com/cli";
 export const cliPackageVersion = "0.11.0";
 

@@ -106,8 +106,8 @@ it says.
 ## Local state and credentials
 
 `.firstdraft/foundation-plan.json` is the agent-authored candidate. `.firstdraft/state.json` is private,
-CLI-owned Project, origin, and ETag state. The current Sketches receipt, per-revision receipts, pending request
-and settlement lock under `.firstdraft/` are also private CLI state. `.firstdraft/compilation.json`, beside it, is too: `plan compile` and
+CLI-owned Project, origin, and ETag state. The Sketches receipts and pending request under `.firstdraft/`,
+the hosted writer PID in `.firstdraft-root-output/hosted-writer.pid`, and `.firstdraft/compilation.json` are private: `plan compile` and
 `compilation download` record there the Compilation whose code they wrote, and reports and notes about generated code
 name it. After root
 adoption both are under `.firstdraft/design/.firstdraft/`. Inspect the Plan; never edit, print, paste, commit, or
@@ -247,11 +247,13 @@ For a Plan-only Project, use `plan push`. Its `plan compile` repeats that exact-
   Plan and any affected screens. `413 payload_too_large` calls for a smaller review. `413 sketch_quota_reached`
   means the Project has reached its review storage limit. Tell the user and continue locally.
 - When publication returns `409 compilation_active`, use the active Compilation’s ID and [check its status](#stuck-compilation-recovery).
-- A `412 sketch_review_changed` at Compile start means the published revision or Plan has moved. Show the current
-  candidate, reconcile differences, and get approval for the exact revision before starting its Compile.
-- For missing or changed reviewed sources on Compile or retained download, restore the receipt, Plan and sources
-  for that revision. If materialization fails with `reviewed_sources_changed` after Compilation, restore them and
-  download the existing Compilation using its ID. Recompiling creates a different run.
+- On `412 sketch_review_changed`, inspect the current review and Head. When `response.current_review.graph_version`
+  differs from `response.head_graph_version`, publish a new review against the current Head even if the Plan bytes
+  match. Reconcile any other differences, present the current revision, and get approval for it before compiling.
+- Before a fresh Compile, preserve intentional changes to the Plan or sketches. Publish them and obtain approval
+  for the new revision. If the files for the current approved revision were lost, restore them without overwriting
+  intentional edits. For a retained download, restore that Compilation’s exact local receipt, Plan and sources in
+  a separate working copy when needed. After `reviewed_sources_changed`, use the existing Compilation ID to retry the download.
 
 `status_unavailable` is a read-only failure. Retry that GET a bounded number of times; if it persists, inspect the
 private state's pinned `api_url` locally without printing the rest of the file. `invalid_server_response` instead
@@ -792,7 +794,7 @@ write the field it names again in plain words, or give a page or code in its sha
 | `plan compile` | `analysis_status_unavailable`, `invalid_analysis_status`, `analysis_status_rejected` | Compile's analysis read failed or was rejected. |
 | `plan compile` | `plan_not_valid` | The accepted graph did not reach `valid`; inspect `current`. |
 | `plan compile` | `local_plan_changed` | Local bytes or their accepted ETag changed before the Compilation start. |
-| `plan compile` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | The Compilation start or status did not complete its validated contract. A `compilation_active` start rejection starts [stuck Compilation recovery](#stuck-compilation-recovery). |
+| `plan compile` | `compilation_start_rejected`, `compilation_status_unavailable`, `invalid_compilation_status` | The Compilation start or status did not complete its validated contract. For `compilation_active`, follow [stuck Compilation recovery](#stuck-compilation-recovery). For `sketch_review_changed`, follow [hosted Sketches recovery](#hosted-sketches-recovery). |
 | `plan compile` | `compilation_changed`, `compilation_wait_timed_out`, `compilation_failed`, `compilation_cancelled` | The pinned Compilation changed, remained nonterminal, or reached a non-success terminal state. For `compilation_failed`, follow [Failed Compilation](#failed-compilation). |
 | `plan compile` | `invalid_output_path` | Preflight makes no request; an absent-path post-analysis recheck may follow an accepted push and reads, but no Compilation starts. Preserve owner material and correct only the reported root precondition or choose an absent path. |
 | `plan compile`, `compilation download` | `artifact_unavailable`, `invalid_artifact`, `materialization_failed` | No verified local tree was installed. |

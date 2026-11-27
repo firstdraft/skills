@@ -150,9 +150,9 @@ Plan content.
 
 After root adoption, run later First Draft commands from `.firstdraft/design/`; never initialize the generated root.
 
-For a new hosted sketch interview, run `firstdraft_cli project start` after readiness and share its URL.
-Retry in the same folder. Hosted capture needs Chrome. If this host cannot capture and the owner chooses a
-local walkthrough, begin with ordinary `plan init` and local sketches. Honor headless and Plan-only requests.
+Before reserving a hosted sketch Project, check for Chrome or `FIRSTDRAFT_CHROME_PATH`. After readiness,
+run `firstdraft_cli project start` and share its URL. Retry in the same folder. Without Chrome, if the owner
+chooses a local walkthrough, skip reservation and use ordinary `plan init`. Honor headless and Plan-only requests.
 
 When ready to author a Plan, establish or propose the application name. If the folder has no Plan file yet,
 initialize it (including in a Project just started for Sketches):
