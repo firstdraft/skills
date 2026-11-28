@@ -63,6 +63,8 @@ missing from this list sorts by that date.
 
 | Release | In use from |
 | --- | --- |
+| `2026-11-27-protected-record-sign-in` | 2026-11-27 |
+| `2026-11-27-ruby-4-0-10` | 2026-11-27 |
 | `2026-11-25-application-mail` | 2026-11-26 |
 | `2026-11-17-gem-advisories` | 2026-11-20 |
 | `2026-11-13-events-listed` | 2026-11-17 |
@@ -93,6 +95,64 @@ missing from this list sorts by that date.
 | `2026-10-03-accounts-without-verification` | 2026-10-04 |
 | `2026-10-03-workshop-core` | 2026-10-03 |
 | `2026-09-29-skipped-data-defaults` | 2026-10-01 or earlier |
+
+## 2026-11-27: Protected record links send guests to sign in
+
+**Rails Compiler — released.**
+
+- Existing apps: in an earlier Rails app with Accounts, check whether signed-out visitors receive `404` on pages
+  whose record lookup always requires an Account. Apply the steps below to those lookups and their write routes.
+- Compiler: release `2026-11-27-protected-record-sign-in`, in use on firstdraft.com from 2026-11-27.
+
+A guest who opens a protected record page in a browser now goes to sign-in and returns to that page afterward. The
+[November 21 entry](#2026-11-21-target-profile-rails-sketch2026-11) covers the earlier fix for protected lists.
+
+**Port.** Use `bin/rails routes` and the controllers in `app/controllers/` to find the affected actions. For each
+action, read the Policy scope used by its lookup, whether it runs in a `set_…` callback or in the action itself.
+Edit and Update use the update scope in generated apps. State Machine events use the Show scope to find the record
+and then check their own rule. Nested pages and writes use the parent page's scope to find the parent.
+
+Extend the controller's existing `before_action :authenticate, only: …`, or add one using the app's existing
+sign-in callback, before the lookup. Name the actions whose lookup admits no guest, including applicable Update,
+Destroy, nested writes, and event actions. Keep the scoped finders and each action's authorization checks. When a
+scope has a guest-visible branch, such as published records, let that lookup run for guests. Keep ordinary JSON
+Reference searches on their scoped `404` or `403` responses so a search leaves the page's sign-in return URL intact.
+
+**Check.** Update existing guest request specs that expect `404` for the changed actions to expect the sign-in
+redirect. Use local test records and the app's normal sign-in flow to check that a guest who opens a protected Show
+or Edit URL returns to that URL after signing in. For each changed write route, check that a guest request that
+passes Rails' CSRF check stops at sign-in and leaves the record, associated rows, or transition state unchanged,
+including after signing in. A signed-in Account outside the lookup scope still gets `404`. Verify that a signed-in
+Account who can find the record but fails the action's rule is denied, and that an allowed Account can complete the
+action. Where the Policy admits guests, check that a guest can open a visible record and gets `404` for a hidden one.
+Run `bin/ci`.
+
+## 2026-11-27: Ruby 4.0.10 fixes security vulnerabilities
+
+**Rails Compiler — released.**
+
+- Existing apps: update if the app runs on Ruby 4.0.0 through 4.0.9, including the earlier generated pin of 4.0.5.
+  Check the runtime used locally, in CI, and in the deployed app. If the app is on another Ruby branch, check the
+  patched versions in the [Ruby security advisory][ruby-november-security].
+- Compiler: release `2026-11-27-ruby-4-0-10`, in use on firstdraft.com from 2026-11-27.
+
+The new Foundation pins Ruby 4.0.10 and Brakeman 8.1.1. Ruby 4.0.10 fixes seven vulnerabilities in regular
+expressions and string case conversion. The generated `bin/brakeman` checks for a current scanner and the CI
+step exits on warnings. Brakeman 8.1.1 warns when it scans an app with the affected Ruby pin.
+[Ruby security advisory][ruby-november-security], [Brakeman 8.1.1 release notes][brakeman-8-1-1].
+
+**Port.** Install Ruby 4.0.10 and update `.ruby-version`, the `RUBY_VERSION` arguments in `Dockerfile` and
+`.devcontainer/Dockerfile` where present, and any separate Ruby pins the app uses for CI or hosting. If the app
+declares a Ruby version in `Gemfile`, update that requirement too and refresh its lock with `bundle update --ruby`.
+On the patched Ruby, run `bundle update brakeman --conservative` if the app still locks an older Brakeman. Use the
+[dependency audit entry](#2026-11-20-security-advisories-in-an-apps-dependencies) for other dependency updates.
+
+**Check.** Confirm `ruby -v` in the app, run `bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error` and
+`bin/ci`, and let the app's normal CI exercise its production image if it builds one. Confirm the host's effective
+Ruby version when the app next deploys.
+
+[ruby-november-security]: https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/
+[brakeman-8-1-1]: https://github.com/presidentbeef/brakeman/releases/tag/v8.1.1
 
 ## 2026-11-27: Review the app’s sketches and Plan together
 
